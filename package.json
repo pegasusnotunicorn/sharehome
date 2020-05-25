@@ -7,6 +7,7 @@
     "node": "12.16.2"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "@react-pdf/renderer": "^1.6.8",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -25,7 +26,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "postinstall": "react-scripts build",
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import { MemberCard } from '../../Footer/MemberCard.js';
 import { EventGoalCard } from '../../Footer/EventGoalCard.js';
 import { ChevronDown, User, Users, UserPlus, ArrowRight, ArrowUpCircle, ArrowRightCircle, ArrowLeftCircle, MessageSquare, TrendingUp, TrendingDown, Home, Wind, Heart} from 'react-feather';

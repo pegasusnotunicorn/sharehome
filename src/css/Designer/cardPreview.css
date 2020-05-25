@@ -1,0 +1,84 @@
+.cardPreviewBorder{
+  padding:10px;
+  background:white;
+  margin-bottom:10px;
+  overflow:hidden;
+  cursor:pointer;
+}
+
+.cardPreviewBorder.currentCard{
+  background:#2A188B;
+}
+
+.cardPreview{
+  position:relative;
+  background:black;
+}
+
+.cardPreview * {
+  opacity:0.4;
+}
+
+.cardPreview.currentCard {
+  /* border:10px solid #2A188B; */
+}
+
+.cardPreview.currentCard * {
+  /* opacity:.; */
+}
+
+
+.cardPreviewNumber{
+  opacity:1;
+  font-size: 50px;
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  font-weight: bolder;
+}
+
+.cardPreviewText{
+  font-family: 'Interstate Extra Light Condensed';
+  position:absolute;
+  text-align:left;
+  color:white;
+  z-index:3;
+  white-space:nowrap;
+  overflow:hidden;
+  width:100%;
+  bottom:0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.cardPreviewMainText{
+  text-transform: uppercase;
+}
+
+.cardPreviewSubText{
+}
+
+.japaneseName{
+  font-family: 'GenShinGothic Monospace Extra Light';
+}
+
+.cardPreviewShadow{
+  height:50%;
+  width:100%;
+  position:absolute;
+  bottom:0;
+  background-image: linear-gradient(rgba(255,0,0,0), rgba(0,0,0,.75));
+  z-index:2;
+}
+
+.cardPreviewImage{
+  object-fit:cover;
+  object-position:center center;
+  position:absolute;
+  height:100%;
+  width:100%;
+  top: 0;
+  left:0;
+  z-index:1;
+}

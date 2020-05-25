@@ -1,0 +1,75 @@
+.cardViewer{
+  position:relative;
+  overflow:hidden;
+  border:1px solid white;
+}
+
+.cardViewerBleed{
+  box-shadow: 0 0 0px 200px rgba(0,0,0,0.75);
+  position:absolute;
+  z-index:4;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+}
+
+.cardViewerText{
+  font-family: 'Interstate Extra Light Condensed';
+  position:absolute;
+  text-align:left;
+  color:white;
+  z-index:3;
+  white-space:nowrap;
+  overflow:hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.cardViewerInput input{
+  font-family: 'Interstate Extra Light Condensed';
+  border:0;
+  outline:0;
+  padding:0;
+  background:transparent;
+  color:white;
+}
+
+.cardViewerInput.name input{
+  text-transform: uppercase;
+}
+
+.cardViewerInput.japaneseName input{
+  font-family: 'GenShinGothic Monospace Extra Light';
+}
+
+.cardViewerShadow{
+  height:50%;
+  width:100%;
+  position:absolute;
+  bottom:0;
+  background-image: linear-gradient(rgba(255,0,0,0), rgba(0,0,0,.75));
+  z-index:2;
+}
+
+.cardViewerImage{
+  object-fit:cover;
+  object-position:center center;
+  position:absolute;
+  height:100%;
+  width:100%;
+  top: 0;
+  left:0;
+  z-index:1;
+  cursor:move;
+}
+
+/* Making number scroll up/down disappear */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

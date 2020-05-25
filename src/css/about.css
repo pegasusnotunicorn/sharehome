@@ -1,0 +1,117 @@
+.link{
+  text-decoration:underline;
+  cursor:pointer;
+}
+
+.subcontentWrapper.border-bottom{
+  border-bottom:1px solid white;
+  margin-bottom:20px;
+}
+
+.howToPlayWrapper{
+  width:300px;
+  display:inline-block;
+  padding:20px;
+  vertical-align: top;
+  padding-bottom:0px;
+}
+
+.subtitle .backToAbout{
+  position:absolute;
+  left:0;
+}
+
+.subtitle{
+  position:relative;
+}
+
+.subtext{
+  font-size:0.75em;
+  line-height:100%;
+  text-transform:uppercase;
+  margin-top:20px !important;
+  list-style-type:circle;
+  text-align:left;
+  opacity:0.85;
+}
+
+.timePlayerInfoWrapper{
+  display:flex;
+  margin-top:10px;
+  margin-bottom:10px;
+  justify-content:center;
+  align-items:center;
+  text-transform:uppercase;
+}
+
+.timePlayerInfoWrapper div, .timePlayerInfoWrapper svg{
+  margin-right:10px;
+}
+
+.stepsContainer{
+  display:none;
+}
+
+.stepsContainer.is-active{
+  display:block;
+}
+
+.showRulesButton{
+  text-decoration:underline;
+  cursor:pointer;
+}
+
+.stepWrapper{
+  display:inline-block;
+  padding-top:10px;
+  width:300px;
+  vertical-align:middle;
+  margin:2vh;
+  margin-left:0;
+  margin-right:0;
+  padding:2vh;
+  border-width:3px;
+  border-style:solid;
+  transition:all 0.5s;
+}
+
+.stepWrapper:hover{
+  transform:scale(0.95);
+}
+
+.stepWrapper svg{
+  width:32px;
+  height:32px;
+}
+
+.stepWrapper p{
+  margin-top:20px;
+  margin-bottom:0;
+}
+
+.stepWrapperSplit{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.stepSplitterLine{
+  margin:auto;
+}
+
+.illustrationWrapperCenter{
+  display:flex;
+  margin-top:20px;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.illustrationWrapperCenter .illustrationCardWrapper{
+  display:flex;
+  align-items:center;
+}
+
+.listOfTaboo li{
+  float:left;
+  padding-left:10px;
+}

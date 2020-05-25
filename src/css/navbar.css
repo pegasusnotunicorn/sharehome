@@ -1,0 +1,83 @@
+.navbar{
+  position:fixed;
+  top:0;
+  text-align:left;
+  margin:0;
+  transition:0.5s;
+  z-index:99;
+  height:100vh;
+  background:#2A188B;
+  border-right:4px solid #1F1169;
+  box-shadow:0px 0px 10px 1px #000;
+}
+
+.navbar .title{
+  font-size:30px;
+  margin-bottom:0;
+  position:absolute;
+  padding:0;
+  top:15px;
+  right:15px;
+  width:auto;
+  opacity:0;
+  transition:opacity 0.25s;
+}
+
+.navbar.is-active .title{
+  opacity:1;
+  transition:opacity 0.75s;
+}
+
+.navbar .title:hover:after{
+  content:'シェアホーム';
+  font-size:20px;
+  font-family:'GenShinGothic Monospace Extra Light';
+}
+
+.navbarButtonWrapper{
+  margin-top:60px;
+  height:calc(100% - 155px);
+}
+
+.navbarButton{
+  display:inline-block;
+  text-decoration:none;
+  text-transform:uppercase;
+  width:calc(100% - 40px);
+  user-select:none;
+  -webkit-user-drag:none;
+  border:0;
+  border-right:4px solid #1F1169;
+  padding:20px;
+  margin:0;
+}
+
+.navbarButton.is-active{
+  border-right:4px solid #FF3A20;
+  color:black;
+  background:white;
+}
+
+.navbarButton.is-active svg{
+  stroke:black;
+}
+
+.navbarBottomWrapper p {
+  margin-bottom:0px;
+  margin-left:20px;
+}
+
+.navbarOpenClose{
+  position:fixed;
+  top:0px;
+  left:0px;
+  height:40px;
+  width:40px;
+  cursor:pointer;
+  color:white;
+  font-size:25px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  outline:0;
+}

@@ -1,0 +1,97 @@
+body {
+  margin:0;
+  padding:0;
+  border:0;
+  font-family: 'Interstate Extra Light Condensed';
+  background:black;
+  color:white;
+  text-align:center;
+  letter-spacing:1px;
+}
+
+a {
+  color:white;
+}
+
+svg {
+  vertical-align:sub;
+}
+
+svg.is-flipped{
+  transform:scaleX(-1);
+}
+
+svg.is-48{
+  width:48px;
+  height:48px;
+}
+
+.button svg {
+  padding-right:10px;
+}
+
+p {
+  opacity:.85;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
+/* to let the image underneath be clicked and dragged */
+.nopointerevent{
+  pointer-events: none;
+}
+
+.button{
+  background-color:#2A188B;
+  border:4px solid #1F1169;
+  font-family: 'Interstate Extra Light Condensed';
+  font-size:20px;
+  text-transform: uppercase;
+  outline:0;
+  color:white;
+  line-height:100%;
+  cursor:pointer;
+  padding:10px;
+  padding-top:12px;
+}
+
+.button:active{
+  background-color:#1F1169 !important;
+  color:white !important;
+}
+
+.button:active svg{
+  stroke:white !important;
+}
+
+.content{
+  text-align:center;
+  display:block;
+  line-height:150%;
+  width:100%;
+  padding-bottom:35vh;
+  margin:auto;
+  margin-top:40px;
+}
+
+.content.max-width{
+  max-width:750px;
+}
+
+.content p {
+  margin-top:0;
+}
+
+.contentWrapper{
+  margin:auto;
+  display:block;
+  margin-top:10px;
+}

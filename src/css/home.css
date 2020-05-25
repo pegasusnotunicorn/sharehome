@@ -1,0 +1,89 @@
+.title{
+  text-transform:uppercase;
+  font-size:60px;
+  padding:30px;
+  background-color:#2A188B;
+  display:inline-block;
+  margin:auto;
+  margin-bottom:3vh;
+  width:255px;
+  height:20px;
+}
+
+.title:after{
+  content:'SHAREHOME';
+}
+
+.title:hover:after{
+  content:'シェアホーム';
+  font-size:40px;
+  font-family: 'GenShinGothic Monospace Extra Light';
+}
+
+.subcontentWrapper{
+  max-width:500px;
+  margin:auto;
+  padding-left:10px;
+  padding-right:10px;
+}
+
+.subtitle{
+  margin:auto;
+  max-width:75vw;
+  line-height:150%;
+  font-size:1.75em;
+}
+
+.CTAWrapper{
+  margin-top:3vh;
+}
+
+.callToAction {
+  display:inline-block;
+  padding-top:10px;
+  color:white;
+  width:170px;
+  height:250px;
+  vertical-align:middle;
+  margin:2vh;
+  padding:2vh;
+  border-width:5px;
+  border-style:solid;
+  text-decoration:none;
+  text-align:center;
+  position:relative;
+  -webkit-user-select:none;
+	-webkit-user-drag:none;
+	-webkit-app-region:no-drag;
+  transition:all 0.5s;
+}
+
+.callToAction:active{
+  border-color:white;
+}
+
+.callToAction:hover{
+  transform:scale(0.95);
+}
+
+.callToAction h1{
+  line-height:150%;
+  font-size:3vh;
+  text-transform:uppercase;
+}
+
+.callToAction p {
+  font-size:12px;
+  line-height:125%;
+  position:absolute;
+  bottom:20px;
+  left:20px;
+  width:calc(100% - 40px);
+}
+
+.test {
+  margin-top:10px;
+  background-color:white;
+  border-radius:40%;
+  padding:12px;
+}

@@ -8,12 +8,12 @@ let app = express();
 app.use(express.static(path.join(__dirname, 'build')));
 
 if (process.env.NODE_ENV === 'production') {
-	app.use(express.static('client/build'));
+	app.use(express.static('build'));
 }
 
 //express serve up index.html file if it doesn't recognize route
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
 });
 
 app.set('port', port);

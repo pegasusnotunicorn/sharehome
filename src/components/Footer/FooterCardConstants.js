@@ -6,6 +6,9 @@ const memberCards = [
     japaneseName: "リー・ウォンミン",
     image: {
       url: "/images/members/member_wonmin.jpg",
+      name: "member_wonmin.jpg",
+      width: 1467,
+      height: 978,
     },
   },
   {
@@ -15,6 +18,9 @@ const memberCards = [
     japaneseName: "ホン・ラヒ",
     image: {
       url: "/images/members/member_lahee.jpg",
+      name: "member_lahee.jpg",
+      width: 1467,
+      height: 978,
     },
   },
   {
@@ -24,6 +30,9 @@ const memberCards = [
     japaneseName: "ピーター",
     image: {
       url: "/images/members/member_peter.jpg",
+      name: "member_peter.jpg",
+      width: 1393,
+      height: 929,
     },
   },
   {
@@ -33,6 +42,9 @@ const memberCards = [
     japaneseName: "ガオ",
     image: {
       url: "/images/members/member_gao.jpg",
+      name: "member_gao.jpg",
+      width: 952,
+      height: 631,
     },
   },
 ]

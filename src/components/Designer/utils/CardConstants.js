@@ -1,3 +1,5 @@
+import { getRandomMember } from '../../Footer/FooterCardConstants.js';
+
 //variables for printing in inches
 const DPI = 72;   //(dots per inch)
 let documentBleed = 0.125;
@@ -52,18 +54,6 @@ function getCoverFitObject(objectWidth, objectHeight, viewerWidth, viewerHeight)
   };
 }
 
-//default card variables
-const defaultName = "Candace Green";
-const defaultJapaneseName = "キャンディス•グリーン";
-const defaultAge = "21";
-const defaultJob = "Influencer";
-const defaultImage = getImageObject(
-  "/images/test.jpg",     //url
-  "test.jpg",             //name
-  1000,                   //width
-  1400                    //height
-);
-
 export function getImageObject(url, name, width, height){
   let imageXY = getCoverFitObject(width, height, documentWidth, documentHeight);
 
@@ -77,12 +67,18 @@ export function getImageObject(url, name, width, height){
   }
 }
 
+//default card variables
 export function getDefaultCardObject(){
+  let randomMember = getRandomMember();
+  let defaultImage = getImageObject(
+    randomMember.image.url,
+    randomMember.image.name,
+    randomMember.image.width,
+    randomMember.image.height
+  );
+
   return {
-    name : defaultName,
-    japaneseName : defaultJapaneseName,
-    age : defaultAge,
-    job : defaultJob,
+    ...randomMember,
     image : defaultImage,
   }
 }

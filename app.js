@@ -1,11 +1,17 @@
 const express = require('express');
 const http = require('http');
 const path = require('path');
+const port = process.env.PORT || '8080';
 
+//express will serve up production assets
 let app = express();
 app.use(express.static(path.join(__dirname, 'build')));
 
-const port = process.env.PORT || '8080';
+//express serve up index.html file if it doesn't recognize route
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+});
+
 app.set('port', port);
 
 const server = http.createServer(app);

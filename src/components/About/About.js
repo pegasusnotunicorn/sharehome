@@ -11,11 +11,19 @@ import '../../css/about.css';
 const About = (props) => {
 
   let location = useLocation();
+
+  //styling for any cards on about page
+  let cardStyle = {
+    width:"70px",
+    height:"50px",
+    fontSize:"2px",
+  }
+
   let gameModeDetails = [
     {
       name:"Roleplay",
       link:"roleplay",
-      jsx:()=>{ return (<Roleplay />)},
+      jsx:()=>{ return (<Roleplay cardStyle={cardStyle} />)},
       description:"Play as strangers living together in the same house whose daily interactions and drama are commentated on by the other players.",
       playerCount:"6+ Players",
       playTime:"25 Minutes",
@@ -23,7 +31,7 @@ const About = (props) => {
     {
       name:"Guess Who?",
       link:"guesswho",
-      jsx:()=>{ return (<Guesswho />)},
+      jsx:()=>{ return (<Guesswho cardStyle={cardStyle} />)},
       description:"Every player is given a random Member Card and takes turns to guess who they are. You are only allowed to ask yes / no questions.",
       playerCount:"2+ Players",
       playTime:"10 Minutes",
@@ -31,7 +39,7 @@ const About = (props) => {
     {
       name:"Taboo",
       link:"taboo",
-      jsx:()=>{ return (<Taboo />)},
+      jsx:()=>{ return (<Taboo cardStyle={cardStyle} />)},
       description:"Split into teams and take turns with the deck of Member Cards. Get your teammates to guess each character without using any of the forbidden words.",
       playerCount:"2+ Players",
       playTime:"10 Minutes",
@@ -39,7 +47,7 @@ const About = (props) => {
     {
       name:"Charades",
       link:"charades",
-      jsx:()=>{ return (<Charades />)},
+      jsx:()=>{ return (<Charades cardStyle={cardStyle} />)},
       description:"Players take turns acting out their favorite scenes with random Member Cards, while the others try to guess who they are.",
       playerCount:"4+ Players",
       playTime:"10 Minutes",
@@ -125,7 +133,7 @@ const About = (props) => {
   });
 
   return (
-    <div className="content max-width">
+    <div className="content padding-bottom max-width">
       <NavLink to="/"><div className="title noselect"></div></NavLink>
       <Content />
     </div>

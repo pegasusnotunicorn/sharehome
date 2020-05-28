@@ -1,5 +1,6 @@
 import React from 'react';
 import { Image, Copy, Trash2 } from 'react-feather';
+import ConfirmModalButton from '../utils/ConfirmModalButton.js';
 import '../../../css/Designer/cardButtons.css';
 
 function CardButtons(props){
@@ -12,9 +13,16 @@ function CardButtons(props){
         name="image"
         accept="image/*"
       />
-      <label id="imageFileLabel" className="noselect button contentButton" htmlFor="imageFileInput"><Image />Change Image</label>
-      <button className="noselect button contentButton" onClick={props.duplicateCurrentCard}><Copy />Duplicate Card</button>
-      <button className="noselect button contentButton" onClick={props.removeCurrentCard}><Trash2 />Delete Card</button>
+      <label id="imageFileLabel" className="noselect button is-bordered contentButton" htmlFor="imageFileInput"><Image />Change Image</label>
+      <button className="noselect button is-bordered contentButton" onClick={props.duplicateCurrentCard}><Copy />Duplicate Card</button>
+
+      <ConfirmModalButton
+        className="noselect button is-bordered contentButton"
+        onClick={props.removeCurrentCard}
+        icon={<Trash2 />}
+        text="Delete Card"
+        modalText="Are you sure you want to delete the current card?"
+      />
     </div>
   )
 }

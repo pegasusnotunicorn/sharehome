@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-import { MemberCard } from './MemberCard.js';
-import { EventGoalCard } from './EventGoalCard.js';
-import '../../css/footer.css';
+import Card from './Card/Card.js';
 
 function randomIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -10,6 +8,8 @@ function randomIntFromInterval(min, max) { // min and max included
 //create an array of random cards given type and total amount to make
 function createRandomCards(type, totalSame, totalAll){
   return [...Array(totalSame)].map((curr, index)=>{
+
+    //random stuff to simulate throwing cards from below the screen
     let randomLeft = Math.round((Math.random() * 10 - 5) + (index)*(100/totalSame));
     let randomBottom = randomIntFromInterval(-20, -7);
     let randomZ = Math.round(Math.random() * totalAll);
@@ -22,34 +22,41 @@ function createRandomCards(type, totalSame, totalAll){
       id:type + index,
       type:tempType,
       mainStyle:{
+        //stuff needed size the card
         width:"35vh",
         height:"25vh",
         fontSize:"1vh",
-        left:randomLeft + "vw",
-        zIndex:randomZ,
-        bottom:"-100%",
-        transform:"rotate(0deg)",
+        //stuff needed to simulate the random throwing
+        position:"fixed",
         transition:"none",
-        position:"fixed"
+        transform:"rotate(0deg)",
+        zIndex:randomZ,
+        left:randomLeft + "vw",
+        bottom:"-100%",
       },
-      transition:"bottom " + randomTransition + "s, transform " + randomTransition + "s " + randomTransition/2 + "s",
       //used for animation later in useEffect
+      transition:"bottom " + randomTransition + "s, transform " + randomTransition + "s " + randomTransition/2 + "s",
       randomBottom:randomBottom + "vh",
       randomDegree:"rotate(" + randomDegree + "deg)",
     }
 
-    return (type === "member") ? (<MemberCard {...props}/>) : (<EventGoalCard {...props}/>);
+    //dont flip event / goal cards
+    if (tempType !== "member"){
+      props.showFront = false;
+    }
+
+    return (<Card {...props}/>);
   });;
 }
 
 const Footer = (props) => {
 
   let totalMemberCards = Math.ceil(window.innerWidth / 200);
-  let totalEventGoalCards = Math.ceil(window.innerWidth / 500);
-  let totalCards = totalMemberCards + totalEventGoalCards;
+  let totalCardBacks = Math.ceil(window.innerWidth / 500);
+  let totalCards = totalMemberCards + totalCardBacks;
 
   let memberCards = createRandomCards("member", totalMemberCards, totalCards);
-  let eventGoalCard = createRandomCards("eventgoal", totalEventGoalCards, totalCards);
+  let CardBack = createRandomCards("eventgoal", totalCardBacks, totalCards);
 
   //animate bottom + rotation to simulate "throwing" the cards from bottom
   useEffect(()=>{
@@ -58,16 +65,16 @@ const Footer = (props) => {
       document.getElementById("member" + i).style.bottom = memberCards[i].props.randomBottom;
       document.getElementById("member" + i).style.transform = memberCards[i].props.randomDegree;
     }
-    for (let i = 0; i < eventGoalCard.length; i++){
-      document.getElementById("eventgoal" + i).style.transition = eventGoalCard[i].props.transition;
-      document.getElementById("eventgoal" + i).style.bottom = eventGoalCard[i].props.randomBottom;
-      document.getElementById("eventgoal" + i).style.transform = eventGoalCard[i].props.randomDegree;
+    for (let i = 0; i < CardBack.length; i++){
+      document.getElementById("eventgoal" + i).style.transition = CardBack[i].props.transition;
+      document.getElementById("eventgoal" + i).style.bottom = CardBack[i].props.randomBottom;
+      document.getElementById("eventgoal" + i).style.transform = CardBack[i].props.randomDegree;
     }
   });
 
   return (
     <div className="footer">
-      {eventGoalCard}
+      {CardBack}
       {memberCards}
     </div>
   )

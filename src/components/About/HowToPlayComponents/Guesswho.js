@@ -1,15 +1,12 @@
 import React from 'react';
-import { MemberCard } from '../../Footer/MemberCard.js';
+import Card from '../../Card/Card.js';
 import { ChevronDown, User, Users, ArrowRight, CheckCircle, Slash, UserCheck, MessageSquare, Gift } from 'react-feather';
 import '../../../css/about.css';
 
 const Guesswho = (props) => {
 
-  let cardStyle = {
-    width:"98px",
-    height:"70px",
-    fontSize:"3px",
-  }
+  //sizing for about page card styles
+  let cardStyle = props.cardStyle;
 
   return (
     <div>
@@ -23,7 +20,12 @@ const Guesswho = (props) => {
             <Users />
           </div>
           <ArrowRight />
-          <MemberCard mainStyle={cardStyle} />
+          <Card
+            type="member"
+            showFront={false}
+            disableFlip={true}
+            mainStyle={cardStyle}
+          />
         </div>
       </div>
 

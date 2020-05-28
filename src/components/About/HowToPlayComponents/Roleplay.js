@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { MemberCard } from '../../Footer/MemberCard.js';
-import { EventGoalCard } from '../../Footer/EventGoalCard.js';
+import Card from '../../Card/Card.js';
 import { ChevronDown, User, Users, UserPlus, ArrowRight, ArrowUpCircle, ArrowRightCircle, ArrowLeftCircle, MessageSquare, TrendingUp, TrendingDown, Home, Wind, Heart} from 'react-feather';
 import '../../../css/about.css';
 
 const Roleplay = (props) => {
 
-  let cardStyle = {
-    width:"70px",
-    height:"50px",
-    fontSize:"2px",
-  }
+  //sizing for about page card styles
+  let cardStyle = props.cardStyle;
 
   //state to keep track of if we are showing game rules or game setup
   const [showRules, setshowRules] = useState(false);
@@ -58,9 +54,16 @@ const Roleplay = (props) => {
             </p>
             <div className="illustrationWrapperCenter">
               <div className="illustrationCardWrapper">
-                <MemberCard mainStyle={{...cardStyle, marginRight:"10px"}} />
-                <EventGoalCard
+                <Card
+                  type="member"
+                  showFront={false}
+                  disableFlip={true}
+                  mainStyle={{...cardStyle, marginRight:"10px"}}
+                />
+                <Card
                   type="goal"
+                  showFront={false}
+                  disableFlip={true}
                   mainStyle={{...cardStyle, marginRight:"10px"}}
                 />
                 <ArrowUpCircle />
@@ -89,7 +92,12 @@ const Roleplay = (props) => {
             </p>
             <div className="illustrationWrapperCenter">
               <div className="illustrationCardWrapper">
-                <MemberCard mainStyle={{...cardStyle, marginRight:"10px"}} />
+                <Card
+                  type="commentator"
+                  showFront={false}
+                  disableFlip={true}
+                  mainStyle={{...cardStyle, marginRight:"10px"}}
+                />
                 <ArrowUpCircle style={{marginRight:"10px"}}/>
               </div>
               <ArrowRight />
@@ -206,8 +214,10 @@ const Roleplay = (props) => {
             <div className="illustrationWrapperCenter">
               <div className="illustrationCardWrapper">
                 <User style={{marginRight:"10px"}}/>
-                <EventGoalCard
+                <Card
                   type="event"
+                  showFront={false}
+                  disableFlip={true}
                   mainStyle={cardStyle}
                 />
               </div>
@@ -244,8 +254,10 @@ const Roleplay = (props) => {
             <div className="illustrationWrapperCenter">
               <div className="illustrationCardWrapper">
                 <User style={{marginRight:"10px"}}/>
-                <EventGoalCard
+                <Card
                   type="event"
+                  showFront={false}
+                  disableFlip={true}
                   mainStyle={cardStyle}
                 />
               </div>

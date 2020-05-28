@@ -37,18 +37,19 @@
 .navbarButtonWrapper{
   margin-top:60px;
   height:calc(100% - 155px);
+  border-top:1px solid white;
 }
 
 .navbarButton{
   display:inline-block;
+  text-align:left;
   text-decoration:none;
   text-transform:uppercase;
   width:calc(100% - 40px);
   user-select:none;
   -webkit-user-drag:none;
-  border:0;
-  border-right:4px solid #1F1169;
   padding:20px;
+  border:0;
   margin:0;
 }
 
@@ -70,7 +71,6 @@
 .navbarOpenClose{
   position:fixed;
   top:0px;
-  left:0px;
   height:40px;
   width:40px;
   cursor:pointer;

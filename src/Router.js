@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
-import Navbar from './components/Navbar/Navbar.js';
-import Footer from './components/Footer/Footer.js';
+import NavbarMain from './components/Navbar/NavbarMain.js';
+import Footer from './components/Footer.js';
 import Home from './components/Home/Home.js';
 import About from './components/About/About.js';
 import Contact from './components/Contact/Contact.js';
 import Designer from './components/Designer/Designer.js';
-import Error from './components/Error/Error.js';
+import Error from './components/Error.js';
 
 const Router = (props) => {
 
@@ -36,7 +36,7 @@ const Router = (props) => {
         <Redirect to="/" />
       </Switch>
 
-      <Navbar />
+      <NavbarMain />
       <Route render={() => {
         return (showFooter) ? <Footer key={Date.now()} /> : null
       }} />

@@ -33,7 +33,7 @@ function CardViewer(props){
               extraWidth={0}
               onChange={props.handleInputChange}
               value={currentCard.age}
-              placeholder={currentCard.age}
+              placeholder={currentCard.age.toString()}
           />)
         </div>
         <div style={cardViewerDynamicStyles.subFont}>

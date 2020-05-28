@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 //custom files
 import * as CardConstants from '../utils/CardConstants.js';
 import DownloadPDFFile from '../PDFDocument/DownloadPDFFile.js';
 import PDFDocument from '../PDFDocument/PDFDocument.js';
-import CardPreview from './CardPreview.js';
 import Sidebar from './Sidebar.js';
 import CardEditor from '../CardEditor/CardEditor.js';
 import { useStickyState, useStickyReducer } from '../utils/stickyHooks.js';
@@ -43,14 +42,6 @@ function reducer(state, action) {
       return [action.card];
     default:
       throw new Error();
-  }
-}
-
-//scroll to a cardPreview
-function scrollTo(index){
-  let currentDOMPreview = document.getElementById("cardPreview"+index);
-  if (!!currentDOMPreview){
-    document.getElementById("cardPreview"+index).scrollIntoView({behavior:"smooth"});
   }
 }
 
@@ -138,49 +129,29 @@ function DeckEditor(props){
   const goToCard = (cardIndex) => {
     setCurrentIndex(cardIndex);
     currentCard = cards[cardIndex];
-    scrollTo(cardIndex);
   }
-
-  //renders a list of buttons to keep track of all cards in the deck (click to go to it)
-  const listOfCards = cards.map((step, move) => {
-
-    let cardPreviewProps = {
-      key: "cardPreview" + move,
-      id : "cardPreview" + move,
-      currentCard: step,
-      currentIndex: move,
-      handleClick: goToCard,
-      //current card is this button!
-      ifCurrentCard : (move === currentIndex) ? " currentCard" : "",
-      number : (move === currentIndex) ? "EDITING" : move + 1,
-    }
-
-    return (<CardPreview {...cardPreviewProps}/>);
-  });
-
-  //focus the current card in the preview pane
-  useEffect(()=>{
-    scrollTo(currentIndex);
-  }, [cards, currentIndex]);
 
   return (
     <div>
       <CardEditor
         cards={cards}
         currentCard={currentCard}
-        setCurrentCard={updateCurrentCard}
-        removeCurrentCard={removeCurrentCard}
-        duplicateCurrentCard={duplicateCurrentCard}
         viewerMagnifyValue={props.viewerMagnifyValue}
+        cardFunctions={{
+          updateCurrentCard:updateCurrentCard,
+          removeCurrentCard:removeCurrentCard,
+          duplicateCurrentCard:duplicateCurrentCard,
+        }}
       />
       <Sidebar
-      downloadAllCards={downloadAllCards}
-      resetAllCards={resetAllCards}
-      addNewCard={addNewCard}
-      currentCard={currentCard}
-      currentIndex={currentIndex}
-      cards={cards}
-      listOfCards={listOfCards}
+        cards={cards}
+        currentIndex={currentIndex}
+        cardFunctions={{
+          downloadAllCards:downloadAllCards,
+          resetAllCards:resetAllCards,
+          addNewCard:addNewCard,
+          goToCard:goToCard,
+        }}
       />
     </div>
   );

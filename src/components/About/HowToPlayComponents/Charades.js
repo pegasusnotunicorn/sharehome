@@ -1,16 +1,12 @@
 import React from 'react';
-import { EventGoalCard } from '../../Footer/EventGoalCard.js';
-import { MemberCard } from '../../Footer/MemberCard.js';
+import Card from '../../Card/Card.js';
 import { ChevronDown, HelpCircle, ArrowRight, Users, UserPlus, Gift } from 'react-feather';
 import '../../../css/about.css';
 
 const Charades = (props) => {
 
-  let cardStyle = {
-    width:"98px",
-    height:"70px",
-    fontSize:"3px",
-  }
+  //sizing for about page card styles
+  let cardStyle = props.cardStyle;
 
   return (
     <div>
@@ -18,8 +14,10 @@ const Charades = (props) => {
         <h2 className="subtitle">Step 1</h2>
         <p>Select a random Event Card. Select players at random based on the amount of participants on the Event Card.</p>
         <div className="illustrationWrapperCenter">
-          <EventGoalCard
+          <Card
             type="event"
+            showFront={false}
+            disableFlip={true}
             mainStyle={cardStyle}
           />
           <HelpCircle />
@@ -43,7 +41,12 @@ const Charades = (props) => {
             <Users className="is-flipped" />
           </div>
           <ArrowRight />
-          <MemberCard mainStyle={cardStyle} />
+          <Card
+            type="member"
+            showFront={false}
+            disableFlip={true}
+            mainStyle={cardStyle}
+          />
         </div>
       </div>
 

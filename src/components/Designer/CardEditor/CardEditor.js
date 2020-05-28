@@ -20,7 +20,10 @@ function getMouseXY(e, viewerMagnifyValue){
 //needs to get via props, the currentCard and setter for changing currentCard properties
 function CardEditor(props){
   const currentCard = props.currentCard;
-  const setCurrentCard = props.setCurrentCard;
+
+  const updateCurrentCard = props.cardFunctions.updateCurrentCard;
+  const removeCurrentCard = props.cardFunctions.removeCurrentCard;
+  const duplicateCurrentCard = props.cardFunctions.duplicateCurrentCard;
 
   //returns a new card details object with newValue for newProp
   const updateAndReturnCurrentCard = (newProp, newValue) => {
@@ -47,13 +50,13 @@ function CardEditor(props){
               img.width,
               img.height,
             ));
-            setCurrentCard(tempCard);
+            updateCurrentCard(tempCard);
           };
           img.src = tempImageURL;
         }
         break;
       default:
-        setCurrentCard(updateAndReturnCurrentCard(e.target.name, e.target.value));
+        updateCurrentCard(updateAndReturnCurrentCard(e.target.name, e.target.value));
         break;
     }
   }
@@ -101,7 +104,7 @@ function CardEditor(props){
         x: Math.round(newX),
         y: Math.round(newY),
       });
-      setCurrentCard(tempCard);
+      updateCurrentCard(tempCard);
     }
   }
 
@@ -118,8 +121,8 @@ function CardEditor(props){
       />
       <CardButtons
         handleInputChange={handleInputChange}
-        removeCurrentCard={props.removeCurrentCard}
-        duplicateCurrentCard={props.duplicateCurrentCard}
+        removeCurrentCard={removeCurrentCard}
+        duplicateCurrentCard={duplicateCurrentCard}
       />
       <DebugPDFViewer
         viewerMagnifyValue={props.viewerMagnifyValue}

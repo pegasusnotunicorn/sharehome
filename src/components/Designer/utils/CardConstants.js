@@ -1,4 +1,4 @@
-import { getRandomMember } from '../../Footer/FooterCardConstants.js';
+import { getRandomPerson } from '../../Card/ExamplePeople.js';
 
 //variables for printing in inches
 const DPI = 72;   //(dots per inch)
@@ -69,7 +69,7 @@ export function getImageObject(url, name, width, height){
 
 //default card variables
 export function getDefaultCardObject(){
-  let randomMember = getRandomMember();
+  let randomMember = getRandomPerson("member");
   let defaultImage = getImageObject(
     randomMember.image.url,
     randomMember.image.name,

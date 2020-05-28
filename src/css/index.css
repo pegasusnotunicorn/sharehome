@@ -13,6 +13,10 @@ a {
   color:white;
 }
 
+p, li {
+  opacity:.85;
+}
+
 svg {
   vertical-align:sub;
 }
@@ -28,10 +32,6 @@ svg.is-48{
 
 .button svg {
   padding-right:10px;
-}
-
-p {
-  opacity:.85;
 }
 
 .noselect {
@@ -51,7 +51,6 @@ p {
 
 .button{
   background-color:#2A188B;
-  border:4px solid #1F1169;
   font-family: 'Interstate Extra Light Condensed';
   font-size:20px;
   text-transform: uppercase;
@@ -61,6 +60,11 @@ p {
   cursor:pointer;
   padding:10px;
   padding-top:12px;
+  border:0;
+}
+
+.button.is-bordered{
+  border:4px solid #1F1169;
 }
 
 .button:active{
@@ -80,6 +84,10 @@ p {
   padding-bottom:35vh;
   margin:auto;
   margin-top:40px;
+}
+
+.content.padding-bottom{
+  padding-bottom:35vh;
 }
 
 .content.max-width{

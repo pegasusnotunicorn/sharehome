@@ -1,8 +1,12 @@
 import React from 'react';
-import { ChevronDown, Users, UserCheck, Watch, Package, Smile, AlertOctagon, Frown } from 'react-feather';
+import Card from '../../Card/Card.js';
+import { ChevronDown, Users, UserCheck, Watch, Smile, AlertOctagon, Frown } from 'react-feather';
 import '../../../css/about.css';
 
 const Taboo = (props) => {
+
+  //sizing for about page card styles
+  let cardStyle = props.cardStyle;
 
   return (
     <div>
@@ -33,9 +37,14 @@ const Taboo = (props) => {
             <UserCheck className="redStroke" />
             <UserCheck className="greenStroke" />
           </div>
-          <div>
+          <div className="illustrationCardWrapper">
             <Watch />
-            <Package />
+            <Card
+              type="member"
+              showFront={false}
+              disableFlip={true}
+              mainStyle={cardStyle}
+            />
           </div>
           <div>
             <Users className="is-flipped" />

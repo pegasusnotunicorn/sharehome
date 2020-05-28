@@ -5,7 +5,7 @@ import { Users, Clock} from 'react-feather';
 const GameModeIcons = (props) => {
 
   return (
-    <div class="timePlayerInfoWrapper">
+    <div className="timePlayerInfoWrapper">
       <div>
         <Users />{props.playerCount}
       </div>

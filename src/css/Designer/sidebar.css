@@ -1,25 +1,22 @@
-.sidebar{
-  padding: 10px;
-  position: fixed;
-  right: 0;
-  top: 0;
-  height: 100vh;
-  width: 175px;
-  overflow-y: hidden;
-  overflow-x: hidden;
-  text-align: center;
-  z-index: 5;
-  background: black;
+.content{
+  padding-bottom:0;
+}
+
+.designerTitle{
+  margin:20px;
 }
 
 .sidebarButtonWrapper{
   padding-bottom:0;
+  border-top:1px solid white;
+  border-bottom:1px solid white;
+  margin-bottom:20px;
 }
 
 .cardPreviewWrapper{
   overflow-y:scroll;
   overflow-x:hidden;
-  height:calc(100vh - 190px);
+  height:calc(100vh - 280px);
   /* Hide scrollbar for IE and Edge */
   -ms-overflow-style: none;
 }
@@ -29,8 +26,6 @@
   display: none;
 }
 
-.sideBarButton{
-  font-size:20px;
-  margin-bottom:10px;
+.sidebarButton{
   width:100%;
 }

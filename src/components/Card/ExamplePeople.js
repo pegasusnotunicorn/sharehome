@@ -1,4 +1,4 @@
-const memberCards = [
+const examplePeople = [
   {
     name: "Wonmin Lee",
     age: 28,
@@ -49,17 +49,21 @@ const memberCards = [
   },
 ]
 
-//return the details of a random member
-export function getRandomMember(){
-  return memberCards[Math.floor(Math.random() * memberCards.length)];
+//return the details of a random person
+export function getRandomPerson(){
+  return examplePeople[Math.floor(Math.random() * examplePeople.length)];
 }
 
-//return details of a specific member or a random one if cant find
-export function getSpecificMember(memberName){
-  for (let i = 0; i < memberCards.length ; i++){
-    if (memberCards[i].name === memberName){
-      return memberCards[i];
+//return details of a specific person or a random one if cant find
+export function getSpecificPerson(personName){
+
+  //search for them
+  for (let i = 0; i < examplePeople.length ; i++){
+    if (examplePeople[i].name === personName){
+      return examplePeople[i];
     }
   }
-  return memberCards[Math.floor(Math.random() * memberCards.length)];
+
+  //couldnt find, so return a random
+  return getRandomPerson();
 }

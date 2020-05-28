@@ -2,21 +2,14 @@ import React from 'react';
 import { Home, HelpCircle, Mail, Edit, Star, ShoppingCart } from 'react-feather';
 
 import { NavLink } from 'react-router-dom';
+import NavbarTemplate from './NavbarTemplate.js';
 import '../../css/navbar.css';
 import '../../css/hamburger.css';
 
-const navbarWidth = 300;
-
-function toggleNav() {
-  let navLeft = document.getElementById("navbar").style.left;
-  document.getElementById("navbar").style.left = (navLeft === "0px") ? (-(navbarWidth + 10)) + "px" : "0px";
-  document.getElementById("navbar").classList.toggle("is-active");
-  document.getElementById("navbarOpenClose").classList.toggle("is-active");
-}
-
-const Navbar = () => {
-  return (
-    <div id="navbar" className="navbar" style={{width:navbarWidth, left:-(navbarWidth+10)}}>
+//main navbar for page navigation on the website
+export const NavbarMain = () => {
+  const innards = (
+    <div style={{height:"100%"}}>
       <NavLink to="/"><div className="title noselect"></div></NavLink>
       <div className="navbarButtonWrapper">
         <NavLink exact={true} to="/" activeClassName="is-active" className="button noselect navbarButton"><Home />Home</NavLink>
@@ -30,13 +23,16 @@ const Navbar = () => {
         <p>Questions? Comments?</p>
         <p><a className="email" href="mailto:hello@sharehomethegame.com">hello@sharehomethegame.com</a></p>
       </div>
-      <button id="navbarOpenClose" className="hamburger hamburger--slider navbarOpenClose" onClick={toggleNav} type="button">
-        <span className="hamburger-box">
-          <span className="hamburger-inner"></span>
-        </span>
-      </button>
     </div>
-  );
+  )
+
+  return (
+    <NavbarTemplate
+      innards={innards}
+      position="left"
+      id="navbar"
+    />
+  )
 }
 
-export default Navbar;
+export default NavbarMain;

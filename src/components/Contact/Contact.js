@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { CornerLeftDown } from 'react-feather';
-import { MemberCard } from '../Footer/MemberCard.js';
+import Card from '../Card/Card.js';
 import { NavLink } from 'react-router-dom';
 import '../../css/contact.css';
 
@@ -25,13 +25,15 @@ const Contact = (props) => {
             is not affiliated with the makers of the popular Japanese reality TV show on that really popular streaming website.
           </p>
           <p>
-            Although it would be awesome if they could just reply to my emails.<br/>どうかよろしくお願いします！
+            Although it would be awesome if they could just reply to my emails.<br/>どうかよろしくお願い致します！
           </p>
         </div>
         <div className="madeby">
           <p><CornerLeftDown style={{verticalAlign:"text-top", marginRight:"10px"}} />Made by this guy</p>
-          <MemberCard
-            memberName="Wonmin Lee"
+          <Card
+            type="member"
+            personName="Wonmin Lee"
+            showFront={true}
             mainStyle={{
               width:"300px",
               height:"200px",

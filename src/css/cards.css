@@ -1,0 +1,153 @@
+/* <editor-fold> -------------------------------------------------- FLIP CARD */
+
+.flipcard{
+  background-color: transparent;
+  bottom:-100%;
+  display:inline-block;
+  position:relative;
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+}
+
+.flipcardInner{
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+}
+
+.flipcard:not(.disable-flip):hover .flipcardInner, .flipcard.is-flipped .flipcardInner {
+  transform: rotateY(180deg);
+}
+
+.flipcard.is-flipped:not(.disable-flip):hover .flipcardInner {
+  transform: rotateY(0deg);
+}
+
+.flipcardFront, .flipcardBack {
+  border-radius:2em;
+  box-shadow:1px 1px 10px #000;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow:hidden;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  z-index:10;
+}
+
+.flipcardBack {
+  transform: rotateY(180deg);
+  background-color:white;
+}
+
+/* </editor-fold> ----------------------------------------------------------- */
+
+/* <editor-fold> ------------------------------------------------ MEMBER CARD */
+
+.memberCommCardWrapper{
+  height:100%;
+  width:100%;
+}
+
+.memberCommCardText{
+  width:100%;
+  position:absolute;
+  bottom:0;
+  text-align:left;
+  white-space:nowrap;
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+  color:white;
+  margin:2em;
+  z-index:9;
+}
+
+.memberCommCardMainText{
+  text-transform:uppercase;
+  font-size:4em;
+  line-height:100%;
+}
+
+.memberCommCardSubText{
+  font-size:2em;
+  line-height:100%;
+}
+
+.memberCommCardShadow{
+  height:50%;
+  width:100%;
+  position:absolute;
+  bottom:0;
+  background-image:linear-gradient(rgba(255,0,0,0), rgba(0,0,0,.75));
+}
+
+.memberCommCardImage{
+  object-fit:cover;
+  width:100%;
+  height:100%;
+  object-position:center center;
+}
+
+/* </editor-fold> ----------------------------------------------------------- */
+
+/* <editor-fold> -------------------------------------------EVENT / GOAL CARD */
+
+.eventGoalCardWrapper{
+  border-width:2em;
+  border-style:solid;
+  height:calc(100% - 4em);
+  width:calc(100% - 4em);
+  background:white;
+}
+
+.eventGoalTextWrapper{
+  color:black;
+  font-size:2em;
+  line-height:125%;
+  text-align:left;
+  overflow:hidden;
+  margin:1em;
+  height:calc(100% - 2em);
+  width:calc(100% - 2em);
+}
+
+/* </editor-fold> ----------------------------------------------------------- */
+
+/* <editor-fold> -------------------------------------------------- CARD BACK */
+
+.cardBackText{
+  text-align:center;
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:100%;
+  -webkit-font-smoothing:antialiased;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+}
+
+.cardBackMainText{
+  line-height: 100%;
+  color:black;
+  text-transform:uppercase;
+  margin:auto;
+  white-space:pre-line;
+  font-size:6em;
+  padding:.2em;
+}
+
+.cardBackSubText{
+  line-height: 100%;
+  color:white;
+  display:inline-block;
+  width:auto;
+  font-size:3em;
+  padding:.2em;
+}
+
+/* </editor-fold> ----------------------------------------------------------- */

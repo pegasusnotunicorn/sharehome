@@ -25,6 +25,7 @@ const RandomCardsForFooter = (type, totalSame, totalAll) => {
       id:type + index,
       key:tempType + index,
       type:tempType,
+      flipPercentage: 0.75,     //75% chance of showing front of the card
       mainStyle:{
         //stuff needed size the card
         width:"35vh",

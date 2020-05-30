@@ -4,7 +4,10 @@ import { getRandomPerson, getSpecificPerson } from './ExamplePeople.js';
 export const CardFrontPerson = (props) => {
 
   //check if there is a person name, if not get a random
-  let cardPerson = (props.personName) ? getSpecificPerson(props.personName) : getRandomPerson(props.type);
+  let cardPerson = (props.personName) ? getSpecificPerson(props.personName) : getRandomPerson();
+
+  let objectPositionX = (typeof cardPerson.image.x !== "undefined") ? cardPerson.image.x + "px" : "50%";
+  let objectPositionY = (typeof cardPerson.image.y !== "undefined") ? cardPerson.image.y + "px" : "50%";
 
   return (
     <div className="memberCommCardWrapper">
@@ -20,8 +23,11 @@ export const CardFrontPerson = (props) => {
       <img
         draggable={false}
         className="memberCommCardImage nopointerevent"
-        alt="Background for Card"
+        alt={"Image credit - " + cardPerson.image.credit}
         src={cardPerson.image.url}
+        style={{
+          objectPosition:objectPositionX + " " + objectPositionY
+        }}
       />
     </div>
   )

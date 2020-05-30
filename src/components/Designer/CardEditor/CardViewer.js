@@ -64,7 +64,7 @@ const CardViewer = (props) => {
       <img
         draggable={false}
         className="cardViewerImage"
-        alt="Background for Card"
+        alt={"Image credit - " + currentCard.image.credit}
         src={currentCard.image.url}
         style={cardViewerDynamicStyles.image}
         onMouseDown={props.handleMouseDown}

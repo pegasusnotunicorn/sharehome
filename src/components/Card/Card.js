@@ -14,7 +14,8 @@ export const Card = (props) => {
     isFlippedClass = (props.showFront) ? "" : "is-flipped";
   }
   else {
-    isFlippedClass = (Math.random() > 0.5) ? "" : "is-flipped";
+    let flipPercentage = (typeof props.flipPercentage !== "undefined") ? props.flipPercentage : 0.5;
+    isFlippedClass = (Math.random() > flipPercentage) ? "" : "is-flipped";
   }
 
   //disable flip

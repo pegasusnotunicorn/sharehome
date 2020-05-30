@@ -68,14 +68,21 @@ export function getImageObject(url, name, width, height){
 }
 
 //default card variables
-export function getDefaultCardObject(){
-  let randomMember = getRandomPerson("member");
+export function getDefaultCardObject(notThisPerson){
+  let randomMember = getRandomPerson(notThisPerson);
   let defaultImage = getImageObject(
     randomMember.image.url,
     randomMember.image.name,
     randomMember.image.width,
     randomMember.image.height
   );
+
+  //credit to artist
+  defaultImage.credit = randomMember.image.credit;
+
+  //default x and y positions if they exist
+  defaultImage.x = (typeof randomMember.image.x !== "undefined") ? randomMember.image.x : defaultImage.x;
+  defaultImage.y = (typeof randomMember.image.y !== "undefined") ? randomMember.image.y : defaultImage.y;
 
   return {
     ...randomMember,

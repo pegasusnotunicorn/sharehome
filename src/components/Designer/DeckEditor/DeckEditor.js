@@ -49,7 +49,7 @@ const DeckEditor = (props) => {
     setcurrentCardIndex(cards.length);
     dispatch({
       type: 'add',
-      item: cardConstants.getDefaultCardObject()
+      item: cardConstants.getDefaultCardObject(cards[cards.length - 1].name)
     });
   }
 

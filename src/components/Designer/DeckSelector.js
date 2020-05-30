@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
-
-//custom files
-import Card from '../Card/Card.js';
 import { NavLink } from 'react-router-dom';
 
-function DeckSelector(props){
+import { reducerForArrays } from './utils/reducerForArrays.js';
+import { useStickyReducer } from './utils/stickyHooks.js';
+
+import DeckEditor from './DeckEditor/DeckEditor.js';
+import Card from '../Card/Card.js';
+
+//CTA buttons to actually select the deck
+const DeckSelectorCTA = (props) => {
 
   //flip once on page load to get rid of no back page visible bug
   useEffect(()=>{
@@ -13,20 +17,7 @@ function DeckSelector(props){
     });
   });
 
-  //sizing for the cards on the CTAs
-  let cardStyle = {
-    width:"200px",
-    height:"140px",
-    fontSize:"5px",
-  }
-
-  //select a deck and remember it as selected
-  let selectDeck = (type) => {
-    props.setDesigning(type);
-  }
-
-  //details for the CTA buttons to select a deck
-  let deckSelectorDetails = [
+  let deckSelectors = [
     {
       type:"member",
       description:"Create and play with custom Member Cards of your friends or family!",
@@ -43,22 +34,23 @@ function DeckSelector(props){
       type:"goal",
       description:"Create a custom deck of your own dreams and goals for being in SHAREHOME!",
     },
-  ];
-
-  //create the JSX from the above detail array
-  let deckSelectors = deckSelectorDetails.map((elem, index)=>{
+  ].map((elem, index)=>{
     return (
       <div
         key={elem.type + index}
         className="deckSelecter noselect"
         onClick={()=>{
-          selectDeck(elem.type);
+          props.selectDeck(elem.type);
         }}
       >
         <Card
           type={elem.type}
           showFront={true}
-          mainStyle={cardStyle}
+          mainStyle={{
+            width:"200px",
+            height:"140px",
+            fontSize:"5px",
+          }}
         />
         <p>{elem.description}</p>
       </div>
@@ -66,7 +58,7 @@ function DeckSelector(props){
   });
 
   return (
-    <div>
+    <>
       <div className="subcontentWrapper border-bottom">
         <h2 className="subtitle">Design your own cards</h2>
         <p>
@@ -78,7 +70,39 @@ function DeckSelector(props){
       <div className="deckSelecterWrapper">
         {deckSelectors}
       </div>
-    </div>
+    </>
+  )
+}
+
+//logic for handling deck selection
+const DeckSelector = (props) => {
+
+  //current deck using local storage if it exists
+  let currentDeck = {};
+  if (window.localStorage.currentDeckIndex && window.localStorage.decks){
+    currentDeck = JSON.parse(window.localStorage.decks)[JSON.parse(window.localStorage.currentDeckIndex)];
+  }
+
+  const [decks, dispatch] = useStickyReducer(reducerForArrays, [currentDeck], "decks");
+
+  //select a deck and remember it as selected
+  let selectDeck = (type) => {
+    props.setDesigning(true);     //we are now designing so hide the deck selector
+  }
+
+  //show deck editor if we're designing something, otherwise show deck selector
+  return (
+    <>
+      { props.designing
+        ? <DeckEditor
+            viewerMagnifyValue={3}
+            setDesigning={props.setDesigning}
+          />
+        : <DeckSelectorCTA
+            selectDeck={selectDeck}
+          />
+      }
+    </>
   )
 }
 

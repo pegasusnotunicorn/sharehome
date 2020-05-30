@@ -1,45 +1,33 @@
 import React, { useEffect } from 'react';
 
 //custom files
-import DeckEditor from './DeckEditor/DeckEditor.js';
 import DeckSelector from './DeckSelector.js';
 import { NavLink } from 'react-router-dom';
 import { useStickyState } from './utils/stickyHooks.js';
 import "../../css/Designer/designer.css"
 
-function Designer(props){
+const DesignerPage = (props) => {
+
+  //bool to keep track of if we're designing or not
   const [designing, setDesigning] = useStickyState(false, "designing");
 
   //using window.localStorage to check if anything was being designed
   useEffect(()=>{
     document.title = "SHAREHOME - Card Designer";
-
-    //hide footer for designer page
-    if (designing){
-      props.setShowFooter(false);
-    }
-    else {
-      props.setShowFooter(true);
-    }
+    props.setShowFooter(!designing);  //hide footer for designer page
   });
 
   return (
-    <div>
+    <>
       <div className="content">
         <NavLink to="/"><div className="title noselect"></div></NavLink>
-        {designing
-          ? <DeckEditor
-              viewerMagnifyValue={3}
-              designing={designing}
-              setDesigning={setDesigning}
-            />
-          : <DeckSelector
-              setDesigning={setDesigning}
-            />
-        }
+        <DeckSelector
+          designing={designing}
+          setDesigning={setDesigning}
+        />
       </div>
-    </div>
+    </>
   );
 }
 
-export default Designer;
+export default DesignerPage;

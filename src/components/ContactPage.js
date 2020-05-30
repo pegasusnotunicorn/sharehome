@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
-import { CornerLeftDown } from 'react-feather';
-import Card from '../Card/Card.js';
 import { NavLink } from 'react-router-dom';
-import '../../css/contact.css';
+import { CornerLeftDown } from 'react-feather';
 
-const Contact = (props) => {
+import Card from './Card/Card.js';
+
+import '../css/contact.css';
+
+const ContactPage = (props) => {
 
   useEffect(() => {
     props.setShowFooter(true);
@@ -46,4 +48,4 @@ const Contact = (props) => {
   );
 }
 
-export default Contact;
+export default ContactPage;

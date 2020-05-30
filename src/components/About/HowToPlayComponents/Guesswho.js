@@ -9,7 +9,7 @@ const Guesswho = (props) => {
   let cardStyle = props.cardStyle;
 
   return (
-    <div>
+    <>
       <div className="stepWrapper">
         <h2 className="subtitle">Step 1</h2>
         <p>Every player is given a random Member Card.</p>
@@ -68,7 +68,7 @@ const Guesswho = (props) => {
         </div>
       </div>
       <p>...repeat from <span className="link" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"})}}>Step 1</span> until bored.</p>
-    </div>
+    </>
   );
 }
 

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Download, PlusSquare, Trash2, ArrowLeft } from 'react-feather';
 
-import { DebugButtons } from '../utils/DebugTools.js';
+import NavbarTemplate from '../../Navbar/NavbarTemplate.js';
 import CardPreview from './CardPreview.js';
 import ConfirmModalButton from '../utils/ConfirmModalButton.js';
-import NavbarTemplate from '../../Navbar/NavbarTemplate.js';
+import { DebugButtons } from '../utils/DebugTools.js';
 
 import '../../../css/Designer/sidebar.css';
 
@@ -17,10 +17,10 @@ function scrollTo(index){
 }
 
 //sidebar for editing the deck
-function Sidebar(props){
+const Sidebar = (props) => {
   const cards = props.cards;
-  const currentIndex = props.currentIndex;
-  const currentCard = cards[currentIndex];
+  const currentCardIndex = props.currentCardIndex;
+  const currentCard = cards[currentCardIndex];
 
   const downloadAllCards = props.cardFunctions.downloadAllCards;
   const resetAllCards = props.cardFunctions.resetAllCards;
@@ -29,8 +29,8 @@ function Sidebar(props){
 
   //focus the current card in the preview pane
   useEffect(()=>{
-    scrollTo(currentIndex);
-  }, [currentIndex]);
+    scrollTo(currentCardIndex);
+  }, [currentCardIndex]);
 
   //renders a list of buttons to keep track of all cards in the deck (click to go to it)
   const listOfCards = cards.map((step, move) => {
@@ -39,11 +39,11 @@ function Sidebar(props){
       key: "cardPreview" + move,
       id : "cardPreview" + move,
       currentCard: step,
-      currentIndex: move,
+      currentCardIndex: move,
       handleClick: goToCard,
       //current card is this button!
-      ifCurrentCard : (move === currentIndex) ? " currentCard" : "",
-      number : (move === currentIndex) ? "EDITING" : move + 1,
+      ifCurrentCard : (move === currentCardIndex) ? " currentCard" : "",
+      number : (move === currentCardIndex) ? "EDITING" : move + 1,
     }
 
     return (<CardPreview {...cardPreviewProps}/>);
@@ -60,9 +60,9 @@ function Sidebar(props){
 
   //innards for the navbar template
   const innards = (
-    <div>
+    <>
       <h2 className="designerTitle" onClick={()=>{props.setDesigning(false)}}><ArrowLeft /><span>Back to decks</span></h2>
-      <p className="currentlyEditing">Currently editing {props.designing} cards</p>
+      <p className="currentlyEditing">Currently editing XXXXX cards</p>
       <div className="sidebarButtonWrapper sidebarContent">
         <ConfirmModalButton
           className="noselect button navbarButton sidebarButton"
@@ -81,14 +81,14 @@ function Sidebar(props){
         <button className="noselect button navbarButton sidebarButton" onClick={addNewCard}><PlusSquare />Add New Card</button>
         <DebugButtons
           currentCard={currentCard}
-          currentIndex={currentIndex}
+          currentCardIndex={currentCardIndex}
           cards={cards}
         />
       </div>
       <div className="cardPreviewWrapper sidebarContent">
         {listOfCards}
       </div>
-    </div>
+    </>
   );
 
   //use the navbar template but put sidebar innards inside

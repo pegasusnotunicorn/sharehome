@@ -1,15 +1,17 @@
 import React from 'react';
-import '../../../css/Designer/cardPreview.css';
-import DynamicStylesCard from '../../../css/Designer/DynamicStylesCard.js';
-import * as CardConstants from '../utils/CardConstants.js';
 import { Plus } from 'react-feather';
 
-function cardPreview(props){
+import * as cardConstants from '../utils/cardConstants.js';
+import dynamicStylesCard from '../../../css/Designer/dynamicStylesCard.js';
+
+import '../../../css/Designer/cardPreview.css';
+
+const CardPreview = (props) => {
   let currentCard = props.currentCard;
-  let cardPreviewDynamicStyles = DynamicStylesCard(CardConstants.previewMagnifyValue, currentCard);
+  let cardPreviewDynamicStyles = dynamicStylesCard(cardConstants.previewMagnifyValue, currentCard);
 
   const handleClick = () => {
-    props.handleClick(props.currentIndex);
+    props.handleClick(props.currentCardIndex);
   }
 
   //plus button to add a new card
@@ -53,4 +55,4 @@ function cardPreview(props){
   }
 }
 
-export default cardPreview;
+export default CardPreview;

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 
-function Error(props){
+const ErrorPage = (props) => {
 
   useEffect(() => {
     props.setShowFooter(true);
@@ -19,4 +19,4 @@ function Error(props){
   )
 }
 
-export default Error;
+export default ErrorPage;

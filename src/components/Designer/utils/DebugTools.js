@@ -1,12 +1,13 @@
 import React from 'react';
 import { PDFViewer } from '@react-pdf/renderer';
+
 import PDFDocument from '../PDFDocument/PDFDocument.js';
-import DynamicStylesCard from '../../../css/Designer/DynamicStylesCard.js';
+import dynamicStylesCard from '../../../css/Designer/dynamicStylesCard.js';
 
 let debugMode = false;
 
 //buttons to console log various debug variables
-export function DebugButtons(props){
+export const DebugButtons = (props) => {
   if (!debugMode){
     return "";
   }
@@ -23,8 +24,8 @@ export function DebugButtons(props){
 }
 
 //debug how PDF looks faster with PDFViewer built into browser, dont have to download file each time
-export function DebugPDFViewer(props){
-  let cardViewerDynamicStyles = DynamicStylesCard(props.viewerMagnifyValue);
+export const DebugPDFViewer = (props) => {
+  let cardViewerDynamicStyles = dynamicStylesCard(props.viewerMagnifyValue);
 
   if (!debugMode){
     return "";

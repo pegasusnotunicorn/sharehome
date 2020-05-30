@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Smile, Gift, Printer } from 'react-feather';
+
 import '../css/home.css';
 import '../css/colors.css';
 
-const Home = (props) => {
+const HomePage = (props) => {
 
   useEffect(() => {
     props.setShowFooter(true);
@@ -40,4 +41,4 @@ const Home = (props) => {
   );
 }
 
-export default Home;
+export default HomePage;

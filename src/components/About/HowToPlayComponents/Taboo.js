@@ -9,7 +9,7 @@ const Taboo = (props) => {
   let cardStyle = props.cardStyle;
 
   return (
-    <div>
+    <>
       <div className="stepWrapper">
         <h2 className="subtitle">Step 1</h2>
         <p>Split into teams and pick a representative for your team.</p>
@@ -94,7 +94,7 @@ const Taboo = (props) => {
       </div>
 
       <p>...repeat from <span className="link" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"})}}>Step 1</span> until bored.</p>
-    </div>
+    </>
   );
 }
 

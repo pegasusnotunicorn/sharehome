@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+
 import GameModeDetails from './HowToPlayComponents/GameModeDetails.js';
 import GameModeIcons from './HowToPlayComponents/GameModeIcons.js';
 import Roleplay from './HowToPlayComponents/Roleplay.js';
 import Charades from './HowToPlayComponents/Charades.js';
 import Guesswho from './HowToPlayComponents/Guesswho.js';
 import Taboo from './HowToPlayComponents/Taboo.js';
+
 import '../../css/about.css';
 
-const About = (props) => {
+const AboutPage = (props) => {
 
   let location = useLocation();
 
@@ -140,4 +142,4 @@ const About = (props) => {
   );
 }
 
-export default About;
+export default AboutPage;

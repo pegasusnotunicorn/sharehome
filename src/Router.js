@@ -3,11 +3,11 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import NavbarMain from './components/Navbar/NavbarMain.js';
 import Footer from './components/Footer.js';
-import Home from './components/Home.js';
-import About from './components/About/About.js';
-import Contact from './components/Contact/Contact.js';
-import Designer from './components/Designer/Designer.js';
-import Error from './components/Error.js';
+import HomePage from './components/HomePage.js';
+import AboutPage from './components/About/AboutPage.js';
+import ContactPage from './components/ContactPage.js';
+import DesignerPage from './components/Designer/DesignerPage.js';
+import ErrorPage from './components/ErrorPage.js';
 
 const Router = (props) => {
 
@@ -19,19 +19,19 @@ const Router = (props) => {
       <Switch>
         <Route path="/" render={() => {
           //pass the state setter so we can hide the footer when needed
-          return <Home setShowFooter={setShowFooter}/>
+          return <HomePage setShowFooter={setShowFooter}/>
         }} exact/>
         <Route path="/about" render={() => {
-          return <About setShowFooter={setShowFooter}/>
+          return <AboutPage setShowFooter={setShowFooter}/>
         }} />
         <Route path="/contact" render={() => {
-          return <Contact setShowFooter={setShowFooter}/>
+          return <ContactPage setShowFooter={setShowFooter}/>
         }} exact/>
         <Route path="/designer" render={() => {
-          return <Designer setShowFooter={setShowFooter}/>
+          return <DesignerPage setShowFooter={setShowFooter}/>
         }} exact/>
         <Route render={() => {
-          return <Error setShowFooter={setShowFooter}/>
+          return <ErrorPage setShowFooter={setShowFooter}/>
         }} exact/>
         <Redirect to="/" />
       </Switch>

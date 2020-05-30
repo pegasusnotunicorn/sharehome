@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 
 //custom files
-import { getImageObject, PDFDimensions } from '../utils/CardConstants.js';
+import { getImageObject, pdfDimensions } from '../utils/cardConstants.js';
+
 import CardViewer from './CardViewer.js';
 import CardButtons from './CardButtons.js';
 import { DebugPDFViewer } from '../utils/DebugTools.js';
+
 import '../../../css/Designer/cardEditor.css';
 
 //get the X and Y coordinates of mouse inside the bounding rect divided by magnifyValue
@@ -18,8 +20,8 @@ function getMouseXY(e, viewerMagnifyValue){
 
 //wrapper for card editor section (including input + PDF)
 //needs to get via props, the currentCard and setter for changing currentCard properties
-function CardEditor(props){
-  const currentCard = props.currentCard;
+const CardEditor = (props) => {
+  const currentCard = props.cards[props.currentCardIndex];
 
   const updateCurrentCard = props.cardFunctions.updateCurrentCard;
   const removeCurrentCard = props.cardFunctions.removeCurrentCard;
@@ -90,8 +92,8 @@ function CardEditor(props){
       //dont let the image move outside of the bounds of the viewer
       let newX = currentCard.image.x - deltaX;
       let newY = currentCard.image.y - deltaY;
-      let rightBound = -(currentCard.image.width - PDFDimensions.width);
-      let botBound = -(currentCard.image.height - PDFDimensions.height);
+      let rightBound = -(currentCard.image.width - pdfDimensions.width);
+      let botBound = -(currentCard.image.height - pdfDimensions.height);
 
       newX = (newX > 0) ? 0 : newX;     //prevent dragging to the right past left bound
       newX = (newX < rightBound) ? rightBound : newX; //prevent dragging to the left past right bound
@@ -109,7 +111,7 @@ function CardEditor(props){
   }
 
   return (
-    <div>
+    <>
       <CardViewer
         currentCard={currentCard}
         textNoPointerEvent={(startingCoords) ? "nopointerevent" : ""}   //so we can move image while over text, but let text be clickable
@@ -129,7 +131,7 @@ function CardEditor(props){
         startingCoords={startingCoords}
         cards={props.cards}
       />
-    </div>
+    </>
   );
 }
 

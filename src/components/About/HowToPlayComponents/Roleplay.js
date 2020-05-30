@@ -15,7 +15,7 @@ const Roleplay = (props) => {
   }
 
   return (
-    <div>
+    <>
       <h2 className="subtitle">Game {(!showRules) ? "Setup" : "Rules"}</h2>
       <div className="showRulesButton noselect" onClick={toggleSteps}>{(showRules) ? "Show me the game setup again" : "Show me the game rules instead"}</div>
 
@@ -354,7 +354,7 @@ const Roleplay = (props) => {
         <p>...repeat from <span className="link" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"})}}>Step 1</span> until bored.</p>
 
       </div>
-    </div>
+    </>
   );
 }
 

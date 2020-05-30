@@ -1,11 +1,13 @@
 import React from 'react';
-import DynamicStylesCard from '../../../css/Designer/DynamicStylesCard.js';
 import AutosizeInput from 'react-input-autosize';
+
+import dynamicStylesCard from '../../../css/Designer/dynamicStylesCard.js';
+
 import '../../../css/Designer/cardViewer.css';
 
-function CardViewer(props){
+const CardViewer = (props) => {
   let currentCard = props.currentCard;
-  let cardViewerDynamicStyles = DynamicStylesCard(props.viewerMagnifyValue, currentCard);
+  let cardViewerDynamicStyles = dynamicStylesCard(props.viewerMagnifyValue, currentCard);
 
   return (
     <div

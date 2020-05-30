@@ -6,7 +6,7 @@ function randomIntFromInterval(min, max) { // min and max included
 }
 
 //create an array of random cards given type and total amount to make
-function createRandomCards(type, totalSame, totalAll){
+const RandomCardsForFooter = (type, totalSame, totalAll) => {
   return [...Array(totalSame)].map((curr, index)=>{
 
     //random stuff to simulate throwing cards from below the screen
@@ -59,8 +59,8 @@ const Footer = (props) => {
   let totalEventGoalCards = Math.ceil(window.innerWidth / 500);
   let totalCards = totalMemberCards + totalEventGoalCards;
 
-  let memberCards = createRandomCards("person", totalMemberCards, totalCards);
-  let CardBack = createRandomCards("eventgoal", totalEventGoalCards, totalCards);
+  let memberCards = RandomCardsForFooter("person", totalMemberCards, totalCards);
+  let CardBack = RandomCardsForFooter("eventgoal", totalEventGoalCards, totalCards);
 
   //animate bottom + rotation to simulate "throwing" the cards from bottom
   useEffect(()=>{

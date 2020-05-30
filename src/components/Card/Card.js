@@ -5,6 +5,7 @@ import CardBack from "./CardBack.js";
 import "../../css/cards.css"
 
 //a flip-able card based on the actual cards
+//props are - showFront, disableFlip, id, type, mainStyle
 export const Card = (props) => {
 
   //turn off random flip

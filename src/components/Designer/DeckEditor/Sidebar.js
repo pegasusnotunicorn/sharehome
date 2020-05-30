@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
-import { Download, PlusSquare, Trash2 } from 'react-feather';
+import { Download, PlusSquare, Trash2, ArrowLeft } from 'react-feather';
+
 import { DebugButtons } from '../utils/DebugTools.js';
 import CardPreview from './CardPreview.js';
 import ConfirmModalButton from '../utils/ConfirmModalButton.js';
 import NavbarTemplate from '../../Navbar/NavbarTemplate.js';
+
 import '../../../css/Designer/sidebar.css';
 
 //scroll to a cardPreview
@@ -59,7 +61,8 @@ function Sidebar(props){
   //innards for the navbar template
   const innards = (
     <div>
-      <h2 className="designerTitle">Card Designer</h2>
+      <h2 className="designerTitle" onClick={()=>{props.setDesigning(false)}}><ArrowLeft /><span>Back to decks</span></h2>
+      <p className="currentlyEditing">Currently editing {props.designing} cards</p>
       <div className="sidebarButtonWrapper sidebarContent">
         <ConfirmModalButton
           className="noselect button navbarButton sidebarButton"

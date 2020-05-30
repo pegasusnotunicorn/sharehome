@@ -4,6 +4,23 @@
 
 .designerTitle{
   margin:20px;
+  cursor:pointer;
+}
+
+.designerTitle * {
+  vertical-align:text-bottom;
+}
+
+.designerTitle svg{
+  padding-right:10px;
+}
+
+.designerTitle span{
+  text-decoration:underline;
+}
+
+.currentlyEditing{
+  margin:20px;
 }
 
 .sidebarButtonWrapper{
@@ -16,7 +33,7 @@
 .cardPreviewWrapper{
   overflow-y:scroll;
   overflow-x:hidden;
-  height:calc(100vh - 280px);
+  height:calc(100vh - 320px);
   /* Hide scrollbar for IE and Edge */
   -ms-overflow-style: none;
 }

@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import NavbarMain from './components/Navbar/NavbarMain.js';
 import Footer from './components/Footer.js';
-import Home from './components/Home/Home.js';
+import Home from './components/Home.js';
 import About from './components/About/About.js';
 import Contact from './components/Contact/Contact.js';
 import Designer from './components/Designer/Designer.js';

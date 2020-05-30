@@ -94,9 +94,9 @@ const About = (props) => {
     }
     //showing all the game modes
     else {
-      let gameModes = gameModeDetails.map((current)=>{
+      let gameModes = gameModeDetails.map((current, index)=>{
         return (
-          <div className="howToPlayWrapper">
+          <div key={"howToPlay" + index} className="howToPlayWrapper">
             <h2 className="subtitle"><NavLink to={"/about/" + current.link}>{current.name}</NavLink></h2>
             <GameModeIcons
               playerCount={current.playerCount}

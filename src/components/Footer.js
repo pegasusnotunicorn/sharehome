@@ -13,13 +13,17 @@ function createRandomCards(type, totalSame, totalAll){
     let randomLeft = Math.round((Math.random() * 10 - 5) + (index)*(100/totalSame));
     let randomBottom = randomIntFromInterval(-20, -7);
     let randomZ = Math.round(Math.random() * totalAll);
-    let randomDegree = randomIntFromInterval(-80, 80);
+    let randomDegree = randomIntFromInterval(-180, 180);
     let randomTransition = Math.round(Math.random() * 75) / 100;
 
-    let tempType = (type === "member") ? "member" : (Math.random() > 0.5) ? "goal" : "event";
+    //half of all person cards are members/commentators and same for event/goal cards
+    let tempType = (type === "person")
+      ? ((Math.random() > 0.5) ? "member" : "commentator")
+      : ((Math.random() > 0.5) ? "goal" : "event");
+
     let props = {
-      key:tempType + index,
       id:type + index,
+      key:tempType + index,
       type:tempType,
       mainStyle:{
         //stuff needed size the card
@@ -41,7 +45,7 @@ function createRandomCards(type, totalSame, totalAll){
     }
 
     //dont flip event / goal cards
-    if (tempType !== "member"){
+    if (type !== "person"){
       props.showFront = false;
     }
 
@@ -52,18 +56,20 @@ function createRandomCards(type, totalSame, totalAll){
 const Footer = (props) => {
 
   let totalMemberCards = Math.ceil(window.innerWidth / 200);
-  let totalCardBacks = Math.ceil(window.innerWidth / 500);
-  let totalCards = totalMemberCards + totalCardBacks;
+  let totalEventGoalCards = Math.ceil(window.innerWidth / 500);
+  let totalCards = totalMemberCards + totalEventGoalCards;
 
-  let memberCards = createRandomCards("member", totalMemberCards, totalCards);
-  let CardBack = createRandomCards("eventgoal", totalCardBacks, totalCards);
+  let memberCards = createRandomCards("person", totalMemberCards, totalCards);
+  let CardBack = createRandomCards("eventgoal", totalEventGoalCards, totalCards);
 
   //animate bottom + rotation to simulate "throwing" the cards from bottom
   useEffect(()=>{
     for (let i = 0; i < memberCards.length; i++){
-      document.getElementById("member" + i).style.transition = memberCards[i].props.transition;
-      document.getElementById("member" + i).style.bottom = memberCards[i].props.randomBottom;
-      document.getElementById("member" + i).style.transform = memberCards[i].props.randomDegree;
+      let memberCardDom = document.getElementById("person" + i);
+      memberCardDom.classList.toggle("is-flipped");   //toggle a flip so we can avoid the first flip no show problem
+      memberCardDom.style.transition = memberCards[i].props.transition;
+      memberCardDom.style.bottom = memberCards[i].props.randomBottom;
+      memberCardDom.style.transform = memberCards[i].props.randomDegree;
     }
     for (let i = 0; i < CardBack.length; i++){
       document.getElementById("eventgoal" + i).style.transition = CardBack[i].props.transition;

@@ -144,14 +144,16 @@ function DeckEditor(props){
         }}
       />
       <Sidebar
-        cards={cards}
-        currentIndex={currentIndex}
+        designing={props.designing}     //what type of deck am i currently editing
+        setDesigning={props.setDesigning}  //function to go back and select a new deck
+        cards={cards}                   //the cards i am editing
+        currentIndex={currentIndex}     //the current index of the current card i am editing
         cardFunctions={{
           downloadAllCards:downloadAllCards,
           resetAllCards:resetAllCards,
           addNewCard:addNewCard,
           goToCard:goToCard,
-        }}
+        }}                              //various functions to edit cards / decks
       />
     </div>
   );

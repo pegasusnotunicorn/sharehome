@@ -58,6 +58,11 @@
   transition:all 0.5s;
 }
 
+.callToAction.horizontal{
+  width:250px;
+  height:170px;
+}
+
 .callToAction:active{
   border-color:white;
 }

@@ -1,8 +1,8 @@
 //reducer to change state in react
-//to add a new card at end of array, use dispatch({ type: 'add', item: movie })
+//to add a new card at end of array, use dispatch({ type: 'add', item: {ITEM} })
 //to remove an existing card at index, use dispatch({ type: 'remove', index: INDEX })
-//to reset all and replace with empty array except default item, use dispatch({ type: 'reset', item: DEFAULT VALUE })
-//to update an existing card and replace with new item, use dispatch({ type: 'update', index: INDEX })
+//to reset all and replace with empty array except default item, use dispatch({ type: 'reset', item: {DEFAULT ITEM} })
+//to update an existing card and replace with new item, use dispatch({ type: 'update', item: {ITEM}, index: INDEX })
 export const reducerForArrays = (state, action) => {
   switch (action.type) {
     case 'add':

@@ -5,7 +5,6 @@ import { getImageObject, pdfDimensions } from '../utils/cardConstants.js';
 
 import CardViewer from './CardViewer.js';
 import CardButtons from './CardButtons.js';
-import { DebugPDFViewer } from '../utils/DebugTools.js';
 
 import '../../../css/Designer/cardEditor.css';
 
@@ -18,10 +17,11 @@ function getMouseXY(e, viewerMagnifyValue){
   }
 }
 
-//wrapper for card editor section (including input + PDF)
+//wrapper for card editor section
 //needs to get via props, the currentCard and setter for changing currentCard properties
 const CardEditor = (props) => {
-  const currentCard = props.cards[props.currentCardIndex];
+  const currentDeck = props.currentDeck;
+  const currentCard = currentDeck.cards[currentDeck.currentCardIndex];
 
   const updateCurrentCard = props.cardFunctions.updateCurrentCard;
   const removeCurrentCard = props.cardFunctions.removeCurrentCard;
@@ -113,6 +113,7 @@ const CardEditor = (props) => {
   return (
     <>
       <CardViewer
+        type={currentDeck.type}
         currentCard={currentCard}
         textNoPointerEvent={(startingCoords) ? "nopointerevent" : ""}   //so we can move image while over text, but let text be clickable
         handleMouseDown={handleMouseDown}
@@ -122,14 +123,10 @@ const CardEditor = (props) => {
         viewerMagnifyValue={props.viewerMagnifyValue}
       />
       <CardButtons
+        type={currentDeck.type}
         handleInputChange={handleInputChange}
         removeCurrentCard={removeCurrentCard}
         duplicateCurrentCard={duplicateCurrentCard}
-      />
-      <DebugPDFViewer
-        viewerMagnifyValue={props.viewerMagnifyValue}
-        startingCoords={startingCoords}
-        cards={props.cards}
       />
     </>
   );

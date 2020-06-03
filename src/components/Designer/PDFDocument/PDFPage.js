@@ -3,12 +3,13 @@ import { Page, View, Text, Canvas, Image } from '@react-pdf/renderer';
 
 //styles for the PDF document/file
 import * as cardConstants from '../utils/cardConstants.js';
-import dynamicStylesPDF from '../../../css/Designer/dynamicStylesPDF.js';
+import { cardBackConstants } from '../../../components/Card/CardBack.js';
+import { dynamicStylesPDFPerson, dynamicStylesPDFEventGoal } from '../../../css/Designer/dynamicStylesPDF.js';
 
 //function to paint the shadow background canvas gradient
 function paintShadowBackground(painter, availableWidth, availableHeight){
   let grad = painter.linearGradient(0, 0, 0, availableHeight);
-  grad.stop(0, "white", 0);
+  grad.stop(0, "black", 0);
   grad.stop(1, "black", .75);
 
   painter.rect(0, 0, availableWidth, availableHeight);
@@ -16,38 +17,50 @@ function paintShadowBackground(painter, availableWidth, availableHeight){
 }
 
 //create a PDF page (card) and use currentCard to change the inside text
-const PDFFile = (props) => {
+const PDFPage = (props) => {
+  let type = props.type;
+
+  if (type === "member" || type === "commentator"){
+    return <PDFPersonPage {...props} />
+  }
+  else {
+    return <PDFEventGoalPage {...props} />
+  }
+}
+
+//PDF page of a person card (member / commentator)
+const PDFPersonPage = (props) => {
   const currentCard = props.currentCard;
   return (
     <Page
-      style={dynamicStylesPDF.page}
+      style={dynamicStylesPDFPerson.page}
       size={cardConstants.pdfDimensions}
     >
-      <View style={dynamicStylesPDF.view}>
+      <View style={dynamicStylesPDFPerson.view}>
 
         <Image
           src={currentCard.image.url}
           allowDangerousPaths={true}
           style={{
-            ...dynamicStylesPDF.image,
+            ...dynamicStylesPDFPerson.image,
             objectPositionX: currentCard.image.x,
             objectPositionY: currentCard.image.y,
           }}
         />
 
         <Canvas
-          style={dynamicStylesPDF.canvas}
+          style={dynamicStylesPDFPerson.canvas}
           paint={paintShadowBackground}
         ></Canvas>
 
-        <Text style={dynamicStylesPDF.textMain}>
+        <Text style={dynamicStylesPDFPerson.textMain}>
           {currentCard.name} ({currentCard.age})
         </Text>
 
-        <Text style={dynamicStylesPDF.textSub}>
+        <Text style={dynamicStylesPDFPerson.textSub}>
           {currentCard.job}
           &nbsp;&nbsp;
-          <Text style={dynamicStylesPDF.japaneseName}>
+          <Text style={dynamicStylesPDFPerson.japaneseName}>
             {currentCard.japaneseName}
           </Text>
         </Text>
@@ -57,4 +70,31 @@ const PDFFile = (props) => {
   );
 }
 
-export default PDFFile;
+//PDF page of a event / goal card
+const PDFEventGoalPage = (props) => {
+  const currentCard = props.currentCard;
+  const cardType = props.type;
+
+  return (
+    <Page
+      style={dynamicStylesPDFEventGoal.page}
+      size={cardConstants.pdfDimensions}
+    >
+      <View style={dynamicStylesPDFEventGoal.view}>
+
+        <Canvas style={{
+            ...dynamicStylesPDFEventGoal.canvas,
+            backgroundColor:cardBackConstants[cardType].background,
+          }}>
+        </Canvas>
+
+        <Text wrap={true} style={dynamicStylesPDFEventGoal.textMain}>
+          {currentCard.description}
+        </Text>
+
+      </View>
+    </Page>
+  );
+}
+
+export default PDFPage;

@@ -14,10 +14,10 @@ export const DebugButtons = (props) => {
   else {
     return (
       <div className="devtools sidebarContent">
-      <div>Debug Tools</div>
-      <button className="sideBarButton" onClick={()=>{console.log(props.currentCard)}}>Log current card</button>
-      <button className="sideBarButton" onClick={()=>{console.log(props.currentIndex)}}>Log current index</button>
-      <button className="sideBarButton" onClick={()=>{console.log(props.cards)}}>Log cards</button>
+        <div>Debug Tools</div>
+        <button className="button sideBarButton" onClick={()=>{console.log(props.currentCard)}}>Log current card</button>
+        <button className="button sideBarButton" onClick={()=>{console.log(props.currentIndex)}}>Log current index</button>
+        <button className="button sideBarButton" onClick={()=>{console.log(props.cards)}}>Log cards</button>
       </div>
     )
   }
@@ -31,7 +31,7 @@ export const DebugPDFViewer = (props) => {
     return "";
   }
   else {
-    let embeddPDFStyle = {
+    let embededPDFStyle = {
       width: cardViewerDynamicStyles.style.width,
       height: cardViewerDynamicStyles.style.height,
       outline: 0,
@@ -43,13 +43,16 @@ export const DebugPDFViewer = (props) => {
     //only display when the mouses is up
     if (!props.startingCoords){
       return (
-        <PDFViewer style={embeddPDFStyle}>
-          <PDFDocument cards={props.cards}/>
+        <PDFViewer style={embededPDFStyle}>
+          <PDFDocument
+            cards={props.cards}
+            type={props.type}
+          />
         </PDFViewer>
       )
     }
     else {
-      return <div style={embeddPDFStyle}></div>
+      return <div style={embededPDFStyle}></div>
     }
   }
 }

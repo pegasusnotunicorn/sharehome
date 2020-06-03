@@ -1,6 +1,31 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { AlertTriangle, CheckCircle, XCircle } from 'react-feather';
+
 import '../../../css/Designer/modal.css';
+
+const Modal = (props) => {
+  return createPortal(
+    (
+      <div ref={props.modalRef} className="modal" tabIndex="0" onKeyDown={props.handleKeyPress} onClick={props.cancel}>
+        <div onClick={(e)=>{e.stopPropagation()}} className="modalTextWrapper blueBackground">
+          <AlertTriangle className="is-48 yellowStroke" />
+          <h3>{props.modalText}</h3>
+          <div className="modalButtonWrapper">
+            <button className="modalButton button" onClick={props.confirm}>
+              <CheckCircle className="greenStroke" />Yes
+            </button>
+            <button className="modalButton button" onClick={props.cancel}>
+              <XCircle className="redStroke" />
+              No
+            </button>
+          </div>
+        </div>
+      </div>
+    ),
+    document.getElementById("modal")
+  )
+}
 
 //shows a modal to confirm the choice
 export const ConfirmModalButton = (props) => {
@@ -9,22 +34,30 @@ export const ConfirmModalButton = (props) => {
 
   //cancel function
   const cancel = (e) => {
+    if (e) {
+      e.stopPropagation();
+    }
     setShowModal(false);
   }
 
   //confirmation function
   const confirm = (e) => {
+    if (e) {
+      e.stopPropagation();
+    }
     props.onClick();
     setShowModal(false);
   }
 
   //keyboard presses for modal
-  const handleKeyPress = (event) => {
-    console.log("EEE")
-    event.preventDefault();
+  const handleKeyPress = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
 
     if (showModal){
-      switch( event.keyCode ) {
+      switch( e.keyCode ) {
         case 27:    //escape
           cancel();
           break;
@@ -48,27 +81,22 @@ export const ConfirmModalButton = (props) => {
     <span>
       <button
         className={props.className}
-        onClick={()=>{setShowModal(true)}}
+        onClick={(e)=>{
+          e.stopPropagation();
+          setShowModal(true);
+        }}
       >
         {props.icon}{props.text}
       </button>
 
       {showModal &&
-        <div ref={modalRef} className="modal" tabIndex="0" onKeyDown={handleKeyPress} onClick={cancel}>
-          <div onClick={(e)=>{e.stopPropagation()}}className="modalTextWrapper blueBackground">
-            <AlertTriangle className="is-48 yellowStroke" />
-            <h3>{props.modalText}</h3>
-            <div className="modalButtonWrapper">
-              <button className="modalButton button" onClick={confirm}>
-                <CheckCircle className="greenStroke" />Yes
-              </button>
-              <button className="modalButton button" onClick={cancel}>
-                <XCircle className="redStroke" />
-                No
-              </button>
-            </div>
-          </div>
-        </div>
+        <Modal
+          modalRef={modalRef}
+          modalText={props.modalText}
+          handleKeyPress={handleKeyPress}
+          confirm={confirm}
+          cancel={cancel}
+        />
       }
 
     </span>

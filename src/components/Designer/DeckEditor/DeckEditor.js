@@ -1,8 +1,6 @@
 import React from 'react';
 
 import * as cardConstants from '../utils/cardConstants.js';
-import { reducerForArrays } from '../utils/reducerForArrays.js';
-import { useStickyState, useStickyReducer } from '../utils/stickyHooks.js';
 import { downloadPDFFile } from '../PDFDocument/downloadPDFFile.js';
 
 import PDFDocument from '../PDFDocument/PDFDocument.js';
@@ -11,17 +9,24 @@ import CardEditor from '../CardEditor/CardEditor.js';
 
 //wrapper for card editor section (including input + PDF)
 const DeckEditor = (props) => {
+  const currentDeck = props.currentDeck;
+  const updateCurrentDeck = props.updateCurrentDeck;
+  const setCurrentDeckIndex = props.setCurrentDeckIndex;
 
-  //store in local window storage
-  const [cards, dispatch] = useStickyReducer(reducerForArrays, [cardConstants.getDefaultCardObject()], "cards");
-  const [currentCardIndex, setcurrentCardIndex] = useStickyState(0, "currentCardIndex");
+  const cards = currentDeck.cards;
+  const currentCardIndex = currentDeck.currentCardIndex;
+
+  const viewerMagnifyValue = props.viewerMagnifyValue;
 
   //updates the current card and updates it in the cards array
   const updateCurrentCard = (card) => {
-    dispatch({
-      type: 'update',
-      index: currentCardIndex,
-      item: card
+    let newCards = [...cards];
+    newCards[currentCardIndex] = card;
+
+    updateCurrentDeck({
+      ...currentDeck,
+      currentCardIndex:currentCardIndex,
+      cards:newCards,
     });
 
     //to implement an undo, i have access to what the card WAS here
@@ -30,26 +35,38 @@ const DeckEditor = (props) => {
 
   //download the PDF file
   const downloadAllCards = () => {
+    let fileName = currentDeck.name;
     downloadPDFFile(<PDFDocument
       cards={cards}
-    />, "SHAREHOME_Deck.pdf");
+      type={currentDeck.type}
+    />, fileName);
   }
 
   //deletes all cards and resets index to 0
   const resetAllCards = () => {
-    setcurrentCardIndex(0);
-    dispatch({
-      type: 'reset',
-      item: cardConstants.getDefaultCardObject()
+    let newCard = (["member", "commentator"].indexOf(currentDeck.type) !== -1)
+                ? cardConstants.getDefaultPersonCard(cards[cards.length - 1].name)
+                : cardConstants.getDefaultEventGoalCard(currentDeck.type);
+
+    updateCurrentDeck({
+      ...currentDeck,
+      currentCardIndex:0,
+      cards:[newCard],
     });
   }
 
   //adds a new card and sets the index to last
   const addNewCard = () => {
-    setcurrentCardIndex(cards.length);
-    dispatch({
-      type: 'add',
-      item: cardConstants.getDefaultCardObject(cards[cards.length - 1].name)
+    let newCards = [...cards];
+    let newCard = (["member", "commentator"].indexOf(currentDeck.type) !== -1)
+                ? cardConstants.getDefaultPersonCard(cards[cards.length - 1].name)
+                : cardConstants.getDefaultEventGoalCard(currentDeck.type, cards[cards.length - 1].exampleID);
+    newCards.push(newCard);
+
+    updateCurrentDeck({
+      ...currentDeck,
+      currentCardIndex:newCards.length - 1,
+      cards:newCards,
     });
   }
 
@@ -62,34 +79,42 @@ const DeckEditor = (props) => {
     }
     else {
       let newCurrentCardIndex = (currentCardIndex - 1 <= 0 ) ? 0 : currentCardIndex - 1;
-      setcurrentCardIndex(newCurrentCardIndex);
-      dispatch({
-        type: 'remove',
-        index: currentCardIndex
+      let newCards = [...cards];
+      newCards.splice(currentCardIndex, 1);
+
+      updateCurrentDeck({
+        ...currentDeck,
+        currentCardIndex:newCurrentCardIndex,
+        cards:newCards,
       });
     }
   }
 
   //duplicates the current card and sets the index to it
   const duplicateCurrentCard = () => {
-    setcurrentCardIndex(cards.length);
-    dispatch({
-      type: 'add',
-      item: {...cards[currentCardIndex]}
+    let newCards = [...cards];
+    newCards.push(cards[currentCardIndex]);
+
+    updateCurrentDeck({
+      ...currentDeck,
+      currentCardIndex:newCards.length - 1,
+      cards:newCards,
     });
   }
 
   //renders a specific card
   const goToCard = (cardIndex) => {
-    setcurrentCardIndex(cardIndex);
+    updateCurrentDeck({
+      ...currentDeck,
+      currentCardIndex:cardIndex,
+    });
   }
 
   return (
     <>
       <CardEditor
-        cards={cards}
-        currentCardIndex={currentCardIndex}
-        viewerMagnifyValue={props.viewerMagnifyValue}
+        currentDeck={currentDeck}
+        viewerMagnifyValue={viewerMagnifyValue}
         cardFunctions={{
           updateCurrentCard:updateCurrentCard,
           removeCurrentCard:removeCurrentCard,
@@ -97,11 +122,12 @@ const DeckEditor = (props) => {
         }}
       />
       <Sidebar
-        designing={props.designing}             //what type of deck am i currently editing
-        setDesigning={props.setDesigning}       //function to go back and select a new deck
-        cards={cards}                           //the cards i am editing
-        currentCardIndex={currentCardIndex}     //the current index of the current card i am editing
-        cardFunctions={{                        //various functions to edit cards / decks
+        currentDeck={currentDeck}
+        deckFunctions={{
+          updateCurrentDeck:updateCurrentDeck,
+          setCurrentDeckIndex:setCurrentDeckIndex,
+        }}
+        cardFunctions={{
           downloadAllCards:downloadAllCards,
           resetAllCards:resetAllCards,
           addNewCard:addNewCard,

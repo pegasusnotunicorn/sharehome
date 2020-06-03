@@ -17,6 +17,9 @@
 .blueBackground {
   background-color:#2A188B;
 }
+.transparentBackground {
+  background-color:transparent;
+}
 .greenBackground {
   background-color:#03C04E;
 }

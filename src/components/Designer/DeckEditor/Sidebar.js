@@ -4,24 +4,20 @@ import { Download, PlusSquare, Trash2, ArrowLeft } from 'react-feather';
 import NavbarTemplate from '../../Navbar/NavbarTemplate.js';
 import CardPreview from './CardPreview.js';
 import ConfirmModalButton from '../utils/ConfirmModalButton.js';
-import { DebugButtons } from '../utils/DebugTools.js';
 
 import '../../../css/Designer/sidebar.css';
 
-//scroll to a cardPreview
-function scrollTo(index){
-  let currentDOMPreview = document.getElementById("cardPreview"+index);
-  if (!!currentDOMPreview){
-    document.getElementById("cardPreview"+index).scrollIntoView({behavior:"smooth"});
-  }
-}
-
 //sidebar for editing the deck
 const Sidebar = (props) => {
-  const cards = props.cards;
-  const currentCardIndex = props.currentCardIndex;
-  const currentCard = cards[currentCardIndex];
+  const currentDeck = props.currentDeck;
+  const cards = currentDeck.cards;
+  const currentCardIndex = currentDeck.currentCardIndex;
 
+  //functions that update the deck
+  const updateCurrentDeck = props.deckFunctions.updateCurrentDeck;
+  const setCurrentDeckIndex = props.deckFunctions.setCurrentDeckIndex;
+
+  //functions that update cards inside the deck
   const downloadAllCards = props.cardFunctions.downloadAllCards;
   const resetAllCards = props.cardFunctions.resetAllCards;
   const addNewCard = props.cardFunctions.addNewCard;
@@ -37,13 +33,14 @@ const Sidebar = (props) => {
 
     let cardPreviewProps = {
       key: "cardPreview" + move,
-      id : "cardPreview" + move,
+      id: "cardPreview" + move,
+      type: currentDeck.type,
       currentCard: step,
       currentCardIndex: move,
       handleClick: goToCard,
       //current card is this button!
-      ifCurrentCard : (move === currentCardIndex) ? " currentCard" : "",
-      number : (move === currentCardIndex) ? "EDITING" : move + 1,
+      ifCurrentCard: (move === currentCardIndex) ? " currentCard" : "",
+      number: (move === currentCardIndex) ? "EDITING" : move + 1,
     }
 
     return (<CardPreview {...cardPreviewProps}/>);
@@ -61,8 +58,25 @@ const Sidebar = (props) => {
   //innards for the navbar template
   const innards = (
     <>
-      <h2 className="designerTitle" onClick={()=>{props.setDesigning(false)}}><ArrowLeft /><span>Back to decks</span></h2>
-      <p className="currentlyEditing">Currently editing XXXXX cards</p>
+      <h2 className="designerTitle" onClick={()=>{setCurrentDeckIndex(false)}}><ArrowLeft /><span>Back to all decks</span></h2>
+      <div className="currentlyEditing">
+        <span>Now editing - </span>
+        <input
+          name="name"
+          className="deckNameInput"
+          type="text"
+          onChange={(e)=>{
+            updateCurrentDeck({
+              ...currentDeck,
+              name:e.target.value
+            });
+          }}
+          value={currentDeck.name}
+          placeholder="Enter deck name here."
+        />
+        <br / >
+        Deck type - {capitalize(props.currentDeck.type)} Cards
+      </div>
       <div className="sidebarButtonWrapper sidebarContent">
         <ConfirmModalButton
           className="noselect button navbarButton sidebarButton"
@@ -75,15 +89,10 @@ const Sidebar = (props) => {
           className="noselect button navbarButton sidebarButton"
           onClick={resetAllCards}
           icon={<Trash2 />}
-          text="Delete All Cards"
-          modalText="Are you sure you want to delete all the cards?"
+          text="Reset All Cards"
+          modalText="Are you sure you want to reset this deck? All cards will be deleted and the deck will be set to default values."
         />
         <button className="noselect button navbarButton sidebarButton" onClick={addNewCard}><PlusSquare />Add New Card</button>
-        <DebugButtons
-          currentCard={currentCard}
-          currentCardIndex={currentCardIndex}
-          cards={cards}
-        />
       </div>
       <div className="cardPreviewWrapper sidebarContent">
         {listOfCards}
@@ -103,3 +112,17 @@ const Sidebar = (props) => {
 }
 
 export default Sidebar;
+
+
+//scroll to a cardPreview
+function scrollTo(index){
+  let currentDOMPreview = document.getElementById("cardPreview"+index);
+  if (!!currentDOMPreview){
+    document.getElementById("cardPreview"+index).scrollIntoView({behavior:"smooth"});
+  }
+}
+
+//capitalize first letter of a string
+function capitalize(string){
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}

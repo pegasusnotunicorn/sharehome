@@ -1,7 +1,8 @@
 import * as cardConstants from '../../components/Designer/utils/cardConstants.js';
+import { cardBackConstants } from '../../components/Card/CardBack.js';
 
 //return dynamic styles for the card given a magnifyValue;
-export function dynamicStylesCard(magnifyValue, currentCard){
+export function dynamicStylesCard(magnifyValue, type, currentCard){
   const padding = cardConstants.pdfDimensions.padding * magnifyValue;
 
   let styles = {
@@ -15,27 +16,52 @@ export function dynamicStylesCard(magnifyValue, currentCard){
       height:"calc(100% - " + padding + "px)",
       width:"calc(100% - " + padding + "px)",
     },
-    textStyle: {
-      left: padding,
-      bottom: padding,
+    textWrapperStyle: {
       width:"calc(100% - " + padding * 2 + "px)",
-    },
-    mainFont: {
-      fontSize: cardConstants.pdfDimensions.mainFont * magnifyValue,
-    },
-    subFont: {
-      fontSize: cardConstants.pdfDimensions.subFont * magnifyValue,
     },
     numberFont: {
       fontSize: cardConstants.pdfDimensions.mainFont * magnifyValue * 3,
+    },
+  }
+
+  //styling for person cards
+  if (type === "member" || type === "commentator"){
+    styles.textWrapperStyle = {
+      ...styles.textStle,
+      left: padding,
+      bottom: padding,
+    };
+    styles.mainFont = {
+      fontSize: cardConstants.pdfDimensions.mainFont * magnifyValue,
+    };
+    styles.subFont = {
+      fontSize: cardConstants.pdfDimensions.subFont * magnifyValue,
+    };
+
+    //only if there is a card
+    if (currentCard){
+      styles.image = {
+        objectPosition: Math.round(currentCard.image.x*magnifyValue) + "px " + Math.round(currentCard.image.y*magnifyValue) + "px",
+      }
     }
   }
 
-  //only if there is a current card
-  if (currentCard){
-    styles.image = {
-      objectPosition: Math.round(currentCard.image.x*magnifyValue) + "px " + Math.round(currentCard.image.y*magnifyValue) + "px",
-    }
+  //styling for eventgoal cards
+  else if (type === "event" || type === "goal") {
+    styles.textWrapperStyle = {
+      ...styles.textStle,
+      height:"calc(100% - " + padding * 3 + "px)",
+      width:"calc(100% - " + padding * 3 + "px)",
+      background:"white",
+      borderWidth:padding,
+      borderColor:cardBackConstants[type].background,
+      borderStyle:"solid",
+      padding:padding * 0.5,
+    };
+    styles.mainFont = {
+      color:"black",
+      fontSize: cardConstants.pdfDimensions.subFont * magnifyValue,
+    };
   }
 
   return styles;

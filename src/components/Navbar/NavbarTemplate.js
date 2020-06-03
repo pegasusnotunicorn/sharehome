@@ -1,6 +1,6 @@
 import React from 'react';
 
-//template used for navbars
+//template used for sidebars
 export const NavbarTemplate = (props) => {
   const navbarWidth = 300;
   const openCloseStyle = {};

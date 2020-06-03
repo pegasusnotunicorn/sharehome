@@ -5,9 +5,11 @@
 .designerTitle{
   margin:20px;
   cursor:pointer;
+  line-height:100% !important;
 }
 
 .designerTitle * {
+  line-height:100% !important;
   vertical-align:text-bottom;
 }
 
@@ -19,8 +21,38 @@
   text-decoration:underline;
 }
 
+.deckNameInput * {
+  vertical-align:middle;
+}
+
+.deckNameInput{
+  border:0;
+  outline:0;
+  margin-bottom:2px;
+  padding:5px;
+  padding-top:7px;
+  font-size:18px;
+  font-family: 'Interstate Extra Light Condensed';
+}
+
 .currentlyEditing{
   margin:20px;
+  margin-bottom:10px;
+  line-height:200%;
+  word-break:break-all;
+}
+
+.deckNameInput::-webkit-input-placeholder { /* WebKit browsers */
+  padding-left:3px;
+}
+.deckNameInput:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+  padding-left:3px;
+}
+.deckNameInput::-moz-placeholder { /* Mozilla Firefox 19+ */
+  padding-left:3px;
+}
+.deckNameInput:-ms-input-placeholder { /* Internet Explorer 10+ */
+  padding-left:3px;
 }
 
 .sidebarButtonWrapper{
@@ -33,7 +65,7 @@
 .cardPreviewWrapper{
   overflow-y:scroll;
   overflow-x:hidden;
-  height:calc(100vh - 320px);
+  height:calc(100vh - 350px);
   /* Hide scrollbar for IE and Edge */
   -ms-overflow-style: none;
 }

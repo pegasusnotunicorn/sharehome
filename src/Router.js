@@ -17,22 +17,22 @@ const Router = (props) => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/" render={() => {
+        <Route exact path="/" render={() => {
           //pass the state setter so we can hide the footer when needed
           return <HomePage setShowFooter={setShowFooter}/>
-        }} exact/>
+        }} />
         <Route path="/about" render={() => {
           return <AboutPage setShowFooter={setShowFooter}/>
         }} />
-        <Route path="/contact" render={() => {
+        <Route exact path="/contact" render={() => {
           return <ContactPage setShowFooter={setShowFooter}/>
-        }} exact/>
+        }} />
         <Route path="/designer" render={() => {
           return <DesignerPage setShowFooter={setShowFooter}/>
-        }} exact/>
+        }} />
         <Route render={() => {
           return <ErrorPage setShowFooter={setShowFooter}/>
-        }} exact/>
+        }} />
         <Redirect to="/" />
       </Switch>
 

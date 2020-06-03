@@ -1,13 +1,14 @@
 .title{
   text-transform:uppercase;
   font-size:60px;
-  padding:30px;
+  padding:20px;
+  padding-bottom:10px;
   background-color:#2A188B;
   display:inline-block;
   margin:auto;
   margin-bottom:3vh;
   width:255px;
-  height:20px;
+  line-height:100%;
 }
 
 .title:after{
@@ -17,6 +18,7 @@
 .title:hover:after{
   content:'シェアホーム';
   font-size:40px;
+  line-height:100%;
   font-family: 'GenShinGothic Monospace Extra Light';
 }
 
@@ -25,6 +27,10 @@
   margin:auto;
   padding-left:10px;
   padding-right:10px;
+}
+
+.subcontentWrapper.is-wider{
+  max-width:1250px;
 }
 
 .subtitle{

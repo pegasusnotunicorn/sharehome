@@ -8,14 +8,19 @@ import '../../../css/Designer/cardButtons.css';
 const CardButtons = (props) => {
   return (
     <div className="contentButtonWrapper contentWrapper">
-      <input
-        id="imageFileInput"
-        type="file"
-        onChange={props.handleInputChange}
-        name="image"
-        accept="image/*"
-      />
-      <label id="imageFileLabel" className="noselect button is-bordered contentButton" htmlFor="imageFileInput"><Image />Change Image</label>
+      { (["member", "commentator"].indexOf(props.type) !== -1) &&
+        <>
+          <input
+            id="imageFileInput"
+            type="file"
+            onChange={props.handleInputChange}
+            name="image"
+            accept="image/*"
+          />
+          <label id="imageFileLabel" className="noselect button is-bordered contentButton" htmlFor="imageFileInput"><Image />Change Image</label>
+        </>
+      }
+
       <button className="noselect button is-bordered contentButton" onClick={props.duplicateCurrentCard}><Copy />Duplicate Card</button>
 
       <ConfirmModalButton

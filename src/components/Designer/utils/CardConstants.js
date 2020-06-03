@@ -1,4 +1,5 @@
 import { getRandomPerson } from '../../Card/ExamplePeople.js';
+import { getRandomEventGoal } from '../../Card/ExampleEventGoal.js';
 
 //variables for printing in inches
 const DPI = 72;   //(dots per inch)
@@ -67,8 +68,8 @@ export function getImageObject(url, name, width, height){
   }
 }
 
-//default card variables
-export function getDefaultCardObject(notThisPerson){
+//default person card variables
+export function getDefaultPersonCard(notThisPerson){
   let randomMember = getRandomPerson(notThisPerson);
   let defaultImage = getImageObject(
     randomMember.image.url,
@@ -88,4 +89,11 @@ export function getDefaultCardObject(notThisPerson){
     ...randomMember,
     image : defaultImage,
   }
+}
+
+//default event card variables
+export function getDefaultEventGoalCard(type, exampleID){
+  let randomEventGoal = getRandomEventGoal(type, exampleID);
+
+  return randomEventGoal;
 }

@@ -90,13 +90,17 @@ const PersonCardViewer = (props) => {
 //card viewer for event / goal cards
 const EventGoalCardViewer = (props) => {
   let currentCard = props.currentCard;
+  let currentCardIndex = props.currentCardIndex;
+  let deckName = props.deckName;
   let cardViewerDynamicStyles = dynamicStylesCard(props.viewerMagnifyValue, props.type, currentCard);
+
+  let maxRows = 7;
 
   //prevent textarea from going too far (past 9 lines)
   const handleTextAreaInput = (e) => {
     let numberOfLines = calculateHeight(e.target);
 
-    if (numberOfLines > 9) {
+    if (numberOfLines > maxRows) {
       return false;
     }
     else {
@@ -115,10 +119,14 @@ const EventGoalCardViewer = (props) => {
           name="description"
           className="cardViewerInput textarea"
           style={cardViewerDynamicStyles.mainFont}
-          rows="9"
+          rows={maxRows}
           onChange={handleTextAreaInput}
           value={currentCard.description}
         />
+        <div className="cardViewerDeckName" style={cardViewerDynamicStyles.subFont}>
+          <span>{deckName}</span>
+          <span>#{currentCardIndex + 1}</span>
+        </div>
       </div>
     </div>
   )

@@ -118,7 +118,9 @@ const DeckEditor = (props) => {
           setCurrentDeckIndex:setCurrentDeckIndex,
         }}
         cardFunctions={{
-          downloadDeck:downloadDeck,
+          downloadDeck:()=>{
+            downloadDeck(currentDeck);
+          },
           resetAllCards:resetAllCards,
           addNewCard:addNewCard,
           goToCard:goToCard,

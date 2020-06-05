@@ -50,18 +50,30 @@ export function dynamicStylesCard(magnifyValue, type, currentCard){
   else if (type === "event" || type === "goal") {
     styles.textWrapperStyle = {
       ...styles.textStle,
-      height:"calc(100% - " + padding * 3 + "px)",
-      width:"calc(100% - " + padding * 3 + "px)",
-      background:"white",
+      height:"calc(100% - " + padding * 2 + "px)",
+      width:"calc(100% - " + padding * 2 + "px)",
       borderWidth:padding,
       borderColor:cardBackConstants[type].background,
       borderStyle:"solid",
-      padding:padding * 0.5,
     };
     styles.mainFont = {
       color:"black",
+      background:"white",
+      padding:padding * 0.5,
       fontSize: cardConstants.pdfDimensions.subFont * magnifyValue,
+      height:"calc(100% - " + padding * 2.5 + "px)",
+      width:"calc(100% - " + padding + "px)",
     };
+    styles.subFont = {
+      color:"black",
+      background:"white",
+      position:"absolute",
+      bottom:0,
+      borderTop:"1px solid black",
+      padding:padding * 0.5,
+      width:"calc(100% - " + padding + "px)",
+      fontSize: (cardConstants.pdfDimensions.subFont * magnifyValue) / 2,
+    }
   }
 
   return styles;

@@ -33,7 +33,14 @@
 .deckSelectorRow p {
   margin-top:0px;
   margin-bottom:-6px;
+}
+
+.deckSelectorRow p.margin-right {
   margin-right:10px;
+}
+
+.deckSelectorRow p.margin-left {
+  margin-left:10px;
 }
 
 .deckSelectorCell{

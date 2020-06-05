@@ -35,6 +35,7 @@ const Sidebar = (props) => {
       key: "cardPreview" + move,
       id: "cardPreview" + move,
       type: currentDeck.type,
+      deckName: currentDeck.name,
       currentCard: step,
       currentCardIndex: move,
       handleClick: goToCard,

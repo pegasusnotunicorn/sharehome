@@ -9,73 +9,6 @@ import { downloadDecks } from '../utils/downloadPDFFile.js';
 
 import '../../../css/Designer/deckSelector.css';
 
-//row representing a single deck
-const DeckRow = (props) => {
-  let currentDeck = props.currentDeck;
-  let currentDeckIndex = props.currentDeckIndex;
-  let setCurrentDeckIndex = props.setCurrentDeckIndex;
-  let selectDecks = props.selectDecks;
-
-  let history = useHistory();
-
-  //select this row!
-  function selectRow(e){
-    e.stopPropagation();
-    selectDecks([currentDeckIndex], !currentDeck.selected);
-  }
-
-  return (
-    <div onClick={(e)=>{
-      setCurrentDeckIndex(currentDeckIndex);
-      history.push("/designer/edit")
-    }} className={"deckSelectorRow noselect " + ((currentDeck.selected) ? "blueBackground" : "")}>
-      <div className="deckSelectorCell">
-        <div className="deckSelectorButtonWrapper no-border">
-          { currentDeck.selected
-            ? (
-              <CheckSquare
-                className="deckSelectorButton"
-                onClick={selectRow}
-              />
-            )
-            : (
-              <Square
-                className="deckSelectorButton"
-                onClick={selectRow}
-              />
-            )
-          }
-        </div>
-        <Card
-          className="deckCard"
-          type={currentDeck.type}
-          showFront={false}
-          disableFlip={true}
-          disableShadow={true}
-          mainStyle={{
-            width:"65px",
-            height:"45px",
-            fontSize:"1.7px",
-          }}
-        />
-        <p className="deckName">{currentDeck.name}</p>
-      </div>
-      <div className="deckSelectorCell padding-left">
-        <p>{currentDeck.cards.length} {(currentDeck.cards.length > 1) ? "cards" : "card"}</p>
-        <p>
-          {
-            new Intl.DateTimeFormat({
-              year: "numeric",
-              month: "long",
-              day: "2-digit"
-            }).format(new Date(currentDeck.createdOn))
-          }
-        </p>
-      </div>
-    </div>
-  )
-}
-
 //header for deck rows
 const DeckHeader = (props) => {
   const decks = props.decks;
@@ -176,7 +109,7 @@ const DeckHeader = (props) => {
         onClick={(e)=>{
           setShowMoreDialog(!showMoreDialog);
         }}
-      >
+        >
         <MoreVertical />
         <input
           id="deckImporter"
@@ -184,7 +117,7 @@ const DeckHeader = (props) => {
           type="file"
           accept="application/json"
           onChange={importJSON}
-        />
+          />
         { showMoreDialog &&
           <div className="moreDialog">
             <label
@@ -194,14 +127,14 @@ const DeckHeader = (props) => {
               onClick={(e)=>{
                 e.stopPropagation();
               }}
-            >
+              >
               Import Decks
             </label>
             { selectedDecks.length > 0 &&
               <button
                 className="button transparentBackground"
                 onClick={exportAsJSON}
-              >
+                >
                 Export Deck{(selectedDecks.length > 1) ? "s" : ""}
               </button>
             }
@@ -218,44 +151,56 @@ const DeckHeader = (props) => {
           <SelectedSquareIcon
             className="deckSelectorButton"
             onClick={selectAllOrNone}
-          />
+            />
         </div>
-        <div className="deckSelectorButtonWrapper">
-          <ConfirmModalButton
-            className="noselect button transparentBackground deckSelectorButton"
-            onClick={()=>{
-              deleteDecks(selectedDecks);
-            }}
-            icon={<Trash2 />}
-            modalText={`Are you sure you want to delete ${pluralDecks}?`}
-          />
+        <div>
+          <p className="margin-left">
+            { selectedDecks.length > 0
+              ? (`${selectedDecks.length} selected`)
+              : ("Select deck(s) to edit")
+            }
+          </p>
         </div>
-        <div className="deckSelectorButtonWrapper">
-          <ConfirmModalButton
-            className="noselect button transparentBackground deckSelectorButton"
-            onClick={()=>{
-              downloadDecks(selectedDecks, decks);
-            }}
-            icon={<Download />}
-            modalText={`Are you sure you want to download ${pluralDecks} (as PDFs)?`}
-          />
-        </div>
-        <div className="deckSelectorButtonWrapper">
-          <ConfirmModalButton
-            className="noselect button transparentBackground deckSelectorButton"
-            onClick={(e)=>{
-              duplicateDecks(selectedDecks);
-            }}
-            icon={<Copy />}
-            modalText={`Are you sure you want to copy ${pluralDecks}?`}
-          />
-        </div>
+        { selectedDecks.length > 0 &&
+          <>
+            <div className="deckSelectorButtonWrapper">
+              <ConfirmModalButton
+                className="noselect button transparentBackground deckSelectorButton"
+                onClick={()=>{
+                  deleteDecks(selectedDecks);
+                }}
+                icon={<Trash2 />}
+                modalText={`Are you sure you want to delete ${pluralDecks}?`}
+                />
+            </div>
+            <div className="deckSelectorButtonWrapper">
+              <ConfirmModalButton
+                className="noselect button transparentBackground deckSelectorButton"
+                onClick={()=>{
+                  downloadDecks(selectedDecks, decks);
+                }}
+                icon={<Download />}
+                modalText={`Are you sure you want to download ${pluralDecks} (as PDFs)?`}
+                />
+            </div>
+            <div className="deckSelectorButtonWrapper">
+            <ConfirmModalButton
+              className="noselect button transparentBackground deckSelectorButton"
+              onClick={(e)=>{
+                duplicateDecks(selectedDecks);
+              }}
+              icon={<Copy />}
+              modalText={`Are you sure you want to copy ${pluralDecks}?`}
+              />
+          </div>
+          </>
+        }
         <div className="deckSelectorButtonWrapper">
           <MoreButton />
         </div>
       </div>
       <div>
-        <p>
+        <p className="margin-right">
           <NavLink to="/designer/create">
             + Make a new deck
           </NavLink>
@@ -265,7 +210,91 @@ const DeckHeader = (props) => {
   )
 }
 
-//logic for handling deck selection
+//row representing a single deck
+const DeckRow = (props) => {
+  let currentDeck = props.currentDeck;
+  let currentDeckIndex = props.currentDeckIndex;
+  let setCurrentDeckIndex = props.setCurrentDeckIndex;
+  let selectDecks = props.selectDecks;
+
+  //last selected deck
+  let lastSelected = props.lastSelected;
+  let setLastSelected = props.setLastSelected;
+
+  let history = useHistory();
+
+  //select this row!
+  function selectRow(e){
+    e.stopPropagation();
+
+    //shift held down and there was a last selected
+    //set everything between last selected and now to what this is being set to (inclusive)
+    if (e.shiftKey && typeof lastSelected === "number"){
+      let end = Math.max(lastSelected, currentDeckIndex);
+      let start = Math.min(lastSelected, currentDeckIndex);
+      let tempDecks = new Array(end - start + 1).fill().map((item, index) => start + index);
+      selectDecks(tempDecks, !currentDeck.selected);
+    }
+    //otherwise just select this deck
+    else {
+      selectDecks([currentDeckIndex], !currentDeck.selected);
+    }
+    setLastSelected(currentDeckIndex);
+  }
+
+  return (
+    <div onClick={(e)=>{
+      setCurrentDeckIndex(currentDeckIndex);
+      history.push("/designer/edit")
+    }} className={"deckSelectorRow noselect " + ((currentDeck.selected) ? "blueBackground" : "")}>
+      <div className="deckSelectorCell">
+        <div className="deckSelectorButtonWrapper no-border">
+          { currentDeck.selected
+            ? (
+              <CheckSquare
+                className="deckSelectorButton"
+                onClick={selectRow}
+              />
+            )
+            : (
+              <Square
+                className="deckSelectorButton"
+                onClick={selectRow}
+              />
+            )
+          }
+        </div>
+        <Card
+          className="deckCard"
+          type={currentDeck.type}
+          showFront={false}
+          disableFlip={true}
+          disableShadow={true}
+          mainStyle={{
+            width:"65px",
+            height:"45px",
+            fontSize:"1.7px",
+          }}
+        />
+        <p className="deckName">{currentDeck.name}</p>
+      </div>
+      <div className="deckSelectorCell padding-left">
+        <p className="margin-right">{currentDeck.cards.length} {(currentDeck.cards.length > 1) ? "cards" : "card"}</p>
+        <p className="margin-right">
+          {
+            new Intl.DateTimeFormat({
+              year: "numeric",
+              month: "long",
+              day: "2-digit"
+            }).format(new Date(currentDeck.createdOn))
+          }
+        </p>
+      </div>
+    </div>
+  )
+}
+
+//show all decks and edit them if necessary
 const DeckSelector = (props) => {
   const decks = props.decks;
 
@@ -276,6 +305,9 @@ const DeckSelector = (props) => {
   const duplicateDecks = props.deckFunctions.duplicateDecks;
   const addNewDeck = props.deckFunctions.addNewDeck;
 
+  //what was the last selected deck
+  const [lastSelected, setLastSelected] = useState(false);
+
   //all rows of decks
   const listOfDecks = decks.map((elem, index)=>{
     return (
@@ -285,13 +317,15 @@ const DeckSelector = (props) => {
         currentDeckIndex={index}
         setCurrentDeckIndex={setCurrentDeckIndex}
         selectDecks={selectDecks}
+        lastSelected={lastSelected}
+        setLastSelected={setLastSelected}
       />
     )
   });
 
   return (
     <>
-      <h3>Select an existing deck to edit</h3>
+      <h3>My SHAREHOME decks</h3>
       <div className="deckSelectorWrapper">
         <DeckHeader
           decks={decks}

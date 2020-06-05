@@ -79,6 +79,8 @@ const PersonCardPreview = (props) => {
 //event / goal card preview for sidebar
 const EventGoalCardPreview = (props) => {
   let currentCard = props.currentCard;
+  let currentCardIndex = props.currentCardIndex;
+  let deckName = props.deckName;
   let cardPreviewDynamicStyles = dynamicStylesCard(cardConstants.previewMagnifyValue, props.type, currentCard);
 
   return (
@@ -98,6 +100,10 @@ const EventGoalCardPreview = (props) => {
             rows="9"
             value={currentCard.description}
           />
+          <div className="cardPreviewDeckName" style={cardPreviewDynamicStyles.subFont}>
+            <span>{deckName}</span>
+            <span>#{currentCardIndex + 1}</span>
+          </div>
         </div>
     </div>
   )

@@ -53,11 +53,11 @@ const PDFPersonPage = (props) => {
           paint={paintShadowBackground}
         ></Canvas>
 
-        <Text style={dynamicStylesPDFPerson.textMain}>
+        <Text style={dynamicStylesPDFPerson.mainFont}>
           {currentCard.name} ({currentCard.age})
         </Text>
 
-        <Text style={dynamicStylesPDFPerson.textSub}>
+        <Text style={dynamicStylesPDFPerson.subFont}>
           {currentCard.job}
           &nbsp;&nbsp;
           <Text style={dynamicStylesPDFPerson.japaneseName}>
@@ -73,6 +73,8 @@ const PDFPersonPage = (props) => {
 //PDF page of a event / goal card
 const PDFEventGoalPage = (props) => {
   const currentCard = props.currentCard;
+  const currentCardIndex = props.currentCardIndex;
+  const deckName = props.deckName;
   const cardType = props.type;
 
   return (
@@ -88,9 +90,14 @@ const PDFEventGoalPage = (props) => {
           }}>
         </Canvas>
 
-        <Text wrap={true} style={dynamicStylesPDFEventGoal.textMain}>
+        <Text style={dynamicStylesPDFEventGoal.mainFont}>
           {currentCard.description}
         </Text>
+
+        <View style={dynamicStylesPDFEventGoal.footerView}>
+          <Text style={dynamicStylesPDFEventGoal.subFont}>{deckName}</Text>
+          <Text style={dynamicStylesPDFEventGoal.subFont}>#{currentCardIndex}</Text>
+        </View>
 
       </View>
     </Page>

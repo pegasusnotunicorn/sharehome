@@ -73,6 +73,14 @@
   resize:none;
 }
 
+.cardPreviewDeckName{
+  border-top:1px solid black;
+  color:black;
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+}
+
 .cardPreviewTextWrapper.person{
   white-space:nowrap;
   bottom:0;

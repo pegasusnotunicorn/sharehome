@@ -17,7 +17,7 @@ const PDFBackPage = (props) => {
     >
       <View style={dynamicStylesPDFBack.view}>
 
-        <Text style={dynamicStylesPDFBack.textMain}>
+        <Text style={dynamicStylesPDFBack.mainFont}>
           {cardBackConstants[backType].mainText}
         </Text>
 

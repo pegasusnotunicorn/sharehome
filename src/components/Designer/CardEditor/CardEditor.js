@@ -114,7 +114,9 @@ const CardEditor = (props) => {
     <>
       <CardViewer
         type={currentDeck.type}
+        deckName={currentDeck.name}
         currentCard={currentCard}
+        currentCardIndex={currentDeck.currentCardIndex}
         textNoPointerEvent={(startingCoords) ? "nopointerevent" : ""}   //so we can move image while over text, but let text be clickable
         handleMouseDown={handleMouseDown}
         handleMouseUp={handleMouseUp}

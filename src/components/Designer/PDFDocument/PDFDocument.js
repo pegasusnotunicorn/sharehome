@@ -12,6 +12,7 @@ import GenShinGothic from "../../../fonts/GenShinGothic-Monospace-ExtraLight.ttf
 //create a PDF document and use currentCard to change the inside text
 const PDFDocument = (props) => {
   const cards = props.cards;
+  const deckName = props.deckName;
   const type = props.type;
 
   //create each page using cards array
@@ -21,6 +22,8 @@ const PDFDocument = (props) => {
         key={"PDFPage" + index}
         type={type}
         currentCard={elem}
+        currentCardIndex={index}
+        deckName={deckName}
       />
     )
   });

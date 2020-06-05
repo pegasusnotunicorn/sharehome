@@ -28,7 +28,7 @@ export const dynamicStylesPDFPerson = StyleSheet.create({
     display:"block",
     bottom:0
   },
-  textMain:{
+  mainFont:{
     fontSize:cardConstants.pdfDimensions.mainFont,
     padding:cardConstants.pdfDimensions.padding,
     paddingBottom:cardConstants.pdfDimensions.padding/2,
@@ -38,7 +38,7 @@ export const dynamicStylesPDFPerson = StyleSheet.create({
     maxLines:1,
     textTransform:"uppercase",
   },
-  textSub:{
+  subFont:{
     fontSize:cardConstants.pdfDimensions.subFont,
     padding:cardConstants.pdfDimensions.padding,
     position:"absolute",
@@ -71,7 +71,7 @@ export const dynamicStylesPDFBack = StyleSheet.create({
     width:"100%",
     whiteSpace:"nowrap",
   },
-  textMain:{
+  mainFont:{
     fontSize:cardConstants.pdfDimensions.mainFont * 1.5,
     width:cardConstants.pdfDimensions.width,
     padding:cardConstants.pdfDimensions.padding,
@@ -111,14 +111,14 @@ export const dynamicStylesPDFEventGoal = StyleSheet.create({
   },
   canvas:{
     display:"block",
-    height:"100%",
     width:"100%",
+    height:"100%"
   },
-  textMain:{
+  mainFont:{
     fontSize:cardConstants.pdfDimensions.subFont,
-    width:cardConstants.pdfDimensions.width - (cardConstants.pdfDimensions.padding * 2),
-    height:cardConstants.pdfDimensions.height - (cardConstants.pdfDimensions.padding * 2),
     padding:cardConstants.pdfDimensions.padding * 0.5,
+    width:cardConstants.pdfDimensions.width - (cardConstants.pdfDimensions.padding * 2),
+    height:cardConstants.pdfDimensions.height - (cardConstants.pdfDimensions.padding * 3.5),
     textAlign:"left",
     position:"absolute",
     left:cardConstants.pdfDimensions.padding,
@@ -127,4 +127,23 @@ export const dynamicStylesPDFEventGoal = StyleSheet.create({
     backgroundColor:"white",
     textOverflow:"clip",
   },
+  footerView:{
+    color:"black",
+    backgroundColor:"white",
+    display:"flex",
+    flexDirection:"row",
+    justifyContent:"space-between",
+    position:"absolute",
+    left:cardConstants.pdfDimensions.padding,
+    bottom:cardConstants.pdfDimensions.padding,
+    width:cardConstants.pdfDimensions.width - (cardConstants.pdfDimensions.padding * 2),
+    borderTop:"1 black solid",
+  },
+  subFont:{
+    padding:cardConstants.pdfDimensions.padding * 0.5,
+    fontSize:cardConstants.pdfDimensions.subFont / 2,
+    color:"black",
+    textAlign:"left",
+    display:"inline-block",
+  }
 });

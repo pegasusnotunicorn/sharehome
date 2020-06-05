@@ -15,6 +15,7 @@ async function downloadPDFFile(documentData, fileName){
 export const downloadDeck = (currentDeck) => {
   downloadPDFFile(<PDFDocument
     cards={currentDeck.cards}
+    deckName={currentDeck.name}
     type={currentDeck.type}
   />, currentDeck.name);
 }
@@ -28,6 +29,7 @@ export const downloadDecks = async (arrayOfIndex, decks) => {
     let currentDeck = decks[arrayOfIndex[i]];
     let blob = await pdf(<PDFDocument
       cards={currentDeck.cards}
+      deckName={currentDeck.name}
       type={currentDeck.type}
     />).toBlob();
     zip.file(i + "-" + currentDeck.name + ".pdf", blob);

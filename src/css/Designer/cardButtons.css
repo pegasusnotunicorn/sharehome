@@ -1,12 +1,12 @@
 /* Choose image file to upload */
-input[type="file"] {
+.contentButtonWrapper input[type="file"] {
   opacity: 0;
   position: absolute;
   pointer-events: none;
   width: 1px;
   height: 1px;
 }
-input[type="file"] + label {
+.contentButtonWrapper input[type="file"] + label {
   cursor:pointer;
 }
 

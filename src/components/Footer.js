@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import Card from './Card/Card.js';
 
+import '../css/footer.css';
+
 function randomIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -11,7 +13,7 @@ const RandomCardsForFooter = (type, totalSame, totalAll) => {
 
     //random stuff to simulate throwing cards from below the screen
     let randomLeft = Math.round((Math.random() * 10 - 5) + (index)*(100/totalSame));
-    let randomBottom = randomIntFromInterval(-20, -7);
+    let randomBottom = randomIntFromInterval(-35, 0);
     let randomZ = Math.round(Math.random() * totalAll);
     let randomDegree = randomIntFromInterval(-180, 180);
     let randomTransition = Math.round(Math.random() * 75) / 100;
@@ -32,15 +34,14 @@ const RandomCardsForFooter = (type, totalSame, totalAll) => {
         height:"25vh",
         fontSize:"1vh",
         //stuff needed to simulate the random throwing
-        position:"fixed",
-        transition:"none",
+        position:"absolute",
         transform:"rotate(0deg)",
         zIndex:randomZ,
         left:randomLeft + "vw",
         bottom:"-100%",
+        transition:"bottom " + randomTransition + "s, transform " + randomTransition + "s " + randomTransition/2 + "s",
       },
       //used for animation later in useEffect
-      transition:"bottom " + randomTransition + "s, transform " + randomTransition + "s " + randomTransition/2 + "s",
       randomBottom:randomBottom + "vh",
       randomDegree:"rotate(" + randomDegree + "deg)",
     }
@@ -56,32 +57,24 @@ const RandomCardsForFooter = (type, totalSame, totalAll) => {
 
 const Footer = (props) => {
 
-  let totalMemberCards = Math.ceil(window.innerWidth / 200);
-  let totalEventGoalCards = Math.ceil(window.innerWidth / 500);
+  let totalMemberCards = Math.ceil(window.innerWidth / 150);
+  let totalEventGoalCards = Math.ceil(window.innerWidth / 400);
   let totalCards = totalMemberCards + totalEventGoalCards;
 
   let memberCards = RandomCardsForFooter("person", totalMemberCards, totalCards);
-  let CardBack = RandomCardsForFooter("eventgoal", totalEventGoalCards, totalCards);
+  let eventGoalCards = RandomCardsForFooter("eventgoal", totalEventGoalCards, totalCards);
 
   //animate bottom + rotation to simulate "throwing" the cards from bottom
   useEffect(()=>{
     for (let i = 0; i < memberCards.length; i++){
       let memberCardDom = document.getElementById("person" + i);
       memberCardDom.classList.toggle("is-flipped");   //toggle a flip so we can avoid the first flip no show problem
-      memberCardDom.style.transition = memberCards[i].props.transition;
-      memberCardDom.style.bottom = memberCards[i].props.randomBottom;
-      memberCardDom.style.transform = memberCards[i].props.randomDegree;
-    }
-    for (let i = 0; i < CardBack.length; i++){
-      document.getElementById("eventgoal" + i).style.transition = CardBack[i].props.transition;
-      document.getElementById("eventgoal" + i).style.bottom = CardBack[i].props.randomBottom;
-      document.getElementById("eventgoal" + i).style.transform = CardBack[i].props.randomDegree;
     }
   });
 
   return (
     <div className="footer">
-      {CardBack}
+      {eventGoalCards}
       {memberCards}
     </div>
   )

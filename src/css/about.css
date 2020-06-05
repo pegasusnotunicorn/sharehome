@@ -59,6 +59,7 @@
 .showRulesButton{
   text-decoration:underline;
   cursor:pointer;
+  margin:0;
 }
 
 .stepWrapper{

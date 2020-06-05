@@ -1,8 +1,8 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { ArrowLeft } from 'react-feather';
 
 import Card from '../../Card/Card.js';
+import '../../../css/Designer/deckCreator.css';
 
 //CTA buttons to create a new deck
 const DeckCreator = (props) => {
@@ -28,7 +28,7 @@ const DeckCreator = (props) => {
     return (
       <div
         key={elem.type + index}
-        className="deckSelecter noselect"
+        className="deckCreator noselect"
         onClick={()=>{
           props.createNewDeck(elem.type);
         }}
@@ -51,9 +51,9 @@ const DeckCreator = (props) => {
     <div className="subcontentWrapper is-wider">
       <h3>Select a type of deck to make</h3>
       { props.decks.length > 0 &&
-        <p><NavLink to="/designer"><ArrowLeft />Back to all decks</NavLink></p>
+        <p><NavLink to="/designer">← Back to all decks</NavLink></p>
       }
-      <div className="deckSelecterWrapper">
+      <div className="deckCreatorWrapper">
         {deckTypes}
       </div>
     </div>

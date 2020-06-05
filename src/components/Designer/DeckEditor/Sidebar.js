@@ -18,7 +18,7 @@ const Sidebar = (props) => {
   const setCurrentDeckIndex = props.deckFunctions.setCurrentDeckIndex;
 
   //functions that update cards inside the deck
-  const downloadAllCards = props.cardFunctions.downloadAllCards;
+  const downloadDeck = props.cardFunctions.downloadDeck;
   const resetAllCards = props.cardFunctions.resetAllCards;
   const addNewCard = props.cardFunctions.addNewCard;
   const goToCard = props.cardFunctions.goToCard;
@@ -80,7 +80,7 @@ const Sidebar = (props) => {
       <div className="sidebarButtonWrapper sidebarContent">
         <ConfirmModalButton
           className="noselect button navbarButton sidebarButton"
-          onClick={downloadAllCards}
+          onClick={downloadDeck}
           icon={<Download />}
           text="Download All Cards (PDF)"
           modalText="Are you sure you want to download all the cards?"

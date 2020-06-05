@@ -20,6 +20,15 @@ export const reducerForArrays = (state, action) => {
         //every other item stays
         return true;
       });
+    case 'removemulti':
+      return state.filter((item, index) => {
+        //if indexes contains this index, delete
+        if (action.indexes.indexOf(index) !== -1){
+          return false;
+        }
+        //every other item stays
+        return true;
+      });
     case 'update':
       return state.map((item, index) => {
         //replace the item at index

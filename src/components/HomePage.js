@@ -13,7 +13,7 @@ const HomePage = (props) => {
   });
 
   return (
-    <div className="content">
+    <div className="content padding-bottom">
       <NavLink to="/"><div className="title noselect"></div></NavLink>
       <div className="subcontentWrapper">
         <h2 className="subtitle">

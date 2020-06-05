@@ -78,7 +78,7 @@ export const ConfirmModalButton = (props) => {
   });
 
   return (
-    <span>
+    <>
       <button
         className={props.className}
         onClick={(e)=>{
@@ -99,7 +99,7 @@ export const ConfirmModalButton = (props) => {
         />
       }
 
-    </span>
+    </>
   )
 }
 

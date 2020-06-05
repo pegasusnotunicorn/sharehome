@@ -1,11 +1,9 @@
 import React from 'react';
-import { NavLink, Redirect, Switch, Route } from 'react-router-dom';
+import { NavLink, Redirect, Switch, Route, useHistory } from 'react-router-dom';
 
 import DeckCreator from './DeckCreator.js';
 import DeckSelector from './DeckSelector.js';
 import { getDefaultDeck } from '../utils/deckConstants.js';
-
-import '../../../css/Designer/deckManager.css';
 
 //show create a new deck or edit an existing deck
 const DeckManager = (props) => {
@@ -15,34 +13,61 @@ const DeckManager = (props) => {
   let currentDeckIndex = props.currentDeckIndex;
   let setCurrentDeckIndex = props.setCurrentDeckIndex;
 
-  //create a new type of deck and start editing it
+  const history = useHistory();
+
+  //create a new type of deck and go back to selector
   let createNewDeck = (type) => {
     dispatchDeck({
       type:"add",
       item:getDefaultDeck(type),
     });
-    setCurrentDeckIndex(decks.length);
+    history.goBack();
   }
 
-  //deletes a specific deck
-  let deleteDeck = (index) => {
+  //select or deselect an array of decks
+  let selectDecks = (arrayOfIndex, selected) => {
+    for (let i = 0; i < arrayOfIndex.length; i++){
+      dispatchDeck({
+        type:"update",
+        index:arrayOfIndex[i],
+        item:{
+          ...decks[arrayOfIndex[i]],
+          selected:selected,
+        },
+      });
+    }
+  }
+
+  //deletes an array of decks
+  let deleteDecks = (arrayOfIndex) => {
     dispatchDeck({
-      type:"remove",
-      index:index,
+      type:"removemulti",
+      indexes:arrayOfIndex,
     });
-    setCurrentDeckIndex(false);
   }
 
-  //deletes a specific deck
-  let duplicateDeck = (index) => {
+  //duplicates an array of decks
+  let duplicateDecks = (arrayOfIndex) => {
+    for (let i = 0; i < arrayOfIndex.length; i++){
+      dispatchDeck({
+        type:"add",
+        item:{
+          ...decks[arrayOfIndex[i]],
+          createdOn: new Date(),
+        },
+      });
+    }
+  }
+
+  //add a new decks
+  let addNewDeck = (newDeck) => {
     dispatchDeck({
       type:"add",
       item:{
-        ...decks[index],
+        ...newDeck,
         createdOn: new Date(),
-      },
+      }
     });
-    setCurrentDeckIndex(decks.length);
   }
 
   return (
@@ -71,9 +96,13 @@ const DeckManager = (props) => {
               if (decks.length > 0){
                 return <DeckSelector
                   decks={decks}
-                  setCurrentDeckIndex={setCurrentDeckIndex}
-                  deleteDeck={deleteDeck}
-                  duplicateDeck={duplicateDeck}
+                  deckFunctions={{
+                    setCurrentDeckIndex:setCurrentDeckIndex,
+                    selectDecks:selectDecks,
+                    deleteDecks:deleteDecks,
+                    duplicateDecks:duplicateDecks,
+                    addNewDeck:addNewDeck,
+                  }}
                 />
               }
               //if no decks, redirect to creator

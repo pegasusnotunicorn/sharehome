@@ -17,25 +17,25 @@ const DesignerPage = (props) => {
   useEffect(()=>{
     document.title = "SHAREHOME - Card Designer";
 
-    props.setShowFooter(false);  //hide footer for designer page
+    // props.setShowFooter(false);  //hide footer for designer page
     // props.setShowFooter(!Number.isInteger(currentDeckIndex));  //hide footer for designer page
   });
 
   let updateCurrentDeck = (newDeck) => {
     dispatchDeck({
       type:"update",
-      item:newDeck,
       index:currentDeckIndex,
+      item:newDeck,
     });
   }
 
   //show deck manager if we don't have a current deck we are editing
   return (
     <>
-      <div className="content padding-bottom">
+      <div className="content max-width padding-bottom">
         <NavLink to="/"><div className="title noselect"></div></NavLink>
         <Switch>
-          <Route path="/designer/edit" render={()=>{
+          <Route exact path="/designer/edit" render={()=>{
             //if currently editing a deck, show editor
             if (Number.isInteger(currentDeckIndex)){
               return (

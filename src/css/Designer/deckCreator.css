@@ -1,0 +1,17 @@
+.deckCreator{
+  display: inline-block;
+  width: 200px;
+  cursor: pointer;
+  position: relative;
+  margin: 0px 20px 20px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: rgb(255, 255, 255);
+  border-image: initial;
+  padding: 20px 20px 0px;
+  transition: transform 0.5s ease 0s, -webkit-transform 0.5s ease 0s;
+}
+
+.deckCreator:hover{
+  transform:scale(0.95);
+}

@@ -17,7 +17,7 @@ const Roleplay = (props) => {
   return (
     <>
       <h2 className="subtitle">Game {(!showRules) ? "Setup" : "Rules"}</h2>
-      <div className="showRulesButton noselect" onClick={toggleSteps}>{(showRules) ? "Show me the game setup again" : "Show me the game rules instead"}</div>
+      <p className="showRulesButton noselect" onClick={toggleSteps}>{(showRules) ? "Show me the game setup again" : "Show me the game rules instead"}</p>
 
       <div className={"stepsContainer" + ((!showRules) ? " is-active" : "")}>
 
@@ -119,7 +119,7 @@ const Roleplay = (props) => {
 
         </div>
 
-        <div className="showRulesButton noselect" onClick={toggleSteps}>Sounds good, take me to the game rules!</div>
+        <p className="showRulesButton noselect" onClick={toggleSteps}>Sounds good! Take me to the game rules.</p>
 
       </div>
 

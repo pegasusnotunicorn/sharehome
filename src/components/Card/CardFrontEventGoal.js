@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { getRandomEventGoal } from './ExampleEventGoal.js';
 
 export const EventGoalCard = (props) => {
-  let eventGoalDetails = getRandomEventGoal(props.type);
+
+  let [eventGoalDetails] = useState(getRandomEventGoal(props.type));
   let eventGoalBorderColor = (props.type === "goal") ? "blueBorder" : "redBorder";
 
   return (

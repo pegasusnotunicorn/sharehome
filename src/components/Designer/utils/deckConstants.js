@@ -22,6 +22,7 @@ export function getDefaultDeck(type){
     cards:defaultCards,
     currentCardIndex:0,
     createdOn:Date.now(),
+    selected:true,
   }
 }
 

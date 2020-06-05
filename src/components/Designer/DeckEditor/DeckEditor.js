@@ -1,9 +1,8 @@
 import React from 'react';
 
 import * as cardConstants from '../utils/cardConstants.js';
-import { downloadPDFFile } from '../PDFDocument/downloadPDFFile.js';
+import { downloadDeck } from '../utils/downloadPDFFile.js';
 
-import PDFDocument from '../PDFDocument/PDFDocument.js';
 import Sidebar from './Sidebar.js';
 import CardEditor from '../CardEditor/CardEditor.js';
 
@@ -31,15 +30,6 @@ const DeckEditor = (props) => {
 
     //to implement an undo, i have access to what the card WAS here
     //just need to keep this in an array and access it whenever
-  }
-
-  //download the PDF file
-  const downloadAllCards = () => {
-    let fileName = currentDeck.name;
-    downloadPDFFile(<PDFDocument
-      cards={cards}
-      type={currentDeck.type}
-    />, fileName);
   }
 
   //deletes all cards and resets index to 0
@@ -128,7 +118,7 @@ const DeckEditor = (props) => {
           setCurrentDeckIndex:setCurrentDeckIndex,
         }}
         cardFunctions={{
-          downloadAllCards:downloadAllCards,
+          downloadDeck:downloadDeck,
           resetAllCards:resetAllCards,
           addNewCard:addNewCard,
           goToCard:goToCard,

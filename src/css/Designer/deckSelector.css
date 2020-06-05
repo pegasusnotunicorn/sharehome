@@ -1,0 +1,120 @@
+.subcontentWrapper svg {
+  vertical-align:middle;
+  padding-right:10px;
+}
+
+.deckSelectorWrapper{
+
+}
+.deckSelectorRow.headerRow{
+  cursor:default;
+}
+
+.deckSelectorRow{
+  cursor:pointer;
+  width:95%;
+  border-width:1px;
+  border-style:solid;
+  border-color:rgba(45,45,45,1);
+  position:relative;
+  text-align:left;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:auto;
+  margin-bottom:-1px;
+  height:60px;
+}
+
+.deckSelectorRow:hover{
+
+}
+
+.deckSelectorRow p {
+  margin-top:0px;
+  margin-bottom:-6px;
+  margin-right:10px;
+}
+
+.deckSelectorCell{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:0;
+  white-space:nowrap;
+}
+
+.deckName{
+  text-overflow:ellipsis;
+  overflow:hidden;
+}
+
+.deckCard{
+  float:right;
+  margin-left:10px;
+  margin-right:10px;
+}
+
+@media only screen and (max-width:600px) {
+  .deckName {
+    max-width:100px !important;
+  }
+}
+
+.deckSelectorButtonWrapper{
+  padding:10px;
+  padding-right:0px;
+}
+
+.deckSelectorButton{
+  transition:background 0.25s;
+  background:rgba(255,255,255,0);
+  font-size:15px;
+  border-radius:25%;
+  padding:10px;
+  cursor:pointer;
+  position:relative;
+}
+
+.deckSelectorButton:hover{
+  background:rgba(255,255,255,0.25);
+}
+
+.deckSelectorButton svg{
+  vertical-align:middle;
+  padding-right:0;
+}
+
+.deckSelectorButton:active{
+  background-color:rgba(255,255,255,0.25) !important;
+}
+
+.moreDialog{
+  position:absolute;
+  background:rgba(50,50,50);
+  min-width:100px;
+  z-index:1;
+  border-radius:10px;
+  overflow:hidden;
+  left:25%;
+  top:75%;
+}
+
+.deckSelectorButton input[type="file"] {
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+  width: 1px;
+  height: 1px;
+}
+.moreDialog input[type="file"] + label {
+  cursor:pointer;
+}
+
+.moreDialog .button{
+  display:block;
+  width:100%;
+  text-transform:none;
+  padding:20px;
+  font-size:1em;
+}

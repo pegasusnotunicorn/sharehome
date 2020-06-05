@@ -7,6 +7,9 @@ body {
   color:white;
   text-align:center;
   letter-spacing:1px;
+  overflow-x:hidden;
+  min-height:100vh;
+  position:relative;
 }
 
 a {

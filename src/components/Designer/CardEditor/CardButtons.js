@@ -12,12 +12,18 @@ const CardButtons = (props) => {
         <>
           <input
             id="imageFileInput"
-            type="file"
-            onChange={props.handleInputChange}
             name="image"
+            type="file"
             accept="image/*"
+            onChange={props.handleInputChange}
           />
-          <label id="imageFileLabel" className="noselect button is-bordered contentButton" htmlFor="imageFileInput"><Image />Change Image</label>
+          <label
+            id="imageFileLabel"
+            className="noselect button is-bordered contentButton"
+            htmlFor="imageFileInput"
+          >
+            <Image />Change Image
+          </label>
         </>
       }
 

@@ -13,12 +13,8 @@ const DesignerPage = (props) => {
   const [decks, dispatchDeck] = useStickyReducer(reducerForArrays, [], "decks");
   const [currentDeckIndex, setCurrentDeckIndex] = useStickyState(false, "currentDeckIndex");
 
-
   useEffect(()=>{
     document.title = "SHAREHOME - Card Designer";
-
-    // props.setShowFooter(false);  //hide footer for designer page
-    // props.setShowFooter(!Number.isInteger(currentDeckIndex));  //hide footer for designer page
   });
 
   let updateCurrentDeck = (newDeck) => {
@@ -32,7 +28,7 @@ const DesignerPage = (props) => {
   //show deck manager if we don't have a current deck we are editing
   return (
     <>
-      <div className="content max-width padding-bottom">
+      <div className="content max-width">
         <NavLink to="/"><div className="title noselect"></div></NavLink>
         <Switch>
           <Route exact path="/designer/edit" render={()=>{

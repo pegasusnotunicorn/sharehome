@@ -52,7 +52,7 @@ const Charades = (props) => {
 
       <div className="stepSplitterLine"><ChevronDown className="is-48" /></div>
 
-      <div className="stepWrapper">
+      <div className="stepWrapper greenBorder">
         <h2 className="subtitle">Step 3</h2>
         <p>Whoever first correctly guesses all the Members earns a point. The player with the most points wins!</p>
         <div className="illustrationWrapperCenter">

@@ -101,11 +101,11 @@
 }
 
 .deckSelectorButton input[type="file"] {
-  opacity: 0;
-  position: absolute;
-  pointer-events: none;
-  width: 1px;
-  height: 1px;
+  opacity:0;
+  position:absolute;
+  pointer-events:none;
+  width:1px;
+  height:1px;
 }
 .moreDialog input[type="file"] + label {
   cursor:pointer;

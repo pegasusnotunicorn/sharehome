@@ -46,6 +46,7 @@ export const Card = (props) => {
     if (cardRef.current && typeof props.randomDegree !== "undefined"){
       let cardRefCurrent = cardRef.current;
       cardRefCurrent.style.bottom = props.randomBottom;
+      cardRefCurrent.style.bottom = (isClicked) ? "40px" : props.randomBottom;
       cardRefCurrent.style.transform = (isClicked) ? "rotate(0deg)" : props.randomDegree;
     }
   }, [isClicked, props.randomBottom, props.transition, props.randomDegree]);
@@ -61,17 +62,9 @@ export const Card = (props) => {
         + disableShadowClass + " "
         + props.className}
       style={cardStyle}
-      onMouseDown={(e)=>{
-        if (typeof props.flipPercentage !== "undefined"){
-          setIsClicked(true);
-        }
-      }}
-      onMouseUp={(e)=>{
-        setIsClicked(false);
-      }}
-      onMouseOut={(e)=>{
-        if (isClicked){
-          setIsClicked(false);
+      onClick={()=>{
+        if (typeof props.randomDegree !== "undefined"){
+          setIsClicked(!isClicked);
         }
       }}
     >

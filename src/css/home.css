@@ -1,4 +1,4 @@
-.title{
+.content .title{
   text-transform:uppercase;
   font-size:60px;
   padding:20px;
@@ -6,6 +6,7 @@
   background-color:#2A188B;
   display:inline-block;
   margin:auto;
+  margin-top:40px;
   margin-bottom:3vh;
   width:255px;
   line-height:100%;

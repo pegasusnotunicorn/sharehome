@@ -7,27 +7,31 @@ function randomIntFromInterval(min, max) { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-//create an array of random cards given type and total amount to make
-const RandomCardsForFooter = (type, totalSame, totalAll) => {
-  return [...Array(totalSame)].map((curr, index)=>{
-
-    //random stuff to simulate throwing cards from below the screen
-    let randomLeft = Math.round((Math.random() * 10 - 5) + (index)*(100/totalSame));
-    let randomBottom = randomIntFromInterval(-35, 0);
-    let randomZ = Math.round(Math.random() * totalAll);
-    let randomDegree = randomIntFromInterval(-180, 180);
-    let randomTransition = Math.round(Math.random() * 75) / 100;
+//create an array of random cards given approximate ratio of eventgoal to person cards
+const RandomCardsForFooter = (totalPeopleCards, totalEventGoalCards) => {
+  return [...Array(totalPeopleCards + totalEventGoalCards)].map((curr, index, array)=>{
 
     //half of all person cards are members/commentators and same for event/goal cards
-    let tempType = (type === "person")
-      ? ((Math.random() > 0.5) ? "member" : "commentator")
-      : ((Math.random() > 0.5) ? "goal" : "event");
+    let broadType = (Math.random() > (totalPeopleCards / array.length)) ? "eventgoal" : "person";
+    let specificType = (broadType === "person")
+        ? ((Math.random() > 0.5) ? "member" : "commentator")
+        : ((Math.random() > 0.5) ? "goal" : "event");
+
+    //random stuff to simulate throwing cards from below the screen
+    let randomTransition = Math.round(Math.random() * 75) / 100;
+    let randomDegree = randomIntFromInterval(-180, 180);
+    let randomZ = Math.round(Math.random() * array.length);
+    let randomLeft = Math.round((index - 1) * (100 / array.length));
+
+    //u shaped distribution
+    let uShapeVar = Math.floor(Math.pow((index + 1 - array.length / 2), 2) / 4) - 15;
+    let randomBottom = uShapeVar;
 
     let props = {
-      id:type + index,
-      key:tempType + index,
-      type:tempType,
-      flipPercentage: 0.75,     //75% chance of showing front of the card
+      id:broadType + index,
+      key:broadType + index,
+      type:specificType,
+      flipPercentage: 0.75,     //chance of showing front of the card
       mainStyle:{
         //stuff needed size the card
         width:"35vh",
@@ -40,6 +44,8 @@ const RandomCardsForFooter = (type, totalSame, totalAll) => {
         left:randomLeft + "vw",
         bottom:"-100%",
         transition:"bottom " + randomTransition + "s, transform " + randomTransition + "s " + randomTransition/2 + "s",
+        //other shit
+        cursor:"pointer",
       },
       //used for animation later in useEffect
       randomBottom:randomBottom + "vh",
@@ -47,7 +53,7 @@ const RandomCardsForFooter = (type, totalSame, totalAll) => {
     }
 
     //dont flip event / goal cards
-    if (type !== "person"){
+    if (broadType === "eventgoal"){
       props.showFront = false;
     }
 
@@ -57,25 +63,25 @@ const RandomCardsForFooter = (type, totalSame, totalAll) => {
 
 const Footer = (props) => {
 
-  let totalMemberCards = Math.ceil(window.innerWidth / 150);
+  //used to make ratio of cards
+  let totalPeopleCards = Math.ceil(window.innerWidth / 150);
   let totalEventGoalCards = Math.ceil(window.innerWidth / 400);
-  let totalCards = totalMemberCards + totalEventGoalCards;
 
-  let memberCards = RandomCardsForFooter("person", totalMemberCards, totalCards);
-  let eventGoalCards = RandomCardsForFooter("eventgoal", totalEventGoalCards, totalCards);
+  let footerCards = RandomCardsForFooter(totalPeopleCards, totalEventGoalCards);
 
-  //animate bottom + rotation to simulate "throwing" the cards from bottom
+  //toggle a flip so we can avoid the first flip no show problem
   useEffect(()=>{
-    for (let i = 0; i < memberCards.length; i++){
-      let memberCardDom = document.getElementById("person" + i);
-      memberCardDom.classList.toggle("is-flipped");   //toggle a flip so we can avoid the first flip no show problem
+    for (let i = 0; i < footerCards.length; i++){
+      let personCard = document.getElementById("person" + i);
+      if (personCard){
+        document.getElementById("person" + i).classList.toggle("is-flipped");
+      }
     }
   });
 
   return (
     <div className="footer">
-      {eventGoalCards}
-      {memberCards}
+      {footerCards}
     </div>
   )
 }

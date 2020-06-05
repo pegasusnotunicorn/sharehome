@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import { Square, CheckSquare, MinusSquare, Trash2, Copy, Download, MoreVertical } from 'react-feather';
 import { saveAs } from 'file-saver';
 
@@ -16,6 +16,8 @@ const DeckRow = (props) => {
   let setCurrentDeckIndex = props.setCurrentDeckIndex;
   let selectDecks = props.selectDecks;
 
+  let history = useHistory();
+
   //select this row!
   function selectRow(e){
     e.stopPropagation();
@@ -25,6 +27,7 @@ const DeckRow = (props) => {
   return (
     <div onClick={(e)=>{
       setCurrentDeckIndex(currentDeckIndex);
+      history.push("/designer/edit")
     }} className={"deckSelectorRow noselect " + ((currentDeck.selected) ? "blueBackground" : "")}>
       <div className="deckSelectorCell">
         <div className="deckSelectorButtonWrapper no-border">
@@ -92,7 +95,7 @@ const DeckHeader = (props) => {
     SelectedSquareIcon = MinusSquare;
   }
 
-  let pluralDecks = (selectedDecks.length > 1) ? "these decks?" : "this deck?";
+  let pluralDecks = (selectedDecks.length > 1) ? "these decks" : "this deck";
 
   //toggle select all or none
   function selectAllOrNone(){
@@ -224,15 +227,17 @@ const DeckHeader = (props) => {
               deleteDecks(selectedDecks);
             }}
             icon={<Trash2 />}
-            modalText={"Are you sure you want to delete " + pluralDecks}
+            modalText={`Are you sure you want to delete ${pluralDecks}?`}
           />
         </div>
         <div className="deckSelectorButtonWrapper">
-          <Download
+          <ConfirmModalButton
             className="noselect button transparentBackground deckSelectorButton"
-            onClick={(e)=>{
+            onClick={()=>{
               downloadDecks(selectedDecks, decks);
             }}
+            icon={<Download />}
+            modalText={`Are you sure you want to download ${pluralDecks} (as PDFs)?`}
           />
         </div>
         <div className="deckSelectorButtonWrapper">
@@ -242,7 +247,7 @@ const DeckHeader = (props) => {
               duplicateDecks(selectedDecks);
             }}
             icon={<Copy />}
-            modalText={"Are you sure you want to copy " + pluralDecks}
+            modalText={`Are you sure you want to copy ${pluralDecks}?`}
           />
         </div>
         <div className="deckSelectorButtonWrapper">

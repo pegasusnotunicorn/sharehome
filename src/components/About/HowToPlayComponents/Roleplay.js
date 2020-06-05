@@ -119,7 +119,15 @@ const Roleplay = (props) => {
 
         </div>
 
-        <p className="showRulesButton noselect" onClick={toggleSteps}>Sounds good! Take me to the game rules.</p>
+        <p
+          className="showRulesButton noselect"
+          onClick={()=>{
+            window.scrollTo({top:0,behavior:"smooth"});
+            toggleSteps();
+          }}
+        >
+          Sounds good! Take me to the game rules.
+        </p>
 
       </div>
 
@@ -276,7 +284,7 @@ const Roleplay = (props) => {
 
         <div className="stepWrapperSplit">
 
-          <div className="stepWrapper">
+          <div className="stepWrapper greenBorder">
             <h2 className="subtitle">Step 5 - Reveal Round</h2>
             <p>
               All Members are now back at the house and talk about how their days went. Any Member can ask out any other Member now.
@@ -308,6 +316,9 @@ const Roleplay = (props) => {
                 <UserPlus className="greenStroke" />
               </div>
             </div>
+            <p>
+              The game ends whenever you get bored. The player with the most points wins!
+            </p>
           </div>
 
           <div className="stepWrapper">

@@ -1,57 +1,57 @@
 .blue {
-  color:#2A188B;
+  color:#2A188B !important;
 }
 .darkblue {
-  color:#1F1169;
+  color:#1F1169 !important;
 }
 .green {
-  color:#03C04E;
+  color:#03C04E !important;
 }
 .red {
-  color:#FF3A20;
+  color:#FF3A20 !important;
 }
 .yellow {
-  color:#F9C22E;
+  color:#F9C22E !important;
 }
 
 .blueBackground {
-  background-color:#2A188B;
+  background-color:#2A188B !important;
 }
 .transparentBackground {
-  background-color:transparent;
+  background-color:transparent !important;
 }
 .greenBackground {
-  background-color:#03C04E;
+  background-color:#03C04E !important;
 }
 .redBackground {
-  background-color:#FF3A20;
+  background-color:#FF3A20 !important;
 }
 .yellowBackground {
-  background-color:#F9C22E;
+  background-color:#F9C22E !important;
 }
 
 .blueBorder {
-  border-color:#2A188B;
+  border-color:#2A188B !important;
 }
 .greenBorder {
-  border-color:#03C04E;
+  border-color:#03C04E !important;
 }
 .redBorder {
-  border-color:#FF3A20;
+  border-color:#FF3A20 !important;
 }
 .yellowBorder {
-  border-color:#F9C22E;
+  border-color:#F9C22E !important;
 }
 
 .blueStroke {
-  stroke:#2A188B;
+  stroke:#2A188B !important;
 }
 .greenStroke {
-  stroke:#03C04E;
+  stroke:#03C04E !important;
 }
 .redStroke {
-  stroke:#FF3A20;
+  stroke:#FF3A20 !important;
 }
 .yellowStroke {
-  stroke:#F9C22E;
+  stroke:#F9C22E !important;
 }

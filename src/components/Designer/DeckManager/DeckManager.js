@@ -10,18 +10,18 @@ const DeckManager = (props) => {
 
   let decks = props.decks;
   let dispatchDeck = props.dispatchDeck;
-  let currentDeckIndex = props.currentDeckIndex;
   let setCurrentDeckIndex = props.setCurrentDeckIndex;
 
   const history = useHistory();
 
   //create a new type of deck and go back to selector
   let createNewDeck = (type) => {
+    selectDecks([...Array(decks.length).keys()], false);
     dispatchDeck({
       type:"add",
       item:getDefaultDeck(type),
     });
-    history.goBack();
+    history.push("/designer");
   }
 
   //select or deselect an array of decks
@@ -79,40 +79,35 @@ const DeckManager = (props) => {
         </p>
         <p>For more details on how these cards work, visit the <NavLink to="/about">How to Play page</NavLink>.</p>
       </div>
-      { (Number.isInteger(currentDeckIndex))    //editing something
-        ? <Redirect to="/designer/edit" />
-        : (
-          <Switch>
-            <Route exact path="/designer/create" render={()=>{
-              return (
-                <DeckCreator
-                  decks={decks}
-                  createNewDeck={createNewDeck}
-                />
-              )
-            }} />
-            <Route render={()=>{
-              //show selector if we have decks to choose from
-              if (decks.length > 0){
-                return <DeckSelector
-                  decks={decks}
-                  deckFunctions={{
-                    setCurrentDeckIndex:setCurrentDeckIndex,
-                    selectDecks:selectDecks,
-                    deleteDecks:deleteDecks,
-                    duplicateDecks:duplicateDecks,
-                    addNewDeck:addNewDeck,
-                  }}
-                />
-              }
-              //if no decks, redirect to creator
-              else {
-                return <Redirect to="/designer/create" />
-              }
-            }} />
-          </Switch>
-        )
-      }
+      <Switch>
+        <Route exact path="/designer/create" render={()=>{
+          return (
+            <DeckCreator
+              decks={decks}
+              createNewDeck={createNewDeck}
+            />
+          )
+        }} />
+        <Route render={()=>{
+          //show selector if we have decks to choose from
+          if (decks.length > 0){
+            return <DeckSelector
+              decks={decks}
+              deckFunctions={{
+                setCurrentDeckIndex:setCurrentDeckIndex,
+                selectDecks:selectDecks,
+                deleteDecks:deleteDecks,
+                duplicateDecks:duplicateDecks,
+                addNewDeck:addNewDeck,
+              }}
+            />
+          }
+          //if no decks, redirect to creator
+          else {
+            return <Redirect to="/designer/create" />
+          }
+        }} />
+      </Switch>
     </>
   )
 }

@@ -8,6 +8,7 @@
   -webkit-perspective: 1000px; /* Remove this if you don't want the 3D effect */
   -moz-perspective: 1000px; /* Remove this if you don't want the 3D effect */
   -o-perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  pointer-events:all;
 }
 
 .flipcardInner{
@@ -30,7 +31,8 @@
   transform: rotateY(0deg);
 }
 
-.flipcard:not(.disable-shadow) .flipcardFront, .flipcard:not(.disable-shadow) .flipcardFront .flipcardBack{
+.flipcard:not(.disable-shadow) .flipcardBack,
+.flipcard:not(.disable-shadow) .flipcardFront{
   box-shadow:1px 1px 10px #000;
 }
 

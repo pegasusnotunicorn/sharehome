@@ -135,7 +135,7 @@ const AboutPage = (props) => {
   });
 
   return (
-    <div className="content padding-bottom max-width">
+    <div className="content max-width">
       <NavLink to="/"><div className="title noselect"></div></NavLink>
       <Content />
     </div>

@@ -3,5 +3,8 @@
   position:absolute;
   bottom:0;
   width:100vw;
-  height:35vh;
+  height:30vh;
+  overflow:hidden;
+  padding-top:20vh;
+  pointer-events:none;
 }

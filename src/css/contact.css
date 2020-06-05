@@ -5,3 +5,7 @@
 .madeby{
   margin-top:50px;
 }
+
+.madeby:last-child{
+  margin-bottom:20px;
+}

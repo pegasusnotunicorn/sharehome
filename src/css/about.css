@@ -73,6 +73,7 @@
   padding:2vh;
   border-width:3px;
   border-style:solid;
+  border-color:rgba(45,45,45,1);
   transition:all 0.5s;
 }
 

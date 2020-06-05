@@ -76,7 +76,7 @@ const Taboo = (props) => {
 
       <div className="stepSplitterLine"><ChevronDown className="is-48" /></div>
 
-      <div className="stepWrapper">
+      <div className="stepWrapper greenBorder">
         <h2 className="subtitle">Step 4</h2>
         <p>The team with the most amount of correct guesses wins!</p>
         <div className="illustrationWrapperCenter">

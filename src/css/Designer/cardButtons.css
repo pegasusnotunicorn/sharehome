@@ -1,3 +1,7 @@
+.contentButtonWrapper {
+  margin-bottom:40px;
+}
+
 /* Choose image file to upload */
 .contentButtonWrapper input[type="file"] {
   opacity: 0;

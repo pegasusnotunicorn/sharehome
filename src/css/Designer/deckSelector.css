@@ -3,15 +3,11 @@
   padding-right:10px;
 }
 
-.deckSelectorWrapper{
-
-}
-.deckSelectorRow.headerRow{
-  cursor:default;
-}
-
-.deckSelectorRow{
+.selectorRow:not(.headerRow){
   cursor:pointer;
+}
+
+.selectorRow{
   width:95%;
   border-width:1px;
   border-style:solid;
@@ -26,24 +22,20 @@
   height:60px;
 }
 
-.deckSelectorRow:hover{
-
-}
-
-.deckSelectorRow p {
+.selectorRow p {
   margin-top:0px;
   margin-bottom:-6px;
 }
 
-.deckSelectorRow p.margin-right {
+.selectorRow p.margin-right {
   margin-right:10px;
 }
 
-.deckSelectorRow p.margin-left {
+.selectorRow p.margin-left {
   margin-left:10px;
 }
 
-.deckSelectorCell{
+.selectorCell{
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -68,12 +60,12 @@
   }
 }
 
-.deckSelectorButtonWrapper{
+.selectorCellButtonWrapper{
   padding:10px;
   padding-right:0px;
 }
 
-.deckSelectorButton{
+.selectorButton{
   transition:background 0.25s;
   background:rgba(255,255,255,0);
   font-size:15px;
@@ -83,16 +75,16 @@
   position:relative;
 }
 
-.deckSelectorButton:hover{
+.selectorButton:hover{
   background:rgba(255,255,255,0.25);
 }
 
-.deckSelectorButton svg{
+.selectorButton svg{
   vertical-align:middle;
   padding-right:0;
 }
 
-.deckSelectorButton:active{
+.selectorButton:active{
   background-color:rgba(255,255,255,0.25) !important;
 }
 
@@ -107,7 +99,7 @@
   top:75%;
 }
 
-.deckSelectorButton input[type="file"] {
+.selectorButton input[type="file"] {
   opacity:0;
   position:absolute;
   pointer-events:none;

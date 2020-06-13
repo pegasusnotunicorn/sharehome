@@ -4,7 +4,6 @@ import { NavLink } from 'react-router-dom';
 const ErrorPage = (props) => {
 
   useEffect(() => {
-    props.setShowFooter(true);
     document.title = "SHAREHOME - Something went wrong!";
   });
 

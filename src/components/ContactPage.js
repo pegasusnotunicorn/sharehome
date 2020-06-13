@@ -9,7 +9,6 @@ import '../css/contact.css';
 const ContactPage = (props) => {
 
   useEffect(() => {
-    props.setShowFooter(true);
     document.title = "SHAREHOME - Contact us";
   });
 

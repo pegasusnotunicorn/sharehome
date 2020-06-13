@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { AlertTriangle, CheckCircle, XCircle } from 'react-feather';
 
-import '../../../css/Designer/modal.css';
+import '../../css/Designer/modal.css';
 
 const Modal = (props) => {
   return createPortal(

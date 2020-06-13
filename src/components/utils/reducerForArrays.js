@@ -40,6 +40,8 @@ export const reducerForArrays = (state, action) => {
       });
     case 'reset':
       return [action.item];
+    case 'replace':
+      return action.item;
     default:
       throw new Error();
   }

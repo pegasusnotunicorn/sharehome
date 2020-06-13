@@ -9,7 +9,7 @@ const GameModeDetails = (props) => {
   return (
     <div className="subcontentWrapper border-bottom">
       <h2 className="subtitle">
-        <NavLink className="backToAbout" to="/about"><ArrowLeft /></NavLink>
+        <NavLink className="subtitleBackPageArrow" to="/about"><ArrowLeft /></NavLink>
         {props.name}
       </h2>
       <GameModeIcons

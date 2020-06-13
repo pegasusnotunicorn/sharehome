@@ -3,7 +3,7 @@ import { Download, PlusSquare, Trash2, ArrowLeft } from 'react-feather';
 
 import NavbarTemplate from '../../Navbar/NavbarTemplate.js';
 import CardPreview from './CardPreview.js';
-import ConfirmModalButton from '../utils/ConfirmModalButton.js';
+import ConfirmModalButton from '../../utils/ConfirmModalButton.js';
 
 import '../../../css/Designer/sidebar.css';
 
@@ -64,7 +64,7 @@ const Sidebar = (props) => {
         <span>Now editing - </span>
         <input
           name="name"
-          className="deckNameInput"
+          className="input"
           type="text"
           onChange={(e)=>{
             updateCurrentDeck({

@@ -13,7 +13,9 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "express": "^4.17.1",
+    "express-session": "^1.17.1",
     "file-saver": "^2.0.2",
+    "http-proxy-middleware": "^1.0.4",
     "jszip": "^3.4.0",
     "pdfkit": "^0.11.0",
     "react": "^16.13.1",
@@ -23,6 +25,9 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "use-socket.io-client": "^1.1.0",
+    "uuid": "^8.1.0",
     "webfontloader": "^1.6.28"
   },
   "scripts": {
@@ -50,5 +55,16 @@
   "devDependencies": {
     "typescript": "^3.9.3"
   },
-  "optionalDependencies": {}
+  "optionalDependencies": {},
+  "nodemonConfig":{
+    "watch": "app.js",
+    "verbose": true,
+    "ignore": [
+      "\\.git/*",
+      "node_modules/*",
+      "public/*",
+      "src/css/*",
+      "*.css"
+    ]
+  }
 }

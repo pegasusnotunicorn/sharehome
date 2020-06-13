@@ -1,0 +1,27 @@
+.roomSelectorCell svg {
+  padding-left:20px;
+  padding-right:20px;
+}
+
+.selectorCell p.padding-right{
+  padding-right:20px;
+}
+
+.selectorRow.fatRow {
+  height:200px;
+  display:block;
+  text-align:center;
+  cursor:default;
+}
+
+.selectorRow.fatRow div{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  height:150px;
+}
+
+.selectorRow.fatRow p, .selectorRow.fatRow a{
+  margin:20px;
+}

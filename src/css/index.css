@@ -44,6 +44,36 @@ svg.is-48{
   height:48px;
 }
 
+svg.is-spinning {
+  -webkit-animation: spin 1000ms infinite linear;
+  animation: spin 1000ms infinite linear;
+  transform-origin:center center;
+  padding:0 !important;
+  margin:0 !important;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+
+
 .button svg {
   padding-right:10px;
 }
@@ -110,4 +140,25 @@ svg.is-48{
   margin:auto;
   display:block;
   margin-top:10px;
+}
+
+.subcontentWrapper{
+  max-width:500px;
+  margin:auto;
+  padding-left:10px;
+  padding-right:10px;
+}
+
+.subcontentWrapper.is-wider{
+  max-width:1250px;
+}
+
+.subcontentWrapper.border-bottom{
+  border-bottom:1px solid white;
+  margin-bottom:20px;
+}
+
+.subcontentWrapper.border-top{
+  border-top:1px solid white;
+  margin-top:20px;
 }

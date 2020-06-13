@@ -4,7 +4,7 @@ import { Square, CheckSquare, MinusSquare, Trash2, Copy, Download, MoreVertical 
 import { saveAs } from 'file-saver';
 
 import Card from '../../Card/Card.js';
-import ConfirmModalButton from '../utils/ConfirmModalButton.js';
+import ConfirmModalButton from '../../utils/ConfirmModalButton.js';
 import { downloadDecks } from '../utils/downloadPDFFile.js';
 
 import '../../../css/Designer/deckSelector.css';
@@ -105,7 +105,7 @@ const DeckHeader = (props) => {
     return (
       <div
         ref={moreButtonRef}
-        className="noselect button transparentBackground deckSelectorButton"
+        className="noselect button transparentBackground selectorButton"
         onClick={(e)=>{
           setShowMoreDialog(!showMoreDialog);
         }}
@@ -117,7 +117,7 @@ const DeckHeader = (props) => {
           type="file"
           accept="application/json"
           onChange={importJSON}
-          />
+        />
         { showMoreDialog &&
           <div className="moreDialog">
             <label
@@ -145,11 +145,11 @@ const DeckHeader = (props) => {
   }
 
   return (
-    <div className="deckSelectorRow headerRow noselect">
-      <div className="deckSelectorCell">
-        <div className="deckSelectorButtonWrapper">
+    <div className="selectorRow headerRow noselect">
+      <div className="selectorCell">
+        <div className="selectorCellButtonWrapper">
           <SelectedSquareIcon
-            className="deckSelectorButton"
+            className="selectorButton"
             onClick={selectAllOrNone}
             />
         </div>
@@ -163,39 +163,39 @@ const DeckHeader = (props) => {
         </div>
         { selectedDecks.length > 0 &&
           <>
-            <div className="deckSelectorButtonWrapper">
+            <div className="selectorCellButtonWrapper">
               <ConfirmModalButton
-                className="noselect button transparentBackground deckSelectorButton"
+                className="noselect button transparentBackground selectorButton"
                 onClick={()=>{
                   deleteDecks(selectedDecks);
                 }}
                 icon={<Trash2 />}
                 modalText={`Are you sure you want to delete ${pluralDecks}?`}
-                />
+              />
             </div>
-            <div className="deckSelectorButtonWrapper">
+            <div className="selectorCellButtonWrapper">
               <ConfirmModalButton
-                className="noselect button transparentBackground deckSelectorButton"
+                className="noselect button transparentBackground selectorButton"
                 onClick={()=>{
                   downloadDecks(selectedDecks, decks);
                 }}
                 icon={<Download />}
                 modalText={`Are you sure you want to download ${pluralDecks} (as PDFs)?`}
-                />
+              />
             </div>
-            <div className="deckSelectorButtonWrapper">
+            <div className="selectorCellButtonWrapper">
             <ConfirmModalButton
-              className="noselect button transparentBackground deckSelectorButton"
+              className="noselect button transparentBackground selectorButton"
               onClick={(e)=>{
                 duplicateDecks(selectedDecks);
               }}
               icon={<Copy />}
               modalText={`Are you sure you want to copy ${pluralDecks}?`}
-              />
+            />
           </div>
           </>
         }
-        <div className="deckSelectorButtonWrapper">
+        <div className="selectorCellButtonWrapper">
           <MoreButton />
         </div>
       </div>
@@ -246,19 +246,19 @@ const DeckRow = (props) => {
     <div onClick={(e)=>{
       setCurrentDeckIndex(currentDeckIndex);
       history.push("/designer/edit")
-    }} className={"deckSelectorRow noselect " + ((currentDeck.selected) ? "blueBackground" : "")}>
-      <div className="deckSelectorCell">
-        <div className="deckSelectorButtonWrapper no-border">
+    }} className={"selectorRow noselect " + ((currentDeck.selected) ? "blueBackground" : "")}>
+      <div className="selectorCell">
+        <div className="selectorCellButtonWrapper no-border">
           { currentDeck.selected
             ? (
               <CheckSquare
-                className="deckSelectorButton"
+                className="selectorButton"
                 onClick={selectRow}
               />
             )
             : (
               <Square
-                className="deckSelectorButton"
+                className="selectorButton"
                 onClick={selectRow}
               />
             )
@@ -278,7 +278,7 @@ const DeckRow = (props) => {
         />
         <p className="deckName">{currentDeck.name}</p>
       </div>
-      <div className="deckSelectorCell padding-left">
+      <div className="selectorCell padding-left">
         <p className="margin-right">{currentDeck.cards.length} {(currentDeck.cards.length > 1) ? "cards" : "card"}</p>
         <p className="margin-right">
           {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image, Copy, Trash2 } from 'react-feather';
 
-import ConfirmModalButton from '../utils/ConfirmModalButton.js';
+import ConfirmModalButton from '../../utils/ConfirmModalButton.js';
 
 import '../../../css/Designer/cardButtons.css';
 

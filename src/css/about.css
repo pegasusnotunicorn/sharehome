@@ -3,11 +3,6 @@
   cursor:pointer;
 }
 
-.subcontentWrapper.border-bottom{
-  border-bottom:1px solid white;
-  margin-bottom:20px;
-}
-
 .howToPlayWrapper{
   width:300px;
   display:inline-block;
@@ -16,7 +11,7 @@
   padding-bottom:0px;
 }
 
-.subtitle .backToAbout{
+.subtitle .subtitleBackPageArrow{
   position:absolute;
   left:0;
 }

@@ -23,17 +23,6 @@
   font-family: 'GenShinGothic Monospace Extra Light';
 }
 
-.subcontentWrapper{
-  max-width:500px;
-  margin:auto;
-  padding-left:10px;
-  padding-right:10px;
-}
-
-.subcontentWrapper.is-wider{
-  max-width:1250px;
-}
-
 .subtitle{
   margin:auto;
   max-width:75vw;

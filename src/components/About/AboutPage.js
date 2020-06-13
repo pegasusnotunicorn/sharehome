@@ -130,7 +130,6 @@ const AboutPage = (props) => {
   }
 
   useEffect(() => {
-    props.setShowFooter(true);
     document.title = "SHAREHOME - How to play";
   });
 

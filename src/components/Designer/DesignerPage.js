@@ -4,8 +4,8 @@ import { NavLink, Redirect, Switch, Route } from 'react-router-dom';
 //custom files
 import DeckManager from './DeckManager/DeckManager.js';
 import DeckEditor from './DeckEditor/DeckEditor.js';
-import { useStickyReducer, useStickyState } from './utils/stickyHooks.js';
-import { reducerForArrays } from './utils/reducerForArrays.js';
+import { useStickyReducer, useStickyState } from '../utils/stickyHooks.js';
+import { reducerForArrays } from '../utils/reducerForArrays.js';
 
 const DesignerPage = (props) => {
 

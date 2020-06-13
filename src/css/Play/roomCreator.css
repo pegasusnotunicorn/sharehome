@@ -1,0 +1,14 @@
+.roomCreatorButtonWrapper{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.createRoomInput{
+  padding:10px;
+  padding-top:16px;
+  line-height:100%;
+  margin-bottom:0;
+  font-size:20px;
+  vertical-align:middle;
+}

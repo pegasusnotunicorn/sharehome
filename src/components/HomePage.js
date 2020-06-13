@@ -8,7 +8,6 @@ import '../css/colors.css';
 const HomePage = (props) => {
 
   useEffect(() => {
-    props.setShowFooter(true);
     document.title = "SHAREHOME - A custom party game";
   });
 

@@ -1,15 +1,9 @@
 import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Gift, Printer } from 'react-feather';
+import { Gift, Printer, Smile } from 'react-feather';
 
 import '../css/home.css';
 import '../css/colors.css';
-
-// <NavLink className="callToAction noselect" to="/play">
-//   <Smile width="30" height="30" className="callToActionIcon blueStroke" />
-//   <h1>Play virtually<br></br>right now</h1>
-//   <p>friends or video conferencing not included</p>
-// </NavLink>
 
 const HomePage = (props) => {
 
@@ -26,6 +20,11 @@ const HomePage = (props) => {
         </h2>
       </div>
       <div className="CTAWrapper">
+        <NavLink className="callToAction noselect" to="/">
+          <Smile width="30" height="30" className="callToActionIcon blueStroke" />
+          <h1>Play virtually<br></br>right now</h1>
+          <p>friends or video conferencing not included</p>
+        </NavLink>
         <NavLink className="callToAction noselect" to="/purchase">
           <Gift width="30" height="30" className="callToActionIcon blueStroke" />
           <h1>Purchase a<br></br>physical copy</h1>

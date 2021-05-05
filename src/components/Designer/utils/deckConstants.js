@@ -23,6 +23,7 @@ export function getDefaultDeck(type){
     currentCardIndex:0,
     createdOn:Date.now(),
     selected:true,
+    description:"Default " + capitalize(type) + " Deck",
   }
 }
 

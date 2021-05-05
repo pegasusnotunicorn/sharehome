@@ -1,5 +1,10 @@
-.contentButtonWrapper {
-  margin-bottom:40px;
+.cardButtonsTitle{
+  margin-bottom:0;
+}
+
+.contentButtonWrapper{
+  margin-top:20px;
+  margin-bottom:20px;
 }
 
 /* Choose image file to upload */
@@ -21,4 +26,8 @@
   padding-top:12px;
   width: auto;
   display: inline-block;
+}
+
+.contentButton span{
+  line-height:100%;
 }

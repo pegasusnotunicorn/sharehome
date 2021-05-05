@@ -1,15 +1,19 @@
 .deckCreator{
   display:inline-block;
-  width:200px;
+  width:175px;
   cursor:pointer;
   position:relative;
-  margin:0px 20px 20px;
+  margin:0px 10px 20px;
   border-width:3px;
   border-style:solid;
   border-color:rgba(45,45,45,1);
   border-image:initial;
   padding:20px 20px 0px;
   transition:transform 0.5s ease 0s, -webkit-transform 0.5s ease 0s;
+}
+
+.deckCreator p{
+  margin-top:10px;
 }
 
 .deckCreator:hover{

@@ -180,7 +180,7 @@ const DeckHeader = (props) => {
                   downloadDecks(selectedDecks, decks);
                 }}
                 icon={<Download />}
-                modalText={`Are you sure you want to download ${pluralDecks} (as PDFs)?`}
+                modalText={`Are you sure you want to download ${pluralDecks} (in PDF format)?`}
               />
             </div>
             <div className="selectorCellButtonWrapper">
@@ -211,7 +211,7 @@ const DeckHeader = (props) => {
 }
 
 //row representing a single deck
-const DeckRow = (props) => {
+export const DeckRow = (props) => {
   let currentDeck = props.currentDeck;
   let currentDeckIndex = props.currentDeckIndex;
   let setCurrentDeckIndex = props.setCurrentDeckIndex;
@@ -221,6 +221,7 @@ const DeckRow = (props) => {
   let lastSelected = props.lastSelected;
   let setLastSelected = props.setLastSelected;
 
+  let [showSelector] = useState(props.showSelector);
   let history = useHistory();
 
   //select this row!
@@ -248,7 +249,8 @@ const DeckRow = (props) => {
       history.push("/designer/edit")
     }} className={"selectorRow noselect " + ((currentDeck.selected) ? "blueBackground" : "")}>
       <div className="selectorCell">
-        <div className="selectorCellButtonWrapper no-border">
+        { showSelector &&
+          <div className="selectorCellButtonWrapper no-border">
           { currentDeck.selected
             ? (
               <CheckSquare
@@ -264,10 +266,12 @@ const DeckRow = (props) => {
             )
           }
         </div>
+        }
         <Card
           className="deckCard"
           type={currentDeck.type}
           showFront={false}
+          hideFront={true}
           disableFlip={true}
           disableShadow={true}
           mainStyle={{
@@ -319,6 +323,7 @@ const DeckSelector = (props) => {
         selectDecks={selectDecks}
         lastSelected={lastSelected}
         setLastSelected={setLastSelected}
+        showSelector={true}
       />
     )
   });
@@ -326,6 +331,7 @@ const DeckSelector = (props) => {
   return (
     <>
       <h3>My SHAREHOME decks</h3>
+      <p>Click on a deck below to edit its contents.</p>
       <div className="deckSelectorWrapper">
         <DeckHeader
           decks={decks}

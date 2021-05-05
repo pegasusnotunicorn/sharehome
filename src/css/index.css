@@ -107,8 +107,21 @@ svg.is-spinning {
   border:0;
 }
 
+.button.is-rounded{
+  border-radius:4px;
+}
+
 .button.is-bordered{
   border:4px solid #1F1169;
+}
+
+.button.is-transparent{
+  background:transparent;
+}
+
+.button.is-transparent:active{
+  background:rgba(40,40,40,1) !important;
+  color:white !important;
 }
 
 .button:active{
@@ -149,6 +162,10 @@ svg.is-spinning {
   padding-right:10px;
 }
 
+.subcontentWrapper.max-width{
+  max-width:750px;
+}
+
 .subcontentWrapper.is-wider{
   max-width:1250px;
 }
@@ -161,4 +178,33 @@ svg.is-spinning {
 .subcontentWrapper.border-top{
   border-top:1px solid white;
   margin-top:20px;
+}
+
+.subtitle{
+  position:relative;
+  word-break:break-word;
+}
+
+.subtitleBackPageArrow{
+  position:absolute;
+  left:-40px;
+  cursor:pointer;
+  top:50%;
+  transform:translateY(-50%);
+}
+
+.subsubtitle{
+  margin-top:0px;
+  position:relative;
+}
+
+input[type="text"]:not(.cardViewerInput){
+  padding:10px;
+  padding-top:16px;
+  line-height:100%;
+  margin-bottom:0;
+  font-size:20px;
+  vertical-align:middle;
+  min-width:300px;
+  font-family: 'Interstate Extra Light Condensed';
 }

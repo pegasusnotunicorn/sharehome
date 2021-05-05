@@ -82,9 +82,9 @@
   width:calc(100% - 40px);
 }
 
-.test {
-  margin-top:10px;
-  background-color:white;
-  border-radius:40%;
-  padding:12px;
+.callToActionIcon {
+  margin-top: 10px;
+  background-color: #fff;
+  border-radius: 40%;
+  padding: 12px;
 }

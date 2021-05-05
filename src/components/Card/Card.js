@@ -5,33 +5,35 @@ import CardBack from "./CardBack.js";
 import "../../css/cards.css"
 
 //a flip-able card based on the actual cards
-//props are - showFront, disableFlip, id, type, mainStyle
+//props are - showFront, disableFlip, id, type, mainStyle (width/height/fontSize)
 export const Card = (props) => {
 
-  const [isClicked, setIsClicked] = useState(false);
-  const [randomFlip] = useState(Math.random());
   const cardRef = useRef();
+  const [isClicked, setIsClicked] = useState(false);
+  const [showFront] = useState(props.showFront);      //forcibly show front (true) or back (false), undefined = flippable
+  const [disableFlip] = useState(props.disableFlip || false);
+  const [disableShadow] = useState(props.disableShadow || false);
+  const [randomFlip] = useState(Math.random());
 
-  let isFlippedClass, disableFlippedClass, disableShadowClass = "";
+  //don't render the front or the back
+  const [hideFront] = useState(props.hideFront);
+  const [hideBack] = useState(props.hideBack);
 
-  //turn off random flip
-  if (typeof props.showFront !== "undefined"){
-    isFlippedClass = (props.showFront) ? "" : "is-flipped";
+  //disable stuff via classes
+  let classes = "";
+  if (disableShadow) classes += " disable-shadow ";
+  if (disableFlip || isClicked) {
+    classes += " disable-flip ";
   }
+  //turn off random flip if force show front or back
+  if (typeof showFront !== "undefined"){
+    classes += (props.showFront) ? " " : " is-flipped ";
+  }
+  //else randomly flip the card on load based on flipPercentage
   else {
     let flipPercentage = (typeof props.flipPercentage !== "undefined") ? props.flipPercentage : 0.5;
-    isFlippedClass = (randomFlip > flipPercentage) ? "" : "is-flipped";
+    classes += (randomFlip > flipPercentage) ? " " : " is-flipped ";
   }
-
-  //disable flip
-  disableFlippedClass = (props.disableFlip) ? "disable-flip" : "";
-
-  //disable shadow
-  disableShadowClass = (props.disableShadow) ? "disable-shadow" : "";
-
-  //if clicked, dont flip
-  isFlippedClass = (isClicked) ? "" : isFlippedClass;
-  disableFlippedClass = (isClicked) ? "disable-flip" : disableFlippedClass;
 
   //click to disable rotation and bring to front
   const cardStyle = {
@@ -57,9 +59,7 @@ export const Card = (props) => {
       ref={cardRef}
       className={
         "noselect flipcard "
-        + isFlippedClass + " "
-        + disableFlippedClass + " "
-        + disableShadowClass + " "
+        + classes
         + props.className}
       style={cardStyle}
       onClick={()=>{
@@ -69,15 +69,20 @@ export const Card = (props) => {
       }}
     >
       <div className="flipcardInner">
-        <div className="noselect flipcardFront">
-          <CardFront
-            type={props.type}
-            personName={props.personName}
-          />
-        </div>
-        <div className="noselect flipcardBack">
-          <CardBack {...props} />
-        </div>
+        { !hideFront &&
+          <div className="noselect flipcardFront">
+            <CardFront
+              type={props.type}
+              personName={props.personName}
+              mainStyle={props.mainStyle}
+            />
+          </div>
+        }
+        { !hideBack &&
+          <div className="noselect flipcardBack">
+            <CardBack {...props} />
+          </div>
+        }
       </div>
     </div>
   )
@@ -93,6 +98,7 @@ const CardFront = (props) => {
       return (
         <CardFrontPerson
           personName={props.personName}
+          mainStyle={props.mainStyle}
         />
       );
     case ("goal"):

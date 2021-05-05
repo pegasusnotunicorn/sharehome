@@ -12,10 +12,12 @@ export const NavbarTemplate = (props) => {
 
   if (props.position === "left"){
     navbarStyle.left = startingPosition;
+    navbarStyle.borderRight = "border-right:4px solid #1F1169";
     openCloseStyle.left = 0;
   }
   if (props.position === "right"){
     navbarStyle.right = startingPosition;
+    navbarStyle.borderLeft = "border-right:4px solid #1F1169";
     openCloseStyle.right = 20;
   }
 

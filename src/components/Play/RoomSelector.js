@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink } from 'react-router-dom';
-import { RefreshCw, Home, Users, Frown } from 'react-feather';
+import { Home, Users } from 'react-feather';
+
+import { ExistingRowsHeader, LoadingRow, NoRoomsRow } from '../utils/TableRows.js';
 
 import '../../css/Play/roomSelector.css';
 
 const RoomSelector = (props) => {
   let rooms = props.rooms;
-  let totalRoomCount = Object.keys(rooms).length;
+  let totalRoomCount = rooms.length;
   let currentSocket = props.currentSocket;
   let emitJoinRoom = props.emitJoinRoom;
   let setCurrentRoomName = props.setCurrentRoomName;
@@ -45,15 +47,17 @@ const RoomSelector = (props) => {
         <p><NavLink to="/play/create">Create a new room</NavLink> and invite your friends or click on an existing room below to join and play with strangers on the internet!</p>
         <p>For more details on how to play, visit the <NavLink to="/about">How to Play page</NavLink>.</p>
       </div>
-      <div className="subcontentWrapper is-wider">
+      <div className="subcontentWrapper max-width">
         <h3>
           Existing rooms
         </h3>
-        <ExistingRoomsHeader
-          getRooms={getRooms}
+        <ExistingRowsHeader
+          onRefresh={getRooms}
+          link={"/play/create"}
+          linkText={"+ Create a new room"}
         />
         { loadingRows
-          ? <LoadingRows />
+          ? <LoadingRow loadingMessage={"Now loading rooms..."}/>
           : (totalRoomCount > 0)
             ? (
               <ExistingRooms
@@ -61,34 +65,15 @@ const RoomSelector = (props) => {
                 emitJoinRoom={emitJoinRoom}
               />
             )
-            : <NoRoomsRow />
+            : (
+              <NoRoomsRow
+                noRowsMessage={"There are no available public rooms."}
+                link={"/play/create"}
+              />
+            )
         }
       </div>
     </>
-  )
-}
-
-const ExistingRoomsHeader = (props) => {
-  let getRooms = props.getRooms;
-
-  return (
-    <div className="selectorRow headerRow noselect">
-      <div className="selectorCell">
-        <div className="selectorCellButtonWrapper">
-          <RefreshCw
-            className="selectorButton"
-            onClick={getRooms}
-          />
-        </div>
-      </div>
-      <div className="selectorCell">
-        <p className="margin-right">
-          <NavLink to="/play/create">
-            + Create a new room
-          </NavLink>
-        </p>
-      </div>
-    </div>
   )
 }
 
@@ -97,22 +82,29 @@ const ExistingRooms = (props) => {
   let rooms = props.rooms;
   let emitJoinRoom = props.emitJoinRoom;
 
-  return Object.keys(rooms).map((elem, index) => {
-    let iteratingRoom = rooms[elem];
-    let totalPlayers = (iteratingRoom.players.length + " player") + ((iteratingRoom.players.length > 1) ? "s" : "");
+  return rooms.map((elem, index) => {
+    let iteratingRoom = elem;
+    let totalPlayers = (iteratingRoom.players.length + " player") + ((iteratingRoom.players.length > 1 || iteratingRoom.players.length === 0) ? "s" : "");
     return (
       <div
         className="selectorRow noselect"
         key={"room" + index}
         onClick={()=>{
-          emitJoinRoom(iteratingRoom.roomName);
+          emitJoinRoom({
+            roomName:iteratingRoom.roomName
+          });
         }}
       >
         <div className="selectorCell roomSelectorCell">
-          <Home /><p>{iteratingRoom.roomName}</p>
+          <Home />
+          <p>{iteratingRoom.roomName}</p>
+          { iteratingRoom.description &&
+            <p className="roomSelectorDescription">{iteratingRoom.description}</p>
+          }
         </div>
         <div className="selectorCell">
-          <p className="padding-right">
+          <Users /><p className="margin-right">{totalPlayers}</p>
+          <p className="margin-right">
             {
               new Intl.DateTimeFormat({
                 year: "numeric",
@@ -121,37 +113,10 @@ const ExistingRooms = (props) => {
               }).format(new Date(iteratingRoom.createdOn))
             }
           </p>
-          <Users /><p className="margin-right">{totalPlayers}</p>
         </div>
       </div>
     )
   });
-}
-
-//to show when loading rooms
-const LoadingRows = () => {
-  return (
-    <div className="selectorRow fatRow loadingRow">
-      <div>
-        <RefreshCw className="loadingRowRefresh is-48" />
-        <p>Now loading rooms...</p>
-        <p>Just wait one second!</p>
-      </div>
-    </div>
-  )
-}
-
-//to show when there are no rooms
-const NoRoomsRow = () => {
-  return (
-    <div className="selectorRow fatRow noRow">
-      <div>
-        <Frown className="is-48" />
-        <p>There are no existing rooms.</p>
-        <NavLink to="/play/create">Make a new one!</NavLink>
-      </div>
-    </div>
-  )
 }
 
 export default RoomSelector;

@@ -34,9 +34,9 @@ const RandomCardsForFooter = (totalPeopleCards, totalEventGoalCards) => {
       flipPercentage: 0.75,     //chance of showing front of the card
       mainStyle:{
         //stuff needed size the card
-        width:"35vh",
-        height:"25vh",
-        fontSize:"1vh",
+        width:"300px",
+        height:"215px",
+        fontSize:"7.5px",
         //stuff needed to simulate the random throwing
         position:"absolute",
         transform:"rotate(0deg)",

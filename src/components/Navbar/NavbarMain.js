@@ -1,10 +1,12 @@
 import React from 'react';
-import { Home, HelpCircle, Mail, Edit, Star, ShoppingCart } from 'react-feather';
+import { Home, HelpCircle, Mail, Edit, ShoppingCart } from 'react-feather';
 
 import { NavLink } from 'react-router-dom';
 import NavbarTemplate from './NavbarTemplate.js';
 import '../../css/navbar.css';
 import '../../css/hamburger.css';
+
+// <NavLink to="/play" activeClassName="is-active" className="button noselect navbarButton"><Star />Play Online</NavLink>
 
 //main navbar for page navigation on the website
 export const NavbarMain = () => {
@@ -16,7 +18,6 @@ export const NavbarMain = () => {
         <NavLink to="/about" activeClassName="is-active" className="button noselect navbarButton"><HelpCircle />How to play</NavLink>
         <NavLink to="/contact" activeClassName="is-active" className="button noselect navbarButton"><Mail />Contact</NavLink>
         <NavLink to="/designer" activeClassName="is-active" className="button noselect navbarButton"><Edit />Designer</NavLink>
-        <NavLink to="/play" activeClassName="is-active" className="button noselect navbarButton"><Star />Play Online</NavLink>
         <NavLink to="/purchase" activeClassName="is-active" className="button noselect navbarButton"><ShoppingCart />Purchase</NavLink>
       </div>
       <div className="navbarBottomWrapper">

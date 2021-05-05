@@ -6,37 +6,42 @@ import ConfirmModalButton from '../../utils/ConfirmModalButton.js';
 import '../../../css/Designer/cardButtons.css';
 
 const CardButtons = (props) => {
+  const currentDeck = props.currentDeck;
+
   return (
-    <div className="contentButtonWrapper contentWrapper">
-      { (["member", "commentator"].indexOf(props.type) !== -1) &&
-        <>
-          <input
-            id="imageFileInput"
-            name="image"
-            type="file"
-            accept="image/*"
-            onChange={props.handleInputChange}
-          />
-          <label
-            id="imageFileLabel"
-            className="noselect button is-bordered contentButton"
-            htmlFor="imageFileInput"
-          >
-            <Image />Change Image
-          </label>
-        </>
-      }
+    <>
+      <div className="contentButtonWrapper">
+        <h3 className="cardButtonsTitle">Card Editing Tools</h3>
+        { (["member", "commentator"].indexOf(currentDeck.type) !== -1) &&
+          <>
+            <input
+              id="imageFileInput"
+              name="image"
+              type="file"
+              accept="image/*"
+              onChange={props.handleInputChange}
+            />
+            <label
+              id="imageFileLabel"
+              className="noselect button is-transparent is-rounded contentButton"
+              htmlFor="imageFileInput"
+            >
+              <Image />Change Image
+            </label>
+          </>
+        }
 
-      <button className="noselect button is-bordered contentButton" onClick={props.duplicateCurrentCard}><Copy />Duplicate Card</button>
+        <button className="noselect button is-transparent is-rounded contentButton" onClick={props.duplicateCurrentCard}><Copy />Duplicate Card</button>
 
-      <ConfirmModalButton
-        className="noselect button is-bordered contentButton"
-        onClick={props.removeCurrentCard}
-        icon={<Trash2 />}
-        text="Delete Card"
-        modalText="Are you sure you want to delete the current card?"
-      />
-    </div>
+        <ConfirmModalButton
+          className="noselect button is-transparent is-rounded contentButton"
+          onClick={props.removeCurrentCard}
+          icon={<Trash2 />}
+          text="Delete Card"
+          modalText="Are you sure you want to delete the current card?"
+        />
+      </div>
+    </>
   )
 }
 

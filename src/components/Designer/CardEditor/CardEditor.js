@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
+import { ArrowLeft } from 'react-feather';
 
-//custom files
 import { getImageObject, pdfDimensions } from '../utils/cardConstants.js';
 
 import CardViewer from './CardViewer.js';
@@ -23,6 +23,10 @@ const CardEditor = (props) => {
   const currentDeck = props.currentDeck;
   const currentCard = currentDeck.cards[currentDeck.currentCardIndex];
 
+  //functions that update the deck
+  const setCurrentDeckIndex = props.deckFunctions.setCurrentDeckIndex;
+
+  //functions that update the current card
   const updateCurrentCard = props.cardFunctions.updateCurrentCard;
   const removeCurrentCard = props.cardFunctions.removeCurrentCard;
   const duplicateCurrentCard = props.cardFunctions.duplicateCurrentCard;
@@ -36,12 +40,13 @@ const CardEditor = (props) => {
   }
 
   //event handlers for inputs
-  const handleInputChange = (e) => {
+  const handleInputChange = async (e) => {
     switch (e.target.name) {
       case 'image':
         if (e.target.files[0]){
           const tempImageURL = URL.createObjectURL(e.target.files[0]);
           const tempImageName = e.target.files[0].name;
+          const file = e.target.files[0];
 
           //get new details (width / height) of uploaded image and generate a new image object
           let img = new Image();
@@ -52,8 +57,11 @@ const CardEditor = (props) => {
               img.width,
               img.height,
             ));
+
+            tempCard.image.file = file;
             updateCurrentCard(tempCard);
           };
+
           img.src = tempImageURL;
         }
         break;
@@ -112,6 +120,24 @@ const CardEditor = (props) => {
 
   return (
     <>
+      <div className="subcontentWrapper border-bottom">
+        <h2 className="subtitle">
+          <ArrowLeft className="subtitleBackPageArrow" onClick={()=>{setCurrentDeckIndex(false)}} />
+          <span>Now Editing - {currentDeck.name}</span>
+        </h2>
+        <h3 className="subsubtitle">
+          {capitalize(props.currentDeck.type)} Cards
+        </h3>
+        <p>
+          Click on any text inside the card below to edit it. You can also reposition the background image by clicking and dragging.
+        </p>
+      </div>
+      <CardButtons
+        currentDeck={currentDeck}
+        handleInputChange={handleInputChange}
+        removeCurrentCard={removeCurrentCard}
+        duplicateCurrentCard={duplicateCurrentCard}
+      />
       <CardViewer
         type={currentDeck.type}
         deckName={currentDeck.name}
@@ -124,14 +150,13 @@ const CardEditor = (props) => {
         handleInputChange={handleInputChange}
         viewerMagnifyValue={props.viewerMagnifyValue}
       />
-      <CardButtons
-        type={currentDeck.type}
-        handleInputChange={handleInputChange}
-        removeCurrentCard={removeCurrentCard}
-        duplicateCurrentCard={duplicateCurrentCard}
-      />
     </>
   );
+}
+
+//capitalize first letter of a string
+function capitalize(string){
+  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 export default CardEditor;

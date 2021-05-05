@@ -15,14 +15,14 @@ const Taboo = (props) => {
         <p>Split into teams and pick a representative for your team.</p>
         <div className="illustrationWrapperCenter">
           <div>
-            <Users />
-            <Users />
+            <Users className="is-flipped" />
+            <Users className="is-flipped" />
             <UserCheck className="greenStroke" style={{paddingLeft:"25px"}}/>
           </div>
           <div>
             <UserCheck className="redStroke" style={{paddingRight:"25px"}} />
-            <Users className="is-flipped" />
-            <Users className="is-flipped" />
+            <Users />
+            <Users />
           </div>
         </div>
       </div>
@@ -41,14 +41,15 @@ const Taboo = (props) => {
             <Watch />
             <Card
               type="member"
+              hideFront={true}
               showFront={false}
               disableFlip={true}
               mainStyle={cardStyle}
             />
           </div>
           <div>
-            <Users className="is-flipped" />
-            <Users className="is-flipped" />
+            <Users />
+            <Users />
           </div>
         </div>
       </div>
@@ -86,9 +87,9 @@ const Taboo = (props) => {
             <Users className="is-flipped" />
           </div>
           <div>
-            <Users className="is-flipped" style={{marginRight:"10px"}} />
+            <Users style={{marginRight:"10px"}} />
             <Frown className="redStroke" style={{marginRight:"10px"}} />
-            <Users className="is-flipped" />
+            <Users />
           </div>
         </div>
       </div>

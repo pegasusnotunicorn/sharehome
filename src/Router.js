@@ -7,8 +7,12 @@ import HomePage from './components/HomePage.js';
 import AboutPage from './components/About/AboutPage.js';
 import ContactPage from './components/ContactPage.js';
 import DesignerPage from './components/Designer/DesignerPage.js';
-import PlayPage from './components/Play/PlayPage.js';
 import ErrorPage from './components/ErrorPage.js';
+
+// import PlayPage from './components/Play/PlayPage.js';
+// <Route path="/play" render={() => {
+//   return <PlayPage />
+// }} />
 
 const Router = (props) => {
 
@@ -27,9 +31,6 @@ const Router = (props) => {
         }} />
         <Route path="/designer" render={() => {
           return <DesignerPage />
-        }} />
-        <Route path="/play" render={() => {
-          return <PlayPage />
         }} />
         <Route render={() => {
           return <ErrorPage />

@@ -26,50 +26,54 @@ const PersonCardViewer = (props) => {
       className="cardViewer noselect contentWrapper"
       style={cardViewerDynamicStyles.style}
       onMouseOut={props.handleMouseUp}
-      >
+    >
       <div className="cardViewerBleed nopointerevent" style={cardViewerDynamicStyles.bleedStyle}></div>
       <div className={"cardViewerText " + props.textNoPointerEvent} style={cardViewerDynamicStyles.textWrapperStyle}>
         <div style={cardViewerDynamicStyles.mainFont}>
           <AutosizeInput
             name="name"
-            className="cardViewerInput name"
+            className="cardViewerInputWrapper name"
+            inputClassName="cardViewerInput"
             inputStyle={cardViewerDynamicStyles.mainFont}
             type="text"
             onChange={props.handleInputChange}
             value={currentCard.name}
             placeholder={currentCard.name}
-            />
+          />
           (<AutosizeInput
             name="age"
-            className="cardViewerInput"
+            className="cardViewerInputWrapper"
+            inputClassName="cardViewerInput"
             inputStyle={cardViewerDynamicStyles.mainFont}
             type="number"
             extraWidth={0}
             onChange={props.handleInputChange}
             value={currentCard.age}
             placeholder={currentCard.age.toString()}
-            />)
+          />)
           </div>
           <div style={cardViewerDynamicStyles.subFont}>
             <AutosizeInput
               name="job"
-              className="cardViewerInput"
+              className="cardViewerInputWrapper"
+              inputClassName="cardViewerInput"
               inputStyle={cardViewerDynamicStyles.subFont}
               type="text"
               onChange={props.handleInputChange}
               value={currentCard.job}
               placeholder={currentCard.job}
-              />
+            />
             &nbsp;
             <AutosizeInput
               name="japaneseName"
-              className="cardViewerInput japaneseName"
+              className="cardViewerInputWrapper japaneseName"
+              inputClassName="cardViewerInput"
               inputStyle={cardViewerDynamicStyles.subFont}
               type="text"
               onChange={props.handleInputChange}
               value={currentCard.japaneseName}
               placeholder={currentCard.japaneseName}
-              />
+            />
           </div>
         </div>
         <div className="cardViewerShadow nopointerevent"></div>
@@ -82,7 +86,7 @@ const PersonCardViewer = (props) => {
           onMouseDown={props.handleMouseDown}
           onMouseUp={props.handleMouseUp}
           onMouseMove={props.handleMouseMove}
-          />
+        />
       </div>
     )
   }
@@ -117,7 +121,7 @@ const EventGoalCardViewer = (props) => {
       <div className="cardViewerText" style={cardViewerDynamicStyles.textWrapperStyle}>
         <textarea
           name="description"
-          className="cardViewerInput textarea"
+          className="cardViewerInputWrapper textarea"
           style={cardViewerDynamicStyles.mainFont}
           rows={maxRows}
           onChange={handleTextAreaInput}

@@ -2,8 +2,8 @@ import React from 'react';
 import { NavLink, Redirect, Switch, Route, useHistory } from 'react-router-dom';
 
 import DeckCreator from './DeckCreator.js';
+import DeckCopier from './DeckCopier.js';
 import DeckSelector from './DeckSelector.js';
-import { getDefaultDeck } from '../utils/deckConstants.js';
 
 //show create a new deck or edit an existing deck
 const DeckManager = (props) => {
@@ -15,11 +15,11 @@ const DeckManager = (props) => {
   const history = useHistory();
 
   //create a new type of deck and go back to selector
-  let createNewDeck = (type) => {
+  let createNewDeck = (newDeck) => {
     selectDecks([...Array(decks.length).keys()], false);
     dispatchDeck({
       type:"add",
-      item:getDefaultDeck(type),
+      item:newDeck,
     });
     history.push("/designer");
   }
@@ -85,6 +85,15 @@ const DeckManager = (props) => {
             <DeckCreator
               decks={decks}
               createNewDeck={createNewDeck}
+            />
+          )
+        }} />
+        <Route exact path="/designer/copy" render={()=>{
+          return (
+            <DeckCopier
+              decks={decks}
+              createNewDeck={createNewDeck}
+              setCurrentDeckIndex={setCurrentDeckIndex}
             />
           )
         }} />

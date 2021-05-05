@@ -1,15 +1,163 @@
-.roomButtonWrapper{
+/* <editor-fold>------------------------------------------------------TABLE*/
+
+.table{
+  border:3px solid white;
+  border-radius:100%;
+  width:750px;
+  height:500px;
+  display:block;
+  margin:auto;
+  margin-top:35vh;
+  margin-bottom:25vh;
+  position:relative;
+}
+
+.tableCenterWrapper{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  position:absolute;
+  width:100%;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+}
+
+.tableCenterWrapper .flipcard{
+  margin:10px;
+}
+
+/* </editor-fold> */
+
+/* <editor-fold>------------------------------------------------------PLAYERS*/
+
+.playerOnTable{
+  position:absolute;
+  transform:translate(-50%, -50%);
+  border:1px solid;
+  border-color:white;
+  background:black;
+  padding:10px;
+  line-height:150%;
+  word-break:break-all;
+  transition:all .5s;
+  overflow:hidden;
+}
+
+.playerOnTable p {
+  transition:all .5s;
+  margin-bottom:0px;
+}
+
+.playerCardWrapper{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  transition:all .5s;
+}
+
+.playerButtonsRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.playerButton{
+  flex-grow:1;
   display:flex;
   justify-content:space-around;
   align-items:center;
-  margin:20px;
+  padding:5px;
+  border-radius:5px;
+  background:black;
+  transition:background 0.25s;
+  cursor:pointer;
+  padding-left:10px;
+  padding-right:10px;
+  margin-right:10px;
 }
 
-.table{
-  border:1px solid white;
-  border-radius:25%;
-  width:100%;
-  height:50vh;
-  display:block;
-  margin-top:20px;
+.playerButton:last-child{
+  margin-right:0px;
 }
+
+.playerButton span{
+  margin-top:3px;
+}
+
+.playerButton span:first-child{
+  margin-right:10px;
+}
+
+.playerButton span:last-child{
+  margin-left:10px;
+}
+
+.playerButton svg{
+  padding:0;
+}
+
+.playerButton:hover{
+  background:rgba(255,255,255,.15) !important;
+}
+
+.playerButton:active{
+  background:rgba(255,255,255,.3) !important;
+}
+
+/* </editor-fold> */
+
+/* <editor-fold>------------------------------------------------------MYPLAYER*/
+
+.playerOnTable.myPlayer{
+  padding:20px;
+}
+
+.playerOnTable.myPlayer p {
+  margin-bottom:6px;
+}
+
+.playerOnTable.myPlayer{
+  z-index:100;
+  border-width:3px;
+}
+
+.playerOnTable.myPlayer .playerButtonsWrapper{
+  margin-top:10px;
+}
+
+.playerOnTable.myPlayer .playerButtonsRow:not(:last-child){
+  margin-bottom:10px;
+}
+
+/* </editor-fold> */
+
+/* <editor-fold>------------------------------------------------------OTHERPLAYER*/
+
+.playerOnTable.is-active{
+  padding:20px;
+  z-index:99;
+}
+
+.playerOnTable.is-active p {
+  margin-bottom:10px;
+}
+
+.playerOnTable.is-active .playerCardWrapper{
+  padding-bottom:50px;
+}
+
+.playerOnTable:not(.myPlayer).is-active .playerButtonsWrapper{
+  bottom:20px;
+  left:20px;
+}
+
+.playerOnTable:not(.myPlayer) .playerButtonsWrapper{
+  position:absolute;
+  width:calc(100% - 40px);
+  transition:all 0.5s;
+  left:20px;
+  bottom:-100%;
+}
+
+/* </editor-fold> */

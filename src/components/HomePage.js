@@ -1,9 +1,15 @@
 import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Smile, Gift, Printer } from 'react-feather';
+import { Gift, Printer } from 'react-feather';
 
 import '../css/home.css';
 import '../css/colors.css';
+
+// <NavLink className="callToAction noselect" to="/play">
+//   <Smile width="30" height="30" className="callToActionIcon blueStroke" />
+//   <h1>Play virtually<br></br>right now</h1>
+//   <p>friends or video conferencing not included</p>
+// </NavLink>
 
 const HomePage = (props) => {
 
@@ -20,18 +26,13 @@ const HomePage = (props) => {
         </h2>
       </div>
       <div className="CTAWrapper">
-        <NavLink className="callToAction noselect" to="/play">
-          <Smile width="30" height="30" className="test blueStroke" />
-          <h1>Play virtually<br></br>right now</h1>
-          <p>friends or video conferencing not included</p>
-        </NavLink>
         <NavLink className="callToAction noselect" to="/purchase">
-          <Gift width="30" height="30" className="test blueStroke" />
+          <Gift width="30" height="30" className="callToActionIcon blueStroke" />
           <h1>Purchase a<br></br>physical copy</h1>
           <p>for when this quarantine stuff is finally over</p>
         </NavLink>
         <NavLink className="callToAction noselect" to="/print">
-          <Printer width="30" height="30" className="test blueStroke" />
+          <Printer width="30" height="30" className="callToActionIcon blueStroke" />
           <h1>Print a shitty<br></br>paper version</h1>
           <p>free if you have a printer for some reason</p>
         </NavLink>

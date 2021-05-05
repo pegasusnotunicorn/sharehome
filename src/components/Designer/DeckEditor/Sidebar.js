@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Download, PlusSquare, Trash2, ArrowLeft } from 'react-feather';
+import { UploadCloud, Download, PlusSquare, Trash2 } from 'react-feather';
 
 import NavbarTemplate from '../../Navbar/NavbarTemplate.js';
 import CardPreview from './CardPreview.js';
@@ -13,9 +13,9 @@ const Sidebar = (props) => {
   const cards = currentDeck.cards;
   const currentCardIndex = currentDeck.currentCardIndex;
 
-  //functions that update the deck
+  //functiosn that update the deck
   const updateCurrentDeck = props.deckFunctions.updateCurrentDeck;
-  const setCurrentDeckIndex = props.deckFunctions.setCurrentDeckIndex;
+  const uploadCurrentDeck = props.deckFunctions.uploadCurrentDeck;
 
   //functions that update cards inside the deck
   const downloadDeck = props.cardFunctions.downloadDeck;
@@ -59,26 +59,47 @@ const Sidebar = (props) => {
   //innards for the navbar template
   const innards = (
     <>
-      <h2 className="designerTitle" onClick={()=>{setCurrentDeckIndex(false)}}><ArrowLeft /><span>Back to all decks</span></h2>
-      <div className="currentlyEditing">
-        <span>Now editing - </span>
-        <input
-          name="name"
-          className="input"
-          type="text"
-          onChange={(e)=>{
-            updateCurrentDeck({
-              ...currentDeck,
-              name:e.target.value
-            });
-          }}
-          value={currentDeck.name}
-          placeholder="Enter deck name here."
-        />
-        <br / >
-        Deck type - {capitalize(props.currentDeck.type)} Cards
-      </div>
+      <h3 className="sidebarTitle">Deck Editing Tools</h3>
       <div className="sidebarButtonWrapper sidebarContent">
+        <div className="sidebarInputWrapper">
+          <p>Edit deck name</p>
+          <input
+            name="name"
+            className="input"
+            type="text"
+            onChange={(e)=>{
+              updateCurrentDeck({
+                ...currentDeck,
+                name:e.target.value
+              });
+            }}
+            value={currentDeck.name}
+            placeholder="Enter deck name here."
+          />
+        </div>
+        <div className="sidebarInputWrapper">
+          <p>Edit deck description</p>
+          <input
+            name="name"
+            className="input"
+            type="text"
+            onChange={(e)=>{
+              updateCurrentDeck({
+                ...currentDeck,
+                description:e.target.value
+              });
+            }}
+            value={currentDeck.description}
+            placeholder="Enter deck description here."
+          />
+        </div>
+        <ConfirmModalButton
+          className="noselect button navbarButton sidebarButton"
+          onClick={uploadCurrentDeck}
+          icon={<UploadCloud />}
+          text="Share Deck Online"
+          modalText="Are you sure you want to upload this deck and share it online? <br /> <br /> By uploading this deck, you are agreeing that you have the legal rights to all the images and texts contained in this deck."
+        />
         <ConfirmModalButton
           className="noselect button navbarButton sidebarButton"
           onClick={downloadDeck}
@@ -121,9 +142,4 @@ function scrollTo(index){
   if (!!currentDOMPreview){
     document.getElementById("cardPreview"+index).scrollIntoView({behavior:"smooth"});
   }
-}
-
-//capitalize first letter of a string
-function capitalize(string){
-  return string.charAt(0).toUpperCase() + string.slice(1);
 }

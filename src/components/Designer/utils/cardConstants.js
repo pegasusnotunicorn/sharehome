@@ -33,7 +33,7 @@ export const pdfDimensions = {
 }
 
 //function to get an image's width + height after object-fit: cover
-function getCoverFitObject(objectWidth, objectHeight, viewerWidth, viewerHeight){
+export function getCoverFitObject(objectWidth, objectHeight, viewerWidth, viewerHeight){
   let viewerRatio = viewerWidth / viewerHeight;
   let objectRatio = objectWidth / objectHeight;
 

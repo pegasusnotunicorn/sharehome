@@ -16,6 +16,7 @@ const Charades = (props) => {
         <div className="illustrationWrapperCenter">
           <Card
             type="event"
+            hideFront={true}
             showFront={false}
             disableFlip={true}
             mainStyle={cardStyle}
@@ -43,6 +44,7 @@ const Charades = (props) => {
           <ArrowRight />
           <Card
             type="member"
+            hideFront={true}
             showFront={false}
             disableFlip={true}
             mainStyle={cardStyle}

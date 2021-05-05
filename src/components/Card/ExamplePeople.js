@@ -96,7 +96,7 @@ const examplePeople = [
     name: "Leslie Colins",
     age: 22,
     job: "Freelancer",
-    japaneseName: "ヘイズ",
+    japaneseName: "レズリー",
     image: {
       url: "/images/members/member_leslie.jpeg",
       name: "member_leslie.jpeg",

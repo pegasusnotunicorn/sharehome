@@ -12,16 +12,17 @@ const Guesswho = (props) => {
     <>
       <div className="stepWrapper">
         <h2 className="subtitle">Step 1</h2>
-        <p>Every player is given a random Member Card.</p>
+        <p>Every player is given a random Member Card. Do not look at your card but show it to everyone else.</p>
         <div className="illustrationWrapperCenter">
           <div>
-            <Users />
-            <Users />
-            <Users />
+            <Users className="is-flipped" />
+            <Users className="is-flipped" />
+            <Users className="is-flipped" />
           </div>
           <ArrowRight />
           <Card
             type="member"
+            hideFront={true}
             showFront={false}
             disableFlip={true}
             mainStyle={cardStyle}
@@ -54,7 +55,7 @@ const Guesswho = (props) => {
 
       <div className="stepWrapper greenBorder">
         <h2 className="subtitle">Step 3</h2>
-        <p>Whoever first guesses their Member correctly earns a point. The player with the most points wins!</p>
+        <p>Whoever correctly guesses their Member earns a point. The player with the most points wins!</p>
         <div className="illustrationWrapperCenter">
           <div>
             <UserCheck style={{marginRight:"10px"}}/>

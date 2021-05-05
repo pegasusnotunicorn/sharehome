@@ -11,15 +11,6 @@
   padding-bottom:0px;
 }
 
-.subtitle .subtitleBackPageArrow{
-  position:absolute;
-  left:0;
-}
-
-.subtitle{
-  position:relative;
-}
-
 .subtext{
   font-size:0.75em;
   line-height:100%;

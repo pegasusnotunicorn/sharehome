@@ -11,6 +11,7 @@ const DeckEditor = (props) => {
   const currentDeck = props.currentDeck;
   const updateCurrentDeck = props.updateCurrentDeck;
   const setCurrentDeckIndex = props.setCurrentDeckIndex;
+  const uploadCurrentDeck = props.uploadCurrentDeck;
 
   const cards = currentDeck.cards;
   const currentCardIndex = currentDeck.currentCardIndex;
@@ -109,14 +110,15 @@ const DeckEditor = (props) => {
           updateCurrentCard:updateCurrentCard,
           removeCurrentCard:removeCurrentCard,
           duplicateCurrentCard:duplicateCurrentCard,
+          setCurrentDeckIndex:setCurrentDeckIndex
         }}
-      />
-      <Sidebar
-        currentDeck={currentDeck}
         deckFunctions={{
           updateCurrentDeck:updateCurrentDeck,
           setCurrentDeckIndex:setCurrentDeckIndex,
         }}
+      />
+      <Sidebar
+        currentDeck={currentDeck}
         cardFunctions={{
           downloadDeck:()=>{
             downloadDeck(currentDeck);
@@ -124,6 +126,11 @@ const DeckEditor = (props) => {
           resetAllCards:resetAllCards,
           addNewCard:addNewCard,
           goToCard:goToCard,
+        }}
+        deckFunctions={{
+          updateCurrentDeck:updateCurrentDeck,
+          setCurrentDeckIndex:setCurrentDeckIndex,
+          uploadCurrentDeck:uploadCurrentDeck,
         }}
       />
     </>

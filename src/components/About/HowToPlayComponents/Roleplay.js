@@ -50,7 +50,7 @@ const Roleplay = (props) => {
           <div className="stepWrapper">
             <h2 className="subtitle">Step 2 - Members</h2>
             <p>
-              Players are assigned a random Member Card, a Goal Card, and receive two Signal Tokens.
+              Players are given a random Member Card, a Goal Card, and two Signal Tokens.
             </p>
             <div className="illustrationWrapperCenter">
               <div className="illustrationCardWrapper">
@@ -58,12 +58,14 @@ const Roleplay = (props) => {
                   type="member"
                   showFront={false}
                   disableFlip={true}
+                  hideFront={true}
                   mainStyle={{...cardStyle, marginRight:"10px"}}
                 />
                 <Card
                   type="goal"
                   showFront={false}
                   disableFlip={true}
+                  hideFront={true}
                   mainStyle={{...cardStyle, marginRight:"10px"}}
                 />
                 <ArrowUpCircle />
@@ -88,13 +90,14 @@ const Roleplay = (props) => {
           <div className="stepWrapper">
             <h2 className="subtitle">Step 2 - Commentators</h2>
             <p>
-              Players are assigned a random Commentator Card and receive a Signal Token.
+              Players are given a random Commentator Card and a Signal Token.
             </p>
             <div className="illustrationWrapperCenter">
               <div className="illustrationCardWrapper">
                 <Card
                   type="commentator"
                   showFront={false}
+                  hideFront={true}
                   disableFlip={true}
                   mainStyle={{...cardStyle, marginRight:"10px"}}
                 />
@@ -140,7 +143,7 @@ const Roleplay = (props) => {
           </p>
           <div className="illustrationWrapperCenter">
             <div>
-              <UserPlus />
+              <User className="greenStroke"/>
               <MessageSquare style={{marginLeft:"10px"}} />
             </div>
             <div>
@@ -153,12 +156,15 @@ const Roleplay = (props) => {
             All Members secretly point their Signal Tokens towards a Member who they like (may be as a friend) or hate. You can point at yourself.
           </p>
           <div className="illustrationWrapperCenter">
-            <User />
+            <User className="greenStroke"/>
             <ArrowRightCircle className="greenStroke" />
-            <User />
+            <User className="greenStroke"/>
             <ArrowLeftCircle className="redStroke" />
-            <User />
+            <User className="greenStroke"/>
           </div>
+          <li className="subtext">
+            Use your Member Card to cover your Signal Token.
+          </li>
         </div>
 
         <div className="stepSplitterLine"><ChevronDown className="is-48" /></div>
@@ -186,12 +192,15 @@ const Roleplay = (props) => {
           </p>
           <div className="illustrationWrapperCenter">
             <div>
-              <User style={{marginRight:"10px"}} />
+              <User  className="greenStroke" style={{marginRight:"10px"}} />
               <ArrowRightCircle className="greenStroke" style={{marginRight:"10px"}} />
-              <User />
+              <User className="greenStroke" />
             </div>
-            <User />
+            <User className="yellowStroke"/>
           </div>
+          <li className="subtext">
+            Place your signal tokens in between two members
+          </li>
         </div>
 
         <div className="stepSplitterLine"><ChevronDown className="is-48" /></div>
@@ -224,6 +233,7 @@ const Roleplay = (props) => {
                 <User style={{marginRight:"10px"}}/>
                 <Card
                   type="event"
+                  hideFront={true}
                   showFront={false}
                   disableFlip={true}
                   mainStyle={cardStyle}
@@ -264,6 +274,7 @@ const Roleplay = (props) => {
                 <User style={{marginRight:"10px"}}/>
                 <Card
                   type="event"
+                  hideFront={true}
                   showFront={false}
                   disableFlip={true}
                   mainStyle={cardStyle}
@@ -322,7 +333,7 @@ const Roleplay = (props) => {
           </div>
 
           <div className="stepWrapper">
-            <h2 className="subtitle">Graduations</h2>
+            <h2 className="subtitle">About Graduations</h2>
             <p>
               Any Members who have accomplished their goals may graduate to receive a point.
             </p>

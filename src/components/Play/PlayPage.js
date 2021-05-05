@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { NavLink, Switch, Route, Redirect, useHistory, useLocation } from 'react-router-dom';
 import { RefreshCw } from 'react-feather';
 import io from 'socket.io-client';
 
 import RoomCreator from './RoomCreator.js';
 import RoomSelector from './RoomSelector.js';
-import Room from './Room.js';
+import Room from './Room/Room.js';
+import { errorCodes } from '../utils/errorCodes.js';
 import { useStickyReducer } from '../utils/stickyHooks.js';
-import { reducerForObjects } from '../utils/reducerForObjects.js';
+import { reducerForArrays } from '../utils/reducers.js';
+import Modal from '../utils/Modal.js';
 
 const isDev = process.env.NODE_ENV === 'development';
 const ENDPOINT = "ws://localhost:3000";
@@ -18,11 +20,21 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
+function getRoomByName(rooms, roomName){
+  for (let x = 0; x < rooms.length ; x++){
+    if (rooms[x].roomName === roomName){
+      return rooms[x];
+    }
+  }
+  return false;
+}
+
 const PlayPage = (props) => {
   const [currentSocket, setCurrentSocket] = useState(null);
-  const [username, setUsername] = useState("", "username");
+  const [currentUser, setCurrentUser] = useState({});
+  const [displayMessage, setDisplayMessage] = useState("");
 
-  const [rooms, dispatchRooms] = useStickyReducer(reducerForObjects, {}, "rooms");
+  const [rooms, dispatchRooms] = useStickyReducer(reducerForArrays, [], "rooms");
   const [currentRoomName, setCurrentRoomName] = useState(false, "currentRoomName");
 
   const history = useHistory();
@@ -38,17 +50,22 @@ const PlayPage = (props) => {
       : io({ path: '/socket-io' });
     setCurrentSocket(socket)
 
+    //any error messages
+    socket.on("error_code", (data) => {
+      setDisplayMessage(errorCodes[data]);
+    });
+
     //any existing info on session
     socket.on("heres_existing_user", (data) => {
-      console.log("existing user session data");
-      if (data.username){
-        setUsername(data.username);
+      console.log("existing user session data", data);
+      if (data){
+        setCurrentUser(data);
       }
     });
 
     //get all existing rooms
     socket.on("heres_available_rooms", (data) => {
-      console.log("receiving all available rooms");
+      console.log("receiving all available rooms", data);
       dispatchRooms({
         type:"replace",
         item:data
@@ -57,10 +74,10 @@ const PlayPage = (props) => {
 
     //get room data about current room
     socket.on("heres_room_data", (data) => {
-      console.log("receiving room specific data");
+      console.log("receiving room specific data", data);
+      setCurrentRoomName(data.roomName);
       dispatchRooms({
-        type:"update",
-        index:data.roomName,
+        type:"add",
         item:data,
       });
     });
@@ -68,45 +85,53 @@ const PlayPage = (props) => {
     return () => { socket.disconnect() }
   }, [dispatchRooms]);
 
-  //to keep track of what currentRoomName was before changing
-  const previousRoomName = useRef(currentRoomName);
-  //go to room if currentroom exists and if currentRoomName changes to something new
+  //go to room if currentroom exists and only if currentRoomName changes to something new
+  const previousRoomName = useRef(currentRoomName);     //what currentRoomName was before changing
   useEffect(() => {
-    if (currentRoomName !== previousRoomName && rooms[currentRoomName]){
+    if (currentRoomName !== previousRoomName && getRoomByName(rooms, currentRoomName)){
       history.push("/play?room=" + currentRoomName);
     }
   }, [rooms, currentRoomName, history]);
 
-  //copy paste url link
-  useEffect(() => {
-    if (currentSocket && queryRoomName && !currentRoomName){
-      emitJoinRoom(queryRoomName);
-    }
-  }, [currentSocket, queryRoomName, currentRoomName])
-
   //emit that i am joining a room
-  function emitJoinRoom(roomName){
+  const emitJoinRoom = useCallback((roomObj, create) => {
     console.log("im joining room");
-    currentSocket.emit("im_joining_room", roomName);
-    setCurrentRoomName(roomName);
-  }
+    let emitText = (create) ? "im_creating_room" : "im_joining_room";
+    currentSocket.emit(emitText, roomObj);
+  }, [currentSocket]);
 
   //emit that i am leaving a room
-  function emitExitRoom(){
+  const emitExitRoom = useCallback(() => {
     console.log("im exiting room");
     currentSocket.emit("im_exiting_room", currentRoomName);
     setCurrentRoomName(false);
     history.push("/play");
-  }
+  }, [currentRoomName, currentSocket, history]);
+
+  //for when you copy paste url link and send to someone (they load rooms and join automatically)
+  useEffect(() => {
+    if (currentSocket && queryRoomName && !currentRoomName){
+      emitJoinRoom({
+        roomName:queryRoomName
+      });
+    }
+  }, [emitJoinRoom, currentSocket, queryRoomName, currentRoomName])
+
+  //tries to prevent refresh when current room is defined
+  useEffect(() => {
+    if (typeof currentRoomName === "string") window.onbeforeunload = () => {return true};
+    return () => { window.onbeforeunload = undefined }
+  });
 
   return (
-    <div className="content max-width">
+    <div className="content">
       <NavLink to="/"><div className="title noselect"></div></NavLink>
       <Switch>
         <Route exact path="/play/create" render={()=>{
           return (
             <RoomCreator
               emitJoinRoom={emitJoinRoom}
+              setDisplayMessage={setDisplayMessage}
             />
           )
         }} />
@@ -123,9 +148,10 @@ const PlayPage = (props) => {
             )
           }
           //rooms exists so check if the room exists
-          else if (Object.keys(rooms).length > 0){
+          else if (rooms.length > 0){
             return (
               <Room
+                currentUser={currentUser}
                 rooms={rooms}
                 queryRoomName={queryRoomName}
                 currentRoomName={currentRoomName}
@@ -147,6 +173,15 @@ const PlayPage = (props) => {
         }} />
         <Redirect to="/play" />
       </Switch>
+      { (displayMessage !== "") &&
+        <Modal
+          showModal={(displayMessage !== "")}
+          setShowModal={()=>{setDisplayMessage("")}}
+          showCancel={false}
+          modalText={displayMessage}
+          confirmText="Got it"
+        />
+      }
     </div>
   )
 }

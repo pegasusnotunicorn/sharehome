@@ -22,6 +22,18 @@
   height:60px;
 }
 
+.selectorRow .flipcardBack{
+  border:1px solid black;
+}
+
+.selectorRow.blueBackground {
+  color:white;
+}
+
+.selectorRow.blueBackground .flipcardBack{
+  border:1px solid #2A188B;
+}
+
 .selectorRow p {
   margin-top:0px;
   margin-bottom:-6px;
@@ -82,6 +94,7 @@
 .selectorButton svg{
   vertical-align:middle;
   padding-right:0;
+  stroke:black;
 }
 
 .selectorButton:active{

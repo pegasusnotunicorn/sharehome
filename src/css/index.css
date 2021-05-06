@@ -7,8 +7,6 @@ body {
   padding:0;
   border:0;
   font-family: 'Interstate Extra Light Condensed';
-  background:black;
-  color:white;
   text-align:center;
   letter-spacing:1px;
 }
@@ -20,7 +18,6 @@ body {
 }
 
 a {
-  color:white;
 }
 
 h1, h2, h3, h4, h5, p, li, ul, a, span {

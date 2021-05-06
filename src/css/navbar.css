@@ -19,7 +19,12 @@
   right:15px;
   width:auto;
   opacity:0;
+  color:white;
   transition:opacity 0.25s;
+}
+
+.navbar p, .navbar a{
+  color:white;
 }
 
 .navbar.is-active .title{
@@ -73,7 +78,7 @@
   height:40px;
   width:40px;
   cursor:pointer;
-  color:white;
+  color:black;
   font-size:25px;
   display:flex;
   justify-content:center;

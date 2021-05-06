@@ -6,6 +6,12 @@ import { getDefaultDeck } from '../utils/deckConstants.js';
 import Card from '../../Card/Card.js';
 import '../../../css/Designer/deckCreator.css';
 
+// <p>
+//   <NavLink to="/designer/copy">
+//     ...or click here to copy someone else's deck
+//   </NavLink>
+// </p>
+
 //CTA buttons to create a new deck
 const DeckCreator = (props) => {
 
@@ -57,11 +63,9 @@ const DeckCreator = (props) => {
         }
         <span>Select a type of deck to make</span>
       </h3>
-      <p>
-        <NavLink to="/designer/copy">
-          ...or click here to copy someone else's deck
-        </NavLink>
-      </p>
+
+
+
       <div className="deckCreatorWrapper">
         {deckTypes}
       </div>

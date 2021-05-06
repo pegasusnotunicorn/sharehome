@@ -4,6 +4,7 @@
   padding:20px;
   padding-bottom:10px;
   background-color:#2A188B;
+  color:white;
   display:inline-block;
   margin:auto;
   margin-top:40px;
@@ -37,7 +38,6 @@
 .callToAction {
   display:inline-block;
   padding-top:10px;
-  color:white;
   width:170px;
   height:250px;
   vertical-align:middle;
@@ -60,7 +60,7 @@
 }
 
 .callToAction:active{
-  border-color:white;
+  border-color:black;
 }
 
 .callToAction:hover{
@@ -84,7 +84,39 @@
 
 .callToActionIcon {
   margin-top: 10px;
-  background-color: #fff;
+  background-color: #000;
   border-radius: 40%;
   padding: 12px;
+}
+
+.is-hidden{
+  display:none;
+}
+
+.emailWrapper{
+  margin-top:75px;
+}
+
+.emailInput{
+  height:100%;
+  font-family: 'Interstate Extra Light Condensed';
+  font-size: 20px;
+  outline: 0;
+  line-height: 100%;
+  padding: 10px;
+  padding-top: 12px;
+  border: 1px solid black;
+  width:calc(100% - 150px);
+}
+
+.subscribeButton{
+  border:1px solid #2A188B;
+}
+
+.couchContainer{
+  max-width:750px;
+  padding:25px;
+  margin:auto;
+  margin-top:25px;
+  margin-bottom:25px;
 }

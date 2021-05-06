@@ -65,7 +65,7 @@ const DesignerPage = (props) => {
               return <Redirect to="/designer" />
             }
           }} />
-        <Route exact path={["/designer", "/designer/copy", "/designer/create"]} render={()=>{
+        <Route exact path={["/designer", "/designer/create"]} render={()=>{
             return (
               <DeckManager
                 decks={decks}

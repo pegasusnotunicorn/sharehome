@@ -1,12 +1,12 @@
 import React from 'react';
-import { Home, HelpCircle, Mail, Edit, ShoppingCart } from 'react-feather';
+import { Home, HelpCircle, Mail, Edit, Star } from 'react-feather';
 
 import { NavLink } from 'react-router-dom';
 import NavbarTemplate from './NavbarTemplate.js';
 import '../../css/navbar.css';
 import '../../css/hamburger.css';
 
-// <NavLink to="/play" activeClassName="is-active" className="button noselect navbarButton"><Star />Play Online</NavLink>
+// <NavLink to="/purchase" activeClassName="is-active" className="button noselect navbarButton"><ShoppingCart />Purchase</NavLink>
 
 //main navbar for page navigation on the website
 export const NavbarMain = () => {
@@ -16,9 +16,9 @@ export const NavbarMain = () => {
       <div className="navbarButtonWrapper">
         <NavLink exact={true} to="/" activeClassName="is-active" className="button noselect navbarButton"><Home />Home</NavLink>
         <NavLink to="/about" activeClassName="is-active" className="button noselect navbarButton"><HelpCircle />How to play</NavLink>
-        <NavLink to="/contact" activeClassName="is-active" className="button noselect navbarButton"><Mail />Contact</NavLink>
-        <NavLink to="/designer" activeClassName="is-active" className="button noselect navbarButton"><Edit />Designer</NavLink>
-        <NavLink to="/purchase" activeClassName="is-active" className="button noselect navbarButton"><ShoppingCart />Purchase</NavLink>
+        <NavLink to="/contact" activeClassName="is-active" className="button noselect navbarButton"><Mail />Contact Us</NavLink>
+        <NavLink to="/designer" activeClassName="is-active" className="button noselect navbarButton"><Edit />Card Designer</NavLink>
+        <a href="https://tabletopia.com/playground/sharehome-u81imm/play-now" rel="noopener noreferrer" target="_blank" activeClassName="is-active" className="button noselect navbarButton"><Star />Play Online</a>
       </div>
       <div className="navbarBottomWrapper">
         <p>Questions? Comments?</p>

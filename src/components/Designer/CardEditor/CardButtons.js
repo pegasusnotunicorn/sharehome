@@ -23,7 +23,7 @@ const CardButtons = (props) => {
             />
             <label
               id="imageFileLabel"
-              className="noselect button is-transparent is-rounded contentButton"
+              className="noselect button is-rounded contentButton"
               htmlFor="imageFileInput"
             >
               <Image />Change Image
@@ -31,10 +31,10 @@ const CardButtons = (props) => {
           </>
         }
 
-        <button className="noselect button is-transparent is-rounded contentButton" onClick={props.duplicateCurrentCard}><Copy />Duplicate Card</button>
+        <button className="noselect button is-rounded contentButton" onClick={props.duplicateCurrentCard}><Copy />Duplicate Card</button>
 
         <ConfirmModalButton
-          className="noselect button is-transparent is-rounded contentButton"
+          className="noselect button is-rounded contentButton"
           onClick={props.removeCurrentCard}
           icon={<Trash2 />}
           text="Delete Card"

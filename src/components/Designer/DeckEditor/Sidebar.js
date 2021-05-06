@@ -7,6 +7,14 @@ import ConfirmModalButton from '../../utils/ConfirmModalButton.js';
 
 import '../../../css/Designer/sidebar.css';
 
+// <ConfirmModalButton
+//   className="noselect button navbarButton sidebarButton"
+//   onClick={uploadCurrentDeck}
+//   icon={<UploadCloud />}
+//   text="Share Deck Online"
+//   modalText="Are you sure you want to upload this deck and share it online? <br /> <br /> By uploading this deck, you are agreeing that you have the legal rights to all the images and texts contained in this deck."
+// />
+
 //sidebar for editing the deck
 const Sidebar = (props) => {
   const currentDeck = props.currentDeck;
@@ -93,13 +101,6 @@ const Sidebar = (props) => {
             placeholder="Enter deck description here."
           />
         </div>
-        <ConfirmModalButton
-          className="noselect button navbarButton sidebarButton"
-          onClick={uploadCurrentDeck}
-          icon={<UploadCloud />}
-          text="Share Deck Online"
-          modalText="Are you sure you want to upload this deck and share it online? <br /> <br /> By uploading this deck, you are agreeing that you have the legal rights to all the images and texts contained in this deck."
-        />
         <ConfirmModalButton
           className="noselect button navbarButton sidebarButton"
           onClick={downloadDeck}

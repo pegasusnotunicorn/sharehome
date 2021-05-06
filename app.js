@@ -24,11 +24,11 @@ const sessionMiddleware = session({
 });
 app.use(sessionMiddleware);
 
-//start socket.io server
-require('./src/server/socketio.js')(server, sessionMiddleware);
-
-//API for decks
-require('./src/server/decks.js')(app);
+// //start socket.io server
+// require('./src/server/socketio.js')(server, sessionMiddleware);
+//
+// //API for decks
+// require('./src/server/decks.js')(app);
 
 //express will serve up build folder
 app.use(express.static(path.join(__dirname, 'build')));

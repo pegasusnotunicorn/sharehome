@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Download, PlusSquare, Trash2 } from 'react-feather';
 
 import NavbarTemplate from '../../Navbar/NavbarTemplate.js';
@@ -30,6 +30,8 @@ const Sidebar = (props) => {
   const resetAllCards = props.cardFunctions.resetAllCards;
   const addNewCard = props.cardFunctions.addNewCard;
   const goToCard = props.cardFunctions.goToCard;
+
+  const [visibility, setVisibility] = useState("visible");
 
   //focus the current card in the preview pane
   useEffect(()=>{
@@ -67,10 +69,10 @@ const Sidebar = (props) => {
   //innards for the navbar template
   const innards = (
     <>
-      <h3 className="sidebarTitle">Deck Editing Tools</h3>
+      <h3 className="sidebarTitle">Tools</h3>
       <div className="sidebarButtonWrapper sidebarContent">
         <div className="sidebarInputWrapper">
-          <p>Edit deck name</p>
+          <p>Deck name</p>
           <input
             name="name"
             className="input"
@@ -86,7 +88,7 @@ const Sidebar = (props) => {
           />
         </div>
         <div className="sidebarInputWrapper">
-          <p>Edit deck description</p>
+          <p>Deck description</p>
           <input
             name="name"
             className="input"
@@ -129,7 +131,8 @@ const Sidebar = (props) => {
       innards={innards}
       position="right"
       id="sidebar"
-      startingPosition="visible"
+      visibility={visibility}
+      setVisibility={setVisibility}
     />
   )
 }

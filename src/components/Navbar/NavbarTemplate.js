@@ -4,12 +4,13 @@ import React from 'react';
 export const NavbarTemplate = (props) => {
   const navbarWidth = 300;
   const openCloseStyle = {};
+  const startingPosition = (props.visibility === "visible") ? 0 : -(navbarWidth+10);
+  const startingHamburgerClass = (props.visibility === "visible") ? " is-active" : "";
+
+  //style the left or right sidebar
   const navbarStyle = {
     width:navbarWidth,
   }
-  const startingPosition = (props.startingPosition === "visible") ? 0 : -(navbarWidth+10);
-  const startingHamburgerClass = (props.startingPosition === "visible") ? " is-active" : "";
-
   if (props.position === "left"){
     navbarStyle.left = startingPosition;
     navbarStyle.borderRight = "border-right:4px solid #1F1169";
@@ -23,14 +24,12 @@ export const NavbarTemplate = (props) => {
 
   //function used to toggle open navbar
   const toggleNav = () => {
-    let navPosition = document.getElementById(props.id).style[props.position];
-    document.getElementById(props.id).style[props.position] = (navPosition === "0px") ? (-(navbarWidth + 10)) + "px" : "0px";
-    document.getElementById(props.id).classList.toggle("is-active");
-    document.getElementById(props.id + "OpenClose").classList.toggle("is-active");
+    let newVisiblity = (props.visibility === "visible") ? "invisible" : "visible";
+    props.setVisibility(newVisiblity);
   }
 
   return (
-    <div id={props.id} className="navbar" style={navbarStyle} >
+    <div id={props.id} className={"navbar" + startingHamburgerClass} style={navbarStyle} >
       <button id={props.id + "OpenClose"} className={"hamburger hamburger--slider navbarOpenClose" + startingHamburgerClass} onClick={toggleNav} style={openCloseStyle} type="button">
         <span className="hamburger-box">
           <span className="hamburger-inner"></span>

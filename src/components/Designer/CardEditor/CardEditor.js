@@ -123,12 +123,9 @@ const CardEditor = (props) => {
       <div className="subcontentWrapper border-bottom">
         <h2 className="subtitle">
           <ArrowLeft className="subtitleBackPageArrow" onClick={()=>{setCurrentDeckIndex(false)}} />
-          <span>Now Editing - {currentDeck.name}</span>
+          <span>Deck Editor</span>
         </h2>
-        <h3 className="subsubtitle">
-          {capitalize(props.currentDeck.type)} Cards
-        </h3>
-        <p>
+        <p className="cardEditorDescription">
           Click on any text inside the card below to edit it. You can also reposition the background image by clicking and dragging.
         </p>
       </div>
@@ -152,11 +149,6 @@ const CardEditor = (props) => {
       />
     </>
   );
-}
-
-//capitalize first letter of a string
-function capitalize(string){
-  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 export default CardEditor;

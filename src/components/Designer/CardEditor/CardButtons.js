@@ -11,7 +11,6 @@ const CardButtons = (props) => {
   return (
     <>
       <div className="contentButtonWrapper">
-        <h3 className="cardButtonsTitle">Card Editing Tools</h3>
         { (["member", "commentator"].indexOf(currentDeck.type) !== -1) &&
           <>
             <input

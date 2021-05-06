@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Home, HelpCircle, Mail, Edit, Star } from 'react-feather';
 
 import { NavLink } from 'react-router-dom';
@@ -10,15 +10,18 @@ import '../../css/hamburger.css';
 
 //main navbar for page navigation on the website
 export const NavbarMain = () => {
+  const [visibility, setVisibility] = useState("invisible");
+  const hideNav = () => { setVisibility("invisible"); }
+
   const innards = (
     <div style={{height:"100%"}}>
       <NavLink to="/"><div className="title noselect"></div></NavLink>
       <div className="navbarButtonWrapper">
-        <NavLink exact={true} to="/" activeClassName="is-active" className="button noselect navbarButton"><Home />Home</NavLink>
-        <NavLink to="/about" activeClassName="is-active" className="button noselect navbarButton"><HelpCircle />How to play</NavLink>
-        <NavLink to="/contact" activeClassName="is-active" className="button noselect navbarButton"><Mail />Contact Us</NavLink>
-        <NavLink to="/designer" activeClassName="is-active" className="button noselect navbarButton"><Edit />Card Designer</NavLink>
-        <a href="https://tabletopia.com/playground/sharehome-u81imm/play-now" rel="noopener noreferrer" target="_blank" activeClassName="is-active" className="button noselect navbarButton"><Star />Play Online</a>
+        <NavLink onClick={hideNav} exact={true} to="/" activeClassName="is-active" className="button noselect navbarButton"><Home />Home</NavLink>
+        <NavLink onClick={hideNav} to="/about" activeClassName="is-active" className="button noselect navbarButton"><HelpCircle />How to play</NavLink>
+        <NavLink onClick={hideNav} to="/contact" activeClassName="is-active" className="button noselect navbarButton"><Mail />Contact Us</NavLink>
+        <NavLink onClick={hideNav} to="/designer" activeClassName="is-active" className="button noselect navbarButton"><Edit />Card Designer</NavLink>
+        <a href="https://tabletopia.com/playground/sharehome-u81imm/play-now" rel="noopener noreferrer" target="_blank" activeclassname="is-active" className="button noselect navbarButton"><Star />Play Online</a>
       </div>
       <div className="navbarBottomWrapper">
         <p>Questions? Comments?</p>
@@ -32,6 +35,8 @@ export const NavbarMain = () => {
       innards={innards}
       position="left"
       id="navbar"
+      visibility={visibility}
+      setVisibility={setVisibility}
     />
   )
 }

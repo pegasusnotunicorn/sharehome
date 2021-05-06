@@ -26,6 +26,17 @@
   padding-top:12px;
   width: auto;
   display: inline-block;
+  background-color:white;
+  border:1px solid #DCDCDC;
+  color:black !important;
+}
+
+.contentButton:active{
+  background-color:#DCDCDC !important;
+  color:black !important;
+}
+.contentButton:active svg{
+  stroke:black !important;
 }
 
 .contentButton span{

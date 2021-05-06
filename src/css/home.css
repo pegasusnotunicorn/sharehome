@@ -96,12 +96,16 @@
   position: absolute; left: -5000px;
 }
 
+.forminputText{
+  margin-bottom:0;
+}
+
 .forminputText a{
   display:block;
 }
 
 .emailWrapper{
-  margin-top:75px;
+  margin-top:50px;
 }
 
 .emailInput{
@@ -125,5 +129,4 @@
   padding:25px;
   margin:auto;
   margin-top:25px;
-  margin-bottom:25px;
 }

@@ -92,6 +92,13 @@
 .is-hidden{
   display:none;
 }
+.hiddenInput{
+  position: absolute; left: -5000px;
+}
+
+.forminputText a{
+  display:block;
+}
 
 .emailWrapper{
   margin-top:75px;

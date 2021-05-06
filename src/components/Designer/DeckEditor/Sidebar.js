@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { UploadCloud, Download, PlusSquare, Trash2 } from 'react-feather';
+import { Download, PlusSquare, Trash2 } from 'react-feather';
 
 import NavbarTemplate from '../../Navbar/NavbarTemplate.js';
 import CardPreview from './CardPreview.js';
@@ -23,7 +23,7 @@ const Sidebar = (props) => {
 
   //functiosn that update the deck
   const updateCurrentDeck = props.deckFunctions.updateCurrentDeck;
-  const uploadCurrentDeck = props.deckFunctions.uploadCurrentDeck;
+  // const uploadCurrentDeck = props.deckFunctions.uploadCurrentDeck;
 
   //functions that update cards inside the deck
   const downloadDeck = props.cardFunctions.downloadDeck;

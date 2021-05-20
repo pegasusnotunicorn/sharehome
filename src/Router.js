@@ -5,6 +5,7 @@ import NavbarMain from './components/Navbar/NavbarMain.js';
 import Footer from './components/Footer.js';
 import HomePage from './components/HomePage.js';
 import AboutPage from './components/About/AboutPage.js';
+import PhotosPage from './components/Photos/PhotosPage.js';
 import ContactPage from './components/ContactPage.js';
 import DesignerPage from './components/Designer/DesignerPage.js';
 import ErrorPage from './components/ErrorPage.js';
@@ -25,6 +26,9 @@ const Router = (props) => {
         }} />
         <Route path="/about" render={() => {
           return <AboutPage />
+        }} />
+        <Route path="/photos" render={() => {
+          return <PhotosPage />
         }} />
         <Route exact path="/contact" render={() => {
           return <ContactPage />

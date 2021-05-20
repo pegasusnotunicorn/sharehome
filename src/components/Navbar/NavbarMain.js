@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, HelpCircle, Mail, Edit, Star } from 'react-feather';
+import { Home, HelpCircle, Mail, Edit, Star, Camera } from 'react-feather';
 
 import { NavLink } from 'react-router-dom';
 import NavbarTemplate from './NavbarTemplate.js';
@@ -19,6 +19,7 @@ export const NavbarMain = () => {
       <div className="navbarButtonWrapper">
         <NavLink onClick={hideNav} exact={true} to="/" activeClassName="is-active" className="button noselect navbarButton"><Home />Home</NavLink>
         <NavLink onClick={hideNav} to="/about" activeClassName="is-active" className="button noselect navbarButton"><HelpCircle />How to play</NavLink>
+        <NavLink onClick={hideNav} to="/photos" activeClassName="is-active" className="button noselect navbarButton"><Camera />Photos</NavLink>
         <NavLink onClick={hideNav} to="/contact" activeClassName="is-active" className="button noselect navbarButton"><Mail />Contact Us</NavLink>
         <NavLink onClick={hideNav} to="/designer" activeClassName="is-active" className="button noselect navbarButton"><Edit />Card Designer</NavLink>
         <a href="https://tabletopia.com/playground/sharehome-u81imm/play-now" rel="noopener noreferrer" target="_blank" activeclassname="is-active" className="button noselect navbarButton"><Star />Play Online</a>

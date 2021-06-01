@@ -1,11 +1,12 @@
-const express = require('express');
 const http = require('http');
 const path = require('path');
 const port = process.env.PORT || '8080';
 const multer = require('multer');
+const express = require('express');
 const upload = multer({ dest: './public/uploads/' });
 const bodyParser = require('body-parser')
 const session = require('express-session');
+const cors = require('cors');
 
 //create server
 let app = express();
@@ -30,10 +31,22 @@ app.use(sessionMiddleware);
 // //API for decks
 // require('./src/server/decks.js')(app);
 
+//CORS shit
+var whitelist = ['https://www.sharehomethegame.com', 'https://sharehomethegame.com', "http://www.sharehomethegame.com", "http://sharehomethegame.com"]
+var corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+
 //express will serve up build folder
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(express.static('build'));
-app.get('*', (req, res) => {
+app.get('*', cors(corsOptions), (req, res) => {
 	res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
 });
 

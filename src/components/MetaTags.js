@@ -8,7 +8,6 @@ const MetaTags = (props) => {
   return (
     <div className="metatag_wrapper">
       <Helmet>
-        <title>Page 1</title>
         <meta name="description" content={ description } />
 
         <meta itemprop="name" content={ description } />

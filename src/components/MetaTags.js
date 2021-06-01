@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 
 const MetaTags = (props) => {
 
-  const description = "A card game inspired by that hit Japanese reality TV show on that popular streaming service. SHAREHOME is a game about acting, laughing, and storytelling. What sort of relationships will you form? Will you uplift one another or devolve into chaos? You decide!"
+  const description = "Inspired by that hit Japanese reality TV show, SHAREHOME is a game about acting, laughing, and storytelling. What sort of relationships will you form? Will you uplift one another or devolve into chaos? You decide!"
 
   return (
     <div className="metatag_wrapper">

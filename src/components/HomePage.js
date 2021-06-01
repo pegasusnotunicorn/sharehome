@@ -24,7 +24,7 @@ const HomePage = (props) => {
 
         <GameModeIcons
           playerCount="2 to 6+ players"
-          playTime="10-30 minutes"
+          playTime="10-30+ minutes"
         />
 
         <CustomForm />

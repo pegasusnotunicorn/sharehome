@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
+import MetaTags from './components/MetaTags.js';
 import NavbarMain from './components/Navbar/NavbarMain.js';
 import Footer from './components/Footer.js';
 import HomePage from './components/HomePage.js';
@@ -19,6 +20,7 @@ const Router = (props) => {
 
   return (
     <BrowserRouter>
+      <MetaTags></MetaTags>
       <Switch>
         <Route exact path="/" render={() => {
           //pass the state setter so we can hide the footer when needed

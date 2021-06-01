@@ -3,6 +3,14 @@
   margin-bottom:100px;
 }
 
+.photoSubcontent{
+  margin-top:25px;
+}
+
+.photoSubcontent:first-child{
+  margin-top:0px !important;
+}
+
 .photoWrapper{
   width:100%;
 }

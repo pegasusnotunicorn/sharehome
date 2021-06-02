@@ -22,7 +22,7 @@ export const NavbarMain = () => {
         <NavLink onClick={hideNav} to="/photos" activeClassName="is-active" className="button noselect navbarButton"><Camera />Photos</NavLink>
         <NavLink onClick={hideNav} to="/contact" activeClassName="is-active" className="button noselect navbarButton"><Mail />Contact Us</NavLink>
         <NavLink onClick={hideNav} to="/designer" activeClassName="is-active" className="button noselect navbarButton"><Edit />Card Designer</NavLink>
-        <a href="https://tabletopia.com/playground/sharehome-u81imm/play-now" rel="noopener noreferrer" target="_blank" activeclassname="is-active" className="button noselect navbarButton"><Star />Play Online</a>
+        <a href="https://tabletopia.com/games/sharehome" rel="noopener noreferrer" target="_blank" activeclassname="is-active" className="button noselect navbarButton"><Star />Play Online</a>
       </div>
       <div className="navbarBottomWrapper">
         <p>Questions? Comments?</p>

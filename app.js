@@ -1,16 +1,21 @@
 const http = require('http');
 const path = require('path');
 const port = process.env.PORT || '8080';
-const multer = require('multer');
-const express = require('express');
-const upload = multer({ dest: './public/uploads/' });
-const bodyParser = require('body-parser')
-const session = require('express-session');
 const cors = require('cors');
+const express = require('express');
+// const multer = require('multer');
+// const upload = multer({ dest: './public/uploads/' });
+// const bodyParser = require('body-parser')
+// const session = require('express-session');
 
 //create server
 let app = express();
 app.use(cors());
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
 
 const server = http.createServer(app);
 // app.use(bodyParser.urlencoded({ extended: true }));		//application/xwww-form-urlencoded

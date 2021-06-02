@@ -11,19 +11,19 @@ const cors = require('cors');
 //create server
 let app = express();
 const server = http.createServer(app);
-app.use(bodyParser.urlencoded({ extended: true }));		//application/xwww-form-urlencoded
-app.use(bodyParser.json());		//application/json
-app.use(upload.any()); 		//formdata
+// app.use(bodyParser.urlencoded({ extended: true }));		//application/xwww-form-urlencoded
+// app.use(bodyParser.json());		//application/json
+// app.use(upload.any()); 		//formdata
 
 //cookie session for both express and socket.io
-const { v4: uuidv4 } = require('uuid');
-const sessionMiddleware = session({
-	secret: 'sharehome awesome game',
-	cookie: { maxAge: 24 * 60 * 60 * 1000 },		//1 day
-	resave: true,
-	saveUninitialized: true,
-});
-app.use(sessionMiddleware);
+// const { v4: uuidv4 } = require('uuid');
+// const sessionMiddleware = session({
+// 	secret: 'sharehome awesome game',
+// 	cookie: { maxAge: 24 * 60 * 60 * 1000 },		//1 day
+// 	resave: true,
+// 	saveUninitialized: true,
+// });
+// app.use(sessionMiddleware);
 
 // //start socket.io server
 // require('./src/server/socketio.js')(server, sessionMiddleware);
@@ -32,21 +32,12 @@ app.use(sessionMiddleware);
 // require('./src/server/decks.js')(app);
 
 //CORS shit
-var whitelist = ['https://www.sharehomethegame.com', 'https://sharehomethegame.com', "http://www.sharehomethegame.com", "http://sharehomethegame.com"]
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
+app.use(cors());
 
 //express will serve up build folder
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(express.static('build'));
-app.get('*', cors(corsOptions), (req, res) => {
+app.get('*', (req, res) => {
 	res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
 });
 

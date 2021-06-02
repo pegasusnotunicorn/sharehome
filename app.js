@@ -10,6 +10,8 @@ const cors = require('cors');
 
 //create server
 let app = express();
+app.use(cors());
+
 const server = http.createServer(app);
 // app.use(bodyParser.urlencoded({ extended: true }));		//application/xwww-form-urlencoded
 // app.use(bodyParser.json());		//application/json
@@ -30,9 +32,6 @@ const server = http.createServer(app);
 //
 // //API for decks
 // require('./src/server/decks.js')(app);
-
-//CORS shit
-app.use(cors());
 
 //express will serve up build folder
 app.use(express.static(path.join(__dirname, 'build')));

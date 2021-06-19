@@ -30,7 +30,7 @@ export const NavbarMain = () => {
       </div>
       <div className="navbarBottomWrapper">
         <p>
-          <span className="languageChange" onClick={()=>{i18n.changeLanguage("en")}}>English</span> / <span className="languageChange" onClick={()=>{i18n.changeLanguage("jp")}}>日本語</span></p>
+          <span className="languageChange" onClick={()=>{i18n.changeLanguage("en-US")}}>English</span> / <span className="languageChange" onClick={()=>{i18n.changeLanguage("ja")}}>日本語</span></p>
         <p>{t('navbar.questions')}</p>
         <p className="emailP"><a className="email" href="mailto:hello@sharehomethegame.com">hello@sharehomethegame.com</a></p>
       </div>

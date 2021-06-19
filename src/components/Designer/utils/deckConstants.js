@@ -18,12 +18,12 @@ export function getDefaultDeck(type){
   }
 
   return {
-    name:i18n.t("default") + i18n.t(type) + i18n.t("deck"),
+    name:i18n.t("default") + " " + i18n.t(type) + " " + i18n.t("deck"),
     type:type,
     cards:defaultCards,
     currentCardIndex:0,
     createdOn:Date.now(),
     selected:true,
-    description:i18n.t("default") + i18n.t(type) + i18n.t("deck"),
+    description:i18n.t("default") + " " + i18n.t(type) + " " + i18n.t("deck"),
   }
 }

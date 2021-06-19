@@ -3,6 +3,7 @@ import { NavLink, useHistory } from 'react-router-dom';
 import { Square, CheckSquare, MinusSquare, Trash2, Copy, Download, MoreVertical } from 'react-feather';
 import { saveAs } from 'file-saver';
 import { useTranslation } from 'react-i18next';
+import i18n from "i18next";
 
 import Card from '../../Card/Card.js';
 import ConfirmModalButton from '../../utils/ConfirmModalButton.js';
@@ -291,7 +292,7 @@ export const DeckRow = (props) => {
         <p className="margin-right">{currentDeck.cards.length} {(currentDeck.cards.length > 1) ? t("designer page.selector.cards") : t("designer page.selector.card")}</p>
         <p className="margin-right">
           {
-            new Intl.DateTimeFormat({
+            new Intl.DateTimeFormat(i18n.language, {
               year: "numeric",
               month: "long",
               day: "2-digit"

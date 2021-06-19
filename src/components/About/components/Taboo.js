@@ -17,7 +17,7 @@ const Taboo = (props) => {
     <>
       <div className="stepWrapper">
         <h2 className="subtitle">{t('about page.step1')}</h2>
-        <p>{t('about page.guess who.step1 1')}</p>
+        <p>{t('about page.taboo.step1 1')}</p>
         <div className="illustrationWrapperCenter">
           <div>
             <Users className="is-flipped" />
@@ -36,7 +36,7 @@ const Taboo = (props) => {
 
       <div className="stepWrapper">
         <h2 className="subtitle">{t('about page.step2')}</h2>
-        <p>{t('about page.guess who.step2 1')}</p>
+        <p>{t('about page.taboo.step2 1')}</p>
         <div className="illustrationWrapperCenter">
           <div>
             <UserCheck className="redStroke" />
@@ -63,7 +63,7 @@ const Taboo = (props) => {
 
       <div className="stepWrapper">
         <h2 className="subtitle">{t('about page.step3')}</h2>
-        <p>{t('about page.guess who.step3 1')}</p>
+        <p>{t('about page.taboo.step3 1')}</p>
         <div className="illustrationWrapperCenter">
           <div className="listOfTaboo">
             <li>{t('about page.taboo.step3 li1')}</li>

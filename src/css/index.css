@@ -6,7 +6,7 @@ body {
   margin:0;
   padding:0;
   border:0;
-  font-family: 'Interstate Extra Light Condensed';
+  font-family: 'Interstate Extra Light Condensed', 'GenShinGothic Monospace Extra Light';
   text-align:center;
   letter-spacing:1px;
 }
@@ -92,7 +92,7 @@ svg.is-spinning {
 
 .button{
   background-color:#2A188B;
-  font-family: 'Interstate Extra Light Condensed';
+  font-family: 'Interstate Extra Light Condensed', 'GenShinGothic Monospace Extra Light';
   font-size:20px;
   text-transform: uppercase;
   outline:0;
@@ -203,5 +203,5 @@ input[type="text"]:not(.cardViewerInput){
   font-size:20px;
   vertical-align:middle;
   min-width:300px;
-  font-family: 'Interstate Extra Light Condensed';
+  font-family: 'Interstate Extra Light Condensed', 'GenShinGothic Monospace Extra Light';
 }

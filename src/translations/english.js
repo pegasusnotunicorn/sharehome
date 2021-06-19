@@ -192,7 +192,7 @@ const english = {
         "cards": "cards",
         "deck": "this deck",
         "decks": "these decks",
-        "delete prompt": "Are you sure you want to delete ",
+        "delete prompt1": "Are you sure you want to delete ",
         "delete prompt2": "?",
         "download prompt1": "Are you sure you want to download ",
         "download prompt2": " (in PDF format)?",

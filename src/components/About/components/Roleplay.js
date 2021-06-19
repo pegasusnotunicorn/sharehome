@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import Card from '../../Card/Card.js';
 import { ChevronDown, User, Users, UserPlus, ArrowRight, ArrowUpCircle, ArrowRightCircle, ArrowLeftCircle, MessageSquare, TrendingUp, TrendingDown, Home, Wind, Heart} from 'react-feather';
+import { useTranslation } from 'react-i18next';
+
+import RepeatFrom1 from '../utils/RepeatFrom1.js';
+
 import '../../../css/about.css';
 
 const Roleplay = (props) => {
+  const { t } = useTranslation();
 
   //sizing for about page card styles
   let cardStyle = props.cardStyle;
@@ -16,15 +21,15 @@ const Roleplay = (props) => {
 
   return (
     <>
-      <h2 className="subtitle">Game {(!showRules) ? "Setup" : "Rules"}</h2>
-      <p className="showRulesButton noselect" onClick={toggleSteps}>{(showRules) ? "Show me the game setup again" : "Show me the game rules instead"}</p>
+      <h2 className="subtitle">{(!showRules) ? t('about page.roleplay.setup.title') : t('about page.roleplay.rules.title')}</h2>
+      <p className="showRulesButton noselect" onClick={toggleSteps}>{(showRules) ? t('about page.roleplay.rules.description') : t('about page.roleplay.setup.description')}</p>
 
       <div className={"stepsContainer" + ((!showRules) ? " is-active" : "")}>
 
         <div className="stepWrapper">
-          <h2 className="subtitle">Step 1</h2>
+          <h2 className="subtitle">{t('about page.step1')}</h2>
           <p>
-            Decide the 6 players who will be Members of the House. The rest will be playing as Commentators.
+            {t('about page.roleplay.setup.step1 1')}
           </p>
           <div className="illustrationWrapperCenter">
             <div>
@@ -39,7 +44,7 @@ const Roleplay = (props) => {
             </div>
           </div>
           <li className="subtext">
-            If you don't have enough players, each Member also plays as a Commentator.
+            {t('about page.roleplay.setup.step1 2')}
           </li>
         </div>
 
@@ -48,9 +53,9 @@ const Roleplay = (props) => {
         <div className="stepWrapperSplit">
 
           <div className="stepWrapper">
-            <h2 className="subtitle">Step 2 - Members</h2>
+            <h2 className="subtitle">{t('about page.roleplay.setup.step2m')}</h2>
             <p>
-              Players are given a random Member Card, a Goal Card, and two Signal Tokens.
+              {t('about page.roleplay.setup.step2m 1')}
             </p>
             <div className="illustrationWrapperCenter">
               <div className="illustrationCardWrapper">
@@ -77,20 +82,20 @@ const Roleplay = (props) => {
               </div>
             </div>
             <p>
-              Your goal is to complete your Goal Card or find love and leave the house.
+              {t('about page.roleplay.setup.step2m 2')}
             </p>
             <li className="subtext">
-              Place your Member Card face up for all to see.
+              {t('about page.roleplay.setup.step2m 3')}
             </li>
             <li className="subtext">
-              The more convincing your acting, the better!
+              {t('about page.roleplay.setup.step2m 4')}
             </li>
           </div>
 
           <div className="stepWrapper">
-            <h2 className="subtitle">Step 2 - Commentators</h2>
+            <h2 className="subtitle">{t('about page.roleplay.setup.step2c')}</h2>
             <p>
-              Players are given a random Commentator Card and a Signal Token.
+              {t('about page.roleplay.setup.step2c 1')}
             </p>
             <div className="illustrationWrapperCenter">
               <div className="illustrationCardWrapper">
@@ -110,13 +115,13 @@ const Roleplay = (props) => {
               </div>
             </div>
             <p>
-              Your goal is to commentate on what the Members are doing and crack jokes.
+              {t('about page.roleplay.setup.step2c 2')}
             </p>
             <li className="subtext">
-              You may speak at any time.
+              {t('about page.roleplay.setup.step2c 3')}
             </li>
             <li className="subtext">
-              The more you talk, the more everyone has fun!
+              {t('about page.roleplay.setup.step2c 4')}
             </li>
           </div>
 
@@ -129,7 +134,7 @@ const Roleplay = (props) => {
             toggleSteps();
           }}
         >
-          Sounds good! Take me to the game rules.
+          {t('about page.roleplay.setup.description2')}
         </p>
 
       </div>
@@ -137,9 +142,9 @@ const Roleplay = (props) => {
       <div className={"stepsContainer" + ((showRules) ? " is-active" : "")}>
 
         <div className="stepWrapper">
-          <h2 id="step1" className="subtitle">Step 1 - Introductions Round</h2>
+          <h2 id="step1" className="subtitle">{t('about page.roleplay.rules.step1')}</h2>
           <p>
-            All new Members introduce themselves.
+            {t('about page.roleplay.rules.step1 1')}
           </p>
           <div className="illustrationWrapperCenter">
             <div>
@@ -153,7 +158,7 @@ const Roleplay = (props) => {
             </div>
           </div>
           <p>
-            All Members secretly point their Signal Tokens towards a Member who they like (may be as a friend) or hate. You can point at yourself.
+            {t('about page.roleplay.rules.step1 2')}
           </p>
           <div className="illustrationWrapperCenter">
             <User className="greenStroke"/>
@@ -163,16 +168,16 @@ const Roleplay = (props) => {
             <User className="greenStroke"/>
           </div>
           <li className="subtext">
-            Use your Member Card to cover your Signal Token.
+            {t('about page.roleplay.rules.step1 3')}
           </li>
         </div>
 
         <div className="stepSplitterLine"><ChevronDown className="is-48" /></div>
 
         <div className="stepWrapper">
-          <h2 className="subtitle">Step 2 - Commentary Round</h2>
+          <h2 className="subtitle">{t('about page.roleplay.rules.step2')}</h2>
           <p>
-            Commentators commentate on what they saw.
+            {t('about page.roleplay.rules.step2 1')}
           </p>
           <div className="illustrationWrapperCenter">
             <div>
@@ -188,7 +193,7 @@ const Roleplay = (props) => {
             </div>
           </div>
           <p>
-            All Commentators use their Signal Tokens to predict which Member likes (or hates) who.
+            {t('about page.roleplay.rules.step2 2')}
           </p>
           <div className="illustrationWrapperCenter">
             <div>
@@ -199,7 +204,7 @@ const Roleplay = (props) => {
             <User className="yellowStroke"/>
           </div>
           <li className="subtext">
-            Place your signal tokens in between two members
+            {t('about page.roleplay.rules.step2 3')}
           </li>
         </div>
 
@@ -208,9 +213,9 @@ const Roleplay = (props) => {
         <div className="stepWrapperSplit">
 
           <div className="stepWrapper">
-            <h2 className="subtitle">Step 3 - Event Round <span className="green">(Liked)</span></h2>
+            <h2 className="subtitle">{t('about page.roleplay.rules.step3')}<span className='green'>{t('about page.roleplay.rules.step3span')}</span></h2>
             <p>
-              The Member with the most amount of predicted "likes" from Commentators is now trending!
+              {t('about page.roleplay.rules.step3 1')}
             </p>
             <div className="illustrationWrapperCenter">
               <User />
@@ -223,10 +228,10 @@ const Roleplay = (props) => {
               <User />
             </div>
             <p>
-              This Member draws an Event Card and chooses who will act out the Event.
+              {t('about page.roleplay.rules.step3 2')}
             </p>
             <li className="subtext">
-              They may include themselves.
+              {t('about page.roleplay.rules.step3 3')}
             </li>
             <div className="illustrationWrapperCenter">
               <div className="illustrationCardWrapper">
@@ -249,9 +254,9 @@ const Roleplay = (props) => {
           </div>
 
           <div className="stepWrapper">
-            <h2 className="subtitle">Step 4 - Event Round <span className="red">(Hated)</span></h2>
+            <h2 className="subtitle">{t('about page.roleplay.rules.step4')}<span className='red'>{t('about page.roleplay.rules.step4span')}</span></h2>
             <p>
-              The Member with the most amount of predicted "hates" from Commentators is now trending!
+              {t('about page.roleplay.rules.step4 1')}
             </p>
             <div className="illustrationWrapperCenter">
               <User />
@@ -264,10 +269,10 @@ const Roleplay = (props) => {
               <User />
             </div>
             <p>
-              This Member draws an Event Card and chooses who will act out the Event.
+              {t('about page.roleplay.rules.step4 2')}
             </p>
             <li className="subtext">
-              They may include themselves.
+              {t('about page.roleplay.rules.step4 3')}
             </li>
             <div className="illustrationWrapperCenter">
               <div className="illustrationCardWrapper">
@@ -296,9 +301,9 @@ const Roleplay = (props) => {
         <div className="stepWrapperSplit">
 
           <div className="stepWrapper greenBorder">
-            <h2 className="subtitle">Step 5 - Reveal Round</h2>
+            <h2 className="subtitle">{t('about page.roleplay.rules.step5')}</h2>
             <p>
-              All Members are now back at the house and talk about how their days went. Any Member can ask out any other Member now.
+              {t('about page.roleplay.rules.step5 1')}
             </p>
             <div className="illustrationWrapperCenter">
               <div>
@@ -313,7 +318,7 @@ const Roleplay = (props) => {
               </div>
             </div>
             <p>
-              All Members reveal their Signal Tokens. For any correct Predictions, the Commentator and the two predicted Members receive a point each.
+              {t('about page.roleplay.rules.step5 2')}
             </p>
             <div className="illustrationWrapperCenter">
               <div>
@@ -328,14 +333,14 @@ const Roleplay = (props) => {
               </div>
             </div>
             <p>
-              The game ends whenever you get bored. The player with the most points wins!
+              {t('about page.roleplay.rules.step5 3')}
             </p>
           </div>
 
           <div className="stepWrapper">
-            <h2 className="subtitle">About Graduations</h2>
+            <h2 className="subtitle">{t('about page.roleplay.rules.step6')}</h2>
             <p>
-              Any Members who have accomplished their goals may graduate to receive a point.
+              {t('about page.roleplay.rules.step6 1')}
             </p>
             <div className="illustrationWrapperCenter">
               <div>
@@ -349,7 +354,7 @@ const Roleplay = (props) => {
               </div>
             </div>
             <p>
-              Members who like each other may decide to graduate together to receive a point each.
+              {t('about page.roleplay.rules.step6 2')}
             </p>
             <div className="illustrationWrapperCenter">
               <div>
@@ -364,16 +369,14 @@ const Roleplay = (props) => {
                 <UserPlus />
               </div>
             </div>
-
             <p>
-              Any graduating Member is replaced by the youngest non-member player with the lowest amount of points. Pick a random Member Card and join the house.
+              {t('about page.roleplay.rules.step6 3')}
             </p>
-
           </div>
 
         </div>
 
-        <p>...repeat from <span className="link" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"})}}>Step 1</span> until bored.</p>
+        <RepeatFrom1></RepeatFrom1>
 
       </div>
     </>

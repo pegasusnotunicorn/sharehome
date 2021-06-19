@@ -1,11 +1,13 @@
 import React from 'react';
 import { Image, Copy, Trash2 } from 'react-feather';
+import { useTranslation } from 'react-i18next';
 
 import ConfirmModalButton from '../../utils/ConfirmModalButton.js';
 
 import '../../../css/Designer/cardButtons.css';
 
 const CardButtons = (props) => {
+  const { t } = useTranslation();
   const currentDeck = props.currentDeck;
 
   return (
@@ -25,19 +27,19 @@ const CardButtons = (props) => {
               className="noselect button is-rounded contentButton"
               htmlFor="imageFileInput"
             >
-              <Image />Change Image
+              <Image />{t("designer page.editor.buttons.change image")}
             </label>
           </>
         }
 
-        <button className="noselect button is-rounded contentButton" onClick={props.duplicateCurrentCard}><Copy />Duplicate Card</button>
+        <button className="noselect button is-rounded contentButton" onClick={props.duplicateCurrentCard}><Copy />{t("designer page.editor.buttons.duplicate")}</button>
 
         <ConfirmModalButton
           className="noselect button is-rounded contentButton"
           onClick={props.removeCurrentCard}
           icon={<Trash2 />}
-          text="Delete Card"
-          modalText="Are you sure you want to delete the current card?"
+          text={t("designer page.editor.buttons.delete")}
+          modalText={t("designer page.editor.buttons.delete prompt")}
         />
       </div>
     </>

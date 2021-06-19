@@ -1,12 +1,16 @@
 import React from 'react';
 import MailchimpSubscribe from "react-mailchimp-subscribe";
 
+//internationalization hook
+import { useTranslation } from 'react-i18next';
+
 const url = "https://sharehomethegame.us1.list-manage.com/subscribe/post?u=492281ef78974a5a81ee73e99&amp;id=53c3e28f07";
 
 //basic email form
 const EmailForm = ({ status, message, onValidated }) => {
+  const { t } = useTranslation();
   let email;
-  let text = "Sign up to be alerted when it goes on sale!";
+  let text = t('email form.prompt');
 
   const submit = (e) => {
     e.preventDefault();
@@ -23,7 +27,7 @@ const EmailForm = ({ status, message, onValidated }) => {
     text = message.replace("0 - ", "");
   }
   else if (status === "sending"){
-    text = "Submitting...";
+    text = t('email form.sending');
   }
 
   return (
@@ -37,7 +41,7 @@ const EmailForm = ({ status, message, onValidated }) => {
         required
       />
       <button type="submit" className="subscribeButton button">
-        STAY UPDATED
+        {t('email form.button')}
       </button>
     </form>
   );

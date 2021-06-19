@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
-import GameModeDetails from './HowToPlayComponents/GameModeDetails.js';
-import GameModeIcons from './HowToPlayComponents/GameModeIcons.js';
-import Roleplay from './HowToPlayComponents/Roleplay.js';
-import Charades from './HowToPlayComponents/Charades.js';
-import Guesswho from './HowToPlayComponents/Guesswho.js';
-import Taboo from './HowToPlayComponents/Taboo.js';
+import GameModeDetails from './utils/GameModeDetails.js';
+import GameModeIcons from './utils/GameModeIcons.js';
+import Roleplay from './components/Roleplay.js';
+import Charades from './components/Charades.js';
+import Guesswho from './components/Guesswho.js';
+import Taboo from './components/Taboo.js';
 
 import '../../css/about.css';
 
 const AboutPage = (props) => {
-
+  const { t } = useTranslation();
   let location = useLocation();
 
   //styling for any cards on about page
@@ -23,36 +24,36 @@ const AboutPage = (props) => {
 
   let gameModeDetails = [
     {
-      name:"Roleplay",
+      name:t('about page.roleplay.name'),
       link:"roleplay",
       jsx:()=>{ return (<Roleplay cardStyle={cardStyle} />)},
-      description:"Play as strangers living together in the same house whose daily interactions and drama are commentated on by the other players.",
-      playerCount:"6+ Players",
-      playTime:"25 Minutes",
+      description:t('about page.roleplay.description'),
+      playerCount:t('about page.roleplay.player count'),
+      playTime:t('about page.roleplay.play time')
     },
     {
-      name:"Guess Who?",
+      name:t('about page.guess who.name'),
       link:"guesswho",
       jsx:()=>{ return (<Guesswho cardStyle={cardStyle} />)},
-      description:"Every player is given a random Member Card and takes turns to guess who they are. You are only allowed to ask yes / no questions.",
-      playerCount:"2+ Players",
-      playTime:"10 Minutes",
+      description:t('about page.guess who.description'),
+      playerCount:t('about page.guess who.player count'),
+      playTime:t('about page.guess who.play time')
     },
     {
-      name:"Taboo",
+      name:t('about page.taboo.name'),
       link:"taboo",
       jsx:()=>{ return (<Taboo cardStyle={cardStyle} />)},
-      description:"Split into teams and take turns with the deck of Member Cards. Get your teammates to guess each character without using any of the forbidden words.",
-      playerCount:"4+ Players",
-      playTime:"10 Minutes",
+      description:t('about page.taboo.description'),
+      playerCount:t('about page.taboo.player count'),
+      playTime:t('about page.taboo.play time')
     },
     {
-      name:"Charades",
+      name:t('about page.charades.name'),
       link:"charades",
       jsx:()=>{ return (<Charades cardStyle={cardStyle} />)},
-      description:"Players take turns acting out their favorite events with random Member Cards, while the others try to guess who they are.",
-      playerCount:"4+ Players",
-      playTime:"10 Minutes",
+      description:t('about page.charades.description'),
+      playerCount:t('about page.charades.player count'),
+      playTime:t('about page.charades.play time')
     },
   ];
 
@@ -114,14 +115,14 @@ const AboutPage = (props) => {
       return (
         <div>
           <div className="subcontentWrapper border-bottom">
-            <h2 className="subtitle">How to play?</h2>
-            <p>SHAREHOME is a very flexible party game with multiple ways of playing. Feel free to add your own house rules to change it up!</p>
+            <h2 className="subtitle">{t('about page.main page.how to play')}</h2>
+            <p>{t('about page.main page.description')}</p>
           </div>
           {gameModes}
           <div className="howToPlayWrapper">
-            <h2 className="subtitle">...and many more!</h2>
+            <h2 className="subtitle">{t('about page.main page.and many more')}</h2>
             <p>
-              How will you play SHAREHOME? {/*<a href="/rulebook.pdf">Click here to view the full rulebook PDF.</a>*/}
+              {t('about page.main page.how will you play')}
             </p>
           </div>
         </div>

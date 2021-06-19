@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
 import { Square, CheckSquare, MinusSquare, Trash2, Copy, Download, MoreVertical } from 'react-feather';
 import { saveAs } from 'file-saver';
+import { useTranslation } from 'react-i18next';
 
 import Card from '../../Card/Card.js';
 import ConfirmModalButton from '../../utils/ConfirmModalButton.js';
@@ -11,6 +12,8 @@ import '../../../css/Designer/deckSelector.css';
 
 //header for deck rows
 const DeckHeader = (props) => {
+  const { t } = useTranslation();
+
   const decks = props.decks;
 
   const selectDecks = props.selectDecks;
@@ -28,7 +31,7 @@ const DeckHeader = (props) => {
     SelectedSquareIcon = MinusSquare;
   }
 
-  let pluralDecks = (selectedDecks.length > 1) ? "these decks" : "this deck";
+  let pluralDecks = (selectedDecks.length > 1) ? (t("designer page.selector.decks")) : (t("designer page.selector.deck"));
 
   //toggle select all or none
   function selectAllOrNone(){
@@ -128,14 +131,14 @@ const DeckHeader = (props) => {
                 e.stopPropagation();
               }}
               >
-              Import Decks
+              {t("designer page.selector.import")}
             </label>
             { selectedDecks.length > 0 &&
               <button
                 className="button transparentBackground"
                 onClick={exportAsJSON}
                 >
-                Export Deck{(selectedDecks.length > 1) ? "s" : ""}
+                {t("designer page.selector.export")}
               </button>
             }
           </div>
@@ -156,8 +159,8 @@ const DeckHeader = (props) => {
         <div>
           <p className="margin-left">
             { selectedDecks.length > 0
-              ? (`${selectedDecks.length} selected`)
-              : ("Select deck(s) to edit")
+              ? (selectedDecks.length + t("designer page.selector.selected prompt"))
+              : (t("designer page.selector.select prompt"))
             }
           </p>
         </div>
@@ -170,7 +173,7 @@ const DeckHeader = (props) => {
                   deleteDecks(selectedDecks);
                 }}
                 icon={<Trash2 />}
-                modalText={`Are you sure you want to delete ${pluralDecks}?`}
+                modalText={t("designer page.selector.delete prompt1") + pluralDecks + t("designer page.selector.delete prompt2")}
               />
             </div>
             <div className="selectorCellButtonWrapper">
@@ -180,7 +183,7 @@ const DeckHeader = (props) => {
                   downloadDecks(selectedDecks, decks);
                 }}
                 icon={<Download />}
-                modalText={`Are you sure you want to download ${pluralDecks} (in PDF format)?`}
+                modalText={t("designer page.selector.download prompt1") + pluralDecks + t("designer page.selector.download prompt2")}
               />
             </div>
             <div className="selectorCellButtonWrapper">
@@ -190,7 +193,7 @@ const DeckHeader = (props) => {
                 duplicateDecks(selectedDecks);
               }}
               icon={<Copy />}
-              modalText={`Are you sure you want to copy ${pluralDecks}?`}
+              modalText={t("designer page.selector.copy prompt1") + pluralDecks + t("designer page.selector.copy prompt2")}
             />
           </div>
           </>
@@ -202,7 +205,7 @@ const DeckHeader = (props) => {
       <div>
         <p className="margin-right">
           <NavLink to="/designer/create">
-            + Make a new deck
+            {t("designer page.selector.make a new deck")}
           </NavLink>
         </p>
       </div>
@@ -212,6 +215,8 @@ const DeckHeader = (props) => {
 
 //row representing a single deck
 export const DeckRow = (props) => {
+  const { t } = useTranslation();
+
   let currentDeck = props.currentDeck;
   let currentDeckIndex = props.currentDeckIndex;
   let setCurrentDeckIndex = props.setCurrentDeckIndex;
@@ -283,7 +288,7 @@ export const DeckRow = (props) => {
         <p className="deckName">{currentDeck.name}</p>
       </div>
       <div className="selectorCell padding-left">
-        <p className="margin-right">{currentDeck.cards.length} {(currentDeck.cards.length > 1) ? "cards" : "card"}</p>
+        <p className="margin-right">{currentDeck.cards.length} {(currentDeck.cards.length > 1) ? t("designer page.selector.cards") : t("designer page.selector.card")}</p>
         <p className="margin-right">
           {
             new Intl.DateTimeFormat({
@@ -300,6 +305,8 @@ export const DeckRow = (props) => {
 
 //show all decks and edit them if necessary
 const DeckSelector = (props) => {
+  const { t } = useTranslation();
+
   const decks = props.decks;
 
   //functions to change decks
@@ -330,8 +337,8 @@ const DeckSelector = (props) => {
 
   return (
     <>
-      <h3>My SHAREHOME decks</h3>
-      <p>Click on a deck below to edit its contents.</p>
+      <h3>{t("designer page.selector.my sharehome")}</h3>
+      <p>{t("designer page.selector.prompt")}</p>
       <div className="deckSelectorWrapper">
         <DeckHeader
           decks={decks}

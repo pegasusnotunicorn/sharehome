@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { CustomForm } from './utils/MailchimpForm.js';
-import GameModeIcons from "./About/HowToPlayComponents/GameModeIcons.js";
+import GameModeIcons from "./About/utils/GameModeIcons.js";
+import { useTranslation } from 'react-i18next';
 
 // import { Printer, Gift, Smile } from 'react-feather';
 
@@ -9,6 +10,7 @@ import '../css/home.css';
 import '../css/colors.css';
 
 const HomePage = (props) => {
+  const { t } = useTranslation();
 
   useEffect(() => {
     document.title = "SHAREHOME - A custom party game";
@@ -19,12 +21,12 @@ const HomePage = (props) => {
       <NavLink to="/"><div className="title noselect"></div></NavLink>
       <div className="subcontentWrapper">
         <h3>
-          A card game inspired by that hit Japanese reality TV show on that popular streaming service.
+          {t('main page.subtitle')}
         </h3>
 
         <GameModeIcons
-          playerCount="2 to 6+ players"
-          playTime="10-30+ minutes"
+          playerCount={t('main page.player count')}
+          playTime={t('main page.play time')}
         />
 
         <CustomForm />

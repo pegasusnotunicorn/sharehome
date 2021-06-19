@@ -40,7 +40,7 @@
 
 .navbarButtonWrapper{
   margin-top:60px;
-  height:calc(100% - 155px);
+  height:calc(100% - 185px);
   border-top:1px solid white;
 }
 
@@ -67,9 +67,18 @@
   stroke:black;
 }
 
+.navbarBottomWrapper .languageChange {
+  text-decoration: underline;
+  cursor:pointer;
+}
+
 .navbarBottomWrapper p {
   margin-bottom:0px;
   margin-left:20px;
+}
+
+.navbarBottomWrapper .emailP {
+  margin-top:0;
 }
 
 .navbarOpenClose{

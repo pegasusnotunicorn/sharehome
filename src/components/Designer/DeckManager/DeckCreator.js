@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { ArrowLeft } from 'react-feather';
+import { useTranslation } from 'react-i18next';
 
 import { getDefaultDeck } from '../utils/deckConstants.js';
 import Card from '../../Card/Card.js';
@@ -14,23 +15,24 @@ import '../../../css/Designer/deckCreator.css';
 
 //CTA buttons to create a new deck
 const DeckCreator = (props) => {
+  const { t } = useTranslation();
 
   let deckTypes = [
     {
       type:"member",
-      description:"Create custom Member Cards of your friends or family!",
+      description:t("designer page.creator.decks.member"),
     },
     {
       type:"commentator",
-      description:"Create custom Commentator Cards of your friends or family!",
+      description:t("designer page.creator.decks.commentator"),
     },
     {
       type:"event",
-      description:"Create a custom deck of Event Cards filled with your own adventures!",
+      description:t("designer page.creator.decks.event"),
     },
     {
       type:"goal",
-      description:"Create a custom deck of your own dreams and goals!",
+      description:t("designer page.creator.decks.goal"),
     },
   ].map((elem, index)=>{
     return (
@@ -61,10 +63,8 @@ const DeckCreator = (props) => {
         { props.decks.length > 0 &&
           <NavLink to="/designer"><ArrowLeft className="subtitleBackPageArrow" /></NavLink>
         }
-        <span>Select a type of deck to make</span>
+        <span>{t("designer page.creator.prompt")}</span>
       </h3>
-
-
 
       <div className="deckCreatorWrapper">
         {deckTypes}

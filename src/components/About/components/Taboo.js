@@ -1,9 +1,14 @@
 import React from 'react';
 import Card from '../../Card/Card.js';
 import { ChevronDown, Users, UserCheck, Watch, Smile, AlertOctagon, Frown } from 'react-feather';
+import { useTranslation } from 'react-i18next';
+
+import RepeatFrom1 from '../utils/RepeatFrom1.js';
+
 import '../../../css/about.css';
 
 const Taboo = (props) => {
+  const { t } = useTranslation();
 
   //sizing for about page card styles
   let cardStyle = props.cardStyle;
@@ -11,8 +16,8 @@ const Taboo = (props) => {
   return (
     <>
       <div className="stepWrapper">
-        <h2 className="subtitle">Step 1</h2>
-        <p>Split into teams and pick a representative for your team.</p>
+        <h2 className="subtitle">{t('about page.step1')}</h2>
+        <p>{t('about page.guess who.step1 1')}</p>
         <div className="illustrationWrapperCenter">
           <div>
             <Users className="is-flipped" />
@@ -30,8 +35,8 @@ const Taboo = (props) => {
       <div className="stepSplitterLine"><ChevronDown className="is-48" /></div>
 
       <div className="stepWrapper">
-        <h2 className="subtitle">Step 2</h2>
-        <p>Each team representative takes one-minute turns with the deck of Member Cards.</p>
+        <h2 className="subtitle">{t('about page.step2')}</h2>
+        <p>{t('about page.guess who.step2 1')}</p>
         <div className="illustrationWrapperCenter">
           <div>
             <UserCheck className="redStroke" />
@@ -57,17 +62,17 @@ const Taboo = (props) => {
       <div className="stepSplitterLine"><ChevronDown className="is-48" /></div>
 
       <div className="stepWrapper">
-        <h2 className="subtitle">Step 3</h2>
-        <p>Try to get your teammates to guess as many Member Cards as possible without mentioning any of these forbidden topics.</p>
+        <h2 className="subtitle">{t('about page.step3')}</h2>
+        <p>{t('about page.guess who.step3 1')}</p>
         <div className="illustrationWrapperCenter">
           <div className="listOfTaboo">
-            <li>Name</li>
-            <li>Gender</li>
-            <li>Age</li>
-            <li>Job</li>
-            <li>Career</li>
-            <li>Appearance</li>
-            <li>...or any other categories you want!</li>
+            <li>{t('about page.taboo.step3 li1')}</li>
+            <li>{t('about page.taboo.step3 li2')}</li>
+            <li>{t('about page.taboo.step3 li3')}</li>
+            <li>{t('about page.taboo.step3 li4')}</li>
+            <li>{t('about page.taboo.step3 li5')}</li>
+            <li>{t('about page.taboo.step3 li6')}</li>
+            <li>{t('about page.taboo.step3 li7')}</li>
           </div>
           <div>
             <AlertOctagon className="redStroke" />
@@ -78,8 +83,8 @@ const Taboo = (props) => {
       <div className="stepSplitterLine"><ChevronDown className="is-48" /></div>
 
       <div className="stepWrapper greenBorder">
-        <h2 className="subtitle">Step 4</h2>
-        <p>The team with the most amount of correct guesses wins!</p>
+        <h2 className="subtitle">{t('about page.step4')}</h2>
+        <p>{t('about page.taboo.step4 1')}</p>
         <div className="illustrationWrapperCenter">
           <div>
             <Users className="is-flipped" style={{marginRight:"10px"}} />
@@ -94,7 +99,8 @@ const Taboo = (props) => {
         </div>
       </div>
 
-      <p>...repeat from <span className="link" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"})}}>Step 1</span> until bored.</p>
+      <RepeatFrom1></RepeatFrom1>
+
     </>
   );
 }

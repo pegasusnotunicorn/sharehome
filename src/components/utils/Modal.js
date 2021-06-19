@@ -1,19 +1,22 @@
 import React, { useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { AlertTriangle, CheckCircle, XCircle } from 'react-feather';
+import { useTranslation } from 'react-i18next';
 
 import '../../css/Designer/modal.css';
 
 //a modal with keyboard functionality that shows
 const Modal = (props) => {
+  const { t } = useTranslation();
+
   const showModal = props.showModal;
   const setShowModal = props.setShowModal;
   const onClick = props.onClick;
 
   //various customizations
   const showCancel = props.showCancel;
-  const confirmText = props.confirmText || "Yes";
-  const cancelText = props.cancelText || "No";
+  const confirmText = props.confirmText || t("yes");
+  const cancelText = props.cancelText || t("no");
 
   const modalRef = useRef(null);
 

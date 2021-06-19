@@ -1,4 +1,5 @@
 import { getDefaultPersonCard, getDefaultEventGoalCard } from './cardConstants.js';
+import i18n from "i18next";
 
 export function getDefaultDeck(type){
 
@@ -17,17 +18,12 @@ export function getDefaultDeck(type){
   }
 
   return {
-    name:"Default " + capitalize(type) + " Deck",
+    name:i18n.t("default") + i18n.t(type) + i18n.t("deck"),
     type:type,
     cards:defaultCards,
     currentCardIndex:0,
     createdOn:Date.now(),
     selected:true,
-    description:"Default " + capitalize(type) + " Deck",
+    description:i18n.t("default") + i18n.t(type) + i18n.t("deck"),
   }
-}
-
-//capitalize first letter of a string
-function capitalize(string){
-  return string.charAt(0).toUpperCase() + string.slice(1);
 }

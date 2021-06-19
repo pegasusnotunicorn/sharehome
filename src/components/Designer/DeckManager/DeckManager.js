@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink, Redirect, Switch, Route, useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import DeckCreator from './DeckCreator.js';
 import DeckCopier from './DeckCopier.js';
@@ -7,6 +8,7 @@ import DeckSelector from './DeckSelector.js';
 
 //show create a new deck or edit an existing deck
 const DeckManager = (props) => {
+  const { t } = useTranslation();
 
   let decks = props.decks;
   let dispatchDeck = props.dispatchDeck;
@@ -73,11 +75,11 @@ const DeckManager = (props) => {
   return (
     <>
       <div className="subcontentWrapper border-bottom">
-        <h2 className="subtitle">Design your own cards</h2>
+        <h2 className="subtitle">{t("designer page.manager.title")}</h2>
         <p>
-          Design custom cards of you and your friends to play with. Share the cards with the world so that anyone can play with them. The possibilities are endless!
+          {t("designer page.manager.description1")}
         </p>
-        <p>For more details on how these cards work, visit the <NavLink to="/about">How to Play page</NavLink>.</p>
+        <p>{t("designer page.manager.description2")}<NavLink to="/about">{t("designer page.manager.description3")}</NavLink>{t("designer page.manager.description4")}</p>
       </div>
       <Switch>
         <Route exact path="/designer/create" render={()=>{

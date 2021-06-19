@@ -31,6 +31,10 @@
   font-size:1.75em;
 }
 
+.subcontentWrapper h3{
+  font-weight:normal;
+}
+
 .CTAWrapper{
   margin-top:3vh;
 }
@@ -121,7 +125,7 @@
 }
 
 .subscribeButton{
-  border:1px solid #2A188B;
+  border: 1px solid #2A188B;
 }
 
 .couchContainer{

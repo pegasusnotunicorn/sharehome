@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import '../../css/photos.css';
 
@@ -102,6 +103,7 @@ const PhotoWithCaption = (props) => {
 }
 
 const PhotosPage = (props) => {
+  const { t } = useTranslation();
 
   useEffect(() => {
     document.title = "SHAREHOME - Photos";
@@ -189,35 +191,35 @@ const PhotosPage = (props) => {
       <NavLink to="/"><div className="title noselect"></div></NavLink>
       <div className="photoContent">
         <div className="photoSubcontent">
-          <h2 className="subtitle">Main Game</h2>
-          <p>The main base game that comes with a standard set of cards.<br></br>
-          <span style={{color:"red"}}>NOTE:</span> The final product may look different from what is depicted on this page.</p>
+          <h2 className="subtitle">{t('photos page.base.title')}</h2>
+          <p>{t('photos page.base.description')}<br></br>
+          <span style={{color:"red"}}>{t('photos page.warning red')}</span> {t('photos page.warning')}</p>
           { mainPhotos }
         </div>
         <div className="photoSubcontent">
-          <h2 className="subtitle">Expansion Decks</h2>
-          <p>Planned expansion decks with new additional cards.<br></br>
-          <span style={{color:"red"}}>NOTE:</span> The final product may look different from what is depicted on this page.</p>
+          <h2 className="subtitle">{t('photos page.expansion.title')}</h2>
+          <p>{t('photos page.expansion.description')}<br></br>
+            <span style={{color:"red"}}>{t('photos page.warning red')}</span> {t('photos page.warning')}</p>
           { expansionPhotos }
         </div>
         <div id="SHONAN" className="photoSubcontent">
-          <h2 className="subtitle">SHONAN Expansion Deck</h2>
+          <h2 className="subtitle">{t('photos page.shonan')}</h2>
           { shonanPhotos }
         </div>
         <div id="TOKYOCITY" className="photoSubcontent">
-          <h2 className="subtitle">TOKYO CITY Expansion Deck</h2>
+          <h2 className="subtitle">{t('photos page.tokyo city')}</h2>
           { tokyocityPhotos }
         </div>
         <div id="HAWAII" className="photoSubcontent">
-          <h2 className="subtitle">HAWAII Expansion Deck</h2>
+          <h2 className="subtitle">{t('photos page.hawaii')}</h2>
           { hawaiiPhotos }
         </div>
         <div id="KARUIZAWA" className="photoSubcontent">
-          <h2 className="subtitle">KARUIZAWA Expansion Deck</h2>
+          <h2 className="subtitle">{t('photos page.karuizawa')}</h2>
           { karuizawaPhotos }
         </div>
         <div id="TOKYO2020" className="photoSubcontent">
-          <h2 className="subtitle">TOKYO 2020 Expansion Deck</h2>
+          <h2 className="subtitle">{t('photos page.tokyo 2020')}</h2>
           { tokyo2020Photos }
         </div>
       </div>

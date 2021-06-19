@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft } from 'react-feather';
+import { useTranslation } from 'react-i18next';
 
 import { getImageObject, pdfDimensions } from '../utils/cardConstants.js';
 
@@ -20,6 +21,8 @@ function getMouseXY(e, viewerMagnifyValue){
 //wrapper for card editor section
 //needs to get via props, the currentCard and setter for changing currentCard properties
 const CardEditor = (props) => {
+  const { t } = useTranslation();
+
   const currentDeck = props.currentDeck;
   const currentCard = currentDeck.cards[currentDeck.currentCardIndex];
 
@@ -123,10 +126,10 @@ const CardEditor = (props) => {
       <div className="subcontentWrapper border-bottom">
         <h2 className="subtitle">
           <ArrowLeft className="subtitleBackPageArrow" onClick={()=>{setCurrentDeckIndex(false)}} />
-          <span>Deck Editor</span>
+          <span>{t("designer page.editor.title")}</span>
         </h2>
         <p className="cardEditorDescription">
-          Click on any text inside the card below to edit it. You can also reposition the background image by clicking and dragging.
+          {t("designer page.editor.description")}
         </p>
       </div>
       <CardButtons

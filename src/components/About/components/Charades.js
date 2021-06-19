@@ -1,9 +1,14 @@
 import React from 'react';
 import Card from '../../Card/Card.js';
 import { ChevronDown, HelpCircle, ArrowRight, Users, UserPlus, Gift } from 'react-feather';
+import { useTranslation } from 'react-i18next';
+
+import RepeatFrom1 from '../utils/RepeatFrom1.js';
+
 import '../../../css/about.css';
 
 const Charades = (props) => {
+  const { t } = useTranslation();
 
   //sizing for about page card styles
   let cardStyle = props.cardStyle;
@@ -11,8 +16,8 @@ const Charades = (props) => {
   return (
     <>
       <div className="stepWrapper">
-        <h2 className="subtitle">Step 1</h2>
-        <p>Select a random Event Card. Select players at random based on the amount of participants on the Event Card.</p>
+        <h2 className="subtitle">{t('about page.step1')}</h2>
+        <p>{t('about page.charades.step1 1')}</p>
         <div className="illustrationWrapperCenter">
           <Card
             type="event"
@@ -33,8 +38,8 @@ const Charades = (props) => {
       <div className="stepSplitterLine"><ChevronDown className="is-48" /></div>
 
       <div className="stepWrapper">
-        <h2 className="subtitle">Step 2</h2>
-        <p>The selected players are each given a random Member Card. They then act out the scene as if they are those Members.</p>
+        <h2 className="subtitle">{t('about page.step2')}</h2>
+        <p>{t('about page.charades.step2 1')}</p>
         <div className="illustrationWrapperCenter">
           <div>
             <Users className="is-flipped" />
@@ -55,8 +60,8 @@ const Charades = (props) => {
       <div className="stepSplitterLine"><ChevronDown className="is-48" /></div>
 
       <div className="stepWrapper greenBorder">
-        <h2 className="subtitle">Step 3</h2>
-        <p>Whoever first correctly guesses all the Members earns a point. The player with the most points wins!</p>
+        <h2 className="subtitle">{t('about page.step3')}</h2>
+        <p>{t('about page.charades.step3 1')}</p>
         <div className="illustrationWrapperCenter">
           <div>
             <UserPlus style={{marginRight:"10px"}}/>
@@ -70,7 +75,8 @@ const Charades = (props) => {
         </div>
       </div>
 
-      <p>...repeat from <span className="link" onClick={()=>{window.scrollTo({top:0,behavior:"smooth"})}}>Step 1</span> until bored.</p>
+      <RepeatFrom1></RepeatFrom1>
+
     </>
   );
 }

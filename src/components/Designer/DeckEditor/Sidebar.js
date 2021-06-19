@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Download, PlusSquare, Trash2 } from 'react-feather';
+import { useTranslation } from 'react-i18next';
 
 import NavbarTemplate from '../../Navbar/NavbarTemplate.js';
 import CardPreview from './CardPreview.js';
@@ -17,6 +18,8 @@ import '../../../css/Designer/sidebar.css';
 
 //sidebar for editing the deck
 const Sidebar = (props) => {
+  const { t } = useTranslation();
+
   const currentDeck = props.currentDeck;
   const cards = currentDeck.cards;
   const currentCardIndex = currentDeck.currentCardIndex;
@@ -51,7 +54,7 @@ const Sidebar = (props) => {
       handleClick: goToCard,
       //current card is this button!
       ifCurrentCard: (move === currentCardIndex) ? " currentCard" : "",
-      number: (move === currentCardIndex) ? "EDITING" : move + 1,
+      number: (move === currentCardIndex) ? t("designer page.editor.sidebar.editing") : move + 1,
     }
 
     return (<CardPreview {...cardPreviewProps}/>);
@@ -69,10 +72,10 @@ const Sidebar = (props) => {
   //innards for the navbar template
   const innards = (
     <>
-      <h3 className="sidebarTitle">Tools</h3>
+      <h3 className="sidebarTitle">{t("designer page.editor.sidebar.tools")}</h3>
       <div className="sidebarButtonWrapper sidebarContent">
         <div className="sidebarInputWrapper">
-          <p>Deck name</p>
+          <p>{t("designer page.editor.sidebar.deck name")}</p>
           <input
             name="name"
             className="input"
@@ -84,11 +87,11 @@ const Sidebar = (props) => {
               });
             }}
             value={currentDeck.name}
-            placeholder="Enter deck name here."
+            placeholder={t("designer page.editor.sidebar.deck name placeholder")}
           />
         </div>
         <div className="sidebarInputWrapper">
-          <p>Deck description</p>
+          <p>{t("designer page.editor.sidebar.deck description")}</p>
           <input
             name="name"
             className="input"
@@ -100,24 +103,24 @@ const Sidebar = (props) => {
               });
             }}
             value={currentDeck.description}
-            placeholder="Enter deck description here."
+            placeholder={t("designer page.editor.sidebar.deck description placeholder")}
           />
         </div>
         <ConfirmModalButton
           className="noselect button navbarButton sidebarButton"
           onClick={downloadDeck}
           icon={<Download />}
-          text="Download All Cards (PDF)"
-          modalText="Are you sure you want to download all the cards?"
+          text={t("designer page.editor.sidebar.download")}
+          modalText={t("designer page.editor.sidebar.download prompt")}
         />
         <ConfirmModalButton
           className="noselect button navbarButton sidebarButton"
           onClick={resetAllCards}
           icon={<Trash2 />}
-          text="Reset All Cards"
-          modalText="Are you sure you want to reset this deck? All cards will be deleted and the deck will be set to default values."
+          text={t("designer page.editor.sidebar.reset")}
+          modalText={t("designer page.editor.sidebar.reset prompt")}
         />
-        <button className="noselect button navbarButton sidebarButton" onClick={addNewCard}><PlusSquare />Add New Card</button>
+        <button className="noselect button navbarButton sidebarButton" onClick={addNewCard}><PlusSquare />{t("designer page.editor.sidebar.add")}</button>
       </div>
       <div className="cardPreviewWrapper sidebarContent">
         {listOfCards}

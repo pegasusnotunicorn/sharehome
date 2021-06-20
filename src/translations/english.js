@@ -12,6 +12,12 @@ const english = {
     "card":"Card",
     "deck":"Deck",
 
+    "error page":{
+      "title":"Oops, something went wrong!",
+      "description": "You tried to go to a page that doesn't exist! ",
+      "link": "Click to go back home.",
+    },
+
     "navbar":{
       "home":"HOME",
       "how to play": "HOW TO PLAY",

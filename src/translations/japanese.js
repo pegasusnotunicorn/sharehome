@@ -12,6 +12,12 @@ const japanese = {
     "card":"カード",
     "deck":"デッキ",
 
+    "error page":{
+      "title":"ページが見つかりません！",
+      "description": "申し訳ありませんが、お探しのページが見つかりませんでした。",
+      "link": "メインページへ戻る",
+    },
+
     "navbar":{
       "home":"ホーム",
       "how to play": "ゲームの遊び方",

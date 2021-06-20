@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 import { CustomForm } from './utils/MailchimpForm.js';
 import GameModeIcons from "./About/utils/GameModeIcons.js";
 import { useTranslation } from 'react-i18next';
-import i18n from "i18next";
 
 // import { Printer, Gift, Smile } from 'react-feather';
 
@@ -23,7 +22,6 @@ const HomePage = (props) => {
       <div className="subcontentWrapper">
         <h3>
           {t('main page.subtitle')}
-          {i18n.language}
         </h3>
 
         <GameModeIcons

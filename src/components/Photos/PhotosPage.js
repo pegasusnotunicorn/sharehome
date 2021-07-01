@@ -35,9 +35,9 @@ const shonanPhotosDetails = [
   {
     image_link:"/images/photos/expansions/shonan3.png"
   },
-  {
-    image_link:"/images/photos/expansions/shonan5.png"
-  }
+  // {
+  //   image_link:"/images/photos/expansions/shonan5.png"
+  // }
 ]
 
 //tokyocity photo details
@@ -48,9 +48,9 @@ const tokyocityPhotosDetails = [
   {
     image_link:"/images/photos/expansions/tokyocity3.png"
   },
-  {
-    image_link:"/images/photos/expansions/tokyocity5.png"
-  }
+  // {
+  //   image_link:"/images/photos/expansions/tokyocity5.png"
+  // }
 ]
 
 //hawaii photo details
@@ -61,9 +61,9 @@ const hawaiiPhotosDetails = [
   {
     image_link:"/images/photos/expansions/hawaii3.png"
   },
-  {
-    image_link:"/images/photos/expansions/hawaii5.png"
-  }
+  // {
+  //   image_link:"/images/photos/expansions/hawaii5.png"
+  // }
 ]
 
 //karuizawa photo details
@@ -74,9 +74,9 @@ const karuizawaPhotosDetails = [
   {
     image_link:"/images/photos/expansions/karuizawa3.png"
   },
-  {
-    image_link:"/images/photos/expansions/karuizawa5.png"
-  }
+  // {
+  //   image_link:"/images/photos/expansions/karuizawa5.png"
+  // }
 ]
 
 //tokyo2020 photo details
@@ -87,9 +87,9 @@ const tokyo2020PhotosDetails = [
   {
     image_link:"/images/photos/expansions/tokyo20203.png"
   },
-  {
-    image_link:"/images/photos/expansions/tokyo20205.png"
-  }
+  // {
+  //   image_link:"/images/photos/expansions/tokyo20205.png"
+  // }
 ]
 
 //a single photo with caption

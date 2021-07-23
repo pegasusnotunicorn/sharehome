@@ -38,6 +38,7 @@ const english = {
       "prompt": "Sign up to be alerted when it goes on sale!",
       "button": "STAY UPDATED",
       "sending": "Submitting...",
+      "success": "Thank you very much! </br> We just sent you a confirmation email. If you haven't received anything, please double check your email address."
     },
 
     "about page":{

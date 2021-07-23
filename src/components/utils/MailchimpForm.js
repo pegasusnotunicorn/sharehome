@@ -21,7 +21,7 @@ const EmailForm = ({ status, message, onValidated }) => {
 
   //status text above the form
   if (status === "success"){
-    text = message;
+    text = t('email form.success');
   }
   else if (status === "error"){
     text = message.replace("0 - ", "");

@@ -18,9 +18,21 @@ const DesignerPage = (props) => {
   const [currentDeckIndex, setCurrentDeckIndex] = useStickyState(false, "currentDeckIndex");
   const [displayMessage, setDisplayMessage] = useState("");
 
+  //determine if mobile or not
+  const [width, setWidth] = useState(window.innerWidth);
+  function handleWindowSizeChange() {
+    setWidth(window.innerWidth);
+  }
+
   useEffect(()=>{
     document.title = "SHAREHOME - Card Designer";
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+        window.removeEventListener('resize', handleWindowSizeChange);
+    }
   });
+
+  let isMobile: boolean = (width <= 768);
 
   let updateCurrentDeck = (newDeck) => {
     dispatchDeck({
@@ -56,7 +68,8 @@ const DesignerPage = (props) => {
                   updateCurrentDeck={updateCurrentDeck}
                   setCurrentDeckIndex={setCurrentDeckIndex}
                   uploadCurrentDeck={uploadCurrentDeck}
-                  viewerMagnifyValue={3}
+                  viewerMagnifyValue={Math.min(3, width/300)}
+                  isMobile={isMobile}
                 />
               )
             }

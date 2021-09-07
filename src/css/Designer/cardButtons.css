@@ -22,13 +22,16 @@
 .contentButton{
   height: auto;
   padding: 10px;
-  margin-right:10px;
   padding-top:12px;
   width: auto;
   display: inline-block;
   background-color:white;
   border:1px solid #DCDCDC;
   color:black !important;
+}
+
+.contentButton:not(:last-child){
+  margin-right:10px;
 }
 
 .contentButton:active{

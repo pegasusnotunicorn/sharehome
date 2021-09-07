@@ -75,6 +75,15 @@ svg.is-spinning {
   padding-right:10px;
 }
 
+@media only screen and (max-width:600px) {
+  .button.hideText svg{
+    padding-right:0px;
+  }
+  .button.hideText span {
+    display:none;
+  }
+}
+
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */

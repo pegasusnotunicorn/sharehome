@@ -17,6 +17,7 @@ export const ConfirmModalButton = (props) => {
       className={props.className}
       onClick={props.onClick}
       modalText={props.modalText}
+      hiddenMobile={props.hiddenMobile}
     />
   )
 }

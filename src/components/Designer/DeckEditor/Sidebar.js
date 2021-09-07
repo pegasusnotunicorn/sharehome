@@ -34,7 +34,7 @@ const Sidebar = (props) => {
   const addNewCard = props.cardFunctions.addNewCard;
   const goToCard = props.cardFunctions.goToCard;
 
-  const [visibility, setVisibility] = useState("visible");
+  const [visibility, setVisibility] = useState(props.isMobile ? "invisible" : "visible");
 
   //focus the current card in the preview pane
   useEffect(()=>{

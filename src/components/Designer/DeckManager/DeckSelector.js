@@ -158,7 +158,7 @@ const DeckHeader = (props) => {
             />
         </div>
         <div>
-          <p className="margin-left">
+          <p className="margin-left hiddenMobile">
             { selectedDecks.length > 0
               ? (selectedDecks.length + t("designer page.selector.selected prompt"))
               : (t("designer page.selector.select prompt"))
@@ -290,7 +290,7 @@ export const DeckRow = (props) => {
       </div>
       <div className="selectorCell padding-left">
         <p className="margin-right">{currentDeck.cards.length} {(currentDeck.cards.length > 1) ? t("designer page.selector.cards") : t("designer page.selector.card")}</p>
-        <p className="margin-right">
+        <p className="margin-right hiddenMobile">
           {
             new Intl.DateTimeFormat(i18n.language, {
               year: "numeric",

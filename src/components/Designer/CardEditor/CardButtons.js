@@ -24,18 +24,21 @@ const CardButtons = (props) => {
             />
             <label
               id="imageFileLabel"
-              className="noselect button is-rounded contentButton"
+              className="noselect button hideText is-rounded contentButton"
               htmlFor="imageFileInput"
             >
-              <Image />{t("designer page.editor.buttons.change image")}
+              <Image /><span>{t("designer page.editor.buttons.change image")}</span>
             </label>
           </>
         }
 
-        <button className="noselect button is-rounded contentButton" onClick={props.duplicateCurrentCard}><Copy />{t("designer page.editor.buttons.duplicate")}</button>
+        <button className="noselect button hideText is-rounded contentButton" onClick={props.duplicateCurrentCard}>
+          <Copy />
+          <span>{t("designer page.editor.buttons.duplicate")}</span>
+        </button>
 
         <ConfirmModalButton
-          className="noselect button is-rounded contentButton"
+          className="noselect button hideText is-rounded contentButton"
           onClick={props.removeCurrentCard}
           icon={<Trash2 />}
           text={t("designer page.editor.buttons.delete")}

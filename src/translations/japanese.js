@@ -24,6 +24,7 @@ const japanese = {
       "photos":"ギャラリー",
       "contact us":"お問い合わせ",
       "card designer":"デッキエディター",
+      "blog":"ブログ",
       "play online":"オンラインプレイ",
       "questions":"お問い合わせはこちらへどうぞ",
     },
@@ -37,6 +38,7 @@ const japanese = {
     "email form":{
       "prompt": "メルマガ登録で最新ニュースが届く！",
       "button": "登録",
+      "sidebarbutton": "登録",
       "sending": "転送中...",
       "success": "ありがとうございます！</br>すぐ確認メールが届きます。届かない場合は再度メールアドレスをご確認して下さい。"
     },

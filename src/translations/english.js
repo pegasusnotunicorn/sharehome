@@ -24,6 +24,7 @@ const english = {
       "photos":"PHOTOS",
       "contact us":"CONTACT US",
       "card designer":"card designer",
+      "blog":"BLOG",
       "play online":"PLAY ONLINE",
       "questions":"Questions? Comments?",
     },
@@ -35,8 +36,9 @@ const english = {
     },
 
     "email form":{
-      "prompt": "Sign up to be alerted when it goes on sale!",
+      "prompt": "Sign up for the newsletter to be the first to know when we launch!",
       "button": "STAY UPDATED",
+      "sidebarbutton": "SUBMIT",
       "sending": "Submitting...",
       "success": "Thank you very much! </br> We just sent you a confirmation email. If you haven't received anything, please double check your email address."
     },

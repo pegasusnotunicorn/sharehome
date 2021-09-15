@@ -40,7 +40,7 @@
 
 .navbarButtonWrapper{
   margin-top:60px;
-  height:calc(100% - 185px);
+  height:calc(100% - 235px);
   border-top:1px solid white;
 }
 
@@ -79,6 +79,29 @@
 
 .navbarBottomWrapper .emailP {
   margin-top:0;
+}
+
+.navbarBottomWrapper .emailWrapper {
+  color:white;
+  margin-left:20px;
+  margin-top:20px;
+  margin-right:20px;
+}
+
+.navbarBottomWrapper .emailWrapper p {
+  margin-left:0;
+  margin-top:0;
+  height:48px;
+  overflow:hidden;
+}
+
+.navbarBottomWrapper .emailWrapper .emailInput {
+  width: calc(100% - 94px);
+  border:1px solid white;
+}
+
+.navbarBottomWrapper .emailWrapper .subscribeButton {
+  border:1px solid white;
 }
 
 .navbarOpenClose{

@@ -26,7 +26,7 @@ const DesignerPage = (props) => {
   }
 
   useEffect(()=>{
-    document.title = "Love, Career & Magic — Card Designer!";
+    document.title = "Love, Career & Magic — Card Designer";
     window.addEventListener('resize', handleWindowSizeChange);
     return () => {
         window.removeEventListener('resize', handleWindowSizeChange);

@@ -133,7 +133,7 @@ const AboutPage = (props) => {
   }
 
   useEffect(() => {
-    document.title = "SHAREHOME - How To Play";
+    document.title = "Love, Career & Magic — How To Play";
   });
 
   return (

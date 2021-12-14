@@ -7,7 +7,7 @@ export const Title = (props) => {
     <div className="lcmContainer">
       <div className="titleWrapper">
         <NavLink to="/">
-          <img className="lcmImage" src="./images/lcm.png" alt="Love, Career, & Magic"></img>
+          <img className="lcmImage" src="/images/lcm.png" alt="Love, Career, & Magic"></img>
         </NavLink>
         <h3 className="sharehomegame">a SHAREHOME game</h3>
       </div>
@@ -21,7 +21,7 @@ export const TitleCircle = (props) => {
   return (
     <div className="titleWrapper">
       <NavLink to="/">
-        <img className="lcmImage" src="./images/lcmCircle.png" alt="Love, Career, & Magic"></img>
+        <img className="lcmImage" src="/images/lcmCircle.png" alt="Love, Career, & Magic"></img>
       </NavLink>
       <h3 className="sharehomegame">a SHAREHOME game</h3>
     </div>

@@ -52,7 +52,7 @@
 }
 
 .cardPreviewTextWrapper{
-  font-family: 'Interstate Extra Light Condensed';
+  font-family: 'AmaticSC Regular';
   position:absolute;
   text-align:left;
   color:white;
@@ -63,7 +63,7 @@
 }
 
 .cardPreviewTextarea{
-  font-family: 'Interstate Extra Light Condensed';
+  font-family: 'AmaticSC Regular';
   border:0;
   outline:0;
   padding:0;
@@ -106,7 +106,7 @@
 }
 
 .japaneseName{
-  font-family: 'GenShinGothic Monospace Extra Light';
+  font-family: 'ZenKurenaido Regular';
 }
 
 .cardPreviewShadow{

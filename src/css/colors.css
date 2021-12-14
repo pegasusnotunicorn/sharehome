@@ -1,60 +1,60 @@
 .blue {
-  color:#2A188B !important;
+  color:#5F5AA2 !important;
 }
 .darkblue {
-  color:#1F1169 !important;
+  color:#454176 !important;
 }
 .green {
-  color:#03C04E !important;
+  color:#7DAF9C !important;
 }
 .red {
-  color:#FF3A20 !important;
+  color:#DD7373 !important;
 }
 .yellow {
-  color:#F9C22E !important;
+  color:#F1DB4B !important;
 }
 
 .blueBackground {
-  background-color:#2A188B !important;
+  background-color:#5F5AA2 !important;
 }
 .transparentBackground {
   background-color:transparent !important;
 }
 .greenBackground {
-  background-color:#03C04E !important;
+  background-color:#7DAF9C !important;
 }
 .redBackground {
-  background-color:#FF3A20 !important;
+  background-color:#DD7373 !important;
 }
 .yellowBackground {
-  background-color:#F9C22E !important;
+  background-color:#F1DB4B !important;
 }
 
 .blueBorder {
-  border-color:#2A188B !important;
+  border-color:#5F5AA2 !important;
 }
 .greenBorder {
-  border-color:#03C04E !important;
+  border-color:#7DAF9C !important;
 }
 .redBorder {
-  border-color:#FF3A20 !important;
+  border-color:#DD7373 !important;
 }
 .yellowBorder {
-  border-color:#F9C22E !important;
+  border-color:#F1DB4B !important;
 }
 
 .blueStroke {
-  stroke:#2A188B !important;
+  stroke:#5F5AA2 !important;
 }
 .greenStroke {
-  stroke:#03C04E !important;
+  stroke:#7DAF9C !important;
 }
 .redStroke {
-  stroke:#FF3A20 !important;
+  stroke:#DD7373 !important;
 }
 .yellowStroke {
-  stroke:#F9C22E !important;
+  stroke:#F1DB4B !important;
 }
 .blackStroke {
-  stroke:#000000 !important;
+  stroke:#323232 !important;
 }

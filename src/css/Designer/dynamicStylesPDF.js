@@ -8,7 +8,7 @@ export const dynamicStylesPDFPerson = StyleSheet.create({
     display:"block",
     position:"relative",
     color:"white",
-    fontFamily:'Interstate Extra Light Condensed',
+    fontFamily:'AmaticSC Regular',
   },
   view:{
     display:"inline-block",
@@ -61,7 +61,7 @@ export const dynamicStylesPDFBack = StyleSheet.create({
     height:cardConstants.pdfDimensions.height,
     display:"block",
     position:"relative",
-    fontFamily:'Interstate Extra Light Condensed',
+    fontFamily:'AmaticSC Regular',
     textAlign:"center",
   },
   view:{
@@ -101,7 +101,7 @@ export const dynamicStylesPDFEventGoal = StyleSheet.create({
     height:cardConstants.pdfDimensions.height,
     display:"block",
     position:"relative",
-    fontFamily:'Interstate Extra Light Condensed',
+    fontFamily:'AmaticSC Regular',
     textAlign:"center",
   },
   view:{

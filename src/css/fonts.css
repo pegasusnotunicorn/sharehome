@@ -1,13 +1,20 @@
 @font-face {
-    font-family: 'Interstate Extra Light Condensed';
-    src: url('../fonts/Interstate-ExtraLight-Cond.ttf') format('truetype');
+    font-family: 'AmaticSC Regular';
+    src: url('../fonts/AmaticSC-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'GenShinGothic Monospace Extra Light';
-    src: url('../fonts/GenShinGothic-Monospace-ExtraLight.ttf') format('truetype');
+    font-family: 'AmaticSC Bold';
+    src: url('../fonts/AmaticSC-Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ZenKurenaido Regular';
+    src: url('../fonts/ZenKurenaido-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }

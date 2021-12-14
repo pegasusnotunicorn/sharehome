@@ -30,13 +30,16 @@ const english = {
     },
 
     "main page":{
-      "subtitle": "A card game inspired by that hit Japanese reality TV show on that popular streaming service.",
-      "player count": "2 TO 6+ PLAYERS",
-      "play time": "10-30+ MINUTES",
+      "subtitle1": "Welcome to SHAREHOME!",
+      "subtitle2": "The fantastical reality TV show that documents the lives of six mythical strangers living thier every day modern lives.",
+      "subtitle3": "Love, Career & Magic is a card game that lets you relive your favorite scenes by playing as the characters who appeared!",
+      "player count": "2+ PLAYERS",
+      "play time": "10+ MINUTES",
+      "splashalt": "6 strangers enjoying a meal together."
     },
 
     "email form":{
-      "prompt": "Sign up for the newsletter to be the first to know when we launch!",
+      "prompt": "Sign up for the newsletter to stay in touch!",
       "button": "STAY UPDATED",
       "sidebarbutton": "SUBMIT",
       "sending": "Submitting...",
@@ -65,14 +68,14 @@ const english = {
       "roleplay":{
         "name": "Roleplay",
         "description": "Play as strangers living together in the same house whose daily interactions and drama are commentated on by the other players.",
-        "player count": "6+ Players",
-        "play time": "25 Minutes",
+        "player count": "3+ Players",
+        "play time": "15+ Minutes",
 
         "setup":{
           "title": "Game Setup",
           "description": "Show me the game rules instead",
-          "step1 1": "Decide the 6 players who will be Members of the House. The rest will be playing as Commentators.",
-          "step1 2": "If you don't have enough players, each Member also plays as a Commentator.",
+          "step1 1": "Decide the players who will be Members of the House. The rest will be playing as Commentators.",
+          "step1 2": "If you don't have enough 6+ players, each Member also plays as a Commentator.",
           "step2m": "Step 2 - Members",
           "step2m 1": "Players are given a random Member Card, a Goal Card, and two Signal Tokens.",
           "step2m 2": "Your goal is to complete your Goal Card or find love and leave the house.",

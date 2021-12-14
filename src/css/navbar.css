@@ -1,12 +1,18 @@
+.navBarMain{
+  display:flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .navbar{
   position:fixed;
   top:0;
   text-align:left;
   margin:0;
-  transition:0.5s;
+  transition:left 0.5s;
   z-index:99;
   height:100vh;
-  background:#2A188B;
+  background:#5F5AA2;
   box-shadow:0px 0px 10px 1px #000;
 }
 
@@ -27,6 +33,26 @@
   color:white;
 }
 
+.titleWrapper{
+  position:relative;
+}
+
+.navbar .lcmImage {
+  width:175px;
+  margin: auto;
+  display: block;
+  margin-top: 3vh;
+}
+
+.navbar .sharehomegame {
+  color: white;
+  bottom: 0;
+  text-align: center;
+  font-size: 20px;
+  margin-top: 10px !important;
+  margin-bottom: 0;
+}
+
 .navbar.is-active .title{
   opacity:1;
   transition:opacity 0.75s;
@@ -35,13 +61,11 @@
 .navbar .title:hover:after{
   content:'シェアホーム';
   font-size:20px;
-  font-family:'GenShinGothic Monospace Extra Light';
+  font-family:'ZenKurenaido Regular';
 }
 
 .navbarButtonWrapper{
-  margin-top:60px;
-  height:calc(100% - 235px);
-  border-top:1px solid white;
+  margin-top:15px;
 }
 
 .navbarButton{
@@ -49,7 +73,7 @@
   text-align:left;
   text-decoration:none;
   text-transform:uppercase;
-  width:calc(100% - 40px);
+  width:calc(100% - 44px);
   user-select:none;
   -webkit-user-drag:none;
   padding:20px;
@@ -58,7 +82,7 @@
 }
 
 .navbarButton.is-active{
-  border-right:4px solid #FF3A20;
+  border-right:4px solid #DD7373;
   color:black;
   background:white;
 }
@@ -83,15 +107,12 @@
 
 .navbarBottomWrapper .emailWrapper {
   color:white;
-  margin-left:20px;
-  margin-top:20px;
-  margin-right:20px;
+  margin:20px;
 }
 
 .navbarBottomWrapper .emailWrapper p {
   margin-left:0;
   margin-top:0;
-  height:48px;
   overflow:hidden;
 }
 

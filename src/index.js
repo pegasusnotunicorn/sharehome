@@ -4,16 +4,21 @@ import * as serviceWorker from './serviceWorker';
 import WebFont from 'webfontloader';
 
 import './css/index.css';
+import './css/eng.css';
+import './css/jap.css';
 import './css/fonts.css';
 import Router from './Router.js';
-import './i18n';
+import i18n from './i18n';
 
 //load font first
 WebFont.load({
   custom: {
-    families: ['Interstate Extra Light Condensed', 'GenShinGothic Monospace Extra Light'],
+    families: ['AmaticSC Regular', 'ZenKurenaido Regular'],
   },
   active: ()=>{
+    //set language so we can use custom CSS
+    document.getElementById('sharehome').setAttribute("language", i18n.language);
+
     ReactDOM.render(
       <React.StrictMode>
         <Router />

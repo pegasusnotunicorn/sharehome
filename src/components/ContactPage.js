@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
 import { CornerLeftDown } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 
+//custom files
 import Card from './Card/Card.js';
+import { Title } from './utils/Title.js';
 
 import '../css/contact.css';
 
@@ -16,7 +17,7 @@ const ContactPage = (props) => {
 
   return (
     <div className="content max-width">
-      <NavLink to="/"><div className="title noselect"></div></NavLink>
+      <Title />
       <div className="subcontentWrapper">
         <h2 className="subtitle">{t("contact page.title")}</h2>
         <p>{t("contact page.email")}<a className="email" href="mailto:hello@sharehomethegame.com">hello@sharehomethegame.com</a></p>

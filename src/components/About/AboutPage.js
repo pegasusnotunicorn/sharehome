@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+//custom files
+import { Title } from '../utils/Title.js';
 import GameModeDetails from './utils/GameModeDetails.js';
 import GameModeIcons from './utils/GameModeIcons.js';
 import Roleplay from './components/Roleplay.js';
@@ -136,7 +138,7 @@ const AboutPage = (props) => {
 
   return (
     <div className="content max-width">
-      <NavLink to="/"><div className="title noselect"></div></NavLink>
+      <Title />
       <Content />
     </div>
   );

@@ -6,9 +6,13 @@ body {
   margin:0;
   padding:0;
   border:0;
-  font-family: 'Interstate Extra Light Condensed', 'GenShinGothic Monospace Extra Light';
+  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
   text-align:center;
   letter-spacing:1px;
+}
+
+.prelineWhiteSpace {
+  white-space: pre-line;
 }
 
 #sharehome{
@@ -100,13 +104,12 @@ svg.is-spinning {
 }
 
 .button{
-  background-color:#2A188B;
-  font-family: 'Interstate Extra Light Condensed', 'GenShinGothic Monospace Extra Light';
+  background-color: #5F5AA2;
+  color:white;
+  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
   font-size:20px;
   text-transform: uppercase;
   outline:0;
-  color:white;
-  line-height:100%;
   cursor:pointer;
   padding:10px;
   padding-top:12px;
@@ -164,6 +167,7 @@ svg.is-spinning {
 .subcontentWrapper{
   max-width:500px;
   margin:auto;
+  margin-top:3vh;
   padding-left:10px;
   padding-right:10px;
 }
@@ -204,6 +208,38 @@ svg.is-spinning {
   position:relative;
 }
 
+.lcmContainer{
+  width:300px;
+  margin:auto;
+  margin-top:3vh;
+}
+
+/* mobile stuff */
+@media only screen and (max-width: 600px) {
+  .lcmImage{
+    width:200px !important;
+  }
+  .sharehomegame{
+    text-align: center !important;
+    margin-top: 0 !important;
+  }
+}
+
+.lcmImage{
+  width:100%;
+}
+
+.sharehomegame{
+  text-align: right;
+  width: 100%;
+  margin-top: -25px;
+  font-size: 20px;
+}
+
+hr{
+  border-color:rgba(0,0,0,0.15);
+}
+
 input[type="text"]:not(.cardViewerInput){
   padding:10px;
   padding-top:16px;
@@ -212,5 +248,5 @@ input[type="text"]:not(.cardViewerInput){
   font-size:20px;
   vertical-align:middle;
   min-width:300px;
-  font-family: 'Interstate Extra Light Condensed', 'GenShinGothic Monospace Extra Light';
+  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
 }

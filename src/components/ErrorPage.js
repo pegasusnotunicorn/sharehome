@@ -2,6 +2,10 @@ import React, { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
+//custom files
+import { Title } from './utils/Title.js';
+import { Splash } from './utils/Splash.js';
+
 const ErrorPage = (props) => {
   const { t } = useTranslation();
 
@@ -11,15 +15,13 @@ const ErrorPage = (props) => {
 
   return (
     <div className="content max-width">
-      <NavLink to="/"><div className="title noselect"></div></NavLink>
+      <Title />
       <div className="subcontentWrapper">
         <h2 className="subtitle">{t("error page.title")}</h2>
         <p>{t("error page.description")}<NavLink to="/">{t("error page.link")}</NavLink></p>
       </div>
 
-      <div className="couchContainer">
-        <img className="couch" src="/images/couch.svg" alt="Commentator couch"></img>
-      </div>
+      <Splash />
     </div>
   )
 }

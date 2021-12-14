@@ -6,8 +6,8 @@ import PDFPage from './PDFPage.js';
 import PDFBackPage from './PDFBackPage.js';
 
 //import fonts as variables because strings don't seem to work
-import InterstateExtraLightCondensed from "../../../fonts/Interstate-ExtraLight-Cond.ttf";
-import GenShinGothic from "../../../fonts/GenShinGothic-Monospace-ExtraLight.ttf";
+import InterstateExtraLightCondensed from "../../../fonts/AmaticSC-Regular.ttf";
+import GenShinGothic from "../../../fonts/ZenKurenaido-Regular.ttf";
 
 //create a PDF document and use currentCard to change the inside text
 const PDFDocument = (props) => {
@@ -32,7 +32,7 @@ const PDFDocument = (props) => {
 
   //register fonts here so each time document is made, fonts will be good
   Font.register({
-    family: 'Interstate Extra Light Condensed',
+    family: 'AmaticSC-Regular',
     fontStyle: 'normal',
     fontWeight: 'normal',
     src: InterstateExtraLightCondensed

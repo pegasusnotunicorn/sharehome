@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, Redirect, Switch, Route } from 'react-router-dom';
+import { Redirect, Switch, Route } from 'react-router-dom';
 import { Smile } from 'react-feather';
 
 //custom files
+import { Title } from '../utils/Title.js';
 import DeckManager from './DeckManager/DeckManager.js';
 import DeckEditor from './DeckEditor/DeckEditor.js';
 import { useStickyReducer, useStickyState } from '../utils/stickyHooks.js';
@@ -57,7 +58,7 @@ const DesignerPage = (props) => {
   return (
     <>
       <div className="content max-width">
-        <NavLink to="/"><div className="title noselect"></div></NavLink>
+        <Title />
         <Switch>
           <Route exact path="/designer/edit" render={()=>{
             //if currently editing a deck, show editor

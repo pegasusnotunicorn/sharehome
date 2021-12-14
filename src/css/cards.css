@@ -9,6 +9,7 @@
   -moz-perspective: 1000px; /* Remove this if you don't want the 3D effect */
   -o-perspective: 1000px; /* Remove this if you don't want the 3D effect */
   pointer-events:all;
+  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
 }
 
 .flipcardInner{
@@ -23,11 +24,11 @@
   -o-transform-style: preserve-3d;
 }
 
-.flipcard:not(.disable-flip):hover .flipcardInner, .flipcard.is-flipped .flipcardInner {
+.flipcard:not(.disable-flip):not(.is-clicked):hover .flipcardInner, .flipcard.is-flipped .flipcardInner {
   transform: rotateY(180deg);
 }
 
-.flipcard.is-flipped:not(.disable-flip):hover .flipcardInner {
+.flipcard.is-flipped:not(.disable-flip):not(.is-clicked):hover .flipcardInner {
   transform: rotateY(0deg);
 }
 

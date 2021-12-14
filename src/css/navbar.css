@@ -81,6 +81,14 @@
   margin:0;
 }
 
+/* mobile stuff */
+@media only screen and (max-width: 600px) {
+  .navbarButton{
+    padding-top:10px;
+    padding-bottom:10px;
+  }
+}
+
 .navbarButton.is-active{
   border-right:4px solid #DD7373;
   color:black;

@@ -6,6 +6,13 @@
 }
 
 @font-face {
+    font-family: 'Roboto Thin';
+    src: url('../fonts/Roboto-Thin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
     font-family: 'AmaticSC Bold';
     src: url('../fonts/AmaticSC-Bold.ttf') format('truetype');
     font-weight: normal;

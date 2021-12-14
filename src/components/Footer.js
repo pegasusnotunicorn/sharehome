@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Card from './Card/Card.js';
 
 import '../css/footer.css';
@@ -33,7 +33,7 @@ const RandomCardsForFooter = (totalPeopleCards, totalEventGoalCards) => {
       type:specificType,
       flipPercentage: 0.75,     //chance of showing front of the card
       mainStyle:{
-        //stuff needed size the card
+        //stuff needed for card size
         width:"300px",
         height:"215px",
         fontSize:"7.5px",
@@ -68,16 +68,6 @@ const Footer = (props) => {
   let totalEventGoalCards = Math.ceil(window.innerWidth / 400);
 
   let footerCards = RandomCardsForFooter(totalPeopleCards, totalEventGoalCards);
-
-  //toggle a flip so we can avoid the first flip no show problem
-  useEffect(()=>{
-    for (let i = 0; i < footerCards.length; i++){
-      let personCard = document.getElementById("person" + i);
-      if (personCard){
-        document.getElementById("person" + i).classList.toggle("is-flipped");
-      }
-    }
-  });
 
   return (
     <div className="footer">

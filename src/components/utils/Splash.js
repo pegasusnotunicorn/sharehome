@@ -7,7 +7,7 @@ export const Splash = (props) => {
   return (
     <div className="couchContainer">
       <a href="./images/splash.jpg" target="_blank">
-        <img className="couch" src="./images/splash.jpg" alt={t('main page.splashalt')}></img>
+        <img className="couch" src="/images/splash.jpg" alt={t('main page.splashalt')}></img>
       </a>
     </div>
   );

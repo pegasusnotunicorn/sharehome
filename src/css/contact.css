@@ -8,3 +8,17 @@
 .madeby:last-child{
   margin-bottom:20px;
 }
+
+.socialWrapper {
+  width:50%;
+  margin:auto;
+  display:flex;
+  justify-content: space-around;
+}
+
+.socialWrapper svg {
+  width: 1.75em;
+  height: 1.75em;
+  color:black;
+  text-decoration: none;
+}

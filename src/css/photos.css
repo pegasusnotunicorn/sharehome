@@ -5,6 +5,8 @@
 
 .photoSubcontent{
   margin-top:25px;
+  padding-left:15px;
+  padding-right:15px;
 }
 
 .photoSubcontent:first-child{
@@ -13,14 +15,31 @@
 
 .photoWrapper{
   width:100%;
+  margin-bottom: 2em;
+  position:relative;
 }
 
 .photoWrapper img{
-  width:calc(100% - 30px);
-  padding:15px;
+  width: 100%;
 }
 
 .caption{
-  margin:0;
-  margin-top:-20px !important;
+  margin: 0;
+  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
+  background: rgba(0,0,0,0.3);
+  color: white;
+  font-size:3em;
+  position: absolute;
+  width: 100%;
+  bottom: 8px;
+}
+
+@media only screen and (max-width:600px) {
+  .caption{
+    font-size: 1.5em;
+  }
+}
+
+.moretocome{
+  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
 }

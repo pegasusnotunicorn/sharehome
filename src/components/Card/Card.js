@@ -10,10 +10,26 @@ export const Card = (props) => {
 
   const cardRef = useRef();
   const [isClicked, setIsClicked] = useState(false);
-  const [showFront] = useState(props.showFront);      //forcibly show front (true) or back (false), undefined = flippable
   const [disableFlip] = useState(props.disableFlip || false);
   const [disableShadow] = useState(props.disableShadow || false);
+
+  //flipped = back of the card
+  let flipped = false; //showing the front
+  let flipPercentage = (typeof props.flipPercentage !== "undefined") ? props.flipPercentage : 0.5;
+  const [showFront] = useState(props.showFront);      //forcibly show front (true) or back (false), undefined = flippable
   const [randomFlip] = useState(Math.random());
+
+  //turn off random flip if force show front or back
+  if (typeof showFront !== "undefined"){
+    flipped = !props.showFront;
+  }
+  //chance of showing front of the card
+  else if (randomFlip > flipPercentage){
+    flipped = true;
+  }
+
+  const [isFlipped, setIsFlipped] = useState(flipped);
+  const [initialFlipped] = useState(flipped);   //to remember the initial flipped state post click
 
   //don't render the front or the back
   const [hideFront] = useState(props.hideFront);
@@ -25,15 +41,19 @@ export const Card = (props) => {
   if (disableFlip || isClicked) {
     classes += " disable-flip ";
   }
-  //turn off random flip if force show front or back
-  if (typeof showFront !== "undefined"){
-    classes += (props.showFront) ? " " : " is-flipped ";
+
+  //not clicked but flipped
+  if (!isClicked && isFlipped){
+    classes += " is-flipped ";
   }
-  //else randomly flip the card on load based on flipPercentage
-  else {
-    let flipPercentage = (typeof props.flipPercentage !== "undefined") ? props.flipPercentage : 0.5;
-    classes += (randomFlip > flipPercentage) ? " " : " is-flipped ";
+
+  //if clicked show front and bring to center
+  if (isClicked){
+    classes += " is-clicked ";
   }
+
+  //any props classnames
+  if (props.className) classes += " " + props.className;
 
   //click to disable rotation and bring to front
   const cardStyle = {
@@ -47,7 +67,6 @@ export const Card = (props) => {
   useEffect(()=>{
     if (cardRef.current && typeof props.randomDegree !== "undefined"){
       let cardRefCurrent = cardRef.current;
-      cardRefCurrent.style.bottom = props.randomBottom;
       cardRefCurrent.style.bottom = (isClicked) ? "40px" : props.randomBottom;
       cardRefCurrent.style.transform = (isClicked) ? "rotate(0deg)" : props.randomDegree;
     }
@@ -59,12 +78,20 @@ export const Card = (props) => {
       ref={cardRef}
       className={
         "noselect flipcard "
-        + classes
-        + props.className}
+        + classes}
       style={cardStyle}
       onClick={()=>{
+        //click only footer stuff
         if (typeof props.randomDegree !== "undefined"){
           setIsClicked(!isClicked);
+
+          //clicking
+          if (!isClicked){
+            setIsFlipped(true);
+          }
+          else {
+            setIsFlipped(initialFlipped);
+          }
         }
       }}
     >

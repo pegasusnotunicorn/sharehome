@@ -9,6 +9,8 @@ body {
   font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
   text-align:center;
   letter-spacing:1px;
+  font-size:1.1em;
+  color:#323232;
 }
 
 .prelineWhiteSpace {
@@ -28,12 +30,21 @@ h1, h2, h3, h4, h5, p, li, ul, a, span {
   line-height:150%;
 }
 
+h2, h2 a {
+  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
+}
+
+h3, p, a, input {
+  font-family:"Roboto Thin";
+}
+
 p, li {
   opacity:.85;
 }
 
 svg {
   vertical-align:sub;
+  opacity:.6;
 }
 
 svg.is-flipped{
@@ -168,8 +179,8 @@ svg.is-spinning {
   max-width:500px;
   margin:auto;
   margin-top:3vh;
-  padding-left:10px;
-  padding-right:10px;
+  padding-left:20px;
+  padding-right:20px;
 }
 
 .subcontentWrapper.max-width{
@@ -234,6 +245,7 @@ svg.is-spinning {
   width: 100%;
   margin-top: -25px;
   font-size: 20px;
+  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
 }
 
 hr{

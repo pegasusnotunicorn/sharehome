@@ -32,6 +32,7 @@
 
 .timePlayerInfoWrapper div, .timePlayerInfoWrapper svg{
   margin-right:10px;
+  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
 }
 
 .stepsContainer{
@@ -109,4 +110,8 @@
   float:left;
   padding-left:10px;
   list-style-type:disclosure-closed;
+}
+
+.subtitle a {
+  color:#5F5AA2;
 }

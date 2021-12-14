@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Home, HelpCircle, Mail, Edit, FileText } from 'react-feather';
+import { Home, HelpCircle, Mail, Edit, FileText, Camera } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 import i18n from "i18next";
 
@@ -12,7 +12,6 @@ import '../../css/hamburger.css';
 
 // <NavLink to="/purchase" activeClassName="is-active" className="button noselect navbarButton"><ShoppingCart />Purchase</NavLink>
 // <a href="https://tabletopia.com/games/sharehome" rel="noopener noreferrer" target="_blank" activeclassname="is-active" className="button noselect navbarButton"><Star />{t('navbar.play online')}</a>
-// <NavLink onClick={hideNav} to="/photos" activeClassName="is-active" className="button noselect navbarButton"><Camera />{t('navbar.photos')}</NavLink>
 
 //main navbar for page navigation on the website
 export const NavbarMain = () => {
@@ -26,6 +25,7 @@ export const NavbarMain = () => {
       <div className="navbarButtonWrapper">
         <NavLink onClick={hideNav} exact={true} to="/" activeClassName="is-active" className="button noselect navbarButton"><Home />{t('navbar.home')}</NavLink>
         <NavLink onClick={hideNav} to="/about" activeClassName="is-active" className="button noselect navbarButton"><HelpCircle />{t('navbar.how to play')}</NavLink>
+        <NavLink onClick={hideNav} to="/photos" activeClassName="is-active" className="button noselect navbarButton"><Camera />{t('navbar.photos')}</NavLink>
         <NavLink onClick={hideNav} to="/designer" activeClassName="is-active" className="button noselect navbarButton"><Edit />{t('navbar.card designer')}</NavLink>
         <NavLink onClick={hideNav} to="/contact" activeClassName="is-active" className="button noselect navbarButton"><Mail />{t('navbar.contact us')}</NavLink>
         <a href="https://pegasusgames.medium.com/" rel="noopener noreferrer" target="_blank" activeclassname="is-active" className="button noselect navbarButton"><FileText />{t('navbar.blog')}</a>

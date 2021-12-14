@@ -11,7 +11,6 @@
 # production
 /build
 /src/components/Play
-/src/components/Photos
 /src/components/Designer/DeckManager/DeckCopier.js
 
 # misc

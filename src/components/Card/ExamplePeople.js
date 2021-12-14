@@ -31,7 +31,7 @@ const examplePeople = [
     name: "Beatrice Cavendish",
     age: 27,
     job: "Optometrist",
-    japaneseName: "ベアトリス",
+    japaneseName: "ベアトリス・カヴェンディッシュ",
     image: {
       url: "/images/members/characters2.jpg",
       name: "characters2.jpg",
@@ -59,7 +59,7 @@ const examplePeople = [
     name: "Köttr, the Grumpy",
     age: 121,
     job: "Courier",
-    japaneseName: "コトル・ザー・グランぴー",
+    japaneseName: "コトル・ザー・グランピー",
     image: {
       url: "/images/members/characters4.jpg",
       name: "characters4.jpg",

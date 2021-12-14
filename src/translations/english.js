@@ -12,6 +12,30 @@ const english = {
     "card":"Card",
     "deck":"Deck",
 
+    "characters": {
+      "1":{
+        name: "Urg The Hacker",
+      },
+      "2":{
+        name: "Beatrice Cavendish",
+      },
+      "3":{
+        name: "Tsukasa Shōbō",
+      },
+      "4":{
+        name: "Köttr, The Grumpy",
+      },
+      "5":{
+        name: "Lydia Grimsbane",
+      },
+      "6":{
+        name: "Ahxi Raanee",
+      },
+      "7":{
+        name: "Ogark Chestmaul",
+      },
+    },
+
     "error page":{
       "title":"Oops, something went wrong!",
       "description": "You tried to go to a page that doesn't exist! ",
@@ -32,14 +56,14 @@ const english = {
     "main page":{
       "subtitle1": "Welcome to SHAREHOME!",
       "subtitle2": "The fantastical reality TV show that documents the lives of six mythical strangers living thier every day modern lives.",
-      "subtitle3": "Love, Career & Magic is a card game that lets you relive your favorite scenes by playing as the characters who appeared!",
+      "subtitle3": "Love, Career & Magic is a card game that lets you relive your favorite scenes by playing as the characters from the show!",
       "player count": "2+ PLAYERS",
       "play time": "10+ MINUTES",
       "splashalt": "6 strangers enjoying a meal together."
     },
 
     "email form":{
-      "prompt": "Sign up for the newsletter to stay in touch!",
+      "prompt": "Sign up to be notified when we launch!",
       "button": "STAY UPDATED",
       "sidebarbutton": "SUBMIT",
       "sending": "Submitting...",
@@ -165,21 +189,17 @@ const english = {
     },
 
     "photos page":{
-      "warning red": "NOTE",
-      "warning": "The final product may look different from what is depicted on this page.",
+      "warning red": "NOTE:",
+      "warning": "The final artwork may look different from what is depicted below.",
       "base": {
-        "title": "Main Game",
-        "description": "The main base game that comes with a standard set of cards.",
+        "title": "Artworks",
+        "description": "Various artworks for the game.",
       },
       "expansion": {
-        "title": "Expansion Decks",
-        "description": "Planned expansion decks with new additional cards.",
+        "title": "Characters",
+        "description": "Artworks of all playable characters included in the game.",
       },
-      "shonan": "SHONAN Expansion Deck",
-      "hawaii": "HAWAII Expansion Deck",
-      "tokyo city": "TOKYO CITY Expansion Deck",
-      "karuizawa": "KARUIZAWA Expansion Deck",
-      "tokyo 2020": "TOKYO 2020 Expansion Deck",
+      "moretocome": "More characters will be added every week!"
     },
 
     "contact page":{
@@ -187,8 +207,7 @@ const english = {
       "email": "Email us at ",
       "description 1": "SHAREHOME is made by ",
       "description 2": " and is not affiliated with the makers of the popular Japanese reality TV show on that really popular streaming website.",
-      "description 3": "Although it would be awesome if they could just reply to my emails.",
-      "description 4": "どうかよろしくお願い致します！",
+      "description 3": "よろしくお願い致します！",
       "made by": "Made by this guy",
     },
 
@@ -228,7 +247,7 @@ const english = {
           "member": "Create custom Member Cards of your friends or family!",
           "commentator": "Create custom Commentator Cards of your friends or family!",
           "event": "Create a custom deck of Event Cards filled with your own adventures!",
-          "goal": "Create a custom deck of your own dreams and goals!",
+          "goal": "Create a custom deck of your own dreams, goals, and desires!",
         }
       },
 

@@ -10,7 +10,7 @@ const ErrorPage = (props) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    document.title = "SHAREHOME - Something went wrong!";
+    document.title = "Love, Career & Magic — Something went wrong!";
   });
 
   return (

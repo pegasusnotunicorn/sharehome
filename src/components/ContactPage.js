@@ -12,7 +12,7 @@ const ContactPage = (props) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    document.title = "SHAREHOME - Contact us";
+    document.title = "Love, Career & Magic — Contact Us";
   });
 
   return (

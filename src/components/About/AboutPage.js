@@ -133,7 +133,7 @@ const AboutPage = (props) => {
   }
 
   useEffect(() => {
-    document.title = "SHAREHOME - How to play";
+    document.title = "SHAREHOME - How To Play";
   });
 
   return (

@@ -1,5 +1,5 @@
 {
-  "name": "SHAREHOME — Love, Career & Magic",
+  "name": "Love, Career, and Magic: A SHAREHOME Game",
   "homepage": "https://sharehomethegame.com",
   "version": "1.0.0",
   "private": true,
@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@react-pdf/renderer": "^1.6.9",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^7.2.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -63,7 +63,6 @@
   "devDependencies": {
     "typescript": "^3.9.3"
   },
-  "optionalDependencies": {},
   "nodemonConfig": {
     "watch": [
       "app.js",

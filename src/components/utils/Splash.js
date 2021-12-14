@@ -5,10 +5,10 @@ export const Splash = (props) => {
   const { t } = useTranslation();
 
   return (
-    <a href="./images/splash.jpg" target="_blank">
-      <div className="couchContainer">
+    <div className="couchContainer">
+      <a href="./images/splash.jpg" target="_blank">
         <img className="couch" src="./images/splash.jpg" alt={t('main page.splashalt')}></img>
-      </div>
-    </a>
+      </a>
+    </div>
   );
 }

@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 
 const MetaTags = (props) => {
 
-  const description = "Love, Career & Magic is a card game about laughing, acting, and storytelling. What sort of fantastical relationships will you form? Will you uplift one another or devolve into chaos? You decide!"
+  const description = "A fantastical reality TV card game about laughing, acting, and storytelling. What sort of fantastical relationships will you form? You decide!"
 
   return (
     <div className="metatag_wrapper">

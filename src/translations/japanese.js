@@ -12,30 +12,6 @@ const japanese = {
     "card":"カード",
     "deck":"デッキ",
 
-    "characters": {
-      "1":{
-        name: "ウルグ・ザー・ハッカー",
-      },
-      "2":{
-        name: "ベアトリス・カヴェンディッシュ",
-      },
-      "3":{
-        name: "小坊士（しょうぼうつかさ）",
-      },
-      "4":{
-        name: "コトル・ザー・グランピー",
-      },
-      "5":{
-        name: "リディア・グリムズベイン",
-      },
-      "6":{
-        name: "アッシ・ラーニー",
-      },
-      "7":{
-        name: "オガルク・チェストモール",
-      },
-    },
-
     "error page":{
       "title":"ページが見つかりません！",
       "description": "申し訳ありませんが、お探しのページが見つかりませんでした。",
@@ -45,29 +21,37 @@ const japanese = {
     "navbar":{
       "home":"ホーム",
       "how to play": "ゲームの遊び方",
-      "photos":"ギャラリー",
+      "characters":"キャラクター紹介",
       "contact us":"お問い合わせ",
       "card designer":"デッキエディター",
-      "blog":"ブログ",
+      "blog":"ブログ（英語）",
       "play online":"オンラインプレイ",
       "questions":"お問い合わせはこちらへどうぞ",
     },
 
     "main page":{
+      "subtitle": "異世界のリアリティ番組をベースにしたカードゲーム",
       "subtitle1": "「シェアホーム」へようこそ！",
       "subtitle2": "「シェアホーム」は見ず知らずの男女獣人６匹が共同する生活をただただ記録したリアリティ番組です。",
       "subtitle3": "「Love, Career & Magic」は番組出演者を演じて名シーンを好きに再現するカードゲーム。",
       "player count": "２+ 人用",
       "play time": "プレイ時間 １０+ 分",
-      "splashalt": "6人の獣人がワイワイご飯を食べている様子。"
+      "splashalt": "6人の獣人がワイワイご飯を食べている様子。",
+      "charactersSection": "キャラクター紹介",
+      "moretocome": "毎週新キャラ一人が紹介されます！",
+      "clicktoseemore" : "キャラクターの一覧はこちらへ",
+      "spotlightCharacter": "今週の新キャラ紹介",
+      "final text": "２０２２年キックスターターで発売予定！",
+      "otherworks": "他のゲーム",
     },
 
     "email form":{
-      "prompt": "メルマガ登録で最新ニュースが届く！",
+      "prompt": "メルマガ登録で最新ニュースが届きます！",
       "button": "登録",
       "sidebarbutton": "登録",
+      "promise": "",
       "sending": "転送中...",
-      "success": "ありがとうございます！</br>すぐ確認メールが届きます。届かない場合は再度メールアドレスをご確認して下さい。"
+      "success": "ありがとうございます！すぐ確認メールが届きます。届かない場合は再度メールアドレスをご確認して下さい。"
     },
 
     "about page":{
@@ -188,18 +172,16 @@ const japanese = {
 
     },
 
-    "photos page":{
+    "characters page":{
       "warning red": "（注意）",
       "warning": "完成品は以下のイラストと異なる場合があります。ご了承くださいませ。",
-      "base": {
-        "title": "ゲームのイラスト",
-        "description": "ゲームのイメージを伝えるキーアート。",
-      },
-      "expansion": {
-        "title": "キャラクター",
-        "description": "ゲームのキャラクターを紹介するキーイラスト。",
-      },
-      "moretocome": "毎週新キャラ一人が紹介されます！"
+      "title": "キャラクター",
+      "description": "ゲームのキャラクターを紹介するキーイラスト。",
+      "moretocome": "毎週新キャラ一人が紹介されます！",
+      "race" : "種族:",
+      "job" : "職業:",
+      "age" : "年齢:",
+      "hobbies" : "趣味:",
     },
 
     "contact page":{
@@ -214,7 +196,7 @@ const japanese = {
     "designer page":{
 
       "selector":{
-        "my sharehome": "MY「シェアホーム」デッキ",
+        "my sharehome": "MY 「シェアホーム」 デッキ",
         "prompt": "デッキをクリックしたら編集できます。",
         "make a new deck": "＋追加デッキ",
         "select prompt": "編集したいデッキをクリックしてください",

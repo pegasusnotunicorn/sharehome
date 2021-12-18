@@ -12,30 +12,6 @@ const english = {
     "card":"Card",
     "deck":"Deck",
 
-    "characters": {
-      "1":{
-        name: "Urg The Hacker",
-      },
-      "2":{
-        name: "Beatrice Cavendish",
-      },
-      "3":{
-        name: "Tsukasa Shōbō",
-      },
-      "4":{
-        name: "Köttr, The Grumpy",
-      },
-      "5":{
-        name: "Lydia Grimsbane",
-      },
-      "6":{
-        name: "Ahxi Raanee",
-      },
-      "7":{
-        name: "Ogark Chestmaul",
-      },
-    },
-
     "error page":{
       "title":"Oops, something went wrong!",
       "description": "You tried to go to a page that doesn't exist! ",
@@ -45,7 +21,7 @@ const english = {
     "navbar":{
       "home":"HOME",
       "how to play": "HOW TO PLAY",
-      "photos":"PHOTOS",
+      "characters":"CHARACTERS",
       "contact us":"CONTACT US",
       "card designer":"card designer",
       "blog":"BLOG",
@@ -54,20 +30,28 @@ const english = {
     },
 
     "main page":{
+      "subtitle": "The reality TV card game set in a fantastical modern world",
       "subtitle1": "Welcome to SHAREHOME!",
-      "subtitle2": "The fantastical reality TV show that documents the lives of six mythical strangers living thier every day modern lives.",
+      "subtitle2": "The fantastical reality TV show that documents the lives of six mythical strangers living their every day modern lives.",
       "subtitle3": "Love, Career & Magic is a card game that lets you relive your favorite scenes by playing as the characters from the show!",
       "player count": "2+ PLAYERS",
       "play time": "10+ MINUTES",
-      "splashalt": "6 strangers enjoying a meal together."
+      "splashalt": "6 strangers enjoying a meal together.",
+      "charactersSection": "Playable Characters",
+      "moretocome": "More characters will be added every week!",
+      "clicktoseemore" : "Click here to see all the characters.",
+      "spotlightCharacter": "This Week's Character Spotlight",
+      "final text": "Coming soon to Kickstarter in 2022",
+      "otherworks": "Check out my other game!",
     },
 
     "email form":{
       "prompt": "Sign up to be notified when we launch!",
       "button": "STAY UPDATED",
       "sidebarbutton": "SUBMIT",
+      "promise": "Your email will not be shared with anyone else.",
       "sending": "Submitting...",
-      "success": "Thank you very much! </br> We just sent you a confirmation email. If you haven't received anything, please double check your email address."
+      "success": "Thank you! We just sent a confirmation email. If you do not receive anything, please double check your email address."
     },
 
     "about page":{
@@ -188,18 +172,16 @@ const english = {
 
     },
 
-    "photos page":{
+    "characters page":{
       "warning red": "NOTE:",
       "warning": "The final artwork may look different from what is depicted below.",
-      "base": {
-        "title": "Artworks",
-        "description": "Various artworks for the game.",
-      },
-      "expansion": {
-        "title": "Characters",
-        "description": "Artworks of all playable characters included in the game.",
-      },
-      "moretocome": "More characters will be added every week!"
+      "title": "Characters",
+      "description": "Artworks of all playable characters included in the game.",
+      "moretocome": "More characters will be added every week!",
+      "race" : "Race:",
+      "job" : "Profession:",
+      "age" : "Age:",
+      "hobbies" : "Hobbies:"
     },
 
     "contact page":{
@@ -266,7 +248,7 @@ const english = {
           "tools": "Tools",
           "deck name": "Deck Name",
           "deck name placeholder": "Enter deck name here.",
-          "deck description": "deck description",
+          "deck description": "Deck Description",
           "deck description placeholder": "Enter deck description here.",
           "download": "DOWNLOAD ALL CARDS (PDF)",
           "download prompt": "Are you sure you want to download all the cards?",

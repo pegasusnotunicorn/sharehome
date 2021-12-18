@@ -4,8 +4,10 @@ import { Users, Clock} from 'react-feather';
 //the player count and the total play time icons
 const GameModeIcons = (props) => {
 
+  let classes = "timePlayerInfoWrapper " + props.className;
+
   return (
-    <div className="timePlayerInfoWrapper">
+    <div className={classes}>
       <div>
         <Users />{props.playerCount}
       </div>

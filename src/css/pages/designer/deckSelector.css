@@ -1,9 +1,20 @@
+@media only screen and (max-width:600px) {
+  .deckSelectorWrapper {
+    padding-left:20px;
+    padding-right:20px;
+  }
+}
+
+.headerRow{
+  border-radius:1em 0 0 0;
+}
+
 .selectorRow:not(.headerRow){
   cursor:pointer;
 }
 
 .selectorRow{
-  width:95%;
+  width:100%;
   border-width:1px;
   border-style:solid;
   border-color:rgb(45,45,45);
@@ -15,6 +26,10 @@
   margin:auto;
   margin-bottom:-1px;
   height:60px;
+}
+
+.selectorRow:last-child{
+  border-radius:0 0 1em 0;
 }
 
 .selectorRow .flipcardBack{

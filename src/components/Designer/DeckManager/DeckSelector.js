@@ -9,7 +9,7 @@ import Card from '../../Card/Card.js';
 import ConfirmModalButton from '../../utils/ConfirmModalButton.js';
 import { downloadDecks } from '../utils/downloadPDFFile.js';
 
-import '../../../css/Designer/deckSelector.css';
+import '../../../css/pages/designer/deckSelector.css';
 
 //header for deck rows
 const DeckHeader = (props) => {
@@ -338,8 +338,10 @@ const DeckSelector = (props) => {
 
   return (
     <>
-      <h3>{t("designer page.selector.my sharehome")}</h3>
-      <p>{t("designer page.selector.prompt")}</p>
+      <div className="subcontentWrapper">
+        <h3>{t("designer page.selector.my sharehome")}</h3>
+        <p>{t("designer page.selector.prompt")}</p>
+      </div>
       <div className="deckSelectorWrapper">
         <DeckHeader
           decks={decks}

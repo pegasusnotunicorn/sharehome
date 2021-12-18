@@ -4,7 +4,7 @@ import { Page, View, Text, Canvas, Image } from '@react-pdf/renderer';
 //styles for the PDF document/file
 import * as cardConstants from '../utils/cardConstants.js';
 import { cardBackConstants } from '../../../components/Card/CardBack.js';
-import { dynamicStylesPDFPerson, dynamicStylesPDFEventGoal } from '../../../css/Designer/dynamicStylesPDF.js';
+import { dynamicStylesPDFPerson, dynamicStylesPDFEventGoal } from '../../../css/pages/designer/dynamicStylesPDF.js';
 
 //function to paint the shadow background canvas gradient
 function paintShadowBackground(painter, availableWidth, availableHeight){

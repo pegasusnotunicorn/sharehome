@@ -2,12 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import CardFrontPerson from './CardFrontPerson.js';
 import CardFrontEventGoal from './CardFrontEventGoal.js';
 import CardBack from "./CardBack.js";
-import "../../css/cards.css"
+import "../../css/utils/cards.css"
 
 //a flip-able card based on the actual cards
 //props are - showFront, disableFlip, id, type, mainStyle (width/height/fontSize)
 export const Card = (props) => {
-
   const cardRef = useRef();
   const [isClicked, setIsClicked] = useState(false);
   const [disableFlip] = useState(props.disableFlip || false);
@@ -102,6 +101,7 @@ export const Card = (props) => {
               type={props.type}
               personName={props.personName}
               mainStyle={props.mainStyle}
+              disableText={props.disableText}
             />
           </div>
         }
@@ -126,6 +126,7 @@ const CardFront = (props) => {
         <CardFrontPerson
           personName={props.personName}
           mainStyle={props.mainStyle}
+          disableText={props.disableText}
         />
       );
     case ("goal"):

@@ -1,24 +1,25 @@
 import React from 'react';
+import navbarStyles from '../../css/navbar.module.css';
 
 //template used for sidebars
 export const NavbarTemplate = (props) => {
   const navbarWidth = 300;
   const openCloseStyle = {};
   const startingPosition = (props.visibility === "visible") ? 0 : -(navbarWidth+10);
-  const startingHamburgerClass = (props.visibility === "visible") ? " is-active" : "";
+  const startingHamburgerClass = (props.visibility === "visible") ? "is-active" : "";
 
   //style the left or right sidebar
-  const navbarStyle = {
+  const newStyle = {
     width:navbarWidth,
   }
   if (props.position === "left"){
-    navbarStyle.left = startingPosition;
-    navbarStyle.borderRight = "border-right:4px solid #1F1169";
+    newStyle.left = startingPosition;
+    newStyle.borderRight = "border-right:4px solid #1F1169";
     openCloseStyle.left = 0;
   }
   if (props.position === "right"){
-    navbarStyle.right = startingPosition;
-    navbarStyle.borderLeft = "border-right:4px solid #1F1169";
+    newStyle.right = startingPosition;
+    newStyle.borderLeft = "border-right:4px solid #1F1169";
     openCloseStyle.right = 20;
   }
 
@@ -28,9 +29,12 @@ export const NavbarTemplate = (props) => {
     props.setVisibility(newVisiblity);
   }
 
+  //main navbar or deck editor sidebar
+  const greenOrBlue = (props.position === "left") ? "blueBackground" : "greenBackground"
+
   return (
-    <div id={props.id} className={"navbar" + startingHamburgerClass} style={navbarStyle} >
-      <button id={props.id + "OpenClose"} className={"hamburger hamburger--slider navbarOpenClose" + startingHamburgerClass} onClick={toggleNav} style={openCloseStyle} type="button">
+    <div id={navbarStyles[props.id]} className={`${navbarStyles.navbarClass} ${startingHamburgerClass}`} style={newStyle} >
+      <button id={`${navbarStyles[props.id]}OpenClose`} className={`hamburger ${greenOrBlue} hamburger--slider ${navbarStyles.navbarOpenClose} ${startingHamburgerClass}`} onClick={toggleNav} style={openCloseStyle} type="button">
         <span className="hamburger-box">
           <span className="hamburger-inner"></span>
         </span>

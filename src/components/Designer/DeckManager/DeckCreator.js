@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { getDefaultDeck } from '../utils/deckConstants.js';
 import Card from '../../Card/Card.js';
-import '../../../css/Designer/deckCreator.css';
+import '../../../css/pages/designer/deckCreator.css';
 
 // <p>
 //   <NavLink to="/designer/copy">
@@ -21,24 +21,23 @@ const DeckCreator = (props) => {
     {
       type:"member",
       description:t("designer page.creator.decks.member"),
-    },
-    {
-      type:"commentator",
-      description:t("designer page.creator.decks.commentator"),
+      className:"greenBackground",
     },
     {
       type:"event",
       description:t("designer page.creator.decks.event"),
+      className:"redBackground",
     },
     {
       type:"goal",
       description:t("designer page.creator.decks.goal"),
+      className:"blueBackground",
     },
   ].map((elem, index)=>{
     return (
       <div
         key={elem.type + index}
-        className="deckCreator noselect"
+        className={`deckCreator noselect ${elem.className}`}
         onClick={()=>{
           props.createNewDeck(getDefaultDeck(elem.type));
         }}

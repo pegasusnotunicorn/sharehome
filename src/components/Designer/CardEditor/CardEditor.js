@@ -7,7 +7,7 @@ import { getImageObject, pdfDimensions } from '../utils/cardConstants.js';
 import CardViewer from './CardViewer.js';
 import CardButtons from './CardButtons.js';
 
-import '../../../css/Designer/cardEditor.css';
+import '../../../css/pages/designer/cardEditor.css';
 
 //get the X and Y coordinates of mouse inside the bounding rect divided by magnifyValue
 function getMouseXY(e, viewerMagnifyValue){

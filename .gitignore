@@ -5,6 +5,10 @@
 /.pnp
 .pnp.js
 
+# unused
+/server
+/src/components/Characters/PhotosPage.js
+
 # testing
 /coverage
 

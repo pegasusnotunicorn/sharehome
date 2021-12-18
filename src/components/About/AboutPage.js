@@ -11,7 +11,7 @@ import Charades from './components/Charades.js';
 import Guesswho from './components/Guesswho.js';
 import Taboo from './components/Taboo.js';
 
-import '../../css/about.css';
+import '../../css/pages/about.css';
 
 const AboutPage = (props) => {
   const { t } = useTranslation();
@@ -102,7 +102,7 @@ const AboutPage = (props) => {
       let gameModes = gameModeDetails.map((current, index)=>{
         return (
           <div key={"howToPlay" + index} className="howToPlayWrapper">
-            <h2 className="subtitle"><NavLink to={"/about/" + current.link}>{current.name}</NavLink></h2>
+            <h2 className="subsubtitle"><NavLink to={"/about/" + current.link}>{current.name}</NavLink></h2>
             <GameModeIcons
               playerCount={current.playerCount}
               playTime={current.playTime}
@@ -122,7 +122,7 @@ const AboutPage = (props) => {
           </div>
           {gameModes}
           <div className="howToPlayWrapper">
-            <h2 className="subtitle">{t('about page.main page.and many more')}</h2>
+            <h2 className="subsubtitle">{t('about page.main page.and many more')}</h2>
             <p>
               {t('about page.main page.how will you play')}
             </p>

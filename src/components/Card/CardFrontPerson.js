@@ -8,6 +8,7 @@ export const CardFrontPerson = (props) => {
 
   //check if there is a person name, if not get a random
   let cardPerson = (props.personName) ? getSpecificPerson(props.personName) : cardPersonState;
+  let disableText = (typeof props.disableText !== "undefined") ? props.disableText : false;
 
   //object position offset (ratio scales according to size of the card set in parent)
   let cardWidth = Number.parseInt(props.mainStyle.width);
@@ -17,8 +18,8 @@ export const CardFrontPerson = (props) => {
   let objectPositionX = (typeof cardPerson.image.x !== "undefined") ? Math.round(cardPerson.image.x * (cardXY.width / imageXY.width)) + "px" : "50%";
   let objectPositionY = (typeof cardPerson.image.y !== "undefined") ? Math.round(cardPerson.image.y * (cardXY.height / imageXY.height)) + "px" : "50%";
 
-  return (
-    <div className="memberCommCardWrapper">
+  let mainText = (disableText) ? "" : (
+    <>
       <div className="memberCommCardShadow"></div>
       <div className="memberCommCardText">
         <div className="memberCommCardMainText">
@@ -28,6 +29,12 @@ export const CardFrontPerson = (props) => {
           {cardPerson.job}&nbsp;<span className="japaneseName">{cardPerson.japaneseName}</span>
         </div>
       </div>
+    </>
+  );
+
+  return (
+    <div className="memberCommCardWrapper">
+      { mainText }
       <img
         draggable={false}
         className="memberCommCardImage nopointerevent"

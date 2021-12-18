@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { AlertTriangle, CheckCircle, XCircle } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 
-import '../../css/Designer/modal.css';
+import '../../css/pages/designer/modal.css';
 
 //a modal with keyboard functionality that shows
 const Modal = (props) => {
@@ -80,11 +80,11 @@ const Modal = (props) => {
           { icon }
           <h3 dangerouslySetInnerHTML={modalText()}></h3>
           <div className="modalButtonWrapper">
-            <button className="modalButton button" onClick={confirm}>
+            <button className="modalButton button is-rounded" onClick={confirm}>
               <CheckCircle className="greenStroke" />{confirmText}
             </button>
             { showCancel &&
-              <button className="modalButton button" onClick={cancel}>
+              <button className="modalButton button is-rounded" onClick={cancel}>
                 <XCircle className="redStroke" />
                 {cancelText}
               </button>

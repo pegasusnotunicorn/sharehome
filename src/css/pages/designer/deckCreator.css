@@ -1,15 +1,22 @@
+.deckCreatorWrapper{
+  display:flex;
+  justify-content: space-between;
+}
+
 .deckCreator{
   display:inline-block;
-  width:175px;
+  margin-left: 1em;
+  margin-right: 1em;
+  width:27.5%;
   cursor:pointer;
   position:relative;
-  margin:0px 10px 20px;
   border-width:1px;
   border-style:solid;
-  border-color:rgba(45,45,45,1);
   border-image:initial;
   padding:20px 20px 0px;
   transition:transform 0.5s ease 0s, -webkit-transform 0.5s ease 0s;
+  border-radius:1em 0 1em 0;
+  color:#FFF;
 }
 
 .deckCreator p{
@@ -17,5 +24,6 @@
 }
 
 .deckCreator:hover{
-  transform:scale(0.95);
+  transform:scale(1.05);
+  z-index:99;
 }

@@ -3,7 +3,7 @@ import { Page, View, Text } from '@react-pdf/renderer';
 
 //styles for the PDF document/file
 import * as cardConstants from '../utils/cardConstants.js';
-import { dynamicStylesPDFBack } from '../../../css/Designer/dynamicStylesPDF.js';
+import { dynamicStylesPDFBack } from '../../../css/pages/designer/dynamicStylesPDF.js';
 import { cardBackConstants } from '../../Card/CardBack.js';
 
 //create a PDF page of the back given the type

@@ -1,9 +1,9 @@
 import React from 'react';
 import AutosizeInput from 'react-input-autosize';
 
-import dynamicStylesCard from '../../../css/Designer/dynamicStylesCard.js';
+import dynamicStylesCard from '../../../css/pages/designer/dynamicStylesCard.js';
 
-import '../../../css/Designer/cardViewer.css';
+import '../../../css/pages/designer/cardViewer.css';
 
 const CardViewer = (props) => {
   let type = props.type;

@@ -1,25 +1,25 @@
-.photoContent {
+.characterContent {
   width:100%;
   margin-bottom:100px;
 }
 
-.photoSubcontent{
+.characterSubcontent{
   margin-top:25px;
   padding-left:15px;
   padding-right:15px;
 }
 
-.photoSubcontent:first-child{
+.characterSubcontent:first-child{
   margin-top:0px !important;
 }
 
-.photoWrapper{
+.characterWrapper{
   width:100%;
   margin-bottom: 2em;
   position:relative;
 }
 
-.photoWrapper img{
+.characterWrapper img{
   width: 100%;
 }
 

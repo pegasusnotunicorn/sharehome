@@ -6,7 +6,7 @@ import NavbarTemplate from '../../Navbar/NavbarTemplate.js';
 import CardPreview from './CardPreview.js';
 import ConfirmModalButton from '../../utils/ConfirmModalButton.js';
 
-import '../../../css/Designer/sidebar.css';
+import '../../../css/pages/designer/sidebar.css';
 
 // <ConfirmModalButton
 //   className="noselect button navbarButton sidebarButton"
@@ -107,20 +107,20 @@ const Sidebar = (props) => {
           />
         </div>
         <ConfirmModalButton
-          className="noselect button navbarButton sidebarButton"
+          className="noselect button navbarButton sidebarButton greenBackground"
           onClick={downloadDeck}
           icon={<Download />}
           text={t("designer page.editor.sidebar.download")}
           modalText={t("designer page.editor.sidebar.download prompt")}
         />
         <ConfirmModalButton
-          className="noselect button navbarButton sidebarButton"
+          className="noselect button navbarButton sidebarButton greenBackground"
           onClick={resetAllCards}
           icon={<Trash2 />}
           text={t("designer page.editor.sidebar.reset")}
           modalText={t("designer page.editor.sidebar.reset prompt")}
         />
-        <button className="noselect button navbarButton sidebarButton" onClick={addNewCard}><PlusSquare />{t("designer page.editor.sidebar.add")}</button>
+        <button className="noselect button navbarButton sidebarButton greenBackground" onClick={addNewCard}><PlusSquare />{t("designer page.editor.sidebar.add")}</button>
       </div>
       <div className="cardPreviewWrapper sidebarContent">
         {listOfCards}
@@ -141,7 +141,6 @@ const Sidebar = (props) => {
 }
 
 export default Sidebar;
-
 
 //scroll to a cardPreview
 function scrollTo(index){

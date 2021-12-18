@@ -2,9 +2,9 @@ import React from 'react';
 import { Plus } from 'react-feather';
 
 import * as cardConstants from '../utils/cardConstants.js';
-import dynamicStylesCard from '../../../css/Designer/dynamicStylesCard.js';
+import dynamicStylesCard from '../../../css/pages/designer/dynamicStylesCard.js';
 
-import '../../../css/Designer/cardPreview.css';
+import '../../../css/pages/designer/cardPreview.css';
 
 //the preview card in the sidebar (member / commentator / event / goal / plus (to add new card))
 const CardPreview = (props) => {

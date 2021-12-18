@@ -6,21 +6,18 @@ import NavbarMain from './components/Navbar/NavbarMain.js';
 import Footer from './components/Footer.js';
 import HomePage from './components/HomePage.js';
 import AboutPage from './components/About/AboutPage.js';
-import PhotosPage from './components/Photos/PhotosPage.js';
+import CharactersPage from './components/Characters/CharactersPage.js';
 import ContactPage from './components/ContactPage.js';
 import DesignerPage from './components/Designer/DesignerPage.js';
 import ErrorPage from './components/ErrorPage.js';
-
-// import PlayPage from './components/Play/PlayPage.js';
-// <Route path="/play" render={() => {
-//   return <PlayPage />
-// }} />
+import { ShapesContainer } from "./components/utils/ShapesContainer.js";
 
 const Router = (props) => {
 
   return (
     <BrowserRouter>
       <MetaTags></MetaTags>
+      <ShapesContainer count={75}/>
       <Switch>
         <Route exact path="/" render={() => {
           //pass the state setter so we can hide the footer when needed
@@ -29,8 +26,8 @@ const Router = (props) => {
         <Route path="/about" render={() => {
           return <AboutPage />
         }} />
-        <Route path="/photos" render={() => {
-          return <PhotosPage />
+        <Route path="/characters" render={() => {
+          return <CharactersPage />
         }} />
         <Route exact path="/contact" render={() => {
           return <ContactPage />

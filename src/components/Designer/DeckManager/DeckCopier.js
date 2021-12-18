@@ -6,7 +6,7 @@ import { ExistingRowsHeader, LoadingRow, NoRoomsRow } from '../../utils/TableRow
 import { DeckRow } from './DeckSelector.js';
 import { getData } from '../../utils/useFetch.js';
 
-import '../../../css/Designer/deckCopier.css';
+import '../../../css/pages/designer/deckCopier.css';
 
 //CTA buttons to create a new deck
 const DeckCreator = (props) => {

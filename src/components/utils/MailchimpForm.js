@@ -7,11 +7,12 @@ import { useTranslation } from 'react-i18next';
 const url = "https://sharehomethegame.us1.list-manage.com/subscribe/post?u=492281ef78974a5a81ee73e99&amp;id=53c3e28f07";
 
 //basic email form
-const EmailForm = ({ sidebar, status, message, onValidated }) => {
+const EmailForm = ({ sidebar, status, message, onValidated, moduleStyles }) => {
   const { t } = useTranslation();
   let email;
-  let text = t('email form.prompt');
+  let text = "";
 
+  //submit to mailchimp
   const submit = (e) => {
     e.preventDefault();
     onValidated({
@@ -29,36 +30,53 @@ const EmailForm = ({ sidebar, status, message, onValidated }) => {
   else if (status === "sending"){
     text = t('email form.sending');
   }
-
-  //if mailchimp form is in the sidebar or not
-  const instructionText = (sidebar)
-    ? <p className="forminputText" dangerouslySetInnerHTML={{__html:text}}></p>
-    : <h3 className="forminputText" dangerouslySetInnerHTML={{__html:text}}></h3>
+  else if (sidebar){
+    text = t('email form.prompt');
+  }
+  else if (!sidebar){
+    text = t('email form.promise');
+  }
 
   const buttonText = (sidebar) ? t('email form.sidebarbutton') : t('email form.button');
 
+  //text to show status
+  let statusText;
+  if (sidebar) {
+    statusText = (<p className={`${moduleStyles.forminputText}`}>{text}</p>)
+  }
+  else {
+    statusText = (
+      <>
+        <h1 className={`${moduleStyles.forminputText}`}>{t('email form.prompt')}</h1>
+        <p className={`${moduleStyles.forminputText}`}>{text}</p>
+      </>
+    );
+  }
+
   return (
-    <form onSubmit={submit}>
-      { instructionText }
-      <input
-        ref={node => (email = node)}
-        type="email"
-        className="emailInput"
-        placeholder="minasan@konbanwa.com"
-        required
-      />
-      <button type="submit" className="subscribeButton button">
-        { buttonText }
-      </button>
-    </form>
+    <>
+      { statusText }
+      <form className={moduleStyles.formWrapper} onSubmit={submit}>
+        <input
+          ref={node => (email = node)}
+          type="email"
+          className={moduleStyles.emailInput}
+          placeholder="minasan@konbanwa.com"
+          required
+        />
+        <button type="submit" className={`${moduleStyles.subscribeButton} button greenBackground`}>
+          { buttonText }
+        </button>
+      </form>
+    </>
   );
 };
 
 //form for mailchimp email
-export const CustomForm = ({ sidebar, status, message, onValidated }) => {
+export const CustomForm = ({ sidebar, status, message, onValidated, moduleStyles }) => {
   return (
 
-    <div className="emailWrapper">
+    <div className={moduleStyles.emailWrapper}>
       <MailchimpSubscribe
         url={url}
         render={({ subscribe, status, message }) => (
@@ -66,6 +84,7 @@ export const CustomForm = ({ sidebar, status, message, onValidated }) => {
             sidebar={sidebar}
             status={status}
             message={message}
+            moduleStyles={moduleStyles}
             onValidated={formData => subscribe(formData)}
           />
         )}

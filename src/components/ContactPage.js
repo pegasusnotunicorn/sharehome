@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Card from './Card/Card.js';
 import { Title } from './utils/Title.js';
 
-import '../css/contact.css';
+import '../css/pages/contact.css';
 
 const ContactPage = (props) => {
   const { t } = useTranslation();

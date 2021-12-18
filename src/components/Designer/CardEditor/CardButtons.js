@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import ConfirmModalButton from '../../utils/ConfirmModalButton.js';
 
-import '../../../css/Designer/cardButtons.css';
+import '../../../css/pages/designer/cardButtons.css';
 
 const CardButtons = (props) => {
   const { t } = useTranslation();

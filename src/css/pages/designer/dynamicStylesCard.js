@@ -1,5 +1,5 @@
-import * as cardConstants from '../../components/Designer/utils/cardConstants.js';
-import { cardBackConstants } from '../../components/Card/CardBack.js';
+import * as cardConstants from '../../../components/Designer/utils/cardConstants.js';
+import { cardBackConstants } from '../../../components/Card/CardBack.js';
 
 //return dynamic styles for the card given a magnifyValue;
 export function dynamicStylesCard(magnifyValue, type, currentCard){
@@ -20,7 +20,7 @@ export function dynamicStylesCard(magnifyValue, type, currentCard){
       width:"calc(100% - " + padding * 2 + "px)",
     },
     numberFont: {
-      fontSize: cardConstants.pdfDimensions.mainFont * magnifyValue * 3,
+      fontSize: cardConstants.pdfDimensions.mainFont * magnifyValue * 2.5,
     },
   }
 

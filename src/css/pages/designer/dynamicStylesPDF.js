@@ -1,5 +1,5 @@
 import { StyleSheet } from '@react-pdf/renderer';
-import * as cardConstants from '../../components/Designer/utils/cardConstants.js';
+import * as cardConstants from '../../../components/Designer/utils/cardConstants.js';
 
 export const dynamicStylesPDFPerson = StyleSheet.create({
   page:{

@@ -1,5 +1,7 @@
+/* <editor-fold>------------------------------------------------------------------GLOBALS */
+
 html {
-  /* margin-left: calc(100vw - 100%); */
+
 }
 
 body {
@@ -11,16 +13,8 @@ body {
   letter-spacing:1px;
   font-size:1.1em;
   color:#323232;
-}
-
-.prelineWhiteSpace {
-  white-space: pre-line;
-}
-
-#sharehome{
-  min-height:100vh;
-  position:relative;
   overflow-x:hidden;
+  position:relative;
 }
 
 a {
@@ -42,9 +36,83 @@ p, li {
   opacity:.85;
 }
 
+.prelineWhiteSpace {
+  white-space: pre-line;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
+/* to let the image underneath be clicked and dragged */
+.nopointerevent{
+  pointer-events: none;
+}
+
+/* </editor-fold> */
+
+/* <editor-fold>------------------------------------------------------------------BUTTONS */
+
+.button{
+  background-color: #5F5AA2;
+  color:white;
+  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
+  font-size:20px;
+  text-transform: uppercase;
+  outline:0;
+  cursor:pointer;
+  padding:10px;
+  padding-top:12px;
+  border:0;
+}
+
+.button.is-rounded{
+  border-radius:4px;
+}
+
+.button.is-bordered{
+  border:4px solid #1F1169;
+}
+
+.button.is-transparent{
+  background:transparent;
+}
+
+.button.is-transparent:active{
+  background:rgba(40,40,40,1) !important;
+  color:white !important;
+}
+
+.button:active{
+  background-color:#323232 !important;
+  color:white !important;
+}
+
+.button svg {
+  padding-right:10px;
+}
+
+.button:active svg{
+  stroke:white !important;
+}
+
+@media only screen and (max-width:600px) {
+  .button.hideText svg{
+    padding-right:0px;
+  }
+  .button.hideText span {
+    display:none;
+  }
+}
+
 svg {
   vertical-align:sub;
-  opacity:.6;
 }
 
 svg.is-flipped{
@@ -85,73 +153,9 @@ svg.is-spinning {
   }
 }
 
+/* </editor-fold> */
 
-.button svg {
-  padding-right:10px;
-}
-
-@media only screen and (max-width:600px) {
-  .button.hideText svg{
-    padding-right:0px;
-  }
-  .button.hideText span {
-    display:none;
-  }
-}
-
-.noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Opera and Firefox */
-}
-
-/* to let the image underneath be clicked and dragged */
-.nopointerevent{
-  pointer-events: none;
-}
-
-.button{
-  background-color: #5F5AA2;
-  color:white;
-  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
-  font-size:20px;
-  text-transform: uppercase;
-  outline:0;
-  cursor:pointer;
-  padding:10px;
-  padding-top:12px;
-  border:0;
-}
-
-.button.is-rounded{
-  border-radius:4px;
-}
-
-.button.is-bordered{
-  border:4px solid #1F1169;
-}
-
-.button.is-transparent{
-  background:transparent;
-}
-
-.button.is-transparent:active{
-  background:rgba(40,40,40,1) !important;
-  color:white !important;
-}
-
-.button:active{
-  background-color:#1F1169 !important;
-  color:white !important;
-}
-
-.button:active svg{
-  stroke:white !important;
-}
+/* <editor-fold>------------------------------------------------------------------CONTENT BLOCKS */
 
 .content{
   text-align:center;
@@ -176,11 +180,19 @@ svg.is-spinning {
 }
 
 .subcontentWrapper{
-  max-width:500px;
+  max-width:750px;
   margin:auto;
-  margin-top:3vh;
-  padding-left:20px;
-  padding-right:20px;
+}
+
+.subcontentWrapper h1, .subcontentWrapper h2, .subcontentWrapper h3{
+  font-weight:normal;
+}
+
+@media only screen and (max-width:600px) {
+  .subcontentWrapper{
+    padding-left:20px;
+    padding-right:20px;
+  }
 }
 
 .subcontentWrapper.max-width{
@@ -192,18 +204,19 @@ svg.is-spinning {
 }
 
 .subcontentWrapper.border-bottom{
-  border-bottom:1px solid white;
+  border-bottom:1px solid rgba(0,0,0,.15);
   margin-bottom:20px;
 }
 
 .subcontentWrapper.border-top{
-  border-top:1px solid white;
+  border-top:1px solid rgba(0,0,0,.15);
   margin-top:20px;
 }
 
 .subtitle{
   position:relative;
   word-break:break-word;
+  font-weight:normal;
 }
 
 .subtitleBackPageArrow{
@@ -217,48 +230,30 @@ svg.is-spinning {
 .subsubtitle{
   margin-top:0px;
   position:relative;
+  font-weight:normal;
 }
+
+/* </editor-fold> */
+
+/* <editor-fold>------------------------------------------------------------------TITLE */
 
 .lcmContainer{
-  width:300px;
   margin:auto;
-  margin-top:3vh;
-}
-
-/* mobile stuff */
-@media only screen and (max-width: 600px) {
-  .lcmImage{
-    width:200px !important;
-  }
-  .sharehomegame{
-    text-align: center !important;
-    margin-top: 0 !important;
-  }
+  padding-top:2em;
+  width:300px;
 }
 
 .lcmImage{
+  background:transparent;
   width:100%;
 }
 
 .sharehomegame{
   text-align: right;
-  width: 100%;
-  margin-top: -25px;
-  font-size: 20px;
+  width: 109%;
+  margin-top: -30px !important;
+  font-size: 1.3em;
   font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
 }
 
-hr{
-  border-color:rgba(0,0,0,0.15);
-}
-
-input[type="text"]:not(.cardViewerInput){
-  padding:10px;
-  padding-top:16px;
-  line-height:100%;
-  margin-bottom:0;
-  font-size:20px;
-  vertical-align:middle;
-  min-width:300px;
-  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
-}
+/* </editor-fold> */

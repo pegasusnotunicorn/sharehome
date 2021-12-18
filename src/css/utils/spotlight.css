@@ -53,6 +53,10 @@
 
 /* mobile stuff */
 @media only screen and (max-width: 1200px) {
+  .is-hidden-mobile{
+    display:none;
+  }
+
   .characterSpotlightWrapper{
     flex-direction: column;
   }
@@ -76,6 +80,9 @@
 
   .spotlightDetailsWrapper h3 {
     font-size:1em;
+    text-align:center;
+    display:flex;
+    flex-direction: column;
   }
 
   .spotlightDetailsSection .divider:first-child {
@@ -84,5 +91,9 @@
 
   p.leftAlign{
     text-align:left;
+  }
+
+  .spotlightDetailsSection .spotlightBold {
+    padding-right:0px;
   }
 }

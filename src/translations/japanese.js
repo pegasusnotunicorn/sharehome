@@ -178,10 +178,10 @@ const japanese = {
       "title": "キャラクター",
       "description": "ゲームのキャラクターを紹介するキーイラスト。",
       "moretocome": "毎週新キャラ一人が紹介されます！",
-      "race" : "種族:",
-      "job" : "職業:",
-      "age" : "年齢:",
-      "hobbies" : "趣味:",
+      "race" : "種族",
+      "job" : "職業",
+      "age" : "年齢",
+      "hobbies" : "趣味",
     },
 
     "contact page":{

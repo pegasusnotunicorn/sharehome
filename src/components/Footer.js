@@ -1,6 +1,7 @@
 import React from 'react';
 import Card from './Card/Card.js';
 
+import useWindowDimensions from './utils/useWindowDimensions.js';
 import '../css/footer.css';
 
 function randomIntFromInterval(min, max) { // min and max included
@@ -8,8 +9,11 @@ function randomIntFromInterval(min, max) { // min and max included
 }
 
 //create an array of random cards given approximate ratio of eventgoal to person cards
-const RandomCardsForFooter = (totalPeopleCards, totalEventGoalCards) => {
+const RandomCardsForFooter = (totalPeopleCards, totalEventGoalCards, width) => {
   return [...Array(totalPeopleCards + totalEventGoalCards)].map((curr, index, array)=>{
+
+    let cardWidth = 300;
+    let cardHeight = cardWidth / 1.7;
 
     //half of all person cards are members/commentators and same for event/goal cards
     let broadType = (Math.random() > (totalPeopleCards / array.length)) ? "eventgoal" : "person";
@@ -34,8 +38,8 @@ const RandomCardsForFooter = (totalPeopleCards, totalEventGoalCards) => {
       flipPercentage: 0.75,     //chance of showing front of the card
       mainStyle:{
         //stuff needed for card size
-        width:"300px",
-        height:"215px",
+        width:`${cardWidth}px`,
+        height:`${cardHeight}px`,
         fontSize:"7.5px",
         //stuff needed to simulate the random throwing
         position:"absolute",
@@ -63,11 +67,13 @@ const RandomCardsForFooter = (totalPeopleCards, totalEventGoalCards) => {
 
 const Footer = (props) => {
 
-  //used to make ratio of cards
-  let totalPeopleCards = Math.ceil(window.innerWidth / 150);
-  let totalEventGoalCards = Math.ceil(window.innerWidth / 400);
+  const { width} = useWindowDimensions();
 
-  let footerCards = RandomCardsForFooter(totalPeopleCards, totalEventGoalCards);
+  //used to make ratio of cards
+  let totalPeopleCards = Math.ceil(width / 150);
+  let totalEventGoalCards = Math.ceil(width / 400);
+
+  let footerCards = RandomCardsForFooter(totalPeopleCards, totalEventGoalCards, width);
 
   return (
     <div className="footer">

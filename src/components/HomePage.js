@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 //custom files
@@ -56,7 +57,7 @@ const HomePage = (props) => {
           <p>
             {t('main page.moretocome')}
             <br />
-            <a href="/characters">{t('main page.clicktoseemore')}</a>
+            <NavLink to="/characters">{t('main page.clicktoseemore')}</NavLink>
           </p>
         </div>
         <div className={`${homeStyles.swiperContainer}`}>

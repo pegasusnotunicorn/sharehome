@@ -124,8 +124,18 @@ p.smallText a {
   }
 
   .subtitle {
-    font-size:1.65em;
+    font-size:1.5em;
   }
+
+  .gameDetails{
+    font-size:1.25em;
+  }
+
+  .gameDetails > div > svg {
+    margin-top: 1.5px;
+    margin-right:7.5px;
+  }
+
 }
 
 /* </editor-fold> */
@@ -217,6 +227,16 @@ p.smallText a {
   position: absolute;
   right: 0;
   height:100%;
+}
+
+@media only screen and (max-width: 600px) {
+  .emailInput {
+    font-size:1em;
+  }
+
+  .subscribeButton{
+    font-size:1em;
+  }
 }
 
 /* </editor-fold> */

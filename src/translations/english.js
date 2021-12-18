@@ -47,7 +47,7 @@ const english = {
 
     "email form":{
       "prompt": "Sign up to be notified when we launch!",
-      "button": "STAY UPDATED",
+      "button": "SUBMIT",
       "sidebarbutton": "SUBMIT",
       "promise": "Your email will not be shared with anyone else.",
       "sending": "Submitting...",
@@ -178,10 +178,10 @@ const english = {
       "title": "Characters",
       "description": "Artworks of all playable characters included in the game.",
       "moretocome": "More characters will be added every week!",
-      "race" : "Race:",
-      "job" : "Profession:",
-      "age" : "Age:",
-      "hobbies" : "Hobbies:"
+      "race" : "Race",
+      "job" : "Profession",
+      "age" : "Age",
+      "hobbies" : "Hobbies"
     },
 
     "contact page":{

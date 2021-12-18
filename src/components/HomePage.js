@@ -10,6 +10,7 @@ import { CharacterSpotlight } from './utils/CharacterSpotlight.js';
 
 import homeStyles from '../css/pages/home.module.css';
 import '../css/utils/colors.css';
+import '../css/utils/fireworks.css';
 
 const HomePage = (props) => {
   const { t } = useTranslation();
@@ -18,13 +19,18 @@ const HomePage = (props) => {
     document.title = "Love, Career & Magic — SHAREHOME";
   });
 
+  // <div className="pyro">
+  //   <div className="before"></div>
+  //   <div className="after"></div>
+  // </div>
+
   return (
     <div className="content">
 
       <div className={`${homeStyles.mainContentWrapper} noselect`}>
         <img className={`${homeStyles.backgroundImage} nopointerevent`} draggable="false" src="/images/splash.jpg" alt={t('main page.splashalt')}></img>
         <div className={`${homeStyles.lcmContainer}`}>
-          <img className={`${homeStyles.lcmImage}`} draggable="false" src="/images/lcm.png" alt="Love, Career, & Magic"></img>
+          <img className={`${homeStyles.lcmImage} ${homeStyles.floating}`} draggable="false" src="/images/lcm.png" alt="Love, Career, & Magic"></img>
           <p className={`${homeStyles.sharehomegame}`}>a sharehome game</p>
         </div>
         <div className={`${homeStyles.gamedetailContainer}`}>

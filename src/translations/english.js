@@ -226,9 +226,8 @@ const english = {
       "creator":{
         "prompt": "Select a type of deck to make",
         "decks":{
-          "member": "Create custom Member Cards of your friends or family!",
-          "commentator": "Create custom Commentator Cards of your friends or family!",
-          "event": "Create a custom deck of Event Cards filled with your own adventures!",
+          "member": "Create a custom deck of Member Cards with your friends or family!",
+          "event": "Create a custom deck of Event Cards with your own adventures!",
           "goal": "Create a custom deck of your own dreams, goals, and desires!",
         }
       },

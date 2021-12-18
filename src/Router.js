@@ -17,7 +17,7 @@ const Router = (props) => {
   return (
     <BrowserRouter>
       <MetaTags></MetaTags>
-      <ShapesContainer count={75}/>
+      <ShapesContainer count={70}/>
       <Switch>
         <Route exact path="/" render={() => {
           //pass the state setter so we can hide the footer when needed

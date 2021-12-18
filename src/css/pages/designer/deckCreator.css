@@ -1,13 +1,40 @@
 .deckCreatorWrapper{
   display:flex;
   justify-content: space-between;
+  text-align:center;
+}
+
+/* mobile only */
+@media only screen and (max-width: 600px) {
+  .deckCreator{
+    max-width:100% !important;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .deckCreatorWrapper{
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* tablet only */
+@media only screen and (min-width: 600px) and (max-width: 900px) {
+  .deckCreator{
+    max-width:40% !important;
+    margin: 0 !important;
+    margin-left: 1em !important;
+    margin-bottom: 1em !important;
+  }
 }
 
 .deckCreator{
   display:inline-block;
+  margin:auto;
   margin-left: 1em;
   margin-right: 1em;
-  width:27.5%;
+  margin-bottom:1em;
+  max-width:35%;
   cursor:pointer;
   position:relative;
   border-width:1px;

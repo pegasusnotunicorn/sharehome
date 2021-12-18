@@ -1,8 +1,8 @@
 
 .shapesContainer{
-  position: absolute;
-  width: 100%;
-  height: 100%;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
   z-index:-99999;
   overflow:hidden;
 }
@@ -16,7 +16,7 @@
   animation-iteration-count: infinite;
   animation-timing-function: linear;
   animation-direction: alternate;
-  opacity:0.15;
+  opacity:0.125;
 }
 
 .heart.is-blue:after, .heart.is-blue:before {background: #5F5AA2;}

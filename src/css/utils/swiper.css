@@ -18,3 +18,11 @@
 .swiper-pagination-bullet-active {
   background: #FFF;
 }
+
+.swiper-slide > .flipcard {
+  transition: transform 0.5s;
+}
+
+.swiper-slide > .flipcard:hover {
+  transform:scale(1.05);
+}

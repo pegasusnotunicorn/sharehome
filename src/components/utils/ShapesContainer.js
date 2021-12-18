@@ -12,8 +12,8 @@ const RandomShapesBackground = (totalShapes) => {
   return [...Array(totalShapes)].map((curr, index, array)=>{
 
     //variables
-    let minSizeShape = 50;
-    let maxSizeShape = 125;
+    let minSizeShape = 25;
+    let maxSizeShape = 150;
     let minDuration = 30;
     let maxDuration = 120;
 
@@ -51,8 +51,9 @@ const RandomShapesBackground = (totalShapes) => {
         break;
       case "square":
         randomColor += "Background";
-        randomSize.width = `${randomIntFromInterval(minSizeShape,maxSizeShape)}px`
-        randomSize.height = `${randomIntFromInterval(minSizeShape,maxSizeShape)}px`
+        let randomWidth = randomIntFromInterval(minSizeShape,maxSizeShape)
+        randomSize.width = `${randomWidth}px`
+        randomSize.height = `${randomWidth}px`
         randomSize.transform = `rotate(${randomIntFromInterval(0,360)}deg)`;
         randomGoalTransform = `rotate(${randomIntFromInterval(0,360)}deg)`;
         break;
@@ -61,8 +62,8 @@ const RandomShapesBackground = (totalShapes) => {
     }
 
     //properties of the shape
-    let randomLeft = `${randomIntFromInterval(-5,100)}`;
-    let randomTop = `${randomIntFromInterval(-5,100)}`;
+    let randomLeft = `${randomIntFromInterval(0,100)}`;
+    let randomTop = `${randomIntFromInterval(0,100)}`;
     let props = {
       id:"shape" + index,
       key:"shape" + index,
@@ -83,7 +84,7 @@ const RandomShapesBackground = (totalShapes) => {
     let randomKeyframe = (<style>{`
         @keyframes randomKeyframe${index} {
            0% { left: ${randomLeft}%; top: ${randomTop}%; transform: ${randomSize.transform}}
-           100% { left: ${randomIntFromInterval(-5,100)}%; top: ${randomIntFromInterval(-5,100)}%; transform : ${randomGoalTransform};}
+           100% { left: ${randomIntFromInterval(0,100)}%; top: ${randomIntFromInterval(0,100)}%; transform : ${randomGoalTransform};}
         }
     `}</style>);
 

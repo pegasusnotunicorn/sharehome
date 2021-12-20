@@ -7,6 +7,7 @@
 
 .headerRow{
   border-radius:1em 0 0 0;
+  background-color:#FFF;
 }
 
 .selectorRow:not(.headerRow){

@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Parallax, ParallaxLayer } from '@react-spring/parallax'
+import { useLocation } from 'react-router-dom';
 
 import '../../css/utils/shapes.css';
 
@@ -7,8 +9,94 @@ const randomIntFromInterval = (min, max) => { // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
+//random between 0 and 100, weighted for closer to 0 or 100
+const randomWeightedLeftAndRight = () => {
+  let tempRand = Math.random();
+  if (tempRand > 0.51) {
+    return randomIntFromInterval(0,40);
+  }
+  else if (tempRand < 0.49) {
+    return randomIntFromInterval(60,100);
+  }
+  else {
+    return randomIntFromInterval(45,55);
+  }
+}
+
+//generate the containers for the random shapes so we can do parallax
+const RandomShapesContainers = (totalShapes, totalContainers) => {
+  const parallaxRef = useRef();
+
+  //shapes per container / # of containers
+  let totalShapesPerContainer = Math.floor(totalShapes / totalContainers);
+
+  //read for window scroll and change parallax scroll
+  useEffect(() => {
+
+    //on scroll function for parallax
+    const onScroll = () => {
+      let windowScroll = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+      let parallaxEquivalent = Math.round(windowScroll * totalContainers * 1000) / 1000;
+      if (parallaxRef.current) {
+        parallaxRef.current.scrollTo(parallaxEquivalent);
+      }
+    }
+
+    //window event listener
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+    }
+  }, [totalContainers]);
+
+  //properties of parallax
+  let parallaxProps = {
+    pages:totalContainers,
+    style:{
+      top: '0',
+      left: '0',
+      paddingRight: '17px',
+      zIndex: "-999",
+    },
+    ref: parallaxRef,
+    className: "parallaxContainer",
+  }
+
+  return (
+    <Parallax {...parallaxProps}>
+      { ParallaxLayers(totalContainers, totalShapesPerContainer) }
+    </Parallax>
+  )
+}
+
+//generate array of random shape containers and encase in parallax layers
+const ParallaxLayers = (totalContainers, totalShapesPerContainer) => {
+  return [...Array(totalContainers)].map((curr, index, array)=>{
+
+    let shapes = RandomShapes(totalShapesPerContainer);
+
+    let props = {
+      id:"parallaxLayer" + index,
+      key:"parallaxLayer" + index,
+      offset:index,
+      speed:Math.random(),
+      style:{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }
+    }
+
+    return (
+      <ParallaxLayer {...props}>
+        {shapes}
+      </ParallaxLayer>
+    );
+  });
+}
+
 //generate the array of random shapes
-const RandomShapesBackground = (totalShapes) => {
+const RandomShapes = (totalShapes) => {
   return [...Array(totalShapes)].map((curr, index, array)=>{
 
     //variables
@@ -62,7 +150,7 @@ const RandomShapesBackground = (totalShapes) => {
     }
 
     //properties of the shape
-    let randomLeft = `${randomIntFromInterval(0,100)}`;
+    let randomLeft = `${randomWeightedLeftAndRight()}`;
     let randomTop = `${randomIntFromInterval(0,100)}`;
     let props = {
       id:"shape" + index,
@@ -96,11 +184,9 @@ const RandomShapesBackground = (totalShapes) => {
 
 //generate a container that is 100% width 100% height with random shapes floating around in the background
 export const ShapesContainer = (props) => {
-  let RandomShapes = RandomShapesBackground(props.count);
+  let location = useLocation();   //to change the shapes container every time location is changed
+  let totalContainers = (location.pathname === "/") ? 2 : 2;
+  let containers = RandomShapesContainers(props.count, totalContainers);
 
-  return (
-    <div className="shapesContainer">
-      {RandomShapes}
-    </div>
-  )
+  return containers
 }

@@ -19,6 +19,7 @@ const HomePage = (props) => {
     document.title = "Love, Career & Magic — SHAREHOME";
   });
 
+  // fireworks stuff
   // <div className="pyro">
   //   <div className="before"></div>
   //   <div className="after"></div>
@@ -26,7 +27,6 @@ const HomePage = (props) => {
 
   return (
     <div className="content">
-
       <div className={`${homeStyles.mainContentWrapper} noselect`}>
         <img className={`${homeStyles.backgroundImage} nopointerevent`} draggable="false" src="/images/splash.jpg" alt={t('main page.splashalt')}></img>
         <div className={`${homeStyles.lcmContainer}`}>
@@ -91,7 +91,6 @@ const HomePage = (props) => {
           <p className={`${homeStyles.smallText}`}><a target="_blank" rel="noreferrer" href="https://sysifuscorp.com">{t('main page.otherworks')}</a></p>
         </div>
       </div>
-
     </div>
   );
 }

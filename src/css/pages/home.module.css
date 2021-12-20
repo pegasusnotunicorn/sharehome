@@ -90,6 +90,7 @@ p.smallText a {
 
 .lcmImage{
   width:100%;
+  margin:0;
 }
 
 .gamedetailContainer{
@@ -105,7 +106,7 @@ p.smallText a {
 .sharehomegame{
   text-align: right;
   width: 109%;
-  margin-top: -15px !important;
+  margin-top: -30px !important;
   font-size: 1.3em;
   font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
 }
@@ -201,7 +202,8 @@ p.smallText a {
 }
 
 .emailWrapper p {
-  margin-bottom:0.5em !important;
+  margin-top:0.75em !important;
+  overflow-wrap:break-word;
   font-size:1em;
 }
 

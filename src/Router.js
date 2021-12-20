@@ -13,14 +13,13 @@ import ErrorPage from './components/ErrorPage.js';
 import { ShapesContainer } from "./components/utils/ShapesContainer.js";
 
 const Router = (props) => {
-
   return (
     <BrowserRouter>
       <MetaTags></MetaTags>
-      <ShapesContainer count={70}/>
+      <NavbarMain />
+
       <Switch>
         <Route exact path="/" render={() => {
-          //pass the state setter so we can hide the footer when needed
           return <HomePage />
         }} />
         <Route path="/about" render={() => {
@@ -41,10 +40,10 @@ const Router = (props) => {
         <Redirect to="/" />
       </Switch>
 
-      <NavbarMain />
-      <Route render={() => {
-        return <Footer key={Date.now()} />
-      }} />
+      <Footer key={Date.now()} />
+
+      <ShapesContainer count={75}/>
+
     </BrowserRouter>
  )
 }

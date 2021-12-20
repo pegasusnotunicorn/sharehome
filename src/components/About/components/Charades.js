@@ -14,7 +14,8 @@ const Charades = (props) => {
   let cardStyle = props.cardStyle;
 
   return (
-    <>
+    <div className="stepsContainer is-active">
+
       <div className="stepWrapper">
         <h2 className="subtitle">{t('about page.step1')}</h2>
         <p>{t('about page.charades.step1 1')}</p>
@@ -77,7 +78,7 @@ const Charades = (props) => {
 
       <RepeatFrom1></RepeatFrom1>
 
-    </>
+    </div>
   );
 }
 

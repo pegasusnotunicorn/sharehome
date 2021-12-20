@@ -21,7 +21,7 @@ const AboutPage = (props) => {
   let cardStyle = {
     width:"70px",
     height:"50px",
-    fontSize:"2px",
+    fontSize:"1.5px",
   }
 
   let gameModeDetails = [
@@ -31,7 +31,8 @@ const AboutPage = (props) => {
       jsx:()=>{ return (<Roleplay cardStyle={cardStyle} />)},
       description:t('about page.roleplay.description'),
       playerCount:t('about page.roleplay.player count'),
-      playTime:t('about page.roleplay.play time')
+      playTime:t('about page.roleplay.play time'),
+      background:"greenBackground",
     },
     {
       name:t('about page.guess who.name'),
@@ -39,7 +40,8 @@ const AboutPage = (props) => {
       jsx:()=>{ return (<Guesswho cardStyle={cardStyle} />)},
       description:t('about page.guess who.description'),
       playerCount:t('about page.guess who.player count'),
-      playTime:t('about page.guess who.play time')
+      playTime:t('about page.guess who.play time'),
+      background:"blueBackground",
     },
     {
       name:t('about page.taboo.name'),
@@ -47,7 +49,8 @@ const AboutPage = (props) => {
       jsx:()=>{ return (<Taboo cardStyle={cardStyle} />)},
       description:t('about page.taboo.description'),
       playerCount:t('about page.taboo.player count'),
-      playTime:t('about page.taboo.play time')
+      playTime:t('about page.taboo.play time'),
+      background:"redBackground",
     },
     {
       name:t('about page.charades.name'),
@@ -55,7 +58,8 @@ const AboutPage = (props) => {
       jsx:()=>{ return (<Charades cardStyle={cardStyle} />)},
       description:t('about page.charades.description'),
       playerCount:t('about page.charades.player count'),
-      playTime:t('about page.charades.play time')
+      playTime:t('about page.charades.play time'),
+      background:"yellowBackground",
     },
   ];
 
@@ -101,8 +105,8 @@ const AboutPage = (props) => {
     else {
       let gameModes = gameModeDetails.map((current, index)=>{
         return (
-          <div key={"howToPlay" + index} className="howToPlayWrapper">
-            <h2 className="subsubtitle"><NavLink to={"/about/" + current.link}>{current.name}</NavLink></h2>
+          <NavLink draggable={false} to={`/about/${current.link}`} className={`howToPlayWrapper noselect ${gameModeDetails[index].background}`} key={`howToPlay${index}`}>
+            <h2 className="subsubtitle">{current.name}</h2>
             <GameModeIcons
               playerCount={current.playerCount}
               playTime={current.playTime}
@@ -110,7 +114,7 @@ const AboutPage = (props) => {
             <p>
               {current.description}
             </p>
-          </div>
+          </NavLink>
         )
       });
 
@@ -120,8 +124,10 @@ const AboutPage = (props) => {
             <h2 className="subtitle">{t('about page.main page.how to play')}</h2>
             <p>{t('about page.main page.description')}</p>
           </div>
-          {gameModes}
-          <div className="howToPlayWrapper">
+          <div className="howToPlayContainer">
+            {gameModes}
+          </div>
+          <div className="subcontentWrapper">
             <h2 className="subsubtitle">{t('about page.main page.and many more')}</h2>
             <p>
               {t('about page.main page.how will you play')}

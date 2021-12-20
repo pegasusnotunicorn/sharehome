@@ -5,3 +5,8 @@
 #sharehome[language="ja"] .spotlightDetailsWrapper h1 {
   font-size:2em !important;
 }
+
+
+#sharehome[language="ja"] .howToPlayWrapper .timePlayerInfoWrapper  {
+  font-size:.8em !important;
+}

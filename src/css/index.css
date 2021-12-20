@@ -29,7 +29,7 @@ h2, h2 a {
 }
 
 h3, p, a, input {
-  font-family:"Roboto Thin";
+  font-family:"Roboto Light";
 }
 
 p, li {
@@ -85,13 +85,13 @@ p, li {
 }
 
 .button.is-transparent:active{
-  background:rgba(40,40,40,1) !important;
-  color:white !important;
+  background:#323232 !important;
+  color:#FFF !important;
 }
 
 .button:active{
   background-color:#323232 !important;
-  color:white !important;
+  color:#FFF !important;
 }
 
 .button svg {
@@ -99,7 +99,7 @@ p, li {
 }
 
 .button:active svg{
-  stroke:white !important;
+  stroke:#FFF !important;
 }
 
 @media only screen and (max-width:600px) {
@@ -166,7 +166,7 @@ svg.is-spinning {
 }
 
 .content.max-width{
-  max-width:750px;
+  max-width:900px;
 }
 
 .content p {
@@ -180,19 +180,14 @@ svg.is-spinning {
 }
 
 .subcontentWrapper{
-  max-width:750px;
+  max-width:900px;
   margin:auto;
+  padding-left:20px;
+  padding-right:20px;
 }
 
 .subcontentWrapper h1, .subcontentWrapper h2, .subcontentWrapper h3{
   font-weight:normal;
-}
-
-@media only screen and (max-width:600px) {
-  .subcontentWrapper{
-    padding-left:20px;
-    padding-right:20px;
-  }
 }
 
 .subcontentWrapper.max-width{
@@ -219,14 +214,6 @@ svg.is-spinning {
   font-weight:normal;
 }
 
-.subtitleBackPageArrow{
-  position:absolute;
-  left:-40px;
-  cursor:pointer;
-  top:50%;
-  transform:translateY(-50%);
-}
-
 .subsubtitle{
   margin-top:0px;
   position:relative;
@@ -237,6 +224,21 @@ svg.is-spinning {
 
 /* <editor-fold>------------------------------------------------------------------TITLE */
 
+.floating {
+  animation-name: floating;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  margin-left: 30px;
+  margin-top: 5px;
+}
+
+@keyframes floating {
+  0% { transform: translate(0,  0px); }
+  50%  { transform: translate(0, 5px); }
+  100%   { transform: translate(0, -0px); }
+}
+
 .lcmContainer{
   margin:auto;
   padding-top:2em;
@@ -246,6 +248,7 @@ svg.is-spinning {
 .lcmImage{
   background:transparent;
   width:100%;
+  margin:0;
 }
 
 .sharehomegame{

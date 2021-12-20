@@ -219,7 +219,7 @@ const english = {
         "title":"Design your own cards",
         "description1":"Design custom cards of you and your friends to play with. Share the cards with the world so that anyone can play with them. The possibilities are endless!",
         "description2":"For more details on how these cards work, visit the ",
-        "description3":"How to Play page.",
+        "description3":"How to Play page",
         "description4":".",
       },
 

@@ -5,6 +5,7 @@ import MailchimpSubscribe from "react-mailchimp-subscribe";
 import { useTranslation } from 'react-i18next';
 
 const url = "https://sharehomethegame.us1.list-manage.com/subscribe/post?u=492281ef78974a5a81ee73e99&amp;id=53c3e28f07";
+// const url = "https://faketest.com";
 
 //basic email form
 const EmailForm = ({ sidebar, status, message, onValidated, moduleStyles }) => {
@@ -45,12 +46,7 @@ const EmailForm = ({ sidebar, status, message, onValidated, moduleStyles }) => {
     statusText = (<p className={`${moduleStyles.forminputText}`}>{text}</p>)
   }
   else {
-    statusText = (
-      <>
-        <h1 className={`${moduleStyles.forminputText}`}>{t('email form.prompt')}</h1>
-        <p className={`${moduleStyles.forminputText}`}>{text}</p>
-      </>
-    );
+    statusText = (<h1 className={`${moduleStyles.forminputText}`}>{t('email form.prompt')}</h1>);
   }
 
   return (
@@ -68,6 +64,9 @@ const EmailForm = ({ sidebar, status, message, onValidated, moduleStyles }) => {
           { buttonText }
         </button>
       </form>
+      { !sidebar &&
+        <p className={`${moduleStyles.forminputText}`}>{text}</p>
+      }
     </>
   );
 };

@@ -14,7 +14,7 @@ const Guesswho = (props) => {
   let cardStyle = props.cardStyle;
 
   return (
-    <>
+    <div className="stepsContainer is-active">
       <div className="stepWrapper">
         <h2 className="subtitle">{t('about page.step1')}</h2>
         <p>{t('about page.guess who.step1 1')}</p>
@@ -74,7 +74,7 @@ const Guesswho = (props) => {
         </div>
       </div>
       <RepeatFrom1></RepeatFrom1>
-    </>
+    </div>
   );
 }
 

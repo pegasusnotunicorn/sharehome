@@ -6,7 +6,6 @@
 .pnp.js
 
 # unused
-/server
 /src/components/Characters/PhotosPage.js
 
 # testing
@@ -14,7 +13,6 @@
 
 # production
 /build
-/src/components/Play
 /src/components/Designer/DeckManager/DeckCopier.js
 
 # misc

@@ -1,3 +1,6 @@
+.parallaxContainer::-webkit-scrollbar {
+  display: none;
+}
 
 .backgroundShapes{
   /* position: fixed; */

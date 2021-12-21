@@ -39,7 +39,7 @@ const HomePage = (props) => {
         <div id={`${homeStyles.mainContentInnerRight}`} className={`${homeStyles.mainContentInner}`}>
           <div className={`${homeStyles.lcmContainer}`}>
             <NavLink draggable={false} className="noselect" to="/">
-              <img className={`${homeStyles.lcmImage} floating`} draggable="false" src="/images/lcm.png" alt="Love, Career, & Magic"></img>
+              <img className={`${homeStyles.lcmImage} floating noselect`} draggable="false" src="/images/lcm.png" alt="Love, Career, & Magic"></img>
             </NavLink>
             <p className={`${homeStyles.sharehomegame}`}>a sharehome game</p>
           </div>

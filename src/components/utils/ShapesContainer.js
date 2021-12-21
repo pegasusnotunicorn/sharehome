@@ -57,18 +57,21 @@ const RandomShapesContainers = (totalShapes, dontScroll) => {
     style:{
       top: '0',
       left: '0',
-      paddingRight: '17px',
       zIndex: "-999",
+      overflowX: "hidden",
     },
     ref: parallaxRef,
     className: "parallaxContainer",
+    innerStyle: {
+      overflowX: "hidden"
+    }
   }
 
   //dont hide overflow if we're not scrolling
   if (dontScroll){
     parallaxProps.style.overflow = "initial";
     parallaxProps.innerStyle = {
-      overflow: "initial"
+      overflow: "initial",
     }
   }
 
@@ -93,7 +96,8 @@ const ParallaxLayers = (totalContainers, totalShapesPerContainer) => {
       style:{
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        overflow:"hidden",
       }
     }
 

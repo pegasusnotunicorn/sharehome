@@ -33,7 +33,7 @@ const getCharacterCard = (character, windowHeight, windowWidth) => {
       //other shit
       cursor:"pointer",
     },
-    className: "floating",
+    className: "floating noselect",
   }
 
   return (<Card {...props}/>);

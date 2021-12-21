@@ -3,7 +3,7 @@
 }
 
 .swiper-container {
-  overflow: visible;
+  overflow: hidden;
   padding-bottom:3em;
 }
 

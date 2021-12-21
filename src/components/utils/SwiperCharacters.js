@@ -44,6 +44,7 @@ const getAllCharacterCards = (windowHeight, windowWidth) => {
         //other shit
         cursor:"pointer",
       },
+      className: (index%2 === 0) ? "floating" : "floating-counter",
     }
 
     let idkey = `swiperCard${index}`;

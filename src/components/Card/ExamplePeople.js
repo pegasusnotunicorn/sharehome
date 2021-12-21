@@ -469,6 +469,25 @@ const examplePeople = [
   },
 ]
 
+// shuffle an array
+function shuffle(array) {
+  let currentIndex = array.length,  randomIndex;
+
+  // While there remain elements to shuffle...
+  while (currentIndex !== 0) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
+
 //return the details of a random person
 export function getRandomPerson(notThisPerson){
   var rando = examplePeople[Math.floor(Math.random() * examplePeople.length)];
@@ -493,11 +512,16 @@ export function getSpecificPerson(personName){
 }
 
 //returns details of all characters except the ones who need to be ignored
-export function getAllPeople(){
+export function getAllPeople(random){
   let removedIgnoredChars = examplePeople.filter((e)=>{
     return !e.ignoreInRandom;
   })
-  return removedIgnoredChars;
+  if (random) {
+    return shuffle(removedIgnoredChars)
+  }
+  else {
+    return removedIgnoredChars;
+  }
 }
 
 //returns the latest person

@@ -32,7 +32,8 @@ const getCharacterCard = (character, windowHeight, windowWidth) => {
       fontSize:"12px",
       //other shit
       cursor:"pointer",
-    }
+    },
+    className: "floating",
   }
 
   return (<Card {...props}/>);
@@ -63,30 +64,30 @@ export const CharacterSpotlight = (props) => {
         <h1>{name}</h1>
         <div className="spotlightDetailsSection space-between">
           <div className="divider"></div>
-          <h3>
+          <p>
             <span className="spotlightBold">{t('characters page.race')}<span className="is-hidden-mobile">:</span></span>
             <span>{race}</span>
-          </h3>
+          </p>
           <div className="divider"></div>
-          <h3>
+          <p>
             <span className="spotlightBold">{t('characters page.age')}<span className="is-hidden-mobile">:</span></span>
             <span>{character.age}</span>
-          </h3>
+          </p>
           <div className="divider"></div>
-          <h3>
+          <p>
             <span className="spotlightBold">{t('characters page.job')}<span className="is-hidden-mobile">:</span></span>
             <span>{job}</span>
-          </h3>
+          </p>
           <div className="divider"></div>
         </div>
         <div className="spotlightDetailsSection">
-          <h3>
+          <p>
             <span className="spotlightBold">{`${t('characters page.hobbies')}`}<span className="is-hidden-mobile">:</span></span>
             <span>{hobbies}</span>
-          </h3>
+          </p>
         </div>
         <div className="spotlightDetailsSection">
-          <h3>{description}</h3>
+          <p>{description}</p>
         </div>
       </div>
     </div>

@@ -13,6 +13,9 @@
 .yellow {
   color:#F1DB4B !important;
 }
+.white {
+  color:#FFFFFF !important;
+}
 
 .blueBackground {
   background-color:#5F5AA2 !important;
@@ -57,4 +60,7 @@
 }
 .blackStroke {
   stroke:#323232 !important;
+}
+.whiteStroke {
+  stroke:#FFFFFF !important;
 }

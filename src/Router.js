@@ -13,6 +13,7 @@ import ErrorPage from './components/ErrorPage.js';
 import { ShapesContainer } from "./components/utils/ShapesContainer.js";
 
 const Router = (props) => {
+
   return (
     <BrowserRouter>
       <MetaTags></MetaTags>
@@ -42,10 +43,10 @@ const Router = (props) => {
 
       <Footer key={Date.now()} />
 
-      <ShapesContainer count={75}/>
+      <ShapesContainer count={75} />
 
     </BrowserRouter>
- )
+  )
 }
 
 export default Router;

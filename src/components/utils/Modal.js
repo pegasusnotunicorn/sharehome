@@ -80,11 +80,11 @@ const Modal = (props) => {
           { icon }
           <h3 dangerouslySetInnerHTML={modalText()}></h3>
           <div className="modalButtonWrapper">
-            <button className="modalButton button is-rounded" onClick={confirm}>
+            <button className="modalButton blueBackground white button is-rounded" onClick={confirm}>
               <CheckCircle className="greenStroke" />{confirmText}
             </button>
             { showCancel &&
-              <button className="modalButton button is-rounded" onClick={cancel}>
+              <button className="modalButton blueBackground white button is-rounded" onClick={cancel}>
                 <XCircle className="redStroke" />
                 {cancelText}
               </button>

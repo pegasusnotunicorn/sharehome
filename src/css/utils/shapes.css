@@ -16,7 +16,7 @@
   animation-iteration-count: infinite;
   animation-timing-function: linear;
   animation-direction: alternate;
-  opacity:0.125;
+  opacity:0.15;
 }
 
 .heart.is-blue:after, .heart.is-blue:before {background: #5F5AA2;}

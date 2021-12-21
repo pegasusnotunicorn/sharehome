@@ -24,30 +24,32 @@ const randomWeightedLeftAndRight = () => {
 }
 
 //generate the containers for the random shapes so we can do parallax
-const RandomShapesContainers = (totalShapes, totalContainers) => {
+const RandomShapesContainers = (totalShapes, dontScroll) => {
   const parallaxRef = useRef();
 
   //shapes per container / # of containers
+  let totalContainers = (dontScroll) ? 1 : 2;
   let totalShapesPerContainer = Math.floor(totalShapes / totalContainers);
 
   //read for window scroll and change parallax scroll
   useEffect(() => {
+    if (!dontScroll){
+      //on scroll function for parallax
+      const onScroll = () => {
+        let windowScroll = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+        let parallaxEquivalent = Math.round(windowScroll * totalContainers * 1000) / 1000;
+        if (parallaxRef.current) {
+          parallaxRef.current.scrollTo(parallaxEquivalent);
+        }
+      }
 
-    //on scroll function for parallax
-    const onScroll = () => {
-      let windowScroll = window.scrollY / (document.body.scrollHeight - window.innerHeight);
-      let parallaxEquivalent = Math.round(windowScroll * totalContainers * 1000) / 1000;
-      if (parallaxRef.current) {
-        parallaxRef.current.scrollTo(parallaxEquivalent);
+      //window event listener
+      window.addEventListener('scroll', onScroll);
+      return () => {
+        window.removeEventListener('scroll', onScroll);
       }
     }
-
-    //window event listener
-    window.addEventListener('scroll', onScroll);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-    }
-  }, [totalContainers]);
+  }, [totalContainers, dontScroll]);
 
   //properties of parallax
   let parallaxProps = {
@@ -60,6 +62,14 @@ const RandomShapesContainers = (totalShapes, totalContainers) => {
     },
     ref: parallaxRef,
     className: "parallaxContainer",
+  }
+
+  //dont hide overflow if we're not scrolling
+  if (dontScroll){
+    parallaxProps.style.overflow = "initial";
+    parallaxProps.innerStyle = {
+      overflow: "initial"
+    }
   }
 
   return (
@@ -79,7 +89,7 @@ const ParallaxLayers = (totalContainers, totalShapesPerContainer) => {
       id:"parallaxLayer" + index,
       key:"parallaxLayer" + index,
       offset:index,
-      speed:Math.random(),
+      speed:Math.random()/100,
       style:{
         display: 'flex',
         justifyContent: 'center',
@@ -185,8 +195,8 @@ const RandomShapes = (totalShapes) => {
 //generate a container that is 100% width 100% height with random shapes floating around in the background
 export const ShapesContainer = (props) => {
   let location = useLocation();   //to change the shapes container every time location is changed
-  let totalContainers = (location.pathname === "/") ? 2 : 2;
-  let containers = RandomShapesContainers(props.count, totalContainers);
+  let shapesCount = (location.pathname !== "/") ? 25 : props.count;  //less shapes on non-main page
+  let containers = RandomShapesContainers(shapesCount, props.dontScroll);
 
   return containers
 }

@@ -38,17 +38,19 @@ const CharactersPage = (props) => {
   });
 
   return (
-    <div className="content max-width">
+    <div className="content">
       <Title />
-      <div className="characterContent">
-        <div className="characterSubcontent">
-          <h2 className="subtitle">{t('characters page.title')}</h2>
-          <p>{t('characters page.description')}<br></br>
-          <span style={{color:"red"}}>{t('characters page.warning red')}</span> {t('characters page.warning')}</p>
-          { expansionCharacters }
-        </div>
-        <div className="characterSubcontent">
-          <h3 className="moretocome">{t('characters page.moretocome')}</h3>
+      <div className="subcontentWrapper">
+        <div className="characterContent">
+          <div className="characterSubcontent">
+            <h2 className="subtitle">{t('characters page.title')}</h2>
+            <p>{t('characters page.description')}<br></br>
+            <span style={{color:"red"}}>{t('characters page.warning red')}</span> {t('characters page.warning')}</p>
+            { expansionCharacters }
+          </div>
+          <div className="characterSubcontent">
+            <h3 className="moretocome">{t('characters page.moretocome')}</h3>
+          </div>
         </div>
       </div>
     </div>

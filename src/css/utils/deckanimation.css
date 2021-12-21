@@ -1,0 +1,55 @@
+.deckContainer {
+  min-height:100vh;
+  overflow: hidden;
+  width: 100%;
+}
+
+.deckContainer > div {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  will-change: transform;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.deckContainer > div > div {
+  cursor:pointer;
+  background-color: white;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 50vh;
+  max-height: 400px;
+  width: 85vh;
+  max-width: 700px;
+  will-change: transform;
+  border-radius: 10px;
+  box-shadow: 0 12.5px 50px -10px rgba(50, 50, 73, 0.4), 0 10px 10px -10px rgba(50, 50, 73, 0.3);
+}
+
+@media only screen and (max-width: 900px) {
+  .deckContainer {
+    min-height:50vh;
+  }
+
+  .deckContainer > div {
+    justify-content: center !important;
+  }
+
+  .deckContainer > div > div {
+    max-height: 190px !important;
+    max-width: 325px !important;
+  }
+}
+
+@media only screen and (min-width: 900px) and (max-width: 1200px) {
+  .deckContainer > div {
+    justify-content: center !important;
+  }
+  .deckContainer > div > div {
+    max-height: 350px !important;
+    max-width: 600px !important;
+  }
+}

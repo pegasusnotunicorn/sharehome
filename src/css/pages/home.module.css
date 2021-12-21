@@ -1,6 +1,7 @@
+/* <editor-fold>--------------------------------------GENERAL */
+
 .mainpageContainer{
   position:relative;
-  overflow:hidden;
   display: flex;
   width:100%;
 }
@@ -9,25 +10,18 @@
   padding:2em;
 }
 
-/* mobile stuff */
-@media only screen and (max-width: 1200px) {
-  .mainpageContainer{
-    min-height: 55vh;
-  }
-}
-
 .mainpageContainer h1{
-  font-size:2em;
+  font-size:3em;
   margin-top:0;
   margin-bottom:0.5em;
 }
 
 .mainpageContainer p{
-  font-size:1.35em;
+  font-size:1em;
 }
 
 .mainpageContainer p:last-child a{
-  color:white;
+  color:#FFF;
 }
 
 p.smallText {
@@ -40,52 +34,99 @@ p.smallText a {
   color:#323232 !important;
 }
 
+/* tablet */
+@media only screen and (max-width: 1200px) {
+  .mainpageContainer{
+    min-height: 55vh;
+  }
+}
+
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .mainpageContainer > div:first-child {
+    padding:0;
+  }
+
+  .mainpageContainer p{
+    font-size:1em !important;
+  }
+}
+
+/* </editor-fold> */
+
 /* <editor-fold>--------------------------------------HERO IMAGE */
+
+#heroContainer{
+  margin-bottom:20vh;
+}
 
 .mainContentWrapper{
   position:relative;
   height:100vh;
   width:100%;
-  overflow:hidden;
-  background-color:rgba(0,0,0,.175);
-  border-radius:0 0 15vw 0;
+  display:flex;
+  justify-content: center;
+  flex-wrap:nowrap;
+  color:#323232;
 }
 
-.backgroundImage{
-  position:absolute;
-  height: 100vh;
-  min-width: 100%;
-  object-fit: cover;
-  z-index:-99;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-50%);
+.mainContentInner{
+  width:50%;
+  height:100%;
+  position:relative;
+  display:flex;
 }
 
-.floating {
-  animation-name: floating;
-  animation-duration: 3s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
-  margin-left: 30px;
-  margin-top: 5px;
+/* small desktop */
+@media only screen and (min-width: 1200px) and (max-width: 1600px) {
+  #mainContentInnerRight{
+    width:40% !important;
+    justify-content: right;
+  }
+  .lcmContainer{
+    margin-left:0 !important;
+    margin-right:0 !important;
+  }
 }
 
-@keyframes floating {
-  0% { transform: translate(0,  0px); }
-  50%  { transform: translate(0, 5px); }
-  100%   { transform: translate(0, -0px); }
+/* tablet */
+@media only screen and (min-width: 900px) and (max-width: 1200px) {
+  #mainContentInnerLeft{
+    height:40% !important;
+  }
+  .lcmContainer{
+    width:300px !important;
+  }
+}
+
+/* mobile */
+@media only screen and (max-width: 1200px) {
+  .lcmContainer{
+    width:300px !important;
+  }
+  #heroContainer{
+    margin-bottom:10vh;
+    flex-direction:column-reverse;
+    justify-content:flex-end;
+  }
+
+  #mainContentInnerLeft{
+    height:30%;
+  }
+
+  #mainContentInnerRight{
+    height:40%;
+  }
+
+  .mainContentInner{
+    height:fit-content;
+    width:100%;
+  }
 }
 
 .lcmContainer{
-  margin-top:0;
-  color:white;
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform: translate(-50%,-50%);
   margin:auto;
-  width:300px;
+  width:500px;
 }
 
 .lcmImage{
@@ -93,22 +134,19 @@ p.smallText a {
   margin:0;
 }
 
-.gamedetailContainer{
-  color:white;
-  position:absolute;
-  bottom:5%;
-  left:50%;
-  transform: translateX(-50%);
-  margin:auto;
-  width: calc(100% - 100px);
-}
-
 .sharehomegame{
   text-align: right;
   width: 109%;
-  margin-top: -30px !important;
+  margin-top: -20px !important;
   font-size: 1.3em;
   font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
+}
+
+@media only screen and (min-width: 1200px) {
+  .sharehomegame{
+    width: 95% !important;
+    margin-top: -35px !important;
+  }
 }
 
 .subtitle{
@@ -118,6 +156,15 @@ p.smallText a {
   font-size: 2em;
   font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
   margin-bottom:25px;
+}
+
+.gamedetailContainer{
+  position:absolute;
+  bottom:5%;
+  left:50%;
+  transform: translateX(-50%);
+  margin:auto;
+  width: calc(100% - 100px);
 }
 
 .gameDetails{
@@ -158,29 +205,42 @@ p.smallText a {
 
 /* <editor-fold>--------------------------------------SHAREHOME DESCRIPTION SECTION */
 
-#sharehomeContainer{
+#descriptionContainer{
   min-height: 65vh;
+  justify-content: center;
+  border-radius: 15vw 0 0 0;
+  color:#FFF;
 }
 
-#sharehomeContainer div{
+#descriptionContainer div{
   padding:2em;
-  margin:auto;
+  margin-left: 0;
+  margin-right: 0;
 }
 
-/* </editor-fold> */
-
-/* <editor-fold>--------------------------------------CHARACTER CONTAINER */
-
-#characterContainer{
-  color:white;
-  border-radius:15vw 0 0 0;
-  display:flex;
-  flex-direction: column;
-  padding-bottom:3em;
+.backgroundImage{
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius:5vw;
+  margin:0 !important;
+  box-shadow: 0 12.5px 50px -10px rgba(50, 50, 73, 0.4), 0 10px 10px -10px rgba(50, 50, 73, 0.3);
 }
 
-.swiperContainer{
-  cursor:pointer;
+@media only screen and (max-width: 1200px) {
+  #descriptionContainer{
+    flex-direction:column;
+  }
+  #descriptionContainer > div{
+    margin:auto !important;
+    margin-bottom: 0 !important;
+  }
+  #descriptionContainer > div:first-child{
+    padding-bottom: 0 !important;
+  }
+  #descriptionContainer > div:last-child{
+    padding-top: 0 !important;
+  }
 }
 
 /* </editor-fold> */
@@ -204,7 +264,7 @@ p.smallText a {
 .emailWrapper p {
   margin-top:0.75em !important;
   overflow-wrap:break-word;
-  font-size:1em;
+  font-size:0.75em;
 }
 
 .formWrapper {
@@ -224,9 +284,7 @@ p.smallText a {
 .emailInput {
   box-shadow:0px 0px 10px rgb(0 0 0 / 33%);
   font-size: 1.25em;
-  padding: 0.5em;
-  padding-left: 1em;
-  padding-right: 1em;
+  padding: 1em;
   width: calc(75% - 2em);
   outline: 0;
   border:0;
@@ -244,6 +302,7 @@ p.smallText a {
   position: absolute;
   right: 0;
   height:100%;
+  color:#FFF;
 }
 
 @media only screen and (max-width: 600px) {
@@ -258,14 +317,59 @@ p.smallText a {
 
 /* </editor-fold> */
 
-/* <editor-fold>--------------------------------------SPOTLIGHT CONTAINER */
+/* <editor-fold>--------------------------------------CHARACTER CONTAINER */
 
-#spotlightContainer{
-  border-radius:0 15vw 0 0;
-  color:white;
+#characterContainer{
+  color:#FFF;
   display:flex;
   flex-direction: column;
   padding-bottom:3em;
+}
+
+.swiperContainer{
+  cursor:pointer;
+}
+
+/* </editor-fold> */
+
+/* <editor-fold>--------------------------------------MECHANICS CONTAINER */
+
+#mechanicsContainer{
+  min-height: 65vh;
+}
+
+.mechanicsWrapper{
+  display:flex;
+  justify-content: center;
+  flex-wrap:wrap;
+}
+
+.mechanicsWrapper li{
+  padding:0.5em;
+  font-size:1.5em;
+}
+
+@media only screen and (max-width: 900px) {
+  .mechanicsWrapper li{
+    padding:0.25em;
+    font-size:1.25em;
+  }
+}
+
+/* </editor-fold> */
+
+/* <editor-fold>--------------------------------------SPOTLIGHT CONTAINER */
+
+#spotlightContainer{
+  border-radius:0 0 15vw 0;
+  color:#FFF;
+  display:flex;
+  flex-direction: column;
+  padding-bottom:3em;
+}
+
+#spotlightContainer > div > h1{
+  margin-bottom:0 !important;
 }
 
 /* mobile stuff */
@@ -277,6 +381,10 @@ p.smallText a {
 
 /* </editor-fold> */
 
+/* <editor-fold>--------------------------------------FINAL CONTAINER */
+
 #finalContainer {
-  min-height:25vh;
+  min-height:35vh;
 }
+
+/* </editor-fold> */

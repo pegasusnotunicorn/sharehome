@@ -30,19 +30,37 @@ const english = {
     },
 
     "main page":{
-      "subtitle": "The reality TV card game set in a fantastical modern world",
-      "subtitle1": "Welcome to SHAREHOME!",
-      "subtitle2": "The fantastical reality TV show that documents the lives of six mythical strangers living their every day modern lives.",
-      "subtitle3": "Love, Career & Magic is a card game that lets you relive your favorite scenes by playing as the characters from the show!",
-      "player count": "2+ PLAYERS",
-      "play time": "10+ MINUTES",
-      "splashalt": "6 strangers enjoying a meal together.",
-      "charactersSection": "Playable Characters",
-      "moretocome": "More characters will be added every week!",
-      "clicktoseemore" : "Click here to see all the characters.",
-      "spotlightCharacter": "This Week's Character Spotlight",
-      "final text": "Coming soon to Kickstarter in 2022",
-      "otherworks": "Check out my other game!",
+      "hero": {
+        "subtitle": "The reality TV card game set in a fantastical modern world",
+        "player count": "2+ PLAYERS",
+        "play time": "10+ MINUTES",
+      },
+      "description": {
+        "subtitle1": "Welcome to SHAREHOME!",
+        "subtitle2": "The fantastical reality TV show that documents the lives of six mythical strangers living their every day modern lives.",
+        "subtitle3": "Love, Career & Magic is a card game that lets you relive your favorite scenes by playing as the characters from the show!",
+        "splashalt": "6 strangers enjoying a meal together.",
+      },
+      "character": {
+        "description": "Playable Characters",
+        "moretocome": "More characters will be added every week!",
+        "clicktoseemore" : "Click here to see all the characters.",
+      },
+      "mechanics": {
+        "description": "If you like any of these things, then this game is for you!",
+        "laughing": "Laughing",
+        "improv": "Improv",
+        "party": "Party Games",
+        "acting": "Acting",
+        "stories": "Unique Stories",
+      },
+      "spotlight": {
+        "description": "This Week's Character Spotlight",
+      },
+      "final": {
+        "description": "Coming soon to Kickstarter in 2022",
+        "otherworks": "Check out my other game!",
+      },
     },
 
     "email form":{

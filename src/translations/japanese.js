@@ -30,26 +30,44 @@ const japanese = {
     },
 
     "main page":{
-      "subtitle": "異世界のリアリティ番組をベースにしたカードゲーム",
-      "subtitle1": "「シェアホーム」へようこそ！",
-      "subtitle2": "「シェアホーム」は見ず知らずの男女獣人６匹が共同する生活をただただ記録したリアリティ番組です。",
-      "subtitle3": "「Love, Career & Magic」は番組出演者を演じて名シーンを好きに再現するカードゲーム。",
-      "player count": "２+ 人用",
-      "play time": "プレイ時間 １０+ 分",
-      "splashalt": "6人の獣人がワイワイご飯を食べている様子。",
-      "charactersSection": "キャラクター紹介",
-      "moretocome": "毎週新キャラ一人が紹介されます！",
-      "clicktoseemore" : "キャラクターの一覧はこちらへ",
-      "spotlightCharacter": "今週の新キャラ紹介",
-      "final text": "２０２２年キックスターターで発売予定！",
-      "otherworks": "他のゲーム",
+      "hero": {
+        "subtitle": "異世界のリアリティ番組をベースにしたカードゲーム",
+        "player count": "２+ 人用",
+        "play time": "プレイ時間 １０+ 分",
+      },
+      "description": {
+        "subtitle1": "「シェアホーム」へようこそ！",
+        "subtitle2": "「シェアホーム」は見ず知らずの男女獣人６匹が共同する生活をただただ記録したリアリティ番組です。",
+        "subtitle3": "「Love, Career & Magic」は番組出演者を演じて名シーンを好きに再現するカードゲーム。",
+        "splashalt": "6人の獣人がワイワイご飯を食べている様子。",
+      },
+      "character": {
+        "description": "キャラクター紹介",
+        "moretocome": "毎週新キャラ一人が紹介されます！",
+        "clicktoseemore" : "キャラクターの一覧はこちらへ",
+      },
+      "mechanics": {
+        "description": "If you like any of these things, then this game is for you!",
+        "laughing": "Laughing",
+        "improv": "Improv",
+        "party": "Party Games",
+        "acting": "Acting",
+        "stories": "Unique Stories",
+      },
+      "spotlight": {
+        "description": "今週の新キャラ紹介",
+      },
+      "final": {
+        "description": "２０２２年キックスターターで発売予定！",
+        "otherworks": "他のゲーム",
+      },
     },
 
     "email form":{
-      "prompt": "メルマガ登録で最新ニュースが届きます！",
+      "prompt": "メルマガ登録で最新ニュースが届く！",
       "button": "登録",
       "sidebarbutton": "登録",
-      "promise": "",
+      "promise": "Your email will not be shared with anyone else.",
       "sending": "転送中...",
       "success": "ありがとうございます！すぐ確認メールが届きます。届かない場合は再度メールアドレスをご確認して下さい。"
     },

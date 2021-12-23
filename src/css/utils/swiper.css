@@ -3,8 +3,9 @@
 }
 
 .swiper-container {
-  overflow: hidden;
   padding-bottom:3em;
+  /* to fix floating clipping */
+  padding-top:5px;
 }
 
 .swiper-pagination {

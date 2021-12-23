@@ -27,7 +27,7 @@ const getAllCharacterCards = (windowHeight, windowWidth) => {
   //max card width / size
   let cardWidth = Math.min(Math.floor(windowWidth / cardDividerByScreenWidth), 600);
   let cardHeight = cardWidth / 1.7;
-  let fontSize = (windowWidth >= 1200) ? 12 : 7;
+  let fontSize = (windowWidth >= 1200) ? 9 : 6;
 
   return getAllPeople().map((curr, index, array)=>{
     let props = {

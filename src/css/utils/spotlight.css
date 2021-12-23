@@ -25,8 +25,11 @@
 .spotlightDetailsSection{
   border-top:1px solid #FFF;
   padding-top:0.5em;
-  padding-bottom:0.5em;
   max-width:750px;
+}
+
+.spotlightDetailsSection:not(:last-child){
+  padding-bottom:0.5em;
 }
 .spotlightDetailsSection.space-between{
   display:flex;

@@ -13,7 +13,6 @@ import { ShapesContainer } from "./utils/ShapesContainer.js";
 
 import homeStyles from '../css/pages/home.module.css';
 import '../css/utils/colors.css';
-import '../css/utils/fireworks.css';
 
 const HomePage = (props) => {
   const { t } = useTranslation();
@@ -23,12 +22,6 @@ const HomePage = (props) => {
   useEffect(() => {
     document.title = "Love, Career & Magic — SHAREHOME";
   });
-
-  // fireworks stuff
-  // <div className="pyro">
-  //   <div className="before"></div>
-  //   <div className="after"></div>
-  // </div>
 
   return (
     <div className="content">
@@ -83,7 +76,7 @@ const HomePage = (props) => {
       <div id={`${homeStyles.characterContainer}`} className={`${homeStyles.mainpageContainer} redBackground`}>
         <div className={`subcontentWrapper`}>
           <h1>{t('main page.character.description')}</h1>
-          <p>
+          <p className={`${homeStyles.noMargin}`}>
             {t('main page.character.moretocome')}
             <br />
             <NavLink to="/characters">{t('main page.character.clicktoseemore')}</NavLink>
@@ -98,11 +91,11 @@ const HomePage = (props) => {
         <div className={`subcontentWrapper min-width`}>
           <h1>{t('main page.mechanics.description')}</h1>
           <div class={`${homeStyles.mechanicsWrapper}`}>
-            <li>{t('main page.mechanics.laughing')}</li>
-            <li>{t('main page.mechanics.improv')}</li>
-            <li>{t('main page.mechanics.party')}</li>
-            <li>{t('main page.mechanics.acting')}</li>
-            <li>{t('main page.mechanics.stories')}</li>
+            <div><img src="/images/laughing.png" alt="Laughing icon" />{t('main page.mechanics.laughing')}</div>
+            <div><img src="/images/party.png" alt="Party icon" />{t('main page.mechanics.party')}</div>
+            <div><img src="/images/stories.png" alt="Stories icon" />{t('main page.mechanics.stories')}</div>
+            <div><img src="/images/improv.png" alt="Improv icon" />{t('main page.mechanics.improv')}</div>
+            <div><img src="/images/acting.png" alt="Acting icon" />{t('main page.mechanics.acting')}</div>
           </div>
         </div>
       </div>

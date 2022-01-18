@@ -6,6 +6,7 @@ import useWindowDimensions from '../utils/useWindowDimensions.js';
 import Card from '../Card/Card.js';
 import { getSpecificPerson, getLatestPerson } from '../Card/ExamplePeople.js';
 import '../../css/utils/spotlight.css';
+import VisibilityTrigger from "./VisibilityTrigger.js";
 
 //get swiperslides filled with character cards for all characters
 const getCharacterCard = (character, windowHeight, windowWidth) => {
@@ -61,34 +62,42 @@ export const CharacterSpotlight = (props) => {
         {characterCard}
       </div>
       <div className="spotlightDetailsWrapper">
-        <h1>{name}</h1>
-        <div className="spotlightDetailsSection space-between">
-          <div className="divider"></div>
-          <p>
-            <span className="spotlightBold">{t('characters page.race')}<span className="is-hidden-mobile">:</span></span>
-            <span>{race}</span>
-          </p>
-          <div className="divider"></div>
-          <p>
-            <span className="spotlightBold">{t('characters page.age')}<span className="is-hidden-mobile">:</span></span>
-            <span>{character.age}</span>
-          </p>
-          <div className="divider"></div>
-          <p>
-            <span className="spotlightBold">{t('characters page.job')}<span className="is-hidden-mobile">:</span></span>
-            <span>{job}</span>
-          </p>
-          <div className="divider"></div>
-        </div>
-        <div className="spotlightDetailsSection">
-          <p>
-            <span className="spotlightBold">{`${t('characters page.hobbies')}`}<span className="is-hidden-mobile">:</span></span>
-            <span>{hobbies}</span>
-          </p>
-        </div>
-        <div className="spotlightDetailsSection">
-          <p>{description}</p>
-        </div>
+        <VisibilityTrigger translateY>
+          <h1>{name}</h1>
+        </VisibilityTrigger>
+        <VisibilityTrigger translateY>
+          <div className="spotlightDetailsSection space-between">
+            <div className="divider"></div>
+            <p>
+              <span className="spotlightBold">{t('characters page.race')}<span className="is-hidden-mobile">:</span></span>
+              <span>{race}</span>
+            </p>
+            <div className="divider"></div>
+            <p>
+              <span className="spotlightBold">{t('characters page.age')}<span className="is-hidden-mobile">:</span></span>
+              <span>{character.age}</span>
+            </p>
+            <div className="divider"></div>
+            <p>
+              <span className="spotlightBold">{t('characters page.job')}<span className="is-hidden-mobile">:</span></span>
+              <span>{job}</span>
+            </p>
+            <div className="divider"></div>
+          </div>
+        </VisibilityTrigger>
+        <VisibilityTrigger translateY>
+          <div className="spotlightDetailsSection">
+              <p>
+                <span className="spotlightBold">{`${t('characters page.hobbies')}`}<span className="is-hidden-mobile">:</span></span>
+                <span>{hobbies}</span>
+              </p>
+          </div>
+      </VisibilityTrigger>
+        <VisibilityTrigger translateY>
+          <div className="spotlightDetailsSection">
+              <p>{description}</p>
+          </div>
+        </VisibilityTrigger>
       </div>
     </div>
   );

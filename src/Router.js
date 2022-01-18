@@ -42,7 +42,6 @@ const Router = (props) => {
       </Switch>
 
       <Footer key={Date.now()} />
-
       <ShapesContainer count={75} />
 
     </BrowserRouter>

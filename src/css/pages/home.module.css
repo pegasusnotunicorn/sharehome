@@ -67,8 +67,8 @@ p.smallText a {
 /* <editor-fold>--------------------------------------HERO IMAGE */
 
 #heroContainer{
-  margin-bottom:20vh;
-  overflow:hidden;
+  padding-bottom:10vh;
+  overflow-x:hidden;
 }
 
 .mainContentWrapper{
@@ -77,56 +77,93 @@ p.smallText a {
   width:100%;
   display:flex;
   justify-content: center;
-  flex-wrap:nowrap;
+  flex-direction: column;
   color:#323232;
+}
+
+.mainContentVertical{
+  display:flex;
+  justify-content: center;
+  flex-wrap:nowrap;
+}
+
+.mainContentVertical:last-child{
+  margin-top:10vh;
 }
 
 .mainContentInner{
   width:50%;
-  height:85%;
+  height:100%;
   position:relative;
   display:flex;
 }
 
+#mainContentInnerRight > div {
+  margin:auto;
+}
+
 /* small desktop */
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
+  .mainContentVertical{
+    justify-content: space-around !important;
+  }
   #mainContentInnerRight{
-    width:40% !important;
+    width:25% !important;
     justify-content: right;
   }
   .lcmContainer{
     margin-left:0 !important;
     margin-right:0 !important;
+    width:100% !important;
   }
 }
 
 /* tablet */
 @media only screen and (min-width: 900px) and (max-width: 1200px) {
-  #mainContentInnerLeft{
-    height:40% !important;
+  .mainContentVertical{
+    flex-direction: column-reverse;
+  }
+  .mainContentVertical:not(last-child){
+    flex-grow:7;
+  }
+  .mainContentVertical:last-child{
+    margin-top:0;
+    flex-grow:2;
   }
   .lcmContainer{
-    width:300px !important;
+    width:250px !important;
   }
 }
 
 /* mobile */
 @media only screen and (max-width: 1200px) {
+  .mainContentVertical{
+    flex-direction: column-reverse;
+  }
+  .mainContentVertical:not(last-child){
+    flex-grow:3;
+  }
+  .mainContentVertical:last-child{
+    margin-top:0;
+    flex-grow:1;
+    padding-left:20px;
+    padding-right:20px;
+  }
   .lcmContainer{
-    width:300px !important;
+    width:250px !important;
   }
   #heroContainer{
     margin-bottom:10vh;
-    flex-direction:column-reverse;
-    justify-content:flex-end;
+    flex-direction:column;
+    justify-content:center;
   }
 
   #mainContentInnerLeft{
-    height:30%;
+    height:100% !important;
   }
 
   #mainContentInnerRight{
-    height:40%;
+    height:100% !important;
   }
 
   .mainContentInner{
@@ -148,15 +185,15 @@ p.smallText a {
 .sharehomegame{
   text-align: right;
   width: 109%;
-  margin-top: -20px !important;
+  margin-top: -10px !important;
   font-size: 1.3em;
   font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
 }
 
 @media only screen and (min-width: 1200px) {
   .sharehomegame{
-    width: 95% !important;
-    margin-top: -35px !important;
+    width: 100% !important;
+    margin-top: -30px !important;
   }
 }
 
@@ -170,12 +207,7 @@ p.smallText a {
 }
 
 .gamedetailContainer{
-  position:absolute;
-  bottom:5%;
-  left:50%;
-  transform: translateX(-50%);
   margin:auto;
-  width: calc(100% - 100px);
 }
 
 .gameDetails{
@@ -209,7 +241,6 @@ p.smallText a {
     margin-top: 1.5px;
     margin-right:7.5px;
   }
-
 }
 
 /* </editor-fold> */
@@ -223,8 +254,9 @@ p.smallText a {
   color:#FFF;
 }
 
-#descriptionContainer div{
-  padding:2em;
+#descriptionContainer > div{
+  padding:20px;
+  margin:auto;
   margin-left: 0;
   margin-right: 0;
 }
@@ -260,11 +292,6 @@ p.smallText a {
 
 #emailContainer {
   min-height: 65vh;
-}
-
-#emailContainer div{
-  padding:2em;
-  margin:auto;
 }
 
 .emailWrapper{
@@ -357,7 +384,7 @@ p.smallText a {
 
 .mechanicsWrapper div{
   padding:0em;
-  font-size:1.5em;
+  font-size:1.25em;
   display:flex;
   flex-direction: column;
 }
@@ -391,7 +418,7 @@ p.smallText a {
   padding-bottom:3em;
 }
 
-#spotlightContainer > div > h1{
+#spotlightContainer > div > div > h1{
   margin-bottom:0 !important;
 }
 

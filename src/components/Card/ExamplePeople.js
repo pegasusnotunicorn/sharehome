@@ -180,6 +180,24 @@ const examplePeople = [
     ignoreInRandom: false,
   },
   {
+    name: "Rosamund Galbassi",
+    age: 27,
+    job: "Foot Model",
+    race:"Monopod",
+    description:"Very fast despite only having one leg. Very stable because of the large size of the foot makes her center of gravity much lower. ",
+    hobbies: "Cosplay. Especially really creative ones involving one leg.",
+    japaneseJob: "美脚モデル",
+    japaneseName: "ロザムンド・ガルバッシー",
+    image: {
+      url: "/images/members/characters10.jpg",
+      name: "characters10.jpg",
+      width: 2000,
+      height: 1200,
+      credit: "https://www.fiverr.com/carolynfrank"
+    },
+    ignoreInRandom: false,
+  },
+  {
     name: "Bizz Hagglefeet",
     age: 15,
     job: "Banker",
@@ -281,24 +299,6 @@ const examplePeople = [
     image: {
       url: "/images/members/characters15.jpg",
       name: "characters15.jpg",
-      width: 2000,
-      height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
-    },
-    ignoreInRandom: true,
-  },
-  {
-    name: "Rosamund Galbassi",
-    age: 27,
-    job: "Foot Model",
-    race:"Monopod",
-    description:"Very fast despite only having one leg. Very stable because of the large size of the foot makes her center of gravity much lower. ",
-		hobbies: "Cosplay. Especially really creative ones involving one leg.",
-    japaneseJob: "美脚モデル",
-    japaneseName: "ロザムンド・ガルバッシー",
-    image: {
-      url: "/images/members/characters16.jpg",
-      name: "characters16.jpg",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"

@@ -109,12 +109,12 @@
 
 .navbarButton.is-active{
   border-right:4px solid #DD7373;
-  color:black;
-  background:white;
+  color:#FFF;
+  background:#000;
 }
 
 .navbarButton.is-active svg{
-  stroke:black;
+  stroke:#FFF;
 }
 
 /* </editor-fold> */
@@ -154,9 +154,9 @@
   line-height: 100%;
   padding: 10px;
   padding-top: 12px;
-  border: 0;
   border-radius:0px 0 0 1em;
   font-size: 1em;
+  border:1px solid rgba(0,0,0,.15);
 }
 
 .subscribeButton {
@@ -168,6 +168,7 @@
   width: 25%;
   font-size: 1em;
   color:#FFF;
+  border:1px solid rgba(0,0,0,.15);
 }
 
 /* </editor-fold> */

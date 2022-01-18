@@ -3,7 +3,7 @@ import { useSprings, animated, interpolate } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
 import { getAllPeople } from '../Card/ExamplePeople.js';
-import '../../css/utils/deckanimation.css';
+import '../../css/utils/deckAnimation.css';
 
 //all people (randomized)
 const cards = getAllPeople(true);

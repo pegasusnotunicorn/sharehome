@@ -30,11 +30,11 @@ export const NavbarTemplate = (props) => {
   }
 
   //main navbar or deck editor sidebar
-  const greenOrYellow = (props.position === "left") ? "yellowBackground" : "greenBackground"
+  const colorForNavbar = (props.position === "left") ? "whiteBackground" : "blueBackground"
 
   return (
-    <div id={navbarStyles[props.id]} className={`${navbarStyles.navbarClass} ${startingHamburgerClass} ${greenOrYellow}`} style={newStyle} >
-      <button id={`${navbarStyles[props.id]}OpenClose`} className={`hamburger ${greenOrYellow} hamburger--slider ${navbarStyles.navbarOpenClose} ${startingHamburgerClass}`} onClick={toggleNav} style={openCloseStyle} type="button">
+    <div id={navbarStyles[props.id]} className={`${navbarStyles.navbarClass} ${startingHamburgerClass} ${colorForNavbar}`} style={newStyle} >
+      <button id={`${navbarStyles[props.id]}OpenClose`} className={`hamburger ${colorForNavbar} hamburger--slider ${navbarStyles.navbarOpenClose} ${startingHamburgerClass}`} onClick={toggleNav} style={openCloseStyle} type="button">
         <span className="hamburger-box">
           <span className="hamburger-inner"></span>
         </span>

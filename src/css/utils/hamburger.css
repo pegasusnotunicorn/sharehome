@@ -36,10 +36,10 @@
   .hamburger.is-active .hamburger-inner::after {
     background-color: #323232; }
 
-.hamburger.yellowBackground{
+.hamburger.whiteBackground{
   border-radius: 0 1em 0 1em;
 }
-.hamburger.greenBackground{
+.hamburger.blueBackground{
   border-radius: 1em 0 1em 0;
 }
 

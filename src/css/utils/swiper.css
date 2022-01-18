@@ -1,5 +1,13 @@
 .swiper-button-next, .swiper-button-prev{
   color:#FFF;
+  top:42.5%;
+}
+
+.swiper-button-prev{
+  left:20px;
+}
+.swiper-button-next{
+  right:20px;
 }
 
 .swiper-container {

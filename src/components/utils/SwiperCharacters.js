@@ -2,12 +2,13 @@ import React from 'react';
 
 //import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore, { Navigation, Pagination, A11y} from "swiper";
+import SwiperCore, { Navigation, Pagination, A11y, Autoplay} from "swiper";
 
 //import Swiper styles
 import 'swiper/swiper.min.css'
-import 'swiper/components/navigation/navigation.min.css'
-import 'swiper/components/pagination/pagination.min.css'
+import 'swiper/swiper-bundle.css';
+// import 'swiper/components/navigation/navigation.min.css'
+// import 'swiper/components/pagination/pagination.min.css'
 
 //custom files
 import '../../css/utils/swiper.css'
@@ -16,7 +17,7 @@ import { getAllPeople } from '../Card/ExamplePeople.js';
 import useWindowDimensions from '../utils/useWindowDimensions.js';
 
 // configure Swiper to use modules
-SwiperCore.use([Navigation, Pagination, A11y]);
+SwiperCore.use([Navigation, Pagination, A11y, Autoplay]);
 
 //get swiperslides filled with character cards for all characters
 const getAllCharacterCards = (windowHeight, windowWidth) => {
@@ -64,7 +65,7 @@ export const SwiperCharacters = (props) => {
 
   let allCharacterCards = getAllCharacterCards(height, width);
   let swiperProps = {
-    modules:[Navigation, Pagination, A11y],
+    modules:[Navigation, Pagination, A11y, Autoplay],
     navigation: true,
     loop:true,
     spaceBetween:0,
@@ -72,6 +73,11 @@ export const SwiperCharacters = (props) => {
     pagination:{
       type: 'bullets',
       clickable: true,
+    },
+    autoplay: {
+      delay: 3000,
+      pauseOnMouseEnter: true,
+      disableOnInteraction: false,
     },
     onSlideChange:() => {},
     onSwiper:(swiper) => {},

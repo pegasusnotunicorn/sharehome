@@ -13,10 +13,10 @@ const randomIntFromInterval = (min, max) => { // min and max included
 const randomWeightedLeftAndRight = () => {
   let tempRand = Math.random();
   if (tempRand > 0.51) {
-    return randomIntFromInterval(0,40);
+    return randomIntFromInterval(20,40);
   }
   else if (tempRand < 0.49) {
-    return randomIntFromInterval(60,100);
+    return randomIntFromInterval(60,80);
   }
   else {
     return randomIntFromInterval(45,55);
@@ -57,8 +57,10 @@ const RandomShapesContainers = (totalShapes, dontScroll) => {
     style:{
       top: '0',
       left: '0',
-      zIndex: "-999",
-      overflowX: "hidden",
+      right: '0',
+      bottom: '0',
+      zIndex: '-999',
+      overflow: 'hidden',
     },
     ref: parallaxRef,
     className: "parallaxContainer",
@@ -97,7 +99,7 @@ const ParallaxLayers = (totalContainers, totalShapesPerContainer) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        overflow:"hidden",
+        overflow:'hidden',
       }
     }
 
@@ -165,7 +167,7 @@ const RandomShapes = (totalShapes) => {
 
     //properties of the shape
     let randomLeft = `${randomWeightedLeftAndRight()}`;
-    let randomTop = `${randomIntFromInterval(0,100)}`;
+    let randomTop = `${randomIntFromInterval(20,80)}`;
     let props = {
       id:"shape" + index,
       key:"shape" + index,
@@ -186,7 +188,7 @@ const RandomShapes = (totalShapes) => {
     let randomKeyframe = (<style>{`
         @keyframes randomKeyframe${index} {
            0% { left: ${randomLeft}%; top: ${randomTop}%; transform: ${randomSize.transform}}
-           100% { left: ${randomIntFromInterval(0,100)}%; top: ${randomIntFromInterval(0,100)}%; transform : ${randomGoalTransform};}
+           100% { left: ${randomIntFromInterval(20,80)}%; top: ${randomIntFromInterval(20,80)}%; transform : ${randomGoalTransform};}
         }
     `}</style>);
 

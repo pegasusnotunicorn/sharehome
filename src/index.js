@@ -19,10 +19,10 @@ WebFont.load({
     //set language so we can use custom CSS
     document.getElementById('sharehome').setAttribute("language", i18n.language);
 
+    // <React.StrictMode>
+    // </React.StrictMode>,
     ReactDOM.render(
-      <React.StrictMode>
-        <Router />
-      </React.StrictMode>,
+      <Router />,
       document.getElementById('sharehome')
     );
   },

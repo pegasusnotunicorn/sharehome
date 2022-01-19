@@ -194,7 +194,7 @@ const japanese = {
       "warning red": "（注意）",
       "warning": "完成品は以下のイラストと異なる場合があります。ご了承くださいませ。",
       "title": "キャラクター",
-      "description": "ゲームのキャラクターを紹介するキーイラスト。",
+      "description": "sentaku",
       "moretocome": "毎週新キャラ一人が紹介されます！",
       "race" : "種族",
       "job" : "職業",

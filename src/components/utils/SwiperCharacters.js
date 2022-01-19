@@ -13,7 +13,7 @@ import 'swiper/swiper-bundle.css';
 //custom files
 import '../../css/utils/swiper.css'
 import Card from '../Card/Card.js';
-import { getAllPeople } from '../Card/ExamplePeople.js';
+import { getAllFinishedPeople } from '../Card/ExamplePeople.js';
 import useWindowDimensions from '../utils/useWindowDimensions.js';
 
 // configure Swiper to use modules
@@ -30,7 +30,7 @@ const getAllCharacterCards = (windowHeight, windowWidth) => {
   let cardHeight = cardWidth / 1.7;
   let fontSize = (windowWidth >= 1200) ? 9 : 6;
 
-  return getAllPeople().map((curr, index, array)=>{
+  return getAllFinishedPeople().map((curr, index, array)=>{
     let props = {
       personName: curr.name,
       showFront: true,

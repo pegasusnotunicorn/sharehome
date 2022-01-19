@@ -20,7 +20,7 @@ const SpringTrigger = (props) => {
   return (
     <Spring to={springStyles} {...springProps} >
       {styles => (
-        <animated.div style={styles} {...springProps} ref={props.containerRef}>
+        <animated.div className={props.className} style={styles} {...springProps} ref={props.containerRef}>
           { props.children }
         </animated.div>
       )}

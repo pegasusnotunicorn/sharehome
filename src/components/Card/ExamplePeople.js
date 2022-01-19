@@ -1,6 +1,7 @@
 const examplePeople = [
   {
     name: "Wonmin Lee",
+    urlName: "wonmin",
     age: new Date(new Date() - new Date(new Date(1991,9,10))).getFullYear() - 1970,
     job: "Game Designer",
     race:"Human",
@@ -19,6 +20,7 @@ const examplePeople = [
   },
   {
     name: "Urg the Hacker",
+    urlName: "urg",
     age: 30,
     job: "Web Designer",
     race:"Orc",
@@ -37,6 +39,7 @@ const examplePeople = [
   },
   {
     name: "Beatrice Cavendish",
+    urlName: "beatrice",
     age: 27,
     job: "Optometrist",
     race:"Cockatrice",
@@ -55,6 +58,7 @@ const examplePeople = [
   },
   {
     name: "Tsukasa Shōbō",
+    urlName: "tsukasa",
     age: 19,
     job: "Aspiring Firefighter",
     race:"Elf",
@@ -73,6 +77,7 @@ const examplePeople = [
   },
   {
     name: "Köttr, the Grumpy",
+    urlName: "kottr",
     age: 121,
     job: "Courier",
     race:"Dragon",
@@ -91,6 +96,7 @@ const examplePeople = [
   },
   {
     name: "Lydia Grimsbane",
+    urlName: "lydia",
     age: 19,
     job: "Student",
     race:"Witch",
@@ -109,6 +115,7 @@ const examplePeople = [
   },
   {
     name: "Ahxi Raanee",
+    urlName: "ahxi",
     age: 28,
     job: "Lab Technician",
     race:"Basilisk",
@@ -127,6 +134,7 @@ const examplePeople = [
   },
   {
     name: "Ogark Chestmaul",
+    urlName: "ogark",
     age: 17,
     job: "Part-time Bouncer",
     race:"Ogre",
@@ -145,6 +153,7 @@ const examplePeople = [
   },
   {
     name: "Anna Salandria Westergaard",
+    urlName: "anna",
     age: 23,
     job: "Model",
     race:"Dark Elf",
@@ -163,6 +172,7 @@ const examplePeople = [
   },
   {
     name: "Korelin Bottleguard",
+    urlName: "korelin",
     age: 24,
     job: "Mechanic",
     race:"Dwarf",
@@ -181,6 +191,7 @@ const examplePeople = [
   },
   {
     name: "Rosamund Galbassi",
+    urlName: "rosamund",
     age: 27,
     job: "Foot Model",
     race:"Monopod",
@@ -199,6 +210,7 @@ const examplePeople = [
   },
   {
     name: "Bizz Hagglefeet",
+    urlName: "bizz",
     age: 15,
     job: "Banker",
     race:"Goblin",
@@ -207,8 +219,8 @@ const examplePeople = [
     japaneseJob: "銀行家",
     japaneseName: "ビズ・ハグルフィート",
     image: {
-      url: "/images/members/characters9.jpg",
-      name: "characters9.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -217,6 +229,7 @@ const examplePeople = [
   },
   {
     name: "Seji Toomin",
+    urlName: "seji",
     age: 22,
     job: "Lawyer",
     race:"Troll",
@@ -225,8 +238,8 @@ const examplePeople = [
     japaneseJob: "弁護士",
     japaneseName: "セジ・トゥーミン",
     image: {
-      url: "/images/members/characters10.jpg",
-      name: "characters10.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -235,6 +248,7 @@ const examplePeople = [
   },
   {
     name: "Dorpip Wadlezedle",
+    urlName: "dorpip",
     age: 23,
     job: "Comedian",
     race:"Gnome",
@@ -243,8 +257,8 @@ const examplePeople = [
     japaneseJob: "お笑い芸人",
     japaneseName: "ドルピップ・ワドルゼドル",
     image: {
-      url: "/images/members/characters12.jpg",
-      name: "characters12.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -253,6 +267,7 @@ const examplePeople = [
   },
   {
     name: "Susom the Giant",
+    urlName: "susom",
     age: 50,
     job: "Construction Worker",
     race:"Giant",
@@ -261,8 +276,8 @@ const examplePeople = [
     japaneseJob: "建設労働者",
     japaneseName: "巨人のスソム",
     image: {
-      url: "/images/members/characters13.jpg",
-      name: "characters13.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -271,6 +286,7 @@ const examplePeople = [
   },
   {
     name: "Hansan Snekker",
+    urlName: "hansan",
     age: 31,
     job: "Wizard",
     race:"Wizard",
@@ -279,8 +295,8 @@ const examplePeople = [
     japaneseJob: "魔法使い",
     japaneseName: "ハンサン・スネッカー",
     image: {
-      url: "/images/members/characters14.jpg",
-      name: "characters14.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -289,6 +305,7 @@ const examplePeople = [
   },
   {
     name: "Soh",
+    urlName: "soh",
     age: 24,
     job: "Printer",
     race:"Unicorn",
@@ -297,8 +314,8 @@ const examplePeople = [
     japaneseJob: "印刷人",
     japaneseName: "ソゥ",
     image: {
-      url: "/images/members/characters15.jpg",
-      name: "characters15.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -307,6 +324,7 @@ const examplePeople = [
   },
   {
     name: "Grodrot, The Hungry",
+    urlName: "grodrot",
     age: 65,
     job: "Chef",
     race:"Wyvern",
@@ -315,8 +333,8 @@ const examplePeople = [
     japaneseJob: "シェフ",
     japaneseName: "空腹のグロドット",
     image: {
-      url: "/images/members/characters17.jpg",
-      name: "characters17.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -325,6 +343,7 @@ const examplePeople = [
   },
   {
     name: "Robin Stringsworth",
+    urlName: "robin",
     age: 19,
     job: "Server (Maid Cafe)",
     race:"Talking Puppet",
@@ -333,8 +352,8 @@ const examplePeople = [
     japaneseJob: "メードカフェの店員",
     japaneseName: "ロビン・ストリングズワース",
     image: {
-      url: "/images/members/characters18.jpg",
-      name: "characters18.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -343,6 +362,7 @@ const examplePeople = [
   },
   {
     name: "Gingernuts Goodyhug",
+    urlName: "gingernuts",
     age: 19,
     job: "Convenience Store Part-timer",
     race:"Gingerbread Being",
@@ -351,8 +371,8 @@ const examplePeople = [
     japaneseJob: "コンビニフリーター",
     japaneseName: "ジンジャーナッツ・グディハグ",
     image: {
-      url: "/images/members/characters19.jpg",
-      name: "characters19.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -361,6 +381,7 @@ const examplePeople = [
   },
   {
     name: "Celestia Bernard",
+    urlName: "celestia",
     age: 26,
     job: "Artist",
     race:"Bicorn",
@@ -369,8 +390,8 @@ const examplePeople = [
     japaneseJob: "美術家",
     japaneseName: "セレチア・バーナード",
     image: {
-      url: "/images/members/characters20.jpg",
-      name: "characters20.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -379,6 +400,7 @@ const examplePeople = [
   },
   {
     name: "Elias & Maya Dimakos",
+    urlName: "dimakos",
     age: 25,
     job: "Accountant / Freelance Artist",
     race:"Gemini",
@@ -387,8 +409,8 @@ const examplePeople = [
     japaneseJob: "会計士 / フリーランスアーティスト",
     japaneseName: "エリアス＆マヤ・ディマコス",
     image: {
-      url: "/images/members/characters21.jpg",
-      name: "characters21.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -397,6 +419,7 @@ const examplePeople = [
   },
   {
     name: 'Domination "Dommy" Armor Set',
+    urlName: "dommy",
     age: "???",
     job: "Security Guard",
     race:"Knight Armor",
@@ -405,8 +428,8 @@ const examplePeople = [
     japaneseJob: "銀行の警備員",
     japaneseName: "覇業の鎧、ハギちゃん",
     image: {
-      url: "/images/members/characters22.jpg",
-      name: "characters22.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -415,6 +438,7 @@ const examplePeople = [
   },
   {
     name: 'Arya Jensen',
+    urlName: "arya",
     age: 29,
     job: "Minister",
     race:"Sea Monk",
@@ -423,8 +447,8 @@ const examplePeople = [
     japaneseJob: "司祭",
     japaneseName: "アルヤ・ジェンセン",
     image: {
-      url: "/images/members/characters23.jpg",
-      name: "characters23.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -433,6 +457,7 @@ const examplePeople = [
   },
   {
     name: "Nycolas O'Sullivan",
+    urlName: "nycolas",
     age: 21,
     job: "Jockey (Horse Racer)",
     race:"Dullahan",
@@ -441,8 +466,8 @@ const examplePeople = [
     japaneseJob: "騎手",
     japaneseName: "ニコラス・オサリバン",
     image: {
-      url: "/images/members/characters24.jpg",
-      name: "characters24.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -451,6 +476,7 @@ const examplePeople = [
   },
   {
     name: "Brigit Ní Colla",
+    urlName: "brigit",
     age: 22,
     job: "Model / Bank Teller",
     race:"Leprechan",
@@ -459,8 +485,8 @@ const examplePeople = [
     japaneseJob: "モデル / 窓口係",
     japaneseName: "ブリジェット・ニコラ",
     image: {
-      url: "/images/members/characters25.jpg",
-      name: "characters25.jpg",
+      url: "/images/members/temp.png",
+      name: "temp.png",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
@@ -507,12 +533,24 @@ export function getSpecificPerson(personName){
     }
   }
 
-  //couldnt find, so return a random
-  return getRandomPerson();
+  return false;
+}
+
+//return details of a specific person by url name
+export function getSpecificPersonByURL(urlName){
+
+  //search for them
+  for (let i = 0; i < examplePeople.length ; i++){
+    if (examplePeople[i].urlName === urlName){
+      return examplePeople[i];
+    }
+  }
+
+  return false;
 }
 
 //returns details of all characters except the ones who need to be ignored
-export function getAllPeople(random){
+export function getAllFinishedPeople(random){
   let removedIgnoredChars = examplePeople.filter((e)=>{
     return !e.ignoreInRandom;
   })
@@ -524,8 +562,21 @@ export function getAllPeople(random){
   }
 }
 
+//returns details of all characters even the ones not finished
+export function getAllCharacters(random){
+  let removeWonmin = examplePeople.filter((e)=>{
+    return e.name !== "Wonmin Lee";
+  });
+  if (random) {
+    return shuffle(removeWonmin)
+  }
+  else {
+    return removeWonmin;
+  }
+}
+
 //returns the latest person
 export function getLatestPerson(){
-  let removedIgnoredChars = getAllPeople();
+  let removedIgnoredChars = getAllFinishedPeople();
   return removedIgnoredChars[removedIgnoredChars.length - 1];
 }

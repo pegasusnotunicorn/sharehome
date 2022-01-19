@@ -11,7 +11,6 @@ import VisibilityTrigger from "./VisibilityTrigger.js";
 //get swiperslides filled with character cards for all characters
 const getCharacterCard = (character, windowHeight, windowWidth) => {
 
-
   //to determine how big the cards will be based on window width
   let cardDividerByScreenWidth = (windowWidth > 900) ? 2.2 : 1.2;
 
@@ -47,7 +46,8 @@ export const CharacterSpotlight = (props) => {
 
   //get a specific or the latest character if not defined
   const character = (props.name) ? getSpecificPerson(props.name) : getLatestPerson();
-  const characterCard = getCharacterCard(character, height, width);
+  const floating = props.floating;  //should float or not
+  const characterCard = getCharacterCard(character, height, width, floating);
 
   //language specific
   const name = (i18n.language === "en-US") ? character.name : character.japaneseName;

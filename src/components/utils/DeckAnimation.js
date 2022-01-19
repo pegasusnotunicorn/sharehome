@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { useSprings, animated, interpolate } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
-import { getAllPeople } from '../Card/ExamplePeople.js';
+import { getAllFinishedPeople } from '../Card/ExamplePeople.js';
 import '../../css/utils/deckAnimation.css';
 
 //all people (randomized)
-const cards = getAllPeople(true);
+const cards = getAllFinishedPeople(true);
 
 // These two are just helpers, they curate spring data, values that are later being interpolated into css
 const to = i => ({ x: 0, y: i * -4, scale: 1, rot: -10 + Math.random() * 20, delay: i * 100 })

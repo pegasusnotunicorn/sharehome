@@ -23,16 +23,16 @@ const Router = (props) => {
         <Route exact path="/" render={() => {
           return <HomePage />
         }} />
-        <Route path="/about" render={() => {
+        <Route exact path="/about" render={() => {
           return <AboutPage />
         }} />
-        <Route path="/characters" render={() => {
+        <Route path={["/characters/:name", "/characters"]} render={() => {
           return <CharactersPage />
         }} />
         <Route exact path="/contact" render={() => {
           return <ContactPage />
         }} />
-        <Route path="/designer" render={() => {
+        <Route exact path="/designer" render={() => {
           return <DesignerPage />
         }} />
         <Route render={() => {

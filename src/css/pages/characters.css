@@ -1,14 +1,7 @@
-/* <editor-fold>---------------------------------------------------------DECK */
-
-
-
-/* </editor-fold> */
-
-/* <editor-fold>---------------------------------------------------------CHARACTERS */
+/* <editor-fold>---------------------------------------------------------PAGE */
 
 .characterContent {
   width:100%;
-  margin-bottom:100px;
 }
 
 .characterSubcontent{
@@ -21,35 +14,181 @@
   margin-top:0px !important;
 }
 
-.characterWrapper{
-  width:100%;
-  margin-bottom: 2em;
-  position:relative;
+.moretocome{
+  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
+  font-size:2em;
 }
 
+/* </editor-fold> */
+
+/* <editor-fold>---------------------------------------------------------SPOTLIGHT */
+
+.characterSpotlightWrapper{
+  padding-top:2em;
+  padding-bottom:2em;
+  border-radius: 15vw 0 0 0;
+  color:white;
+}
+
+/* </editor-fold> */
+
+/* <editor-fold>---------------------------------------------------------CHARACTERS */
+
+.charactersContainer{
+  width:calc(100% - 40px);
+  display:flex;
+  margin-left:20px;
+  margin-right:20px;
+  flex-wrap:wrap;
+  min-height:100vh;
+  justify-content: center;
+}
+
+.characterWrapper{
+  width:calc(20% - 1em);
+  margin:0.5em;
+  min-height:250px;
+  position:relative;
+  box-shadow: 0 12.5px 50px -10px rgba(50, 50, 73, 0.4), 0 10px 10px -10px rgba(50, 50, 73, 0.3);
+}
+
+.characterWrapper:not(.notDone):hover{
+  z-index:99;
+}
+
+.characterWrapper:not(.notDone):hover .characterInnerWrapper{
+  transform:scale(1.25);
+}
+
+.characterWrapper:not(.notDone):hover .caption{
+  opacity:1;
+  bottom:0px;
+}
+
+.characterWrapper:not(.notDone){
+  cursor:pointer;
+}
+
+.characterInnerWrapper{
+  transition:transform 0.25s;
+  height:100%;
+  width:100%;
+  overflow:hidden;
+}
+
+/* <editor-fold>---------------------------------------------------------Not done CHARACTERS */
+
+.ignoreFilter {
+  display:none;
+}
+
+.notDone .ignoreFilter{
+  position:absolute;
+  padding-left:15px;
+  padding-right:15px;
+  width:calc(100% - 30px);
+  height:100%;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color:white;
+  margin:auto;
+  cursor:default;
+  background-color:rgba(0,0,0,0.75);
+}
+
+.notDone .ignoreFilter p{
+  margin:0;
+  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
+}
+
+.notDoneName{
+  font-size:2em;
+  line-height:125%;
+}
+
+.comingSoon{
+  font-size:0.9em;
+  margin:0;
+}
+
+/* </editor-fold> */
+
 .characterWrapper img{
-  width: 100%;
+  width:100%;
+  height:100%;
+  object-fit: cover;
 }
 
 .caption{
+  opacity:0;
   margin: 0;
-  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
-  background: rgba(0,0,0,0.3);
+  background-image: linear-gradient(rgba(255,255,255,0),#323232);
   color: white;
-  font-size:3em;
   position: absolute;
   width: 100%;
-  bottom: 8px;
+  bottom: -150px;
+  transition:bottom 0.25s, opacity 0.25s;
+  text-align:center;
 }
 
-@media only screen and (max-width:600px) {
-  .caption{
-    font-size: 1.5em;
+.caption p {
+  line-height:100% !important;
+  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
+  margin:0;
+  padding:5px;
+  padding-left:10px;
+}
+
+.caption > .name {
+  font-size:2em;
+  border-bottom:1px solid #FFF;
+}
+
+.caption > .details {
+  font-size:1em;
+}
+
+.caption > .details > span{
+  padding-right:5px;
+  margin-right:5px;
+}
+
+.caption > .details > span:not(:last-child) {
+  border-right:1px solid #FFF;
+}
+
+/* phone */
+@media only screen and (max-width:800px) {
+  .characterWrapper:not(.notDone) .caption{
+    opacity:1;
+    bottom:0px;
+  }
+
+  .characterWrapper{
+    width:calc(50% - 1em);
+    min-height:129px !important;
+    font-size:0.75em;
   }
 }
 
-.moretocome{
-  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
+/* larger phone */
+@media only screen and (min-width:800px) and (max-width:1200px) {
+  .characterWrapper{
+    width:calc(33% - 1em);
+    min-height:198px !important;
+    font-size:0.9em;
+  }
+}
+
+/* tablet */
+@media only screen and (min-width:1200px) and (max-width:1600px) {
+  .characterWrapper{
+    width:calc(25% - 1em);
+    min-height:126px !important;
+    font-size:1em;
+  }
 }
 
 /* </editor-fold> */

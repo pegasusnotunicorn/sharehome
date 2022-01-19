@@ -194,7 +194,7 @@ const english = {
       "warning red": "NOTE:",
       "warning": "The final artwork may look different from what is depicted below.",
       "title": "Characters",
-      "description": "Artworks of all playable characters included in the game.",
+      "description": "Click on a character to learn more about them!",
       "moretocome": "More characters will be added every week!",
       "race" : "Race",
       "job" : "Profession",

@@ -16,7 +16,7 @@ const AllCharacters = (props) => {
   let chosenCharacter = getSpecificPersonByURL(name);
 
   const redirectToSpecificCharacter = (character) => {
-    if (chosenCharacter !== character){
+    if (chosenCharacter !== character && !character.ignoreInRandom){
       history.push(`/characters/${character.urlName}`);
       window.scrollTo({top:0,behavior:'smooth'});
     }
@@ -65,12 +65,12 @@ const CharactersPage = (props) => {
   let chosenCharacter = getSpecificPersonByURL(name);
 
   //redirect to just /characters if typo a non-existant character
-  if (window.location.pathname !== "/characters" && (typeof name === "undefined" || !chosenCharacter)) {
+  if (window.location.pathname !== "/characters" && (typeof name === "undefined" || !chosenCharacter || chosenCharacter.ignoreInRandom)) {
     return <Redirect to="/characters" />
   }
   else {
 
-    let chosenCharacterContents = (chosenCharacter) ?
+    let chosenCharacterContents = (chosenCharacter && !chosenCharacter.ignoreInRandom) ?
       (
         <div className="characterSpotlightWrapper greenBackground">
           <CharacterSpotlight name={chosenCharacter.name} />

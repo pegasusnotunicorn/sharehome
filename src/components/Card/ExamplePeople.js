@@ -209,6 +209,25 @@ const examplePeople = [
     ignoreInRandom: false,
   },
   {
+    name: "Robin Stringsworth",
+    urlName: "robin",
+    age: 19,
+    job: "Server (Maid Cafe)",
+    race:"Talking Puppet",
+    description:"Comes from a family of puppets that were given life to by a famous woodworking wizard. Nobody knows who the wizard is.",
+    hobbies: "Enjoys dressing up in lolita fashion.",
+    japaneseJob: "メードカフェの店員",
+    japaneseName: "ロビン・ストリングズワース",
+    image: {
+      url: "/images/members/characters11.jpg",
+      name: "characters11.jpg",
+      width: 2000,
+      height: 1200,
+      credit: "https://www.fiverr.com/carolynfrank"
+    },
+    ignoreInRandom: false,
+  },
+  {
     name: "Bizz Hagglefeet",
     urlName: "bizz",
     age: 15,
@@ -332,25 +351,6 @@ const examplePeople = [
 		hobbies: "Taking photos of food.",
     japaneseJob: "シェフ",
     japaneseName: "空腹のグロドット",
-    image: {
-      url: "/images/members/temp.png",
-      name: "temp.png",
-      width: 2000,
-      height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
-    },
-    ignoreInRandom: true,
-  },
-  {
-    name: "Robin Stringsworth",
-    urlName: "robin",
-    age: 19,
-    job: "Server (Maid Cafe)",
-    race:"Talking Puppet",
-    description:"Comes from a family of puppets that were given life to by a famous woodworking wizard. Nobody knows who the wizard is.",
-		hobbies: "Enjoys dressing up in lolita fashion.",
-    japaneseJob: "メードカフェの店員",
-    japaneseName: "ロビン・ストリングズワース",
     image: {
       url: "/images/members/temp.png",
       name: "temp.png",

@@ -51,6 +51,7 @@ export const CharacterSpotlight = (props) => {
 
   //language specific
   const name = (i18n.language === "en-US") ? character.name : character.japaneseName;
+  const nameTitle = (i18n.language === "en-US") ? `${character.name}, The ${character.race}` : `${character.race}の${character.name}`
   const job = (i18n.language === "en-US") ? character.job : character.japaneseJob;
   const race = (i18n.language === "en-US") ? character.race : character.japaneseRace;
   const hobbies = (i18n.language === "en-US") ? character.hobbies : character.japaneseHobbies;
@@ -63,7 +64,7 @@ export const CharacterSpotlight = (props) => {
       </div>
       <div className="spotlightDetailsWrapper">
         <VisibilityTrigger translateY>
-          <h1>{name}</h1>
+          <h1>{nameTitle}</h1>
         </VisibilityTrigger>
         <VisibilityTrigger translateY>
           <div className="spotlightDetailsSection space-between">

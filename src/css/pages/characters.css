@@ -56,8 +56,10 @@
   z-index:99;
 }
 
-.characterWrapper:not(.notDone):hover .characterInnerWrapper{
-  transform:scale(1.25);
+@media only screen and (min-width:800px){
+  .characterWrapper:not(.notDone):hover .characterInnerWrapper{
+    transform:scale(1.25);
+  }
 }
 
 .characterWrapper:not(.notDone):hover .caption{

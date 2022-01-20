@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useSprings, animated, interpolate } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 
-import { getAllFinishedPeople } from '../Card/ExamplePeople.js';
+import { getAllFinishedPeople } from '../Characters/Characters.js';
 import '../../css/utils/deckAnimation.css';
 
 //all people (randomized)

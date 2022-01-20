@@ -2,6 +2,10 @@
 
 .characterContent {
   width:100%;
+  min-height:25vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .characterSubcontent{
@@ -23,16 +27,29 @@
 
 /* <editor-fold>---------------------------------------------------------SPOTLIGHT */
 
-.characterSpotlightWrapper{
+.characterSpotlightContainer{
   padding-top:2em;
   padding-bottom:2em;
-  border-radius: 15vw 0 0 0;
+  border-radius: 7.5vw 0 0 0;
   color:white;
+}
+
+.characterSpotlightContainer.yellowBackground{
+  color:black !important;
+}
+
+.characterSpotlightContainer.yellowBackground .spotlightDetailsSection, .characterSpotlightContainer.yellowBackground .spotlightDetailsSection .divider:not(:first-child):not(:last-child) {
+  border-color:black !important;
 }
 
 /* </editor-fold> */
 
 /* <editor-fold>---------------------------------------------------------CHARACTERS */
+
+.allcharactersWrapper {
+  padding-top:2em;
+  padding-bottom:2em;
+}
 
 .charactersContainer{
   width:calc(100% - 40px);
@@ -172,6 +189,10 @@
     width:calc(50% - 1em);
     min-height:129px !important;
     font-size:0.75em;
+  }
+
+  .caption > .name {
+    border-bottom:0;
   }
 }
 

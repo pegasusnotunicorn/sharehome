@@ -191,10 +191,9 @@ const english = {
     },
 
     "characters page":{
-      "warning red": "NOTE:",
-      "warning": "The final artwork may look different from what is depicted below.",
+      "credit": "Illustrations by Carolyn Frank.",
       "title": "Characters",
-      "description": "Click on a character to learn more about them!",
+      "description": "The various mythical beings that have applied to appear on the reality TV show, SHAREHOME. Click on any of them to learn more about who they are!",
       "moretocome": "More characters will be added every week!",
       "race" : "Race",
       "job" : "Profession",

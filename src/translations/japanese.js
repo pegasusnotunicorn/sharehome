@@ -191,8 +191,7 @@ const japanese = {
     },
 
     "characters page":{
-      "warning red": "（注意）",
-      "warning": "完成品は以下のイラストと異なる場合があります。ご了承くださいませ。",
+      "credit": "All illustrations done by Carolyn Frank.",
       "title": "キャラクター",
       "description": "sentaku",
       "moretocome": "毎週新キャラ一人が紹介されます！",

@@ -13,7 +13,7 @@ import 'swiper/swiper-bundle.css';
 //custom files
 import '../../css/utils/swiper.css'
 import Card from '../Card/Card.js';
-import { getAllFinishedPeople } from '../Card/ExamplePeople.js';
+import { getAllFinishedPeople } from '../Characters/Characters.js';
 import useWindowDimensions from '../utils/useWindowDimensions.js';
 
 // configure Swiper to use modules

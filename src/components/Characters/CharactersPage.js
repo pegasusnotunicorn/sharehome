@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Redirect, useParams, useHistory } from 'react-router-dom';
 
 import { Title } from '../utils/Title.js';
-import { getAllCharacters, getSpecificPersonByURL } from '../Card/ExamplePeople.js';
+import { getAllCharacters, getSpecificPersonByURL } from '../Characters/Characters.js';
 import { CharacterSpotlight } from '../utils/CharacterSpotlight.js';
 
 import VisibilityTrigger from "../utils/VisibilityTrigger.js";
@@ -35,7 +35,7 @@ const AllCharacters = (props) => {
           <img className="boxes" src={elem.image.url} alt={elem.name}></img>
           <div className="caption noselect">
             <p className="name">{elem.name}</p>
-            <p className="details">
+            <p className="details is-hidden-mobile">
               <span>{elem.age}</span>
               <span>{elem.race}</span>
               <span>{elem.job}</span>
@@ -69,11 +69,12 @@ const CharactersPage = (props) => {
     return <Redirect to="/characters" />
   }
   else {
-
+    let randomNumber = Math.random();
+    let randomColor = (randomNumber >= 0.75) ? "red" : (randomNumber >= 0.5) ? "blue" : (randomNumber >= .25) ? "green" : "yellow";
     let chosenCharacterContents = (chosenCharacter && !chosenCharacter.ignoreInRandom) ?
       (
-        <div className="characterSpotlightWrapper greenBackground">
-          <CharacterSpotlight name={chosenCharacter.name} />
+        <div className={`characterSpotlightContainer ${randomColor}Background`}>
+          <CharacterSpotlight once name={chosenCharacter.name} />
         </div>
       ) :
       (
@@ -89,15 +90,17 @@ const CharactersPage = (props) => {
         <div className="subcontentWrapper">
           <div className="characterContent">
             <h2 className="subtitle">{t('characters page.title')}</h2>
-            <p>{t('characters page.description')}<br></br>
-            <span style={{color:"red"}}>{t('characters page.warning red')}</span> {t('characters page.warning')}</p>
+            <p>{t('characters page.description')}<br></br></p>
           </div>
         </div>
 
-        <AllCharacters />
+        <div className="allcharactersWrapper">
+          <AllCharacters />
+        </div>
 
-        <div className="subcontentWrapper">
+        <div className="subcontentWrapper characterContent">
           <h3 className="moretocome">{t('characters page.moretocome')}</h3>
+          <p><a href="https://www.instagram.com/carofranklyn/?hl=en">{t('characters page.credit')}</a></p>
         </div>
       </div>
     )

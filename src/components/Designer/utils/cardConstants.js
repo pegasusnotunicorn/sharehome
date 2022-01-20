@@ -1,4 +1,4 @@
-import { getRandomPerson } from '../../Card/ExamplePeople.js';
+import { getRandomPerson } from '../../Characters/Characters.js';
 import { getRandomEventGoal } from '../../Card/ExampleEventGoal.js';
 
 //variables for printing in inches

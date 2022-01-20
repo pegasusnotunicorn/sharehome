@@ -4,7 +4,7 @@ import useWindowDimensions from '../utils/useWindowDimensions.js';
 
 //custom files
 import Card from '../Card/Card.js';
-import { getSpecificPerson, getLatestPerson } from '../Card/ExamplePeople.js';
+import { getSpecificPerson, getLatestPerson } from '../Characters/Characters.js';
 import '../../css/utils/spotlight.css';
 import VisibilityTrigger from "./VisibilityTrigger.js";
 
@@ -31,7 +31,7 @@ const getCharacterCard = (character, windowHeight, windowWidth) => {
       height:`${cardHeight}px`,
       fontSize:"12px",
       //other shit
-      cursor:"pointer",
+      cursor:"default",
     },
     className: "floating noselect",
   }
@@ -50,11 +50,25 @@ export const CharacterSpotlight = (props) => {
   const characterCard = getCharacterCard(character, height, width, floating);
 
   //language specific
-  const nameTitle = (i18n.language === "en-US") ? `${character.name}, The ${character.race}` : `${character.race}の${character.name}`
-  const job = (i18n.language === "en-US") ? character.job : character.japaneseJob;
+  const nameTitle = (i18n.language === "en-US") ? ((character.title) ? character.title : `${character.name}, The ${character.race}`) : `${character.race}の${character.name}`
   const race = (i18n.language === "en-US") ? character.race : character.japaneseRace;
-  const hobbies = (i18n.language === "en-US") ? character.hobbies : character.japaneseHobbies;
+  const jobTitle = (i18n.language === "en-US") ? ((character.employer) ? `${character.job} at ${character.employer}.` : character.job) : character.japaneseJob;
+
+  //list of descriptions
   const description = (i18n.language === "en-US") ? character.description : character.japaneseDescription;
+  const listOfDescriptions = description.map((elem, index)=>{
+    return (
+      <p key={`description${index}`} className="descriptionsList">{elem}</p>
+    )
+  });
+
+  //bullet list of hobbies
+  const hobbies = (i18n.language === "en-US") ? character.hobbies : character.japaneseHobbies;
+  const listOfHobbies = hobbies.map((elem, index)=>{
+    return (
+      <li key={`hobbies${index}`} className="hobbiesList">{elem}</li>
+    )
+  });
 
   return (
     <div className="characterSpotlightWrapper" >
@@ -62,10 +76,10 @@ export const CharacterSpotlight = (props) => {
         {characterCard}
       </div>
       <div className="spotlightDetailsWrapper">
-        <VisibilityTrigger translateY>
+        <VisibilityTrigger once={props.once} translateY>
           <h1>{nameTitle}</h1>
         </VisibilityTrigger>
-        <VisibilityTrigger translateY>
+        <VisibilityTrigger once={props.once} translateY>
           <div className="spotlightDetailsSection space-between">
             <div className="divider"></div>
             <p>
@@ -78,24 +92,29 @@ export const CharacterSpotlight = (props) => {
               <span>{character.age}</span>
             </p>
             <div className="divider"></div>
+          </div>
+        </VisibilityTrigger>
+        <VisibilityTrigger once={props.once} translateY>
+          <div className="spotlightDetailsSection space-between">
+            <div className="divider"></div>
             <p>
               <span className="spotlightBold">{t('characters page.job')}<span className="is-hidden-mobile">:</span></span>
-              <span>{job}</span>
+              <span>{ jobTitle }</span>
             </p>
             <div className="divider"></div>
           </div>
         </VisibilityTrigger>
-        <VisibilityTrigger translateY>
-          <div className="spotlightDetailsSection">
-              <p>
-                <span className="spotlightBold">{`${t('characters page.hobbies')}`}<span className="is-hidden-mobile">:</span></span>
-                <span>{hobbies}</span>
-              </p>
+        <VisibilityTrigger once={props.once} translateY>
+          <div className="spotlightDetailsSection spotlightHobbiesSection">
+            <p className="spotlightBold">{`${t('characters page.hobbies')}`}:</p>
+            <ul>
+              { listOfHobbies }
+            </ul>
           </div>
-      </VisibilityTrigger>
-        <VisibilityTrigger translateY>
+        </VisibilityTrigger>
+        <VisibilityTrigger once={props.once} translateY>
           <div className="spotlightDetailsSection">
-              <p>{description}</p>
+            { listOfDescriptions }
           </div>
         </VisibilityTrigger>
       </div>

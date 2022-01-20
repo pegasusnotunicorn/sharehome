@@ -20,6 +20,8 @@
 .spotlightDetailsWrapper h1 {
   font-size:3em !important;
   line-height: 100%;
+  margin-top:0.25em;
+  margin-bottom:0.25em;
 }
 
 .spotlightDetailsSection{
@@ -27,6 +29,15 @@
   padding-top:0.5em;
   margin-top:0.5em;
   max-width:750px;
+  text-align:left;
+}
+
+.spotlightHobbiesSection{
+  display:flex;
+}
+
+.spotlightHobbiesSection > ul{
+  margin:0;
 }
 
 .spotlightDetailsSection:not(:last-child){
@@ -48,6 +59,14 @@
 .spotlightDetailsSection .spotlightBold {
   font-family:"Roboto Regular";
   padding-right:10px;
+}
+
+.descriptionsList:not(:last-child){
+  margin-bottom:0.5em;
+}
+
+.spotlightDetailsSection li {
+  text-align: left;
 }
 
 .spotlightDetailsWrapper h2, .spotlightDetailsWrapper h3, .spotlightDetailsWrapper p {

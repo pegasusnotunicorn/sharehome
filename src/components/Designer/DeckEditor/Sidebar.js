@@ -107,20 +107,20 @@ const Sidebar = (props) => {
           />
         </div>
         <ConfirmModalButton
-          className="noselect button navbarButton sidebarButton greenBackground"
+          className="noselect button navbarButton sidebarButton white blueBackground"
           onClick={downloadDeck}
           icon={<Download />}
           text={t("designer page.editor.sidebar.download")}
           modalText={t("designer page.editor.sidebar.download prompt")}
         />
         <ConfirmModalButton
-          className="noselect button navbarButton sidebarButton greenBackground"
+          className="noselect button navbarButton sidebarButton white blueBackground"
           onClick={resetAllCards}
           icon={<Trash2 />}
           text={t("designer page.editor.sidebar.reset")}
           modalText={t("designer page.editor.sidebar.reset prompt")}
         />
-        <button className="noselect button navbarButton sidebarButton greenBackground" onClick={addNewCard}><PlusSquare />{t("designer page.editor.sidebar.add")}</button>
+      <button className="noselect button navbarButton sidebarButton white blueBackground" onClick={addNewCard}><PlusSquare />{t("designer page.editor.sidebar.add")}</button>
       </div>
       <div className="cardPreviewWrapper sidebarContent">
         {listOfCards}
@@ -132,7 +132,7 @@ const Sidebar = (props) => {
   return (
     <NavbarTemplate
       innards={innards}
-      position="right"
+      position="left"
       id="sidebar"
       visibility={visibility}
       setVisibility={setVisibility}

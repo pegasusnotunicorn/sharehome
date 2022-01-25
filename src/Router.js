@@ -32,7 +32,7 @@ const Router = (props) => {
         <Route exact path="/contact" render={() => {
           return <ContactPage />
         }} />
-        <Route exact path="/designer" render={() => {
+        <Route path="/designer" render={() => {
           return <DesignerPage />
         }} />
         <Route render={() => {

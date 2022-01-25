@@ -32,11 +32,11 @@
 }
 
 #navbar{
-  border-radius: 0 4em 0 0;
+  border-radius: 4em 0 0 0;
 }
 
 #sidebar{
-  border-radius: 0 0 0 4em
+  border-radius: 0 4em 0 0;
 }
 
 .navbarClass p, .navbarClass a, .navbarClass h1, .navbarClass h2, .navbarClass h3{
@@ -83,7 +83,7 @@
   text-align:left;
   text-decoration:none;
   text-transform:uppercase;
-  width:calc(100% - 44px);
+  width:calc(100% - 40px);
   user-select:none;
   -webkit-user-drag:none;
   padding:20px;
@@ -108,7 +108,8 @@
 }
 
 .navbarButton.is-active{
-  border-right:4px solid #DD7373;
+  border-left:4px solid #DD7373;
+  padding-left:16px;
   color:#FFF;
   background:#000;
 }

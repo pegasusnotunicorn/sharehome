@@ -55,7 +55,7 @@ export const NavbarMain = () => {
   return (
     <NavbarTemplate
       innards={innards}
-      position="left"
+      position="right"
       id="navbar"
       visibility={visibility}
       setVisibility={setVisibility}

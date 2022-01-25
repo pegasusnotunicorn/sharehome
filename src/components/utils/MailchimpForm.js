@@ -60,7 +60,7 @@ const EmailForm = ({ sidebar, status, message, onValidated, moduleStyles }) => {
   if (sidebar){
     return (
       <>
-        <p className={`${moduleStyles.forminputText}`}>{text}</p>
+        <p className={`${moduleStyles.forminputText}`} dangerouslySetInnerHTML={{__html: text}}></p>
         { form }
       </>
     )
@@ -75,7 +75,7 @@ const EmailForm = ({ sidebar, status, message, onValidated, moduleStyles }) => {
           { form }
         </VisibilityTrigger>
         <VisibilityTrigger translateY>
-          <p className={`${moduleStyles.forminputText}`}>{text}</p>
+          <p className={`${moduleStyles.forminputText}`} dangerouslySetInnerHTML={{__html: text}}></p>
         </VisibilityTrigger>
       </>
     )

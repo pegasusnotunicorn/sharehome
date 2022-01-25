@@ -20,7 +20,7 @@ export const NavbarTemplate = (props) => {
   if (props.position === "right"){
     newStyle.right = startingPosition;
     newStyle.borderLeft = "border-right:4px solid #1F1169";
-    openCloseStyle.right = 20;
+    openCloseStyle.right = 0;
   }
 
   //function used to toggle open navbar
@@ -30,7 +30,7 @@ export const NavbarTemplate = (props) => {
   }
 
   //main navbar or deck editor sidebar
-  const colorForNavbar = (props.position === "left") ? "whiteBackground" : "blueBackground"
+  const colorForNavbar = (props.position === "right") ? "whiteBackground" : "blueBackground"
 
   return (
     <div id={navbarStyles[props.id]} className={`${navbarStyles.navbarClass} ${startingHamburgerClass} ${colorForNavbar}`} style={newStyle} >

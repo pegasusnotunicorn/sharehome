@@ -30,22 +30,22 @@ const MetaTags = (props) => {
   return (
     <div className="metatag_wrapper">
       <Helmet>
-        <meta name="description" content={ description } />
+        <meta name="description" data-react-helmet="true" content={ description } />
 
-        <meta itemprop="name" content={ description } />
-        <meta itemprop="description" content={ description } />
-        <meta itemprop="image" content={ splashImage } />
+        <meta itemprop="name" data-react-helmet="true" content={ description } />
+        <meta itemprop="description" data-react-helmet="true" content={ description } />
+        <meta itemprop="image" data-react-helmet="true" content={ splashImage } />
 
         <meta property="fb:app_id" content="" />
-        <meta property="og:title" content={ title } />
-        <meta property="og:description" content={ description } />
-        <meta property="og:image" content={ splashImage } />
+        <meta property="og:title" data-react-helmet="true" content={ title } />
+        <meta property="og:description" data-react-helmet="true" content={ description } />
+        <meta property="og:image" data-react-helmet="true" content={ splashImage } />
         <meta property="og:url" content="" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image"></meta>
-        <meta name="twitter:title" content={ title }></meta>
-        <meta name="twitter:description" content={ description } />
+        <meta name="twitter:title" data-react-helmet="true" content={ title }></meta>
+        <meta name="twitter:description" data-react-helmet="true" content={ description } />
         <meta name="twitter:image" content={ splashImage } />
         <meta name="twitter:site" content="@sysifuscorp" />
         <meta name="twitter:creator" content="@1minlee" />

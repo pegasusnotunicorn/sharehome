@@ -430,6 +430,43 @@ const allCharacters = [
     ignoreInRandom: false,
   },
   {
+    name: "Dorpip Wadlezedle",
+    urlName: "dorpip",
+    age: 23,
+    job: "Comedian",
+    employer: false,
+    race:"Gnome",
+    description:[
+      "With a surname like Wadlezedle, Dorpip believes that he was born to be a comedian. However, his family of engineers and inventors disagree wholeheartedly and look upon him as the black sheep of the family.",
+      "Takes every opportunity he can get to crack a joke. Even at the cost of the relationships in his life. Sometimes doesn't know when to stop or turn off the joking. Dresses like a garden gnome as a part of his comedy act.",
+    ],
+    hobbies:[
+      "Making everyone laugh. Sometimes at the expense of himself.",
+      "Dispelling awkward tensions with jokes.",
+      "Fart jokes.",
+    ],
+    japaneseDescription:[
+      "",
+      "",
+      "",
+    ],
+    japaneseHobbies:[
+      "",
+      "",
+      "",
+    ],
+    japaneseJob: "お笑い芸人",
+    japaneseName: "ドルピップ・ワドルゼドル",
+    image: {
+      url: "/images/members/characters12.jpg",
+      name: "characters12.jpg",
+      width: 2000,
+      height: 1200,
+      credit: "https://www.fiverr.com/carolynfrank"
+    },
+    ignoreInRandom: false,
+  },
+  {
     name: "Bizz Hagglefeet",
     urlName: "bizz",
     age: 15,
@@ -496,44 +533,6 @@ const allCharacters = [
     ],
     japaneseJob: "弁護士",
     japaneseName: "セジ・トゥーミン",
-    image: {
-      url: "/images/members/temp.png",
-      name: "temp.png",
-      width: 2000,
-      height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
-    },
-    ignoreInRandom: true,
-  },
-  {
-    name: "Dorpip Wadlezedle",
-    urlName: "dorpip",
-    age: 23,
-    job: "Comedian",
-    employer: false,
-    race:"Gnome",
-    description:[
-      "",
-      "",
-      "",
-    ],
-		hobbies:[
-      "",
-      "",
-      "",
-    ],
-    japaneseDescription:[
-      "",
-      "",
-      "",
-    ],
-    japaneseHobbies:[
-      "",
-      "",
-      "",
-    ],
-    japaneseJob: "お笑い芸人",
-    japaneseName: "ドルピップ・ワドルゼドル",
     image: {
       url: "/images/members/temp.png",
       name: "temp.png",

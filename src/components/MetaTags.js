@@ -30,6 +30,10 @@ const MetaTags = (props) => {
   return (
     <div className="metatag_wrapper">
       <Helmet>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#FFFFFF" />
+
         <meta name="description" data-react-helmet="true" content={ description } />
 
         <meta itemprop="name" data-react-helmet="true" content={ description } />

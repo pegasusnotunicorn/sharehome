@@ -29,29 +29,20 @@ const MetaTags = (props) => {
 
   return (
     <Helmet>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta name="theme-color" content="#FFFFFF" />
-
       <meta name="description" data-react-helmet="true" content={ description } />
 
       <meta itemprop="name" data-react-helmet="true" content={ description } />
       <meta itemprop="description" data-react-helmet="true" content={ description } />
       <meta itemprop="image" data-react-helmet="true" content={ splashImage } />
 
-      <meta property="fb:app_id" content="" />
       <meta property="og:title" data-react-helmet="true" content={ title } />
       <meta property="og:description" data-react-helmet="true" content={ description } />
       <meta property="og:image" data-react-helmet="true" content={ splashImage } />
-      <meta property="og:url" content="" />
-      <meta property="og:type" content="website" />
+      <meta property="og:url" data-react-helmet="true" content={ window.location.href } />
 
-      <meta name="twitter:card" content="summary_large_image"></meta>
       <meta name="twitter:title" data-react-helmet="true" content={ title }></meta>
       <meta name="twitter:description" data-react-helmet="true" content={ description } />
-      <meta name="twitter:image" content={ splashImage } />
-      <meta name="twitter:site" content="@sysifuscorp" />
-      <meta name="twitter:creator" content="@1minlee" />
+      <meta name="twitter:image" data-react-helmet="true"  content={ splashImage } />
     </Helmet>
   )
 }

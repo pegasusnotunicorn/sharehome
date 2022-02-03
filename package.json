@@ -3,7 +3,6 @@
   "homepage": "https://sharehomethegame.com",
   "version": "1.0.0",
   "private": true,
-  "main": "app.js",
   "engines": {
     "npm": "^8.3.0",
     "node": "^12.16.2"
@@ -15,11 +14,7 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^7.2.1",
     "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "express-session": "^1.17.1",
     "file-saver": "^2.0.2",
-    "http-proxy-middleware": "^1.0.4",
     "i18next": "^20.3.2",
     "i18next-browser-languagedetector": "^6.1.2",
     "jszip": "^3.4.0",
@@ -67,19 +62,5 @@
   },
   "devDependencies": {
     "typescript": "^3.9.3"
-  },
-  "nodemonConfig": {
-    "watch": [
-      "app.js",
-      "src/server/*"
-    ],
-    "verbose": true,
-    "ignore": [
-      "\\.git/*",
-      "node_modules/*",
-      "public/*",
-      "src/css/*",
-      "*.css"
-    ]
   }
 }

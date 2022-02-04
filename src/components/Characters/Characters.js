@@ -467,6 +467,43 @@ const allCharacters = [
     ignoreInRandom: false,
   },
   {
+    name: "Gingernuts Goodyhug",
+    urlName: "gingernuts",
+    age: 19,
+    job: "Convenience Store Part-timer",
+    employer: "6-Ten Convenience",
+    race:"Gingerbread Being",
+    description:[
+      "Needs to constantly change his body parts to avoid rotting. Can swap out body parts with new cookie limbs. Really likes getting a sugar high. Basically a stoner. Always has a light dust of white powdered sugar underneath his nose. Sometimes enjoys eating parts of his own body when there are no other options available.",
+      "Legend says that Gingerbread Beings were made by magical witches who were really into baking and getting high off of pixie dust.",
+    ],
+		hobbies: [
+      "Stealing sugary food from work.",
+      "Movie theaters. Especially after the movie is over and everyone leaves their food behind.",
+      "Sitting in cotton candy machines.",
+    ],
+    japaneseDescription:[
+      "",
+      "",
+      "",
+    ],
+    japaneseHobbies:[
+      "",
+      "",
+      "",
+    ],
+    japaneseJob: "コンビニフリーター",
+    japaneseName: "ジンジャーナッツ・グディハグ",
+    image: {
+      url: "/images/members/characters13.jpg",
+      name: "characters13.jpg",
+      width: 2000,
+      height: 1200,
+      credit: "https://www.fiverr.com/carolynfrank"
+    },
+    ignoreInRandom: false,
+  },
+  {
     name: "Bizz Hagglefeet",
     urlName: "bizz",
     age: 15,
@@ -686,44 +723,6 @@ const allCharacters = [
     ],
     japaneseJob: "シェフ",
     japaneseName: "空腹のグロドット",
-    image: {
-      url: "/images/members/temp.png",
-      name: "temp.png",
-      width: 2000,
-      height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
-    },
-    ignoreInRandom: true,
-  },
-  {
-    name: "Gingernuts Goodyhug",
-    urlName: "gingernuts",
-    age: 19,
-    job: "Convenience Store Part-timer",
-    employer: "6-Ten Convenience",
-    race:"Gingerbread Being",
-    description:[
-      "",
-      "",
-      "",
-    ],
-		hobbies: [
-      "",
-      "",
-      "",
-    ],
-    japaneseDescription:[
-      "",
-      "",
-      "",
-    ],
-    japaneseHobbies:[
-      "",
-      "",
-      "",
-    ],
-    japaneseJob: "コンビニフリーター",
-    japaneseName: "ジンジャーナッツ・グディハグ",
     image: {
       url: "/images/members/temp.png",
       name: "temp.png",

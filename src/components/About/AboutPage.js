@@ -3,7 +3,6 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 //custom files
-import { Title } from '../utils/Title.js';
 import GameModeDetails from './utils/GameModeDetails.js';
 import GameModeIcons from './utils/GameModeIcons.js';
 import Roleplay from './components/Roleplay.js';
@@ -120,10 +119,14 @@ const AboutPage = (props) => {
 
       return (
         <div>
-          <div className="subcontentWrapper border-bottom">
-            <h2 className="subtitle">{t('about page.main page.how to play')}</h2>
-            <p>{t('about page.main page.description')}</p>
+
+          <div className="subcontentWrapper min-width">
+            <div className="characterContent">
+              <h2 className="subtitle">{t('about page.main page.how to play')}</h2>
+              <p>{t('about page.main page.description')}</p>
+            </div>
           </div>
+
           <div className="howToPlayContainer">
             {gameModes}
           </div>
@@ -144,7 +147,6 @@ const AboutPage = (props) => {
 
   return (
     <div className="content max-width">
-      <Title />
       <Content />
     </div>
   );

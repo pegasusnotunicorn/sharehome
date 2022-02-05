@@ -57,7 +57,7 @@ export function dynamicStylesCard(magnifyValue, type, currentCard){
       borderStyle:"solid",
     };
     styles.mainFont = {
-      color:"black",
+      color:"#323232",
       background:"white",
       padding:padding * 0.5,
       fontSize: cardConstants.pdfDimensions.subFont * magnifyValue,
@@ -65,11 +65,11 @@ export function dynamicStylesCard(magnifyValue, type, currentCard){
       width:"calc(100% - " + padding + "px)",
     };
     styles.subFont = {
-      color:"black",
+      color:"#323232",
       background:"white",
       position:"absolute",
       bottom:0,
-      borderTop:"1px solid black",
+      borderTop:"1px solid #323232",
       padding:padding * 0.5,
       width:"calc(100% - " + padding + "px)",
       fontSize: (cardConstants.pdfDimensions.subFont * magnifyValue) / 2,

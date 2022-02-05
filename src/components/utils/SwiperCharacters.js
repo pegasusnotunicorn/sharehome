@@ -28,15 +28,14 @@ const getAllCharacterCards = (windowHeight, windowWidth) => {
   //max card width / size
   let cardWidth = Math.min(Math.floor(windowWidth / cardDividerByScreenWidth), 600);
   let cardHeight = cardWidth / 1.7;
-  let fontSize = (windowWidth >= 1200) ? 9 : 6;
+  let fontSize = (windowWidth >= 1400) ? 9 : (windowWidth >= 900) ? 7 : 5;
 
   return getAllFinishedPeople().map((curr, index, array)=>{
     let props = {
       personName: curr.name,
       showFront: true,
-      hideBack: true,
-      type: "member",
       disableFlip: true,
+      type: "member",
       mainStyle:{
         //stuff needed for card size
         width:`${cardWidth}px`,

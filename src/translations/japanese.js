@@ -31,12 +31,11 @@ const japanese = {
 
     "main page":{
       "hero": {
-        "subtitle": "異世界のリアリティ番組をベースにしたカードゲーム",
-        "player count": "２+ 人用",
-        "play time": "プレイ時間 １０+ 分",
+        "subtitle": "<span className='emphasis'>異世界</span>のリアリティ番組\nをベースにしたカードゲーム",
+        "player count": "３+ 人用",
+        "play time": "プレイ時間 １５+ 分",
       },
       "description": {
-        "subtitle1": "「シェアホーム」へようこそ！",
         "subtitle2": "「シェアホーム」は見ず知らずの男女獣人６匹が共同する生活をただただ記録したリアリティ番組です。",
         "subtitle3": "「Love, Career & Magic」は番組出演者を演じて名シーンを好きに再現するカードゲーム。",
         "splashalt": "6人の獣人がワイワイご飯を食べている様子。",

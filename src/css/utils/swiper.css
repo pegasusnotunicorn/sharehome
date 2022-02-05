@@ -1,5 +1,5 @@
 .swiper-button-next, .swiper-button-prev{
-  color:#FFF;
+  color:rgba(0,0,0,.45);
   top:42.5%;
 }
 
@@ -25,5 +25,5 @@
   height: 0.5em;
 }
 .swiper-pagination-bullet-active {
-  background: #FFF;
+  background: #DD7373;
 }

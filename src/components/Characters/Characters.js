@@ -166,7 +166,8 @@ const allCharacters = [
       name: "characters4.jpg",
       width: 2000,
       height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
+      credit: "https://www.fiverr.com/carolynfrank",
+      objectPosition: "left",
     },
     ignoreInRandom: false,
   },
@@ -203,7 +204,8 @@ const allCharacters = [
       name: "characters5.jpg",
       width: 2000,
       height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
+      credit: "https://www.fiverr.com/carolynfrank",
+      objectPosition: "right",
     },
     ignoreInRandom: false,
   },
@@ -278,7 +280,8 @@ const allCharacters = [
       name: "characters7.jpg",
       width: 2000,
       height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
+      credit: "https://www.fiverr.com/carolynfrank",
+      objectPosition: "right",
     },
     ignoreInRandom: false,
   },
@@ -315,7 +318,7 @@ const allCharacters = [
       name: "characters8.jpg",
       width: 2000,
       height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
+      credit: "https://www.fiverr.com/carolynfrank",
     },
     ignoreInRandom: false,
   },
@@ -470,7 +473,7 @@ const allCharacters = [
     name: "Gingernuts Goodyhug",
     urlName: "gingernuts",
     age: 19,
-    job: "Convenience Store Part-timer",
+    job: "Part-timer",
     employer: "6-Ten Convenience",
     race:"Gingerbread Being",
     description:[

@@ -16,7 +16,8 @@ const RandomCardsForFooter = (totalPeopleCards, totalEventGoalCards, width) => {
     let cardHeight = cardWidth / 1.7;
 
     //half of all person cards are members/commentators and same for event/goal cards
-    let broadType = (Math.random() > (totalPeopleCards / array.length)) ? "eventgoal" : "person";
+    // let broadType = (Math.random() > (totalPeopleCards / array.length)) ? "eventgoal" : "person";
+    let broadType = "eventgoal";
     let specificType = (broadType === "person")
         ? ((Math.random() > 0.5) ? "member" : "commentator")
         : ((Math.random() > 0.5) ? "goal" : "event");
@@ -35,7 +36,7 @@ const RandomCardsForFooter = (totalPeopleCards, totalEventGoalCards, width) => {
       id:broadType + index,
       key:broadType + index,
       type:specificType,
-      flipPercentage: 0.75,     //chance of showing front of the card
+      flipPercentage: 0.5,     //chance of showing front of the card
       mainStyle:{
         //stuff needed for card size
         width:`${cardWidth}px`,
@@ -54,11 +55,6 @@ const RandomCardsForFooter = (totalPeopleCards, totalEventGoalCards, width) => {
       //used for animation later in useEffect
       randomBottom:randomBottom + "vh",
       randomDegree:"rotate(" + randomDegree + "deg)",
-    }
-
-    //dont flip event / goal cards
-    if (broadType === "eventgoal"){
-      props.showFront = false;
     }
 
     return (<Card {...props}/>);

@@ -8,17 +8,19 @@ const GameModeDetails = (props) => {
 
   return (
     <div className="subcontentWrapper border-bottom">
-      <h2 className="subtitle">
-        <NavLink className="subtitleBackPageArrow" to="/about"><ArrowLeft /></NavLink>
-        {props.name}
-      </h2>
-      <GameModeIcons
-        playerCount={props.playerCount}
-        playTime={props.playTime}
-      />
-      <p>
-        {props.description}
-      </p>
+      <div className="characterContent">
+        <h2 className="subtitle">
+          <NavLink className="subtitleBackPageArrow" to="/about"><ArrowLeft /></NavLink>
+          {props.name}
+        </h2>
+        <GameModeIcons
+          playerCount={props.playerCount}
+          playTime={props.playTime}
+        />
+        <p>
+          {props.description}
+        </p>
+      </div>
     </div>
   );
 }

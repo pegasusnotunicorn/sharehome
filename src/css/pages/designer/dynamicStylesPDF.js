@@ -8,7 +8,7 @@ export const dynamicStylesPDFPerson = StyleSheet.create({
     display:"block",
     position:"relative",
     color:"white",
-    fontFamily:'AmaticSC Regular',
+    fontFamily:'Rowdies-Regular',
   },
   view:{
     display:"inline-block",
@@ -61,7 +61,7 @@ export const dynamicStylesPDFBack = StyleSheet.create({
     height:cardConstants.pdfDimensions.height,
     display:"block",
     position:"relative",
-    fontFamily:'AmaticSC Regular',
+    fontFamily:'Rowdies-Regular',
     textAlign:"center",
   },
   view:{
@@ -101,7 +101,7 @@ export const dynamicStylesPDFEventGoal = StyleSheet.create({
     height:cardConstants.pdfDimensions.height,
     display:"block",
     position:"relative",
-    fontFamily:'AmaticSC Regular',
+    fontFamily:'Rowdies-Regular',
     textAlign:"center",
   },
   view:{
@@ -123,12 +123,12 @@ export const dynamicStylesPDFEventGoal = StyleSheet.create({
     position:"absolute",
     left:cardConstants.pdfDimensions.padding,
     top:cardConstants.pdfDimensions.padding,
-    color:"black",
+    color:"#323232",
     backgroundColor:"white",
     textOverflow:"clip",
   },
   footerView:{
-    color:"black",
+    color:"#323232",
     backgroundColor:"white",
     display:"flex",
     flexDirection:"row",
@@ -137,12 +137,12 @@ export const dynamicStylesPDFEventGoal = StyleSheet.create({
     left:cardConstants.pdfDimensions.padding,
     bottom:cardConstants.pdfDimensions.padding,
     width:cardConstants.pdfDimensions.width - (cardConstants.pdfDimensions.padding * 2),
-    borderTop:"1 black solid",
+    borderTop:"1 #323232 solid",
   },
   subFont:{
     padding:cardConstants.pdfDimensions.padding * 0.5,
     fontSize:cardConstants.pdfDimensions.subFont / 2,
-    color:"black",
+    color:"#323232",
     textAlign:"left",
     display:"inline-block",
   }

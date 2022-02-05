@@ -15,7 +15,7 @@ const english = {
     "error page":{
       "title":"Oops, something went wrong!",
       "description": "You tried to go to a page that doesn't exist! ",
-      "link": "Click to go back home.",
+      "link": "Click here to go back home.",
     },
 
     "navbar":{
@@ -31,13 +31,12 @@ const english = {
 
     "main page":{
       "hero": {
-        "subtitle": "The reality TV card game set in a fantastical modern world",
-        "player count": "2+ PLAYERS",
-        "play time": "10+ MINUTES",
+        "subtitle": "A reality TV card game\n set in a <span className='emphasis'>fantastical</span> modern world",
+        "player count": "3+ PLAYERS",
+        "play time": "15+ MINUTES",
       },
       "description": {
-        "subtitle1": "Welcome to SHAREHOME!",
-        "subtitle2": "The fantastical reality TV show that documents the lives of six mythical strangers living their every day modern lives.",
+        "subtitle2": "Welcome to SHAREHOME, the reality TV show that documents the everyday lives of six mythical strangers living together.",
         "subtitle3": "Love, Career & Magic is a card game that lets you relive your favorite scenes by playing as the characters from the show!",
         "splashalt": "6 strangers enjoying a meal together.",
       },
@@ -193,7 +192,7 @@ const english = {
     "characters page":{
       "credit": "Illustrations by Carolyn Frank.",
       "title": "Characters",
-      "description": "The various mythical beings that have applied to appear on the reality TV show, SHAREHOME. Click on any of them to learn more about who they are!",
+      "description": "The various mythical beings that have appeared on the reality TV show, SHAREHOME. Click on any of them to learn more about who they are!",
       "moretocome": "More characters will be added every week!",
       "race" : "Race",
       "job" : "Profession",

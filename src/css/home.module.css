@@ -1,5 +1,15 @@
 /* <editor-fold>--------------------------------------GENERAL */
 
+.mainContentWrapper{
+  position:relative;
+  height:100vh;
+  width:100%;
+  display:flex;
+  justify-content: center;
+  flex-direction: column;
+  color:#323232;
+}
+
 .mainpageContainer{
   position:relative;
   display: flex;
@@ -11,7 +21,7 @@
 }
 
 .mainpageContainer h1{
-  font-size:3em;
+  font-size:2.5em;
   margin-top:0;
   margin-bottom:0.5em;
 }
@@ -22,10 +32,6 @@
 
 .mainpageContainer p.noMargin{
   margin:0;
-}
-
-.mainpageContainer p:last-child a{
-  color:#FFF;
 }
 
 p.smallText {
@@ -52,8 +58,8 @@ p.smallText a {
   }
 
   .mainpageContainer > div:first-child {
-    padding-left:20px;
-    padding-right:20px;
+    padding-left:2em;
+    padding-right:2em;
   }
 
   .mainpageContainer p{
@@ -67,114 +73,25 @@ p.smallText a {
 /* <editor-fold>--------------------------------------HERO IMAGE */
 
 #heroContainer{
-  padding-bottom:10vh;
-  overflow-x:hidden;
-}
-
-.mainContentWrapper{
-  position:relative;
-  height:100vh;
   width:100%;
-  display:flex;
-  justify-content: center;
   flex-direction: column;
-  color:#323232;
+  align-items: center;
+  justify-content: space-between;
+  height:200vh;
+  overflow:hidden;
 }
 
-.mainContentVertical{
-  display:flex;
-  justify-content: center;
-  flex-wrap:nowrap;
-}
-
-.mainContentVertical:last-child{
-  margin-top:10vh;
-}
-
-.mainContentInner{
-  width:50%;
-  height:100%;
-  position:relative;
-  display:flex;
-}
-
-#mainContentInnerRight > div {
+.titleWrapper{
+  width:auto;
   margin:auto;
-}
-
-/* small desktop */
-@media only screen and (min-width: 1200px) and (max-width: 1600px) {
-  .mainContentVertical{
-    justify-content: space-around !important;
-  }
-  #mainContentInnerRight{
-    width:25% !important;
-    justify-content: right;
-  }
-  .lcmContainer{
-    margin-left:0 !important;
-    margin-right:0 !important;
-    width:100% !important;
-  }
-}
-
-/* tablet */
-@media only screen and (min-width: 900px) and (max-width: 1200px) {
-  .mainContentVertical{
-    flex-direction: column-reverse;
-  }
-  .mainContentVertical:not(last-child){
-    flex-grow:7;
-  }
-  .mainContentVertical:last-child{
-    margin-top:0;
-    flex-grow:2;
-  }
-  .lcmContainer{
-    width:250px !important;
-  }
-}
-
-/* mobile */
-@media only screen and (max-width: 1200px) {
-  .mainContentVertical{
-    flex-direction: column-reverse;
-  }
-  .mainContentVertical:not(last-child){
-    flex-grow:3;
-  }
-  .mainContentVertical:last-child{
-    margin-top:0;
-    flex-grow:1;
-    padding-left:20px;
-    padding-right:20px;
-  }
-  .lcmContainer{
-    width:250px !important;
-  }
-  #heroContainer{
-    margin-bottom:10vh;
-    flex-direction:column;
-    justify-content:center;
-  }
-
-  #mainContentInnerLeft{
-    height:100% !important;
-  }
-
-  #mainContentInnerRight{
-    height:100% !important;
-  }
-
-  .mainContentInner{
-    height:fit-content;
-    width:100%;
-  }
+  height:110vh;
+  display:flex;
 }
 
 .lcmContainer{
   margin:auto;
-  width:500px;
+  width:400px;
+  padding-bottom:10vh;
 }
 
 .lcmImage{
@@ -184,63 +101,36 @@ p.smallText a {
 }
 
 .sharehomegame{
-  text-align: right;
-  width: 109%;
-  margin-top: -10px !important;
-  font-size: 1.3em;
-  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
-}
-
-@media only screen and (min-width: 1200px) {
-  .sharehomegame{
-    width: 100% !important;
-    margin-top: -30px !important;
-  }
-}
-
-.subtitle{
   text-align: center;
   width: 100%;
-  margin-top: 0;
-  font-size: 2em;
-  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
-  margin-bottom:25px;
+  margin-top: 2em !important;
+  font-size: 1em;
+  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
 }
 
-.gamedetailContainer{
-  margin:auto;
+/* small desktop */
+@media only screen and (min-width: 1200px) and (max-width: 1600px) {
+  .lcmContainer{
+    width:350px !important;
+  }
 }
 
-.gameDetails{
-  font-size:1.5em;
-  margin:0 !important;
+/* tablet */
+@media only screen and (min-width: 900px) and (max-width: 1200px) {
+  .lcmContainer{
+    width:300px !important;
+  }
 }
 
-.gameDetails > div {
-  display:flex;
-}
-
-.gameDetails > div > svg {
-  margin-top: 5px;
-}
-
-/* mobile stuff */
-@media only screen and (max-width: 600px) {
-  .lcmImage{
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .lcmContainer{
     width:250px !important;
   }
-
-  .subtitle {
-    font-size:1.5em;
-  }
-
-  .gameDetails{
-    font-size:1.25em;
-  }
-
-  .gameDetails > div > svg {
-    margin-top: 1.5px;
-    margin-right:7.5px;
+  .sharehomegame{
+    width: 100% !important;
+    margin-top: 25px !important;
+    text-align:center;
   }
 }
 
@@ -249,42 +139,78 @@ p.smallText a {
 /* <editor-fold>--------------------------------------SHAREHOME DESCRIPTION SECTION */
 
 #descriptionContainer{
-  min-height: 65vh;
+  min-height: 75vh;
   justify-content: center;
-  border-radius: 15vw 0 0 0;
-  color:#FFF;
+  align-items: center;
+  color:#323232;
 }
 
-#descriptionContainer > div{
-  padding:20px;
-  margin:auto;
-  margin-left: 0;
-  margin-right: 0;
+.descriptionWrapper {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
 }
 
-.backgroundImage{
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-  border-radius:5vw;
+.descriptionWrapper > div {
+  padding-left:0;
+  padding-right:0;
+}
+
+.descriptionWrapper > div:first-child {
+  margin-bottom:2em;
+}
+
+.descriptionWrapper > div:last-child > div:last-child p {
+  margin-bottom:0;
+}
+
+.subtitle{
+  font-size: 2em;
+  white-space: pre-line;
+  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
   margin:0 !important;
-  box-shadow: 0 12.5px 50px -10px rgba(50, 50, 73, 0.4), 0 10px 10px -10px rgba(50, 50, 73, 0.3);
 }
 
-@media only screen and (max-width: 1200px) {
-  #descriptionContainer{
-    flex-direction:column;
+.subtitle span {
+  background: linear-gradient(-45deg, #5F5AA2 20%, #F1DB4B 40%, #7DAF9C 60%, #DD7373 80%);
+  background-size: 200% auto;
+  background-clip: text;
+  text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: animated_text 5s ease-in-out infinite;
+}
+
+@keyframes animated_text {
+	0% { background-position: 0px 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 0px 50%; }
+}
+
+.gameDetails{
+  font-size:1.25em;
+  margin-top:1em;
+}
+
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .gameDetails{
+    font-size:.8em;
   }
-  #descriptionContainer > div{
-    margin:auto !important;
-    margin-bottom: 0 !important;
+
+  .gameDetails > div > svg {
+    margin-top: -2px !important;
   }
-  #descriptionContainer > div:first-child{
-    padding-bottom: 0 !important;
-  }
-  #descriptionContainer > div:last-child{
-    padding-top: 0 !important;
-  }
+}
+
+.gameDetails > div {
+  display:flex;
+}
+
+.gameDetails > div > svg {
+  margin-top: 5px;
 }
 
 /* </editor-fold> */
@@ -297,7 +223,7 @@ p.smallText a {
 
 .emailWrapper{
   margin:auto;
-  width:750px;
+  width:900px;
 }
 
 .emailWrapper p {
@@ -313,7 +239,8 @@ p.smallText a {
 }
 
 .forminputText{
-  max-width: 750px;
+  max-width: 900px;
+  margin:auto;
 }
 
 .forminputText a{
@@ -328,7 +255,7 @@ p.smallText a {
   box-shadow:0px 0px 10px rgb(0 0 0 / 33%);
   font-size: 1.25em;
   padding: 1em;
-  width: calc(75% - 2em);
+  width: calc(75% + 1px);
   outline: 0;
   border:0;
   border-radius: 0 0 0 1.25em;
@@ -346,6 +273,7 @@ p.smallText a {
   right: 0;
   height:100%;
   color:#FFF;
+  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
 }
 
 @media only screen and (max-width: 600px) {
@@ -363,7 +291,7 @@ p.smallText a {
 /* <editor-fold>--------------------------------------CHARACTER CONTAINER */
 
 #characterContainer{
-  color:#FFF;
+  color:#323232;
   display:flex;
   flex-direction: column;
   padding-bottom:3em;
@@ -379,6 +307,7 @@ p.smallText a {
 
 #mechanicsContainer{
   min-height: 65vh;
+  margin-bottom:3em;
 }
 
 .mechanicsWrapper{
@@ -392,6 +321,9 @@ p.smallText a {
   font-size:1.25em;
   display:flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
 }
 
 .mechanicsWrapper div > img {
@@ -416,8 +348,6 @@ p.smallText a {
 /* <editor-fold>--------------------------------------SPOTLIGHT CONTAINER */
 
 #spotlightContainer{
-  border-radius:0 0 15vw 0;
-  color:#FFF;
   display:flex;
   flex-direction: column;
   padding-bottom:3em;

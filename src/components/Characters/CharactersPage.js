@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect, useParams, useHistory } from 'react-router-dom';
 
-import { Title } from '../utils/Title.js';
 import { getAllCharacters, getSpecificPersonByURL } from '../Characters/Characters.js';
 import { CharacterSpotlight } from '../utils/CharacterSpotlight.js';
 
@@ -32,7 +31,7 @@ const AllCharacters = (props) => {
             <p className="notDoneName">{elem.name}</p>
             <p className="comingSoon">Coming soon</p>
           </div>
-          <img className="boxes" src={elem.image.url} alt={elem.name}></img>
+          <img className="boxes" src={elem.image.url} style={{objectPosition:elem.image.objectPosition || "center"}} alt={elem.name}></img>
           <div className="caption noselect">
             <p className="name">{elem.name}</p>
             <p className="details is-hidden-mobile">
@@ -69,11 +68,9 @@ const CharactersPage = (props) => {
     return <Redirect to="/characters" />
   }
   else {
-    let randomNumber = Math.random();
-    let randomColor = (randomNumber >= 0.75) ? "red" : (randomNumber >= 0.5) ? "blue" : (randomNumber >= .25) ? "green" : "yellow";
     let chosenCharacterContents = (chosenCharacter && !chosenCharacter.ignoreInRandom) ?
       (
-        <div className={`characterSpotlightContainer ${randomColor}Background`}>
+        <div className="characterSpotlightContainer">
           <CharacterSpotlight once name={chosenCharacter.name} />
         </div>
       ) :
@@ -83,16 +80,14 @@ const CharactersPage = (props) => {
 
     return (
       <div className="content">
-        <Title />
-
-        { chosenCharacterContents }
-
-        <div className="subcontentWrapper">
+        <div className="subcontentWrapper min-width">
           <div className="characterContent">
             <h2 className="subtitle">{t('characters page.title')}</h2>
             <p>{t('characters page.description')}<br></br></p>
           </div>
         </div>
+
+        { chosenCharacterContents }
 
         <div className="allcharactersWrapper">
           <AllCharacters />

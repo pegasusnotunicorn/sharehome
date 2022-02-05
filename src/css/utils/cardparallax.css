@@ -1,0 +1,41 @@
+.parallaxSectionXOverflow{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:100vh;
+  display:flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding-top:5vh;
+  padding-bottom:5vh;
+}
+
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .parallaxSectionXOverflow{
+  }
+}
+
+.parallaxSection {
+}
+
+.parallaxRow{
+  display:flex;
+  justify-content: center;
+  width:100%;
+}
+
+.parallaxRow:nth-child(2) > .parallaxWrapper > div{
+  transform:translateX(50%);
+}
+
+.fallingCardsWrapper.absolute{
+  position:absolute;
+}
+
+.parallaxWrapper{
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding:0.5em;
+}

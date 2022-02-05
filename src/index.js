@@ -12,7 +12,12 @@ import i18n from './i18n';
 //load font first
 WebFont.load({
   custom: {
-    families: ['AmaticSC Regular', 'ZenKurenaido Regular'],
+    families: [
+      'Rowdies-Regular',
+      'Rowdies-Thin',
+      'Rowdies-Bold',
+      'ZenKurenaido Regular'
+    ],
   },
   active: ()=>{
     //set language so we can use custom CSS

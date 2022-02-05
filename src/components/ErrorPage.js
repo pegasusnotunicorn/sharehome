@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 //custom files
-import { Title } from './utils/Title.js';
 import { Splash } from './utils/Splash.js';
 
 const ErrorPage = (props) => {
@@ -15,10 +14,13 @@ const ErrorPage = (props) => {
 
   return (
     <div className="content max-width">
-      <Title />
-      <div className="subcontentWrapper">
-        <h2 className="subtitle">{t("error page.title")}</h2>
-        <p>{t("error page.description")}<NavLink to="/">{t("error page.link")}</NavLink></p>
+
+      <div className="subcontentWrapper min-width">
+        <div className="characterContent">
+          <h2 className="subtitle">{t("error page.title")}</h2>
+          <p>{t("error page.description")}</p>
+          <p><NavLink to="/">{t("error page.link")}</NavLink></p>
+        </div>
       </div>
 
       <Splash />

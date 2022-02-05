@@ -1,25 +1,14 @@
 /* <editor-fold>---------------------------------------------------------PAGE */
 
 .characterContent {
-  width:100%;
   min-height:25vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.characterSubcontent{
-  margin-top:25px;
-  padding-left:15px;
-  padding-right:15px;
-}
-
-.characterSubcontent:first-child{
-  margin-top:0px !important;
-}
-
 .moretocome{
-  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
   font-size:2em;
 }
 
@@ -35,11 +24,11 @@
 }
 
 .characterSpotlightContainer.yellowBackground{
-  color:black !important;
+  color:#323232 !important;
 }
 
 .characterSpotlightContainer.yellowBackground .spotlightDetailsSection, .characterSpotlightContainer.yellowBackground .spotlightDetailsSection .divider:not(:first-child):not(:last-child) {
-  border-color:black !important;
+  border-color:#323232 !important;
 }
 
 /* </editor-fold> */
@@ -119,7 +108,7 @@
 
 .notDone .ignoreFilter p{
   margin:0;
-  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
 }
 
 .notDoneName{
@@ -154,7 +143,7 @@
 
 .caption p {
   line-height:100% !important;
-  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
   margin:0;
   padding:5px;
   padding-left:10px;
@@ -166,6 +155,7 @@
 }
 
 .caption > .details {
+  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
   font-size:1em;
 }
 

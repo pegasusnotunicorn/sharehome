@@ -16,7 +16,7 @@
 }
 
 .cardViewerText{
-  font-family: 'AmaticSC Regular';
+  font-family: 'Rowdies-Regular';
   position:absolute;
   text-align:left;
   color:white;
@@ -27,7 +27,7 @@
 }
 
 .cardViewerInputWrapper input, .cardViewerInputWrapper.textarea{
-  font-family: 'AmaticSC Regular';
+  font-family: 'Rowdies-Regular';
   border:0;
   outline:0;
   padding:0;
@@ -36,7 +36,7 @@
 }
 
 .cardViewerInputWrapper.textarea{
-  color:black;
+  color:#323232;
   width:100%;
   height:100%;
   overflow:hidden;
@@ -44,8 +44,8 @@
 }
 
 .cardViewerDeckName{
-  border-top:1px solid black;
-  color:black;
+  border-top:1px solid #323232;
+  color:#323232;
   width:100%;
   display:flex;
   justify-content:space-between;

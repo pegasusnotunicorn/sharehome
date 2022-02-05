@@ -27,7 +27,7 @@
   display: inline-block;
   background-color:white;
   border:1px solid #DCDCDC;
-  color:black !important;
+  color:#323232 !important;
 }
 
 .contentButton:not(:last-child){
@@ -36,10 +36,10 @@
 
 .contentButton:active{
   background-color:#DCDCDC !important;
-  color:black !important;
+  color:#323232 !important;
 }
 .contentButton:active svg{
-  stroke:black !important;
+  stroke:#323232 !important;
 }
 
 .contentButton span{

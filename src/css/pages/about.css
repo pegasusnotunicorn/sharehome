@@ -1,8 +1,3 @@
-.link{
-  text-decoration:underline;
-  cursor:pointer;
-}
-
 .howToPlayContainer {
   display:flex;
   justify-content: space-between;
@@ -62,7 +57,7 @@
 
 .timePlayerInfoWrapper div, .timePlayerInfoWrapper svg{
   margin-right:10px;
-  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
 }
 
 .stepsContainer{
@@ -102,10 +97,6 @@
   .stepWrapper{
     width:calc(100% - 40px);
   }
-}
-
-.stepWrapper .subtitle{
-  margin:0;
 }
 
 .subtitleBackPageArrow{

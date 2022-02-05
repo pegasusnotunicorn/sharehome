@@ -9,7 +9,7 @@
   -moz-perspective: 1000px; /* Remove this if you don't want the 3D effect */
   -o-perspective: 1000px; /* Remove this if you don't want the 3D effect */
   pointer-events:all;
-  font-family: 'AmaticSC Regular', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
 }
 
 .flipcardInner{
@@ -34,7 +34,7 @@
 
 .flipcard:not(.disable-shadow) .flipcardBack,
 .flipcard:not(.disable-shadow) .flipcardFront{
-  box-shadow:0px 0px 10px rgb(0 0 0 / 33%);
+  box-shadow:0px 0px 15px rgb(0 0 0 / 33%);
 }
 
 .flipcardFront, .flipcardBack {
@@ -44,6 +44,9 @@
   height: 100%;
   overflow:hidden;
   z-index:10;
+  display:flex;
+  justify-content: center;
+  align-items: center;
   -webkit-backface-visibility: hidden; /* Safari */
   -moz-backface-visibility: hidden; /* Safari */
   -o-backface-visibility: hidden; /* Safari */
@@ -52,7 +55,14 @@
 
 .flipcardBack {
   transform: rotateY(180deg);
-  background-color:white;
+  background-color:#FFF;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flipcardBack.name {
+  background-color:#323232;
 }
 
 /* </editor-fold> ----------------------------------------------------------- */
@@ -69,23 +79,23 @@
   position:absolute;
   bottom:0;
   text-align:left;
-  white-space:nowrap;
+  #FFF-space:nowrap;
   -webkit-font-smoothing:antialiased;
   overflow:hidden;
-  color:white;
+  color:#FFF;
   margin:2em;
   z-index:9;
 }
 
 .memberCommCardMainText{
-  text-transform:uppercase;
   font-size:4em;
   line-height:100%;
 }
 
 .memberCommCardSubText{
-  font-size:2em;
+  font-size:2.5em;
   line-height:100%;
+  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
 }
 
 .memberCommCardShadow{
@@ -108,17 +118,18 @@
 /* <editor-fold> -------------------------------------------EVENT / GOAL CARD */
 
 .eventGoalCardWrapper{
+  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
   border-width:2em;
   border-style:solid;
-  /* need 3.99em to get rid of weird white line */
+  /* need 3.99em to get rid of weird #FFF line */
   height:calc(100% - 3.99em);
   width:calc(100% - 4em);
-  background:white;
+  background:#FFF;
 }
 
 .eventGoalTextWrapper{
-  color:black;
-  font-size:2em;
+  color:#323232;
+  font-size:1.75em;
   line-height:125%;
   text-align:left;
   overflow:hidden;
@@ -128,12 +139,12 @@
 }
 
 .eventGoalBottomTextWrapper{
-  border-top:1px solid black;
+  border-top:1px solid #323232;
   display:flex;
   justify-content:space-between;
   position:absolute;
   bottom:0;
-  color:black;
+  color:#323232;
   width:calc(100% - 8em);
   padding:1.5em;
   padding-left:2em;
@@ -147,37 +158,58 @@
 /* <editor-fold> -------------------------------------------------- CARD BACK */
 
 .cardBackText{
-  text-align:center;
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  width:100%;
   -webkit-font-smoothing:antialiased;
   display:flex;
   align-items:center;
   justify-content:center;
   flex-direction:column;
+  width:calc(100% - 4em);
 }
 
 .cardBackMainText{
   line-height: 100%;
-  color:black;
+  color:#323232;
   text-transform:uppercase;
   margin:auto;
-  white-space:pre-line;
-  font-size:6em;
+  #FFF-space:pre-line;
+  font-size:4em;
   padding:.2em;
 }
 
 .cardBackSubText{
   line-height: 100%;
-  color:white;
+  color:#FFF;
   display:inline-block;
   width:auto;
-  font-size:3em;
+  font-size:2em;
   padding:.2em;
   border-radius: 0.5em 0;
+  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
+}
+
+/* </editor-fold> ----------------------------------------------------------- */
+
+/* <editor-fold> -------------------------------------------------- CARD BACK NAME */
+
+.cardBack.name{
+  width:calc(100% - 2em);
+  height:calc(100% - 2em);
+  border-radius:2em;
+  background-color:#FFF;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cardBackName{
+  font-size:4em;
+  margin-top:0;
+  line-height:100%;
+}
+
+.cardBackAge, .cardBackJob{
+  font-size:2em;
+  margin:0;
 }
 
 /* </editor-fold> ----------------------------------------------------------- */

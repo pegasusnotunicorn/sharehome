@@ -34,7 +34,7 @@
 }
 
 .selectorRow .flipcardBack{
-  border:1px solid black;
+  border:1px solid #323232;
 }
 
 .selectorRow.blueBackground {
@@ -101,14 +101,14 @@
 .selectorButton svg{
   vertical-align:middle;
   padding-right:0;
-  stroke:black;
+  stroke:#323232;
 }
 
 .selectorButton:active{
   background:rgba(0,0,0,.15) !important;
 }
 .selectorButton:active svg{
-  stroke:black !important;
+  stroke:#323232 !important;
 }
 
 .moreDialog{

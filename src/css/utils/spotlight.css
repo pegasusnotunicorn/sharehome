@@ -2,6 +2,7 @@
   display:flex;
   justify-content:center;
   flex-direction:row;
+  color:#323232;
 }
 
 .spotlightCardWrapper{
@@ -18,14 +19,14 @@
 }
 
 .spotlightDetailsWrapper h1 {
-  font-size:3em !important;
+  font-size:2.5em !important;
   line-height: 100%;
   margin-top:0.25em;
   margin-bottom:0.25em;
 }
 
 .spotlightDetailsSection{
-  border-top:1px solid #FFF;
+  border-top:1px solid #323232;
   padding-top:0.5em;
   margin-top:0.5em;
   max-width:750px;
@@ -49,7 +50,7 @@
 }
 
 .spotlightDetailsSection .divider:not(:first-child):not(:last-child) {
-  border-right:1px solid white;
+  border-right:1px solid #323232;
 }
 
 .spotlightDetailsSection .divider:first-child {

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import CardFrontPerson from './CardFrontPerson.js';
 import CardFrontEventGoal from './CardFrontEventGoal.js';
 import CardBack from "./CardBack.js";
+import CardBackName from "./CardBackName.js";
 import "../../css/utils/cards.css"
 
 //a flip-able card based on the actual cards
@@ -33,6 +34,9 @@ export const Card = (props) => {
   //don't render the front or the back
   const [hideFront] = useState(props.hideFront);
   const [hideBack] = useState(props.hideBack);
+
+  //show person name on card back instead
+  const [cardBackName] = useState(props.cardBackName);
 
   //disable stuff via classes
   let classes = "";
@@ -105,7 +109,13 @@ export const Card = (props) => {
             />
           </div>
         }
-        { !hideBack &&
+        {
+          cardBackName &&
+          <div className="noselect flipcardBack name">
+            <CardBackName {...props} />
+          </div>
+        }
+        { !hideBack && !cardBackName &&
           <div className="noselect flipcardBack">
             <CardBack {...props} />
           </div>

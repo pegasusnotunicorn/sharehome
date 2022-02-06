@@ -20,57 +20,65 @@ const HomePage = (props) => {
 
   useEffect(() => {
     document.title = "Love, Career & Magic — SHAREHOME";
-    document.body.scrollTop = document.documentElement.scrollTop = 0;
+
+    //force top of page when refresh
+    window.onbeforeunload = function () {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
   //emphasis
   let subtitle = t('main page.hero.subtitle');
-  let { width } = useWindowDimensions();
+  let { width, height } = useWindowDimensions();
   if (width <= 900) {
     subtitle = subtitle.replace("\n", "");
   }
 
   return (
     <div className="content">
+      <ParallaxSection />
 
       <div id={`${homeStyles.heroContainer}`} className={`${homeStyles.mainContentWrapper} noselect`}>
-        <Parallax opacity={[1,0, "easeInExpo"]}>
-          <VisibilityTrigger className={`${homeStyles.titleWrapper}`} once >
-            <div className={`${homeStyles.lcmContainer}`}>
-              <NavLink draggable={false} className="noselect" to="/">
-                <img className={`${homeStyles.lcmImage} floating noselect`} draggable="false" src="/images/lcm.png" alt="Love, Career, & Magic"></img>
-              </NavLink>
-              <p className={`${homeStyles.sharehomegame}`}>a SHAREHOME game</p>
-            </div>
-          </VisibilityTrigger>
-        </Parallax>
-        <ParallaxSection />
+        <VisibilityTrigger className={`${homeStyles.titleWrapper}`} >
+          <div className={`${homeStyles.lcmContainer}`}>
+            <img className={`${homeStyles.lcmImage} floating noselect`} draggable="false" src="/images/lcm.png" alt="Love, Career, & Magic"></img>
+            <p className={`${homeStyles.sharehomegame}`}>a SHAREHOME game</p>
+          </div>
+        </VisibilityTrigger>
+        <VisibilityTrigger hideAfterScroll delay={750} className={homeStyles.scrollContainer} >
+          <div className={homeStyles.scrollHorizontalContainer}>
+            <div className={homeStyles.scrollVerticalContainer}></div>
+            <div className={homeStyles.scrollVerticalContainer}></div>
+          </div>
+          <div className={homeStyles.scrollHorizontalContainer}>
+            <p>SCROLL</p>
+          </div>
+        </VisibilityTrigger>
       </div>
 
-      <div id={`${homeStyles.descriptionContainer}`} className={`${homeStyles.mainpageContainer}`}>
-        <div className={`${homeStyles.descriptionWrapper}`}>
-          <div className={`subcontentWrapper`}>
-            <VisibilityTrigger translateY>
+      <Parallax
+        className={homeStyles.descriptionOpaque}
+        opacity={[0,1]}
+        startScroll={height*1.75}
+        endScroll={height*2}
+      >
+        <div id={`${homeStyles.descriptionContainer}`} className={`${homeStyles.mainpageContainer}`}>
+          <div className={`${homeStyles.descriptionWrapper}`}>
+            <div className={`subcontentWrapper`}>
               <h1 dangerouslySetInnerHTML={{__html: subtitle }} className={`${homeStyles.subtitle}`}></h1>
-            </VisibilityTrigger>
-            <VisibilityTrigger translateY>
               <GameModeIcons
                 className={`${homeStyles.gameDetails}`}
                 playerCount={t('main page.hero.player count')}
                 playTime={t('main page.hero.play time')}
                 />
-            </VisibilityTrigger>
-          </div>
-          <div className={`subcontentWrapper min-width`}>
-            <VisibilityTrigger translateY>
+            </div>
+            <div className={`subcontentWrapper min-width`}>
               <p>{t('main page.description.subtitle2')}</p>
-            </VisibilityTrigger>
-            <VisibilityTrigger translateY>
               <p>{t('main page.description.subtitle3')}</p>
-            </VisibilityTrigger>
+            </div>
           </div>
         </div>
-      </div>
+      </Parallax>
 
       <div id={`${homeStyles.characterContainer}`} className={`${homeStyles.mainpageContainer}`}>
         <div className={`subcontentWrapper`}>

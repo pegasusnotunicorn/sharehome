@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Spring, animated } from 'react-spring'
 import VisibilitySensor from "react-visibility-sensor";
+import useWindowScroll from './useWindowScroll.js';
 
 const SpringTrigger = (props) => {
-  const isVisible = props.isVisible;
+  let isVisible = props.isVisible;
+
   let springStyles = {
     opacity: isVisible ? 1 : 0,
   }
@@ -30,14 +32,31 @@ const SpringTrigger = (props) => {
 
 //trigger for visbility
 const VisibilityTrigger = (props) => {
-  const [active, setActive] = useState(true);
+  const [active, setActive] = useState(props.active || true);
+  const [isVisible, setIsVisible] = useState(false);
+  const [delay, setDelay] = useState(props.delay || 0);
   const [height, setHeight] = useState(0);
   const containerRef = useRef(null);
+  const scrollPosition = useWindowScroll();
 
-  //on change
-  const change = (isVisible) => {
+  //on change function so if we only want it to come in and stay visible
+  const onChange = (isVisible) => {
+    setIsVisible(isVisible);
     if (props.once && isVisible){
       setActive(false);
+    }
+  }
+
+  //disappear after a set amount of time
+  if (props.hideAfterScroll){
+    if (scrollPosition > 0 && isVisible && active){
+      setIsVisible(false);
+      setActive(false);
+      setDelay(0);
+    }
+    else if (scrollPosition === 0 && !active){
+      setIsVisible(true);
+      setActive(true);
     }
   }
 
@@ -48,25 +67,23 @@ const VisibilityTrigger = (props) => {
     }
   }, [containerRef]);
 
-
   return (
     <VisibilitySensor
       active={active}
-      onChange={change}
+      onChange={onChange}
       delayedCall={true}
       scrollCheck={true}
       resizeCheck={true}
       partialVisibility={"bottom"}
       offset={{bottom:-height * 0.1}}
     >
-      {({isVisible}) =>
-        <SpringTrigger
-          {...props}
-          containerRef={containerRef}
-          isVisible={isVisible}
-        >
-        </SpringTrigger>
-      }
+      <SpringTrigger
+        {...props}
+        delay={delay}
+        containerRef={containerRef}
+        isVisible={isVisible}
+      >
+      </SpringTrigger>
     </VisibilitySensor>
   )
 }

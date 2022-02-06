@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Parallax } from "react-scroll-parallax";
 
 import Card from '../Card/Card.js';
@@ -13,6 +13,27 @@ const randomDeg = (max) => {
 
 //a single row of cards
 const ParallaxRow = (props) => {
+  const { height } = useWindowDimensions();
+
+  //properties for the row
+  let rowProps = {
+    startScroll: height,
+    endScroll: height * 2,
+    translateY:[0,325],
+    opacity:[1,.3],
+    className: "parallaxRow",
+  }
+
+  return (
+    <Parallax { ...rowProps }>
+      <ParallaxCards { ...props } />
+    </Parallax>
+  )
+}
+
+//all cards in a row
+const ParallaxCards = (props) => {
+  let [firstParallaxDisabled, setFirstParallaxDisabled] = useState(false);
   let randomCharacters = props.randomCharacters;
 
   //max card width / size
@@ -24,26 +45,32 @@ const ParallaxRow = (props) => {
   let fontSize = (width >= 1400) ? 10 : (width >= 900) ? 8 : 6;
 
   //create cards for each character
-  let randomCards = randomCharacters.map((curr, index, array) => {
+  return randomCharacters.map((curr, index, array) => {
 
     //move horizontally (direction depends on invert)
-    let translateSpeed = 50;
-    let translateXNum = (props.invert) ? [0, translateSpeed] : [translateSpeed, 0];
+    let translateEnd = 50;
+    let translateXNum = (props.invert) ? [0, translateEnd] : [translateEnd, 0];
     let invertNum = (props.first) ? -1 : 1;
 
-    //properties for the parallax
-    let parallaxProps = {
+    //properties for the parallax from top of page
+    let cardParallaxProps = {
       translateX:translateXNum,
       startScroll: 0,
-      endScroll: height*.75,
+      endScroll: height,
+      disabled:firstParallaxDisabled,
+      onExit: ()=>{
+        setFirstParallaxDisabled(true);
+      },
+      //need to add a class here for some reason, translate not kept when finished
+      className:`parallaxWrapper ${(firstParallaxDisabled && !props.invert) ? "" : "translateXed"}`,
     }
 
     //the one missing card
     let middleCard = Math.floor(props.cardsPerRow / 2);
     let missingCardIndex = width >= 1400 ? (middleCard - invertNum) : middleCard
     if (props.missing && missingCardIndex === index){
-      parallaxProps = {
-        ...parallaxProps,
+      cardParallaxProps = {
+        ...cardParallaxProps,
         speed: 1000,
         translateY:[-400, 0],
         translateX:[-150 * invertNum, 0],
@@ -71,20 +98,28 @@ const ParallaxRow = (props) => {
       },
     }
 
+    //left of middle card go left, others go right
+    let offscreenEnd = (index <= middleCard) ? ((props.invert) ? -200 : -125) : ((props.invert) ? 0 : 25);
+    let offscreenArray = [0, offscreenEnd];
+
+    //properties for the parallax into description,
+    let cardSecondParallaxProps = {
+      key:`parallax${index}`,
+      translateX:offscreenArray,
+      startScroll:height * 1.25,
+      endScroll: height * 1.75,
+      disabled:!firstParallaxDisabled,
+      className:`parallaxSecondWrapper`,
+    }
+
     return (
-      <div key={`parallax${index}`} className="parallaxWrapper">
-        <Parallax {...parallaxProps}>
+      <Parallax {...cardSecondParallaxProps} >
+        <Parallax {...cardParallaxProps}>
           <Card {...cardProps}/>
         </Parallax>
-      </div>
+      </Parallax>
     );
   });
-
-  return (
-    <div className={`parallaxRow`}>
-      { randomCards }
-    </div>
-  );
 }
 
 //the entire section of three rows moving with scroll

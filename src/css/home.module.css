@@ -106,7 +106,7 @@ p.smallText a {
 
 .scrollContainer {
   position:absolute;
-  top:calc(100vh - 125px - 6em);
+  top:calc(100vh - 200px - 6em);
   display:flex;
   flex-direction:column;
   justify-content: space-between;

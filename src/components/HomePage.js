@@ -11,14 +11,12 @@ import VisibilityTrigger from "./utils/VisibilityTrigger.js";
 import ParallaxSection from "./utils/ParallaxSection.js";
 import DeckSection from "./utils/DeckSection.js";
 import useWindowDimensions from './utils/useWindowDimensions.js';
-import useWindowScroll from './utils/useWindowScroll.js';
 
 import homeStyles from '../css/home.module.css';
 import '../css/utils/colors.css';
 
 const HomePage = (props) => {
   const { t } = useTranslation();
-  const scrollPosition = useWindowScroll();
 
   useEffect(() => {
     document.title = "Love, Career & Magic — SHAREHOME";
@@ -44,7 +42,7 @@ const HomePage = (props) => {
         <VisibilityTrigger once className={`${homeStyles.titleWrapper}`} >
           <div className={`${homeStyles.lcmContainer}`}>
             <img className={`${homeStyles.lcmImage} floating noselect`} draggable="false" src="/images/lcm.png" alt="Love, Career, & Magic"></img>
-            <p className={`${homeStyles.sharehomegame}`}>{ scrollPosition }</p>
+            <p className={`${homeStyles.sharehomegame}`}>a SHAREHOME game</p>
           </div>
         </VisibilityTrigger>
         <VisibilityTrigger hideAfterScroll delay={750} className={homeStyles.scrollContainer} >

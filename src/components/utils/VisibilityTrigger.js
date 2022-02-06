@@ -47,14 +47,14 @@ const VisibilityTrigger = (props) => {
     }
   }
 
-  //disappear after a set amount of time
+  //disappear after a scrolling 50px
   if (props.hideAfterScroll){
-    if (scrollPosition > 0 && isVisible && active){
+    if (scrollPosition > 50 && isVisible && active){
       setIsVisible(false);
       setActive(false);
       setDelay(0);
     }
-    else if (scrollPosition <= 0 && !active){
+    else if (scrollPosition <= 50 && !active){
       setIsVisible(true);
       setActive(true);
     }

@@ -44,7 +44,7 @@ const HomePage = (props) => {
         <VisibilityTrigger once className={`${homeStyles.titleWrapper}`} >
           <div className={`${homeStyles.lcmContainer}`}>
             <img className={`${homeStyles.lcmImage} floating noselect`} draggable="false" src="/images/lcm.png" alt="Love, Career, & Magic"></img>
-            <p className={`${homeStyles.sharehomegame}`}>a SHAREHOME game</p>
+            <p className={`${homeStyles.sharehomegame}`}>{ scrollPosition }</p>
           </div>
         </VisibilityTrigger>
         <VisibilityTrigger hideAfterScroll delay={750} className={homeStyles.scrollContainer} >
@@ -53,7 +53,7 @@ const HomePage = (props) => {
             <div className={homeStyles.scrollVerticalContainer}></div>
           </div>
           <div className={homeStyles.scrollHorizontalContainer}>
-            <p>{ scrollPosition }</p>
+            <p>SCROLL</p>
           </div>
         </VisibilityTrigger>
       </div>

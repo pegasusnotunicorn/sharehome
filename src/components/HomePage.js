@@ -45,7 +45,7 @@ const HomePage = (props) => {
             <p className={`${homeStyles.sharehomegame}`}>a SHAREHOME game</p>
           </div>
         </VisibilityTrigger>
-        <VisibilityTrigger hideAfterScroll delay={750} className={homeStyles.scrollContainer} >
+        <VisibilityTrigger hideAfterScroll active={false} delay={750} className={homeStyles.scrollContainer} >
           <div className={homeStyles.scrollHorizontalContainer}>
             <div className={homeStyles.scrollVerticalContainer}></div>
             <div className={homeStyles.scrollVerticalContainer}></div>

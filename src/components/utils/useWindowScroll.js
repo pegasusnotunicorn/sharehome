@@ -5,7 +5,7 @@ export default function useWindowScroll() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrollPosition(window.scrollY);
+      setScrollPosition(document.body.scrollTop);
     };
 
     window.addEventListener('scroll', handleScroll);

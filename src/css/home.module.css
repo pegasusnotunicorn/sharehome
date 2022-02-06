@@ -2,7 +2,7 @@
 
 .mainContentWrapper{
   position:relative;
-  height:100vh;
+  height:100%;
   width:100%;
   display:flex;
   justify-content: center;
@@ -43,7 +43,7 @@ p.smallText a {
 /* tablet */
 @media only screen and (max-width: 1200px) {
   .mainpageContainer{
-    min-height: 55vh;
+    min-height: 55%;
   }
 }
 
@@ -73,12 +73,14 @@ p.smallText a {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  height:200vh;
+  height:200%;
+  position:relative;
 }
 
 .titleWrapper{
   width:auto;
-  height:110vh;
+  height:50%;
+  justify-content: center;
   display:flex;
 }
 

@@ -27,19 +27,6 @@ const HomePage = (props) => {
     }
   }, []);
 
-  // <div className={`subcontentWrapper`}>
-  //   <VisibilityTrigger translateY>
-  //   </VisibilityTrigger>
-  //   <VisibilityTrigger translateY>
-  //     <p className={`${homeStyles.noMargin}`}>
-  //       <br />
-  //     </p>
-  //   </VisibilityTrigger>
-  // </div>
-  // <div className={`${homeStyles.swiperContainer}`}>
-  //   <SwiperCharacters />
-  // </div>
-
   //emphasis
   let subtitle = t('main page.hero.subtitle');
   let { width, height } = useWindowDimensions();
@@ -52,7 +39,7 @@ const HomePage = (props) => {
       <ParallaxSection />
 
       <div id={`${homeStyles.heroContainer}`} className={`${homeStyles.mainContentWrapper} noselect`}>
-        <VisibilityTrigger className={`${homeStyles.titleWrapper}`} >
+        <VisibilityTrigger once className={`${homeStyles.titleWrapper}`} >
           <div className={`${homeStyles.lcmContainer}`}>
             <img className={`${homeStyles.lcmImage} floating noselect`} draggable="false" src="/images/lcm.png" alt="Love, Career, & Magic"></img>
             <p className={`${homeStyles.sharehomegame}`}>a SHAREHOME game</p>

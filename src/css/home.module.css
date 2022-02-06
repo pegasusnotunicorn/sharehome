@@ -16,10 +16,6 @@
   width:100%;
 }
 
-.mainpageContainer > div:first-child {
-  padding:2em;
-}
-
 .mainpageContainer h1{
   font-size:2.5em;
   margin-top:0;
@@ -211,22 +207,6 @@ p.smallText a {
   margin:0 !important;
 }
 
-.subtitle span {
-  background: linear-gradient(-45deg, #5F5AA2 20%, #F1DB4B 40%, #7DAF9C 60%, #DD7373 80%);
-  background-size: 200% auto;
-  background-clip: text;
-  text-fill-color: transparent;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: animated_text 5s ease-in-out infinite;
-}
-
-@keyframes animated_text {
-	0% { background-position: 0px 50%; }
-	50% { background-position: 100% 50%; }
-	100% { background-position: 0px 50%; }
-}
-
 .gameDetails{
   font-size:1.25em;
   margin-top:1em;
@@ -331,13 +311,31 @@ p.smallText a {
 #characterContainer{
   color:#323232;
   display:flex;
-  flex-direction: column;
-  padding-bottom:3em;
+  height:100vh;
+  width:100%;
+  flex-direction: row;
+  align-items: center;
+  overflow:hidden;
 }
 
-.swiperContainer{
-  cursor:pointer;
+.characterTextContainer{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height:100%;
+  width:40%;
+  z-index:99;
+  padding:2em;
 }
+
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .characterTextContainer{
+    width:100%;
+  }
+}
+
 
 /* </editor-fold> */
 

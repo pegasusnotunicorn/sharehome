@@ -6,10 +6,10 @@ import { Parallax } from "react-scroll-parallax";
 //custom files
 import GameModeIcons from "./About/utils/GameModeIcons.js";
 import { CustomForm } from './utils/MailchimpForm.js';
-import { SwiperCharacters } from './utils/SwiperCharacters.js';
 import { CharacterSpotlight } from './utils/CharacterSpotlight.js';
 import VisibilityTrigger from "./utils/VisibilityTrigger.js";
 import ParallaxSection from "./utils/ParallaxSection.js";
+import DeckSection from "./utils/DeckSection.js";
 import useWindowDimensions from './utils/useWindowDimensions.js';
 
 import homeStyles from '../css/home.module.css';
@@ -26,6 +26,19 @@ const HomePage = (props) => {
       window.scrollTo(0, 0);
     }
   }, []);
+
+  // <div className={`subcontentWrapper`}>
+  //   <VisibilityTrigger translateY>
+  //   </VisibilityTrigger>
+  //   <VisibilityTrigger translateY>
+  //     <p className={`${homeStyles.noMargin}`}>
+  //       <br />
+  //     </p>
+  //   </VisibilityTrigger>
+  // </div>
+  // <div className={`${homeStyles.swiperContainer}`}>
+  //   <SwiperCharacters />
+  // </div>
 
   //emphasis
   let subtitle = t('main page.hero.subtitle');
@@ -60,8 +73,7 @@ const HomePage = (props) => {
         className={homeStyles.descriptionOpaque}
         opacity={[0,1]}
         startScroll={height*1.75}
-        endScroll={height*2}
-      >
+        endScroll={height*2}>
         <div id={`${homeStyles.descriptionContainer}`} className={`${homeStyles.mainpageContainer}`}>
           <div className={`${homeStyles.descriptionWrapper}`}>
             <div className={`subcontentWrapper`}>
@@ -81,20 +93,10 @@ const HomePage = (props) => {
       </Parallax>
 
       <div id={`${homeStyles.characterContainer}`} className={`${homeStyles.mainpageContainer}`}>
-        <div className={`subcontentWrapper`}>
-          <VisibilityTrigger translateY>
-            <h1>{t('main page.character.description')}</h1>
-          </VisibilityTrigger>
-          <VisibilityTrigger translateY>
-            <p className={`${homeStyles.noMargin}`}>
-              {t('main page.character.moretocome')}
-              <br />
-              <NavLink to="/characters">{t('main page.character.clicktoseemore')}</NavLink>
-            </p>
-          </VisibilityTrigger>
-        </div>
-        <div className={`${homeStyles.swiperContainer}`}>
-          <SwiperCharacters />
+        <DeckSection numSections={3} />
+        <div className={`${homeStyles.characterTextContainer}`}>
+          <h1>{t('main page.character.description')}</h1>
+          <NavLink className="defaultButton" to="/characters">{t('main page.character.clicktoseemore')}</NavLink>
         </div>
       </div>
 

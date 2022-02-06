@@ -40,7 +40,7 @@ const ParallaxCards = (props) => {
   //to determine how big the cards will be based on window width
   const { width, height } = useWindowDimensions();
   let cardDividerByScreenWidth = (width >= 1400) ? 4.2 : (width >= 900) ? 3.2 : 1.7;
-  let cardWidth = Math.min(Math.floor(width / cardDividerByScreenWidth), 600);
+  let cardWidth = Math.floor(width / cardDividerByScreenWidth);
   let cardHeight = cardWidth / 1.7;
   let fontSize = (width >= 1400) ? 10 : (width >= 900) ? 8 : 6;
 

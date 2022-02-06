@@ -54,7 +54,7 @@ const VisibilityTrigger = (props) => {
       setActive(false);
       setDelay(0);
     }
-    else if (scrollPosition === 0 && !active){
+    else if (scrollPosition <= 0 && !active){
       setIsVisible(true);
       setActive(true);
     }

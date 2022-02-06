@@ -55,9 +55,37 @@ p, li {
   pointer-events: none;
 }
 
+.fantasyEmphasis {
+  background: linear-gradient(-45deg, #5F5AA2 20%, #F1DB4B 40%, #7DAF9C 60%, #DD7373 80%);
+  background-size: 200% auto;
+  background-clip: text;
+  text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: animated_text 5s ease-in-out infinite;
+}
+
+@keyframes animated_text {
+	0% { background-position: 0px 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 0px 50%; }
+}
+
 /* </editor-fold> */
 
 /* <editor-fold>------------------------------------------------------------------BUTTONS */
+
+.defaultButton{
+  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
+  text-transform: uppercase;
+  padding:10px;
+  padding-left:15px;
+  padding-right:15px;
+  background:#323232;
+  color:#FFF;
+  border-radius:4px;
+  text-decoration:none;
+}
 
 .button{
   font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';

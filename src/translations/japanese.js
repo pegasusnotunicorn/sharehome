@@ -31,7 +31,7 @@ const japanese = {
 
     "main page":{
       "hero": {
-        "subtitle": "<span className='emphasis'>異世界</span>のリアリティ番組\nをベースにしたカードゲーム",
+        "subtitle": "<span class='fantasyEmphasis'>異世界</span>のリアリティ番組\nをベースにしたカードゲーム",
         "player count": "３+ 人用",
         "play time": "プレイ時間 １５+ 分",
       },

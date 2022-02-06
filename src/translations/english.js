@@ -31,7 +31,7 @@ const english = {
 
     "main page":{
       "hero": {
-        "subtitle": "A reality TV card game\n set in a <span className='emphasis'>fantastical</span> modern world",
+        "subtitle": "A reality TV card game\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world",
         "player count": "3+ PLAYERS",
         "play time": "15+ MINUTES",
       },
@@ -41,9 +41,9 @@ const english = {
         "splashalt": "6 strangers enjoying a meal together.",
       },
       "character": {
-        "description": "Playable Characters",
+        "description": "Choose one of 25 unique characters to play as!",
         "moretocome": "More characters will be added every week!",
-        "clicktoseemore" : "Click here to see all the characters.",
+        "clicktoseemore" : "View all characters",
       },
       "mechanics": {
         "description": "If you like any of these things, then this game is for you!",

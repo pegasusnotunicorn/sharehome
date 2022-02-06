@@ -28,7 +28,7 @@ const Animation = (props) => {
     zIndex: Math.random()*25,
     scale: 1,
     rot: randomNum(5, true),
-    delay: i * 100 + (100 * (props.rowIndex + 1) * props.numSections)
+    delay: i * 50 + (50 * (props.rowIndex + 1) * props.numSections)
   });
   const from = i => ({
     x: (evenRowMult) ? -3000 : -1000,
@@ -36,7 +36,7 @@ const Animation = (props) => {
     zIndex: i,
     scale: 1.5,
     rot: 0,
-    delay: i * 100 + (100 * (props.rowIndex + 1) * props.numSections)
+    delay: i * 50 + (50 * (props.rowIndex + 1) * props.numSections)
   });
 
   // This is being used down there in the view, it interpolates rotation and scale into a css transform

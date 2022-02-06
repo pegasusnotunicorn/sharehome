@@ -11,12 +11,14 @@ import VisibilityTrigger from "./utils/VisibilityTrigger.js";
 import ParallaxSection from "./utils/ParallaxSection.js";
 import DeckSection from "./utils/DeckSection.js";
 import useWindowDimensions from './utils/useWindowDimensions.js';
+import useWindowScroll from './utils/useWindowScroll.js';
 
 import homeStyles from '../css/home.module.css';
 import '../css/utils/colors.css';
 
 const HomePage = (props) => {
   const { t } = useTranslation();
+  const scrollPosition = useWindowScroll();
 
   useEffect(() => {
     document.title = "Love, Career & Magic — SHAREHOME";
@@ -51,7 +53,7 @@ const HomePage = (props) => {
             <div className={homeStyles.scrollVerticalContainer}></div>
           </div>
           <div className={homeStyles.scrollHorizontalContainer}>
-            <p>SCROLL</p>
+            <p>{ scrollPosition }</p>
           </div>
         </VisibilityTrigger>
       </div>

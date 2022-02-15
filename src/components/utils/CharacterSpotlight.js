@@ -1,58 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import useWindowDimensions from '../utils/useWindowDimensions.js';
 
 //custom files
-import Card from '../Card/Card.js';
+import useWindowDimensions from '../utils/useWindowDimensions.js';
+import ShootingStar from '../Navbar/ShootingStar.js';
 import { getSpecificPerson, getLatestPerson } from '../Characters/Characters.js';
 import '../../css/utils/spotlight.css';
-import VisibilityTrigger from "./VisibilityTrigger.js";
-
-//get swiperslides filled with character cards for all characters
-const getCharacterCard = (character, windowHeight, windowWidth) => {
-
-  //to determine how big the cards will be based on window width
-  let cardDividerByScreenWidth = (windowWidth > 900) ? 2.2 : 1.2;
-
-  //max card width / size
-  let cardWidth = Math.min(Math.floor(windowWidth / cardDividerByScreenWidth), 1000);
-  let cardHeight = cardWidth / 1.7;
-
-  let props = {
-    type: "member",
-    personName: character.name,
-    showFront: true,
-    hideBack: true,
-    disableFlip: true,
-    disableText: true,
-    mainStyle:{
-      //stuff needed for card size
-      width:`${cardWidth}px`,
-      height:`${cardHeight}px`,
-      fontSize:"12px",
-      //other shit
-      cursor:"default",
-    },
-    className: "floating noselect",
-  }
-
-  return (<Card {...props}/>);
-}
+import { GsapFadeScrub } from "./useGsap.js";
+import DefaultButton from '../utils/DefaultButton.js';
 
 export const CharacterSpotlight = (props) => {
   const { i18n } = useTranslation('home');
   const { t } = useTranslation();
-  const { height, width } = useWindowDimensions();
 
   //get a specific or the latest character if not defined
   const character = (props.name) ? getSpecificPerson(props.name) : getLatestPerson();
-  const floating = props.floating;  //should float or not
-  const characterCard = getCharacterCard(character, height, width, floating);
+  const invertClass = (props.invert) ? "invert" : "";
 
   //language specific
-  const nameTitle = (i18n.language === "en-US") ? ((character.title) ? character.title : `${character.name}, The ${character.race}`) : `${character.race}の${character.name}`
-  const race = (i18n.language === "en-US") ? character.race : character.japaneseRace;
+  const name = (i18n.language === "en-US") ? character.name : character.japaneseName;
+  const title = (i18n.language === "en-US") ? (character.title) ? character.title : `The ${character.race}` : `${character.japaneseRace}`;
+  // const race = (i18n.language === "en-US") ? character.race : character.japaneseRace;
+  const job = (i18n.language === "en-US") ? character.job : character.japaneseJob;
   const jobTitle = (i18n.language === "en-US") ? ((character.employer) ? `${character.job} at ${character.employer}.` : character.job) : character.japaneseJob;
+  const age = (i18n.language === "en-US") ? `${character.age} years old` : `${character.age}歳`;
 
   //list of descriptions
   const description = (i18n.language === "en-US") ? character.description : character.japaneseDescription;
@@ -70,54 +42,90 @@ export const CharacterSpotlight = (props) => {
     )
   });
 
+  //hide details button on mobile
+  const [showDetails, setShowDetails] = useState(true);
+  const { width } = useWindowDimensions();
+  useEffect(()=>{
+    if (width < 900) {
+      setShowDetails(false);
+    }
+  }, [width, setShowDetails]);
+  const detailsClass = (showDetails) ? "is-active" : "";
+  const showDetailsButtonText = (showDetails) ? "Hide details" : "Show more details";
+  const backgroundPosition = (character.image.objectPosition) ? `${character.image.objectPosition} center` : "center center";
+
   return (
-    <div className="characterSpotlightWrapper" >
-      <div className="spotlightCardWrapper">
-        {characterCard}
-      </div>
-      <div className="spotlightDetailsWrapper">
-        <VisibilityTrigger once={props.once} translateY>
-          <h1>{nameTitle}</h1>
-        </VisibilityTrigger>
-        <VisibilityTrigger once={props.once} translateY>
-          <div className="spotlightDetailsSection space-between">
-            <div className="divider"></div>
-            <p>
-              <span className="spotlightBold">{t('characters page.race')}<span className="is-hidden-mobile">:</span></span>
-              <span>{race}</span>
-            </p>
-            <div className="divider"></div>
-            <p>
-              <span className="spotlightBold">{t('characters page.age')}<span className="is-hidden-mobile">:</span></span>
-              <span>{character.age}</span>
-            </p>
-            <div className="divider"></div>
+    <div className={`characterSpotlightWrapper ${invertClass}`} >
+      <GsapFadeScrub fadeIn className="fadeInTextWrapper">
+        { props.sectionTitle &&
+          <SectionTitle title={props.sectionTitle} />
+        }
+        <div className="spotlightBottomWrapper">
+          <div className="spotlightLeftWrapper">
+            <NavLink to={`/characters/${character.urlName}`}>
+              <div className="imageCircleMask noselect">
+                <img src={character.image.url} style={{objectPosition:backgroundPosition}} alt={character.name} />
+              </div>
+            </NavLink>
+            <div className="leftDetailsWrapper">
+              <h1>{name}</h1>
+              <h3>— {title} —</h3>
+              <div className="leftAgeJobWrapper">
+                <p>{age}</p>
+                <p className="divider"></p>
+                <p>{job}</p>
+              </div>
+            </div>
           </div>
-        </VisibilityTrigger>
-        <VisibilityTrigger once={props.once} translateY>
-          <div className="spotlightDetailsSection space-between">
-            <div className="divider"></div>
-            <p>
-              <span className="spotlightBold">{t('characters page.job')}<span className="is-hidden-mobile">:</span></span>
-              <span>{ jobTitle }</span>
-            </p>
-            <div className="divider"></div>
+          <div className="spotlightRightWrapper">
+            <div className="spotlightRightTopWrapper">
+              <div className="spotlightDetailsSection spotlightHobbiesSection">
+                <p className="spotlightBold">{`${t('characters page.job')}`}:</p>
+                <p>{ jobTitle }</p>
+              </div>
+              <div className="spotlightDetailsSection spotlightHobbiesSection">
+                <p className="spotlightBold">{`${t('characters page.hobbies')}`}:</p>
+                <ul>
+                  { listOfHobbies }
+                </ul>
+              </div>
+              <div className={`spotlightDetailsSection ${detailsClass}`}>
+                { listOfDescriptions }
+              </div>
+              <div className={`showDetailsButton is-hidden-desktop`}>
+                <p onClick={()=>{setShowDetails(!showDetails)}}>{ showDetailsButtonText }</p>
+              </div>
+            </div>
+            { props.allCharsButton &&
+              <AllCharactersButton />
+            }
           </div>
-        </VisibilityTrigger>
-        <VisibilityTrigger once={props.once} translateY>
-          <div className="spotlightDetailsSection spotlightHobbiesSection">
-            <p className="spotlightBold">{`${t('characters page.hobbies')}`}:</p>
-            <ul>
-              { listOfHobbies }
-            </ul>
-          </div>
-        </VisibilityTrigger>
-        <VisibilityTrigger once={props.once} translateY>
-          <div className="spotlightDetailsSection">
-            { listOfDescriptions }
-          </div>
-        </VisibilityTrigger>
-      </div>
+        </div>
+      </GsapFadeScrub>
     </div>
   );
+}
+
+const SectionTitle = ({title}) => {
+  return (
+    <div className="spotlightTopWrapper">
+      <div className="starWrapperLeft">
+        <ShootingStar isActive={true} orientation="left" whiteMode />
+      </div>
+      <h1>{ title }</h1>
+      <div className="starWrapperRight">
+        <ShootingStar isActive={true} orientation="right" whiteMode mirror />
+      </div>
+    </div>
+  )
+}
+
+const AllCharactersButton = () => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="allCharsButtonWrapper">
+      <DefaultButton icon="people_white" bordered navlink="/characters" text={t('main page.character.clicktoseemore')}/>
+    </div>
+  )
 }

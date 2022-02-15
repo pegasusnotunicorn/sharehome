@@ -1,0 +1,54 @@
+.shootingStar{
+  display:none;
+  justify-content: center;
+  align-items: flex-start;
+  position:absolute;
+}
+
+.shootingStar.is-active{
+  display:flex;
+}
+
+.leftStar{
+  left:2em;
+}
+
+.rightStar{
+  right:2em;
+}
+
+.shootingStar.goingLeft{
+  transform:rotate(90deg);
+}
+
+.shootingStar.goingUp{
+  transform:rotate(180deg);
+}
+
+.shootingStar.goingRight{
+  transform:rotate(-90deg);
+}
+
+.shootingStar.mirror{
+  transform:scaleX(-1);
+}
+
+.shootingStarWrapper{
+  width: 50;
+  height: 50px;
+  display: flex;
+  justify-content: flex-start;
+  transform-origin: bottom right;
+}
+
+.shootingStarSVG{
+  height:50px;
+  width:50px;
+}
+
+.starPathSVG{
+  height:35px;
+  width:35px;
+  margin-left:-10px;
+  margin-top:20px;
+}

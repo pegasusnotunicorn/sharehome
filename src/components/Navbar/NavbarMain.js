@@ -1,65 +1,117 @@
-import React, { useState } from 'react';
-import { Home, HelpCircle, Mail, FileText, Users } from 'react-feather';
+import React, { useState, useEffect, useCallback } from 'react';
+import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import i18n from "i18next";
 
-import { NavLink } from 'react-router-dom';
-import { CustomForm } from '../utils/MailchimpForm.js';
-import NavbarTemplate from './NavbarTemplate.js';
-import navbarStyles from '../../css/navbar.module.css';
+import { GsapFadeDelay } from "../utils/useGsap.js";
+import ShootingStar from './ShootingStar.js';
+import EmailForm from './EmailForm.js';
+import useWindowDimensions from '../utils/useWindowDimensions.js';
+import DefaultButton from '../utils/DefaultButton.js';
+
+import '../../css/navbar.css';
 import '../../css/utils/hamburger.css';
 
-// <NavLink to="/purchase" activeClassName="is-active" className="button noselect navbarButton"><ShoppingCart />Purchase</NavLink>
-// <a href="https://tabletopia.com/games/sharehome" rel="noopener noreferrer" target="_blank" activeclassname="is-active" className="button noselect navbarButton"><Star />{t('navbar.play online')}</a>
-// <NavLink onClick={hideNav} to="/designer" activeClassName={navbarStyles["is-active"]} className={`${navbarStyles.navbarButton} button noselect`}><Edit />{t('navbar.card designer')}</NavLink>
-
 //main navbar for page navigation on the website
-export const NavbarMain = () => {
-  const [visibility, setVisibility] = useState("invisible");
-  const hideNav = () => { setVisibility("invisible"); }
+export const NavbarMain = (props) => {
+  const [visible, setVisibility] = useState(false);
+
+  const isVisibleClass = (visible) ? "is-active" : "";    //class to append if visible
+
+  //function to change language
   const { t } = useTranslation();
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+    document.getElementById('sharehome').setAttribute("language", lang);
+  }
 
-  const innards = (
-    <div className={`${navbarStyles.navBarMain}`} style={{height:"100%"}}>
+  //toggle email logic
+  const { width } = useWindowDimensions();
+  const [mailButtonVisible, setMailButtonVisible] = useState(true);
+  const mailButtonVisibleClass = (mailButtonVisible) ? "is-active" : "";    //class to append if visible
 
-      <div className={`${navbarStyles.titleWrapper}`}>
-        <NavLink to="/">
-          <img className={`${navbarStyles.lcmImage}`} src="/images/lcm.png" alt="Love, Career, & Magic"></img>
-        </NavLink>
-        <h3 className={`${navbarStyles.sharehomegame}`}>a SHAREHOME game</h3>
-      </div>
+  const [mobileShowMail, setMobileShowMail] = useState(false);
+  const mobileShowLeftClass = (mobileShowMail) ? "" : "is-active";    //class to append if visible
+  const mobileShowRightClass = (!mobileShowMail) ? "" : "is-active";    //class to append if visible
 
-      <div className={`${navbarStyles.navbarButtonWrapper}`}>
-        <NavLink onClick={hideNav} exact={true} to="/" activeClassName={navbarStyles["is-active"]} className={`${navbarStyles.navbarButton} button noselect`}><Home />{t('navbar.home')}</NavLink>
-        <NavLink onClick={hideNav} to="/about" activeClassName={navbarStyles["is-active"]} className={`${navbarStyles.navbarButton} button noselect`}><HelpCircle />{t('navbar.how to play')}</NavLink>
-        <NavLink onClick={hideNav} to="/characters" activeClassName={navbarStyles["is-active"]} className={`${navbarStyles.navbarButton} button noselect`}><Users />{t('navbar.characters')}</NavLink>
-        <NavLink onClick={hideNav} to="/contact" activeClassName={navbarStyles["is-active"]} className={`${navbarStyles.navbarButton} button noselect`}><Mail />{t('navbar.contact us')}</NavLink>
-        <a href="https://pegasusgames.medium.com/" rel="noopener noreferrer" target="_blank" activeclassname="is-active" className={`${navbarStyles.navbarButton} button noselect`}><FileText />{t('navbar.blog')}</a>
-      </div>
-      <div className={`${navbarStyles.navbarBottomWrapper}`}>
-        <p className={`${navbarStyles.languageChangeWrapper}`}><span className={`${navbarStyles.languageChangeSpan}`} onClick={()=>{
-            i18n.changeLanguage("en-US");
-            document.getElementById('sharehome').setAttribute("language", "en-US");
-          }}>English</span> / <span className={`${navbarStyles.languageChangeSpan}`} onClick={()=>{
-            i18n.changeLanguage("ja");
-            document.getElementById('sharehome').setAttribute("language", "ja");
-          }}>日本語</span></p>
-        <CustomForm
-          sidebar={true}
-          moduleStyles={navbarStyles}
-        />
-      </div>
-    </div>
-  )
+  //toggle nav / mail buttons
+  const toggleNav = useCallback((mailButton) => {
+    setVisibility(!visible);
+
+    //desktop
+    if (width > 900){
+      setMailButtonVisible(!mailButtonVisible);
+    }
+    //mobile
+    else {
+      //hide the email form if mobile
+      if (mailButton === true){
+        setMobileShowMail(true);
+        setVisibility(true);
+        setMailButtonVisible(false);
+      }
+      else {
+        setMailButtonVisible(true);
+        setMobileShowMail(false);
+      }
+    }
+  }, [width, mailButtonVisible, visible]);
+
+  const toggleMail = useCallback(() => {
+    toggleNav(width <= 900 && !mobileShowMail);
+  }, [width, toggleNav, mobileShowMail]);
+  const isActiveAndDesktop = (width > 900) && visible;
+
+  //set the parent setter
+  const onMount = props.onMount;
+  useEffect(()=>{
+    onMount(toggleMail);
+  },[onMount, visible, toggleMail]);
 
   return (
-    <NavbarTemplate
-      innards={innards}
-      position="right"
-      id="navbar"
-      visibility={visibility}
-      setVisibility={setVisibility}
-    />
+    <div className={`navbarClass ${isVisibleClass}`}>
+
+      <GsapFadeDelay delay={1500} className="fixedButtonsWrapper noselect">
+        <DefaultButton icon="email_white" id="emailToggleButtonMobile" className={mailButtonVisibleClass} onClick={toggleMail} text={t('email form.joinbutton')}/>
+        <button
+          id="navbarOpenClose"
+          className={`hamburger hamburger--slider ${isVisibleClass}`}
+          onClick={toggleNav}
+          type="button"
+          >
+          <span className="hamburger-box">
+            <span className="hamburger-inner"></span>
+          </span>
+        </button>
+      </GsapFadeDelay>
+
+      <div className={`navbarMain ${isVisibleClass}`}>
+        <div className="navbarChildrenWrapper">
+          <div className={`navbarChildren navbarLeftWrapper ${mobileShowLeftClass}`}>
+            <div className="navbarButtonWrapper">
+              <NavLink onClick={toggleNav} exact={true} to="/" activeClassName="is-active" className="navbarButton noselect">{t('navbar.home')}</NavLink>
+              <NavLink onClick={toggleNav} to="/about" activeClassName="is-active" className="navbarButton noselect">{t('navbar.how to play')}</NavLink>
+              <NavLink onClick={toggleNav} to="/characters" activeClassName="is-active" className="navbarButton noselect">{t('navbar.characters')}</NavLink>
+              <NavLink onClick={toggleNav} to="/contact" activeClassName="is-active" className="navbarButton noselect">{t('navbar.contact us')}</NavLink>
+              <a href="https://pegasusgames.medium.com/" rel="noopener noreferrer" target="_blank" className="navbarButton noselect">{t('navbar.blog')}</a>
+              <p className="languageChangeWrapper noselect"><span className="languageChangeSpan noselect"
+                onClick={()=>{ changeLanguage("en-US")}}>English</span> / <span className="languageChangeSpan noselect"
+                onClick={()=>{ changeLanguage("ja")}}>日本語</span>
+              </p>
+            </div>
+          </div>
+          <div className="navbarChildren navbarCenterBorder"></div>
+          <div className={`navbarChildren navbarRightWrapper ${mobileShowRightClass}`}>
+            <ShootingStar className="leftStar" isActive={visible} orientation="right" mirror />
+            <ShootingStar className="rightStar" isActive={visible} orientation="left" delay="2" />
+            <ShootingStar className="leftStar" isActive={visible} orientation="up" delay="4"/>
+            <ShootingStar className="leftStar" isActive={visible} orientation="down" delay="6"/>
+            <EmailForm isActiveAndDesktop={isActiveAndDesktop}/>
+          </div>
+        </div>
+      </div>
+
+    </div>
   )
 }
 

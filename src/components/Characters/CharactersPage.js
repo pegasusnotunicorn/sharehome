@@ -5,7 +5,6 @@ import { Redirect, useParams, useHistory } from 'react-router-dom';
 import { getAllCharacters, getSpecificPersonByURL } from '../Characters/Characters.js';
 import { CharacterSpotlight } from '../utils/CharacterSpotlight.js';
 
-import VisibilityTrigger from "../utils/VisibilityTrigger.js";
 import '../../css/pages/characters.css';
 
 //get all characters and their details
@@ -17,7 +16,6 @@ const AllCharacters = (props) => {
   const redirectToSpecificCharacter = (character) => {
     if (chosenCharacter !== character && !character.ignoreInRandom){
       history.push(`/characters/${character.urlName}`);
-      window.scrollTo({top:0,behavior:'smooth'});
     }
   }
 
@@ -25,7 +23,7 @@ const AllCharacters = (props) => {
   const expansionCharacters = allCharacters.map((elem, index)=>{
     let ignoreInRandom = (elem.ignoreInRandom) ? "notDone" : "";
     return (
-      <VisibilityTrigger className={`characterWrapper ${ignoreInRandom}`} key={index} once translateY >
+      <div className={`characterWrapper ${ignoreInRandom}`} key={index}>
         <div className="characterInnerWrapper" onClick={()=>{redirectToSpecificCharacter(elem)}}>
           <div className="ignoreFilter noselect">
             <p className="notDoneName">{elem.name}</p>
@@ -41,7 +39,7 @@ const AllCharacters = (props) => {
             </p>
           </div>
         </div>
-      </VisibilityTrigger>
+      </div>
     )
   });
 

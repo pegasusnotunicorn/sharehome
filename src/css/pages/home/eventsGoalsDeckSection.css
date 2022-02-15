@@ -1,0 +1,51 @@
+.eventGoalDecksContainer {
+  width: 50%;
+  height: 100%;
+  overflow:hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding:0 !important;
+  z-index:11;
+}
+
+.eventGoalDeckRow {
+  width:100%;
+  height:20%;
+  display:flex;
+  justify-content: left;
+  align-items: center;
+  padding:2em;
+}
+
+.EGCardWrapper {
+  position:absolute;
+}
+
+.EGCardWrapper a {
+  color: #323232;
+  text-decoration: none;
+}
+
+/* small desktop */
+@media only screen and (min-width: 1200px) and (max-width: 1600px) {
+
+}
+
+/* tablet */
+@media only screen and (min-width: 900px) and (max-width: 1200px) {
+
+}
+
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .eventGoalDecksContainer {
+    position:absolute;
+    width:100%;
+    z-index:9;
+  }
+  .eventGoalDeckRow {
+    justify-content: center;
+  }
+}

@@ -6,13 +6,9 @@
  * @link https://github.com/jonsuh/hamburgers
  */
 
- .hamburger:not(.is-active){
-  box-shadow:0px 0px 10px rgb(0 0 0 / 33%);
- }
-
 .hamburger {
   z-index:999;
-  padding: 10px;
+  padding: 5px;
   display: inline-block;
   cursor: pointer;
   transition-property: opacity, filter, box-shadow;
@@ -24,46 +20,17 @@
   background-color: transparent;
   border: 0;
   margin: 10px;
-  width: 50px;
-  height: 45px;
+  width: 55px;
+  height: 55px;
   overflow: visible; }
   .hamburger:hover {
     opacity: 0.8; }
   .hamburger.is-active:hover {
     opacity: 0.8; }
 
-.whiteBackground.hamburger.is-active .hamburger-inner,
-.whiteBackground.hamburger.is-active .hamburger-inner::before,
-.whiteBackground.hamburger.is-active .hamburger-inner::after {
-  background-color: #323232; }
-
-.blueBackground.hamburger.is-active .hamburger-inner,
-.blueBackground.hamburger.is-active .hamburger-inner::before,
-.blueBackground.hamburger.is-active .hamburger-inner::after {
-  background-color: #FFF !important; }
-
-.whiteBackground.hamburger .hamburger-inner,
-.whiteBackground.hamburger .hamburger-inner::before,
-.whiteBackground.hamburger .hamburger-inner::after {
-  background-color: #323232;
-}
-
-.blueBackground.hamburger .hamburger-inner,
-.blueBackground.hamburger .hamburger-inner::before,
-.blueBackground.hamburger .hamburger-inner::after {
-  background-color: #FFF !important;
-}
-
-.hamburger.whiteBackground{
-  border-radius: 0 1em 0 1em;
-}
-.hamburger.blueBackground{
-  border-radius: 1em 0 1em 0;
-}
-
 .hamburger-box {
-  width: 30px;
-  height: 24px;
+  width: 50px;
+  height: 34px;
   transform: scale(0.75);
   display: inline-block;
   position: relative; }
@@ -73,7 +40,7 @@
   top: 50%;
   margin-top: -2px; }
   .hamburger-inner, .hamburger-inner::before, .hamburger-inner::after {
-    width: 30px;
+    width: 50px;
     height: 4px;
     background-color: #323232;
     position: absolute;
@@ -92,7 +59,7 @@
    * Slider
    */
 .hamburger--slider .hamburger-inner {
-  top: 2px; }
+  top: 8px; }
   .hamburger--slider .hamburger-inner::before {
     top: 10px;
     transition-property: transform, opacity;

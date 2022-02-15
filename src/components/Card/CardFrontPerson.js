@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { getRandomPerson, getSpecificPerson } from '../Characters/Characters.js';
-import { pdfDimensions, getCoverFitObject } from '../Designer/utils/cardConstants.js';
+import { pdfDimensions, getCoverFitObject } from '../utils/cardConstants.js';
 
 export const CardFrontPerson = (props) => {
 

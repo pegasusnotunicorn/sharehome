@@ -1,0 +1,174 @@
+/* <editor-fold>--------------------------------------GENERAL  */
+
+.likehateContainers{
+  display:flex;
+  position:relative;
+  padding:2em;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height:50%;
+}
+
+/* </editor-fold> */
+
+/* <editor-fold>--------------------------------------LEFT  */
+
+.likehateLeftContainer {
+  justify-content: flex-start;
+}
+
+@media only screen and (min-width: 1000px) {
+  .likehateLeftContainer {
+    transform:rotate(-2deg);
+  }
+}
+
+.imageAndArrowContainer{
+  width:1000px;
+  height:490px;
+  position:relative;
+  display:flex;
+}
+
+.tableSplash, .arrowContainer {
+  width:100%;
+  height:100%;
+  border-radius:4px;
+  position:absolute;
+}
+
+.tableSplash {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:1;
+}
+
+.arrowsContainer{
+  width:100%;
+  height:100%;
+  z-index:2;
+}
+
+.arrowWrapper {
+  position:absolute;
+}
+
+.arrowWrapperSVG {
+  min-width:150px;
+  z-index:1;
+  display:flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+}
+
+.arrowHeadSVG {
+  width:25px;
+  margin-left:-7px;
+  z-index:2;
+}
+
+.arrowTailSVG {
+  height:100%;
+  width:100px;
+  z-index:1;
+}
+
+/* </editor-fold> */
+
+/* <editor-fold>--------------------------------------RIGHT  */
+
+.likehateRightContainer {
+  width:25%;
+}
+
+/* small desktop */
+@media only screen and (min-width: 1400px) and (max-width: 1600px) {
+  .likehateRightContainer {
+    padding-left:0;
+    padding-top:0;
+    padding-bottom:0;
+  }
+}
+
+/* tablet */
+@media only screen and (min-width: 1000px) and (max-width: 1400px) {
+  .likehateRightContainer {
+    width:50%;
+    margin-top:0;
+    padding-top:0;
+    justify-content: flex-start;
+  }
+}
+
+/* mobile */
+@media only screen and (max-width: 1000px) {
+  .likehateLeftContainer {
+    transform:scale(0.5);
+    padding-top:0;
+    padding-bottom:0
+  }
+  .likehateRightContainer {
+    width:calc(100% - 4em);
+    margin-top:-6em;
+    padding-top:0;
+    justify-content: flex-start;
+    height:40%;
+  }
+}
+
+.likehateTextContainer {
+  display:flex;
+  flex-direction: row;
+}
+
+span.likeMode{
+  background: linear-gradient(-45deg, #9e0b0b 20%, #DD7373 40%, #FF5e5e 60%, #ffcccc 80%);
+  background-size: 200% auto;
+  background-clip: text;
+  text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: animated_text 5s ease-in-out infinite;
+}
+
+span.hateMode{
+  background: linear-gradient(-45deg, #5d4470 20%, #8000e0 40%, #a055d9 60%, #4d0087 80%);
+  background-size: 200% auto;
+  background-clip: text;
+  text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: animated_text 5s ease-in-out infinite;
+}
+
+.likeHateSVG {
+  position:absolute;
+  bottom:0;
+}
+
+@media only screen and (max-width: 1000px) {
+  .likeHateSVG {
+    bottom:0vh;
+  }
+  .likehateTextContainer h1{
+    margin-bottom:0;
+  }
+}
+
+.thumbup{
+  left:55%;
+}
+
+.thumbdown{
+  left:15%;
+}
+
+.likeHateSVG img {
+  width:125px;
+  height:125px;
+}
+
+/* </editor-fold> */

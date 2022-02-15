@@ -71,20 +71,70 @@ p, li {
 	100% { background-position: 0px 50%; }
 }
 
+.mirrored {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+@media only screen and (min-width: 900px) {
+  .is-hidden-desktop{
+    display:none !important;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .is-hidden-mobile{
+    display:none !important;
+  }
+}
+
 /* </editor-fold> */
 
 /* <editor-fold>------------------------------------------------------------------BUTTONS */
 
 .defaultButton{
-  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
-  text-transform: uppercase;
+  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
+  cursor:pointer;
   padding:10px;
   padding-left:15px;
   padding-right:15px;
-  background:#323232;
+  background-color:#323232;
   color:#FFF;
   border-radius:4px;
   text-decoration:none;
+  border:1px solid transparent;
+  box-shadow: 1px 1px 4px 0px #323232;
+  line-height:125%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  width:fit-content;
+}
+
+@media only screen and (max-width: 900px) {
+  .defaultButton{
+    margin:auto;
+    width:100%;
+  }
+}
+
+.defaultButton:active{
+  background-color: #474747;
+}
+
+.defaultButton.is-inverted{
+  background-color:#FFF;
+  color:#323232;
+}
+
+.defaultButton.is-bordered{
+  border: 1px solid #FFF;
+}
+
+.defaultButtonIcon{
+  width:25px;
+  height:25px;
+  margin-right:10px;
 }
 
 .button{

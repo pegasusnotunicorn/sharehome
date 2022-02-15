@@ -1,65 +1,201 @@
+/* <editor-fold>--------------------------------------GENERAL */
+
 .characterSpotlightWrapper {
   display:flex;
   justify-content:center;
-  flex-direction:row;
+  align-items: center;
+  flex-direction: column;
   color:#323232;
+  background:#FFF;
+  padding:2em;
 }
 
-.spotlightCardWrapper{
-  margin:auto;
-  margin-right:0;
+.characterSpotlightWrapper.invert {
+  background:#323232;
+  color:#FFF;
 }
 
-.spotlightDetailsWrapper {
-  text-align:left;
-  padding-left:50px;
-  margin:auto;
-  margin-left:0;
-  max-width:40%;
+.fadeInTextWrapper{
+  width:100%;
 }
 
-.spotlightDetailsWrapper h1 {
-  font-size:2.5em !important;
-  line-height: 100%;
+.spotlightTopWrapper, .spotlightBottomWrapper {
+  display:flex;
+  align-items: center;
+  flex-direction:row;
+  width:calc(100% - 4em);
+  text-align: center;
+  justify-content:center;
+  padding:2em;
+}
+
+.spotlightTopWrapper{
+  padding-top:1em;
+  justify-content:center;
+}
+.spotlightTopWrapper h1{
+  margin:0;
+  line-height: 125%;
+}
+
+.starWrapperLeft{
+  position:relative;
+  display:block;
+  transform:translateX(-2em);
+}
+
+.starWrapperRight{
+  position:relative;
+  display:block;
+  transform:translateX(2em);
+}
+
+.spotlightBottomWrapper{
+}
+
+@media only screen and (max-width: 1000px) {
+  .spotlightTopWrapper, .spotlightBottomWrapper {
+    flex-direction:column;
+  }
+  .spotlightLeftWrapper{
+    padding-bottom:2em;
+  }
+  .spotlightBottomWrapper{
+    padding:0;
+    width:100%;
+  }
+  .spotlightRightTopWrapper{
+    margin-left:0 !important;
+  }
+  .spotlightTopWrapper{
+    padding-left:0;
+    padding-right:0;
+    width:100%;
+  }
+}
+
+@media only screen and (max-width: 900px){
+  .showDetailsButton{
+    text-align: center;
+    margin-top:1em;
+    margin-bottom:0em;
+    text-decoration: underline;
+    cursor:pointer;
+  }
+  .showDetailsButton p{
+    width:fit-content;
+    margin:auto;
+  }
+  .spotlightDetailsSection{
+    display:none;
+  }
+  .spotlightDetailsSection.is-active{
+    display:block;
+  }
+}
+
+.allCharsButtonWrapper{
+  width:100%;
+  display:flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top:1em;
+}
+
+/* </editor-fold> */
+
+/* <editor-fold>--------------------------------------LEFT */
+
+.spotlightLeftWrapper{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-direction: column;
+}
+
+.spotlightLeftWrapper img {
+  width:350px;
+  height:350px;
+  border-radius:100%;
+  object-fit: cover;
+}
+
+.leftDetailsWrapper {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.leftDetailsWrapper h1 {
+  margin-bottom:0;
   margin-top:0.25em;
-  margin-bottom:0.25em;
+  font-size:2em !important;
+  line-height:125%;
 }
 
-.spotlightDetailsSection{
-  border-top:1px solid #323232;
-  padding-top:0.5em;
+.leftDetailsWrapper h3 {
+  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
+  font-size:1em;
+  text-transform: uppercase;
   margin-top:0.5em;
-  max-width:750px;
+  margin-bottom:1em;
+}
+
+.leftAgeJobWrapper {
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width:100%;
+}
+
+.leftAgeJobWrapper p {
+  margin-bottom:0;
+}
+
+.leftAgeJobWrapper .divider {
+  margin-left:.5em;
+  margin-right:.5em;
+  width:1px;
+  height:1px;
+}
+
+/* </editor-fold> */
+
+/* <editor-fold>--------------------------------------RIGHT */
+
+.characterSpotlightWrapper.invert .spotlightRightTopWrapper{
+  background:#FFF;
+  color:#323232;
+  font-size:1em;
+}
+
+.spotlightRightTopWrapper {
   text-align:left;
+  padding:2em;
+  margin-left:4em;
+  border-radius:5px;
+  max-width:700px;
+}
+
+.spotlightRightTopWrapper > .spotlightDetailsSection:not(:last-child){
+  margin-bottom:1em;
 }
 
 .spotlightHobbiesSection{
   display:flex;
+  flex-direction: column;
 }
 
 .spotlightHobbiesSection > ul{
   margin:0;
 }
 
-.spotlightDetailsSection:not(:last-child){
-  padding-bottom:0.5em;
-}
-.spotlightDetailsSection.space-between{
-  display:flex;
-  justify-content: space-between;
-}
-
-.spotlightDetailsSection .divider:not(:first-child):not(:last-child) {
-  border-right:1px solid #323232;
-}
-
-.spotlightDetailsSection .divider:first-child {
-  display:none;
-}
-
 .spotlightDetailsSection .spotlightBold {
   font-family:"Roboto Regular";
-  padding-right:10px;
+  padding-bottom:0.5em;
 }
 
 .descriptionsList:not(:last-child){
@@ -70,60 +206,9 @@
   text-align: left;
 }
 
-.spotlightDetailsWrapper h2, .spotlightDetailsWrapper h3, .spotlightDetailsWrapper p {
+.spotlightRightTopWrapper h2, .spotlightRightTopWrapper h3, .spotlightRightTopWrapper p {
   margin-top:0;
   margin-bottom:0;
 }
 
-/* mobile stuff */
-@media only screen and (max-width: 1200px) {
-  .is-hidden-mobile{
-    display:none;
-  }
-
-  .characterSpotlightWrapper{
-    flex-direction: column;
-  }
-
-  .spotlightCardWrapper{
-    margin-right:auto;
-    margin-bottom:2em;
-  }
-
-  .spotlightDetailsSection p {
-    display:flex;
-    flex-direction: column;
-  }
-
-  .spotlightDetailsWrapper {
-    text-align:center;
-    margin-left:auto;
-    max-width:100%;
-    padding:2em;
-    padding-top:0;
-    padding-bottom:0;
-  }
-
-  .spotlightDetailsWrapper h1 {
-    font-size:2em;
-  }
-
-  .spotlightDetailsWrapper h3 {
-    font-size:1em;
-    text-align:center;
-    display:flex;
-    flex-direction: column;
-  }
-
-  .spotlightDetailsSection .divider:first-child {
-    display:block;
-  }
-
-  p.leftAlign{
-    text-align:left;
-  }
-
-  .spotlightDetailsSection .spotlightBold {
-    padding-right:0px;
-  }
-}
+/* </editor-fold> */

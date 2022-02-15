@@ -40,21 +40,40 @@ const japanese = {
         "subtitle3": "「Love, Career & Magic」は番組出演者を演じて名シーンを好きに再現するカードゲーム。",
         "splashalt": "6人の獣人がワイワイご飯を食べている様子。",
       },
+      "how to play": {
+        "description" : "ゲームの遊び方",
+        "steps" : "(簡単な４段ステップ)",
+      },
       "character": {
-        "description": "キャラクター紹介",
+        "description": "２５人のキャラクターから１人を選ぶ！",
+        "click me": "クリック",
         "moretocome": "毎週新キャラ一人が紹介されます！",
-        "clicktoseemore" : "キャラクターの一覧はこちらへ",
+        "clicktoseemore" : "キャラクターの一覧",
+      },
+      "events": {
+        "description": "イベントカードに従って演じ、デートに誘う。",
+        "subdescription": "親密な絆を作るか、とんだ喧嘩を売るか。",
+      },
+      "goals": {
+        "description": "ゴールカードをクリアしてポイントをゲット！",
+        "subdescription": "秘密ゴールの達成やカップルの誕生で番組から卒業してポイントを貰う。",
+      },
+      "likehate": {
+        "description1": "誰が誰のことが",
+        "like": "好き",
+        "hate": "嫌い",
+        "description2": "か当てたらポイントをゲット!",
       },
       "mechanics": {
-        "description": "If you like any of these things, then this game is for you!",
-        "laughing": "Laughing",
-        "improv": "Improv",
-        "party": "Party Games",
-        "acting": "Acting",
-        "stories": "Unique Stories",
+        "description": "以下のどれでもお好みなら、このゲームが好きかも!",
+        "laughing": "大笑い",
+        "improv": "即興",
+        "party": "パーティーゲーム",
+        "acting": "演技",
+        "stories": "ユニークなストーリー",
       },
       "spotlight": {
-        "description": "今週の新キャラ紹介",
+        "description": "新キャラ紹介",
       },
       "final": {
         "description": "２０２２年キックスターターで発売予定！",
@@ -63,9 +82,9 @@ const japanese = {
     },
 
     "email form":{
+      "joinbutton": "メルマガ登録",
       "prompt": "メルマガ登録で最新ニュースが届く！",
       "button": "登録",
-      "sidebarbutton": "登録",
       "promise": "Your email will not be shared with anyone else.",
       "sending": "転送中...",
       "success": "ありがとうございます！すぐ確認メールが届きます。届かない場合は再度メールアドレスをご確認して下さい。"
@@ -243,7 +262,6 @@ const japanese = {
         "prompt": "作りたいカードデッキの種類を選んで下さい。",
         "decks":{
           "member": "友達や家族のカスタムカードを作ってハウスメンバーとして遊んでみる！",
-          "commentator": "友達や家族のカスタムカードを作ってコメンテーターとして遊んでみる！",
           "event": "自分自身のネタをテーマにしたイベントカードを作ってみる！",
           "goal": "自分の目的や夢をテーマにしうたゴールカードを作ってみる！",
         }

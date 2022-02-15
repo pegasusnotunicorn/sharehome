@@ -18,6 +18,7 @@ const allCharacters = [
       credit: "https://1minlee.com"
     },
     ignoreInRandom: true,
+ 	 	type: "member",
   },
   {
     name: "Urg the Hacker",
@@ -36,6 +37,7 @@ const allCharacters = [
       "Really fluent in working with dark web cryptocurrencies and money laundering.",
       "Manages a NFT marketplace based on funny orc pictures of the orcs that used to bully him as a child."
     ],
+    japaneseRace:"オーク",
     japaneseDescription:[
       "",
       "",
@@ -56,6 +58,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: false,
+ 	 	type: "member",
   },
   {
     name: "Beatrice Cavendish",
@@ -73,6 +76,7 @@ const allCharacters = [
       "Enjoys trying on various different sunglasses for fun.",
       "Likes to read about characters used in other languages.",
     ],
+    japaneseRace:"コカトリス",
     japaneseDescription:[
       "",
       "",
@@ -93,6 +97,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: false,
+ 	 	type: "member",
   },
   {
     name: "Tsukasa Shōbō",
@@ -111,6 +116,7 @@ const allCharacters = [
       "Singing and dancing. Especially when alone.",
       "Pretty much anything that might make him more attractive to the opposite gender.",
     ],
+    japaneseRace:"エルフ",
     japaneseDescription:[
       "",
       "",
@@ -131,6 +137,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: false,
+ 	 	type: "member",
   },
   {
     name: "Köttr, the Grumpy",
@@ -149,6 +156,7 @@ const allCharacters = [
       "Napping.",
       "Snoozing.",
     ],
+    japaneseRace:"ドラゴン",
     japaneseDescription:[
       "",
       "",
@@ -170,6 +178,7 @@ const allCharacters = [
       objectPosition: "left",
     },
     ignoreInRandom: false,
+ 	 	type: "member",
   },
   {
     name: "Lydia Grimsbane",
@@ -187,6 +196,7 @@ const allCharacters = [
       "Reading. Particularly science fiction books about a parallel world ruled by only humans.",
       "Making mocktails with exotic ingredients.",
     ],
+    japaneseRace:"人間",
     japaneseDescription:[
       "",
       "",
@@ -208,6 +218,7 @@ const allCharacters = [
       objectPosition: "right",
     },
     ignoreInRandom: false,
+ 	 	type: "member",
   },
   {
     name: "Ahxi Raanee",
@@ -226,6 +237,7 @@ const allCharacters = [
       "Working out. Lifting weights.",
       "Strength training.",
     ],
+    japaneseRace:"バシリスク",
     japaneseDescription:[
       "",
       "",
@@ -246,6 +258,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: false,
+ 	 	type: "member",
   },
   {
     name: "Ogark Chestmaul",
@@ -263,6 +276,7 @@ const allCharacters = [
       "Likes wearing colors that clash against his blueish skin. Despite it making him stick out like a sore thumb when going bird watching.",
       "Yelling loudly.",
     ],
+    japaneseRace:"オーガ",
     japaneseDescription:[
       "",
       "",
@@ -284,6 +298,7 @@ const allCharacters = [
       objectPosition: "right",
     },
     ignoreInRandom: false,
+ 	 	type: "member",
   },
   {
     name: "Anna Salandria Westergaard",
@@ -301,6 +316,7 @@ const allCharacters = [
       "Finding good deals when shopping.",
       "Getting a massage. Going to the spa.",
     ],
+    japaneseRace:"ダークエルフ",
     japaneseDescription:[
       "",
       "",
@@ -321,6 +337,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank",
     },
     ignoreInRandom: false,
+ 	 	type: "member",
   },
   {
     name: "Korelin Bottleguard",
@@ -338,6 +355,7 @@ const allCharacters = [
       "Betting on who can out-drink who.",
       "Turkey legs",
     ],
+    japaneseRace:"ドワーフ",
     japaneseDescription:[
       "",
       "",
@@ -358,6 +376,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: false,
+ 	 	type: "member",
   },
   {
     name: "Rosamund Galbassi",
@@ -374,6 +393,7 @@ const allCharacters = [
       "Cosplay. Especially really creative ones involving only one leg. Like a table lamp, a table football player, amongst others.",
       "Enjoys shopping for shoes.",
     ],
+    japaneseRace:"モノポッド",
     japaneseDescription:[
       "",
       "",
@@ -394,12 +414,13 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: false,
+ 	 	type: "member",
   },
   {
     name: "Robin Stringsworth",
     urlName: "robin",
     age: 19,
-    job: "Server",
+    job: "Waitress",
     employer: "La Criada Café",
     race:"Talking Puppet",
     description:[
@@ -411,6 +432,7 @@ const allCharacters = [
       "Likes swapping clothes.",
       "Has a large wardrobe full of random articles of clothing from different eras.",
     ],
+    japaneseRace:"生き人形",
     japaneseDescription:[
       "",
       "",
@@ -431,6 +453,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: false,
+ 	 	type: "member",
   },
   {
     name: "Dorpip Wadlezedle",
@@ -448,6 +471,7 @@ const allCharacters = [
       "Dispelling awkward tensions with jokes.",
       "Fart jokes.",
     ],
+    japaneseRace:"ノーム",
     japaneseDescription:[
       "",
       "",
@@ -468,6 +492,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: false,
+ 	 	type: "member",
   },
   {
     name: "Gingernuts Goodyhug",
@@ -485,6 +510,7 @@ const allCharacters = [
       "Movie theaters. Especially after the movie is over and everyone leaves their food behind.",
       "Sitting in cotton candy machines.",
     ],
+    japaneseRace:"ジンジャーブレッド人間",
     japaneseDescription:[
       "",
       "",
@@ -505,6 +531,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: false,
+ 	 	type: "member",
   },
   {
     name: "Bizz Hagglefeet",
@@ -514,15 +541,16 @@ const allCharacters = [
     employer: "the Bank of New Cresthill",
     race:"Goblin",
     description:[
-      "",
-      "",
-      "",
+      "Goblins reach adulthood and physical maturity around age 8. They are often named after their accomplishments in fields such as economics or con-artistry.",
+      "Bizz always wears a bowtie even on his worst days. Really good with numbers and really good with people. Doesn't need a calculator for even the most complex of calculations. Has an excellent memory and can recite anyone's birthday after hearing it once, even years later.",
     ],
 		hobbies:[
-      "",
-      "",
-      "",
+      "Calculus.",
+      "Watching pickup artist videos.",
+      "Memory games.",
+      "Taking IQ quizzes online.",
     ],
+    japaneseRace:"ゴブリン",
     japaneseDescription:[
       "",
       "",
@@ -543,6 +571,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: true,
+ 	 	type: "member",
   },
   {
     name: "Seji Toomin",
@@ -561,6 +590,7 @@ const allCharacters = [
       "",
       "",
     ],
+    japaneseRace:"トロール",
     japaneseDescription:[
       "",
       "",
@@ -581,6 +611,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: true,
+ 	 	type: "member",
   },
   {
     name: "Susom the Giant",
@@ -599,6 +630,7 @@ const allCharacters = [
       "",
       "",
     ],
+    japaneseRace:"巨人",
     japaneseDescription:[
       "",
       "",
@@ -619,6 +651,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: true,
+ 	 	type: "member",
   },
   {
     name: "Hansan Snekker",
@@ -638,6 +671,7 @@ const allCharacters = [
       "",
       "",
     ],
+    japaneseRace:"人間",
     japaneseDescription:[
       "",
       "",
@@ -658,6 +692,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: true,
+ 	 	type: "member",
   },
   {
     name: "Soh",
@@ -676,6 +711,7 @@ const allCharacters = [
       "",
       "",
     ],
+    japaneseRace:"ユニコーン",
     japaneseDescription:[
       "",
       "",
@@ -696,6 +732,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: true,
+ 	 	type: "member",
   },
   {
     name: "Grodrot, The Hungry",
@@ -714,6 +751,7 @@ const allCharacters = [
       "",
       "",
     ],
+    japaneseRace:"ワイバーン",
     japaneseDescription:[
       "",
       "",
@@ -734,6 +772,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: true,
+ 	 	type: "member",
   },
   {
     name: "Celestia Bernard",
@@ -752,6 +791,7 @@ const allCharacters = [
       "",
       "",
     ],
+    japaneseRace:"バイコーン",
     japaneseDescription:[
       "",
       "",
@@ -772,6 +812,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: true,
+ 	 	type: "member",
   },
   {
     name: "Elias & Maya Dimakos",
@@ -790,6 +831,7 @@ const allCharacters = [
       "",
       "",
     ],
+    japaneseRace:"ジェミニ",
     japaneseDescription:[
       "",
       "",
@@ -810,6 +852,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: true,
+ 	 	type: "member",
   },
   {
     name: 'Domination "Dommy" Armor Set',
@@ -828,6 +871,7 @@ const allCharacters = [
       "",
       "",
     ],
+    japaneseRace:"騎士の鎧",
     japaneseDescription:[
       "",
       "",
@@ -848,6 +892,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: true,
+ 	 	type: "member",
   },
   {
     name: 'Arya Jensen',
@@ -866,6 +911,7 @@ const allCharacters = [
       "",
       "",
     ],
+    japaneseRace:"シーモンク",
     japaneseDescription:[
       "",
       "",
@@ -886,6 +932,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: true,
+ 	 	type: "member",
   },
   {
     name: "Nycolas O'Sullivan",
@@ -904,6 +951,7 @@ const allCharacters = [
       "",
       "",
     ],
+    japaneseRace:"デュラハン",
     japaneseDescription:[
       "",
       "",
@@ -924,6 +972,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: true,
+ 	 	type: "member",
   },
   {
     name: "Brigit Ní Colla",
@@ -942,6 +991,7 @@ const allCharacters = [
       "",
       "",
     ],
+    japaneseRace:"レプラコーン",
     japaneseDescription:[
       "",
       "",
@@ -962,6 +1012,7 @@ const allCharacters = [
       credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: true,
+ 	 	type: "member",
   },
 ]
 

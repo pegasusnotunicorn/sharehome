@@ -8,7 +8,7 @@
 .pnp.js
 
 # unused
-/src/components/Characters/PhotosPage.js
+/src/components/unused
 
 # testing
 /coverage

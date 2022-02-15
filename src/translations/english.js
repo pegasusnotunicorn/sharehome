@@ -19,13 +19,13 @@ const english = {
     },
 
     "navbar":{
-      "home":"HOME",
-      "how to play": "HOW TO PLAY",
-      "characters":"CHARACTERS",
-      "contact us":"CONTACT US",
-      "card designer":"card designer",
-      "blog":"BLOG",
-      "play online":"PLAY ONLINE",
+      "home":"Home",
+      "how to play": "How to play",
+      "characters":"Characters",
+      "contact us":"About / Contact",
+      "card designer":"Card Designer",
+      "blog":"Blog",
+      "play online":"Play online",
       "questions":"Questions? Comments?",
     },
 
@@ -40,10 +40,29 @@ const english = {
         "subtitle3": "Love, Career & Magic is a card game that lets you relive your favorite scenes by playing as the characters from the show!",
         "splashalt": "6 strangers enjoying a meal together.",
       },
+      "how to play": {
+        "description" : "How to play",
+        "steps" : "(in 4 easy steps)",
+      },
       "character": {
         "description": "Choose one of 25 unique characters to play as!",
+        "click me": "CLICK ME",
         "moretocome": "More characters will be added every week!",
         "clicktoseemore" : "View all characters",
+      },
+      "events": {
+        "description": "Act out events and go on dates.",
+        "subdescription": "You decide what kind of reality TV star you want to be!\n Will you build long lasting relationships or stir up drama?",
+      },
+      "goals": {
+        "description": "Complete goals to earn even more points.",
+        "subdescription": "Graduate from the show by completing your secret life goals or becoming a couple!",
+      },
+      "likehate": {
+        "description1": "Correctly guess who",
+        "like": "likes",
+        "hate": "hates",
+        "description2": "who to earn points!",
       },
       "mechanics": {
         "description": "If you like any of these things, then this game is for you!",
@@ -54,18 +73,18 @@ const english = {
         "stories": "Unique Stories",
       },
       "spotlight": {
-        "description": "This Week's Character Spotlight",
+        "description": "This Week's Spotlight",
       },
       "final": {
         "description": "Coming soon to Kickstarter in 2022",
-        "otherworks": "Check out my other game!",
+        "otherworks": "Check out my other game",
       },
     },
 
     "email form":{
+      "joinbutton": "Join mailing list",
       "prompt": "Sign up to be notified when we launch!",
-      "button": "SUBMIT",
-      "sidebarbutton": "SUBMIT",
+      "button": "Submit",
       "promise": "Your email will not be shared with anyone else.",
       "sending": "Submitting...",
       "success": "Thank you! We just sent a confirmation email. If you do not receive anything, please double check your email address."
@@ -197,7 +216,7 @@ const english = {
       "race" : "Race",
       "job" : "Profession",
       "age" : "Age",
-      "hobbies" : "Hobbies"
+      "hobbies" : "Hobbies",
     },
 
     "contact page":{

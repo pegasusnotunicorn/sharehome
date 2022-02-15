@@ -210,6 +210,7 @@
 .cardBackAge, .cardBackJob{
   font-size:2em;
   margin:0;
+  text-transform: lowercase;
 }
 
 /* </editor-fold> ----------------------------------------------------------- */

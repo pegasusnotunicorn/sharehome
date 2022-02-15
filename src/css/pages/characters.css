@@ -17,18 +17,8 @@
 /* <editor-fold>---------------------------------------------------------SPOTLIGHT */
 
 .characterSpotlightContainer{
-  padding-top:2em;
-  padding-bottom:2em;
   border-radius: 7.5vw 0 0 0;
   color:white;
-}
-
-.characterSpotlightContainer.yellowBackground{
-  color:#323232 !important;
-}
-
-.characterSpotlightContainer.yellowBackground .spotlightDetailsSection, .characterSpotlightContainer.yellowBackground .spotlightDetailsSection .divider:not(:first-child):not(:last-child) {
-  border-color:#323232 !important;
 }
 
 /* </editor-fold> */

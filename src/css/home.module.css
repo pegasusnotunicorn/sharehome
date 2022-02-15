@@ -18,8 +18,6 @@
 
 .mainpageContainer h1{
   font-size:2.5em;
-  margin-top:0;
-  margin-bottom:0.5em;
 }
 
 .mainpageContainer p{
@@ -30,21 +28,9 @@
   margin:0;
 }
 
-p.smallText {
-  font-size:1em !important;
-  margin-top:0;
-  margin-bottom:0;
-}
-
-p.smallText a {
-  color:#323232 !important;
-}
-
 /* tablet */
 @media only screen and (max-width: 1200px) {
-  .mainpageContainer{
-    min-height: 55%;
-  }
+
 }
 
 /* mobile */
@@ -66,7 +52,7 @@ p.smallText a {
 
 /* </editor-fold> */
 
-/* <editor-fold>--------------------------------------HERO IMAGE */
+/* <editor-fold>--------------------------------------HERO IMAGE + PARALLAX */
 
 #heroContainer{
   width:100%;
@@ -92,8 +78,10 @@ p.smallText a {
 
 .lcmImage{
   width:100%;
+  height:auto;
   margin:0;
   min-height:271.66px;
+  cursor:pointer;
 }
 
 .sharehomegame{
@@ -114,6 +102,13 @@ p.smallText a {
   padding:2em;
 }
 
+.scrollContainer > div{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+}
+
 .scrollHorizontalContainer {
   display:flex;
   flex-direction:row;
@@ -130,6 +125,7 @@ p.smallText a {
   margin-bottom:0;
   font-size:0.75em;
   line-height: 100%;
+  cursor:pointer;
 }
 
 .scrollVerticalContainer{
@@ -138,6 +134,11 @@ p.smallText a {
 
 .scrollHorizontalContainer div:first-child{
   border-right: 0.25px solid #323232;
+}
+
+.buttonWrapper{
+  display:flex;
+  flex-direction: flex-start;
 }
 
 /* small desktop */
@@ -150,14 +151,14 @@ p.smallText a {
 /* tablet */
 @media only screen and (min-width: 900px) and (max-width: 1200px) {
   .lcmContainer{
-    width:300px !important;
+    width:325px !important;
   }
 }
 
 /* mobile */
 @media only screen and (max-width: 900px) {
   .lcmContainer{
-    width:250px !important;
+    width:300px !important;
   }
   .sharehomegame{
     width: 100% !important;
@@ -168,13 +169,14 @@ p.smallText a {
 
 /* </editor-fold> */
 
-/* <editor-fold>--------------------------------------SHAREHOME DESCRIPTION SECTION */
+/* <editor-fold>--------------------------------------SHAREHOME DESCRIPTION */
 
 #descriptionContainer{
   min-height: 100vh;
   justify-content: center;
   align-items: center;
   color:#323232;
+  margin-bottom:50vh;
 }
 
 .descriptionOpaque{
@@ -182,6 +184,7 @@ p.smallText a {
 }
 
 .descriptionWrapper {
+  margin-top:4em;
   display:flex;
   align-items: center;
   justify-content: center;
@@ -192,14 +195,6 @@ p.smallText a {
 .descriptionWrapper > div {
   padding-left:0;
   padding-right:0;
-}
-
-.descriptionWrapper > div:first-child {
-  margin-bottom:2em;
-}
-
-.descriptionWrapper > div:last-child > div:last-child p {
-  margin-bottom:0;
 }
 
 .subtitle{
@@ -214,6 +209,27 @@ p.smallText a {
   margin-top:1em;
 }
 
+.gameDetails > div {
+  display:flex;
+}
+
+.gameDetails > div > svg {
+  margin-top: 5px;
+}
+
+#howToPlay{
+  height:25vh;
+  margin:auto;
+  margin-top:-25vh;
+  text-align: center;
+  display:flex;
+  flex-direction: column;
+}
+
+#howToPlay p{
+  font-size:0.75em;
+}
+
 /* mobile */
 @media only screen and (max-width: 900px) {
   .gameDetails{
@@ -223,97 +239,25 @@ p.smallText a {
   .gameDetails > div > svg {
     margin-top: -2px !important;
   }
-}
 
-.gameDetails > div {
-  display:flex;
-}
-
-.gameDetails > div > svg {
-  margin-top: 5px;
-}
-
-/* </editor-fold> */
-
-/* <editor-fold>--------------------------------------EMAIL SIGN UP */
-
-#emailContainer {
-  min-height: 65vh;
-}
-
-.emailWrapper{
-  margin:auto;
-  width:900px;
-}
-
-.emailWrapper p {
-  margin-top:0.75em !important;
-  overflow-wrap:break-word;
-  font-size:0.75em;
-}
-
-.formWrapper {
-  position:relative;
-  width:100%;
-  text-align: left;
-}
-
-.forminputText{
-  max-width: 900px;
-  margin:auto;
-}
-
-.forminputText a{
-  display:block;
-}
-
-.forminputText a{
-  color:rgba(0,0,0,.85) !important;
-}
-
-.emailInput {
-  box-shadow:0px 0px 10px rgb(0 0 0 / 33%);
-  font-size: 1.25em;
-  padding: 1em;
-  width: calc(75% + 1px);
-  outline: 0;
-  border:0;
-  border-radius: 0 0 0 1.25em;
-  height:100%;
-  line-height: 100%;
-}
-
-.subscribeButton{
-  box-shadow:0px 0px 10px rgb(0 0 0 / 33%);
-  width: 25%;
-  padding: 0.5em;
-  border:0;
-  border-radius: 0 1.25em 0 0;
-  position: absolute;
-  right: 0;
-  height:100%;
-  color:#FFF;
-  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
-}
-
-@media only screen and (max-width: 600px) {
-  .emailInput {
-    font-size:1em;
+  #descriptionContainer{
+    margin-bottom:30vh;
   }
 
-  .subscribeButton{
-    font-size:1em;
+  #howToPlay{
+    height:20vh;
+    margin-top:-10vh;
   }
 }
 
 /* </editor-fold> */
 
-/* <editor-fold>--------------------------------------CHARACTER CONTAINER */
+/* <editor-fold>--------------------------------------CHARACTER DECKS  */
 
 #characterContainer{
   color:#323232;
   display:flex;
-  height:120vh;
+  height:100vh;
   width:100%;
   flex-direction: row;
   align-items: center;
@@ -322,22 +266,255 @@ p.smallText a {
 
 .characterTextContainer{
   display:flex;
-  flex-direction: column;
+  text-align:left;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  height:100%;
+  height:calc(100% - 4em);
   width:40%;
-  z-index:99;
   padding:2em;
+  z-index:9;
+}
+
+.characterTextContainer h1{
+  margin-bottom:0;
+  line-height:125%;
+}
+
+.characterContainerSVG {
+  position:absolute;
+  top:15vh;
+  left:40vw;
+}
+
+.characterContainerSVG p {
+  text-align:right;
+  transform:rotate(-25deg);
+  margin-right:-2em;
+  margin-top:1em;
+  text-align:right;
+  font-size:0.75em;
+}
+
+/* small desktop */
+@media only screen and (min-width: 1200px) and (max-width: 1600px) {
+
+}
+
+/* tablet */
+@media only screen and (min-width: 900px) and (max-width: 1200px) {
+  .characterContainerSVG {
+    left:40vw;
+  }
 }
 
 /* mobile */
 @media only screen and (max-width: 900px) {
   .characterTextContainer{
     width:100%;
+    margin:auto;
+    max-width:500px;
+    text-align:center;
+  }
+  .characterContainerSVG {
+    top:15vh;
+    left:60vw;
+    transform:scale(0.75);
   }
 }
 
+/* </editor-fold> */
+
+/* <editor-fold>--------------------------------------EVENTS DECKS  */
+
+#eventsContainer, #goalsContainer{
+  color:#323232;
+  display:flex;
+  height:100vh;
+  width:100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  overflow:hidden;
+}
+
+.eventsLeftContainer, .goalsRightContainer{
+  display:flex;
+  text-align:right;
+  flex-direction: row;
+  align-items: center;
+  height:calc(100% - 4em);
+  width:60%;
+  padding:2em;
+  z-index:10;
+}
+.eventsLeftContainer{
+  justify-content: flex-end;
+}
+.goalsRightContainer{
+  justify-content: flex-start;
+}
+
+.eventsTextContainer, .goalsTextContainer{
+  display:flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.eventsTextContainer{
+  text-align:right;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.goalsTextContainer{
+  text-align:left;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.eventsTextContainer h1, .goalsTextContainer h1{
+  margin-bottom:0em;
+  line-height:100%;
+}
+
+.eventsTextContainer h3, .goalsTextContainer h3{
+  white-space: pre-line;
+}
+
+.eventsContainerSVG, .goalsContainerSVG {
+  position:absolute;
+}
+
+#eventsContainerSVGcake{
+  top:69vh;
+  right:20vw;
+}
+
+#eventsContainerSVGlovekey{
+  top:15vh;
+  right:25vw;
+}
+
+#eventsContainerSVGplanet{
+  top:20vh;
+  left:20vw;
+  transform:scale(0.65);
+}
+
+#goalsContainerSVGflag{
+  top:58vh;
+  right:27vw;
+  transform:scale(0.65);
+}
+
+#goalsContainerSVGscroll{
+  top:24vh;
+  right:24vw;
+  transform:scale(0.65);
+}
+
+/* small desktop */
+@media only screen and (min-width: 1200px) and (max-width: 1600px) {
+  #eventsContainerSVGcake{
+    right:20vw;
+    top:65vh;
+  }
+  #eventsContainerSVGlovekey{
+    right:22vw;
+  }
+  #eventsContainerSVGplanet{
+  }
+  #goalsContainerSVGflag{
+    right:14vw;
+  }
+
+  #goalsContainerSVGscroll{
+    right:17vw;
+  }
+}
+
+/* tablet */
+@media only screen and (min-width: 900px) and (max-width: 1200px) {
+  #eventsContainerSVGcake{
+    right:65vw;
+    top:65vh;
+  }
+  #eventsContainerSVGlovekey{
+    right:6vw;
+  }
+  .eventsTextContainer {
+    max-width:400px;
+  }
+  #goalsContainerSVGflag{
+    right:70vw;
+    top:70vh;
+  }
+  #goalsContainerSVGscroll{
+    right:70vw;
+    top:17vh;
+  }
+}
+
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .eventsTextContainer{
+    width:100%;
+    margin:auto;
+    max-width:500px;
+    text-align:center;
+  }
+  #eventsContainerSVGcake{
+    top:65vh;
+    right:5vw;
+  }
+  #eventsContainerSVGlovekey{
+    top:25vh;
+    right:7vw;
+  }
+  #eventsContainerSVGplanet{
+    top:60vh;
+    left:-5vw;
+  }
+  .eventsLeftContainer {
+    padding-left:0 !important;
+    padding-right:0 !important;
+    width:calc(100% - 4em);
+  }
+  #goalsContainerSVGflag{
+    right:5vw;
+    top:60vh;
+  }
+  #goalsContainerSVGscroll{
+    right:2.5vw;
+    top:20vh;
+  }
+}
+
+/* </editor-fold> */
+
+/* <editor-fold>--------------------------------------GOALS  */
+
+/* </editor-fold> */
+
+/* <editor-fold>--------------------------------------LIKES / HATES  */
+
+#likehateContainer{
+  color:#323232;
+  display:flex;
+  height:100vh;
+  width:100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  overflow:hidden;
+  margin-bottom:15vh;
+}
+
+@media only screen and (max-width: 1400px) {
+  #likehateContainer{
+    flex-direction: column;
+  }
+}
 
 /* </editor-fold> */
 
@@ -346,6 +523,12 @@ p.smallText a {
 #mechanicsContainer{
   min-height: 65vh;
   margin-bottom:3em;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding:2em;
+  width:calc(100% - 4em);
 }
 
 .mechanicsWrapper{
@@ -388,7 +571,6 @@ p.smallText a {
 #spotlightContainer{
   display:flex;
   flex-direction: column;
-  padding-bottom:3em;
 }
 
 #spotlightContainer > div > div > h1{
@@ -407,7 +589,52 @@ p.smallText a {
 /* <editor-fold>--------------------------------------FINAL CONTAINER */
 
 #finalContainer {
-  min-height:35vh;
+  min-height:100vh;
+  display:flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  /* background-image: linear-gradient(rgba(50,50,50,1),rgba(50,50,50,0.75), rgba(255,255,255,1)); */
+  /* color:#FFF; */
+}
+
+.finalButtonsWrapper{
+  display:flex;
+  justify-content: center;
+}
+
+@media only screen and (max-width: 900px) {
+  .finalButtonsWrapper{
+    flex-direction:column;
+  }
+  .finalButtonsWrapper > div, .finalButtonsWrapper > a{
+    width:calc(100% - 2em);
+    margin-right:0 !important;
+  }
+  .finalButtonsWrapper > div{
+    margin-bottom:1em;
+  }
+}
+
+.finalButtonsWrapper > div{
+  margin-right:2em;
+}
+
+.finalButtonsWrapper > a, .finalButtonsWrapper > div{
+  font-size:0.75em;
+  /* color:#FFF !important; */
+}
+
+#finalContainer .titleWrapper{
+  height:25% !important;
+}
+
+#finalContainer .lcmContainer{
+  padding-bottom: 0 !important;
+}
+
+#finalContainer .sharehomegame{
+  display:none !important;
 }
 
 /* </editor-fold> */

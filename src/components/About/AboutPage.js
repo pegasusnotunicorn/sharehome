@@ -120,7 +120,7 @@ const AboutPage = (props) => {
       return (
         <div>
 
-          <div className="subcontentWrapper min-width">
+          <div className="subcontentWrapper margin-top min-width">
             <div className="characterContent">
               <h2 className="subtitle">{t('about page.main page.how to play')}</h2>
               <p>{t('about page.main page.description')}</p>

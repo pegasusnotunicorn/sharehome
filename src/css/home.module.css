@@ -468,11 +468,11 @@
     right:5vw;
   }
   #eventsContainerSVGlovekey{
-    top:25vh;
-    right:7vw;
+    top:23vh;
+    right:50vw;
   }
   #eventsContainerSVGplanet{
-    top:60vh;
+    top:75vh;
     left:-5vw;
   }
   .eventsLeftContainer {
@@ -485,8 +485,8 @@
     top:60vh;
   }
   #goalsContainerSVGscroll{
-    right:2.5vw;
-    top:20vh;
+    right:47.5vw;
+    top:17.5vh;
   }
 }
 

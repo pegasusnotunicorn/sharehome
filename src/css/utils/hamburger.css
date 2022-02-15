@@ -6,6 +6,12 @@
  * @link https://github.com/jonsuh/hamburgers
  */
 
+ @media only screen and (max-width: 900px) {
+   .hamburger {
+     padding: 3px !important;
+   }
+ }
+
 .hamburger {
   z-index:999;
   padding: 5px;

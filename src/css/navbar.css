@@ -40,9 +40,28 @@
   border-radius:4px;
 }
 
+@media only screen and (max-width: 900px) {
+  #emailToggleButtonMobile{
+    font-size:.75em;
+    padding:5px;
+    padding-left:10px;
+    padding-right:10px;
+  }
+  #navbarOpenClose{
+    height: 32px;
+    width: 54px;
+  }
+}
+
 /* </editor-fold>
 
 /* <editor-fold>--------------------------------------NAVBAR */
+
+.navbarClass{
+  height:100%;
+  width:100%;
+  position:absolute;
+}
 
 .navbarMain{
   /* background-color:rgba(255,255,255,.95); */

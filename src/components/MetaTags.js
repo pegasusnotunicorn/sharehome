@@ -42,7 +42,7 @@ const MetaTags = (props) => {
 
       <meta name="twitter:title" data-react-helmet="true" content={ title }></meta>
       <meta name="twitter:description" data-react-helmet="true" content={ description } />
-      <meta name="twitter:image" data-react-helmet="true"  content={ splashImage } />
+      <meta name="twitter:image" data-react-helmet="true" content={ splashImage } />
     </Helmet>
   )
 }

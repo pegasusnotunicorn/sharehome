@@ -267,6 +267,12 @@ svg.is-spinning {
   font-weight:normal;
 }
 
+@media only screen and (max-width: 900px) {
+  .subcontentWrapper.margin-top{
+    margin-top:5vh;
+  }
+}
+
 .subcontentWrapper.min-width{
   max-width:600px;
 }

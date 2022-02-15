@@ -22,7 +22,6 @@ const allCharacters = [
   },
   {
     name: "Urg the Hacker",
-    title: "Urg the Orc Hacker",
     urlName: "urg",
     age: 30,
     job: "Web Designer",
@@ -141,7 +140,6 @@ const allCharacters = [
   },
   {
     name: "Köttr, the Grumpy",
-    title: "Köttr, the Grumpy Dragon",
     urlName: "kottr",
     age: 121,
     job: "Courier",
@@ -182,7 +180,7 @@ const allCharacters = [
   },
   {
     name: "Lydia Grimsbane",
-    title: "Lydia Grimsbane, the Witch",
+    title: "The Witch",
     urlName: "lydia",
     age: 19,
     job: "Student",
@@ -655,7 +653,7 @@ const allCharacters = [
   },
   {
     name: "Hansan Snekker",
-    title: "Hansan Snekker, the Wizard",
+    title: "The Wizard",
     urlName: "hansan",
     age: 31,
     job: "Wizard",

@@ -78,7 +78,7 @@ const CharactersPage = (props) => {
 
     return (
       <div className="content">
-        <div className="subcontentWrapper min-width">
+        <div className="subcontentWrapper margin-top min-width">
           <div className="characterContent">
             <h2 className="subtitle">{t('characters page.title')}</h2>
             <p>{t('characters page.description')}<br></br></p>

@@ -217,6 +217,9 @@ const japanese = {
       "job" : "職業",
       "age" : "年齢",
       "hobbies" : "趣味",
+      "list" : "Return to list",
+      "next" : "Next",
+      "prev" : "Prev",
     },
 
     "contact page":{

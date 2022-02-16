@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 //custom files
 import Card from './Card/Card.js';
 
-import '../css/pages/contact.css';
+import '../css/pages/contactPage.css';
 
 const ContactPage = (props) => {
   const { t } = useTranslation();
@@ -29,7 +29,7 @@ const ContactPage = (props) => {
         </div>
       </div>
 
-      <div className="subcontentWrapper">
+      <div className="subcontentWrapper min-width">
         <div className="madeby">
           <p>
             {t("contact page.description 1")}<a href="https://unicornwithwings.com">Pegasus Games</a>{t("contact page.description 2")}
@@ -45,8 +45,8 @@ const ContactPage = (props) => {
             personName="Wonmin Lee"
             showFront={true}
             mainStyle={{
-              width:"300px",
-              height:"200px",
+              width:"400px",
+              height:"275px",
               fontSize:"9px",
             }}
           />

@@ -51,14 +51,24 @@
 }
 
 .spotlightBottomWrapper{
+  align-items: flex-start;
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (min-width: 900px) and (max-width: 1200px) {
+  .spotlightLeftWrapper{
+    min-width:300px !important;
+  }
+}
+
+@media only screen and (max-width: 900px){
   .spotlightTopWrapper, .spotlightBottomWrapper {
     flex-direction:column;
   }
   .spotlightLeftWrapper{
     padding-bottom:2em;
+    min-width: unset !important;
+    margin:auto;
+    margin-top:2em;
   }
   .spotlightBottomWrapper{
     padding:0;
@@ -66,15 +76,15 @@
   }
   .spotlightRightTopWrapper{
     margin-left:0 !important;
+    padding-left:1.5em !important;
+    padding-right:1.5em !important;
+    padding-bottom:2em !important;
   }
   .spotlightTopWrapper{
     padding-left:0;
     padding-right:0;
     width:100%;
   }
-}
-
-@media only screen and (max-width: 900px){
   .showDetailsButton{
     text-align: center;
     margin-top:1em;
@@ -112,6 +122,18 @@
   justify-content: center;
   position: relative;
   flex-direction: column;
+  min-width:500px;
+}
+
+.indexTotalWrapper{
+  font-size:1.35em;
+  position: absolute;
+  top:-30px;
+  left:-10px;
+}
+
+.indexWrapper{
+  font-size:1.65em;
 }
 
 .spotlightLeftWrapper img {
@@ -170,15 +192,6 @@
   background:#FFF;
   color:#323232;
   font-size:1em;
-}
-
-.characterSpotlightWrapper.invert .spotlightRightTopWrapper{
-  border:0;
-}
-
-.characterSpotlightWrapper .spotlightRightTopWrapper{
-  border:0.5em solid #323232;
-  border-radius:5px;
 }
 
 .spotlightRightTopWrapper {

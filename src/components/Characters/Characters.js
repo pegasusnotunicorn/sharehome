@@ -1061,7 +1061,15 @@ export function getSpecificPersonByURL(urlName){
   //search for them
   for (let i = 0; i < allCharacters.length ; i++){
     if (allCharacters[i].urlName === urlName){
-      return allCharacters[i];
+      let prevIndex = (i - 1 < 0) ? 0 : i - 1;
+      let nextIndex = (i + 1 >= allCharacters.length) ? allCharacters.length - 1 : i + 1;
+      return {
+        ...allCharacters[i],
+        index: i,
+        total: allCharacters.length - 1,    //ignore wonmin
+        prevCharURL: (allCharacters[prevIndex].ignoreInRandom) ? false : allCharacters[prevIndex].urlName,
+        nextCharURL: (allCharacters[nextIndex].ignoreInRandom) ? false : allCharacters[nextIndex].urlName,
+      };
     }
   }
 

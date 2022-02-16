@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import MetaTags from './components/MetaTags.js';
-import NavbarMain from './components/Navbar/NavbarMain.js';
+import Navbar from './components/Navbar/Navbar.js';
 import ScrollToTop from './ScrollToTop.js';
 import HomePage from './components/Home/HomePage.js';
 import AboutPage from './components/About/AboutPage.js';
@@ -26,7 +26,7 @@ const Router = (props) => {
   return (
     <BrowserRouter>
       <MetaTags></MetaTags>
-      <NavbarMain onMount={onChildMount} />
+      <Navbar onMount={onChildMount} />
 
       <ScrollToTop>
         <Switch>

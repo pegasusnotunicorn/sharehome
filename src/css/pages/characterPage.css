@@ -17,13 +17,60 @@
 /* <editor-fold>---------------------------------------------------------SPOTLIGHT */
 
 .characterSpotlightContainer{
-  border-radius: 7.5vw 0 0 0;
-  color:white;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items: center;
+  padding-left:2em;
+  padding-right:2em;
+}
+
+.characterSpotlightContainer > .characterSpotlightWrapper {
+  padding:0;
+  margin-bottom:1em;
+  border:0.5em solid #323232;
+  border-radius:5px;
+}
+
+.characterSpotlightContainer .spotlightRightTopWrapper{
+  padding:0;
+  max-width:500px;
+}
+
+.characterButtonsWrapper{
+  width:calc(1000px + 9em);
+  display:flex;
+  justify-content: space-between;
+  margin-bottom:10vh;
+}
+
+@media only screen and (min-width: 900px) and (max-width: 1200px) {
+  .characterButtonsWrapper{
+    width:calc(600px + 9em);
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .characterSpotlightContainer > .characterSpotlightWrapper {
+    width:100%;
+  }
+  .characterButtonsWrapper{
+    flex-direction:column;
+    width:calc(100% - 0.75em);
+    margin-left:-.5em !important;
+    margin:auto;
+  }
+  .characterButtonsWrapper a:not(:last-child){
+    margin-bottom:1em;
+  }
+  .characterSpotlightContainer .spotlightLeftWrapper{
+    width:calc(100% - 4em);
+  }
 }
 
 /* </editor-fold> */
 
-/* <editor-fold>---------------------------------------------------------CHARACTERS */
+/* <editor-fold>---------------------------------------------------------ALL CHARACTERS */
 
 .allcharactersWrapper {
   padding-top:2em;
@@ -31,10 +78,10 @@
 }
 
 .charactersContainer{
-  width:calc(100% - 40px);
+  width:calc(100% - 4em);
   display:flex;
-  margin-left:20px;
-  margin-right:20px;
+  margin-left:2em;
+  margin-right:2em;
   flex-wrap:wrap;
   min-height:100vh;
   justify-content: center;

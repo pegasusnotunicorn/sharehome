@@ -68,7 +68,7 @@ const CustomForm = ({ status, message, onValidated, isActiveAndDesktop }) => {
           placeholder="minasan@konbanwa.com"
           required
         />
-        <DefaultButton icon="forward" onClick={submit} button="submit" className="subscribeButton" text={t('email form.button')} />
+        <DefaultButton shadowless icon="forward" onClick={submit} button="submit" className="subscribeButton" text={t('email form.button')} />
       </form>
     </div>
   )

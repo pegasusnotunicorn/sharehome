@@ -14,7 +14,7 @@ import CharactersDeckSection from "./CharactersDeckSection.js";
 import { EventsDeckSection, GoalsDeckSection } from "./EventsGoalsDeckSection.js";
 import LikeHateSection from "./LikeHateSection.js";
 
-import homeStyles from '../../css/home.module.css';
+import homeStyles from '../../css/homePage.module.css';
 import '../../css/utils/colors.css';
 
 const HomePage = forwardRef((props, ref) => {
@@ -104,7 +104,7 @@ const HomePage = forwardRef((props, ref) => {
             <h1>{t('main page.character.description')}</h1>
             <h3>{t('main page.character.moretocome')}</h3>
             <div className={`${homeStyles.buttonWrapper}`}>
-              <DefaultButton icon="people_white" navlink="/characters" text={t('main page.character.clicktoseemore')}/>
+              <DefaultButton shadowless icon="people_white" navlink="/characters" text={t('main page.character.clicktoseemore')}/>
             </div>
           </GsapFadeScrub>
         </div>
@@ -169,8 +169,8 @@ const HomePage = forwardRef((props, ref) => {
         <GsapFadeScrub fadeIn className={`subcontentWrapper`}>
           <h1>{t('main page.final.description')}</h1>
           <div className={`${homeStyles.finalButtonsWrapper}`}>
-            <DefaultButton icon="email_white" ref={navbarButton} text={t('email form.joinbutton')}/>
-            <DefaultButton icon="favorite" inverted href="https://sysifuscorp.com" text={t('main page.final.otherworks')}/>
+            <DefaultButton shadowless icon="email_white" ref={navbarButton} text={t('email form.joinbutton')}/>
+            <DefaultButton inverted bordered shadowless icon="favorite" href="https://sysifuscorp.com" text={t('main page.final.otherworks')}/>
           </div>
         </GsapFadeScrub>
         <GsapFadeScrub fadeIn className={`${homeStyles.titleWrapper}`} >

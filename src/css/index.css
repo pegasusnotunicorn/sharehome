@@ -127,14 +127,31 @@ p, li {
   color:#323232;
 }
 
+.defaultButton.is-inverted:active{
+  background-color:#f0f0f0;
+}
+
+.defaultButton.is-inverted.is-bordered{
+  border: 1px solid #323232;
+}
+
 .defaultButton.is-bordered{
   border: 1px solid #FFF;
+}
+
+.defaultButton.is-shadowless{
+  box-shadow:none;
 }
 
 .defaultButtonIcon{
   width:25px;
   height:25px;
   margin-right:10px;
+}
+
+.defaultButton.is-reversed .defaultButtonIcon{
+  margin-right:0;
+  margin-left:10px;
 }
 
 .button{
@@ -258,8 +275,8 @@ svg.is-spinning {
 .subcontentWrapper{
   max-width:900px;
   margin:auto;
-  padding-left:20px;
-  padding-right:20px;
+  padding-left:2em;
+  padding-right:2em;
   white-space: pre-line;
 }
 

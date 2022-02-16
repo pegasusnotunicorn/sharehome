@@ -4,14 +4,74 @@ import { Redirect, useParams, useHistory } from 'react-router-dom';
 
 import { getAllCharacters, getSpecificPersonByURL } from '../Characters/Characters.js';
 import { CharacterSpotlight } from '../utils/CharacterSpotlight.js';
+import DefaultButton from '../utils/DefaultButton.js';
 
-import '../../css/pages/characters.css';
+import '../../css/pages/characterPage.css';
+
+//render all characters or a specific one depending on URL
+const CharactersPage = (props) => {
+  const { t } = useTranslation();
+  let { name } = useParams();
+
+  useEffect(() => {
+    document.title = "Love, Career & Magic - Characters";
+  });
+
+  //if there is a specifc character name, render that character page
+  let chosenCharacter = getSpecificPersonByURL(name);
+
+  //redirect to just /characters if typo a non-existant character
+  if (window.location.pathname !== "/characters" && (typeof name === "undefined" || !chosenCharacter || chosenCharacter.ignoreInRandom)) {
+    return <Redirect to="/characters" />
+  }
+  else {
+    let content = (chosenCharacter && !chosenCharacter.ignoreInRandom) ?
+      (<IndividualCharacter character={chosenCharacter} />) :
+      (<AllCharacters />);
+
+    return (
+      <div className="content">
+        <div className="subcontentWrapper margin-top min-width">
+          <div className="characterContent">
+            <h2 className="subtitle">{t('characters page.title')}</h2>
+            <p>{t('characters page.description')}<br></br></p>
+          </div>
+        </div>
+        { content }
+      </div>
+    )
+  }
+}
+
+const IndividualCharacter = ({character}) => {
+  const { t } = useTranslation();
+
+  const prevButton = (character.prevCharURL) ?
+    (<DefaultButton inverted bordered shadowless icon="prev" navlink={`/characters/${character.prevCharURL}`} text={t('characters page.prev')}/>) :
+    (<div style={{width:"100px"}}></div>)
+
+  const nextButton = (character.nextCharURL) ?
+    (<DefaultButton inverted reversed shadowless bordered icon="next" navlink={`/characters/${character.nextCharURL}`} text={t('characters page.next')}/>) :
+    (<div style={{width:"100px"}}></div>)
+
+  return (
+    <div className="characterSpotlightContainer">
+      <CharacterSpotlight name={character.name} index={character.index} total={character.total} />
+      <div className="characterButtonsWrapper">
+        { prevButton }
+        <DefaultButton inverted bordered shadowless icon="list" navlink="/characters" text={t('characters page.list')}/>
+        { nextButton }
+      </div>
+    </div>
+  )
+}
 
 //get all characters and their details
 const AllCharacters = (props) => {
   let history = useHistory();
   let { name } = useParams();
   let chosenCharacter = getSpecificPersonByURL(name);
+  const { t } = useTranslation();
 
   const redirectToSpecificCharacter = (character) => {
     if (chosenCharacter !== character && !character.ignoreInRandom){
@@ -44,60 +104,18 @@ const AllCharacters = (props) => {
   });
 
   return (
-    <div className="charactersContainer">
-      { expansionCharacters }
-    </div>
-  )
-}
-
-const CharactersPage = (props) => {
-  const { t } = useTranslation();
-  let { name } = useParams();
-
-  useEffect(() => {
-    document.title = "Love, Career & Magic - Characters";
-  });
-
-  //if there is a specifc character name, render that character page
-  let chosenCharacter = getSpecificPersonByURL(name);
-
-  //redirect to just /characters if typo a non-existant character
-  if (window.location.pathname !== "/characters" && (typeof name === "undefined" || !chosenCharacter || chosenCharacter.ignoreInRandom)) {
-    return <Redirect to="/characters" />
-  }
-  else {
-    let chosenCharacterContents = (chosenCharacter && !chosenCharacter.ignoreInRandom) ?
-      (
-        <div className="characterSpotlightContainer">
-          <CharacterSpotlight once name={chosenCharacter.name} />
-        </div>
-      ) :
-      (
-        <div></div>
-      )
-
-    return (
-      <div className="content">
-        <div className="subcontentWrapper margin-top min-width">
-          <div className="characterContent">
-            <h2 className="subtitle">{t('characters page.title')}</h2>
-            <p>{t('characters page.description')}<br></br></p>
-          </div>
-        </div>
-
-        { chosenCharacterContents }
-
-        <div className="allcharactersWrapper">
-          <AllCharacters />
-        </div>
-
-        <div className="subcontentWrapper characterContent">
-          <h3 className="moretocome">{t('characters page.moretocome')}</h3>
-          <p><a href="https://www.instagram.com/carofranklyn/?hl=en">{t('characters page.credit')}</a></p>
+    <>
+      <div className="allcharactersWrapper">
+        <div className="charactersContainer">
+          { expansionCharacters }
         </div>
       </div>
-    )
-  }
+      <div className="subcontentWrapper characterContent">
+        <h3 className="moretocome">{t('characters page.moretocome')}</h3>
+        <p><a href="https://www.instagram.com/carofranklyn/?hl=en">{t('characters page.credit')}</a></p>
+      </div>
+    </>
+  )
 }
 
 export default CharactersPage;

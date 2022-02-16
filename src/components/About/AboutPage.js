@@ -10,7 +10,7 @@ import Charades from './components/Charades.js';
 import Guesswho from './components/Guesswho.js';
 import Taboo from './components/Taboo.js';
 
-import '../../css/pages/about.css';
+import '../../css/pages/aboutPage.css';
 
 const AboutPage = (props) => {
   const { t } = useTranslation();

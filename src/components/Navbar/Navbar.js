@@ -72,7 +72,7 @@ export const NavbarMain = (props) => {
     <div className={`navbarClass ${isVisibleClass}`}>
 
       <GsapFadeDelay delay={1500} className="fixedButtonsWrapper noselect">
-        <DefaultButton icon="email_white" id="emailToggleButtonMobile" className={mailButtonVisibleClass} onClick={toggleMail} text={t('email form.joinbutton')}/>
+        <DefaultButton shadowless icon="email_white" id="emailToggleButtonMobile" className={mailButtonVisibleClass} onClick={toggleMail} text={t('email form.joinbutton')}/>
         <button
           id="navbarOpenClose"
           className={`hamburger hamburger--slider ${isVisibleClass}`}

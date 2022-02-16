@@ -5,8 +5,6 @@ import { useTranslation } from 'react-i18next';
 
 import RepeatFrom1 from '../utils/RepeatFrom1.js';
 
-import '../../../css/pages/about.css';
-
 const Guesswho = (props) => {
   const { t } = useTranslation();
 

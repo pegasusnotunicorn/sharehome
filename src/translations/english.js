@@ -93,9 +93,9 @@ const english = {
     "about page":{
       "main page":{
         "how to play": "How to play?",
-        "description": "SHAREHOME is a very flexible party game with multiple ways of playing. Feel free to add your own house rules to change it up!",
+        "description": "Love, Career & Magic is a very flexible party game with multiple ways of playing. Feel free to add your own house rules to change it up!",
         "and many more": "...and many more!",
-        "how will you play": "How will you play SHAREHOME?",
+        "how will you play": "How will you play?",
       },
 
       "repeat":{
@@ -217,14 +217,17 @@ const english = {
       "job" : "Profession",
       "age" : "Age",
       "hobbies" : "Hobbies",
+      "list" : "Return to list",
+      "next" : "Next",
+      "prev" : "Prev",
     },
 
     "contact page":{
       "title": "Questions? Comments?",
       "email": "Email us at ",
-      "description 1": "SHAREHOME is made by ",
-      "description 2": " and is not affiliated with the makers of the popular Japanese reality TV show on that really popular streaming website.",
-      "description 3": "よろしくお願い致します！",
+      "description 1": "Love, Career & Magic is made by ",
+      "description 2": " and is not affiliated with any existing reality TV show.",
+      "description 3": "Although if you want, I would love to be affiliated.",
       "made by": "Made by this guy",
     },
 

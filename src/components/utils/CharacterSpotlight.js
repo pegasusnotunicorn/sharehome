@@ -53,7 +53,10 @@ export const CharacterSpotlight = (props) => {
   const detailsClass = (showDetails) ? "is-active" : "";
   const showDetailsButtonText = (showDetails) ? "Hide details" : "Show more details";
   const backgroundPosition = (character.image.objectPosition) ? `${character.image.objectPosition} center` : "center center";
-
+  const LinkTo = (props) => {
+    if (props.sectionTitle) return (<NavLink to={`/characters/${character.urlName}`}>{props.children}</NavLink>);
+    else return (<a target="_blank" rel="noreferrer" href={character.image.url}>{props.children}</a>);
+  }
   return (
     <div className={`characterSpotlightWrapper ${invertClass}`} >
       <GsapFadeScrub fadeIn className="fadeInTextWrapper">
@@ -62,11 +65,14 @@ export const CharacterSpotlight = (props) => {
         }
         <div className="spotlightBottomWrapper">
           <div className="spotlightLeftWrapper">
-            <NavLink to={`/characters/${character.urlName}`}>
+            { props.index && props.total &&
+              <IndexTotal index={props.index} total={props.total} />
+            }
+            <LinkTo>
               <div className="imageCircleMask noselect">
                 <img src={character.image.url} style={{objectPosition:backgroundPosition}} alt={character.name} />
               </div>
-            </NavLink>
+            </LinkTo>
             <div className="leftDetailsWrapper">
               <h1>{name}</h1>
               <h3>— {title} —</h3>
@@ -106,6 +112,16 @@ export const CharacterSpotlight = (props) => {
   );
 }
 
+//#what out of total (for character page)
+const IndexTotal = ({index, total}) => {
+  return (
+    <div className="indexTotalWrapper">
+      <span className="indexWrapper">{index}</span> / {total}
+    </div>
+  )
+}
+
+//title for homepage
 const SectionTitle = ({title}) => {
   return (
     <div className="spotlightTopWrapper">
@@ -125,7 +141,7 @@ const AllCharactersButton = () => {
 
   return (
     <div className="allCharsButtonWrapper">
-      <DefaultButton icon="people_white" bordered navlink="/characters" text={t('main page.character.clicktoseemore')}/>
+      <DefaultButton icon="people_white" bordered shadowless navlink="/characters" text={t('main page.character.clicktoseemore')}/>
     </div>
   )
 }

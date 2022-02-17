@@ -562,13 +562,13 @@ const allCharacters = [
     japaneseJob: "銀行家",
     japaneseName: "ビズ・ハグルフィート",
     image: {
-      url: "/images/members/temp.png",
-      name: "temp.png",
+      url: "/images/members/characters14.jpg",
+      name: "characters14.jpg",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
     },
-    ignoreInRandom: true,
+    ignoreInRandom: false,
  	 	type: "member",
   },
   {

@@ -51,7 +51,8 @@
   display:flex;
   justify-content: space-between;
   align-items: center;
-  width:100%;
+  width:calc(100% - 4em);
+  margin:auto;
   margin-top:1em;
   margin-bottom:0;
 }
@@ -81,7 +82,8 @@
     flex-direction: column;
   }
   .showRulesButton{
-    width:100%;
+    width:calc(100% - 2em);
+    margin:0;
   }
   .showRulesButton:not(:last-child){
     margin-bottom:1em;
@@ -94,6 +96,8 @@
 
 .allStepsContainer{
   display:none;
+  padding-left:2em;
+  padding-right:2em;
 }
 
 .allStepsContainer.is-active{
@@ -103,7 +107,7 @@
 
 @media only screen and (max-width:900px) {
   .allStepsContainer{
-    padding:2em;
+    width:calc(100% - 4em);
   }
 }
 
@@ -126,7 +130,7 @@
 
 @media only screen and (max-width:900px) {
   .stepWrapper{
-    width:calc(100% - 2em);
+    width:calc(100% - 4em - 10px);
   }
 }
 
@@ -192,7 +196,7 @@
   justify-content: space-between;
 }
 .stepBlockHorizontal.evenWidthChildren > *{
-  width:calc(50% - 1em) !important;
+  width:calc(50% - 1em);
 }
 .stepBlockHorizontal.topAlign{
   align-items: flex-start;
@@ -227,6 +231,34 @@
 .stepBlockVertical.leftAlign{
   align-items: flex-start;
   text-align: left;
+}
+
+@media only screen and (max-width:900px) {
+  .stepBlockHorizontal.evenWidthChildren.paddingTop{
+    padding-top:1em !important;
+  }
+  .stepBlockHorizontal.evenWidthChildren{
+    justify-content: space-between;
+    flex-direction: column;
+  }
+  .stepBlockHorizontal.evenWidthChildren > *{
+    width:100%;
+  }
+  .stepBlockHorizontal.spaceAround{
+    flex-direction: column;
+    justify-content: space-around;
+  }
+  .stepBlockHorizontal.spaceAround > *:first-child{
+    padding-bottom:1em;
+  }
+  .stepBlockLeft{
+    width:100% !important;
+    padding-bottom:1em;
+  }
+  .stepBlockRight{
+    width:100% !important;
+    padding-left:0;
+  }
 }
 
 /* </editor-fold> */

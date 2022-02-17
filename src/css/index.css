@@ -131,11 +131,11 @@ p, li {
   background-color:#f0f0f0;
 }
 
-.defaultButton.is-inverted.is-bordered{
+.defaultButton.is-bordered-black{
   border: 1px solid #323232;
 }
 
-.defaultButton.is-bordered{
+.defaultButton.is-bordered-white{
   border: 1px solid #FFF;
 }
 

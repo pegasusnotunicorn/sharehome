@@ -1,11 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-const RepeatFrom1 = () => {
+const RepeatFrom1 = ({className}) => {
   const { t } = useTranslation();
 
   return (
-    <p>
+    <p className={`${className} repeatFrom1`}>
       {t('about page.repeat.1')}
       <span className='link' onClick={()=>{window.scrollTo({top:0,behavior:'smooth'})}}>{t('about page.repeat.2')}</span>
       {t('about page.repeat.3')}

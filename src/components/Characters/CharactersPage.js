@@ -47,11 +47,11 @@ const IndividualCharacter = ({character}) => {
   const { t } = useTranslation();
 
   const prevButton = (character.prevCharURL) ?
-    (<DefaultButton inverted bordered shadowless icon="prev" navlink={`/characters/${character.prevCharURL}`} text={t('characters page.prev')}/>) :
+    (<DefaultButton inverted borderedBlack shadowless icon="prev" navlink={`/characters/${character.prevCharURL}`} text={t('characters page.prev')}/>) :
     (<div style={{width:"100px"}}></div>)
 
   const nextButton = (character.nextCharURL) ?
-    (<DefaultButton inverted reversed shadowless bordered icon="next" navlink={`/characters/${character.nextCharURL}`} text={t('characters page.next')}/>) :
+    (<DefaultButton inverted reversed shadowless borderedBlack icon="next" navlink={`/characters/${character.nextCharURL}`} text={t('characters page.next')}/>) :
     (<div style={{width:"100px"}}></div>)
 
   return (
@@ -59,7 +59,7 @@ const IndividualCharacter = ({character}) => {
       <CharacterSpotlight name={character.name} index={character.index} total={character.total} />
       <div className="characterButtonsWrapper">
         { prevButton }
-        <DefaultButton inverted bordered shadowless icon="list" navlink="/characters" text={t('characters page.list')}/>
+        <DefaultButton inverted borderedBlack shadowless icon="list" navlink="/characters" text={t('characters page.list')}/>
         { nextButton }
       </div>
     </div>

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import Card from '../../Card/Card.js';
-import { ChevronDown, User, Users, UserPlus, ArrowRight, ArrowUpCircle, ArrowRightCircle, ArrowLeftCircle, MessageSquare, TrendingUp, TrendingDown, Home, Wind, Heart} from 'react-feather';
 import { useTranslation } from 'react-i18next';
 
 import RepeatFrom1 from '../utils/RepeatFrom1.js';
+import DefaultButton from '../../utils/DefaultButton.js';
 
 const Roleplay = (props) => {
   const { t } = useTranslation();
@@ -17,368 +16,302 @@ const Roleplay = (props) => {
     setshowRules(!showRules);
   }
 
+  const showRulesClass = (showRules) ? "is-active is-inverted" : "";
+  const showSetupClass = (!showRules) ? "is-active is-inverted" : "";
+  const setupButtonText = (showRules) ? `${t('about page.roleplay.setup.title')}` : `> ${t('about page.roleplay.setup.title')} <`;
+  const rulesButtonText = (showRules) ? `> ${t('about page.roleplay.rules.title')} <` : `${t('about page.roleplay.rules.title')}`;
+
   return (
     <>
-      <h2 className="subtitle">{(!showRules) ? t('about page.roleplay.setup.title') : t('about page.roleplay.rules.title')}</h2>
-      <p className="showRulesButton noselect" onClick={toggleSteps}>{(showRules) ? t('about page.roleplay.rules.description') : t('about page.roleplay.setup.description')}</p>
-
-      <div className={"stepsContainer" + ((!showRules) ? " is-active" : "")}>
-
-        <div className="stepWrapper">
-          <h2 className="subtitle">{t('about page.step1')}</h2>
-          <p>
-            {t('about page.roleplay.setup.step1 1')}
-          </p>
-          <div className="illustrationWrapperCenter">
-            <div>
-              <Users className="greenStroke is-flipped" />
-              <Users className="greenStroke is-flipped" />
-              <Users className="greenStroke is-flipped" />
-            </div>
-            <div>
-              <Users className="yellowStroke" />
-              <Users className="yellowStroke" />
-              <Users className="yellowStroke" />
-            </div>
-          </div>
-          <li className="subtext">
-            {t('about page.roleplay.setup.step1 2')}
-          </li>
-        </div>
-
-        <div className="stepSplitterLine"><ChevronDown className="is-48" /></div>
-
-        <div className="stepWrapperSplit">
-
-          <div className="stepWrapper">
-            <h2 className="subtitle">{t('about page.roleplay.setup.step2m')}</h2>
-            <p>
-              {t('about page.roleplay.setup.step2m 1')}
-            </p>
-            <div className="illustrationWrapperCenter">
-              <div className="illustrationCardWrapper">
-                <Card
-                  type="member"
-                  showFront={false}
-                  disableFlip={true}
-                  hideFront={true}
-                  mainStyle={{...cardStyle, marginRight:"10px"}}
-                />
-                <Card
-                  type="goal"
-                  showFront={false}
-                  disableFlip={true}
-                  hideFront={true}
-                  mainStyle={{...cardStyle, marginRight:"10px"}}
-                />
-                <ArrowUpCircle />
-                <ArrowUpCircle />
-              </div>
-              <ArrowRight />
-              <div>
-                <Users className="greenStroke" />
-              </div>
-            </div>
-            <p>
-              {t('about page.roleplay.setup.step2m 2')}
-            </p>
-            <li className="subtext">
-              {t('about page.roleplay.setup.step2m 3')}
-            </li>
-            <li className="subtext">
-              {t('about page.roleplay.setup.step2m 4')}
-            </li>
-          </div>
-
-          <div className="stepWrapper">
-            <h2 className="subtitle">{t('about page.roleplay.setup.step2c')}</h2>
-            <p>
-              {t('about page.roleplay.setup.step2c 1')}
-            </p>
-            <div className="illustrationWrapperCenter">
-              <div className="illustrationCardWrapper">
-                <Card
-                  type="commentator"
-                  showFront={false}
-                  hideFront={true}
-                  disableFlip={true}
-                  mainStyle={{...cardStyle, marginRight:"10px"}}
-                />
-                <ArrowUpCircle style={{marginRight:"10px"}}/>
-              </div>
-              <ArrowRight />
-              <div>
-                <Users className="yellowStroke" />
-                <Users className="yellowStroke" />
-              </div>
-            </div>
-            <p>
-              {t('about page.roleplay.setup.step2c 2')}
-            </p>
-            <li className="subtext">
-              {t('about page.roleplay.setup.step2c 3')}
-            </li>
-            <li className="subtext">
-              {t('about page.roleplay.setup.step2c 4')}
-            </li>
-          </div>
-
-        </div>
-
-        <p
-          className="showRulesButton noselect"
-          onClick={()=>{
-            window.scrollTo({top:0,behavior:"smooth"});
-            toggleSteps();
-          }}
-        >
-          {t('about page.roleplay.setup.description2')}
-        </p>
-
+      <div className="setupRulesButtonWrapper">
+        <DefaultButton shadowless borderedBlack className={`showRulesButton ${showSetupClass}`} onClick={()=>{setshowRules(false)}} text={setupButtonText} />
+        <DefaultButton shadowless borderedBlack className={`showRulesButton ${showRulesClass}`} onClick={()=>{setshowRules(true)}} text={rulesButtonText} />
       </div>
-
-      <div className={"stepsContainer" + ((showRules) ? " is-active" : "")}>
-
-        <div className="stepWrapper">
-          <h2 id="step1" className="subtitle">{t('about page.roleplay.rules.step1')}</h2>
-          <p>
-            {t('about page.roleplay.rules.step1 1')}
-          </p>
-          <div className="illustrationWrapperCenter">
-            <div>
-              <User className="greenStroke"/>
-              <MessageSquare style={{marginLeft:"10px"}} />
-            </div>
-            <div>
-              <User />
-              <Users />
-              <Users />
-            </div>
-          </div>
-          <p>
-            {t('about page.roleplay.rules.step1 2')}
-          </p>
-          <div className="illustrationWrapperCenter">
-            <User className="greenStroke"/>
-            <ArrowRightCircle className="greenStroke" />
-            <User className="greenStroke"/>
-            <ArrowLeftCircle className="redStroke" />
-            <User className="greenStroke"/>
-          </div>
-          <li className="subtext">
-            {t('about page.roleplay.rules.step1 3')}
-          </li>
-        </div>
-
-        <div className="stepSplitterLine"><ChevronDown className="is-48" /></div>
-
-        <div className="stepWrapper">
-          <h2 className="subtitle">{t('about page.roleplay.rules.step2')}</h2>
-          <p>
-            {t('about page.roleplay.rules.step2 1')}
-          </p>
-          <div className="illustrationWrapperCenter">
-            <div>
-              <Users className="greenStroke is-flipped" />
-              <Users className="greenStroke is-flipped" />
-              <Users className="greenStroke is-flipped" />
-            </div>
-            <div>
-              <MessageSquare style={{marginRight:"10px"}} className="is-flipped" />
-              <Users className="yellowStroke" />
-              <Users className="yellowStroke" />
-              <Users className="yellowStroke" />
-            </div>
-          </div>
-          <p>
-            {t('about page.roleplay.rules.step2 2')}
-          </p>
-          <div className="illustrationWrapperCenter">
-            <div>
-              <User  className="greenStroke" style={{marginRight:"10px"}} />
-              <ArrowRightCircle className="greenStroke" style={{marginRight:"10px"}} />
-              <User className="greenStroke" />
-            </div>
-            <User className="yellowStroke"/>
-          </div>
-          <li className="subtext">
-            {t('about page.roleplay.rules.step2 3')}
-          </li>
-        </div>
-
-        <div className="stepSplitterLine"><ChevronDown className="is-48" /></div>
-
-        <div className="stepWrapperSplit">
-
-          <div className="stepWrapper">
-            <h2 className="subtitle">{t('about page.roleplay.rules.step3')}<span className='green'>{t('about page.roleplay.rules.step3span')}</span></h2>
-            <p>
-              {t('about page.roleplay.rules.step3 1')}
-            </p>
-            <div className="illustrationWrapperCenter">
-              <User />
-              <ArrowRightCircle className="greenStroke" />
-              <div>
-                <User />
-                <TrendingUp />
-              </div>
-              <ArrowLeftCircle className="greenStroke" />
-              <User />
-            </div>
-            <p>
-              {t('about page.roleplay.rules.step3 2')}
-            </p>
-            <li className="subtext">
-              {t('about page.roleplay.rules.step3 3')}
-            </li>
-            <div className="illustrationWrapperCenter">
-              <div className="illustrationCardWrapper">
-                <User style={{marginRight:"10px"}}/>
-                <Card
-                  type="event"
-                  hideFront={true}
-                  showFront={false}
-                  disableFlip={true}
-                  mainStyle={cardStyle}
-                />
-              </div>
-              <ArrowRight />
-              <div>
-                <User />
-                <Users />
-                <Users />
-              </div>
-            </div>
-          </div>
-
-          <div className="stepWrapper">
-            <h2 className="subtitle">{t('about page.roleplay.rules.step4')}<span className='red'>{t('about page.roleplay.rules.step4span')}</span></h2>
-            <p>
-              {t('about page.roleplay.rules.step4 1')}
-            </p>
-            <div className="illustrationWrapperCenter">
-              <User />
-              <ArrowRightCircle className="redStroke" />
-              <div>
-                <User />
-                <TrendingDown />
-              </div>
-              <ArrowLeftCircle className="redStroke" />
-              <User />
-            </div>
-            <p>
-              {t('about page.roleplay.rules.step4 2')}
-            </p>
-            <li className="subtext">
-              {t('about page.roleplay.rules.step4 3')}
-            </li>
-            <div className="illustrationWrapperCenter">
-              <div className="illustrationCardWrapper">
-                <User style={{marginRight:"10px"}}/>
-                <Card
-                  type="event"
-                  hideFront={true}
-                  showFront={false}
-                  disableFlip={true}
-                  mainStyle={cardStyle}
-                />
-              </div>
-              <ArrowRight />
-              <div>
-                <User />
-                <Users />
-                <Users />
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <div className="stepSplitterLine"><ChevronDown className="is-48" /></div>
-
-        <div className="stepWrapperSplit">
-
-          <div className="stepWrapper greenBorder">
-            <h2 className="subtitle">{t('about page.roleplay.rules.step5')}</h2>
-            <p>
-              {t('about page.roleplay.rules.step5 1')}
-            </p>
-            <div className="illustrationWrapperCenter">
-              <div>
-                <Users className="is-flipped" />
-                <Users className="is-flipped" />
-              </div>
-              <Home />
-              <div>
-                <User style={{marginRight:"10px"}} />
-                <MessageSquare className="is-flipped" style={{marginRight:"10px"}} />
-                <User />
-              </div>
-            </div>
-            <p>
-              {t('about page.roleplay.rules.step5 2')}
-            </p>
-            <div className="illustrationWrapperCenter">
-              <div>
-                <User style={{marginRight:"10px"}}/>
-                <ArrowRightCircle className="greenStroke" style={{marginRight:"10px"}}/>
-                <User />
-              </div>
-              <div>
-                <UserPlus className="yellowStroke" />
-                <UserPlus className="greenStroke" />
-                <UserPlus className="greenStroke" />
-              </div>
-            </div>
-            <p>
-              {t('about page.roleplay.rules.step5 3')}
-            </p>
-          </div>
-
-          <div className="stepWrapper">
-            <h2 className="subtitle">{t('about page.roleplay.rules.step6')}</h2>
-            <p>
-              {t('about page.roleplay.rules.step6 1')}
-            </p>
-            <div className="illustrationWrapperCenter">
-              <div>
-                <Home style={{marginRight:"10px"}} />
-                <Users className="is-flipped" />
-                <Users className="is-flipped" />
-              </div>
-              <div>
-                <Wind className="is-flipped"/>
-                <UserPlus />
-              </div>
-            </div>
-            <p>
-              {t('about page.roleplay.rules.step6 2')}
-            </p>
-            <div className="illustrationWrapperCenter">
-              <div>
-                <Home style={{marginRight:"10px"}} />
-                <Users className="is-flipped" />
-                <Users className="is-flipped" />
-              </div>
-              <div>
-                <Wind className="is-flipped"/>
-                <UserPlus />
-                <Heart className="redStroke" />
-                <UserPlus />
-              </div>
-            </div>
-            <p>
-              {t('about page.roleplay.rules.step6 3')}
-            </p>
-          </div>
-
-        </div>
-
-        <RepeatFrom1></RepeatFrom1>
-
-      </div>
+      <Setup showRules={showRules} setshowRules={setshowRules} cardStyle={cardStyle} toggleSteps={toggleSteps} />
+      <Rules showRules={showRules} setshowRules={setshowRules} cardStyle={cardStyle} />
     </>
   );
+}
+
+//show the setup
+const Setup = ({showRules, setshowRules, cardStyle, toggleSteps}) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className={"allStepsContainer" + ((!showRules) ? " is-active" : "")}>
+
+      {/* STEP 1 SETUP */}
+      <div className="stepWrapper">
+        <h2 className="stepTitle">{t('about page.step1')}</h2>
+
+        <div className="stepBlockWrapper vertical">
+          <div className="stepBlockHorizontal">
+
+            <div className="stepBlockLeft">
+              <div className="stepBlockVertical">
+                <div className="stepBlockHorizontal">
+                  <img className="translateYDown" src="/images/icons/darkperson.svg" alt="member icon" />
+                  <img className="translateYUp" src="/images/icons/darkperson.svg" alt="member icon" />
+                  <img className="translateYDown" src="/images/icons/darkperson.svg" alt="member icon" />
+                </div>
+                <p className="boldText marginTop">{t('about page.roleplay.members')}</p>
+              </div>
+            </div>
+
+            <div className="stepBlockRight">
+              <div className="stepBlockVertical">
+                <div className="stepBlockHorizontal">
+                  <img className="translateYDown" src="/images/icons/whiteperson.svg" alt="commentator icon" />
+                  <img className="translateYUp" src="/images/icons/whiteperson.svg" alt="commentator icon" />
+                  <img className="translateYDown" src="/images/icons/whiteperson.svg" alt="commentator icon" />
+                </div>
+                <p className="boldText marginTop">{t('about page.roleplay.commentators')}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="stepBlockHorizontal topAlign paddingTop evenWidthChildren">
+            <div className="stepBlockLeft">
+              <h2 className="boldText">{t('about page.roleplay.setup.step1 1')}</h2>
+            </div>
+            <div className="stepBlockRight">
+              <li className="subtext">{t('about page.roleplay.setup.step1 2')}</li>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* STEP 2 SETUP */}
+      <div className="stepWrapper">
+        <h2 className="stepTitle">{t('about page.roleplay.setup.step2')}</h2>
+        <div className="stepBlockWrapper vertical">
+
+          {/* MEMBERS TITLE */}
+          <div className="stepBlockHorizontal leftAlign paddingTop">
+            <img className="paddingRight" src="/images/icons/darkperson.svg" alt="member icon" />
+            <h4 className="boldText">{t('about page.roleplay.members')}</h4>
+          </div>
+
+          {/* MEMBERS PT 2 */}
+          <div className="stepBlockHorizontal topAlign paddingTop evenWidthChildren">
+            <h2 className="boldText">{t('about page.roleplay.setup.step2m 1')}</h2>
+            <div className="stepBlockVertical leftAlign">
+              <li className="subtext">{t('about page.roleplay.setup.step2m 3')}</li>
+              <li className="subtext">{t('about page.roleplay.setup.step2m 4')}</li>
+              <div className="stepBlockHorizontal paddingTopHalf">
+                <img className="smallImage paddingRight" src="/images/icons/flag.svg" alt="flag icon" />
+                <p className="subtext marginTop">{t('about page.roleplay.setup.step2m 2')}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* DIVIDER */}
+          <div className="stepBlockDividerHorizontal"></div>
+
+          {/* COMMENTATORS TITLE */}
+          <div className="stepBlockHorizontal leftAlign paddingTop">
+            <img className="paddingRight" src="/images/icons/whiteperson.svg" alt="commentator icon"/>
+            <h4 className="boldText">{t('about page.roleplay.commentators')}</h4>
+          </div>
+
+          {/* COMMENTATORS PT 2 */}
+          <div className="stepBlockHorizontal topAlign paddingTop evenWidthChildren">
+            <h2 className="boldText">{t('about page.roleplay.setup.step2c 1')}</h2>
+            <div className="stepBlockVertical leftAlign">
+              <li className="subtext">{t('about page.roleplay.setup.step2c 3')}</li>
+              <li className="subtext">{t('about page.roleplay.setup.step2c 4')}</li>
+              <div className="stepBlockHorizontal paddingTopHalf">
+                <img className="smallImage paddingRight" src="/images/icons/flag.svg" alt="flag icon"/>
+                <p className="subtext">{t('about page.roleplay.setup.step2c 2')}</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <p
+        className="showRulesButtonBottom"
+        onClick={()=>{
+          window.scrollTo({top:0,behavior:"smooth"});
+          toggleSteps();
+        }}
+      >
+        {t('about page.roleplay.setup.description2')}
+      </p>
+
+    </div>
+  )
+}
+
+//show the rules
+const Rules = ({showRules, setshowRules, cardStyle}) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className={"allStepsContainer" + ((showRules) ? " is-active" : "")}>
+
+      {/* INTRODUCTION ROUND*/}
+      <div className="stepWrapper">
+        <h2 id="step1" className="stepTitle">{t('about page.roleplay.rules.step1')}</h2>
+        <div className="stepBlockWrapper vertical">
+
+          <div className="stepBlockVertical leftAlign">
+            <h2 className="boldText">{t('about page.roleplay.rules.step1 t')}</h2>
+            <p>{t('about page.roleplay.rules.step1 1')}</p>
+          </div>
+
+          <div className="stepBlockHorizontal paddingTop spaceAround">
+            <img className="wideImage" src="/images/icons/membertalk.svg" alt="members talking icon"/>
+            <img className="wideImage" src="/images/icons/memberpoint.svg" alt="members talking icon"/>
+          </div>
+
+          <div className="stepBlockHorizontal paddingTop evenWidthChildren topAlign">
+            <div className="stepBlockVertical leftAlign">
+              <p className="marginTop">{t('about page.roleplay.rules.step1 2')}</p>
+            </div>
+            <div className="stepBlockVertical leftAlign">
+              <li className="subtext">{t('about page.roleplay.rules.step1 3')}</li>
+              <li className="subtext">{t('about page.roleplay.rules.step1 4')}</li>
+              <li className="subtext">{t('about page.roleplay.rules.step1 5')}</li>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* COMMENTATOR ROUND */}
+      <div className="stepWrapper">
+        <h2 className="stepTitle">{t('about page.roleplay.rules.step2')}</h2>
+
+        <div className="stepBlockWrapper vertical">
+
+          <div className="stepBlockVertical leftAlign">
+            <h2 className="boldText">{t('about page.roleplay.rules.step2 t')}</h2>
+            <p>{t('about page.roleplay.rules.step2 1')}</p>
+          </div>
+
+          <div className="stepBlockHorizontal paddingTop spaceAround">
+            <img className="wideImage" src="/images/icons/commentatortalk.svg" alt="members talking icon"/>
+            <img className="wideImage" src="/images/icons/commentatorpoint.svg" alt="members talking icon"/>
+          </div>
+
+          <div className="stepBlockHorizontal paddingTop evenWidthChildren topAlign">
+            <div className="stepBlockVertical leftAlign">
+              <p className="marginTop">{t('about page.roleplay.rules.step2 2')}</p>
+            </div>
+            <div className="stepBlockVertical leftAlign">
+              <li className="subtext">{t('about page.roleplay.rules.step2 3')}</li>
+              <li className="subtext">{t('about page.roleplay.rules.step2 4')}</li>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* EVENT ROUND */}
+
+      <div className="stepWrapper">
+        <h2 className="stepTitle">{t('about page.roleplay.rules.step3')}</h2>
+
+        <div className="stepBlockWrapper vertical">
+
+          <div className="stepBlockVertical leftAlign">
+            <h2 className="boldText">{t('about page.roleplay.rules.step3 t')}<span className='green'>{t('about page.roleplay.rules.step3span')}</span></h2>
+            <p>{t('about page.roleplay.rules.step3 1')}</p>
+          </div>
+
+          <div className="stepBlockHorizontal paddingTop evenWidthChildren topAlign">
+            <div className="stepBlockVertical leftAlign">
+              <p className="marginTop">{t('about page.roleplay.rules.step3 2')}</p>
+            </div>
+            <div className="stepBlockVertical leftAlign">
+              <li className="subtext">{t('about page.roleplay.rules.step3 3')}</li>
+            </div>
+          </div>
+
+          <div className="stepBlockDividerHorizontal"></div>
+
+          <div className="stepBlockVertical leftAlign paddingTop">
+            <h2 className="boldText">{t('about page.roleplay.rules.step4 t')}<span className='red'>{t('about page.roleplay.rules.step4span')}</span></h2>
+            <p>{t('about page.roleplay.rules.step4 1')}</p>
+          </div>
+
+          <div className="stepBlockHorizontal paddingTop evenWidthChildren topAlign">
+            <div className="stepBlockVertical leftAlign">
+              <p className="marginTop">{t('about page.roleplay.rules.step3 2')}</p>
+            </div>
+            <div className="stepBlockVertical leftAlign">
+              <li className="subtext">{t('about page.roleplay.rules.step3 3')}</li>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div className="stepWrapper">
+        <h2 className="stepTitle">{t('about page.roleplay.rules.step5')}</h2>
+
+          <div className="stepBlockWrapper vertical">
+            <div className="stepBlockVertical leftAlign">
+              <h2 className="boldText">{t('about page.roleplay.rules.step5 t')}</h2>
+              <p>{t('about page.roleplay.rules.step5 1')}</p>
+              <p className="marginTop">{t('about page.roleplay.rules.step5 1p')}</p>
+            </div>
+
+            <div className="stepBlockVertical paddingTop">
+              <img className="wideImage" src="/images/icons/reveal.svg" alt="reveal icon" />
+            </div>
+
+            <div className="stepBlockVertical paddingTop leftAlign topAlign">
+              <p className="marginTop">{t('about page.roleplay.rules.step5 2')}</p>
+            </div>
+
+          </div>
+      </div>
+
+      <div className="stepWrapper">
+        <h2 className="stepTitle">{t('about page.roleplay.rules.step6')}</h2>
+
+          <div className="stepBlockWrapper vertical">
+            <div className="stepBlockVertical leftAlign">
+              <h2 className="boldText">{t('about page.roleplay.rules.step6 t')}</h2>
+            </div>
+
+            <div className="stepBlockHorizontal paddingTop evenWidthChildren topAlign">
+
+              <div className="stepBlockVertical leftAlign">
+                <div className="stepBlockVertical">
+                  <img className="wideImage" src="/images/icons/goalgrad.svg" alt="reveal icon" />
+                </div>
+                <div className="stepBlockVertical paddingTop leftAlign topAlign">
+                  <p>{t('about page.roleplay.rules.step6 1')}</p>
+                </div>
+              </div>
+
+              <div className="stepBlockVertical leftAlign">
+                <div className="stepBlockVertical">
+                  <img className="wideImage" src="/images/icons/couplegrad.svg" alt="reveal icon" />
+                </div>
+                <div className="stepBlockVertical paddingTop leftAlign topAlign">
+                  <p>{t('about page.roleplay.rules.step6 2')}</p>
+                </div>
+              </div>
+
+            </div>
+
+            <div className="stepBlockVertical paddingTopHalf leftAlign topAlign">
+              <p>{t('about page.roleplay.rules.step6 3')}</p>
+              <RepeatFrom1 className="marginTopDbl"></RepeatFrom1>
+            </div>
+
+
+          </div>
+      </div>
+
+
+    </div>
+  )
 }
 
 export default Roleplay;

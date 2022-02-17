@@ -6,18 +6,19 @@ const DefaultButton = forwardRef(({
   className,
   text,
   navlink, href, button,
-  bordered, inverted, shadowless,
+  borderedBlack, borderedWhite, inverted, shadowless,
   onClick,
   icon, reversed,
 }, ref) => {
-  const borderedClass = (bordered) ? "is-bordered" : "";
+  const borderedBlackClass = (borderedBlack) ? "is-bordered-black" : "";
+  const borderedWhiteClass = (borderedWhite) ? "is-bordered-white" : "";
   const invertedClass = (inverted) ? "is-inverted" : "";
   const shadowlessClass = (shadowless) ? "is-shadowless" : "";
   const reversedClass = (reversed) ? "is-reversed" : "";
 
   const props = {
     id: id,
-    className: `defaultButton noselect ${invertedClass} ${borderedClass} ${reversedClass} ${shadowlessClass} ${className}`,
+    className: `defaultButton noselect ${invertedClass} ${borderedBlackClass} ${borderedWhiteClass} ${reversedClass} ${shadowlessClass} ${className}`,
     onClick: onClick,
     ref: ref,
   }

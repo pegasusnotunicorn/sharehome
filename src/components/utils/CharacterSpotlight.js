@@ -68,7 +68,7 @@ export const CharacterSpotlight = (props) => {
             { props.index && props.total &&
               <IndexTotal index={props.index} total={props.total} />
             }
-            <LinkTo>
+            <LinkTo {...props}>
               <div className="imageCircleMask noselect">
                 <img src={character.image.url} style={{objectPosition:backgroundPosition}} alt={character.name} />
               </div>
@@ -141,7 +141,7 @@ const AllCharactersButton = () => {
 
   return (
     <div className="allCharsButtonWrapper">
-      <DefaultButton icon="people_white" bordered shadowless navlink="/characters" text={t('main page.character.clicktoseemore')}/>
+      <DefaultButton icon="people_white" borderedWhite shadowless navlink="/characters" text={t('main page.character.clicktoseemore')}/>
     </div>
   )
 }

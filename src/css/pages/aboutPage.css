@@ -1,49 +1,29 @@
+/* <editor-fold>--------------------------------------TOP */
+
 .howToPlayContainer {
   display:flex;
   justify-content: space-between;
   flex-wrap:wrap;
-  padding:20px;
+  padding:2em;
 }
 
 .howToPlayWrapper{
-  width:42.5%;
+  width:100%;
   display:inline-block;
-  padding:20px;
+  border:5px solid #323232;
+  border-radius:5px;
+  color: #323232;
+  padding:2em;
   vertical-align: top;
-  padding-bottom:0px;
-  margin-bottom:20px;
-  border-radius: 2em 0 2em 0;
+  margin-bottom:2em;
   text-decoration: none;
   transition:transform 0.5s ease 0s, -webkit-transform 0.5s ease 0s;
 }
 
-@media only screen and (max-width:600px) {
+@media only screen and (max-width:900px) {
   .howToPlayWrapper{
     width:100%;
   }
-}
-
-.howToPlayWrapper:hover{
-  transform:scale(1.05);
-}
-
-.howToPlayWrapper:not(.yellowBackground):not(.noBackground), .howToPlayWrapper:not(.yellowBackground) .subsubtitle a {
-  color:#FFFFFF;
-}
-
-.howToPlayWrapper.yellowBackground, .howToPlayWrapper.yellowBackground .subsubtitle a {
-  color:#323232;
-}
-
-.subtext{
-  font-size:0.75em;
-  line-height:100%;
-  text-transform:uppercase;
-  margin-top:20px !important;
-  list-style-type:disclosure-closed;
-  text-align:left;
-  opacity:0.85;
-  font-family:"Roboto Light";
 }
 
 .timePlayerInfoWrapper{
@@ -55,104 +35,262 @@
   text-transform:uppercase;
 }
 
-.timePlayerInfoWrapper div, .timePlayerInfoWrapper svg{
-  margin-right:10px;
+.timePlayerInfoWrapper div:not(:last-child){
+  margin-right:1em;
+}
+
+.timePlayerInfoWrapper div{
   font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
 }
 
-.stepsContainer{
-  display:none;
-  padding:20px;
+.timePlayerInfoWrapper svg{
+  margin-right:.5em;
 }
 
-.stepsContainer.is-active{
-  display:block;
-  padding:20px;
-}
-
-.showRulesButton{
-  text-decoration:underline;
-  cursor:pointer;
-  margin:0;
-}
-
-.stepWrapper{
-  display:inline-block;
-  background-color:white;
-  border-radius: 2em 0 2em 0;
-  padding-top:10px;
-  width:45%;
-  vertical-align:middle;
-  margin:2vh;
-  margin-left:10px;
-  margin-right:10px;
-  padding:2vh;
-  border-width:1px;
-  border-style:solid;
-  border-color:#323232;
-  transition:all 0.5s;
-}
-
-@media only screen and (max-width:600px) {
-  .stepWrapper{
-    width:calc(100% - 40px);
-  }
-}
-
-.subtitleBackPageArrow{
-  position:absolute;
-  left:0px;
-  cursor:pointer;
-  top:25%;
-  color:#323232;
-  transform:translateY(-50%);
-}
-
-.stepWrapper:hover{
-  transform:scale(1.05);
-}
-
-.stepWrapper svg{
-  width:32px;
-  height:32px;
-}
-
-.stepWrapper p{
-  margin-top:20px;
+.setupRulesButtonWrapper{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  width:100%;
+  margin-top:1em;
   margin-bottom:0;
 }
 
-.stepWrapperSplit{
+.showRulesButton{
+  width:45%;
+}
+
+.showRulesButton.is-active{
+  cursor:default;
+}
+
+.showRulesButton.is-active:active{
+  background-color:#FFFFFF;
+}
+
+.showRulesButtonBottom{
+  text-decoration: underline;
+  width:fit-content;
+  margin:auto;
+  margin-top:2em !important;
+  cursor:pointer;
+}
+
+@media only screen and (max-width:900px) {
+  .setupRulesButtonWrapper{
+    flex-direction: column;
+  }
+  .showRulesButton{
+    width:100%;
+  }
+  .showRulesButton:not(:last-child){
+    margin-bottom:1em;
+  }
+}
+
+/* </editor-fold> */
+
+/* <editor-fold>--------------------------------------ALL STEPS */
+
+.allStepsContainer{
+  display:none;
+}
+
+.allStepsContainer.is-active{
+  display:block;
+  margin-bottom:5vh;
+}
+
+@media only screen and (max-width:900px) {
+  .allStepsContainer{
+    padding:2em;
+  }
+}
+
+.stepWrapper{
+  background-color:white;
+  width:calc(100% - 4em - 10px);
+  vertical-align:middle;
+  margin:0;
+  padding:2em;
+  border-radius:5px;
+  border-width:5px;
+  border-style:solid;
+  border-color:#323232;
   display:flex;
-  justify-content:space-between;
-  align-items:center;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position:relative;
+}
+
+@media only screen and (max-width:900px) {
+  .stepWrapper{
+    width:calc(100% - 2em);
+  }
+}
+
+.allStepsContainer .stepWrapper{
+  margin-top:4em;
+}
+
+.stepWrapper .stepTitle {
+  width: fit-content;
+  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
+  background: #323232;
+  color: #FFF;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  padding-bottom: 0.5em;
+  padding-top: 0.4em;
+  border-radius: 5px;
+  font-size: 1em !important;
+  left:2em;
+  top:-1.25em;
+  margin:0;
+  position:absolute;
+  text-transform: uppercase;
 }
 
 .stepWrapper.greenBorder {
-  border-width: 10px;
-  padding: 10px !important;
 }
 
-.stepSplitterLine{
-  margin:auto;
-}
-
-.illustrationWrapperCenter{
+.stepBlockWrapper{
   display:flex;
-  margin-top:20px;
-  justify-content:space-between;
+  justify-content:center;
   align-items:center;
+  width:100%;
+}
+.stepBlockWrapper.vertical{
+  flex-direction: column;
 }
 
-.illustrationWrapperCenter .illustrationCardWrapper{
+.stepBlockLeft{
+  width:50%;
+}
+
+.stepBlockRight{
+  width:50%;
+  padding-left:2em;
+}
+
+.stepBlockDividerHorizontal{
+  border-bottom:1px solid rgba(0,0,0,.15);
+  width:100%;
+  padding-top:2em;
+}
+
+.stepBlockHorizontal{
   display:flex;
-  align-items:center;
+  width:100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 }
 
-@media only screen and (max-width:600px) {
-  .stepWrapperSplit{
-    display:inline-block !important;
-  }
+.stepBlockHorizontal.evenWidthChildren{
+  justify-content: space-between;
+}
+.stepBlockHorizontal.evenWidthChildren > *{
+  width:calc(50% - 1em) !important;
+}
+.stepBlockHorizontal.topAlign{
+  align-items: flex-start;
+}
+.stepBlockHorizontal.spaceBetween{
+  justify-content: space-between;
+}
+.stepBlockHorizontal.spaceAround{
+  justify-content: space-around;
+}
+.stepBlockHorizontal.leftAlign{
+  justify-content: flex-start;
+}
+.stepBlockHorizontal.paddingTop, .stepBlockVertical.paddingTop{
+  padding-top:2em;
+}
+.stepBlockHorizontal.paddingTopHalf, .stepBlockVertical.paddingTopHalf{
+  padding-top:1em;
+}
+.stepBlockHorizontal.paddingBottom, .stepBlockVertical.paddingBottom{
+  padding-bottom:2em;
+}
+
+.stepBlockVertical{
+  display:flex;
+  width:100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.stepBlockVertical.leftAlign{
+  align-items: flex-start;
+  text-align: left;
+}
+
+/* </editor-fold> */
+
+/* <editor-fold>--------------------------------------STEP BLOCK STUFF */
+
+.stepBlockWrapper .boldText {
+  text-align:left;
+  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
+  margin:0;
+}
+
+.stepBlockWrapper .subtext {
+  text-align:left;
+  font-size:0.75em;
+  line-height:150%;
+  text-transform:uppercase;
+  text-align:left;
+  margin-top:.5em;
+  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
+}
+
+.stepBlockWrapper p.marginTopDbl {
+  margin-top:1em !important;
+}
+
+.stepBlockWrapper p.marginTop {
+  margin-top:0.5em !important;
+}
+
+.stepBlockWrapper p{
+  margin:0;
+}
+
+.stepBlockWrapper img {
+  width:50px;
+  height:50px;
+}
+
+.stepBlockWrapper img.smallImage {
+  width:25px;
+  height:25px;
+}
+
+.stepBlockWrapper img.wideImage {
+  width:250px;
+  height:100px;
+}
+
+.stepBlockWrapper img.paddingRight{
+  padding-right:1em;
+}
+
+.stepBlockWrapper img.translateYUp {
+  margin-bottom:10%;
+}
+
+.stepBlockWrapper img.translateYDown {
+  margin-top:10%;
+}
+
+.repeatFrom1{
+  text-decoration: underline;
+  cursor:pointer;
 }
 
 .listOfTaboo li{
@@ -160,3 +298,5 @@
   padding-left:10px;
   list-style-type:disclosure-closed;
 }
+
+/* </editor-fold> */

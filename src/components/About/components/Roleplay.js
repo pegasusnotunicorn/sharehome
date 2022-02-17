@@ -166,27 +166,35 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
 
           <div className="stepBlockVertical leftAlign">
             <h2 className="boldText">{t('about page.roleplay.rules.step1 t')}</h2>
-            <p>{t('about page.roleplay.rules.step1 1')}</p>
           </div>
 
-          <div className="stepBlockHorizontal paddingTop spaceAround">
-            <img className="wideImage" src="/images/icons/membertalk.svg" alt="members talking icon"/>
-            <img className="wideImage" src="/images/icons/memberpoint.svg" alt="members talking icon"/>
-          </div>
-
-          <div className="stepBlockHorizontal paddingTop evenWidthChildren topAlign">
+          <div className="stepBlockHorizontal paddingTopHalf evenWidthChildren topAlign">
             <div className="stepBlockLeft">
               <div className="stepBlockVertical leftAlign">
-                <p className="marginTop">{t('about page.roleplay.rules.step1 2')}</p>
+                <div className="stepBlockVertical leftAlign topAlign">
+                  <p>{t('about page.roleplay.rules.step1 1')}</p>
+                </div>
+                <div className="stepBlockVertical paddingTopHalf">
+                  <img className="wideImage" src="/images/icons/membertalk.svg" alt="members talking icon"/>
+                </div>
               </div>
             </div>
             <div className="stepBlockRight">
               <div className="stepBlockVertical leftAlign">
-                <li className="subtext">{t('about page.roleplay.rules.step1 3')}</li>
-                <li className="subtext">{t('about page.roleplay.rules.step1 4')}</li>
-                <li className="subtext">{t('about page.roleplay.rules.step1 5')}</li>
+                <div className="stepBlockVertical leftAlign topAlign">
+                  <p>{t('about page.roleplay.rules.step1 2')}</p>
+                </div>
+                <div className="stepBlockVertical paddingTopHalf">
+                  <img className="wideImage" src="/images/icons/memberpoint.svg" alt="members talking icon"/>
+                </div>
               </div>
             </div>
+          </div>
+
+          <div className="stepBlockVertical paddingTop leftAlign">
+            <li className="subtext">{t('about page.roleplay.rules.step1 3')}</li>
+            <li className="subtext">{t('about page.roleplay.rules.step1 4')}</li>
+            <li className="subtext">{t('about page.roleplay.rules.step1 5')}</li>
           </div>
 
         </div>
@@ -200,26 +208,34 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
 
           <div className="stepBlockVertical leftAlign">
             <h2 className="boldText">{t('about page.roleplay.rules.step2 t')}</h2>
-            <p>{t('about page.roleplay.rules.step2 1')}</p>
           </div>
 
-          <div className="stepBlockHorizontal paddingTop spaceAround">
-            <img className="wideImage" src="/images/icons/commentatortalk.svg" alt="members talking icon"/>
-            <img className="wideImage" src="/images/icons/commentatorpoint.svg" alt="members talking icon"/>
-          </div>
-
-          <div className="stepBlockHorizontal paddingTop evenWidthChildren topAlign">
+          <div className="stepBlockHorizontal paddingTopHalf evenWidthChildren topAlign">
             <div className="stepBlockLeft">
               <div className="stepBlockVertical leftAlign">
-                <p className="marginTop">{t('about page.roleplay.rules.step2 2')}</p>
+                <div className="stepBlockVertical leftAlign topAlign">
+                  <p>{t('about page.roleplay.rules.step2 1')}</p>
+                </div>
+                <div className="stepBlockVertical paddingTopHalf">
+                  <img className="wideImage" src="/images/icons/commentatortalk.svg" alt="members talking icon"/>
+                </div>
               </div>
             </div>
             <div className="stepBlockRight">
               <div className="stepBlockVertical leftAlign">
-                <li className="subtext">{t('about page.roleplay.rules.step2 3')}</li>
-                <li className="subtext">{t('about page.roleplay.rules.step2 4')}</li>
+                <div className="stepBlockVertical leftAlign topAlign">
+                  <p>{t('about page.roleplay.rules.step2 2')}</p>
+                </div>
+                <div className="stepBlockVertical paddingTopHalf">
+                  <img className="wideImage" src="/images/icons/commentatorpoint.svg" alt="members talking icon"/>
+                </div>
               </div>
             </div>
+          </div>
+
+          <div className="stepBlockVertical paddingTop leftAlign">
+            <li className="subtext">{t('about page.roleplay.rules.step2 3')}</li>
+            <li className="subtext">{t('about page.roleplay.rules.step2 4')}</li>
           </div>
 
         </div>
@@ -302,30 +318,30 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
               <h2 className="boldText">{t('about page.roleplay.rules.step6 t')}</h2>
             </div>
 
-            <div className="stepBlockHorizontal paddingTop evenWidthChildren topAlign">
+            <div className="stepBlockHorizontal paddingTopHalf evenWidthChildren topAlign">
               <div className="stepBlockLeft">
                 <div className="stepBlockVertical leftAlign">
-                  <div className="stepBlockVertical">
-                    <img className="wideImage" src="/images/icons/goalgrad.svg" alt="reveal icon" />
-                  </div>
-                  <div className="stepBlockVertical paddingTop leftAlign topAlign">
+                  <div className="stepBlockVertical leftAlign topAlign">
                     <p>{t('about page.roleplay.rules.step6 1')}</p>
+                  </div>
+                  <div className="stepBlockVertical paddingTopHalf">
+                    <img className="wideImage" src="/images/icons/goalgrad.svg" alt="reveal icon" />
                   </div>
                 </div>
               </div>
               <div className="stepBlockRight">
                 <div className="stepBlockVertical leftAlign">
-                  <div className="stepBlockVertical">
-                    <img className="wideImage" src="/images/icons/couplegrad.svg" alt="reveal icon" />
-                  </div>
-                  <div className="stepBlockVertical paddingTop leftAlign topAlign">
+                  <div className="stepBlockVertical leftAlign topAlign">
                     <p>{t('about page.roleplay.rules.step6 2')}</p>
+                  </div>
+                  <div className="stepBlockVertical paddingTopHalf">
+                    <img className="wideImage" src="/images/icons/couplegrad.svg" alt="reveal icon" />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="stepBlockVertical paddingTopHalf leftAlign topAlign">
+            <div className="stepBlockVertical paddingTop leftAlign topAlign">
               <p>{t('about page.roleplay.rules.step6 3')}</p>
               <RepeatFrom1 className="marginTopDbl"></RepeatFrom1>
             </div>

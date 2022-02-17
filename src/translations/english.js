@@ -139,7 +139,7 @@ const english = {
           "description": "Show me the game setup again",
           "step1": "Step 1",
           "step1 t": "Introductions Round",
-          "step1 1": "New Members have just arrived at the house! Please introduce yourselves to everyone else.",
+          "step1 1": "New Members have just arrived at the house! All new Members must introduce themselves to everyone else in the house.",
           "step1 2": "All Members then SECRETLY point their Signal Tokens towards a Member who they hate or like (platonically or romantically).",
           "step1 3": "Use your Member Card to cover your Signal Token.",
           "step1 4": "You can point the token at yourself.",

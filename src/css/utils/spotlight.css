@@ -64,6 +64,9 @@
   .spotlightTopWrapper, .spotlightBottomWrapper {
     flex-direction:column;
   }
+  .spotlightRightWrapper{
+    width:100%;
+  }
   .spotlightLeftWrapper{
     padding-bottom:2em;
     min-width: unset !important;

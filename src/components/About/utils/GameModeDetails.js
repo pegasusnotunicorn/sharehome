@@ -5,7 +5,7 @@ import GameModeIcons from "./GameModeIcons.js";
 const GameModeDetails = (props) => {
 
   return (
-    <div className="subcontentWrapper">
+    <div className="subcontentWrapper margin-top">
       <div className="characterContent">
         <h2 className="subtitle">
           {props.name}

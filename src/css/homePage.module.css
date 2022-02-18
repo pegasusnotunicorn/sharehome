@@ -37,11 +37,7 @@
 @media only screen and (max-width: 900px) {
   .mainpageContainer h1{
     font-size:2em;
-  }
-
-  .mainpageContainer > div:first-child {
-    padding-left:2em;
-    padding-right:2em;
+    line-height: 125%;
   }
 
   .mainpageContainer p{
@@ -374,7 +370,7 @@
 
 .eventsTextContainer h1, .goalsTextContainer h1{
   margin-bottom:0em;
-  line-height:100%;
+  line-height:125%;
 }
 
 .eventsTextContainer h3, .goalsTextContainer h3{
@@ -475,6 +471,9 @@
     top:75vh;
     left:-5vw;
   }
+  .goalsRightContainer{
+    width:calc(100% - 4em);
+  }
   .eventsLeftContainer {
     padding-left:0 !important;
     padding-right:0 !important;
@@ -486,7 +485,7 @@
   }
   #goalsContainerSVGscroll{
     right:47.5vw;
-    top:17.5vh;
+    top:15vh;
   }
 }
 

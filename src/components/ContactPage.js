@@ -45,9 +45,9 @@ const ContactPage = (props) => {
             personName="Wonmin Lee"
             showFront={true}
             mainStyle={{
-              width:"400px",
-              height:"275px",
-              fontSize:"9px",
+              width:"300px",
+              height:"200px",
+              fontSize:"7px",
             }}
           />
         </div>

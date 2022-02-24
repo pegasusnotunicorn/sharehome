@@ -55,13 +55,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  height:100vh;
+  height:200vh;
   position:relative;
 }
 
 .titleWrapper{
   width:auto;
-  height:100%;
+  height:50%;
   justify-content: center;
   display:flex;
 }
@@ -460,11 +460,11 @@
     text-align:center;
   }
   #eventsContainerSVGcake{
-    top:65vh;
+    top:70vh;
     right:5vw;
   }
   #eventsContainerSVGlovekey{
-    top:23vh;
+    top:13vh;
     right:50vw;
   }
   #eventsContainerSVGplanet{
@@ -481,11 +481,11 @@
   }
   #goalsContainerSVGflag{
     right:5vw;
-    top:60vh;
+    top:70vh;
   }
   #goalsContainerSVGscroll{
     right:47.5vw;
-    top:15vh;
+    top:5vh;
   }
 }
 

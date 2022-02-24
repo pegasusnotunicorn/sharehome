@@ -112,7 +112,7 @@
   }
   .likehateRightContainer {
     width:calc(100% - 4em);
-    margin-top:-6em;
+    margin-top:-3em;
     padding-top:0;
     justify-content: flex-start;
     height:40%;
@@ -121,7 +121,7 @@
 
 .likehateTextContainer {
   display:flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 span.likeMode{
@@ -144,14 +144,18 @@ span.hateMode{
   animation: animated_text 5s ease-in-out infinite;
 }
 
-.likeHateSVG {
-  position:absolute;
-  bottom:0;
+.likeHateSVGWrapper{
+  margin-top:2em;
+  width:100%;
 }
 
-@media only screen and (max-width: 1000px) {
+.likeHateSVG {
+
+}
+
+@media only screen and (max-width: 900px) {
   .likeHateSVG {
-    bottom:5vh;
+
   }
   .likehateTextContainer h1{
     margin-bottom:0;
@@ -159,11 +163,11 @@ span.hateMode{
 }
 
 .thumbup{
-  left:55%;
+
 }
 
 .thumbdown{
-  left:15%;
+
 }
 
 .likeHateSVG img {

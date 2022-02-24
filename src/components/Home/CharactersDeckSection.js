@@ -77,12 +77,18 @@ const Decks = (props) => {
     let isEvenMult = (rowIndex % 2 === 0) ? -1 : 1;
     let isEvenMultTemp = isEvenMult;
     let finalY = randomNumFromNeg(10);
+
+    //small desktop specific
     if (width > 1200 && width <= 1600) { distanceRanges = [4,12]; }
+
+    //tablet specific
     else if (width > 900 && width <= 1200) { distanceRanges = [2,10]; }
+
+    //mobile specific
     else if (width <= 900) {
       distanceRanges = (isEvenMult === -1) ? ((rowIndex === 0) ? [-20,-10] : [-30,-20]) : [-30,-20];   //first row, second row, third row (negative)
       isEvenMultTemp *= -1;
-      if (rowIndex === 1) finalY += randomNum(110,120);
+      if (rowIndex === 1) finalY += randomNum(130,140);
       if (rowIndex === 0) finalY -= 10;
     }
 

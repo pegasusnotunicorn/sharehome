@@ -72,7 +72,9 @@ const AnimatedCard = (props) => {
     //fine tune adjustments
     if (width <= 900) {
       finalX = (rowIndex === 1) ? 17.5 : finalX;
-      finalY = (rowIndex === 1) ? -25 : finalY;
+      finalY = (rowIndex === 0) ? -5 : finalY;
+      finalY = (rowIndex === 1) ? -33 : finalY;
+      finalY = (rowIndex === 2) ? 5 : finalY;
       finalX = (rowIndex === 2) ? -5 : finalX;
     }
   }

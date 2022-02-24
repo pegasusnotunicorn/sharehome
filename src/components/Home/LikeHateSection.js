@@ -461,7 +461,7 @@ const LikeHateSection = (props) => {
               <span className={likeModeClass} ref={likeHateTextRef}>{ likeModeText }</span>
               {` ${t('main page.likehate.description2')}`}
             </h1>
-            <div ref={thumbsRef}>
+            <div className="likeHateSVGWrapper" ref={thumbsRef}>
               <GsapWiggle className={`likeHateSVG ${likeHateSVG}`}>
                 <img src={`/images/icons/${likeHateSVG}.svg`} alt="like or hate icon"/>
               </GsapWiggle>

@@ -22,13 +22,9 @@ WebFont.load({
   active: ()=>{
     //set language so we can use custom CSS
     document.getElementById('sharehome').setAttribute("language", i18n.language);
-
-    // <React.StrictMode>
-    // </React.StrictMode>,
+    ReactDOM.render(
+      <Router />,
+      document.getElementById('sharehome')
+    );
   }
 });
-
-ReactDOM.render(
-  <Router />,
-  document.getElementById('sharehome')
-);

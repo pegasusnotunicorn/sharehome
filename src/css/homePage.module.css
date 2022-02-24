@@ -55,13 +55,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  height:200%;
+  height:100vh;
   position:relative;
 }
 
 .titleWrapper{
   width:auto;
-  height:50%;
+  height:100%;
   justify-content: center;
   display:flex;
 }
@@ -147,14 +147,14 @@
 /* tablet */
 @media only screen and (min-width: 900px) and (max-width: 1200px) {
   .lcmContainer{
-    width:325px !important;
+    width:300px !important;
   }
 }
 
 /* mobile */
 @media only screen and (max-width: 900px) {
   .lcmContainer{
-    width:300px !important;
+    width:250px !important;
   }
   .sharehomegame{
     width: 100% !important;

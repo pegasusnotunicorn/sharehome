@@ -39,7 +39,7 @@ export const CardFrontPerson = (props) => {
         draggable={false}
         className="memberCommCardImage nopointerevent"
         alt={"Image credit - " + cardPerson.image.credit}
-        src={cardPerson.image.url}
+        src={cardPerson.image.url.replace("big", "small")}
         style={{
           objectPosition:objectPositionX + " " + objectPositionY,
           transition:"all 0.5s",

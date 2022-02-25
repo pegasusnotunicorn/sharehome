@@ -13,18 +13,20 @@ import i18n from './i18n';
 WebFont.load({
   custom: {
     families: [
-      'Rowdies-Regular',
       'Rowdies-Light',
+      'Rowdies-Regular',
       'Rowdies-Bold',
-      'NotoSansJP Bold'
+      'NotoSansJP Light',
+      'NotoSansJP Bold',
     ],
   },
   active: ()=>{
     //set language so we can use custom CSS
     document.getElementById('sharehome').setAttribute("language", i18n.language);
-    ReactDOM.render(
-      <Router />,
-      document.getElementById('sharehome')
-    );
   }
 });
+
+ReactDOM.render(
+  <Router />,
+  document.getElementById('sharehome')
+);

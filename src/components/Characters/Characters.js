@@ -11,7 +11,7 @@ const allCharacters = [
 		japaneseJob: "ゲームクリエイター",
     japaneseName: "リー・ウォンミン",
     image: {
-      url: "/images/members/member_wonmin.jpg",
+      url: "/images/members/big/member_wonmin.jpg",
       name: "member_wonmin.jpg",
       width: 1467,
       height: 978,
@@ -51,7 +51,7 @@ const allCharacters = [
 		japaneseJob: "Webデザイナー",
     japaneseName: "ハッカーのウルグ",
     image: {
-      url: "/images/members/characters1.jpg",
+      url: "/images/members/big/characters1.jpg",
       name: "characters1.jpg",
       width: 2000,
       height: 1200,
@@ -91,7 +91,7 @@ const allCharacters = [
 		japaneseJob: "検眼医",
     japaneseName: "ベアトリス・カヴェンディッシュ",
     image: {
-      url: "/images/members/characters2.jpg",
+      url: "/images/members/big/characters2.jpg",
       name: "characters2.jpg",
       width: 2000,
       height: 1200,
@@ -132,7 +132,7 @@ const allCharacters = [
 		japaneseJob: "消防士志望",
     japaneseName: "小坊士",
     image: {
-      url: "/images/members/characters3.jpg",
+      url: "/images/members/big/characters3.jpg",
       name: "characters3.jpg",
       width: 2000,
       height: 1200,
@@ -173,7 +173,7 @@ const allCharacters = [
 		japaneseJob: "宅配人",
     japaneseName: "不機嫌のコトル",
     image: {
-      url: "/images/members/characters4.jpg",
+      url: "/images/members/big/characters4.jpg",
       name: "characters4.jpg",
       width: 2000,
       height: 1200,
@@ -214,7 +214,7 @@ const allCharacters = [
 		japaneseJob: "学生",
     japaneseName: "リディア・グリムズベイン",
     image: {
-      url: "/images/members/characters5.jpg",
+      url: "/images/members/big/characters5.jpg",
       name: "characters5.jpg",
       width: 2000,
       height: 1200,
@@ -256,7 +256,7 @@ const allCharacters = [
 		japaneseJob: "検査技師",
     japaneseName: "アッシ・ラーニー",
     image: {
-      url: "/images/members/characters6.jpg",
+      url: "/images/members/big/characters6.jpg",
       name: "characters6.jpg",
       width: 2000,
       height: 1200,
@@ -296,7 +296,7 @@ const allCharacters = [
 		japaneseJob: "クラブの用心棒",
     japaneseName: "オガルク・チェストモール",
     image: {
-      url: "/images/members/characters7.jpg",
+      url: "/images/members/big/characters7.jpg",
       name: "characters7.jpg",
       width: 2000,
       height: 1200,
@@ -337,7 +337,7 @@ const allCharacters = [
 		japaneseJob: "モデル",
     japaneseName: "アンナ・サラドリア・ウェスターガード",
     image: {
-      url: "/images/members/characters8.jpg",
+      url: "/images/members/big/characters8.jpg",
       name: "characters8.jpg",
       width: 2000,
       height: 1200,
@@ -377,7 +377,7 @@ const allCharacters = [
 		japaneseJob: "整備士",
     japaneseName: "コレリン・ボトルガード",
     image: {
-      url: "/images/members/characters9.jpg",
+      url: "/images/members/big/characters9.jpg",
       name: "characters11.jpg",
       width: 2000,
       height: 1200,
@@ -416,7 +416,7 @@ const allCharacters = [
 		japaneseJob: "美脚モデル",
     japaneseName: "ロザムンド・ガルバッシー",
     image: {
-      url: "/images/members/characters10.jpg",
+      url: "/images/members/big/characters10.jpg",
       name: "characters10.jpg",
       width: 2000,
       height: 1200,
@@ -456,7 +456,7 @@ const allCharacters = [
 		japaneseJob: "メードカフェの店員",
     japaneseName: "ロビン・ストリングズワース",
     image: {
-      url: "/images/members/characters11.jpg",
+      url: "/images/members/big/characters11.jpg",
       name: "characters11.jpg",
       width: 2000,
       height: 1200,
@@ -496,7 +496,7 @@ const allCharacters = [
 		japaneseJob: "お笑い芸人",
     japaneseName: "ドルピップ・ワドルゼドル",
     image: {
-      url: "/images/members/characters12.jpg",
+      url: "/images/members/big/characters12.jpg",
       name: "characters12.jpg",
       width: 2000,
       height: 1200,
@@ -536,7 +536,7 @@ const allCharacters = [
 		japaneseJob: "コンビニフリーター",
     japaneseName: "ジンジャーナッツ・グディハグ",
     image: {
-      url: "/images/members/characters13.jpg",
+      url: "/images/members/big/characters13.jpg",
       name: "characters13.jpg",
       width: 2000,
       height: 1200,
@@ -577,7 +577,7 @@ const allCharacters = [
 		japaneseJob: "銀行家",
     japaneseName: "ビズ・ハグルフィート",
     image: {
-      url: "/images/members/characters14.jpg",
+      url: "/images/members/big/characters14.jpg",
       name: "characters14.jpg",
       width: 2000,
       height: 1200,
@@ -618,7 +618,7 @@ const allCharacters = [
 		japaneseJob: "シェフ",
     japaneseName: "空腹のグロドット",
     image: {
-      url: "/images/members/characters15.jpg",
+      url: "/images/members/big/characters15.jpg",
       name: "characters15.jpg",
       width: 2000,
       height: 1200,
@@ -659,7 +659,7 @@ const allCharacters = [
 		japaneseJob: "弁護士",
     japaneseName: "セジ・トゥーミン",
     image: {
-      url: "/images/members/temp.png",
+      url: "/images/members/big/temp.png",
       name: "temp.png",
       width: 2000,
       height: 1200,
@@ -700,7 +700,7 @@ const allCharacters = [
 		japaneseJob: "建設労働者",
     japaneseName: "巨人のスソム",
     image: {
-      url: "/images/members/temp.png",
+      url: "/images/members/big/temp.png",
       name: "temp.png",
       width: 2000,
       height: 1200,
@@ -742,7 +742,7 @@ const allCharacters = [
 		japaneseJob: "魔法使い",
     japaneseName: "ハンサン・スネッカー",
     image: {
-      url: "/images/members/temp.png",
+      url: "/images/members/big/temp.png",
       name: "temp.png",
       width: 2000,
       height: 1200,
@@ -783,7 +783,7 @@ const allCharacters = [
 		japaneseJob: "印刷人",
     japaneseName: "ソゥ",
     image: {
-      url: "/images/members/temp.png",
+      url: "/images/members/big/temp.png",
       name: "temp.png",
       width: 2000,
       height: 1200,
@@ -824,7 +824,7 @@ const allCharacters = [
 		japaneseJob: "美術家",
     japaneseName: "セレチア・バーナード",
     image: {
-      url: "/images/members/temp.png",
+      url: "/images/members/big/temp.png",
       name: "temp.png",
       width: 2000,
       height: 1200,
@@ -865,7 +865,7 @@ const allCharacters = [
 		japaneseJob: "会計士 / フリーランスアーティスト",
     japaneseName: "エリアス＆マヤ・ディマコス",
     image: {
-      url: "/images/members/temp.png",
+      url: "/images/members/big/temp.png",
       name: "temp.png",
       width: 2000,
       height: 1200,
@@ -906,7 +906,7 @@ const allCharacters = [
 		japaneseJob: "銀行の警備員",
     japaneseName: "覇業の鎧、ハギちゃん",
     image: {
-      url: "/images/members/temp.png",
+      url: "/images/members/big/temp.png",
       name: "temp.png",
       width: 2000,
       height: 1200,
@@ -947,7 +947,7 @@ const allCharacters = [
 		japaneseJob: "司祭",
     japaneseName: "アルヤ・ジェンセン",
     image: {
-      url: "/images/members/temp.png",
+      url: "/images/members/big/temp.png",
       name: "temp.png",
       width: 2000,
       height: 1200,
@@ -988,7 +988,7 @@ const allCharacters = [
 		japaneseJob: "騎手",
     japaneseName: "ニコラス・オサリバン",
     image: {
-      url: "/images/members/temp.png",
+      url: "/images/members/big/temp.png",
       name: "temp.png",
       width: 2000,
       height: 1200,
@@ -1029,7 +1029,7 @@ const allCharacters = [
 		japaneseJob: "モデル / 窓口係",
     japaneseName: "ブリジェット・ニコラ",
     image: {
-      url: "/images/members/temp.png",
+      url: "/images/members/big/temp.png",
       name: "temp.png",
       width: 2000,
       height: 1200,

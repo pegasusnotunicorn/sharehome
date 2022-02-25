@@ -27,6 +27,9 @@ const MetaTags = (props) => {
     }
   }
 
+  //add absolute image path for Twitter
+  splashImage = `https://sharehomethegame.com${splashImage}`;
+
   return (
     <Helmet>
       <meta name="description" data-react-helmet="true" content={ description } />

@@ -42,8 +42,8 @@ const english = {
     "main page":{
       "hero": {
         "subtitle": "A reality TV card game\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world",
-        "player count": "3+ PLAYERS",
-        "play time": "15+ MINUTES",
+        "player count": "4 ~ 20+ players",
+        "play time": "20+ minutes",
       },
       "description": {
         "subtitle2": "Welcome to SHAREHOME, the reality TV show that documents the everyday lives of six mythical strangers living together.",

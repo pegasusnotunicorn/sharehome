@@ -42,8 +42,8 @@ const japanese = {
     "main page":{
       "hero": {
         "subtitle": "<span class='fantasyEmphasis'>異世界</span>のリアリティ番組\nをベースにしたカードゲーム",
-        "player count": "３+ 人用",
-        "play time": "プレイ時間 １５+ 分",
+        "player count": "３〜２０+ 人用",
+        "play time": "プレイ時間 ２０+ 分",
       },
       "description": {
         "subtitle2": "「シェアホーム」は見ず知らずの男女獣人６匹が共同する生活をただただ記録したリアリティ番組です。",

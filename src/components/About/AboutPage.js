@@ -31,8 +31,8 @@ const AboutPage = (props) => {
       link:"roleplay",
       jsx:()=>{ return (<Roleplay cardStyle={cardStyle} />)},
       description:t('about page.roleplay.description'),
-      playerCount:t('about page.roleplay.player count'),
-      playTime:t('about page.roleplay.play time'),
+      playerCount:t('main page.hero.player count'),
+      playTime:t('main page.hero.play time'),
       background:"greenBackground",
     },
     {

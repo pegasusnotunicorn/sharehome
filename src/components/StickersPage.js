@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Helmet } from "react-helmet";
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -8,12 +9,35 @@ import { Splash } from './utils/Splash.js';
 const ErrorPage = (props) => {
   const { t } = useTranslation();
 
+  //custom meta tags for this page
+  const title = "Love, Career & Magic — Free stickers!";
+  const splashImage = `https://sharehomethegame.com/images/splash.jpg`;
+  const description = t("sticker page.description");
+
+  //change title of page
   useEffect(() => {
-    document.title = "Love, Career & Magic — Free stickers!";
-  });
+    document.title = title;
+  }, [title]);
 
   return (
     <div className="content max-width">
+
+      <Helmet>
+        <meta name="description" data-react-helmet="true" content={ description } />
+
+        <meta itemprop="name" data-react-helmet="true" content={ description } />
+        <meta itemprop="description" data-react-helmet="true" content={ description } />
+        <meta itemprop="image" data-react-helmet="true" content={ splashImage } />
+
+        <meta property="og:title" data-react-helmet="true" content={ title } />
+        <meta property="og:description" data-react-helmet="true" content={ description } />
+        <meta property="og:image" data-react-helmet="true" content={ splashImage } />
+        <meta property="og:url" data-react-helmet="true" content={ window.location.href } />
+
+        <meta name="twitter:title" data-react-helmet="true" content={ title }></meta>
+        <meta name="twitter:description" data-react-helmet="true" content={ description } />
+        <meta name="twitter:image" data-react-helmet="true" content={ splashImage } />
+      </Helmet>
 
       <div className="subcontentWrapper margin-top min-width">
         <div className="characterContent">

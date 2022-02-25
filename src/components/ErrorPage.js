@@ -15,7 +15,7 @@ const ErrorPage = (props) => {
   return (
     <div className="content max-width">
 
-      <div className="subcontentWrapper min-width">
+      <div className="subcontentWrapper margin-top min-width">
         <div className="characterContent">
           <h2 className="subtitle">{t("error page.title")}</h2>
           <p>{t("error page.description")}</p>

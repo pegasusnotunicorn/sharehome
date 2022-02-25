@@ -90,6 +90,34 @@ p, li {
   }
 }
 
+.stickerTasksWrapper{
+  text-align:left;
+  font-size:1.5em;
+}
+
+.stickerTasksWrapper .taskWrapper:not(:last-child){
+  margin-bottom:1em;
+  margin-top:1em;
+}
+
+.stickerTasksWrapper div{
+  display:flex;
+}
+
+.taskWrapper, .taskWrapper label{
+  cursor:pointer;
+}
+
+.checkWrapper{
+  margin-top:.15em;
+}
+
+.stickerTasksWrapper input {
+  margin-right:1em;
+  width:1.5em;
+  height:1.5em;
+}
+
 /* </editor-fold> */
 
 /* <editor-fold>------------------------------------------------------------------BUTTONS */

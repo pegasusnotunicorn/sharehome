@@ -8,12 +8,14 @@ export const CardBack = (props) => {
 
   const name = (i18n.language === "en-US") ? character.name : character.japaneseName;
   const job = (i18n.language === "en-US") ? character.job : character.japaneseJob;
-  const age = (i18n.language === "en-US") ? `${character.age} year old` : `${character.age}歳` ;
+  const age = (i18n.language === "en-US") ? `${character.age} year old` : `${character.age}歳`;
+  const title = (i18n.language === "en-US") ? (character.title) ? character.title : `The ${character.race}` : character.japaneseRace;
 
   return (
     <div className="noselect cardBack name">
       <div className="cardBackText">
         <h2 className="cardBackName">{ name }</h2>
+        <h2 className="cardBackTitle">—{ title }—</h2>
         <h3 className="cardBackAge">{ age } { job }</h3>
       </div>
     </div>

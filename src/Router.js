@@ -7,6 +7,7 @@ import ScrollToTop from './ScrollToTop.js';
 import HomePage from './components/Home/HomePage.js';
 import AboutPage from './components/About/AboutPage.js';
 import CharactersPage from './components/Characters/CharactersPage.js';
+import StickersPage from './components/StickersPage.js';
 import ContactPage from './components/ContactPage.js';
 import ErrorPage from './components/ErrorPage.js';
 import Footer from './components/Footer.js';
@@ -41,6 +42,9 @@ const Router = (props) => {
           }} />
           <Route exact path="/contact" render={() => {
             return <ContactPage />
+          }} />
+          <Route exact path="/freesticker" render={() => {
+            return <StickersPage />
           }} />
           <Route render={() => {
             return <ErrorPage />

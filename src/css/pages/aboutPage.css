@@ -40,7 +40,7 @@
 }
 
 .timePlayerInfoWrapper div{
-  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Light', 'NotoSansJP Bold';
 }
 
 .timePlayerInfoWrapper svg{
@@ -140,7 +140,7 @@
 
 .stepWrapper .stepTitle {
   width: fit-content;
-  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
   background: #323232;
   color: #FFF;
   padding-left: 0.75em;
@@ -258,6 +258,7 @@
   .stepBlockRight{
     width:100% !important;
     padding-left:0;
+    padding-bottom:1em;
   }
 }
 
@@ -267,7 +268,7 @@
 
 .stepBlockWrapper .boldText {
   text-align:left;
-  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
   margin:0;
 }
 
@@ -278,7 +279,7 @@
   text-transform:uppercase;
   text-align:left;
   margin-top:.5em;
-  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Light', 'NotoSansJP Bold';
 }
 
 .stepBlockWrapper p.marginTopDbl {

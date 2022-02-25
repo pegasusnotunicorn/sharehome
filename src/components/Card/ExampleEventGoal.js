@@ -20,7 +20,7 @@ const exampleGoals = [
   {
     exampleID:4,
     type:"goal",
-    description:"Learn how to play the guitar.",
+    description:"Get someone to teach you how to play the guitar.",
     deckName:"Instruments",
   },
   {
@@ -28,6 +28,36 @@ const exampleGoals = [
     type:"goal",
     description:"Finally get together and go out for drinks + karaoke.",
     deckName:"TH NYC Meetup",
+  },
+  {
+    exampleID:6,
+    type:"goal",
+    description:"Confess your love to the person who you have seen the least amount of times.",
+    deckName:"Blind Love",
+  },
+  {
+    exampleID:7,
+    type:"goal",
+    description:"Coin a catch phrase and get at least two people to say it on air.",
+    deckName:"Top Fashion Icon",
+  },
+  {
+    exampleID:8,
+    type:"goal",
+    description:"Get someone to declare their undying love to you and reject them in front of everyone.",
+    deckName:"Connecticut Shore",
+  },
+  {
+    exampleID:9,
+    type:"goal",
+    description:"Start dating someone who doesn't speak your language.",
+    deckName:"Foreign Lovers",
+  },
+  {
+    exampleID:10,
+    type:"goal",
+    description:"Show off your sexy body blatantly to promote your own line of merchandise.",
+    deckName:"Stranded Sexy Island",
   },
 ]
 
@@ -91,12 +121,6 @@ const exampleEvents = [
     type: "Event",
     description:"Write a message for someone on their dinner using sauce.",
     deckName:"People in the City",
-  },
-  {
-    exampleID:11,
-    type: "Event",
-    description:"Forcibly kiss someone.",
-    deckName:"The Year 2020",
   },
 ]
 

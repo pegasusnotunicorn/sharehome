@@ -85,7 +85,7 @@ const japanese = {
       "joinbutton": "メルマガ登録",
       "prompt": "メルマガ登録で最新ニュースが届く！",
       "button": "登録",
-      "promise": "Your email will not be shared with anyone else.",
+      "promise": "登録は無料で配信停止はいつでも可能です。",
       "sending": "転送中...",
       "success": "ありがとうございます！すぐ確認メールが届きます。届かない場合は再度メールアドレスをご確認して下さい。"
     },
@@ -165,7 +165,7 @@ const japanese = {
           "step5": "Step 5",
           "step5 t": "発表ラウンド",
           "step5 1": "ハウスメンバー全員が家に帰ってくつろいでいる。",
-          "step5 1.5": "イベントカードと関係なく、どのメンバーも他のメンバーをデートに誘ってもいいです。",
+          "step5 1p": "イベントカードと関係なく、どのメンバーも他のメンバーをデートに誘ってもいいです。",
           "step5 2": "全てのハウスメンバーが自分のシグナルチップを見せる。「好き・嫌い」を正しく当てたコメンテーターは１ポイントをもらう。コメンテーターの予測と関連するメンバー２人も１ポイントずつもらう。",
           "step5 3": "時間制限はありません。自分のタイミングで遊びましょう！より多くのポイントを集めたプレイヤーが勝利します。",
           "step6": "Final Step",
@@ -220,17 +220,18 @@ const japanese = {
     },
 
     "characters page":{
-      "credit": "All illustrations done by Carolyn Frank.",
-      "title": "キャラクター",
-      "description": "sentaku",
+      "credit": "作者Carolyn Frank",
+      "title": "キャラクター紹介",
+      "description": "「シェアホーム」に出たキャラクターの一覧。クリックして詳しい情報や詳細が見れます！",
       "moretocome": "毎週新キャラ一人が紹介されます！",
       "race" : "種族",
       "job" : "職業",
       "age" : "年齢",
       "hobbies" : "趣味",
-      "list" : "Return to list",
-      "next" : "Next",
-      "prev" : "Prev",
+      "list" : "リストに戻る",
+      "next" : "次のキャラ",
+      "prev" : "前のキャラ",
+      "comingsoon" : "近日公開",
     },
 
     "contact page":{

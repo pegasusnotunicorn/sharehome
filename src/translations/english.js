@@ -231,6 +231,7 @@ const english = {
       "list" : "Return to list",
       "next" : "Next",
       "prev" : "Prev",
+      "comingsoon" : "Coming Soon",
     },
 
     "contact page":{

@@ -85,7 +85,7 @@
   width: 100%;
   margin-top: 2em !important;
   font-size: 1em;
-  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
+  font-family: 'Roboto Thin';
 }
 
 .scrollContainer {
@@ -196,7 +196,7 @@
 .subtitle{
   font-size: 2em;
   white-space: pre-line;
-  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
   margin:0 !important;
 }
 
@@ -543,7 +543,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Light', 'NotoSansJP Bold';
 }
 
 .mechanicsWrapper div > img {

@@ -9,7 +9,7 @@
   -moz-perspective: 1000px; /* Remove this if you don't want the 3D effect */
   -o-perspective: 1000px; /* Remove this if you don't want the 3D effect */
   pointer-events:all;
-  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
+  font-family: 'Roboto Regular';
 }
 
 .flipcardInner{
@@ -90,12 +90,13 @@
 .memberCommCardMainText{
   font-size:4em;
   line-height:100%;
+  font-family: 'Roboto Regular';
 }
 
 .memberCommCardSubText{
   font-size:2.5em;
   line-height:100%;
-  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
+  font-family:"Roboto Light", 'NotoSansJP Light';
 }
 
 .memberCommCardShadow{
@@ -118,7 +119,7 @@
 /* <editor-fold> -------------------------------------------EVENT / GOAL CARD */
 
 .eventGoalCardWrapper{
-  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
+  font-family: 'Roboto Regular';
   border-width:2em;
   border-style:solid;
   /* need 3.99em to get rid of weird #FFF line */
@@ -163,7 +164,8 @@
   align-items:center;
   justify-content:center;
   flex-direction:column;
-  width:calc(100% - 4em);
+  width:100%;
+  font-family: 'Rowdies-Bold', 'NotoSansJP Bold';
 }
 
 .cardBackMainText{
@@ -171,9 +173,9 @@
   color:#323232;
   text-transform:uppercase;
   margin:auto;
-  #FFF-space:pre-line;
+  white-space:pre-line;
   font-size:4em;
-  padding:.2em;
+  padding-bottom:.35em;
 }
 
 .cardBackSubText{
@@ -182,9 +184,9 @@
   display:inline-block;
   width:auto;
   font-size:2em;
-  padding:.2em;
-  border-radius: 0.5em 0;
-  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
+  padding:.35em;
+  border-radius:5px;
+  font-family: 'Rowdies-Light', 'NotoSansJP Light';
 }
 
 /* </editor-fold> ----------------------------------------------------------- */

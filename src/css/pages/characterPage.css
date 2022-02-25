@@ -8,7 +8,7 @@
 }
 
 .moretocome{
-  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
   font-size:2em;
 }
 
@@ -145,7 +145,7 @@
 
 .notDone .ignoreFilter p{
   margin:0;
-  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
 }
 
 .notDoneName{
@@ -180,7 +180,7 @@
 
 .caption p {
   line-height:100% !important;
-  font-family: 'Rowdies-Regular', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
   margin:0;
   padding:10px;
 }
@@ -191,7 +191,7 @@
 }
 
 .caption > .details {
-  font-family: 'Rowdies-Thin', 'ZenKurenaido Regular';
+  font-family: 'Rowdies-Light', 'NotoSansJP Bold';
   font-size:1em;
 }
 

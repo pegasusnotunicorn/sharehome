@@ -41,8 +41,15 @@
 }
 
 @font-face {
-    font-family: 'ZenKurenaido Regular';
-    src: url('../../fonts/ZenKurenaido-Regular.ttf') format('truetype');
+    font-family: 'NotoSansJP Light';
+    src: url('../../fonts/NotoSansJP-Light.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'NotoSansJP Bold';
+    src: url('../../fonts/NotoSansJP-Bold.otf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }

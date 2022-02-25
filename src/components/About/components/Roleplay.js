@@ -52,7 +52,7 @@ const Setup = ({showRules, setshowRules, cardStyle, toggleSteps}) => {
                 <div className="stepBlockHorizontal">
                   <img className="translateYDown" src="/images/icons/darkperson.svg" alt="member icon" />
                   <img className="translateYUp" src="/images/icons/darkperson.svg" alt="member icon" />
-                  <img className="translateYDown" src="/images/icons/darkperson.svg" alt="member icon" />
+                  <img className="translateYDown is-hidden-mobile" src="/images/icons/darkperson.svg" alt="member icon" />
                 </div>
                 <p className="boldText marginTop">{t('about page.roleplay.members')}</p>
               </div>
@@ -63,7 +63,7 @@ const Setup = ({showRules, setshowRules, cardStyle, toggleSteps}) => {
                 <div className="stepBlockHorizontal">
                   <img className="translateYDown" src="/images/icons/whiteperson.svg" alt="commentator icon" />
                   <img className="translateYUp" src="/images/icons/whiteperson.svg" alt="commentator icon" />
-                  <img className="translateYDown" src="/images/icons/whiteperson.svg" alt="commentator icon" />
+                  <img className="translateYDown is-hidden-mobile" src="/images/icons/whiteperson.svg" alt="commentator icon" />
                 </div>
                 <p className="boldText marginTop">{t('about page.roleplay.commentators')}</p>
               </div>

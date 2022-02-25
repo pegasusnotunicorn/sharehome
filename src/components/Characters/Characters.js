@@ -8,7 +8,7 @@ const allCharacters = [
     race:"Human",
     description:"The creator of this game!",
 		hobbies: "Playing video games.",
-    japaneseJob: "ゲームクリエイター",
+		japaneseJob: "ゲームクリエイター",
     japaneseName: "リー・ウォンミン",
     image: {
       url: "/images/members/member_wonmin.jpg",
@@ -47,7 +47,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "Webデザイナー",
+    japaneseEmployer: "アメージングEコマース",
+		japaneseJob: "Webデザイナー",
     japaneseName: "ハッカーのウルグ",
     image: {
       url: "/images/members/characters1.jpg",
@@ -86,7 +87,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "検眼医",
+    japaneseEmployer: "",
+		japaneseJob: "検眼医",
     japaneseName: "ベアトリス・カヴェンディッシュ",
     image: {
       url: "/images/members/characters2.jpg",
@@ -126,7 +128,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "消防士志望",
+    japaneseEmployer: "",
+		japaneseJob: "消防士志望",
     japaneseName: "小坊士",
     image: {
       url: "/images/members/characters3.jpg",
@@ -166,7 +169,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "宅配人",
+    japaneseEmployer: "",
+		japaneseJob: "宅配人",
     japaneseName: "不機嫌のコトル",
     image: {
       url: "/images/members/characters4.jpg",
@@ -206,7 +210,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "学生",
+    japaneseEmployer: "",
+		japaneseJob: "学生",
     japaneseName: "リディア・グリムズベイン",
     image: {
       url: "/images/members/characters5.jpg",
@@ -247,7 +252,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "検査技師",
+    japaneseEmployer: "",
+		japaneseJob: "検査技師",
     japaneseName: "アッシ・ラーニー",
     image: {
       url: "/images/members/characters6.jpg",
@@ -286,7 +292,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "クラブの用心棒",
+    japaneseEmployer: "",
+		japaneseJob: "クラブの用心棒",
     japaneseName: "オガルク・チェストモール",
     image: {
       url: "/images/members/characters7.jpg",
@@ -326,7 +333,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "モデル",
+    japaneseEmployer: "",
+		japaneseJob: "モデル",
     japaneseName: "アンナ・サラドリア・ウェスターガード",
     image: {
       url: "/images/members/characters8.jpg",
@@ -365,7 +373,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "整備士",
+    japaneseEmployer: "",
+		japaneseJob: "整備士",
     japaneseName: "コレリン・ボトルガード",
     image: {
       url: "/images/members/characters9.jpg",
@@ -403,7 +412,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "美脚モデル",
+    japaneseEmployer: "",
+		japaneseJob: "美脚モデル",
     japaneseName: "ロザムンド・ガルバッシー",
     image: {
       url: "/images/members/characters10.jpg",
@@ -442,7 +452,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "メードカフェの店員",
+    japaneseEmployer: "",
+		japaneseJob: "メードカフェの店員",
     japaneseName: "ロビン・ストリングズワース",
     image: {
       url: "/images/members/characters11.jpg",
@@ -481,7 +492,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "お笑い芸人",
+    japaneseEmployer: "",
+		japaneseJob: "お笑い芸人",
     japaneseName: "ドルピップ・ワドルゼドル",
     image: {
       url: "/images/members/characters12.jpg",
@@ -520,7 +532,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "コンビニフリーター",
+    japaneseEmployer: "",
+		japaneseJob: "コンビニフリーター",
     japaneseName: "ジンジャーナッツ・グディハグ",
     image: {
       url: "/images/members/characters13.jpg",
@@ -560,7 +573,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "銀行家",
+    japaneseEmployer: "",
+		japaneseJob: "銀行家",
     japaneseName: "ビズ・ハグルフィート",
     image: {
       url: "/images/members/characters14.jpg",
@@ -600,7 +614,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "シェフ",
+    japaneseEmployer: "",
+		japaneseJob: "シェフ",
     japaneseName: "空腹のグロドット",
     image: {
       url: "/images/members/characters15.jpg",
@@ -640,7 +655,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "弁護士",
+    japaneseEmployer: "",
+		japaneseJob: "弁護士",
     japaneseName: "セジ・トゥーミン",
     image: {
       url: "/images/members/temp.png",
@@ -680,7 +696,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "建設労働者",
+    japaneseEmployer: "",
+		japaneseJob: "建設労働者",
     japaneseName: "巨人のスソム",
     image: {
       url: "/images/members/temp.png",
@@ -721,7 +738,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "魔法使い",
+    japaneseEmployer: "",
+		japaneseJob: "魔法使い",
     japaneseName: "ハンサン・スネッカー",
     image: {
       url: "/images/members/temp.png",
@@ -761,7 +779,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "印刷人",
+    japaneseEmployer: "",
+		japaneseJob: "印刷人",
     japaneseName: "ソゥ",
     image: {
       url: "/images/members/temp.png",
@@ -801,7 +820,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "美術家",
+    japaneseEmployer: "",
+		japaneseJob: "美術家",
     japaneseName: "セレチア・バーナード",
     image: {
       url: "/images/members/temp.png",
@@ -841,7 +861,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "会計士 / フリーランスアーティスト",
+    japaneseEmployer: "",
+		japaneseJob: "会計士 / フリーランスアーティスト",
     japaneseName: "エリアス＆マヤ・ディマコス",
     image: {
       url: "/images/members/temp.png",
@@ -881,7 +902,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "銀行の警備員",
+    japaneseEmployer: "",
+		japaneseJob: "銀行の警備員",
     japaneseName: "覇業の鎧、ハギちゃん",
     image: {
       url: "/images/members/temp.png",
@@ -921,7 +943,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "司祭",
+    japaneseEmployer: "",
+		japaneseJob: "司祭",
     japaneseName: "アルヤ・ジェンセン",
     image: {
       url: "/images/members/temp.png",
@@ -961,7 +984,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "騎手",
+    japaneseEmployer: "",
+		japaneseJob: "騎手",
     japaneseName: "ニコラス・オサリバン",
     image: {
       url: "/images/members/temp.png",
@@ -1001,7 +1025,8 @@ const allCharacters = [
       "",
       "",
     ],
-    japaneseJob: "モデル / 窓口係",
+    japaneseEmployer: "",
+		japaneseJob: "モデル / 窓口係",
     japaneseName: "ブリジェット・ニコラ",
     image: {
       url: "/images/members/temp.png",

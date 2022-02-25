@@ -71,6 +71,7 @@ const AllCharacters = (props) => {
   let history = useHistory();
   let { name } = useParams();
   let chosenCharacter = getSpecificPersonByURL(name);
+  const { i18n } = useTranslation('home');
   const { t } = useTranslation();
 
   const redirectToSpecificCharacter = (character) => {
@@ -81,21 +82,25 @@ const AllCharacters = (props) => {
 
   const allCharacters = getAllCharacters();
   const expansionCharacters = allCharacters.map((elem, index)=>{
+    const name = (i18n.language === "en-US") ? elem.name : elem.japaneseName;
+    const race = (i18n.language === "en-US") ? elem.race : elem.japaneseRace;
+    const job = (i18n.language === "en-US") ? elem.job : elem.japaneseJob;
+
     let ignoreInRandom = (elem.ignoreInRandom) ? "notDone" : "";
     return (
       <div className={`characterWrapper ${ignoreInRandom}`} key={index}>
         <div className="characterInnerWrapper" onClick={()=>{redirectToSpecificCharacter(elem)}}>
           <div className="ignoreFilter noselect">
-            <p className="notDoneName">{elem.name}</p>
-            <p className="comingSoon">Coming soon</p>
+            <p className="notDoneName">{name}</p>
+            <p className="comingSoon">{t("characters page.comingsoon")}</p>
           </div>
           <img className="boxes" src={elem.image.url} style={{objectPosition:elem.image.objectPosition || "center"}} alt={elem.name}></img>
           <div className="caption noselect">
-            <p className="name">{elem.name}</p>
+            <p className="name">{name}</p>
             <p className="details is-hidden-mobile">
               <span>{elem.age}</span>
-              <span>{elem.race}</span>
-              <span>{elem.job}</span>
+              <span>{race}</span>
+              <span>{job}</span>
             </p>
           </div>
         </div>

@@ -14,9 +14,9 @@ WebFont.load({
   custom: {
     families: [
       'Rowdies-Regular',
-      'Rowdies-Thin',
+      'Rowdies-Light',
       'Rowdies-Bold',
-      'ZenKurenaido Regular'
+      'NotoSansJP Bold'
     ],
   },
   active: ()=>{

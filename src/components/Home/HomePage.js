@@ -52,7 +52,9 @@ const HomePage = forwardRef((props, ref) => {
       <div ref={topLogoRef} id={`${homeStyles.heroContainer}`} className={`${homeStyles.mainContentWrapper} noselect`}>
         <GsapFadeDelay delay={0} className={`${homeStyles.titleWrapper}`} >
           <div className={`${homeStyles.lcmContainer}`}>
-            <img onClick={scrollToDescription} className={`${homeStyles.lcmImage} floating noselect`} width="300" height="326" draggable="false" src="/images/lcm.png" alt="Love, Career, & Magic"></img>
+            <div className={`${homeStyles.lcmMaskWrapper} floating noselect`}>
+              <div className={`${homeStyles.lcmMask}`}></div>
+            </div>
             <p className={`${homeStyles.sharehomegame}`}>a SHAREHOME game</p>
           </div>
         </GsapFadeDelay>
@@ -173,12 +175,14 @@ const HomePage = forwardRef((props, ref) => {
             <DefaultButton inverted borderedBlack shadowless icon="favorite" href="https://sysifuscorp.com" text={t('main page.final.otherworks')}/>
           </div>
         </GsapFadeScrub>
-        <GsapFadeScrub fadeIn className={`${homeStyles.titleWrapper}`} >
+        <GsapFadeDelay delay={0} className={`${homeStyles.titleWrapper}`} >
           <div className={`${homeStyles.lcmContainer}`}>
-            <img onClick={scrollToTop} className={`${homeStyles.lcmImage} floating noselect`} draggable="false" src="/images/lcm.png" alt="Love, Career, & Magic"></img>
+            <div className={`${homeStyles.lcmMaskWrapper} floating noselect`}>
+              <div onClick={scrollToTop} className={`${homeStyles.lcmMask}`}></div>
+            </div>
             <p className={`${homeStyles.sharehomegame}`}>a SHAREHOME game</p>
           </div>
-        </GsapFadeScrub>
+        </GsapFadeDelay>
       </div>
 
     </div>

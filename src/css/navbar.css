@@ -145,7 +145,7 @@
   margin:auto;
 }
 
-.navbarClass p, .navbarClass a, .navbarClass h1, .navbarClass h2, .navbarClass h3{
+.navbarClass p, .navbarClass a:not(.defaultButton), .navbarClass h1, .navbarClass h2, .navbarClass h3{
   color:#323232;
 }
 
@@ -162,6 +162,20 @@
     opacity:1 !important;
     transition-property:opacity;
     transition-duration:0.25s;
+  }
+  #kickstarterButton{
+    font-size:.75em;
+    padding: 6px;
+    padding-left: 7.5px;
+    padding-right: 7.5px;
+  }
+  #kickstarterButton img{
+    width:20px;
+    height:20px;
+  }
+  #navbarOpenClose{
+    margin-left:10px;
+    margin-right:0px;
   }
 }
 

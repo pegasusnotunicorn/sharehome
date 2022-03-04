@@ -634,6 +634,7 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  padding-top:15vh;
   /* background-image: linear-gradient(rgba(50,50,50,1),rgba(50,50,50,0.75), rgba(255,255,255,1)); */
   /* color:#FFF; */
 }

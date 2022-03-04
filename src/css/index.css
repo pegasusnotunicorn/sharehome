@@ -129,7 +129,7 @@ p, li {
   padding-left:15px;
   padding-right:15px;
   background-color:#323232;
-  color:#FFF !important;
+  color:#FFF;
   border-radius:4px;
   text-decoration:none;
   border:1px solid transparent;

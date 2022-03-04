@@ -19,7 +19,7 @@ const english = {
     },
 
     "sticker page": {
-      "title": "Free sticker!",
+      "title": "Free character sticker!",
       "description": "Complete the following tasks for a free sticker! Sorry, but free stickers are limited to US residents and only while supplies last.",
       "description2": "Also it's literally just one guy who is printing and mailing all of these out so please be patient when requesting your free sticker.",
       "description3": "Please use the hashtag #lovecareermagic to show off your sticker when you receive it!",
@@ -37,6 +37,7 @@ const english = {
       "blog":"Blog",
       "play online":"Play online",
       "questions":"Questions? Comments?",
+      "kickstarter":"Remind me on Kickstarter",
     },
 
     "main page":{

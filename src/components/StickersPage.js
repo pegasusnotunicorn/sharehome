@@ -3,15 +3,12 @@ import { Helmet } from "react-helmet";
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-//custom files
-import { Splash } from './utils/Splash.js';
-
-const ErrorPage = (props) => {
+const StickersPage = (props) => {
   const { t } = useTranslation();
 
   //custom meta tags for this page
   const title = "Love, Career & Magic — Free stickers!";
-  const splashImage = `https://sharehomethegame.com/images/splash.jpg`;
+  const splashImage = `https://sharehomethegame.com/images/freesticker.jpg`;
   const description = t("sticker page.description");
 
   //change title of page
@@ -47,12 +44,12 @@ const ErrorPage = (props) => {
           <p>{t("sticker page.description3")}</p>
 
           <form className="stickerTasksWrapper">
-              <div style={{textDecoration:"underline"}} onClick={()=>{
-                window.open("http://eepurl.com/hxOEy1");
-              }}>
-                <div className="checkWrapper"><input type="checkbox" id="task0" name="task0" /></div>
-                <label htmlFor="task0">{t("sticker page.task 0")}</label>
-              </div>
+            <div style={{textDecoration:"underline", cursor:"pointer"}} onClick={()=>{
+              window.open("http://eepurl.com/hxOEy1");
+            }}>
+              <div className="checkWrapper"><input type="checkbox" id="task0" name="task0" /></div>
+              <label style={{cursor:"pointer"}} htmlFor="task0">{t("sticker page.task 0")}</label>
+            </div>
             <div className="taskWrapper">
               <div className="checkWrapper"><input type="checkbox" id="task1" name="task1" /></div>
               <label htmlFor="task1">{t("sticker page.task 1")}</label>
@@ -68,9 +65,14 @@ const ErrorPage = (props) => {
         </div>
       </div>
 
-      <Splash />
+      <div className="subcontentWrapper">
+        <div className="couchContainer">
+          <img className="couch" style={{width:"100%"}} src="/images/freesticker.jpg" alt={t('sticker page.description')}></img>
+        </div>
+      </div>
+
     </div>
   )
 }
 
-export default ErrorPage;
+export default StickersPage;

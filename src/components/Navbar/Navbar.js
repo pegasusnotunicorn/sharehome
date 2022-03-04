@@ -28,7 +28,7 @@ export const NavbarMain = (props) => {
   //toggle email logic
   const { width } = useWindowDimensions();
   const [mailButtonVisible, setMailButtonVisible] = useState(true);
-  const mailButtonVisibleClass = (mailButtonVisible) ? "is-active" : "";    //class to append if visible
+  // const mailButtonVisibleClass = (mailButtonVisible) ? "is-active" : "";    //class to append if visible
 
   const [mobileShowMail, setMobileShowMail] = useState(false);
   const mobileShowLeftClass = (mobileShowMail) ? "" : "is-active";    //class to append if visible
@@ -68,11 +68,13 @@ export const NavbarMain = (props) => {
     onMount(toggleMail);
   },[onMount, visible, toggleMail]);
 
+  //email sign up button
+  // <DefaultButton shadowless icon="email_white" id="emailToggleButtonMobile" className={mailButtonVisibleClass} onClick={toggleMail} text={t('email form.joinbutton')}/>
   return (
     <div className={`navbarClass ${isVisibleClass}`}>
 
       <GsapFadeDelay delay={1500} className="fixedButtonsWrapper noselect">
-        <DefaultButton shadowless icon="email_white" id="emailToggleButtonMobile" className={mailButtonVisibleClass} onClick={toggleMail} text={t('email form.joinbutton')}/>
+        <DefaultButton shadowless icon="whiteStar" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
         <button
           id="navbarOpenClose"
           className={`hamburger hamburger--slider ${isVisibleClass}`}

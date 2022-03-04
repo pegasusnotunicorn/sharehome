@@ -37,6 +37,7 @@ const japanese = {
       "blog":"ブログ（英語）",
       "play online":"オンラインプレイ",
       "questions":"お問い合わせはこちらへどうぞ",
+      "kickstarter":"ローンチ通知を受け取る",
     },
 
     "main page":{

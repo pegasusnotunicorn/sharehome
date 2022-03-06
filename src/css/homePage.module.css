@@ -657,7 +657,7 @@
   }
 }
 
-.finalButtonsWrapper > div{
+.finalButtonsWrapper > div, .finalButtonsWrapper > a{
   margin-right:2em;
 }
 

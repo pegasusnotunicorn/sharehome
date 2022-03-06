@@ -171,7 +171,8 @@ const HomePage = forwardRef((props, ref) => {
         <GsapFadeScrub fadeIn className={`subcontentWrapper`}>
           <h1>{t('main page.final.description')}</h1>
           <div className={`${homeStyles.finalButtonsWrapper}`}>
-            <DefaultButton shadowless icon="email_white" ref={navbarButton} text={t('email form.joinbutton')}/>
+            <DefaultButton shadowless icon="whiteStar" href="https://bit.ly/lovecareermagic" id="kickstarterButton" text={t('navbar.kickstarter')}/>
+            <DefaultButton shadowless icon="email_white" ref={navbarButton} className="is-hidden" text={t('email form.joinbutton')}/>
             <DefaultButton inverted borderedBlack shadowless icon="favorite" href="https://sysifuscorp.com" text={t('main page.final.otherworks')}/>
           </div>
         </GsapFadeScrub>

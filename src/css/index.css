@@ -19,6 +19,10 @@ body {
   min-height: -webkit-fill-available;
 }
 
+.is-hidden{
+  display:none !important;
+}
+
 a {
 }
 

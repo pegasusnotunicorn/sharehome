@@ -18,8 +18,8 @@ const Roleplay = (props) => {
 
   const showRulesClass = (showRules) ? "is-active is-inverted" : "";
   const showSetupClass = (!showRules) ? "is-active is-inverted" : "";
-  const setupButtonText = (showRules) ? `${t('about page.roleplay.setup.title')}` : `> ${t('about page.roleplay.setup.title')} <`;
-  const rulesButtonText = (showRules) ? `> ${t('about page.roleplay.rules.title')} <` : `${t('about page.roleplay.rules.title')}`;
+  const setupButtonText = (showRules) ? `${t('about page.roleplay.setup.title')}` : `${t('about page.roleplay.setup.title')}`;
+  const rulesButtonText = (showRules) ? `${t('about page.roleplay.rules.title')}` : `${t('about page.roleplay.rules.title')}`;
 
   return (
     <>
@@ -242,14 +242,13 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
       </div>
 
       {/* EVENT ROUND */}
-
       <div className="stepWrapper">
         <h2 className="stepTitle">{t('about page.roleplay.rules.step3')}</h2>
 
         <div className="stepBlockWrapper vertical">
 
           <div className="stepBlockVertical leftAlign">
-            <h2 className="boldText">{t('about page.roleplay.rules.step3 t')}<span className='green'>{t('about page.roleplay.rules.step3span')}</span></h2>
+            <h2 className="boldText">{t('about page.roleplay.rules.step3 t')}<span className='likeMode'>{t('about page.roleplay.rules.step3span')}</span></h2>
             <p>{t('about page.roleplay.rules.step3 1')}</p>
           </div>
 
@@ -269,7 +268,7 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
           <div className="stepBlockDividerHorizontal"></div>
 
           <div className="stepBlockVertical leftAlign paddingTop">
-            <h2 className="boldText">{t('about page.roleplay.rules.step4 t')}<span className='red'>{t('about page.roleplay.rules.step4span')}</span></h2>
+            <h2 className="boldText">{t('about page.roleplay.rules.step4 t')}<span className='hateMode'>{t('about page.roleplay.rules.step4span')}</span></h2>
             <p>{t('about page.roleplay.rules.step4 1')}</p>
           </div>
 

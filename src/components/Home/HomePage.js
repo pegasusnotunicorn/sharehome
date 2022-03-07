@@ -61,11 +61,11 @@ const HomePage = forwardRef((props, ref) => {
         <GsapFadeDelay delay={1500} className={homeStyles.scrollContainer}>
           <GsapFadeScrub scrub startScreenTop fadeOut >
             <div className={homeStyles.scrollHorizontalContainer}>
-              <div className={homeStyles.scrollVerticalContainer}></div>
+              <div id={homeStyles.animatedScroll} className={homeStyles.scrollVerticalContainer}></div>
               <div className={homeStyles.scrollVerticalContainer}></div>
             </div>
             <div className={homeStyles.scrollHorizontalContainer}>
-              <p onClick={scrollToDescription} >SCROLL</p>
+              <p onClick={scrollToDescription}>Scroll</p>
             </div>
           </GsapFadeScrub>
         </GsapFadeDelay>
@@ -82,9 +82,10 @@ const HomePage = forwardRef((props, ref) => {
                 playTime={t('main page.hero.play time')}
                 />
             </div>
-            <div className={`subcontentWrapper min-width`}>
+            <div className={`${homeStyles.descriptionTextWrapper} subcontentWrapper min-width`}>
               <p>{t('main page.description.subtitle2')}</p>
               <p>{t('main page.description.subtitle3')}</p>
+              <DefaultButton shadowless icon="whiteStar" href="https://bit.ly/lovecareermagic" id="kickstarterButton" text={t('navbar.kickstarter')}/>
             </div>
           </GsapFadeScrub>
         </div>

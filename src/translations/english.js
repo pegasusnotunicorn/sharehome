@@ -49,7 +49,6 @@ const english = {
       "description": {
         "subtitle2": "Welcome to SHAREHOME, the reality TV show that documents the everyday lives of six mythical strangers living together.",
         "subtitle3": "Love, Career & Magic is a card game that lets you relive your favorite scenes by playing as the characters from the show!",
-        "splashalt": "6 strangers enjoying a meal together.",
       },
       "how to play": {
         "description" : "How to play",
@@ -87,7 +86,7 @@ const english = {
         "description": "This Week's Spotlight",
       },
       "final": {
-        "description": "Coming soon to Kickstarter in 2022",
+        "description": "Coming soon to Kickstarter in 2022!",
         "otherworks": "Check out my other game",
       },
     },
@@ -96,7 +95,7 @@ const english = {
       "joinbutton": "Join mailing list",
       "prompt": "Sign up to be notified when we launch!",
       "button": "Submit",
-      "promise": "Your email will not be shared with anyone else.",
+      "promise": "",
       "sending": "Submitting...",
       "success": "Thank you! We just sent a confirmation email. If you do not receive anything, please double check your email address."
     },

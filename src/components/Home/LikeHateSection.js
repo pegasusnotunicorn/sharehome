@@ -395,7 +395,7 @@ const LikeHateSection = (props) => {
   const likeHateTextRef = useRef(null);
   const thumbsRef = useRef(null);
   useLayoutEffect(()=>{
-    const delay = 5;
+    const delay = 1;
     const duration = 0.5;
     let tl = gsap.timeline({
       repeat: -1,
@@ -456,16 +456,16 @@ const LikeHateSection = (props) => {
       <div className="likehateRightContainer likehateContainers">
         <GsapFadeScrub fadeIn scrubStartCenter>
           <div className="likehateTextContainer">
-            <h1>
-              {`${t('main page.likehate.description1')} `}
-              <span className={likeModeClass} ref={likeHateTextRef}>{ likeModeText }</span>
-              {` ${t('main page.likehate.description2')}`}
-            </h1>
             <div className="likeHateSVGWrapper" ref={thumbsRef}>
               <GsapWiggle className={`likeHateSVG ${likeHateSVG}`}>
                 <img src={`/images/icons/${likeHateSVG}.svg`} alt="like or hate icon"/>
               </GsapWiggle>
             </div>
+            <h1>
+              {`${t('main page.likehate.description1')} `}
+              <span className={likeModeClass} ref={likeHateTextRef}>{ likeModeText }</span>
+              {` ${t('main page.likehate.description2')}`}
+            </h1>
           </div>
         </GsapFadeScrub>
       </div>

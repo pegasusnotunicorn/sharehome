@@ -32,9 +32,9 @@ const allCharacters = [
       "Rejecting the orc status quo, he wants to change the public perception of his people. His desire to show his race in a better light brought him on the show. He hopes that his illegal darkweb activities won't be discovered by the public."
     ],
 		hobbies: [
-      "Hacking greedy corporate websites like a modern day robin hood and donating stolen money to charities.",
-      "Really fluent in working with dark web cryptocurrencies and money laundering.",
-      "Manages a NFT marketplace based on funny orc pictures of the orcs that used to bully him as a child."
+      "Manages a NFT marketplace based on funny orc pictures of the orcs that used to bully him as a child.",
+      "Hacking greedy corporate websites like a modern day robin hood and donating the stolen money to charities.",
+      "Dark web cryptocurrencies and money laundering.",
     ],
     japaneseRace:"オーク",
     japaneseDescription:[
@@ -63,13 +63,13 @@ const allCharacters = [
   {
     name: "Beatrice Cavendish",
     urlName: "beatrice",
-    age: 27,
+    age: 26,
     job: "Optometrist",
     employer: "Cavendish Optometry",
     race:"Cockatrice",
     description: [
-      "Can kill people with just one look according to folk legend. Afraid of testing out that theory so wears special designer sunglasses all the time. Also designs special lenses for other Cockatrices to let them look in the mirror without harm.",
-      "Born and raised in England. Has no arms but has a very dextrous beak and legs. Has no knowledge of parents but legend says Cockatrices are born when a rooster's egg is incubated by a snake."
+      "Cockatrices can kill people with just one look according to folk legend. Afraid of testing out that theory, Beatrice wears special designer sunglasses all of the time. Beatrice also designs special lenses for other Cockatrices to let them look in the mirror without harm.",
+      "Born and raised in England, Beatrice has no arms but has a very dextrous beak and legs. Has no knowledge of parents but legend says Cockatrices are born when a rooster's egg is incubated by a snake."
     ],
 		hobbies: [
       "Really into vegan culture but still eats meat on occasion.",
@@ -108,13 +108,13 @@ const allCharacters = [
     employer: false,
     race:"Elf",
     description:[
-      "An elf of Japanese descent. Physically has stopped growing as most elves do, but is still very immature in his personality and emotional intelligence. Moved to the big city from his village in the forest in pursuit of something more exciting",
-      "He is aspiring to be a forest firefighter like a lot of his hometown elf friends. Has never had a girlfriend in his life and his friends never let him forget that."
+      "An elf of Japanese descent. Tsukasa has physically stopped growing as most elves do around his age. But he still has a very immature personality and low emotional intelligence. Moved to the big city from his tiny village in the forest in pursuit of something more exciting.",
+      "Tsukasa is aspiring to be a forest firefighter like a lot of his hometown elf friends. He has never had a girlfriend in his life and his friends never let him forget that."
     ],
 		hobbies: [
-      "Learning how to play the guitar.",
       "Skateboarding.",
-      "Singing and dancing. Especially when alone.",
+      "Learning how to play the guitar.",
+      "Singing and dancing—especially when alone.",
       "Pretty much anything that might make him more attractive to the opposite gender.",
     ],
     japaneseRace:"エルフ",
@@ -150,8 +150,8 @@ const allCharacters = [
     employer: "Dragon Delivery",
     race:"Dragon",
     description:[
-      "Dragons reach adulthood around age 100. Dragons can also freely change their sizes at will, ranging from a small housecat to a large 4 story building. Is very lazy and likes to sleep a lot, like a house cat. Changing sizes requires a great deal of energy and strength.",
-      `Chases their tail sometimes out of boredom as a form of light exercise when not working and delivering packages. "Works to live" not "lives to work." Doesn't get along with workaholics.`,
+      "Dragons reach adulthood around age 100. They can also freely change their own bodysize at will—ranging from a small house cat to a large four story building. However, changing sizes requires a great deal of energy and strength.",
+      `Köttr is very lazy and likes to sleep a lot, much like a cat. Sometimes chases their own tail out of boredom or as a form of light exercise when not working and delivering packages. “Works to live” not “lives to work.” Doesn’t get along with workaholics.`,
     ],
 		hobbies: [
       "Sleeping.",
@@ -189,11 +189,11 @@ const allCharacters = [
     urlName: "lydia",
     age: 19,
     job: "Student",
-    employer: "the Mismonia Academy of Witchcraft",
+    employer: "the Mismonia Academy of Witchcraft for Young Aspiring Witches",
     race:"Human",
     description:[
-      "Lydia is a second-year witch at the Mismonia Academy of Witchcraft for young aspiring witches. Hopes to major in Potions and Mixology. Wants to help creatures with her magical concoctions when she graduates.",
-      "Has magical rune tattoos sleeves on both arms. Prefers a bucket hat over the traditional witches hat. Doesn't like wearing long sleeve shirts that cover the tattoos.",
+      "Lydia is a second-year witch at the Mismonia Academy of Witchcraft for Young Aspiring Witches. Lydia hopes to major in Potions and Mixology in order to help creatures with her magical concoctions when she graduates.",
+      "Lydia has magical rune sleeves tattooed on both of her arms. She doesn’t like wearing long sleeve shirts that may cover her tattoos. She prefers a stylish bucket hat over the more traditional witch’s hat.",
     ],
 		hobbies:[
       "Reading. Particularly science fiction books about a parallel world ruled by only humans.",
@@ -232,14 +232,14 @@ const allCharacters = [
     employer: "Serpent Science Lab",
     race:"Basilisk",
     description:[
-      "Basilisks are known to be extremely venemous and even a mere whiff of their poison can send victims into a deep coma. Therefore, the venom is a highly sought after commodity in the underground markets.",
+      "Basilisks are known to be extremely venomous to the point where even a mere whiff of their poison can send victims into a deep coma. Therefore, their venom is a highly sought-after commodity in the underground markets.",
       "Despite the notoriety of Basilisks in society, Ahxi wants to help develop new antivenoms and chemical products using the potency of their venom. Came onto the show in hopes of improving public perception of Basilisks.",
     ],
 		hobbies:[
       "Crossfit.",
-      "Pole Dancing.",
-      "Working out. Lifting weights.",
+      "Pole dancing.",
       "Strength training.",
+      "Working out and lifting weights.",
     ],
     japaneseRace:"バシリスク",
     japaneseDescription:[
@@ -268,13 +268,13 @@ const allCharacters = [
   {
     name: "Ogark Chestmaul",
     urlName: "ogark",
-    age: 17,
+    age: 22,
     job: "Part-time Bouncer",
     employer: "local nightclubs and bars",
     race:"Ogre",
     description:[
-      "Lost his left hand in a bet when he was a teenager hanging out with the wrong crowd. He has since cut all ties with that crowd and for each time he almost relapsed back into that crowd, he got a tattoo right above his amputated hand to remind him of the accident.",
-      "A bit dumb but means very well. Extremely well loved by anyone who has met him. A big gentle giant.",
+      "Ogark lost his left hand in a bet when he was a teenager hanging out with the wrong crowd. He has since cut all ties with that crowd. For each time he almost relapsed back into that crowd, he got a tattoo right above his amputated hand to remind him of the accident.",
+      "Ogark is a bit dumb but means very well. He is extremely well loved by anyone who has met him. A big gentle giant.",
     ],
 		hobbies: [
       "Bird watching. Despite having a hard time sneaking up on birds due to his large brutish figure.",

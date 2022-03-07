@@ -28,7 +28,7 @@ const allCharacters = [
     employer: "Amazin' E-Commerce",
     race:"Orc",
     description: [
-      "Bullied a lot as a kid for his scrawny stature. He was not your typical brutish orc. As a child, he turned to the dark web for comfort and found his belonging there amongst the other outcasts of society.",
+      "Urg was bullied a lot as a kid for his scrawny stature. He was not your typical brutish orc. As a child, he turned to the dark web for comfort and found his belonging there amongst the other outcasts of society.",
       "Rejecting the orc status quo, he wants to change the public perception of his people. His desire to show his race in a better light brought him on the show. He hopes that his illegal darkweb activities won't be discovered by the public."
     ],
 		hobbies: [
@@ -192,7 +192,7 @@ const allCharacters = [
     employer: "the Mismonia Academy of Witchcraft for Young Aspiring Witches",
     race:"Human",
     description:[
-      "Lydia is a second-year witch at the Mismonia Academy of Witchcraft for Young Aspiring Witches. Lydia hopes to major in Potions and Mixology in order to help creatures with her magical concoctions when she graduates.",
+      "Lydia is a second-year witch at the Mismonia Academy of Witchcraft for Young Aspiring Witches. Lydia hopes to major in Potions and Mixology in order to help creatures with her magical concoctions when she graduates. She also hopes to improve the public image of witches.",
       "Lydia has magical rune sleeves tattooed on both of her arms. She doesn’t like wearing long sleeve shirts that may cover her tattoos. She prefers a stylish bucket hat over the more traditional witch’s hat.",
     ],
 		hobbies:[
@@ -314,13 +314,14 @@ const allCharacters = [
     employer: "species-inclusive fashion magazine, MONST",
     race:"Dark Elf",
     description:[
-      "Abandoned by her family as a baby, Anna was named and raised by human farmers who found her crying in the forest. Thus, Anna grew up with human values and culture but never felt like she belonged. Her above average height and exotic complexion made her stand out in the village amongst the humans.",
-      "She moved to the city in search of other dark elves. Decided to come onto the show as a latch ditch effort to find any information on her childhood before being adopted.",
+      "Abandoned by her family as a baby, Anna was named and raised by the human farmers who found her crying in the forest. Though she grew up with human values she never felt like she truly belonged. Her above average height and exotic complexion made her stand out in the village.",
+      "Anna moved to the city in search of other dark elves and decided to come on the show as a last-ditch effort to find any information on her childhood before being adopted.",
     ],
 		hobbies:[
       "Haggling.",
       "Finding good deals when shopping.",
-      "Getting a massage. Going to the spa.",
+      "Getting a massage.",
+      "Going to the spa.",
     ],
     japaneseRace:"ダークエルフ",
     japaneseDescription:[
@@ -354,13 +355,14 @@ const allCharacters = [
     employer: "Tregaron Dwarven Auto Body",
     race:"Dwarf",
     description:[
-      "Youngest daughter in a long lineage of alcohol-loving Bottleguard mechanics. Korelin can easily drink more than creatures three/four times her size. Often the first to enter a bar and the last to be tossed out.",
-      "Enjoys drinking beer, wine, spirits, basically anything with alcohol in it. Often found at the local pub once her shift is finished. Or passed out drunk in the bench outside her workshop from drinking the night before.",
+      "Korelin is the youngest daughter in a long lineage of alcohol-loving Bottleguard mechanics. She can easily drink more than creatures three or four times her size. She is often the first to enter a bar and is usually the last to be tossed out.",
+      "Korelin enjoys drinking beer, wine, spirits, and basically anything with alcohol in it. She is often found at the local pub once her shift is finished or passed out drunk in the bench outside her workshop.",
     ],
     hobbies:[
       "Drinking. Duh.",
-      "Betting on who can out-drink who.",
       "Turkey legs",
+      "Betting on who can out-drink who.",
+      "Surprising people she just met with her alcohol tolerance",
     ],
     japaneseRace:"ドワーフ",
     japaneseDescription:[
@@ -389,17 +391,18 @@ const allCharacters = [
   {
     name: "Rosamund Galbassi",
     urlName: "rosamund",
-    age: 27,
+    age: 28,
     job: "Foot Model",
     employer: "Big Magazine",
     race:"Monopod",
     description:[
-      "Monopods are very fast despite only having one leg. They are also extremely stable due to the large size of their foot which makes their center of gravity much lower to the ground. By jumping forward with the legs in front, the large weight of the leg can act almost like a swing which propels them forward into their next step.",
-      "Rosamund works as a foot model for plus sized footwear for large creatures. Came on the show to find a partner who can wear the all the other leftover shoes that she can't wear.",
+      "Monopods are very fast despite only having one leg. They are also extremely stable due to the weight of their foot making their center of gravity much lower. By jumping forward with the foot out, the large weight of the foot can act like a swing which propels them forward into their next step.",
+      "Rosamund works as a foot model for plus sized footwear for large creatures. She came on the show to find a partner who can wear the other shoe so she can purchase pairs of human shoes for cheaper.",
     ],
     hobbies:[
       "Cosplay. Especially really creative ones involving only one leg. Like a table lamp, a table football player, amongst others.",
       "Enjoys shopping for shoes.",
+      "Likes to race with other creatures.",
     ],
     japaneseRace:"モノポッド",
     japaneseDescription:[
@@ -428,17 +431,17 @@ const allCharacters = [
   {
     name: "Robin Stringsworth",
     urlName: "robin",
-    age: 19,
+    age: 20,
     job: "Waitress",
     employer: "La Criada Café",
     race:"Talking Puppet",
     description:[
-      "Comes from a family of magical puppets that a famous wizard gave life to. Nobody knows who the wizard is. But family legends say that the wizard always had a handmade wooden pipe in his mouth.",
-      "Doesn't need any water or food to live and therefore cannot grow fatter or skinnier. Likewise, cannot grow older in age. The Stringsworth family instead uses wood varnish to keep their body parts looking shiny.",
+      "Robin comes from a family of magical puppets that a mysterious wizard gave life to. Nobody knows who the wizard is. But family legends say that the wizard always had a handmade wooden pipe in his mouth.",
+      "Talking Puppets do not require any water or food to live and therefore cannot gain or lose weight. Likewise, they cannot grow older in age. The Stringsworth family instead uses wood varnish to keep their body parts looking shiny.",
     ],
     hobbies:[
       "Enjoys dressing up in goth lolita fashion.",
-      "Likes swapping clothes.",
+      "Likes swapping clothes with other people.",
       "Has a large wardrobe full of random articles of clothing from different eras.",
     ],
     japaneseRace:"生き人形",
@@ -474,7 +477,7 @@ const allCharacters = [
     race:"Gnome",
     description:[
       "With a surname like Wadlezedle, Dorpip believes that he was born to be a comedian. However, his family of engineers and inventors disagree wholeheartedly and look upon him as the black sheep of the family.",
-      "Takes every opportunity he can get to crack a joke. Even at the cost of the relationships in his life. Sometimes doesn't know when to stop or turn off the joking. Dresses like a garden gnome as a part of his comedy act.",
+      "Dorpip takes practically every opportunity he can get to crack a joke. Sometimes even at the cost of the relationships in his life. He doesn’t know when to stop or turn off the joking. He dresses like a garden gnome as a part of his comedy act.",
     ],
     hobbies:[
       "Making everyone laugh. Sometimes at the expense of himself.",
@@ -508,18 +511,18 @@ const allCharacters = [
   {
     name: "Gingernuts Goodyhug",
     urlName: "gingernuts",
-    age: 19,
+    age: 25,
     job: "Part-timer",
     employer: "6-Ten Convenience",
     race:"Gingerbread Being",
     description:[
-      "Needs to constantly change his body parts to avoid rotting. Can swap out body parts with new cookie limbs. Really likes getting a sugar high. Basically a stoner. Always has a light dust of white powdered sugar underneath his nose. Sometimes enjoys eating parts of his own body when there are no other options available.",
-      "Legend says that Gingerbread Beings were made by magical witches who were really into baking and getting high off of pixie dust.",
+      "Gingerbread Beings need to constantly change their body parts with new cookie limbs to avoid rotting. Legend says that Gingerbread Beings were made by magical witches who were really into baking and getting high off of pixie dust.",
+      "Gingernuts really likes getting a sugar high and always has a light dust of white powdered sugar underneath his nose. He sometimes eats parts of his own body when there are no other options available.",
     ],
 		hobbies: [
       "Stealing sugary food from work.",
       "Movie theaters. Especially after the movie is over and everyone leaves their food behind.",
-      "Sitting in cotton candy machines.",
+      "Sitting inside cotton candy machines.",
     ],
     japaneseRace:"ジンジャーブレッド人間",
     japaneseDescription:[
@@ -554,7 +557,7 @@ const allCharacters = [
     race:"Goblin",
     description:[
       "Goblins reach adulthood and physical maturity around age 8. They are often named after their accomplishments in fields such as economics or con-artistry.",
-      "Bizz always wears a bowtie even on his worst days. Really good with numbers and really good with people. Doesn't need a calculator for even the most complex of calculations. Has an excellent memory and can recite anyone's birthday after hearing it once, even years later.",
+      "Bizz always wears a bowtie even on his worst days. He is really good with numbers and even better with people. He doesn’t need a calculator for even the most complex of calculations. Bizz has an excellent memory and can recite anyone’s birthday after hearing it just once, even many years later.",
     ],
 		hobbies:[
       "Calculus.",
@@ -595,13 +598,13 @@ const allCharacters = [
     employer: "L'oeuf Restaurant",
     race:"Wyvern",
     description:[
-      "Wyverns reach adulthood around age 60. Wyverns only have two legs as opposed to the four of the Dragon. Flying costs a great deal of energy and, therefore, is always hungry and always snacking on something.",
-      "Attended culinary school in France specializes in dishes based on smoking or charring foods despite not being able to breathe fire. Wants to share the culinary cultures of his people to the world.",
+      "Wyverns reach adulthood around age 60 and only have two legs as opposed to the four of the Dragon. Despite that, flying costs a great deal of energy. Therefore, Grodrot is always hungry and can often be found snacking on something.",
+      "Grodrot attended culinary school in France and specializes in dishes based on smoking or charring foods (despite Wyverns not being able to breathe fire). He wants to share the culinary cultures of Wyverns with the world.",
     ],
     hobbies:[
       "Taking photos of food.",
       "Scaring people by silently swooping down on them.",
-      "Eating forbidden or exotic foods.",
+      "Eating forbidden or exotic foods, especially food that has gained consciousness.",
     ],
     japaneseRace:"ワイバーン",
     japaneseDescription:[

@@ -69,6 +69,8 @@
 .lcmContainer{
   margin:auto;
   width:800px;
+  height:100%;
+  padding-top:5vh;
   padding-bottom:30vh;
 }
 
@@ -88,7 +90,7 @@
   mask-position: center;
   /* background: linear-gradient(-15deg, #5F5AA2 25%, #7DAF9C 50%, #DD7373 75%); */
   width:100%;
-  min-height:50%;
+  height:50%;
 }
 
 .lcmMask:before {
@@ -113,12 +115,6 @@
   to {
     -webkit-transform: rotate(360deg);
   }
-}
-
-.lcmImage{
-  margin:0;
-  min-height:271.66px;
-  cursor:pointer;
 }
 
 .sharehomegame{
@@ -703,11 +699,19 @@
   height:25% !important;
 }
 
+#finalContainer .lcmContainer{
+  padding-bottom: 0 !important;
+}
+
 #finalContainer .lcmMaskWrapper{
   padding-bottom: 0 !important;
   display:flex;
   height:800px;
   cursor:pointer;
+}
+
+#finalContainer .lcmMask{
+  height:100%;
 }
 
 @media only screen and (max-width: 900px) {

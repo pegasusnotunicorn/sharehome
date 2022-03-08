@@ -295,6 +295,14 @@
     margin-bottom:30vh;
   }
 
+  .descriptionTextWrapper{
+    width:calc(100% - 4em);
+  }
+
+  .descriptionTextWrapper > a{
+    width:calc(100% - 2em);
+  }
+
   #howToPlay{
     height:20vh;
     margin-top:-10vh;
@@ -681,7 +689,7 @@
     width:calc(100% - 2em);
     margin-right:0 !important;
   }
-  .finalButtonsWrapper > div{
+  .finalButtonsWrapper > div, .finalButtonsWrapper > a{
     margin-bottom:1em;
   }
 }

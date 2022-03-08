@@ -6,7 +6,7 @@ const DefaultButton = forwardRef(({
   className,
   text,
   navlink, href, button,
-  borderedBlack, borderedWhite, inverted, shadowless,
+  borderedBlack, borderedWhite, inverted, shadowless, animated,
   onClick,
   icon, reversed,
 }, ref) => {
@@ -15,10 +15,11 @@ const DefaultButton = forwardRef(({
   const invertedClass = (inverted) ? "is-inverted" : "";
   const shadowlessClass = (shadowless) ? "is-shadowless" : "";
   const reversedClass = (reversed) ? "is-reversed" : "";
+  const animatedClass = (animated) ? "is-animated" : "";
 
   const props = {
     id: id,
-    className: `defaultButton noselect ${invertedClass} ${borderedBlackClass} ${borderedWhiteClass} ${reversedClass} ${shadowlessClass} ${className}`,
+    className: `defaultButton noselect ${invertedClass} ${animatedClass} ${borderedBlackClass} ${borderedWhiteClass} ${reversedClass} ${shadowlessClass} ${className}`,
     onClick: onClick,
     ref: ref,
   }

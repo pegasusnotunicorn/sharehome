@@ -10,10 +10,10 @@ const GameModeIcons = (props) => {
   return (
     <div className={classes}>
       <div>
-        <Users />{props.playerCount}
+        <img src="/images/icons/playercount.svg" alt="Player Count" />{props.playerCount}
       </div>
       <div>
-        <Clock />{props.playTime}
+        <img src="/images/icons/sandclock.svg" alt="Time" />{props.playTime}
       </div>
     </div>
   );

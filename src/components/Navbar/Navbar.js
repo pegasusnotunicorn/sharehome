@@ -74,7 +74,7 @@ export const NavbarMain = (props) => {
     <div className={`navbarClass ${isVisibleClass}`}>
 
       <GsapFadeDelay delay={1500} className="fixedButtonsWrapper noselect">
-        <DefaultButton shadowless icon="whiteStar" href="https://bit.ly/lovecareermagic" id="kickstarterButton" text={t('navbar.kickstarter')}/>
+        <DefaultButton shadowless animated icon="arrowRightWhite" href="https://bit.ly/lovecareermagic" id="kickstarterButton" text={t('navbar.kickstarter')}/>
         <button
           id="navbarOpenClose"
           className={`hamburger hamburger--slider ${isVisibleClass}`}

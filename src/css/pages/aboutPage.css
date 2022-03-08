@@ -28,11 +28,12 @@
 
 .timePlayerInfoWrapper{
   display:flex;
-  margin-top:1em;
-  margin-bottom:1em;
+  margin-top:2em;
+  margin-bottom:2em;
   justify-content:center;
   align-items:center;
   text-transform:uppercase;
+  font-size:1em;
 }
 
 .timePlayerInfoWrapper div:not(:last-child){
@@ -41,9 +42,12 @@
 
 .timePlayerInfoWrapper div{
   font-family: 'Rowdies-Light', 'NotoSansJP Bold';
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.timePlayerInfoWrapper svg{
+.timePlayerInfoWrapper svg, .timePlayerInfoWrapper img{
   margin-right:.5em;
 }
 

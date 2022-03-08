@@ -188,96 +188,17 @@ p, li {
   margin-left:10px;
 }
 
-.button{
-  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
-  font-size:20px;
-  text-transform: uppercase;
-  outline:0;
-  cursor:pointer;
-  padding:10px;
-  padding-top:12px;
-  border:0;
+.defaultButton.is-animated img {
+  animation-name: animedButtonSVG;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
 }
 
-.button.is-rounded{
-  border-radius:4px;
-}
-
-.button.is-bordered{
-  border:4px solid #1F1169;
-}
-
-.button.is-transparent{
-  background:transparent;
-}
-
-.button.is-transparent:active{
-  background:#323232 !important;
-  color:#FFF !important;
-}
-
-.button:active{
-  background-color:#323232 !important;
-  color:#FFF !important;
-}
-
-.button svg {
-  padding-right:10px;
-}
-
-.button:active svg{
-  stroke:#FFF !important;
-}
-
-@media only screen and (max-width:600px) {
-  .button.hideText svg{
-    padding-right:0px;
-  }
-  .button.hideText span {
-    display:none;
-  }
-}
-
-svg {
-  vertical-align:sub;
-}
-
-svg.is-flipped{
-  transform:scaleX(-1);
-}
-
-svg.is-48{
-  width:48px;
-  height:48px;
-}
-
-svg.is-spinning {
-  -webkit-animation: spin 1000ms infinite linear;
-  animation: spin 1000ms infinite linear;
-  transform-origin:center center;
-  padding:0 !important;
-  margin:0 !important;
-}
-
-@-webkit-keyframes spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
-  }
-}
-@keyframes spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
-  }
+@keyframes animedButtonSVG {
+  0% { transform: translate(0,  0px); }
+  50%  { transform: translate(5px, 0px); }
+  100%   { transform: translate(-0, 0px); }
 }
 
 /* </editor-fold> */

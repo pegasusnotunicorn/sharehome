@@ -350,8 +350,8 @@
 
 /* small desktop */
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
-  .characterTextContainer h1, .eventsTextContainer h1, .eventsTextContainer h3{
-    max-width:100%;
+  .characterTextContainer h1, .eventsTextContainer h1, .eventsTextContainer h3, .goalsTextContainer h1, .goalsTextContainer h3{
+    max-width:100% !important;
   }
 }
 
@@ -360,15 +360,15 @@
   .characterContainerSVG {
     left:40vw;
   }
-  .characterTextContainer h1, .eventsTextContainer h1, .eventsTextContainer h3{
-    max-width:100%;
+  .characterTextContainer h1, .eventsTextContainer h1, .eventsTextContainer h3, .goalsTextContainer h1, .goalsTextContainer h3{
+    max-width:100% !important;
   }
 }
 
 /* mobile */
 @media only screen and (max-width: 900px) {
-  .characterTextContainer h1, .eventsTextContainer h1, .eventsTextContainer h3{
-    max-width:100%;
+  .characterTextContainer h1, .eventsTextContainer h1, .eventsTextContainer h3, .goalsTextContainer h1, .goalsTextContainer h3{
+    max-width:100% !important;
   }
   .characterTextContainer{
     width:100%;

@@ -290,6 +290,7 @@ svg.is-spinning {
   width:100%;
   padding-bottom:25vh;
   margin:auto;
+  overflow:hidden;
 }
 
 .content.max-width{

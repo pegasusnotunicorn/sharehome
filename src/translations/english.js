@@ -23,9 +23,9 @@ const english = {
       "description": "Complete the following tasks for a free sticker! Sorry, but free stickers are limited to US residents and only while supplies last.",
       "description2": "Also it's literally just one guy who is printing and mailing all of these out so please be patient when requesting your free sticker.",
       "description3": "Please use the hashtag #lovecareermagic to show off your sticker when you receive it!",
+      "task 3": "Click here to follow on Kickstarter.",
       "task 0": "Click here to open the sign up sheet.",
-      "task 1": "Include your email address and shipping details in the sign up sheet.",
-      "task 2": "Share this page publicly on social media. Include a link to your public post in the signup sheet above.",
+      "task 2": "Share this page publicly on social media. Include a link to your post in the signup sheet.",
     },
 
     "navbar":{

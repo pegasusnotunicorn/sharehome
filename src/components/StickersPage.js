@@ -45,14 +45,16 @@ const StickersPage = (props) => {
 
           <form className="stickerTasksWrapper">
             <div style={{textDecoration:"underline", cursor:"pointer"}} onClick={()=>{
+              window.open("https://bit.ly/lovecareermagic");
+            }}>
+              <div className="checkWrapper"><input type="checkbox" id="task0" name="task0" /></div>
+              <label style={{cursor:"pointer"}} htmlFor="task0">{t("sticker page.task 3")}</label>
+            </div>
+            <div className="taskWrapper" style={{textDecoration:"underline", cursor:"pointer"}} onClick={()=>{
               window.open("http://eepurl.com/hxOEy1");
             }}>
               <div className="checkWrapper"><input type="checkbox" id="task0" name="task0" /></div>
               <label style={{cursor:"pointer"}} htmlFor="task0">{t("sticker page.task 0")}</label>
-            </div>
-            <div className="taskWrapper">
-              <div className="checkWrapper"><input type="checkbox" id="task1" name="task1" /></div>
-              <label htmlFor="task1">{t("sticker page.task 1")}</label>
             </div>
             <div className="taskWrapper">
               <div className="checkWrapper"><input type="checkbox" id="task2" name="task2" /></div>

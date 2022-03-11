@@ -1,5 +1,4 @@
 import React from 'react';
-import { Users, Clock} from 'react-feather';
 
 //the player count and the total play time icons
 const GameModeIcons = (props) => {

@@ -509,7 +509,7 @@ const allCharacters = [
  	 	type: "member",
   },
   {
-    name: "Gingernuts Goodyhug",
+    name: "Gingernuts Gooeyhug",
     urlName: "gingernuts",
     age: 25,
     job: "Part-timer",
@@ -537,7 +537,7 @@ const allCharacters = [
     ],
     japaneseEmployer: "",
 		japaneseJob: "コンビニフリーター",
-    japaneseName: "ジンジャーナッツ・グディハグ",
+    japaneseName: "ジンジャーナッツ・グイハグ",
     image: {
       url: "/images/members/big/characters13.jpg",
       name: "characters13.jpg",

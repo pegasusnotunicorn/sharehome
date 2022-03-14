@@ -1,26 +1,5 @@
 const allCharacters = [
   {
-    name: "Wonmin Lee",
-    urlName: "wonmin",
-    age: new Date(new Date() - new Date(new Date(1991,9,10))).getFullYear() - 1970,
-    job: "Game Designer",
-    employer: "Pegasus Games",
-    race:"Human",
-    description:"The creator of this game!",
-		hobbies: "Playing video games.",
-		japaneseJob: "ゲームクリエイター",
-    japaneseName: "リー・ウォンミン",
-    image: {
-      url: "/images/members/big/member_wonmin.jpg",
-      name: "member_wonmin.jpg",
-      width: 1467,
-      height: 978,
-      credit: "https://1minlee.com"
-    },
-    ignoreInRandom: true,
- 	 	type: "member",
-  },
-  {
     name: "Urg the Hacker",
     urlName: "urg",
     age: 30,

@@ -232,7 +232,7 @@ const japanese = {
     "characters page":{
       "credit": "イラストレーターCarolyn Frank",
       "title": "キャラクター紹介",
-      "description": "「Love, Career & Magic」にはユニークでどこか変わったハウスメンバーがたくさんいます！",
+      "description": "「Love, Career & Magic」にはユニークでどこか変わったハウスメンバーがたくさんいます！面白そうなキャラクターをタップして詳しく見てください！",
       "moretocome": "毎週新キャラ一人が紹介されます！",
       "race" : "種族",
       "job" : "職業",
@@ -247,11 +247,15 @@ const japanese = {
     "contact page":{
       "title": "お問い合わせ",
       "email": "メールアドレス ",
-      "description 1": "「SHAREHOME」は ",
-      "description 2": " に創作されており、動画配信サービス会社の番組とは関係ありません。",
+      "about me 1": "どうも、はじめまして。\nゲームの創作者ウォンミンです。",
+      "about me 2": `2016年にゲームを作りたいという夢のため会社をやめて、何年間かけての最初作、<a href="https://sysifuscorp.com" target="_blank" rel="noreferrer">「Welcome to Sysifus Corp」</a>というボードゲームを作りました。そして2021年の３月にキックスターターにてゲームの創作のための資金も調達できました。`,
+      "about me 3": "正直今でも、会社をやめた時でも、ものすごく心配をしましたが、色々な人々からのサポートや応援のお陰でこう自分が好きな仕事が出来ているとは夢みたいな話です。",
+      "about me 4": `「Love, Career & Magic」はこの一年間をかけて、前のゲームより楽しく遊んでもらえるよう、一生懸命頑張った結果です。この度、私のウェブサイトにご覧頂いた方々に感謝の気持ちを込めて、本当にありがとうございました。何卒、興味がある方は是非<a href="https://bit.ly/lovecareermagic" target="_blank" rel="noreferrer">キックスターターにてロンチングの通知を受け取る</a>ボタンを推してもらえたら幸いです。`,
+      "description 1": "「Love, Career & Magic」は ",
+      "description 2": " に創作されており、動画配信サービス会社の番組とは全く関係ありません。",
       "description 3": "ご興味をもっていただきありがとうございます！何か質問などあればぜひ気軽にご相談ください。",
-      "made by": "創作者",
     },
+
 
     "designer page":{
 

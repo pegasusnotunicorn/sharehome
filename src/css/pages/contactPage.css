@@ -1,24 +1,77 @@
 .email{
+
 }
 
-.madeby{
-  margin-top:50px;
-}
-
-.madeby:last-child{
-  margin-bottom:20px;
-}
-
-.socialWrapper {
-  width:50%;
-  margin:auto;
+.aboutMeWrapper{
   display:flex;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: flex-start;
 }
 
-.socialWrapper svg {
-  width: 1.75em;
-  height: 1.75em;
-  color:#323232;
-  text-decoration: none;
+.aboutMeVerticalWrapper{
+  width:25%;
+  text-align: left;
+  padding:2em;
+}
+
+.aboutMeVerticalWrapper:first-child{
+  padding-right:1em;
+}
+
+.aboutMeVerticalWrapper:last-child{
+  padding-left:1em;
+  width:30%;
+}
+
+.aboutMeVerticalWrapper h2 {
+  margin-top:0;
+  white-space: pre-line;
+}
+
+.wonminImage{
+  width:100%;
+}
+
+.socialIconsWrapper {
+  display:flex;
+  justify-content: space-between;
+  width:100%;
+}
+
+.socialIconsWrapper img {
+  width:50px;
+  padding:1em;
+}
+
+.madeby {
+  padding:2em;
+}
+
+/* tablet */
+@media only screen and (min-width: 900px) and (max-width: 1200px) {
+  .aboutMeVerticalWrapper{
+    width:40%;
+  }
+  .aboutMeVerticalWrapper:last-child{
+    width:40%;
+  }
+}
+
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .aboutMeWrapper{
+    flex-direction:column-reverse;
+  }
+  .aboutMeVerticalWrapper{
+    width:calc(100% - 4em) !important;
+    padding:2em !important;
+    padding-bottom:0 !important;
+  }
+  .socialIconsWrapper img {
+    width:50px;
+    padding:.5em;
+  }
+  .madeby{
+    text-align: left;
+  }
 }

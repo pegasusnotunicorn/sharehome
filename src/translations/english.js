@@ -246,11 +246,14 @@ const english = {
 
     "contact page":{
       "title": "Questions? Comments?",
-      "email": "Email us at ",
+      "email": "Email me at ",
+      "about me 1": "Hello, my name is Wonmin.\nI'm the game designer.",
+      "about me 2": `I quit my corporate job back in 2016 to pursue my dreams of becoming a game developer. And in March of 2021, that dream became a reality when my first game, <a href="https://sysifuscorp.com" target="_blank" rel="noreferrer">Welcome to Sysifus Corp</a> was successfully funded on Kickstarter.`,
+      "about me 3": "I had no idea what I was doing when I quit my job. Even now, I'm still terrified for my future. But it is thanks to the support of strangers like you that I am able to do what I love. And for that, I am incredibly thankful.",
+      "about me 4": `I've been hard at work on Love, Career & Magic and I know it'll be amazing. Thanks for visiting my humble page and please do consider <a href="https://bit.ly/lovecareermagic" target="_blank" rel="noreferrer">signing up to be reminded when I launch on Kickstarter sometime in 2022.</a>`,
       "description 1": "Love, Career & Magic is made by ",
       "description 2": " and is not affiliated with any existing reality TV show.",
-      "description 3": "Although if you want, I would love to be affiliated.",
-      "made by": "Made by this guy",
+      "description 3": "Although I would absolutely love to be, wink wink.",
     },
 
     "designer page":{

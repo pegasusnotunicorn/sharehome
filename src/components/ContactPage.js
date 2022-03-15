@@ -16,8 +16,8 @@ const ContactPage = (props) => {
       <div className="subcontentWrapper margin-top min-width">
         <div className="characterContent">
           <h2 className="subtitle">{t("contact page.title")}</h2>
-          <p>{t("contact page.email")}<a className="email" href="mailto:hello@sharehomethegame.com">hello@sharehomethegame.com</a></p>
           <div className="socialIconsWrapper">
+            <a href="mailto:hello@sharehomethegame.com" target="_blank" rel="noreferrer"><img src="/images/icons/email2.svg" alt="Email"/></a>
             <a href="https://instagram.com/sysifuscorp" target="_blank" rel="noreferrer"><img src="/images/icons/instagram.svg" alt="Instagram"/></a>
             <a href="https://www.reddit.com/user/sysifuscorp" target="_blank" rel="noreferrer"><img src="/images/icons/reddit.svg" alt="Reddit"/></a>
             <a href="https://discord.com/invite/nv89cRgEsS" target="_blank" rel="noreferrer"><img src="/images/icons/discord.svg" alt="Discord"/></a>

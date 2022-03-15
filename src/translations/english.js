@@ -35,8 +35,6 @@ const english = {
       "contact us":"About / Contact",
       "card designer":"Card Designer",
       "blog":"Blog",
-      "play online":"Play online",
-      "questions":"Questions? Comments?",
       "kickstarter":"Remind me on Kickstarter",
     },
 
@@ -246,7 +244,6 @@ const english = {
 
     "contact page":{
       "title": "Questions? Comments?",
-      "email": "Email me at ",
       "about me 1": "Hello, my name is Wonmin.\nI'm the game designer.",
       "about me 2": `I quit my corporate job back in 2016 to pursue my dreams of becoming a game developer. And in March of 2021, that dream became a reality when my first game, <a href="https://sysifuscorp.com" target="_blank" rel="noreferrer">Welcome to Sysifus Corp</a> was successfully funded on Kickstarter.`,
       "about me 3": "I had no idea what I was doing when I quit my job. Even now, I'm still terrified for my future. But it is thanks to the support of strangers like you that I am able to do what I love. And for that, I am incredibly thankful.",

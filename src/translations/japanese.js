@@ -29,14 +29,12 @@ const japanese = {
     },
 
     "navbar":{
-      "home":"ホーム",
-      "how to play": "ゲームの遊び方",
-      "characters":"キャラクター紹介",
-      "contact us":"お問い合わせ",
-      "card designer":"デッキエディター",
-      "blog":"ブログ（英語）",
-      "play online":"オンラインプレイ",
-      "questions":"お問い合わせはこちらへどうぞ",
+      "home":"Home",
+      "how to play": "How to play",
+      "characters":"Characters",
+      "contact us":"About / Contact",
+      "card designer":"Card Designer",
+      "blog":"Blog <span style='font-size:.5em'>(English only)</span>",
       "kickstarter":"キックスターターページへ",
     },
 
@@ -246,7 +244,6 @@ const japanese = {
 
     "contact page":{
       "title": "お問い合わせ",
-      "email": "メールアドレス ",
       "about me 1": "どうも、はじめまして。\nゲームの創作者ウォンミンです。",
       "about me 2": `2016年にゲームを作りたいという夢のため会社をやめて、何年間かけての最初作、<a href="https://sysifuscorp.com" target="_blank" rel="noreferrer">「Welcome to Sysifus Corp」</a>というボードゲームを作りました。そして2021年の３月にキックスターターにてゲームの創作のための資金も調達できました。`,
       "about me 3": "正直今でも、会社をやめた時でも、ものすごく心配をしましたが、色々な人々からのサポートや応援のお陰でこう自分が好きな仕事が出来ているとは夢みたいな話です。",

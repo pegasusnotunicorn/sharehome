@@ -95,7 +95,7 @@ export const NavbarMain = (props) => {
               <NavLink onClick={toggleNav} to="/about" activeClassName="is-active" className="navbarButton noselect">{t('navbar.how to play')}</NavLink>
               <NavLink onClick={toggleNav} to="/characters" activeClassName="is-active" className="navbarButton noselect">{t('navbar.characters')}</NavLink>
               <NavLink onClick={toggleNav} to="/contact" activeClassName="is-active" className="navbarButton noselect">{t('navbar.contact us')}</NavLink>
-              <a href="https://pegasusgames.medium.com/" rel="noopener noreferrer" target="_blank" className="navbarButton noselect">{t('navbar.blog')}</a>
+              <a href="https://pegasusgames.medium.com/" rel="noopener noreferrer" target="_blank" className="navbarButton noselect" dangerouslySetInnerHTML={{__html: t("navbar.blog") }}></a>
               <p className="languageChangeWrapper noselect"><span className="languageChangeSpan noselect"
                 onClick={()=>{ changeLanguage("en-US")}}>English</span> / <span className="languageChangeSpan noselect"
                 onClick={()=>{ changeLanguage("ja")}}>日本語</span>

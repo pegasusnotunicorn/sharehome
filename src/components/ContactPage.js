@@ -19,6 +19,7 @@ const ContactPage = (props) => {
           <div className="socialIconsWrapper">
             <a href="mailto:hello@sharehomethegame.com" target="_blank" rel="noreferrer"><img src="/images/icons/email2.svg" alt="Email"/></a>
             <a href="https://instagram.com/sysifuscorp" target="_blank" rel="noreferrer"><img src="/images/icons/instagram.svg" alt="Instagram"/></a>
+            <a href="https://www.tiktok.com/@pegasusgamesnyc" target="_blank" rel="noreferrer"><img src="/images/icons/tiktok.svg" alt="TikTok"/></a>
             <a href="https://www.reddit.com/user/sysifuscorp" target="_blank" rel="noreferrer"><img src="/images/icons/reddit.svg" alt="Reddit"/></a>
             <a href="https://discord.com/invite/nv89cRgEsS" target="_blank" rel="noreferrer"><img src="/images/icons/discord.svg" alt="Discord"/></a>
             <a href="https://twitter.com/sysifuscorp" target="_blank" rel="noreferrer"><img src="/images/icons/twitter.svg" alt="Twitter"/></a>

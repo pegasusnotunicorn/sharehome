@@ -36,6 +36,7 @@
   display:flex;
   justify-content: space-between;
   width:100%;
+  flex-wrap:wrap;
 }
 
 .socialIconsWrapper img {
@@ -69,8 +70,8 @@
     padding-bottom:0 !important;
   }
   .socialIconsWrapper img {
-    width:50px;
-    padding:.5em;
+    width:40px;
+    padding:.35em;
   }
   .madeby{
     text-align: left;

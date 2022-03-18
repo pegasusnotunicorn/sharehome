@@ -92,7 +92,7 @@ export const NavbarMain = (props) => {
           <div className={`navbarChildren navbarLeftWrapper ${mobileShowLeftClass}`}>
             <div className="navbarButtonWrapper">
               <NavLink onClick={toggleNav} exact={true} to="/" activeClassName="is-active" className="navbarButton noselect">{t('navbar.home')}</NavLink>
-              <NavLink onClick={toggleNav} to="/about" activeClassName="is-active" className="navbarButton noselect">{t('navbar.how to play')}</NavLink>
+              <NavLink onClick={toggleNav} to="/howtoplay" activeClassName="is-active" className="navbarButton noselect">{t('navbar.how to play')}</NavLink>
               <NavLink onClick={toggleNav} to="/characters" activeClassName="is-active" className="navbarButton noselect">{t('navbar.characters')}</NavLink>
               <NavLink onClick={toggleNav} to="/contact" activeClassName="is-active" className="navbarButton noselect">{t('navbar.contact us')}</NavLink>
               <a href="https://pegasusgames.medium.com/" rel="noopener noreferrer" target="_blank" className="navbarButton noselect" dangerouslySetInnerHTML={{__html: t("navbar.blog") }}></a>

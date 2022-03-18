@@ -35,6 +35,9 @@ const Router = (props) => {
             return <HomePage ref={setNavbarActive} />
           }} />
           <Route path="/about" render={() => {
+            return <Redirect to="/howtoplay" />
+          }} />
+          <Route path="/howtoplay" render={() => {
             return <AboutPage />
           }} />
           <Route path={["/characters/:name", "/characters"]} render={() => {

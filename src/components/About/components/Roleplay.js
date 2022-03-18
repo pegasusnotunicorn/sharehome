@@ -76,6 +76,7 @@ const Setup = ({showRules, setshowRules, cardStyle, toggleSteps}) => {
             </div>
             <div className="stepBlockRight">
               <li className="subtext">{t('about page.roleplay.setup.step1 2')}</li>
+              <li className="subtext">{t('about page.roleplay.setup.step1 3')}</li>
             </div>
           </div>
         </div>
@@ -101,6 +102,7 @@ const Setup = ({showRules, setshowRules, cardStyle, toggleSteps}) => {
               <div className="stepBlockVertical leftAlign">
                 <li className="subtext">{t('about page.roleplay.setup.step2m 3')}</li>
                 <li className="subtext">{t('about page.roleplay.setup.step2m 4')}</li>
+                <li className="subtext">{t('about page.roleplay.setup.step2m 5')}</li>
                 <div className="stepBlockHorizontal paddingTopHalf">
                   <img className="smallImage paddingRight" src="/images/icons/flag.svg" alt="flag icon" />
                   <p className="subtext marginTop">{t('about page.roleplay.setup.step2m 2')}</p>
@@ -194,7 +196,6 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
           <div className="stepBlockVertical paddingTop leftAlign">
             <li className="subtext">{t('about page.roleplay.rules.step1 3')}</li>
             <li className="subtext">{t('about page.roleplay.rules.step1 4')}</li>
-            <li className="subtext">{t('about page.roleplay.rules.step1 5')}</li>
           </div>
 
         </div>
@@ -236,6 +237,7 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
           <div className="stepBlockVertical paddingTop leftAlign">
             <li className="subtext">{t('about page.roleplay.rules.step2 3')}</li>
             <li className="subtext">{t('about page.roleplay.rules.step2 4')}</li>
+            <li className="subtext">{t('about page.roleplay.rules.step2 5')}</li>
           </div>
 
         </div>
@@ -261,6 +263,7 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
             <div className="stepBlockRight">
               <div className="stepBlockVertical leftAlign">
                 <li className="subtext">{t('about page.roleplay.rules.step3 3')}</li>
+                <li className="subtext">{t('about page.roleplay.rules.step3 4')}</li>
               </div>
             </div>
           </div>
@@ -270,21 +273,8 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
           <div className="stepBlockVertical leftAlign paddingTop">
             <h2 className="boldText">{t('about page.roleplay.rules.step4 t')}<span className='hateMode'>{t('about page.roleplay.rules.step4span')}</span></h2>
             <p>{t('about page.roleplay.rules.step4 1')}</p>
+            <p className="marginTop">{t('about page.roleplay.rules.step4 2')}</p>
           </div>
-
-          <div className="stepBlockHorizontal paddingTop evenWidthChildren topAlign">
-            <div className="stepBlockLeft">
-              <div className="stepBlockVertical leftAlign">
-                <p className="marginTop">{t('about page.roleplay.rules.step3 2')}</p>
-              </div>
-            </div>
-            <div className="stepBlockRight">
-              <div className="stepBlockVertical leftAlign">
-                <li className="subtext">{t('about page.roleplay.rules.step3 3')}</li>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
 

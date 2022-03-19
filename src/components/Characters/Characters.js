@@ -1073,10 +1073,10 @@ export function getSpecificPersonByURL(urlName){
       let nextIndex = (i + 1 >= allCharacters.length) ? allCharacters.length - 1 : i + 1;
       return {
         ...allCharacters[i],
-        index: i,
-        total: allCharacters.length - 1,    //ignore wonmin
-        prevCharURL: (allCharacters[prevIndex].ignoreInRandom) ? false : allCharacters[prevIndex].urlName,
-        nextCharURL: (allCharacters[nextIndex].ignoreInRandom) ? false : allCharacters[nextIndex].urlName,
+        index: i + 1,
+        total: allCharacters.length,
+        prevCharURL: (allCharacters[prevIndex].ignoreInRandom || i === prevIndex) ? false : allCharacters[prevIndex].urlName,
+        nextCharURL: (allCharacters[nextIndex].ignoreInRandom || i === nextIndex) ? false : allCharacters[nextIndex].urlName,
       };
     }
   }

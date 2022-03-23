@@ -4,7 +4,7 @@ export const cardBackConstants = {
   member:{
     mainText:"Member\nCard",
     japaneseText:"メンバーカード",
-    background:"#7DAF9C",
+    background:"#5F5AA2",
     color:"white",
     width:120,
     left:70,
@@ -12,15 +12,15 @@ export const cardBackConstants = {
   commentator:{
     mainText:"Commentator\nCard",
     japaneseText:"コメンテーターカード",
-    background:"#F1DB4B",
-    color:"black",
+    background:"#DD7373",
+    color:"white",
     width:160,
     left:50,
   },
   goal:{
     mainText:"Goal\nCard",
     japaneseText:"ゴールカード",
-    background:"#5F5AA2",
+    background:"#7DAF9C",
     color:"white",
     width:100,
     left:80,
@@ -28,8 +28,8 @@ export const cardBackConstants = {
   event:{
     mainText:"Event\nCard",
     japaneseText:"イベントカード",
-    background:"#DD7373",
-    color:"white",
+    background:"#F1DB4B",
+    color:"black",
     width:120,
     left:70,
   }

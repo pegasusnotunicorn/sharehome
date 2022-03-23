@@ -4,7 +4,7 @@ import { getRandomEventGoal } from './ExampleEventGoal.js';
 export const EventGoalCard = (props) => {
 
   let [eventGoalDetails] = useState(getRandomEventGoal(props.type));
-  let eventGoalBorderColor = (props.type === "goal") ? "blueBorder" : "redBorder";
+  let eventGoalBorderColor = (props.type === "goal") ? "greenBorder" : "yellowBorder";
   let eventGoalNumber = (eventGoalDetails.exampleID) ? eventGoalDetails.exampleID : Math.round(Math.random() * 25);
 
   return (

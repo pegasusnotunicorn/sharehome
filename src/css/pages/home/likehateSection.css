@@ -135,7 +135,7 @@ span.likeMode{
 }
 
 span.hateMode{
-  background: linear-gradient(-45deg, #5d4470 20%, #8000e0 40%, #a055d9 60%, #4d0087 80%);
+  background: linear-gradient(-45deg, #372f9e 20%, #5F5AA2 40%, #7b74d4 60%, #918aff 80%);
   background-size: 200% auto;
   background-clip: text;
   text-fill-color: transparent;

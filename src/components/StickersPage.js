@@ -42,6 +42,7 @@ const StickersPage = (props) => {
           <p>{t("sticker page.description")}</p>
           <p>{t("sticker page.description2")}</p>
           <p>{t("sticker page.description3")}</p>
+          <p style={{fontWeight:"bold", color:"red"}}>{t("sticker page.description4")}</p>
 
           <form className="stickerTasksWrapper">
             <div style={{textDecoration:"underline", cursor:"pointer"}} onClick={()=>{

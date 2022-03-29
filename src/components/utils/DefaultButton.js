@@ -8,7 +8,7 @@ const DefaultButton = forwardRef(({
   navlink, href, button,
   borderedBlack, borderedWhite, inverted, shadowless, animated,
   onClick,
-  icon, reversed,
+  icon, emoji, reversed, download
 }, ref) => {
   const borderedBlackClass = (borderedBlack) ? "is-bordered-black" : "";
   const borderedWhiteClass = (borderedWhite) ? "is-bordered-white" : "";
@@ -27,7 +27,8 @@ const DefaultButton = forwardRef(({
   const iconTextProps = {
     text: text,
     icon: icon,
-    reversed: reversed
+    emoji: emoji,
+    reversed: reversed,
   }
 
   //a tag, navlink, or div tag
@@ -35,8 +36,14 @@ const DefaultButton = forwardRef(({
     props.to = navlink;
     return (<NavLink {...props}><IconText {...iconTextProps} /></NavLink>);
   }
+  else if (emoji){
+    props.href = `/images/emojis/${emoji}.png`;
+    props.download = `${emoji}.png`;
+    return (<a target="_blank" rel="noreferrer" {...props}><IconText {...iconTextProps} /></a>);
+  }
   else if (href){
     props.href = href;
+    if (download) { props.download = download; }
     return (<a target="_blank" rel="noreferrer" {...props}><IconText {...iconTextProps} /></a>);
   }
   else if (button){
@@ -48,14 +55,15 @@ const DefaultButton = forwardRef(({
   }
 });
 
-const Icon = ({icon}) => {
+const Icon = ({icon, emoji}) => {
+  if (emoji) return ((<span><img className="defaultButtonIcon" src={`/images/emojis/${emoji}.png`} alt="button icon" /></span> ))
   if (icon) return (<span><img className="defaultButtonIcon" src={`/images/icons/${icon}.svg`} alt="button icon" /></span> )
   return false;
 }
 
-const IconText = ({text, icon, reversed}) => {
-  if (reversed) return (<>{ text }<Icon icon={icon}/></>);
-  else return (<><Icon icon={icon}/>{ text }</>);
+const IconText = ({text, icon, emoji, reversed}) => {
+  if (reversed) return (<>{ text }<Icon icon={icon} emoji={emoji}/></>);
+  else return (<><Icon icon={icon} emoji={emoji}/>{ text }</>);
 }
 
 export default DefaultButton;

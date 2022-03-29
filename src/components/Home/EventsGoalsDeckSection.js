@@ -66,10 +66,10 @@ const AnimatedCard = (props) => {
   let finalX, finalY, finalRot;
   if (eventOrGoal === "event"){
     finalX = (rowIndex % 2 === 0) ? -randomNum(15,20) : 0;
-    finalY = 0;
+    finalY = (rowIndex === 2) ? 3 : 0;
     finalRot = (rowIndex % 2 === 0) ? "-5deg" : "5deg";
 
-    //fine tune adjustments
+    //fine tune adjustments for mobile
     if (width <= 900) {
       finalX = (rowIndex === 1) ? 17.5 : finalX;
       finalY = (rowIndex === 0) ? -5 : finalY;
@@ -83,7 +83,7 @@ const AnimatedCard = (props) => {
     finalY = 0;
     finalRot = (rowIndex % 2 === 0) ? "5deg" : "-5deg";
 
-    //fine tune adjustments
+    //fine tune adjustments for mobile / tablet
     if (width > 1200 && width <= 1600){
       finalX = (rowIndex % 2 === 0) ? randomNum(30,35) : 15;
     }

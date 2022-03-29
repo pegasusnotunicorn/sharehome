@@ -13,7 +13,7 @@ const RandomCardsForFooter = (totalPeopleCards, totalEventGoalCards, width) => {
   return [...Array(totalPeopleCards + totalEventGoalCards)].map((curr, index, array)=>{
 
     let cardWidth = 300;
-    let cardHeight = cardWidth / 1.7;
+    let cardHeight = cardWidth / 1.4;
 
     //half of all person cards are members/commentators and same for event/goal cards
     // let broadType = (Math.random() > (totalPeopleCards / array.length)) ? "eventgoal" : "person";

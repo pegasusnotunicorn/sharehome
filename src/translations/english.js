@@ -79,6 +79,8 @@ const english = {
         "party": "Party Games",
         "acting": "Acting",
         "stories": "Unique Stories",
+        "howtoplay": "How to play",
+        "rulebook": "Read the full rulebook PDF",
       },
       "spotlight": {
         "description": "This Week's Spotlight",
@@ -242,6 +244,10 @@ const english = {
       "next" : "Next",
       "prev" : "Prev",
       "comingsoon" : "Coming Soon",
+      "emojisection": "Free Character Emojis!",
+      "emojidescription": "Free emojis you can use with Discord or whatever chat application you want! No attribution necessary but it'd be awesome if you could share this website with whoever is curious.",
+      "emoji": "Download Emoji",
+      "emojiall": "Download Emoji Pack",
     },
 
     "contact page":{

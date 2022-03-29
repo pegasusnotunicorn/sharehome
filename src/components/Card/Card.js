@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import CardFrontPerson from './CardFrontPerson.js';
 import CardFrontEventGoal from './CardFrontEventGoal.js';
-import CardBack from "./CardBack.js";
 import CardBackName from "./CardBackName.js";
+import CardBackEventGoal from "./CardBackEventGoal.js";
 import "../../css/utils/cards.css"
 
 //a flip-able card based on the actual cards
@@ -30,13 +30,6 @@ export const Card = (props) => {
 
   const [isFlipped, setIsFlipped] = useState(flipped);
   const [initialFlipped] = useState(flipped);   //to remember the initial flipped state post click
-
-  //don't render the front or the back
-  const [hideFront] = useState(props.hideFront);
-  const [hideBack] = useState(props.hideBack);
-
-  //show person name on card back instead
-  const [cardBackName] = useState(props.cardBackName);
 
   //disable stuff via classes
   let classes = "";
@@ -75,6 +68,21 @@ export const Card = (props) => {
     }
   }, [isClicked, props.randomBottom, props.transition, props.randomDegree]);
 
+  //click for only footer stuff
+  const onclickFunc = () => {
+    if (typeof props.randomDegree !== "undefined"){
+      setIsClicked(!isClicked);
+
+      //clicking
+      if (!isClicked){
+        setIsFlipped(true);
+      }
+      else {
+        setIsFlipped(initialFlipped);
+      }
+    }
+  }
+
   return (
     <div
       id={props.id}
@@ -83,43 +91,11 @@ export const Card = (props) => {
         "noselect flipcard "
         + classes}
       style={cardStyle}
-      onClick={()=>{
-        //click only footer stuff
-        if (typeof props.randomDegree !== "undefined"){
-          setIsClicked(!isClicked);
-
-          //clicking
-          if (!isClicked){
-            setIsFlipped(true);
-          }
-          else {
-            setIsFlipped(initialFlipped);
-          }
-        }
-      }}
+      onClick={onclickFunc}
     >
       <div className="flipcardInner">
-        { !hideFront &&
-          <div className="noselect flipcardFront">
-            <CardFront
-              type={props.type}
-              personName={props.personName}
-              mainStyle={props.mainStyle}
-              disableText={props.disableText}
-            />
-          </div>
-        }
-        {
-          cardBackName &&
-          <div className="noselect flipcardBack name">
-            <CardBackName {...props} />
-          </div>
-        }
-        { !hideBack && !cardBackName &&
-          <div className="noselect flipcardBack">
-            <CardBack {...props} />
-          </div>
-        }
+        <CardFront {...props} />
+        <CardBack {...props}/>
       </div>
     </div>
   )
@@ -129,24 +105,60 @@ export const Card = (props) => {
 const CardFront = (props) => {
   let cardType = props.type;
 
-  switch (cardType){
-    case ("member"):
-    case ("commentator"):
+  if (props.hideFront){
+    return false;
+  }
+  else {
+    switch (cardType){
+      case ("member"):
+      case ("commentator"):
+        return (
+          <div className="noselect flipcardFront">
+            <CardFrontPerson
+              personName={props.personName}
+              mainStyle={props.mainStyle}
+              disableText={props.disableText}
+              />
+          </div>
+        );
+      case ("goal"):
+      case ("event"):
+      default:
+        return (
+          <div className="noselect flipcardFront">
+            <CardFrontEventGoal
+              type={props.type}
+            />
+          </div>
+        );
+    }
+  }
+}
+
+//the back of the card (name / details for member, the image for goal / event)
+const CardBack = (props) => {
+  let cardType = props.type;
+  if (props.hideBack){
+    return false;
+  }
+  else {
+    switch (cardType){
+      case ("member"):
+      case ("commentator"):
       return (
-        <CardFrontPerson
-          personName={props.personName}
-          mainStyle={props.mainStyle}
-          disableText={props.disableText}
-        />
+        <div className="noselect flipcardBack name">
+          <CardBackName {...props} />
+        </div>
       );
-    case ("goal"):
-    case ("event"):
-    default:
+      case ("goal"):
+      case ("event"):
+      default:
       return (
-        <CardFrontEventGoal
-          type={props.type}
-        />
+        <div className="noselect flipcardBack">
+          <CardBackEventGoal {...props} />
+        </div>
       );
+    }
   }
 }
 

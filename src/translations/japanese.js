@@ -79,6 +79,8 @@ const japanese = {
         "party": "パーティーゲーム",
         "acting": "演技",
         "stories": "ユニークなストーリー",
+        "howtoplay": "ゲームの遊び方",
+        "rulebook": "ルールブックのPDFはこちら！(English)",
       },
       "spotlight": {
         "description": "新キャラ紹介",
@@ -242,6 +244,10 @@ const japanese = {
       "next" : "次のキャラ",
       "prev" : "前のキャラ",
       "comingsoon" : "近日公開",
+      "emojisection": "無料キャラクター絵文字！",
+      "emojidescription": "ディスコードや他のチャットアプリでも使える無料の絵文字を提供します！どうぞ自由にお使いください。",
+      "emoji": "絵文字をダウンロード",
+      "emojiall": "絵文字パックをダウンロード",
     },
 
     "contact page":{

@@ -2,8 +2,10 @@
 //to determine how big the cards will be based on window width
 const getHomePageCardProps = ( cardType, width, height ) => {
   let cardDividerByScreenWidth = (width >= 1600) ? 4.2 : (width >= 1200) ? 3.7 : (width >= 900) ? 2.7 : (width >= 700) ? 2.2 : 1.7;
+  if (cardType !== "member") cardDividerByScreenWidth += .75;
   let cardWidth = Math.floor(width / cardDividerByScreenWidth);
-  let cardHeight = cardWidth / 1.7;
+  let cardTypeRatio = (cardType === "member") ? 1.72 : 1.4;
+  let cardHeight = cardWidth / cardTypeRatio;
   let fontSize = (width >= 1400) ? 10 : (width >= 900) ? 8 : 6;
   return {
     showFront: true,

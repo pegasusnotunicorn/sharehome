@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect, useParams, useHistory } from 'react-router-dom';
 
-import { getAllCharacters, getSpecificPersonByURL } from '../Characters/Characters.js';
+import { getAllCharacters, getSpecificPersonByURL, getRandomPerson } from '../Characters/Characters.js';
 import { CharacterSpotlight } from '../utils/CharacterSpotlight.js';
+import { EmojiSection } from '../utils/EmojiSection.js';
 import DefaultButton from '../utils/DefaultButton.js';
 
 import '../../css/pages/characterPage.css';
@@ -20,6 +21,9 @@ const CharactersPage = (props) => {
   //if there is a specifc character name, render that character page
   let chosenCharacter = getSpecificPersonByURL(name);
 
+  let randomCharacter1 = getRandomPerson();
+  let randomCharacter2 = getRandomPerson();
+
   //redirect to just /characters if typo a non-existant character
   if (window.location.pathname !== "/characters" && (typeof name === "undefined" || !chosenCharacter || chosenCharacter.ignoreInRandom)) {
     return <Redirect to="/characters" />
@@ -35,9 +39,19 @@ const CharactersPage = (props) => {
           <div className="characterContent">
             <h2 className="subtitle">{t('characters page.title')}</h2>
             <p>{t('characters page.description')}<br></br></p>
+            <div className="freeEmojiButtonWrapper">
+              <img src={`/images/emojis/${randomCharacter1.emoji}.png`} alt="Random emoji" title={randomCharacter1.emoji} />
+              <a href="#emojis">{t("characters page.emojisection")}</a>
+              <img src={`/images/emojis/${randomCharacter2.emoji}.png`} alt="Random emoji" title={randomCharacter2.emoji} />
+            </div>
           </div>
         </div>
         { content }
+        <EmojiSection />
+        <div className="subcontentWrapper characterContent">
+          <h3 className="moretocome">{t('characters page.moretocome')}</h3>
+          <p><a href="https://www.instagram.com/carofranklyn/?hl=en">{t('characters page.credit')}</a></p>
+        </div>
       </div>
     )
   }
@@ -114,10 +128,6 @@ const AllCharacters = (props) => {
         <div className="charactersContainer">
           { expansionCharacters }
         </div>
-      </div>
-      <div className="subcontentWrapper characterContent">
-        <h3 className="moretocome">{t('characters page.moretocome')}</h3>
-        <p><a href="https://www.instagram.com/carofranklyn/?hl=en">{t('characters page.credit')}</a></p>
       </div>
     </>
   )

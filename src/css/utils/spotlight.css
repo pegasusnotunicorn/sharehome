@@ -139,16 +139,35 @@
   font-size:1.65em;
 }
 
-.spotlightLeftWrapper img {
+.imageCircleMask{
+  position:relative;
+}
+
+.spotlightLeftWrapper .characterImage {
   width:350px;
   height:350px;
   border-radius:100%;
   object-fit: cover;
 }
 
+.magnifierWrapper{
+  border-radius: 100%;
+  padding: 0.5em;
+  border: 1px solid #323232;
+  position:absolute;
+  bottom: 2em;
+  right: 1.5em;
+  background:#FFF;
+}
+
+.imageCircleIcons{
+  width: 25px;
+  height: 25px;
+}
+
 /* mobile */
 @media only screen and (max-width: 900px) {
-  .spotlightLeftWrapper img {
+  .spotlightLeftWrapper .characterImage {
     width:250px;
     height:250px;
   }
@@ -242,6 +261,37 @@
 .spotlightRightTopWrapper h2, .spotlightRightTopWrapper h3, .spotlightRightTopWrapper p {
   margin-top:0;
   margin-bottom:0;
+}
+
+.discordEmojiWrapper{
+  display:flex;
+  flex-direction:row;
+}
+
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .discordEmojiWrapper{
+    margin-top:1em;
+  }
+}
+
+.discordEmojiWrapper .defaultButton{
+  padding:0;
+  padding-right:1em;
+  font-size:.9em;
+  text-decoration: underline;
+}
+
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .discordEmojiWrapper .defaultButton{
+    font-size:.75em;
+  }
+}
+
+
+.discordEmojiWrapper .defaultButton:hover{
+  background-color:#FFF;
 }
 
 /* </editor-fold> */

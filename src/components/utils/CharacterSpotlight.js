@@ -51,7 +51,10 @@ export const CharacterSpotlight = (props) => {
     }
   }, [width, setShowDetails]);
   const detailsClass = (showDetails) ? "is-active" : "";
-  const showDetailsButtonText = (showDetails) ? "Hide details" : "Show more details";
+  let showDetailsButtonText = (showDetails) ? "Hide details" : "Show more details";
+  if (i18n.language !== "en-US"){
+    showDetailsButtonText = (showDetails) ? "詳細メニューを閉じる" : "詳細メニューを開く";
+  }
   const backgroundPosition = (character.image.objectPosition) ? `${character.image.objectPosition} center` : "center center";
   const LinkTo = (props) => {
     if (props.sectionTitle) return (<NavLink to={`/characters/${character.urlName}`}>{props.children}</NavLink>);
@@ -70,7 +73,10 @@ export const CharacterSpotlight = (props) => {
             }
             <LinkTo {...props}>
               <div className="imageCircleMask noselect">
-                <img src={character.image.url} style={{objectPosition:backgroundPosition}} alt={character.name} />
+                <img className="characterImage" src={character.image.url} style={{objectPosition:backgroundPosition}} alt={character.name} />
+                <div className="magnifierWrapper">
+                  <img className="imageCircleIcons" src="/images/icons/magnifier.svg" alt="Look closer" />
+                </div>
               </div>
             </LinkTo>
             <div className="leftDetailsWrapper">
@@ -97,6 +103,12 @@ export const CharacterSpotlight = (props) => {
               </div>
               <div className={`spotlightDetailsSection ${detailsClass}`}>
                 { listOfDescriptions }
+              </div>
+              <div className="discordEmojiWrapper">
+                <DefaultButton emoji={character.emoji} inverted shadowless text={t('characters page.emoji')}/>
+                { character.emoji2 &&
+                  <DefaultButton emoji={character.emoji2} inverted shadowless text={t('characters page.emoji')}/>
+                }
               </div>
               <div className={`showDetailsButton is-hidden-desktop`}>
                 <p onClick={()=>{setShowDetails(!showDetails)}}>{ showDetailsButtonText }</p>

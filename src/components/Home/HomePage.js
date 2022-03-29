@@ -13,6 +13,7 @@ import ParallaxSection from "./ParallaxSection.js";
 import CharactersDeckSection from "./CharactersDeckSection.js";
 import { EventsDeckSection, GoalsDeckSection } from "./EventsGoalsDeckSection.js";
 import LikeHateSection from "./LikeHateSection.js";
+import { EmojiSection } from "../utils/EmojiSection.js";
 
 import homeStyles from '../../css/homePage.module.css';
 import '../../css/utils/colors.css';
@@ -162,11 +163,17 @@ const HomePage = forwardRef((props, ref) => {
           <div><img src="/images/improv.png" alt="Improv icon" />{t('main page.mechanics.improv')}</div>
           <div><img src="/images/acting.png" alt="Acting icon" />{t('main page.mechanics.acting')}</div>
         </div>
+        <div className={`${homeStyles.rulebookWrapper}`}>
+          <DefaultButton inverted borderedBlack shadowless icon="faq" navlink="/howtoplay" text={t('main page.mechanics.howtoplay')}/>
+          <DefaultButton shadowless icon="rulebookWhite" href="/rulebook.pdf" text={t('main page.mechanics.rulebook')}/>
+        </div>
       </GsapFadeScrub>
 
       <div id={`${homeStyles.spotlightContainer}`} className={`${homeStyles.mainpageContainer}`}>
         <CharacterSpotlight invert allCharsButton sectionTitle={t('main page.spotlight.description')} />
       </div>
+
+      <EmojiSection />
 
       <div id={`${homeStyles.finalContainer}`} className={`${homeStyles.mainpageContainer}`}>
         <GsapFadeScrub fadeIn className={`subcontentWrapper`}>

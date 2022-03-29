@@ -627,6 +627,18 @@
   margin-left:1em;
 }
 
+.rulebookWrapper{
+  margin-top:10em;
+  margin-bottom:10em;
+  display:flex;
+  flex-direction: row;
+}
+
+.rulebookWrapper > a {
+  margin-left:1em;
+  margin-right:1em;
+}
+
 @media only screen and (max-width: 900px) {
   .mechanicsWrapper li{
     padding:0.25em;
@@ -638,6 +650,21 @@
     height:150px;
     margin-right:0.5em;
     margin-left:0.5em;
+  }
+
+  .rulebookWrapper{
+    flex-direction:column;
+    margin-top:10em;
+    margin-bottom:0em;
+    width:100%;
+  }
+
+  .rulebookWrapper > a {
+    margin-top:0.5em;
+    margin-bottom:0.5em;
+    margin-left:0;
+    margin-right:0;
+    width:calc(100% - 2em);
   }
 }
 

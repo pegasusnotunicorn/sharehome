@@ -6,6 +6,7 @@ const allCharacters = [
     job: "Web Designer",
     employer: "Amazin' E-Commerce",
     race:"Orc",
+    emoji:"urgSmile",
     description: [
       "Urg was bullied a lot as a kid for his scrawny stature. He was not your typical brutish orc. As a child, he turned to the dark web for comfort and found his belonging there amongst the other outcasts of society.",
       "Rejecting the orc status quo, he wants to change the public perception of his people. His desire to show his race in a better light brought him on the show. He hopes that his illegal darkweb activities won't be discovered by the public."
@@ -46,6 +47,7 @@ const allCharacters = [
     job: "Optometrist",
     employer: "Cavendish Optometry",
     race:"Cockatrice",
+    emoji:"beatriceStare",
     description: [
       "Cockatrices can kill people with just one look according to folk legend. Afraid of testing out that theory, Beatrice wears special designer sunglasses all of the time. Beatrice also designs special lenses for other Cockatrices to let them look in the mirror without harm.",
       "Born and raised in England, Beatrice has no arms but has a very dextrous beak and legs. Has no knowledge of parents but legend says Cockatrices are born when a rooster's egg is incubated by a snake."
@@ -86,6 +88,7 @@ const allCharacters = [
     job: "Aspiring Firefighter",
     employer: false,
     race:"Elf",
+    emoji:"tsukasaSmile",
     description:[
       "An elf of Japanese descent. Tsukasa has physically stopped growing as most elves do around his age. But he still has a very immature personality and low emotional intelligence. Moved to the big city from his tiny village in the forest in pursuit of something more exciting.",
       "Tsukasa is aspiring to be a forest firefighter like a lot of his hometown elf friends. He has never had a girlfriend in his life and his friends never let him forget that."
@@ -128,6 +131,7 @@ const allCharacters = [
     job: "Courier",
     employer: "Dragon Delivery",
     race:"Dragon",
+    emoji:"kottrSleepy",
     description:[
       "Dragons reach adulthood around age 100. They can also freely change their own bodysize at will—ranging from a small house cat to a large four story building. However, changing sizes requires a great deal of energy and strength.",
       `Köttr is very lazy and likes to sleep a lot, much like a cat. Sometimes chases their own tail out of boredom or as a form of light exercise when not working and delivering packages. “Works to live” not “lives to work.” Doesn’t get along with workaholics.`,
@@ -170,6 +174,7 @@ const allCharacters = [
     job: "Student",
     employer: "the Mismonia Academy of Witchcraft for Young Aspiring Witches",
     race:"Human",
+    emoji:"lydiaSolemn",
     description:[
       "Lydia is a second-year witch at the Mismonia Academy of Witchcraft for Young Aspiring Witches. Lydia hopes to major in Potions and Mixology in order to help creatures with her magical concoctions when she graduates. She also hopes to improve the public image of witches.",
       "Lydia has magical rune sleeves tattooed on both of her arms. She doesn’t like wearing long sleeve shirts that may cover her tattoos. She prefers a stylish bucket hat over the more traditional witch’s hat.",
@@ -210,6 +215,7 @@ const allCharacters = [
     job: "Lab Technician",
     employer: "Serpent Science Lab",
     race:"Basilisk",
+    emoji:"ahxiEyeroll",
     description:[
       "Basilisks are known to be extremely venomous to the point where even a mere whiff of their poison can send victims into a deep coma. Therefore, their venom is a highly sought-after commodity in the underground markets.",
       "Despite the notoriety of Basilisks in society, Ahxi wants to help develop new antivenoms and chemical products using the potency of their venom. Came onto the show in hopes of improving public perception of Basilisks.",
@@ -251,6 +257,8 @@ const allCharacters = [
     job: "Part-time Bouncer",
     employer: "local nightclubs and bars",
     race:"Ogre",
+    emoji:"ogarkYell",
+    emoji2:"birdSurprised",
     description:[
       "Ogark lost his left hand in a bet when he was a teenager hanging out with the wrong crowd. He has since cut all ties with that crowd. For each time he almost relapsed back into that crowd, he got a tattoo right above his amputated hand to remind him of the accident.",
       "Ogark is a bit dumb but means very well. He is extremely well loved by anyone who has met him. A big gentle giant.",
@@ -292,6 +300,7 @@ const allCharacters = [
     job: "Model",
     employer: "species-inclusive fashion magazine, MONST",
     race:"Dark Elf",
+    emoji:"annaPhone",
     description:[
       "Abandoned by her family as a baby, Anna was named and raised by the human farmers who found her crying in the forest. Though she grew up with human values she never felt like she truly belonged. Her above average height and exotic complexion made her stand out in the village.",
       "Anna moved to the city in search of other dark elves and decided to come on the show as a last-ditch effort to find any information on her childhood before being adopted.",
@@ -333,6 +342,7 @@ const allCharacters = [
     job: "Mechanic",
     employer: "Tregaron Dwarven Auto Body",
     race:"Dwarf",
+    emoji:"korelinProud",
     description:[
       "Korelin is the youngest daughter in a long lineage of alcohol-loving Bottleguard mechanics. She can easily drink more than creatures three or four times her size. She is often the first to enter a bar and is usually the last to be tossed out.",
       "Korelin enjoys drinking beer, wine, spirits, and basically anything with alcohol in it. She is often found at the local pub once her shift is finished or passed out drunk in the bench outside her workshop.",
@@ -374,6 +384,7 @@ const allCharacters = [
     job: "Foot Model",
     employer: "Big Magazine",
     race:"Monopod",
+    emoji:"rosamundHappy",
     description:[
       "Monopods are very fast despite only having one leg. They are also extremely stable due to the weight of their foot making their center of gravity much lower. By jumping forward with the foot out, the large weight of the foot can act like a swing which propels them forward into their next step.",
       "Rosamund works as a foot model for plus sized footwear for large creatures. She came on the show to find a partner who can wear the other shoe so she can purchase pairs of human shoes for cheaper.",
@@ -414,6 +425,7 @@ const allCharacters = [
     job: "Waitress",
     employer: "La Criada Café",
     race:"Talking Puppet",
+    emoji:"robinSurprised",
     description:[
       "Robin comes from a family of magical puppets that a mysterious wizard gave life to. Nobody knows who the wizard is. But family legends say that the wizard always had a handmade wooden pipe in his mouth.",
       "Talking Puppets do not require any water or food to live and therefore cannot gain or lose weight. Likewise, they cannot grow older in age. The Stringsworth family instead uses wood varnish to keep their body parts looking shiny.",
@@ -454,6 +466,7 @@ const allCharacters = [
     job: "Comedian",
     employer: false,
     race:"Gnome",
+    emoji:"dorpipSweat",
     description:[
       "With a surname like Wadlezedle, Dorpip believes that he was born to be a comedian. However, his family of engineers and inventors disagree wholeheartedly and look upon him as the black sheep of the family.",
       "Dorpip takes practically every opportunity he can get to crack a joke. Sometimes even at the cost of the relationships in his life. He doesn’t know when to stop or turn off the joking. He dresses like a garden gnome as a part of his comedy act.",
@@ -494,6 +507,7 @@ const allCharacters = [
     job: "Part-timer",
     employer: "6-Ten Convenience",
     race:"Gingerbread Being",
+    emoji:"gingernutsCreep",
     description:[
       "Gingerbread Beings need to constantly change their body parts with new cookie limbs to avoid rotting. Legend says that Gingerbread Beings were made by magical witches who were really into baking and getting high off of pixie dust.",
       "Gingernuts really likes getting a sugar high and always has a light dust of white powdered sugar underneath his nose. He sometimes eats parts of his own body when there are no other options available.",
@@ -534,6 +548,7 @@ const allCharacters = [
     job: "Banker",
     employer: "the Bank of New Cresthill",
     race:"Goblin",
+    emoji:"bizzHappy",
     description:[
       "Goblins reach adulthood and physical maturity around age 8. They are often named after their accomplishments in fields such as economics or con-artistry.",
       "Bizz always wears a bowtie even on his worst days. He is really good with numbers and even better with people. He doesn’t need a calculator for even the most complex of calculations. Bizz has an excellent memory and can recite anyone’s birthday after hearing it just once, even many years later.",
@@ -576,6 +591,7 @@ const allCharacters = [
     job: "Chef",
     employer: "L'oeuf Restaurant",
     race:"Wyvern",
+    emoji:"grodrotPanic",
     description:[
       "Wyverns reach adulthood around age 60 and only have two legs as opposed to the four of the Dragon. Despite that, flying costs a great deal of energy. Therefore, Grodrot is always hungry and can often be found snacking on something.",
       "Grodrot attended culinary school in France and specializes in dishes based on smoking or charring foods (despite Wyverns not being able to breathe fire). He wants to share the culinary cultures of Wyverns with the world.",
@@ -609,7 +625,6 @@ const allCharacters = [
     ignoreInRandom: false,
     type: "member",
   },
-
   {
     name: "Nycolas O'Sullivan",
     urlName: "nycolas",
@@ -617,6 +632,8 @@ const allCharacters = [
     job: "Jockey",
     employer: "O'Sullivan Farms",
     race:"Dullahan",
+    emoji:"nycolasPanic",
+    emoji2:"horseWhat",
     description:[
       "Rode horses for as long as he could remember. Probably rode horses in his previous life as a human before becoming a Dullahan. When the head is disconnected from the body, there is a faint glow that comes from the neck. Often carries his own head in his left hand.",
       "Lives on a farm raising purebred horses specifically for racing. Loves competition and cannot stand losing in anything. Is a sore loser.",
@@ -1100,14 +1117,11 @@ export function getAllFinishedPeople(random){
 
 //returns details of all characters even the ones not finished
 export function getAllCharacters(random){
-  let removeWonmin = allCharacters.filter((e)=>{
-    return e.name !== "Wonmin Lee";
-  });
   if (random) {
-    return shuffle(removeWonmin)
+    return shuffle(allCharacters)
   }
   else {
-    return removeWonmin;
+    return allCharacters;
   }
 }
 

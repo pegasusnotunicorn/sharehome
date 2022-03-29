@@ -120,43 +120,58 @@
 
 .eventGoalCardWrapper{
   font-family: 'Roboto Regular';
-  border-width:2em;
-  border-style:solid;
-  /* need 3.99em to get rid of weird #FFF line */
-  height:calc(100% - 3.99em);
-  width:calc(100% - 4em);
-  background:#FFF;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #7daf9c;
 }
 
 .eventGoalTextWrapper{
-  color:#323232;
-  font-size:1.75em;
-  line-height:125%;
-  text-align:left;
-  overflow:hidden;
-  margin:1em;
-  height:calc(100% - 4em);
-  width:calc(100% - 2em);
+  color: #323232;
+  font-size: 1.75em;
+  line-height: 125%;
+  text-align: left;
+  overflow: hidden;
+  border-radius: 1em;
+  padding: 1em;
+  margin: auto;
+  background: #FFF;
+  height: calc(100% - 4em);
+  width: calc(100% - 4em);
+}
+
+.eventGoalBottomTextWrapper.yellowBackground{
+  color: #323232;
 }
 
 .eventGoalBottomTextWrapper{
-  border-top:1px solid #323232;
-  display:flex;
-  justify-content:space-between;
-  position:absolute;
-  bottom:0;
-  color:#323232;
-  width:calc(100% - 8em);
-  padding:1.5em;
-  padding-left:2em;
-  padding-right:2em;
-  margin-bottom:2em;
-  font-size:1em;
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 0;
+  color: #FFF;
+  width: calc(100% - 4em);
+  padding: 2em;
+  padding-left: 2em;
+  padding-right: 2em;
+  margin: auto;
+  font-size: 1em;
 }
 
 /* </editor-fold> ----------------------------------------------------------- */
 
 /* <editor-fold> -------------------------------------------------- CARD BACK */
+
+.cardBack img {
+  width:100%;
+  height:100%;
+  object-fit: cover;
+}
+
+/* </editor-fold> ----------------------------------------------------------- */
+
+/* <editor-fold> -------------------------------------------------- CARD BACK NAME */
 
 .cardBackText{
   -webkit-font-smoothing:antialiased;
@@ -166,32 +181,9 @@
   flex-direction:column;
   width:100%;
   font-family: 'Rowdies-Bold', 'NotoSansJP Bold';
+  padding-left:1em;
+  padding-right:1em;
 }
-
-.cardBackMainText{
-  line-height: 100%;
-  color:#323232;
-  text-transform:uppercase;
-  margin:auto;
-  white-space:pre-line;
-  font-size:4em;
-  padding-bottom:.35em;
-}
-
-.cardBackSubText{
-  line-height: 100%;
-  color:#FFF;
-  display:inline-block;
-  width:auto;
-  font-size:2em;
-  padding:.35em;
-  border-radius:5px;
-  font-family: 'Rowdies-Light', 'NotoSansJP Light';
-}
-
-/* </editor-fold> ----------------------------------------------------------- */
-
-/* <editor-fold> -------------------------------------------------- CARD BACK NAME */
 
 .cardBack.name{
   width:calc(100% - 2em);
@@ -204,19 +196,20 @@
 }
 
 .cardBackName{
-  font-size:4em;
+  font-size:3em;
   margin-top:0;
-  line-height:100%;
+  line-height:125%;
+  margin-bottom:0.5em;
 }
 
 .cardBackTitle{
-  font-size:2.25em;
+  font-size:1.5em;
   margin-top:0;
   text-transform: uppercase;
 }
 
 .cardBackAge, .cardBackJob{
-  font-size:2em;
+  font-size:1.5em;
   margin:0;
   text-transform: lowercase;
 }

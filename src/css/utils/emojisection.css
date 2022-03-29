@@ -1,0 +1,39 @@
+.emojiSection{
+  background-color:rgba(0,0,0,.1);
+  padding-bottom:3em;
+}
+
+.emojisWrapper{
+  width:100%;
+  display:flex;
+  margin:auto;
+  flex-wrap:wrap;
+  text-align: center;
+  justify-content: center;
+}
+
+.emojiWrapper{
+  margin:auto;
+  border-radius:100%;
+  padding:0.75em;
+  background:#FFF;
+  margin:.25em;
+  box-shadow:0px 0px 5px rgb(0 0 0 / 5%);
+}
+
+.emojiWrapper img{
+  width:50px;
+  height:50px;
+}
+
+.emojiPackDownloadButton{
+  margin:auto;
+  margin-top:2em;
+}
+
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .emojiPackDownloadButton{
+    width:calc(100% - 2em);
+  }
+}

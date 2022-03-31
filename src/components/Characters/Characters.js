@@ -8,7 +8,7 @@ const allCharacters = [
     race:"Orc",
     emoji:"urgSmile",
     description: [
-      "Urg was bullied a lot as a kid for his scrawny stature. He was not your typical brutish orc. As a child, he turned to the dark web for comfort and found his belonging there amongst the other outcasts of society.",
+      "Urg was bullied a lot as a kid for his scrawny stature. He was not your typical brutish orc. As a child, he turned to the dark web for comfort and found his home there amongst the other outcasts of society. He enjoys using his technological skills to punish the strong who bully the weak.",
       "Rejecting the orc status quo, he wants to change the public perception of his people. His desire to show his race in a better light brought him on the show. He hopes that his illegal darkweb activities won't be discovered by the public."
     ],
 		hobbies: [
@@ -91,7 +91,7 @@ const allCharacters = [
     emoji:"tsukasaSmile",
     description:[
       "An elf of Japanese descent. Tsukasa has physically stopped growing as most elves do around his age. But he still has a very immature personality and low emotional intelligence. Moved to the big city from his tiny village in the forest in pursuit of something more exciting.",
-      "Tsukasa is aspiring to be a forest firefighter like a lot of his hometown elf friends. He has never had a girlfriend in his life and his friends never let him forget that."
+      "Tsukasa is aspiring to be a forest firefighter like a lot of his hometown elf friends. He has never had a girlfriend in his life and his friends never let him forget that. He desperately wants and craves the positive affirmations of a romantic partner."
     ],
 		hobbies: [
       "Skateboarding.",
@@ -261,7 +261,7 @@ const allCharacters = [
     emoji2:"birdSurprised",
     description:[
       "Ogark lost his left hand in a bet when he was a teenager hanging out with the wrong crowd. He has since cut all ties with that crowd. For each time he almost relapsed back into that crowd, he got a tattoo right above his amputated hand to remind him of the accident.",
-      "Ogark is a bit dumb but means very well. He is extremely well loved by anyone who has met him. A big gentle giant.",
+      "Ogark is a bit dumb but means very well. He is extremely well loved by anyone who has met him. A big gentle giant who would do anything for the people he loves. He loves, he protects, but most importantly, he yells.",
     ],
 		hobbies: [
       "Bird watching. Despite having a hard time sneaking up on birds due to his large brutish figure.",
@@ -550,7 +550,7 @@ const allCharacters = [
     race:"Goblin",
     emoji:"bizzHappy",
     description:[
-      "Goblins reach adulthood and physical maturity around age 8. They are often named after their accomplishments in fields such as economics or con-artistry.",
+      "Goblins reach adulthood and physical maturity around age 8. They are named after their accomplishments in fields such as economics or con-artistry. Bizz earned his surname after achieving what nobody in his village could—haggle the literal feet off of a vendor.",
       "Bizz always wears a bowtie even on his worst days. He is really good with numbers and even better with people. He doesn’t need a calculator for even the most complex of calculations. Bizz has an excellent memory and can recite anyone’s birthday after hearing it just once, even many years later.",
     ],
 		hobbies:[
@@ -635,8 +635,8 @@ const allCharacters = [
     emoji:"nycolasPanic",
     emoji2:"horseWhat",
     description:[
-      "Rode horses for as long as he could remember. Probably rode horses in his previous life as a human before becoming a Dullahan. When the head is disconnected from the body, there is a faint glow that comes from the neck. Often carries his own head in his left hand.",
-      "Lives on a farm raising purebred horses specifically for racing. Loves competition and cannot stand losing in anything. Is a sore loser.",
+      "Nycolas rode horses for as long as he could remember. It’s probably because he rode horses in his previous life as a human before becoming a Dullahan. When a Dullahan’s head is disconnected from the body, there is a faint glow that comes out of the neck. He often carries his own head in his left hand.",
+      "Nycolas lives on a farm raising purebred horses specifically for racing. He loves competition and cannot stand losing in anything no matter how trivial. He is a sore loser.",
     ],
 		hobbies:[
       "Taking care of animals. Particularly larger ones like horses.",
@@ -664,6 +664,48 @@ const allCharacters = [
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank",
       objectPosition: "left",
+    },
+    ignoreInRandom: false,
+ 	 	type: "member",
+  },
+  {
+    name: 'Arya Jensen',
+    urlName: "arya",
+    age: 29,
+    job: "Minister",
+    employer: "Church of the New New World",
+    race:"Sea Monk",
+    emoji:"aryaIrritated",
+    emoji2:"seagullMad",
+    description:[
+      "Arya grew up in a small remote religious town in Denmark full of other devout Sea Monks and worshipped higher beings since childhood. Arya was chosen by the village to act as a cultural emissary to the rest of the world—to spread the good word of the Sea Monks and to shed light on their isolated society.",
+      "Arya was born into the Church life and wants to spread the good word to the rest of the world. Understands that not everyone is religious or believes in the same things, but truly wants to understand the deeper connections that bind everyone together.",
+    ],
+		hobbies:[
+      "Fishing for sport. Catch and release only.",
+      "Making candles with various scents.",
+      "Going on walks.",
+    ],
+    japaneseRace:"シーモンク",
+    japaneseDescription:[
+      "",
+      "",
+      "",
+    ],
+    japaneseHobbies:[
+      "",
+      "",
+      "",
+    ],
+    japaneseEmployer: "",
+		japaneseJob: "司祭",
+    japaneseName: "アルヤ・ジェンセン",
+    image: {
+      url: "/images/members/big/characters17.jpg",
+      name: "characters17.jpg",
+      width: 2000,
+      height: 1200,
+      credit: "https://www.fiverr.com/carolynfrank"
     },
     ignoreInRandom: false,
  	 	type: "member",
@@ -946,47 +988,6 @@ const allCharacters = [
     japaneseEmployer: "",
 		japaneseJob: "銀行の警備員",
     japaneseName: "覇業の鎧、ハギちゃん",
-    image: {
-      url: "/images/members/big/temp.png",
-      name: "temp.png",
-      width: 2000,
-      height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
-    },
-    ignoreInRandom: true,
- 	 	type: "member",
-  },
-  {
-    name: 'Arya Jensen',
-    urlName: "arya",
-    age: 29,
-    job: "Minister",
-    employer: "Church of the New New World",
-    race:"Sea Monk",
-    description:[
-      "",
-      "",
-      "",
-    ],
-		hobbies:[
-      "",
-      "",
-      "",
-    ],
-    japaneseRace:"シーモンク",
-    japaneseDescription:[
-      "",
-      "",
-      "",
-    ],
-    japaneseHobbies:[
-      "",
-      "",
-      "",
-    ],
-    japaneseEmployer: "",
-		japaneseJob: "司祭",
-    japaneseName: "アルヤ・ジェンセン",
     image: {
       url: "/images/members/big/temp.png",
       name: "temp.png",

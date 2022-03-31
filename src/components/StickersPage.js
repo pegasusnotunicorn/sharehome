@@ -61,16 +61,30 @@ const StickersPage = (props) => {
               <div className="checkWrapper"><input type="checkbox" id="task2" name="task2" /></div>
               <label htmlFor="task2">{t("sticker page.task 2")}</label>
             </div>
+
+            {/*
+              <div className="taskWrapper" style={{textDecoration:"underline", cursor:"pointer"}} onClick={()=>{
+                window.open("https://www.instagram.com/sysifuscorp/");
+              }}>
+                <div className="checkWrapper"><input type="checkbox" id="task0" name="task0" /></div>
+                <label style={{cursor:"pointer"}} htmlFor="task0">{t("sticker page.task 4")}</label>
+              </div>
+              <div className="taskWrapper" style={{textDecoration:"underline", cursor:"pointer"}} onClick={()=>{
+                window.open("https://twitter.com/sysifuscorp");
+              }}>
+                <div className="checkWrapper"><input type="checkbox" id="task0" name="task0" /></div>
+                <label style={{cursor:"pointer"}} htmlFor="task0">{t("sticker page.task 5")}</label>
+              </div>
+            */}
+
           </form>
-
-          <p><NavLink to="/">{t("error page.link")}</NavLink></p>
-
         </div>
       </div>
 
       <div className="subcontentWrapper">
         <div className="couchContainer">
           <img className="couch" style={{width:"100%"}} src="/images/freesticker.jpg" alt={t('sticker page.description')}></img>
+          <p style={{marginTop:"1em"}}><NavLink to="/">{t("error page.link")}</NavLink></p>
         </div>
       </div>
 

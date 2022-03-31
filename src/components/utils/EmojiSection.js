@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 //custom files
 import { getAllFinishedPeople } from '../Characters/Characters.js';
 import '../../css/utils/emojisection.css';
+import { GsapFadeScrub } from "./useGsap.js";
 import DefaultButton from '../utils/DefaultButton.js';
 
 const EmojiWrapper = ({emoji}) => {
@@ -27,16 +28,18 @@ export const EmojiSection = (props) => {
 
   return (
     <div id="emojis" className="emojiSection">
-      <div className="subcontentWrapper margin-top min-width">
-        <div className="characterContent">
-          <h2>{t('characters page.emojisection')}</h2>
-          <p>{t('characters page.emojidescription')}</p>
+      <GsapFadeScrub fadeIn className="fadeInTextWrapper">
+        <div className="subcontentWrapper margin-top min-width">
+          <div className="characterContent">
+            <h2>{t('characters page.emojisection')}</h2>
+            <p>{t('characters page.emojidescription')}</p>
+          </div>
+          <div className="emojisWrapper">
+            { allEmojis }
+          </div>
+          <DefaultButton href="/allEmojis.zip" download="allEmojis.zip" className="emojiPackDownloadButton" icon="download" inverted borderedBlack shadowless text={t('characters page.emojiall')}/>
         </div>
-        <div className="emojisWrapper">
-          { allEmojis }
-        </div>
-        <DefaultButton href="/allEmojis.zip" download="allEmojis.zip" className="emojiPackDownloadButton" icon="download" inverted borderedBlack shadowless text={t('characters page.emojiall')}/>
-      </div>
+      </GsapFadeScrub>
     </div>
   )
 }

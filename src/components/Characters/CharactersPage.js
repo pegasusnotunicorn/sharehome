@@ -4,6 +4,7 @@ import { Redirect, useParams, useHistory } from 'react-router-dom';
 
 import { getAllCharacters, getSpecificPersonByURL, getRandomPerson } from '../Characters/Characters.js';
 import { CharacterSpotlight } from '../utils/CharacterSpotlight.js';
+import { GsapFadeScrub } from "../utils/useGsap.js";
 import { EmojiSection } from '../utils/EmojiSection.js';
 import DefaultButton from '../utils/DefaultButton.js';
 
@@ -29,7 +30,7 @@ const CharactersPage = (props) => {
     return <Redirect to="/characters" />
   }
   else {
-    let content = (chosenCharacter && !chosenCharacter.ignoreInRandom) ?
+    let characterContent = (chosenCharacter && !chosenCharacter.ignoreInRandom) ?
       (<IndividualCharacter character={chosenCharacter} />) :
       (<AllCharacters />);
 
@@ -46,12 +47,16 @@ const CharactersPage = (props) => {
             </div>
           </div>
         </div>
-        { content }
+        <GsapFadeScrub fadeIn className="fadeInTextWrapper">
+          { characterContent }
+        </GsapFadeScrub>
         <EmojiSection />
-        <div className="subcontentWrapper characterContent">
-          <h3 className="moretocome">{t('characters page.moretocome')}</h3>
-          <p><a href="https://www.instagram.com/carofranklyn/?hl=en">{t('characters page.credit')}</a></p>
-        </div>
+        <GsapFadeScrub fadeIn className="fadeInTextWrapper">
+          <div className="subcontentWrapper characterContent">
+            <h3 className="moretocome">{t('characters page.moretocome')}</h3>
+            <p><a href="https://www.instagram.com/carofranklyn/?hl=en">{t('characters page.credit')}</a></p>
+          </div>
+        </GsapFadeScrub>
       </div>
     )
   }

@@ -177,7 +177,7 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
                   <p>{t('about page.roleplay.rules.step1 1')}</p>
                 </div>
                 <div className="stepBlockVertical paddingTopHalf">
-                  <img className="wideImage" src="/images/icons/membertalk.svg" alt="members talking icon"/>
+                  <img className="wideImage" src="/images/illustrations/rules/membertalk.svg" alt="members talking icon"/>
                 </div>
               </div>
             </div>
@@ -187,7 +187,7 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
                   <p>{t('about page.roleplay.rules.step1 2')}</p>
                 </div>
                 <div className="stepBlockVertical paddingTopHalf">
-                  <img className="wideImage" src="/images/icons/memberpoint.svg" alt="members talking icon"/>
+                  <img className="wideImage" src="/images/illustrations/rules/memberpoint.svg" alt="members pointing icon"/>
                 </div>
               </div>
             </div>
@@ -218,7 +218,7 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
                   <p>{t('about page.roleplay.rules.step2 1')}</p>
                 </div>
                 <div className="stepBlockVertical paddingTopHalf">
-                  <img className="wideImage" src="/images/icons/commentatortalk.svg" alt="members talking icon"/>
+                  <img className="wideImage" src="/images/illustrations/rules/commentatortalk.svg" alt="commentators talking icon"/>
                 </div>
               </div>
             </div>
@@ -228,7 +228,7 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
                   <p>{t('about page.roleplay.rules.step2 2')}</p>
                 </div>
                 <div className="stepBlockVertical paddingTopHalf">
-                  <img className="wideImage" src="/images/icons/commentatorpoint.svg" alt="members talking icon"/>
+                  <img className="wideImage" src="/images/illustrations/rules/commentatorpoint.svg" alt="commentators pointing icon"/>
                 </div>
               </div>
             </div>
@@ -289,7 +289,7 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
             </div>
 
             <div className="stepBlockVertical paddingTop">
-              <img className="wideImage" src="/images/icons/reveal.svg" alt="reveal icon" />
+              <img className="wideImage" src="/images/illustrations/rules/reveal.svg" alt="reveal icon" />
             </div>
 
             <div className="stepBlockVertical paddingTop leftAlign topAlign">
@@ -314,7 +314,7 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
                     <p>{t('about page.roleplay.rules.step6 1')}</p>
                   </div>
                   <div className="stepBlockVertical paddingTopHalf">
-                    <img className="wideImage" src="/images/icons/goalgrad.svg" alt="reveal icon" />
+                    <img className="wideImage" src="/images/illustrations/rules/goalgrad.svg" alt="goal graduation icon" />
                   </div>
                 </div>
               </div>
@@ -324,7 +324,7 @@ const Rules = ({showRules, setshowRules, cardStyle}) => {
                     <p>{t('about page.roleplay.rules.step6 2')}</p>
                   </div>
                   <div className="stepBlockVertical paddingTopHalf">
-                    <img className="wideImage" src="/images/icons/couplegrad.svg" alt="reveal icon" />
+                    <img className="wideImage" src="/images/illustrations/rules/couplegrad.svg" alt="couple graduation icon" />
                   </div>
                 </div>
               </div>

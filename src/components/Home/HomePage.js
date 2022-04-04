@@ -157,11 +157,11 @@ const HomePage = forwardRef((props, ref) => {
       <GsapFadeScrub fadeIn id={`${homeStyles.mechanicsContainer}`} className={`${homeStyles.mainpageContainer}`}>
         <h1>{t('main page.mechanics.description')}</h1>
         <div className={`${homeStyles.mechanicsWrapper}`}>
-          <div><img src="/images/laughing.png" alt="Laughing icon" />{t('main page.mechanics.laughing')}</div>
-          <div><img src="/images/party.png" alt="Party icon" />{t('main page.mechanics.party')}</div>
-          <div><img src="/images/stories.png" alt="Stories icon" />{t('main page.mechanics.stories')}</div>
-          <div><img src="/images/improv.png" alt="Improv icon" />{t('main page.mechanics.improv')}</div>
-          <div><img src="/images/acting.png" alt="Acting icon" />{t('main page.mechanics.acting')}</div>
+          <div><img src="/images/illustrations/laughing.png" alt="Laughing icon" />{t('main page.mechanics.laughing')}</div>
+          <div><img src="/images/illustrations/party.png" alt="Party icon" />{t('main page.mechanics.party')}</div>
+          <div><img src="/images/illustrations/stories.png" alt="Stories icon" />{t('main page.mechanics.stories')}</div>
+          <div><img src="/images/illustrations/improv.png" alt="Improv icon" />{t('main page.mechanics.improv')}</div>
+          <div><img src="/images/illustrations/acting.png" alt="Acting icon" />{t('main page.mechanics.acting')}</div>
         </div>
         <div className={`${homeStyles.rulebookWrapper}`}>
           <DefaultButton inverted borderedBlack shadowless icon="faq" navlink="/howtoplay" text={t('main page.mechanics.howtoplay')}/>

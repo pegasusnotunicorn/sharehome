@@ -7,7 +7,7 @@ const DefaultButton = forwardRef(({
   text,
   navlink, href, button,
   borderedBlack, borderedWhite, inverted, shadowless, animated,
-  onClick,
+  onClick, style,
   icon, emoji, reversed, download
 }, ref) => {
   const borderedBlackClass = (borderedBlack) ? "is-bordered-black" : "";
@@ -22,6 +22,7 @@ const DefaultButton = forwardRef(({
     className: `defaultButton noselect ${invertedClass} ${animatedClass} ${borderedBlackClass} ${borderedWhiteClass} ${reversedClass} ${shadowlessClass} ${className}`,
     onClick: onClick,
     ref: ref,
+    style: style,
   }
 
   const iconTextProps = {

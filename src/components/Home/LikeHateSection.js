@@ -447,7 +447,7 @@ const LikeHateSection = (props) => {
     <div id={props.id} className={props.className}>
       <div className="likehateLeftContainer likehateContainers">
         <GsapFadeScrub fadeIn className="imageAndArrowContainer">
-          <img className="tableSplash" src="/images/splash.jpg" alt="dinner table" />
+          <img className="tableSplash" src="/images/illustrations/splash.jpg" alt="dinner table" />
           <div ref={arrowsContainerRef} className="arrowsContainer">
             { likeHateArrows }
           </div>

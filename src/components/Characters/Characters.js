@@ -15,6 +15,7 @@ const allCharacters = [
       "Manages a NFT marketplace based on funny orc pictures of the orcs that used to bully him as a child.",
       "Hacking greedy corporate websites like a modern day robin hood and donating the stolen money to charities. ",
       "Money laundering using dark web cryptocurrencies.",
+      "Listening to lofi hiphop synthwave music.",
     ],
     japaneseRace:"オーク",
     japaneseDescription:[
@@ -52,9 +53,10 @@ const allCharacters = [
       "Born and raised in England, Beatrice has no arms but has a very dextrous beak and legs. Has no knowledge of parents but legend says Cockatrices are born when a rooster's egg is incubated by a snake."
     ],
 		hobbies: [
-      "Really into vegan culture but still eats meat on occasion.",
+      "Veganism but still eats meat on rare occasion.",
       "Trying on various different sunglasses for fun when shopping.",
       "Reading about the various written characters, letters, and types used in other languages.",
+      "Whistling as a sport. Regularly attends whistling conventions."
     ],
     japaneseRace:"コカトリス",
     japaneseDescription:[
@@ -96,7 +98,8 @@ const allCharacters = [
       "Learning how to play the guitar.",
       "Skateboarding and surfing.",
       "Singing and dancing—especially when alone.",
-      "Pretty much anything that might make him more attractive and desirable.",
+      "Working out and exercising, but only when others are watching.",
+      "Pretty much anything that might make him seem more attractive and desirable.",
     ],
     japaneseRace:"エルフ",
     japaneseDescription:[
@@ -144,6 +147,7 @@ const allCharacters = [
       "Daydreaming.",
       "Resting.",
       "Slumbering.",
+      "Snoring",
     ],
     japaneseRace:"ドラゴン",
     japaneseDescription:[
@@ -226,7 +230,7 @@ const allCharacters = [
       "Crossfit and high-intensity interval training.",
       "Pole dancing and rhythmic exercises.",
       "Listening to nature sounds and cannot stand loud noises or loud people.",
-      "Learning how to code and build hobby websites.",
+      "Learning how to code and build hobby websites. Wants to make an app to keep track of various exercise routines and physical goals.",
     ],
     japaneseRace:"バシリスク",
     japaneseDescription:[
@@ -353,6 +357,7 @@ const allCharacters = [
       "Drinking. Duh.",
       "Betting on who can out-drink who and surprising people with her tolerance for alcohol.",
       "Turkey legs or chicken wings. Sometimes deep-fried depending on her level of inebriety.",
+      "Drag racing and winning various inner city car races.",
     ],
     japaneseRace:"ドワーフ",
     japaneseDescription:[
@@ -394,6 +399,7 @@ const allCharacters = [
       "Cosplay. Especially really creative ones involving only one leg like a table lamp, a table football player, amongst others.",
       "Shopping for shoes and colorful socks.",
       "Racing with other creatures to see who can run faster.",
+      "Compiling data on various running related metrics and running experiments to improve running technique.",
     ],
     japaneseRace:"モノポッド",
     japaneseDescription:[
@@ -434,6 +440,7 @@ const allCharacters = [
       "Dressing up in goth lolita fashion.",
       "Swapping clothes with other people. Has a large wardrobe full of random articles of clothing from different eras.",
       "Singing, humming, and whistling. Particularly at work when nobody is around.",
+      "Floating in the water without any floatiation devices.",
     ],
     japaneseRace:"生き人形",
     japaneseDescription:[
@@ -475,7 +482,7 @@ const allCharacters = [
       "Making everyone laugh. Sometimes at the expense of himself.",
       "Dispelling awkward tensions with jokes. Especially fart jokes.",
       "Likes instant gratification. Cannot wait for anything for longer than 5 minutes.",
-      "Learning about cryptocurrencies.",
+      "Learning about cryptocurrencies and their application to stand-up comedy.",
     ],
     japaneseRace:"ノーム",
     japaneseDescription:[
@@ -517,7 +524,7 @@ const allCharacters = [
       "Stealing sugary food from work or from other people.",
       "Eating the snacks left behind at movie theaters.",
       "Sitting inside open candy boxes and jumping out to scare people.",
-      "Listening to electronic dance music.",
+      "Listening to electronic dance music. Particularly music with strong bass undertones",
     ],
     japaneseRace:"ジンジャーブレッド人間",
     japaneseDescription:[
@@ -557,9 +564,10 @@ const allCharacters = [
     ],
 		hobbies:[
       "Calculus.",
-      "Watching pickup artist videos.",
-      "Doing memory games, IQ quizzes, or riddles.",
+      "Has a strange obsession with watching pickup artist videos.",
+      "Solving memory games, IQ quizzes, or online riddles.",
       "Cuddling with small furry animals.",
+      "Vegetarianism.",
     ],
     japaneseRace:"ゴブリン",
     japaneseDescription:[
@@ -602,7 +610,7 @@ const allCharacters = [
       "Taking photos of food.",
       "Scaring people by silently swooping down on them.",
       "Eating forbidden or exotic foods, especially food that has gained consciousness.",
-      "Eating meat. Cannot stand the thought of eating vegetables.",
+      "Eating meat. Cannot stand the thought of eating vegetables and rarely uses them in his cooking.",
     ],
     japaneseRace:"ワイバーン",
     japaneseDescription:[
@@ -644,6 +652,7 @@ const allCharacters = [
       "Taking care of animals. Particularly larger ones like horses or cows.",
       "A relaxing hot shower and a good skin care regimen after a day's hard work.",
       "Playing darts, shooting arrows, throwing axes. Anything that requires good accuracy.",
+      "Harvesting edible berries and nuts from nature.",
     ],
     japaneseRace:"デュラハン",
     japaneseDescription:[
@@ -727,7 +736,7 @@ const allCharacters = [
       "Doing pro-bono cases for under-represented trolls. Particularly mountain trolls.",
       "Reading unique and interesting cases. Especially inter-species cases.",
       "Reading cheap romance novels while commuting or for leisure.",
-      "Learning how to play the harmonica.",
+      "Learning how to play the family heirloom harmonica.",
     ],
     japaneseRace:"トロール",
     japaneseDescription:[
@@ -845,13 +854,14 @@ const allCharacters = [
     race:"Human",
     emoji:"",
     description:[
-      "Hansan graduated from the prestigious Dumarth Academy of Wizarding. He works out of his workshop / studio and runs a small private consulting gig where he solves various problems that only a wizard can solve. He is not really into potions, but is really into casting ancient spells or incantations.",
+      "Hansan graduated from the prestigious Dumarth Academy of Wizarding. He works out of his workshop and runs a small consulting gig where he solves problems that only magic can solve. He rarely uses potions, preferring instead to cast ancient spells.",
       "He is also really into woodworking when not doing magical things and likes to take time off from magical work to build things with his just bare hands. Although sometimes he has to cheat and use a spell or two to fix his woodworking mistakes.",
     ],
 		hobbies:[
       "Woodworking, whittling, and carpentry.",
       "Antique guns and firearms. Both shooting them and maintaining them.",
       "Gardening. Strives to grow food without the use of magic but sometimes is forced to use spells to save any dying plants.",
+      "Collecting various keyboards and keycaps. Sometimes also makes his own out of wood.",
     ],
     japaneseRace:"人間",
     japaneseDescription:[
@@ -886,13 +896,14 @@ const allCharacters = [
     emoji:"",
     description:[
       "Soh is the youngest in a large family of 7 children. He is 19 years apart from the eldest sibling so he grew up relatively isolated and lonely. He is very entrepreneurial in spirit but doesn't enjoy working with others or for others. Always had a very headstrong vibe to him since birth.",
-      "He recently inherited the family business of printing and is trying his best to revitalize the dying industry by creating unique ways to print on magical materials. He doesn't want his family legacy to die in his hooves.",
+      "He recently inherited the family business of printing and is trying his best to revitalize the dying industry by creating unique ways to print on magical materials. He doesn't want his family legacy to die in his hooves. Came onto the show in hopes of revitalizing his family business.",
     ],
 		hobbies:[
       "Collecting wooden typefaces that are used for the printing press.",
       "Filming and cataloging the typefaces.",
       "Creating vlogs about the typefaces.",
       "Cooking and learning different cuisines from other cultures.",
+      "Eating out at really fancy five-star restaurants.",
     ],
     japaneseRace:"ユニコーン",
     japaneseDescription:[
@@ -962,17 +973,17 @@ const allCharacters = [
     name: "Elias & Maya Dimakos",
     urlName: "dimakos",
     age: 25,
-    job: "Accountant / Freelance Artist",
-    employer: "Better Calculations Business / Self",
+    job: "Freelance Artist / Accountant",
+    employer: "Self-employed / Better Calculations Business",
     race:"Gemini",
     description:[
       "Gemini have two brains but share one body. They can often read the mind of the other. Usually the two individual personalities are quite similar but there have been rare cases of them being vastly different.",
-      "Elias is more creative and spontaneous while Maya is more calculating and enjoys planning things out far into the future. Together they are a great match for each other and are literally inseparable. They host a weekly podcast where they invite various creatures to call in with their unique problems and talk it out.",
+      "Elias is more creative and spontaneous while Maya is more calculating and enjoys planning things out far into the future. Together they are a great match for each other and are literally inseparable. They host a weekly podcast where they invite various guests to talk about their unique problems in life.",
     ],
 		hobbies:[
       "Drawing comics and creating short meme clips for social media (Elias).",
       "Solving cross-word puzzles, logic puzzles, and daily word riddles. (Maya).",
-      "Hosting various guests of all backgrounds on their weekly podcast talk show (Both).",
+      "Playing various instruments together at the same time as a “one-body” band.",
     ],
     japaneseRace:"ジェミニ",
     japaneseDescription:[
@@ -1012,6 +1023,7 @@ const allCharacters = [
       "Photography. Both taking photos and getting photos taken of.",
       "Finding cool new bars to take photos at and drinking icy cold beer.",
       "Glamping. Cannot sleep in a tent without a portable air conditioner.",
+      "Downloading and trying out all the hot new social media apps on her phone.",
     ],
     japaneseRace:"レプラコーン",
     japaneseDescription:[

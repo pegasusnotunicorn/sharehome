@@ -811,7 +811,7 @@ const allCharacters = [
     job: "Printer",
     employer: "Unicorn Graphics",
     race:"Unicorn",
-    emoji:"",
+    emoji:"sohFocus",
     description:[
       "Soh is the youngest in a large family of 7 children. He is 19 years apart from the eldest sibling so he grew up relatively isolated and lonely. He is very entrepreneurial in spirit but doesn't enjoy working with others or for others. Always had a very headstrong vibe to him since birth.",
       "He recently inherited the family business of printing and is trying his best to revitalize the dying industry by creating unique ways to print on magical materials. He doesn't want his family legacy to die in his hooves. Came onto the show in hopes of revitalizing his family business.",

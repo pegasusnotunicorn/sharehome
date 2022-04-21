@@ -23,7 +23,7 @@ export const CharacterSpotlight = (props) => {
   const title = (i18n.language === "en-US") ? (character.title) ? character.title : `The ${character.race}` : `${character.japaneseRace}`;
   // const race = (i18n.language === "en-US") ? character.race : character.japaneseRace;
   const job = (i18n.language === "en-US") ? character.job : character.japaneseJob;
-  const jobTitle = (i18n.language === "en-US") ? ((character.employer) ? `${character.job} at ${character.employer}.` : character.job) : (character.japaneseEmployer) ? `${character.japaneseJob}（${character.japaneseEmployer}）` : character.japaneseJob;
+  const jobTitle = (i18n.language === "en-US") ? ((character.employer) ? `${character.job} at ${character.employer}.` : `${character.job}.`) : (character.japaneseEmployer) ? `${character.japaneseJob}（${character.japaneseEmployer}）` : character.japaneseJob;
   const age = (i18n.language === "en-US") ? `${character.age} years old` : `${character.age}歳`;
 
   //list of descriptions

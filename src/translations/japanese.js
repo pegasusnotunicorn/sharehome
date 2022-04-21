@@ -80,7 +80,7 @@ const japanese = {
         "laughing": "大笑い",
         "improv": "即興",
         "party": "パーティーゲーム",
-        "acting": "演技",
+        "roleplay": "ロールプレイ",
         "stories": "ユニークなストーリー",
         "howtoplay": "ゲームの遊び方",
         "rulebook": "ルールブックのPDFはこちら！(English)",

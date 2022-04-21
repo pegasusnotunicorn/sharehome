@@ -161,7 +161,7 @@ const HomePage = forwardRef((props, ref) => {
           <div><img src="/images/illustrations/party.png" alt="Party icon" />{t('main page.mechanics.party')}</div>
           <div><img src="/images/illustrations/stories.png" alt="Stories icon" />{t('main page.mechanics.stories')}</div>
           <div><img src="/images/illustrations/improv.png" alt="Improv icon" />{t('main page.mechanics.improv')}</div>
-          <div><img src="/images/illustrations/acting.png" alt="Acting icon" />{t('main page.mechanics.acting')}</div>
+          <div><img src="/images/illustrations/acting.png" alt="Roleplay icon" />{t('main page.mechanics.roleplay')}</div>
         </div>
         <div className={`${homeStyles.rulebookWrapper}`}>
           <DefaultButton inverted borderedBlack shadowless icon="faq" navlink="/howtoplay" text={t('main page.mechanics.howtoplay')}/>

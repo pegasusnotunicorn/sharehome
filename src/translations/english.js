@@ -80,7 +80,7 @@ const english = {
         "laughing": "Laughing",
         "improv": "Improv",
         "party": "Party Games",
-        "acting": "Acting",
+        "roleplay": "Roleplay",
         "stories": "Unique Stories",
         "howtoplay": "How to play",
         "rulebook": "Read the full rulebook PDF",

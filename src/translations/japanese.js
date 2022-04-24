@@ -19,14 +19,15 @@ const japanese = {
     },
 
     "sticker page": {
-      "title": "Free sticker!",
+      "title": "Free character sticker!",
       "description": "Complete the following tasks for a free sticker! Sorry, but free stickers are limited to US residents and only while supplies last.",
       "description2": "Also it's literally just one guy who is printing and mailing all of these out so please be patient when requesting your free sticker.",
       "description3": "Please use the hashtag #lovecareermagic to show off your sticker when you receive it!",
-      "description4": "UPDATE 3/29 — Due to overwhelming demand, I have to make the requirements much stricter. Unfortunately if you don't complete ALL of the below tasks I will not send you a sticker.",
+      "description4": "UPDATE 3/29 — Due to overwhelming demand, I have to make the requirements much stricter. Unfortunately if you don't complete ALL of the below tasks I will not send you a sticker. I am sorry but I simply cannot keep up with the demand if I don't do this.",
+      "description5": "UPDATE 4/24 — Due to increasing demand, I cannot give out stickers to people whose social media is obviously fake, used only for obtaining free things, or have very little followers / friends. I'm really sorry but it's literally impossible for me to mail out thousands of stickers by myself.",
       "task 3": "Click here to follow on Kickstarter.",
       "task 0": "Click here to open the sign up sheet.",
-      "task 2": "Share this page publicly on social media. Include a link to your public post in the signup sheet above.",
+      "task 2": "You must share this page publicly on social media. Include a link to your post in the signup sheet.",
       "task 4": "Click here to follow on Instagram.",
       "task 5": "Click here to follow on Twitter.",
     },

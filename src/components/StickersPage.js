@@ -85,6 +85,7 @@ const StickersPage = (props) => {
       <div className="subcontentWrapper">
         <div className="couchContainer">
           <img className="couch" style={{width:"100%"}} src="/images/freesticker.jpg" alt={t('sticker page.description')}></img>
+          <img className="couch" style={{width:"100%"}} src="/images/freesticker2.jpg" alt={t('sticker page.description')}></img>
           <p style={{marginTop:"1em"}}><NavLink to="/">{t("error page.link")}</NavLink></p>
         </div>
       </div>

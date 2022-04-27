@@ -9,7 +9,7 @@ const allCharacters = [
     emoji:"urgSmile",
     description: [
       "Urg was bullied a lot as a kid for his scrawny stature. He was not your typical brutish orc. As a child, he turned to the dark web for comfort and found his home there amongst the other outcasts of society. He enjoys using his technological skills to punish the strong who bully the weak.",
-      "Rejecting the orc status quo, he wants to change the public perception of his people. His desire to show his race in a better light brought him on the show. He hopes that his illegal darkweb activities won't be discovered by the public."
+      "Rejecting the orc status quo, he wants to change the public perception of his people. His desire to show his race in a better light brought him on the show. He hopes that his illegal dark web activities won't be discovered by the public."
     ],
 		hobbies: [
       "Manages a NFT marketplace based on funny orc pictures of the orcs that used to bully him as a child.",
@@ -50,7 +50,7 @@ const allCharacters = [
     emoji:"beatriceStare",
     description: [
       "Cockatrices can kill people with just one look according to folk legend. Afraid of testing out that theory, Beatrice wears special designer sunglasses all of the time. Beatrice also designs special lenses for other Cockatrices to let them look in the mirror without harm.",
-      "Born and raised in England, Beatrice has no arms but has a very dextrous beak and legs. Has no knowledge of parents but legend says Cockatrices are born when a rooster's egg is incubated by a snake."
+      "Born and raised in England, Beatrice has no arms but has a very dexterous beak and legs. Has no knowledge of parents but legend says Cockatrices are born when a rooster's egg is incubated by a snake."
     ],
 		hobbies: [
       "Veganism but still eats meat on rare occasion.",
@@ -136,7 +136,7 @@ const allCharacters = [
     race:"Dragon",
     emoji:"kottrSleepy",
     description:[
-      "Dragons reach adulthood around age 100. They can also freely change their own bodysize at will—ranging from a small house cat to a large four story building. However, changing sizes requires a great deal of energy and strength.",
+      "Dragons reach adulthood around age 100. They can also freely change their own body size at will—ranging from a small house cat to a large four story building. However, changing sizes requires a great deal of energy and strength.",
       `Köttr is very lazy and likes to sleep a lot, much like a cat. Sometimes chases their own tail out of boredom or as a form of light exercise when not working and delivering packages. “Works to live” not “lives to work.” Doesn’t get along with workaholics.`,
     ],
 		hobbies: [
@@ -224,7 +224,7 @@ const allCharacters = [
     emoji:"ahxiEyeroll",
     description:[
       "Basilisks are known to be extremely venomous to the point where even a mere whiff of their poison can send victims into a deep coma. Therefore, their venom is a highly sought-after commodity in the underground markets.",
-      "Despite the notoriety of Basilisks in society, Ahxi wants to help develop new antivenoms and chemical products using the potency of their venom. Came onto the show in hopes of improving public perception of Basilisks.",
+      "Despite the notoriety of Basilisks in society, Ahxi wants to help develop new anti-venoms and chemical products using the potency of their venom. Came onto the show in hopes of improving public perception of Basilisks.",
     ],
 		hobbies:[
       "Crossfit and high-intensity interval training.",
@@ -440,7 +440,7 @@ const allCharacters = [
       "Dressing up in goth lolita fashion.",
       "Swapping clothes with other people. Has a large wardrobe full of random articles of clothing from different eras.",
       "Singing, humming, and whistling. Particularly at work when nobody is around.",
-      "Floating in the water without any floatiation devices.",
+      "Floating in the water without any floatation devices.",
     ],
     japaneseRace:"生き人形",
     japaneseDescription:[
@@ -843,6 +843,51 @@ const allCharacters = [
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
     },
+    ignoreInRandom: false,
+    type: "member",
+  },
+  {
+    name: "Brigit Ní Colla",
+    urlName: "brigit",
+    age: 22,
+    job: "Bank Teller",
+    job2: "Model",
+    employer: "Bank O'Rainbows",
+    employer2: "Clover Modeling Agency",
+    race:"Leprechan",
+    emoji:"brigitCute",
+    description:[
+      "Female leprechauns are extremely rare to the point of basically not existing. Therefore Brigit is extremely popular and is often surrounded by male peers trying to woo her. Growing up with that much attention has certainly gone to her head, but she is quickly learning that not everyone cares about the rarity of female leprechauns, particularly outside of the leprechaun community.",
+      "She has never had to work hard in her entire life and often had many things handed to her. She got her current day job from a family friend. And also was scouted by a modeling agency on the street.",
+    ],
+    hobbies:[
+      "Photography. Both taking photos and getting photos taken of.",
+      "Finding cool new bars to take photos at and drinking icy cold beer.",
+      "Glamping. Cannot sleep in a tent without a portable air conditioner.",
+      "Downloading and trying out all the hot new social media apps on her phone.",
+    ],
+    japaneseRace:"レプラコーン",
+    japaneseDescription:[
+      "女性のレプラコーンは珍しすぎて、殆ど存在しないと思われている。そのため、ブリジェットはものすごく人気で周りの男性の目線を無識的に招いているのだ。子供の時からいつもチヤホヤされたせいで結構調子に乗っていたものの、番組に出てはレプラコーン以外の世界では誰も女性のレプラコーンのことは気にしていないと気づいてびっくりした。",
+      "一回も苦労したことのない人生を生きてきて、仕事さえ家族のコネで貰った。道でモデルの事務所からスカウトされたらしい。",
+    ],
+    japaneseHobbies:[
+      "撮影、撮ることや撮られること",
+      "四つ葉のクローバー探し",
+      "キンキンに冷えたビールを飲むこと",
+    ],
+    japaneseJob: "窓口係",
+    japaneseEmployer: "レインボウ銀行",
+    japaneseJob2: "モデル",
+    japaneseEmployer2: "クロバー事務所",
+    japaneseName: "ブリジェット・ニコラ",
+    image: {
+      url: "/images/members/big/characters21.jpg",
+      name: "characters21.jpg",
+      width: 2000,
+      height: 1200,
+      credit: "https://www.fiverr.com/carolynfrank"
+    },
     ignoreInRandom: true,
     type: "member",
   },
@@ -1009,46 +1054,7 @@ const allCharacters = [
     ignoreInRandom: true,
  	 	type: "member",
   },
-  {
-    name: "Brigit Ní Colla",
-    urlName: "brigit",
-    age: 22,
-    job: "Model / Bank Teller",
-    employer: "Bank O'Rainbows",
-    race:"Leprechan",
-    description:[
-      "Female leprechauns are extremely rare to the point of basically not existing. Therefore Brigit is extremely popular and is often surrounded by male peers trying to woo her. Growing up with that much attention has certainly gone to her head, but she is quickly learning that not everyone cares about the rarity of female leprechauns, particularly outside of the leprechaun community.",
-      "She has never had to work hard in her entire life and often had many things handed to her. She got her current day job from a family friend. And also was scouted by a modelling agency on the street.",
-    ],
-		hobbies:[
-      "Photography. Both taking photos and getting photos taken of.",
-      "Finding cool new bars to take photos at and drinking icy cold beer.",
-      "Glamping. Cannot sleep in a tent without a portable air conditioner.",
-      "Downloading and trying out all the hot new social media apps on her phone.",
-    ],
-    japaneseRace:"レプラコーン",
-    japaneseDescription:[
-      "女性のレプラコーンは珍しすぎて、殆ど存在しないと思われている。そのため、ブリジェットはものすごく人気で周りの男性の目線を無識的に招いているのだ。子供の時からいつもチヤホヤされたせいで結構調子に乗っていたものの、番組に出てはレプラコーン以外の世界では誰も女性のレプラコーンのことは気にしていないと気づいてびっくりした。",
-      "一回も苦労したことのない人生を生きてきて、仕事さえ家族のコネで貰った。道でモデルの事務所からスカウトされたらしい。",
-    ],
-    japaneseHobbies:[
-      "撮影、撮ることや撮られること",
-      "四つ葉のクローバー探し",
-      "キンキンに冷えたビールを飲むこと",
-    ],
-    japaneseEmployer: "クロバー事務所 / レインボウ銀行",
-		japaneseJob: "モデル / 窓口係",
-    japaneseName: "ブリジェット・ニコラ",
-    image: {
-      url: "/images/members/big/temp.png",
-      name: "temp.png",
-      width: 2000,
-      height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
-    },
-    ignoreInRandom: true,
- 	 	type: "member",
-  },
+
 ]
 
 // shuffle an array

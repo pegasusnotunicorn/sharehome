@@ -22,8 +22,17 @@ export const CharacterSpotlight = (props) => {
   const name = (i18n.language === "en-US") ? character.name : character.japaneseName;
   const title = (i18n.language === "en-US") ? (character.title) ? character.title : `The ${character.race}` : `${character.japaneseRace}`;
   // const race = (i18n.language === "en-US") ? character.race : character.japaneseRace;
-  const job = (i18n.language === "en-US") ? character.job : character.japaneseJob;
+
+  let job = (i18n.language === "en-US") ? character.job : character.japaneseJob;
   const jobTitle = (i18n.language === "en-US") ? ((character.employer) ? `${character.job} at ${character.employer}.` : `${character.job}.`) : (character.japaneseEmployer) ? `${character.japaneseJob}（${character.japaneseEmployer}）` : character.japaneseJob;
+
+  //second job
+  let jobTitle2;
+  if (character.job2) {
+    job = (i18n.language === "en-US") ? `${character.job} / ${character.job2}` : `${character.japanseJob} / ${character.japanseJob2}`;
+    jobTitle2 = (i18n.language === "en-US") ? ((character.employer2) ? `${character.job2} at ${character.employer2}.` : `${character.job2}.`) : (character.japaneseEmployer2) ? `${character.japaneseJob2}（${character.japaneseEmployer2}）` : character.japaneseJob2;
+  }
+
   const age = (i18n.language === "en-US") ? `${character.age} years old` : `${character.age}歳`;
 
   //list of descriptions
@@ -94,6 +103,9 @@ export const CharacterSpotlight = (props) => {
               <div className="spotlightDetailsSection spotlightHobbiesSection">
                 <p className="spotlightBold">{`${t('characters page.job')}`}:</p>
                 <p>{ jobTitle }</p>
+                { character.job2 &&
+                  <p>{jobTitle2}</p>
+                }
               </div>
               <div className="spotlightDetailsSection spotlightHobbiesSection">
                 <p className="spotlightBold">{`${t('characters page.hobbies')}`}:</p>

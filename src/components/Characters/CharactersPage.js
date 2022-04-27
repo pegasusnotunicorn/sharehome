@@ -103,7 +103,10 @@ const AllCharacters = (props) => {
   const expansionCharacters = allCharacters.map((elem, index)=>{
     const name = (i18n.language === "en-US") ? elem.name : elem.japaneseName;
     const race = (i18n.language === "en-US") ? elem.race : elem.japaneseRace;
-    const job = (i18n.language === "en-US") ? elem.job : elem.japaneseJob;
+    let job = (i18n.language === "en-US") ? elem.job : elem.japaneseJob;
+    if (elem.job2) {
+      job = (i18n.language === "en-US") ? `${elem.job} / ${elem.job2}` : `${elem.japanseJob} / ${elem.japanseJob2}`;
+    }
 
     let ignoreInRandom = (elem.ignoreInRandom) ? "notDone" : "";
     return (

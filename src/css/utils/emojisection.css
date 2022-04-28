@@ -3,6 +3,14 @@
   padding-bottom:3em;
 }
 
+.emojiDescriptionWrapper p{
+  margin-bottom:0;
+}
+
+.emojiDescriptionWrapper ul{
+  text-align:left;
+}
+
 .emojisWrapper{
   width:100%;
   display:flex;
@@ -26,9 +34,15 @@
   height:50px;
 }
 
+.emojiButtonsWrapper{
+  margin:auto;
+  display:flex;
+  margin-top:0em;
+  margin-bottom:2em;
+}
+
 .emojiPackDownloadButton{
   margin:auto;
-  margin-top:2em;
 }
 
 /* mobile */

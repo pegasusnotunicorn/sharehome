@@ -97,7 +97,7 @@ const english = {
 
     "email form":{
       "joinbutton": "Join mailing list",
-      "prompt": "Sign up to be notified when we launch!",
+      "prompt": "Sign up to stay updated on the latest news!",
       "button": "Submit",
       "promise": "",
       "sending": "Submitting...",
@@ -249,9 +249,13 @@ const english = {
       "prev" : "Prev",
       "comingsoon" : "Coming Soon",
       "emojisection": "Free Character Emojis!",
-      "emojidescription": "Free emojis you can use with Discord or whatever chat application you want! No attribution necessary but it'd be awesome if you could share this website with whoever is curious.",
+      "emojidescription": "Join my Discord community to use these emojis for free right now!",
       "emoji": "Download Emoji",
       "emojiall": "Download Emoji Pack",
+      "discordjoin": "Join the Discord & Get Free Emojis",
+      "emojidesc1":"See previews and unreleased content before anyone else.",
+      "emojidesc2":"Be a part of the developer journey from the beginning.",
+      "emojidesc3":"Give feedback and help me make this game a reality.",
     },
 
     "contact page":{

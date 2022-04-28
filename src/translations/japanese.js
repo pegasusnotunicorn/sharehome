@@ -249,9 +249,13 @@ const japanese = {
       "prev" : "前のキャラ",
       "comingsoon" : "近日公開",
       "emojisection": "無料キャラクター絵文字！",
-      "emojidescription": "ディスコードや他のチャットアプリでも使える無料の絵文字を提供します！どうぞ自由にお使いください。",
+      "emojidescription": "ディスコードで使える無料の絵文字を提供します！",
       "emoji": "絵文字をダウンロード",
       "emojiall": "絵文字パックをダウンロード",
+      "discordjoin": "ディスコードコミュニティーに登録",
+      "emojidesc1":"他の誰にも早く未公開コンテンツにアクセス。",
+      "emojidesc2":"ゲームの開発ジャーニーに参加。",
+      "emojidesc3":"フィードバックや意見を提供してより楽しいゲームに！",
     },
 
     "contact page":{

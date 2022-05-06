@@ -888,7 +888,7 @@ const allCharacters = [
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank"
     },
-    ignoreInRandom: true,
+    ignoreInRandom: false,
     type: "member",
   },
   {

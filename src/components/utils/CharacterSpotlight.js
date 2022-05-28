@@ -24,7 +24,7 @@ export const CharacterSpotlight = (props) => {
   // const race = (i18n.language === "en-US") ? character.race : character.japaneseRace;
 
   let job = (i18n.language === "en-US") ? character.job : character.japaneseJob;
-  const jobTitle = (i18n.language === "en-US") ? ((character.employer) ? `${character.job} at ${character.employer}.` : `${character.job}.`) : (character.japaneseEmployer) ? `${character.japaneseJob}（${character.japaneseEmployer}）` : character.japaneseJob;
+  const jobTitle = (i18n.language === "en-US") ? ((character.employer) ? `${character.job} at ${character.employer}.` : `${character.job} (Self employed).`) : (character.japaneseEmployer) ? `${character.japaneseJob}（${character.japaneseEmployer}）` : character.japaneseJob;
 
   //second job
   let jobTitle2;
@@ -50,6 +50,16 @@ export const CharacterSpotlight = (props) => {
       <li key={`hobbies${index}`} className="hobbiesList">{elem}</li>
     )
   });
+
+  //list of extra emojis
+  let listOfEmojis;
+  if (character.moreemoji){
+    listOfEmojis = character.moreemoji.map((elem, index)=>{
+      return (
+        <DefaultButton key={`emoji${index}`} emoji={elem} inverted shadowless text={t('characters page.emoji')}/>
+      )
+    });
+  }
 
   //hide details button on mobile
   const [showDetails, setShowDetails] = useState(true);
@@ -120,6 +130,9 @@ export const CharacterSpotlight = (props) => {
                 <DefaultButton emoji={character.emoji} inverted shadowless text={t('characters page.emoji')}/>
                 { character.emoji2 &&
                   <DefaultButton emoji={character.emoji2} inverted shadowless text={t('characters page.emoji')}/>
+                }
+                { character.moreemoji &&
+                  listOfEmojis
                 }
               </div>
               <div className={`showDetailsButton is-hidden-desktop`}>

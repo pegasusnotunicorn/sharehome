@@ -892,46 +892,6 @@ const allCharacters = [
     type: "member",
   },
   {
-    name: "Susom the Giant",
-    urlName: "susom",
-    age: 50,
-    job: "Construction Worker",
-    employer: "Onyx Construction & Demolition",
-    race:"Giant",
-    emoji:"",
-    description:[
-      "Giants reach adulthood around age 50. Giants rarely have surnames because they often travel solo and are so big they don't need a surname to further specify who they are.",
-      "Susom is very shy despite her stature and size. She always wanted a surname to fit in with the rest of the world. She doesn't like standing out in a crowd or being picked for anything. She is a people pleaser and wants to be accepted by a group. She prefers to wear very simple loose-fitting clothing without any intricate designs or patterns.",
-    ],
-		hobbies:[
-      "People watching. Particularly from an angle or location where nobody can look back.",
-      "Sitting outside in the rain and letting the water wash away the stresses of life.",
-      "Primitive camping. Bushcraft. Surviving in nature with minimal tools or technology.",
-    ],
-    japaneseRace:"巨人",
-    japaneseDescription:[
-      "巨人の成年年齢は役２２歳。普段一人で動いているので苗字を持つ巨人はかなり少ない。",
-      "巨人のスソムは体の大きさと違ってとても静かでシャイもの。他のみんなと同じように苗字は昔から憧れていた。人の多い場所と何かのため選ばれるのが苦手。八方美人で誰彼かまわず良い顔ばかりしている。複雑な模様や派手なデザインのものではなく、シンプルで緩やかな服が好み。",
-    ],
-    japaneseHobbies:[
-      "人間観察",
-      "雨のなかに座ること",
-      "野生キャンプ",
-    ],
-    japaneseEmployer: "株式会社オニックス建設",
-		japaneseJob: "建設労働者",
-    japaneseName: "巨人のスソム",
-    image: {
-      url: "/images/members/big/temp.png",
-      name: "temp.png",
-      width: 2000,
-      height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
-    },
-    ignoreInRandom: true,
- 	 	type: "member",
-  },
-  {
     name: "Hansan Snekker",
     title: "The Wizard",
     urlName: "hansan",
@@ -939,7 +899,12 @@ const allCharacters = [
     job: "Wizard",
     employer: false,
     race:"Human",
-    emoji:"",
+    emoji:"hansanSmoke",
+    emoji2:"magicFingers",
+    moreemoji:[
+      "magicFist",
+      "magicOkay",
+    ],
     description:[
       "Hansan graduated from the prestigious Dumarth Academy of Wizarding. He works out of his workshop and runs a small consulting gig where he solves problems that only magic can solve. He rarely uses potions, preferring instead to cast ancient spells.",
       "He is also really into woodworking when not doing magical things and likes to take time off from magical work to build things with his just bare hands. Although sometimes he has to cheat and use a spell or two to fix his woodworking mistakes.",
@@ -964,13 +929,14 @@ const allCharacters = [
 		japaneseJob: "魔法使い",
     japaneseName: "ハンサン・スネッカー",
     image: {
-      url: "/images/members/big/temp.png",
-      name: "temp.png",
+      url: "/images/members/big/characters22.jpg",
+      name: "characters22.jpg",
       width: 2000,
       height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
+      credit: "https://www.fiverr.com/carolynfrank",
+      objectPosition: "60%",
     },
-    ignoreInRandom: true,
+    ignoreInRandom: false,
  	 	type: "member",
   },
   {
@@ -980,7 +946,8 @@ const allCharacters = [
     job: "Artist",
     employer: false,
     race:"Bicorn",
-    emoji:"",
+    emoji:"sysifeThink",
+    emoji2:"sysifusLogo",
     description:[
       "Sysife was born in Western France but moved around the world a lot as a child and can therefore speak many languages. Not a lot is known about the bicorn and, due to their scary appearance, they are often feared wherever they go. Sysife came on the show to dispel false rumors surrounding Bicorns and to improve their public perception.",
       "Sysife used to work for a large corporation as just another cog in the machine. Ultimately decided to quit the life of an office drone to pursue freelance illustration and to shake up the status quo in the modern art world.",
@@ -1006,11 +973,12 @@ const allCharacters = [
 		japaneseJob: "美術家",
     japaneseName: "シシフィ・バーナード",
     image: {
-      url: "/images/members/big/temp.png",
-      name: "temp.png",
+      url: "/images/members/big/characters23.jpg",
+      name: "characters23.jpg",
       width: 2000,
       height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
+      credit: "https://www.fiverr.com/carolynfrank",
+      objectPosition: "85%",
     },
     ignoreInRandom: true,
  	 	type: "member",
@@ -1054,7 +1022,46 @@ const allCharacters = [
     ignoreInRandom: true,
  	 	type: "member",
   },
-
+  {
+    name: "Susom the Giant",
+    urlName: "susom",
+    age: 50,
+    job: "Construction Worker",
+    employer: "Onyx Construction & Demolition",
+    race:"Giant",
+    emoji:"",
+    description:[
+      "Giants reach adulthood around age 50. Giants rarely have surnames because they often travel solo and are so big they don't need a surname to further specify who they are.",
+      "Susom is very shy despite her stature and size. She always wanted a surname to fit in with the rest of the world. She doesn't like standing out in a crowd or being picked for anything. She is a people pleaser and wants to be accepted by a group. She prefers to wear very simple loose-fitting clothing without any intricate designs or patterns.",
+    ],
+    hobbies:[
+      "People watching. Particularly from an angle or location where nobody can look back.",
+      "Sitting outside in the rain and letting the water wash away the stresses of life.",
+      "Primitive camping. Bushcraft. Surviving in nature with minimal tools or technology.",
+    ],
+    japaneseRace:"巨人",
+    japaneseDescription:[
+      "巨人の成年年齢は役２２歳。普段一人で動いているので苗字を持つ巨人はかなり少ない。",
+      "巨人のスソムは体の大きさと違ってとても静かでシャイもの。他のみんなと同じように苗字は昔から憧れていた。人の多い場所と何かのため選ばれるのが苦手。八方美人で誰彼かまわず良い顔ばかりしている。複雑な模様や派手なデザインのものではなく、シンプルで緩やかな服が好み。",
+    ],
+    japaneseHobbies:[
+      "人間観察",
+      "雨のなかに座ること",
+      "野生キャンプ",
+    ],
+    japaneseEmployer: "株式会社オニックス建設",
+    japaneseJob: "建設労働者",
+    japaneseName: "巨人のスソム",
+    image: {
+      url: "/images/members/big/temp.png",
+      name: "temp.png",
+      width: 2000,
+      height: 1200,
+      credit: "https://www.fiverr.com/carolynfrank"
+    },
+    ignoreInRandom: true,
+    type: "member",
+  },
 ]
 
 // shuffle an array

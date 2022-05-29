@@ -51,15 +51,18 @@ const HomePage = forwardRef((props, ref) => {
       <ParallaxSection />
 
       <div ref={topLogoRef} id={`${homeStyles.heroContainer}`} className={`${homeStyles.mainContentWrapper} noselect`}>
-        <GsapFadeDelay delay={0} className={`${homeStyles.titleWrapper}`} >
-          <div className={`${homeStyles.lcmContainer}`}>
+        <img alt="Box and components of the card game." className={`${homeStyles.heroImage}`} src="/images/mainbox.jpg" />
+        <GsapFadeDelay delay={0} className={`${homeStyles.titleWrapper} ${homeStyles.topOne}`} >
+          <div className={`${homeStyles.lcmContainer} ${homeStyles.topOne}`}>
             <div className={`${homeStyles.lcmMaskWrapper} floating noselect`}>
               <div className={`${homeStyles.lcmMask}`}></div>
             </div>
-            <p className={`${homeStyles.sharehomegame}`}>a SHAREHOME game</p>
           </div>
         </GsapFadeDelay>
         <GsapFadeDelay delay={1500} className={homeStyles.scrollContainer}>
+          <GsapFadeScrub scrub startScreenTop fadeOut >
+            <DefaultButton shadowless icon="email_white" ref={navbarButton} className={homeStyles.topMailButton} text={t('email form.joinbutton')}/>
+          </GsapFadeScrub>
           <GsapFadeScrub scrub startScreenTop fadeOut >
             <div className={homeStyles.scrollHorizontalContainer}>
               <div id={homeStyles.animatedScroll} className={homeStyles.scrollVerticalContainer}></div>
@@ -180,7 +183,6 @@ const HomePage = forwardRef((props, ref) => {
           <h1>{t('main page.final.description')}</h1>
           <div className={`${homeStyles.finalButtonsWrapper}`}>
             <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
-            <DefaultButton shadowless icon="email_white" ref={navbarButton} className="is-hidden" text={t('email form.joinbutton')}/>
             <DefaultButton inverted borderedBlack shadowless icon="favorite" href="https://sysifuscorp.com" text={t('main page.final.otherworks')}/>
           </div>
         </GsapFadeScrub>

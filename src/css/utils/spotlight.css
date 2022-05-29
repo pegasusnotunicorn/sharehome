@@ -284,8 +284,10 @@
   text-decoration: underline;
 }
 
-.discordEmojiWrapper .defaultButton:nth-child(2){
-  padding-bottom:1em;
+@media only screen and (min-width: 982px) {
+  .discordEmojiWrapper .defaultButton:nth-child(2){
+    padding-bottom:1em;
+  }
 }
 
 /* mobile */

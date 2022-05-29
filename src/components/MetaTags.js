@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 import { getSpecificPersonByURL } from './Characters/Characters.js';
 
 const MetaTags = (props) => {
-  let splashImage = "/images/splash.jpg";
+  let splashImage = "/images/mainbox.jpg";
   let description = "A fantastical reality TV card game about laughing, acting, and storytelling. Form relationships, stir up drama, and achieve your secret life goals!"
   let title = "Love, Career & Magic — A SHAREHOME Game";
 

@@ -11,42 +11,42 @@ const exampleGoals = [
   },
   {
     type:"goal",
-    description:"Hug everyone at least once without being accused of doing it just for your goal card.",
+    description:"Hug everyone at least once.",
     deckName:"Physical goal",
   },
   {
     type:"goal",
-    description:"High-five everyone at least once without without being accused of doing it just for your goal card.",
+    description:"High-five everyone at least once.",
     deckName:"Physical goal",
   },
   {
     type:"goal",
-    description:"Be thanked by everyone at least once without being accused of doing it just for your goal card.",
+    description:"Be thanked by everyone at least once.",
     deckName:"Physical goal",
   },
   {
     type:"goal",
-    description:"Shake everyone's hands at least once without being accused of doing it just for your goal card.",
+    description:"Shake everyone's hands at least once.",
     deckName:"Physical goal",
   },
   {
     type:"goal",
-    description:"Pat everyone's head at least once without being accused of doing it just for your goal card.",
+    description:"Pat everyone's head at least once.",
     deckName:"Physical goal",
   },
   {
     type:"goal",
-    description:"Give a back-pat to everyone at least once without being accused of doing it just for your goal card.",
+    description:"Give a back-pat to everyone at least once.",
     deckName:"Physical goal",
   },
   {
     type:"goal",
-    description:"Touch everyone's phone at least once without being accused of doing it just for your goal card.",
+    description:"Touch everyone's phone at least once.",
     deckName:"Physical goal",
   },
   {
     type:"goal",
-    description:"Fist bump everyone at least once without being accused of doing it just for your goal card.",
+    description:"Fist bump everyone at least once.",
     deckName:"Physical goal",
   },
   {

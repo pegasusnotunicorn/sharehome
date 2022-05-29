@@ -24,7 +24,10 @@ export const EmojiSection = (props) => {
   const buildElem = (elem, key, two)=>{
     return <EmojiWrapper key={key} emoji={(two) ? elem.emoji2 : elem.emoji} />
   }
-  let allEmojis = allCharacters.map((elem, index) => {return buildElem(elem, `${index}Emoji1`, false)}).concat(allEmoji2Characters.map((elem, index) => {return buildElem(elem, `${index}Emoji2`, true)}));
+  let allEmojis = allCharacters.map((elem, index) => {
+    return buildElem(elem, `${index}Emoji1`, false)})
+            .concat(allEmoji2Characters.map((elem, index) => {return buildElem(elem, `${index}Emoji2`, true)
+  }));
 
   // <DefaultButton href="/allEmojis.zip" download="allEmojis.zip" className="emojiPackDownloadButton" icon="download" inverted borderedBlack shadowless text={t('characters page.emojiall')}/>
   return (

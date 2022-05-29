@@ -59,11 +59,31 @@
   position:relative;
 }
 
+.heroImage{
+  height:100vh;
+  object-fit: contain;
+  position: absolute;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:-1;
+}
+
+.titleWrapper.topOne {
+  height:25%;
+  margin-top:2%;
+  margin-left:25%;
+}
+
 .titleWrapper{
   width:auto;
   height:50%;
   justify-content: center;
   display:flex;
+}
+
+.lcmContainer.topOne {
+  width:400px;
 }
 
 .lcmContainer{
@@ -127,12 +147,18 @@
 
 .scrollContainer {
   position:absolute;
-  top:calc(100vh - 50px - 6em);
+  top:calc(100vh - 50px - 10em);
   display:flex;
   flex-direction:column;
   justify-content: space-between;
   width:200px;
   padding:2em;
+}
+
+.topMailButton{
+  width:100%;
+  margin-left:-1em;
+  margin-bottom:2em;
 }
 
 .scrollContainer > div{
@@ -192,12 +218,38 @@
   .lcmContainer{
     width:700px !important;
   }
+
+  .lcmContainer.topOne{
+    width:350px !important;
+  }
 }
 
 /* tablet */
 @media only screen and (min-width: 900px) and (max-width: 1200px) {
   .lcmContainer{
     width:600px !important;
+  }
+
+  .lcmContainer.topOne{
+    width:325px !important;
+  }
+  .titleWrapper.topOne {
+    margin-left:50%;
+    margin-top:10%;
+  }
+}
+
+
+/* larger mobile (for hero image) */
+@media only screen and (min-width: 750px) and (max-width: 900px) {
+  .lcmContainer.topOne{
+    width:400px !important;
+    height:100% !important;
+  }
+  .heroImage{
+    top:8% !important;
+    width:140vw !important;
+    height:auto;
   }
 }
 
@@ -206,10 +258,22 @@
   .lcmContainer{
     width:500px !important;
   }
+  .lcmContainer.topOne{
+    width:400px !important;
+    height:125%;
+  }
   .sharehomegame{
     width: 100% !important;
     margin-top: 25px !important;
     text-align:center;
+  }
+  .heroImage{
+    top:13.5%;
+    width:140vw;
+    height:auto;
+  }
+  .titleWrapper.topOne {
+    margin-left:0%;
   }
 }
 
@@ -538,8 +602,8 @@
     right:5vw;
   }
   #eventsContainerSVGlovekey{
-    top:13vh;
-    right:50vw;
+    top:20vh;
+    right:10vw;
   }
   #eventsContainerSVGplanet{
     top:75vh;
@@ -554,11 +618,11 @@
     width:calc(100% - 4em);
   }
   #goalsContainerSVGflag{
-    right:5vw;
+    right:15vw;
     top:70vh;
   }
   #goalsContainerSVGscroll{
-    right:47.5vw;
+    right:7.5vw;
     top:5vh;
   }
 }

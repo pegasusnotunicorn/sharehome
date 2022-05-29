@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import i18n from "i18next";
 
-import { GsapFadeDelay } from "../utils/useGsap.js";
+import { GsapFadeDelay, GsapFadeScrub } from "../utils/useGsap.js";
 import ShootingStar from './ShootingStar.js';
 import EmailForm from './EmailForm.js';
 import useWindowDimensions from '../utils/useWindowDimensions.js';
@@ -74,7 +74,9 @@ export const NavbarMain = (props) => {
     <div className={`navbarClass ${isVisibleClass}`}>
 
       <GsapFadeDelay delay={1500} className="fixedButtonsWrapper noselect">
-        <DefaultButton shadowless icon="email_white" id="emailToggleButtonMobile" className={mailButtonVisibleClass} onClick={toggleMail} text={t('email form.joinbutton')}/>
+        <GsapFadeScrub scrub startScreenTop fadeIn >
+          <DefaultButton shadowless icon="email_white" id="emailToggleButtonMobile" className={mailButtonVisibleClass} onClick={toggleMail} text={t('email form.joinbutton')}/>
+        </GsapFadeScrub>
         <button
           id="navbarOpenClose"
           className={`hamburger hamburger--slider ${isVisibleClass}`}

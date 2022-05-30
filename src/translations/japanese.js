@@ -86,6 +86,9 @@ const japanese = {
         "howtoplay": "ゲームの遊び方",
         "rulebook": "ルールブックのPDFはこちら！(English)",
       },
+      "photoshoot": {
+        "description": "フォトギャラリー",
+      },
       "spotlight": {
         "description": "新キャラ紹介",
       },

@@ -659,7 +659,6 @@
 
 #mechanicsContainer{
   min-height: 65vh;
-  margin-bottom:3em;
   display:flex;
   justify-content: center;
   align-items: center;
@@ -693,7 +692,6 @@
 
 .rulebookWrapper{
   margin-top:10em;
-  margin-bottom:10em;
   display:flex;
   flex-direction: row;
 }
@@ -710,10 +708,10 @@
   }
 
   .mechanicsWrapper div > img {
-    width:150px;
-    height:150px;
-    margin-right:0.5em;
-    margin-left:0.5em;
+    width:125px;
+    height:125px;
+    margin-right:0.35em;
+    margin-left:0.35em;
   }
 
   .rulebookWrapper{
@@ -743,13 +741,6 @@
 
 #spotlightContainer > div > div > h1{
   margin-bottom:0 !important;
-}
-
-/* mobile stuff */
-@media only screen and (max-width: 900px) {
-  #spotlightContainer{
-    padding-top:2em;
-  }
 }
 
 /* </editor-fold> */

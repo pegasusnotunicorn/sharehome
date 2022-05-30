@@ -9,6 +9,7 @@ import useWindowDimensions from '../utils/useWindowDimensions.js';
 import DefaultButton from '../utils/DefaultButton.js';
 
 // sections
+import CarouselSection from "./CarouselSection.js";
 import ParallaxSection from "./ParallaxSection.js";
 import CharactersDeckSection from "./CharactersDeckSection.js";
 import { EventsDeckSection, GoalsDeckSection } from "./EventsGoalsDeckSection.js";
@@ -171,6 +172,8 @@ const HomePage = forwardRef((props, ref) => {
           <DefaultButton shadowless icon="rulebookWhite" href="/rulebook.pdf" text={t('main page.mechanics.rulebook')}/>
         </div>
       </GsapFadeScrub>
+
+      <CarouselSection />
 
       <div id={`${homeStyles.spotlightContainer}`} className={`${homeStyles.mainpageContainer}`}>
         <CharacterSpotlight invert allCharsButton sectionTitle={t('main page.spotlight.description')} />

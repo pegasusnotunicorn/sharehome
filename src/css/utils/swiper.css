@@ -1,6 +1,21 @@
+.carouselSection{
+  height:50vh;
+  padding: 2em;
+  padding-bottom:4em;
+  position: relative;
+}
+
+.carouselSection > h2{
+  margin-top:0;
+}
+
+.swiper-container{
+  padding-bottom:0;
+}
+
 .swiper-button-next, .swiper-button-prev{
   color:rgba(0,0,0,.45);
-  top:42.5%;
+  top:50%;
 }
 
 .swiper-button-prev{
@@ -8,12 +23,6 @@
 }
 .swiper-button-next{
   right:20px;
-}
-
-.swiper-container {
-  padding-bottom:3em;
-  /* to fix floating clipping */
-  padding-top:5px;
 }
 
 .swiper-pagination {
@@ -26,4 +35,14 @@
 }
 .swiper-pagination-bullet-active {
   background: #DD7373;
+}
+
+.swiper-slide{
+  display:flex;
+  align-items: center;
+}
+
+.carouselImage{
+  width:100%;
+  border-radius:.5em;
 }

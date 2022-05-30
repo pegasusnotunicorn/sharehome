@@ -86,6 +86,9 @@ const english = {
         "howtoplay": "How to play",
         "rulebook": "Read the full rulebook PDF",
       },
+      "photoshoot": {
+        "description": "Photos",
+      },
       "spotlight": {
         "description": "This Week's Spotlight",
       },

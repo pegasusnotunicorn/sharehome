@@ -25,7 +25,7 @@ const HomePage = forwardRef((props, ref) => {
 
   useEffect(() => {
     document.title = "Love, Career & Magic — a SHAREHOME game";
-    
+
     navbarButton.current.onclick = ref.current;
   }, [ref]);
 
@@ -48,8 +48,10 @@ const HomePage = forwardRef((props, ref) => {
       <ParallaxSection />
 
       <div ref={topLogoRef} id={`${homeStyles.heroContainer}`} className={`${homeStyles.mainContentWrapper} noselect`}>
-        <img alt="Box and components of the card game." className={`${homeStyles.heroImage}`} src="/images/mainbox.jpg" />
-        <GsapFadeDelay delay={0} className={`${homeStyles.titleWrapper} ${homeStyles.topOne}`} >
+        <GsapFadeDelay delay={0} className={`${homeStyles.heroImage}`} >
+          <img alt="Box and components of the card game."  src="/images/mainbox.jpg" />
+        </GsapFadeDelay>
+        <GsapFadeDelay delay={1500} className={`${homeStyles.titleWrapper} ${homeStyles.topOne}`} >
           <div className={`${homeStyles.lcmContainer} ${homeStyles.topOne}`}>
             <div className={`${homeStyles.lcmMaskWrapper} floating noselect`}>
               <div className={`${homeStyles.lcmMask}`}></div>

@@ -53,13 +53,11 @@ export const CharacterSpotlight = (props) => {
 
   //list of extra emojis
   let listOfEmojis;
-  if (character.moreemoji){
-    listOfEmojis = character.moreemoji.map((elem, index)=>{
-      return (
-        <DefaultButton key={`emoji${index}`} emoji={elem} inverted shadowless text={t('characters page.emoji')}/>
-      )
-    });
-  }
+  listOfEmojis = character.emoji.map((elem, index)=>{
+    return (
+      <DefaultButton key={`emoji${index}`} emoji={elem} inverted shadowless text={t('characters page.emoji')}/>
+    )
+  });
 
   //hide details button on mobile
   const [showDetails, setShowDetails] = useState(true);
@@ -125,15 +123,9 @@ export const CharacterSpotlight = (props) => {
               </div>
               <div className={`spotlightDetailsSection ${detailsClass}`}>
                 { listOfDescriptions }
-              </div>
-              <div className="discordEmojiWrapper">
-                <DefaultButton emoji={character.emoji} inverted shadowless text={t('characters page.emoji')}/>
-                { character.emoji2 &&
-                  <DefaultButton emoji={character.emoji2} inverted shadowless text={t('characters page.emoji')}/>
-                }
-                { character.moreemoji &&
-                  listOfEmojis
-                }
+                <div className="discordEmojiWrapper">
+                  { listOfEmojis }
+                </div>
               </div>
               <div className={`showDetailsButton is-hidden-desktop`}>
                 <p onClick={()=>{setShowDetails(!showDetails)}}>{ showDetailsButtonText }</p>

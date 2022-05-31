@@ -25,11 +25,7 @@ const HomePage = forwardRef((props, ref) => {
 
   useEffect(() => {
     document.title = "Love, Career & Magic — a SHAREHOME game";
-
-    // //force top of page when refresh
-    // window.onbeforeunload = function () {
-    //   window.scrollTo(0, 0);
-    // }
+    
     navbarButton.current.onclick = ref.current;
   }, [ref]);
 

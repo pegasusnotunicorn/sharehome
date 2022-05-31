@@ -75,18 +75,24 @@ export const NavbarMain = (props) => {
 
       <GsapFadeDelay delay={1500} className="fixedButtonsWrapper noselect">
         <GsapFadeScrub scrub startScreenTop fadeIn >
-          <DefaultButton shadowless icon="email_white" id="emailToggleButtonMobile" className={mailButtonVisibleClass} onClick={toggleMail} text={t('email form.joinbutton')}/>
+          <NavLink to="/" className="navbarFloatLeft noselect"></NavLink>
         </GsapFadeScrub>
-        <button
-          id="navbarOpenClose"
-          className={`hamburger hamburger--slider ${isVisibleClass}`}
-          onClick={toggleNav}
-          type="button"
-          >
-          <span className="hamburger-box">
-            <span className="hamburger-inner"></span>
-          </span>
-        </button>
+        <div className="navbarFloatRight">
+          <GsapFadeScrub scrub startScreenTop fadeIn >
+            <DefaultButton shadowless icon="email_white" id="emailToggleButtonMobile" className={mailButtonVisibleClass} onClick={toggleMail} text={t('email form.joinbutton')}/>
+          </GsapFadeScrub>
+          <button
+            id="navbarOpenClose"
+            className={`hamburger hamburger--slider ${isVisibleClass}`}
+            onClick={toggleNav}
+            type="button"
+            >
+            <span className="hamburger-box">
+              <span className="hamburger-inner"></span>
+            </span>
+          </button>
+        </div>
+
       </GsapFadeDelay>
 
       <div className={`navbarMain ${isVisibleClass}`}>

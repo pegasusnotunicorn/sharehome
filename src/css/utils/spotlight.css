@@ -64,6 +64,9 @@
   .spotlightTopWrapper, .spotlightBottomWrapper {
     flex-direction:column;
   }
+  .spotlightTopWrapper{
+    padding-bottom:0;
+  }
   .spotlightRightWrapper{
     width:100%;
   }
@@ -232,10 +235,6 @@
   max-width:700px;
 }
 
-.spotlightRightTopWrapper > .spotlightDetailsSection:not(:last-child){
-  margin-bottom:1em;
-}
-
 .spotlightHobbiesSection{
   display:flex;
   flex-direction: column;
@@ -275,6 +274,9 @@
   .discordEmojiWrapper{
     margin-top:1em;
   }
+  .characterSpotlightContainer{
+    padding-bottom:2em;
+  }
 }
 
 .discordEmojiWrapper .defaultButton{
@@ -293,7 +295,9 @@
 /* mobile */
 @media only screen and (max-width: 900px) {
   .discordEmojiWrapper .defaultButton{
-    font-size:.75em;
+    font-size:1em;
+    padding-bottom:0.5em;
+    padding-right:0;
   }
 }
 

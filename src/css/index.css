@@ -244,6 +244,9 @@ p, li {
   .subcontentWrapper.margin-top{
     margin-top:5vh;
   }
+  .subcontentWrapper.padding-top{
+    padding-top:5vh;
+  }
 }
 
 .subcontentWrapper.min-width{

@@ -8,6 +8,29 @@
   justify-content: space-between;
   align-items: center;
   z-index:99999;
+  width:100%;
+}
+
+.navbarFloatLeft{
+  display:block;
+  margin-left:20px;
+  width:50px;
+  height:50px;
+  background:url("./images/simplelogoColor.png");
+  background-size: 50px;
+  user-drag: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.navbarFloatLeft:hover{
+  background:url("./images/simplelogoBlack.png");
+  background-size: 50px;
+}
+
+.navbarFloatRight{
+  display:flex;
+  align-items: center;
 }
 
 #emailToggleButtonMobile{
@@ -22,7 +45,7 @@
 }
 
 #navbarOpenClose{
-  height: 47px;
+  height: 42px;
   width: 58px;
   cursor: pointer;
   color: #323232;
@@ -38,19 +61,28 @@
   background:#FFF;
   /* box-shadow:1px 1px 4px 0px #323232; */
   border-radius:4px;
-  margin-left:30px;
+  margin-left:15px;
 }
 
 @media only screen and (max-width: 900px) {
   #emailToggleButtonMobile{
     font-size:.75em;
     padding:5px;
-    padding-left:10px;
-    padding-right:10px;
+    padding-left:5px;
+    padding-right:5px;
   }
   #navbarOpenClose{
     height: 32px;
     width: 54px;
+    margin-left:10px;
+  }
+  .navbarFloatLeft{
+    width:40px;
+    height:40px;
+    background-size: 40px;
+  }
+  .navbarFloatLeft:hover{
+    background-size: 40px;
   }
 }
 

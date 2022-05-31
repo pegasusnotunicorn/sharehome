@@ -10,6 +10,11 @@ import DefaultButton from '../utils/DefaultButton.js';
 
 import '../../css/pages/characterPage.css';
 
+//get a random elem from array
+const randomFromArray = (array) => {
+  return array[Math.floor(Math.random()*array.length)];
+}
+
 //render all characters or a specific one depending on URL
 const CharactersPage = (props) => {
   const { t } = useTranslation();
@@ -22,8 +27,8 @@ const CharactersPage = (props) => {
   //if there is a specifc character name, render that character page
   let chosenCharacter = getSpecificPersonByURL(name);
 
-  let randomCharacter1 = getRandomPerson();
-  let randomCharacter2 = getRandomPerson();
+  let randomCharacter1Emoji = randomFromArray(getRandomPerson().emoji);
+  let randomCharacter2Emoji = randomFromArray(getRandomPerson().emoji);
 
   //redirect to just /characters if typo a non-existant character
   if (window.location.pathname !== "/characters" && (typeof name === "undefined" || !chosenCharacter || chosenCharacter.ignoreInRandom)) {
@@ -41,9 +46,9 @@ const CharactersPage = (props) => {
             <h2 className="subtitle">{t('characters page.title')}</h2>
             <p>{t('characters page.description')}<br></br></p>
             <div className="freeEmojiButtonWrapper">
-              <img src={`/images/emojis/${randomCharacter1.emoji}.png`} alt="Random emoji" title={randomCharacter1.emoji} />
+              <img src={`/images/emojis/${randomCharacter1Emoji}.png`} alt="Random emoji" title={randomCharacter1Emoji} />
               <a href="#emojis">{t("characters page.emojisection")}</a>
-              <img src={`/images/emojis/${randomCharacter2.emoji}.png`} alt="Random emoji" title={randomCharacter2.emoji} />
+              <img src={`/images/emojis/${randomCharacter2Emoji}.png`} alt="Random emoji" title={randomCharacter2Emoji} />
             </div>
           </div>
         </div>

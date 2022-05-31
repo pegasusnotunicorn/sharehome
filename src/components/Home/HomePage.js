@@ -60,7 +60,7 @@ const HomePage = forwardRef((props, ref) => {
         </GsapFadeDelay>
         <GsapFadeDelay delay={1500} className={homeStyles.scrollContainer}>
           <GsapFadeScrub scrub startScreenTop fadeOut >
-            <DefaultButton shadowless icon="email_white" ref={navbarButton} className={homeStyles.topMailButton} text={t('email form.joinbutton')}/>
+            <DefaultButton shadowless icon="email_white" ref={navbarButton} className={`${homeStyles.topMailButton} GTMtoggleEmailButton` } text={t('email form.joinbutton')}/>
           </GsapFadeScrub>
           <GsapFadeScrub scrub startScreenTop fadeOut >
             <div className={homeStyles.scrollHorizontalContainer}>

@@ -88,7 +88,7 @@ const HomePage = forwardRef((props, ref) => {
             <div className={`${homeStyles.descriptionTextWrapper} subcontentWrapper min-width`}>
               <p>{t('main page.description.subtitle2')}</p>
               <p>{t('main page.description.subtitle3')}</p>
-              <DefaultButton shadowless animated icon="arrowRightWhite" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+              <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
             </div>
           </GsapFadeScrub>
         </div>

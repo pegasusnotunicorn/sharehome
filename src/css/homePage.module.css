@@ -60,17 +60,24 @@
 }
 
 .heroImage{
-  height:100vh;
   object-fit: contain;
   position: absolute;
   top:0;
   left:50%;
   transform:translateX(-50%);
   z-index:-1;
+  height:100vh;
 }
 
 .heroImage > img {
   height:100%;
+}
+
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .heroImage > img {
+    width:100%;
+  }
 }
 
 .titleWrapper.topOne {

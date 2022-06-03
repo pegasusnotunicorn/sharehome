@@ -102,9 +102,9 @@ const english = {
       "joinbutton": "Join mailing list",
       "prompt": "Sign up to stay updated on the latest news!",
       "button": "Submit",
-      "promise": "",
+      "promise": "&nbsp;",
       "sending": "Submitting...",
-      "success": "Thank you! We just sent a confirmation email. If you do not receive anything, please double check your email address."
+      "success": "Thank you for signing up!"
     },
 
     "about page":{

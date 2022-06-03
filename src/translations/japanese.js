@@ -102,7 +102,7 @@ const japanese = {
       "joinbutton": "メルマガ登録",
       "prompt": "メルマガ登録で最新ニュースが届く！",
       "button": "登録",
-      "promise": "",
+      "promise": "&nbsp;",
       "sending": "転送中...",
       "success": "ありがとうございます！すぐ確認メールが届きます。届かない場合は再度メールアドレスをご確認して下さい。"
     },

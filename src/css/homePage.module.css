@@ -158,11 +158,10 @@
 
 .scrollContainer {
   position:absolute;
-  top:calc(100vh - 50px - 10em);
+  top:calc(100vh - 275px);
   display:flex;
   flex-direction:column;
   justify-content: space-between;
-  width:200px;
   padding:2em;
 }
 
@@ -279,7 +278,7 @@
     text-align:center;
   }
   .heroImage{
-    top:13.5%;
+    top:15.5%;
     width:140vw;
     height:auto;
   }

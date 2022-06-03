@@ -9,6 +9,10 @@ const url = "https://sharehomethegame.us1.list-manage.com/subscribe/post?u=49228
 
 //form for mailchimp email
 export const EmailForm = (props) => {
+  const hideTitle = props.hideTitle;
+  const isActiveAndDesktop = props.isActiveAndDesktop;
+  const idFromParent = props.id;
+
   return (
     <MailchimpSubscribe
       url={url}
@@ -17,14 +21,16 @@ export const EmailForm = (props) => {
           status={status}
           message={message}
           onValidated={formData => subscribe(formData)}
-          isActiveAndDesktop={props.isActiveAndDesktop}
+          isActiveAndDesktop={isActiveAndDesktop}
+          hideTitle={hideTitle}
+          idFromParent={idFromParent}
         />
       )}
     />
   );
 };
 
-const CustomForm = ({ status, message, onValidated, isActiveAndDesktop }) => {
+const CustomForm = ({ status, message, onValidated, isActiveAndDesktop, hideTitle, idFromParent }) => {
   const { t } = useTranslation();
   let text = t('email form.promise');
   let email;
@@ -56,9 +62,14 @@ const CustomForm = ({ status, message, onValidated, isActiveAndDesktop }) => {
     text = t('email form.sending');
   }
 
+  //submit button text depending on if navbar or main page
+  let submitButtonText = (hideTitle) ? t('email form.joinbutton') : t('email form.button');
+
   return (
-    <div className="emailWrapper">
-      <h1 className="formPrompt">{t('email form.prompt')}</h1>
+    <div id={idFromParent} className="emailWrapper">
+      { !hideTitle &&
+        <h1 className="formPrompt">{t('email form.prompt')}</h1>
+      }
       <p className="forminputText" dangerouslySetInnerHTML={{ __html: text }}></p>
       <form className="formWrapper" onSubmit={(e)=>e.preventDefault()}>
         <input
@@ -68,7 +79,7 @@ const CustomForm = ({ status, message, onValidated, isActiveAndDesktop }) => {
           placeholder="minasan@konbanwa.com"
           required
         />
-        <DefaultButton shadowless icon="forward" onClick={submit} button="submit" className="subscribeButton" text={t('email form.button')} />
+        <DefaultButton shadowless icon="forward" onClick={submit} button="submit" className="subscribeButton" text={submitButtonText} />
       </form>
     </div>
   )

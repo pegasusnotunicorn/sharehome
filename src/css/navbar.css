@@ -341,3 +341,44 @@
 }
 
 /* </editor-fold> */
+
+/* <editor-fold>--------------------------------------MAIN PAGE EMAIL */
+
+#mainpageEmail {
+  background-color:;
+}
+
+#mainpageEmail .formWrapper {
+  flex-direction:row;
+  margin-bottom:2em;
+}
+
+#mainpageEmail .emailInput {
+  width:300px;
+  margin-bottom:0;
+  border:1px solid #222 !important;
+  border-radius: 4px 0 0 4px;
+  padding:10px !important;
+  height:47px;
+}
+
+#mainpageEmail .subscribeButton {
+  padding:10px 15px 10px 10px !important;
+  border-radius: 0 4px 4px 0;
+  width:50%;
+  height:47px;
+}
+
+@media only screen and (max-width: 900px) {
+  #mainpageEmail .emailInput {
+    font-size:.8em;
+    width:50%;
+  }
+
+  #mainpageEmail .subscribeButton {
+    font-size:.8em;
+    width:60%;
+  }
+}
+
+/* </editor-fold> */

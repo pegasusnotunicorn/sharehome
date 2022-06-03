@@ -5,7 +5,7 @@ import i18n from "i18next";
 
 import { GsapFadeDelay, GsapFadeScrub } from "../utils/useGsap.js";
 import ShootingStar from './ShootingStar.js';
-import EmailForm from './EmailForm.js';
+import EmailForm from '../utils/EmailForm.js';
 import useWindowDimensions from '../utils/useWindowDimensions.js';
 import DefaultButton from '../utils/DefaultButton.js';
 
@@ -116,7 +116,7 @@ export const NavbarMain = (props) => {
             <ShootingStar className="rightStar" isActive={visible} orientation="left" delay="2" />
             <ShootingStar className="leftStar" isActive={visible} orientation="up" delay="4"/>
             <ShootingStar className="leftStar" isActive={visible} orientation="down" delay="6"/>
-            <EmailForm isActiveAndDesktop={isActiveAndDesktop}/>
+            <EmailForm hideTitle={false} isActiveAndDesktop={isActiveAndDesktop}/>
           </div>
         </div>
       </div>

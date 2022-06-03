@@ -7,6 +7,7 @@ import { CharacterSpotlight } from '../utils/CharacterSpotlight.js';
 import { GsapFadeDelay, GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";
 import useWindowDimensions from '../utils/useWindowDimensions.js';
 import DefaultButton from '../utils/DefaultButton.js';
+import EmailForm from '../utils/EmailForm.js';
 
 // sections
 import CarouselSection from "./CarouselSection.js";
@@ -26,7 +27,9 @@ const HomePage = forwardRef((props, ref) => {
   useEffect(() => {
     document.title = "Love, Career & Magic — a SHAREHOME game";
 
-    navbarButton.current.onclick = ref.current;
+    if (navbarButton.current) {
+      navbarButton.current.onclick = ref.current;
+    }
   }, [ref]);
 
   //emphasis
@@ -41,6 +44,8 @@ const HomePage = forwardRef((props, ref) => {
   const topLogoRef = useRef(null);
   const scrollToDescription = () => descriptionSectionRef.current.scrollIntoView({behavior: 'smooth'});
   const scrollToTop = () => topLogoRef.current.scrollIntoView({behavior: 'smooth'});
+
+  // <DefaultButton shadowless icon="email_white" ref={navbarButton} className={`${homeStyles.topMailButton} GTMtoggleEmailButton` } text={t('email form.joinbutton')}/>
 
   return (
     <div className="content">
@@ -59,16 +64,14 @@ const HomePage = forwardRef((props, ref) => {
           </div>
         </GsapFadeDelay>
         <GsapFadeDelay delay={1500} className={homeStyles.scrollContainer}>
-          <GsapFadeScrub scrub startScreenTop fadeOut >
-            <DefaultButton shadowless icon="email_white" ref={navbarButton} className={`${homeStyles.topMailButton} GTMtoggleEmailButton` } text={t('email form.joinbutton')}/>
-          </GsapFadeScrub>
+          <EmailForm id="mainpageEmail" hideTitle={true} isActiveAndDesktop={true} />
           <GsapFadeScrub scrub startScreenTop fadeOut >
             <div className={homeStyles.scrollHorizontalContainer}>
               <div id={homeStyles.animatedScroll} className={homeStyles.scrollVerticalContainer}></div>
               <div className={homeStyles.scrollVerticalContainer}></div>
             </div>
             <div className={homeStyles.scrollHorizontalContainer}>
-              <p onClick={scrollToDescription}>Scroll</p>
+              <p onClick={scrollToDescription}>Scroll down</p>
             </div>
           </GsapFadeScrub>
         </GsapFadeDelay>

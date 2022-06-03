@@ -238,6 +238,7 @@
 .spotlightHobbiesSection{
   display:flex;
   flex-direction: column;
+  padding-bottom:1em;
 }
 
 .spotlightHobbiesSection > ul{
@@ -246,7 +247,6 @@
 
 .spotlightDetailsSection .spotlightBold {
   font-family:"Roboto Regular";
-  padding-bottom:0.5em;
 }
 
 .descriptionsList:not(:last-child){

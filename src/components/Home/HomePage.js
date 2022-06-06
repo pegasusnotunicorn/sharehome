@@ -10,7 +10,7 @@ import DefaultButton from '../utils/DefaultButton.js';
 import EmailForm from '../utils/EmailForm.js';
 
 // sections
-import CarouselSection from "./CarouselSection.js";
+import CarouselSection from "../utils/CarouselSection.js";
 import ParallaxSection from "./ParallaxSection.js";
 import CharactersDeckSection from "./CharactersDeckSection.js";
 import { EventsDeckSection, GoalsDeckSection } from "./EventsGoalsDeckSection.js";
@@ -174,7 +174,7 @@ const HomePage = forwardRef((props, ref) => {
         </div>
       </GsapFadeScrub>
 
-      <CarouselSection />
+      <CarouselSection totalPictures={8} directory="/images/photoshoot/game/pictures"/>
 
       <div id={`${homeStyles.spotlightContainer}`} className={`${homeStyles.mainpageContainer}`}>
         <CharacterSpotlight invert allCharsButton sectionTitle={t('main page.spotlight.description')} />

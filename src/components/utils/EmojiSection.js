@@ -77,7 +77,7 @@ export const EmojiSection = (props) => {
             <DefaultButton href="https://discord.com/invite/nv89cRgEsS" className="emojiPackDownloadButton" icon="discordWhite" shadowless text={t('characters page.discordjoin')}/>
           </div>
         </GsapFadeScrub>
-        <GsapFadeScrub fadeIn>
+        <GsapFadeScrub fadeIn scrub>
           <div className="emojisWrapper">
             { allEmojis }
           </div>

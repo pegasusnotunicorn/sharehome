@@ -19,11 +19,11 @@ import useWindowDimensions from '../utils/useWindowDimensions.js';
 SwiperCore.use([Navigation, Pagination, A11y, Autoplay]);
 
 //return a single slide
-const getPictureSlide = (index) => {
+const getPictureSlide = (index, directory) => {
   return (
     <SwiperSlide key={`carouselImage${index}`}>
-      <a rel="noreferrer" target="_blank" href={`/images/photoshoot/pictures${index}.jpg`}>
-        <img alt={`Photoshoot ${index}`} className="carouselImage" src={`/images/photoshoot/pictures${index}.jpg`} />
+      <a rel="noreferrer" target="_blank" href={`${directory}${index}.jpg`}>
+        <img alt={`Photoshoot ${index}`} className="carouselImage" src={`${directory}${index}.jpg`} />
       </a>
     </SwiperSlide>
   )
@@ -34,6 +34,7 @@ export const CarouselSection = (props) => {
   const { width} = useWindowDimensions();
 
   let cardsPerView = (width >= 1400) ? 3 : (width >= 900) ? 2 : 1;
+  let directory = props.directory;
 
   let swiperProps = {
     modules:[Navigation, Pagination, A11y, Autoplay],
@@ -55,10 +56,15 @@ export const CarouselSection = (props) => {
   }
 
   //get all photos in /images/photoshoot (total of 8)
-  let totalPictures = 8;
+  let totalPictures = props.totalPictures;
   let allPictures = [];
   for (let x = 1; x <= totalPictures; x++){
-    allPictures.push(getPictureSlide(x));
+    allPictures.push(getPictureSlide(x, directory));
+  }
+
+  //randomize array
+  if (props.random){
+    allPictures.sort((a, b) => 0.5 - Math.random());
   }
 
   return (

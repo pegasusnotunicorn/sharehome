@@ -6,6 +6,7 @@ import { getAllCharacters, getSpecificPersonByURL, getRandomPerson } from '../Ch
 import { CharacterSpotlight } from '../utils/CharacterSpotlight.js';
 import { GsapFadeScrub } from "../utils/useGsap.js";
 import { EmojiSection } from '../utils/EmojiSection.js';
+import CarouselSection from "../utils/CarouselSection.js";
 import DefaultButton from '../utils/DefaultButton.js';
 
 import '../../css/pages/characterPage.css';
@@ -44,7 +45,7 @@ const CharactersPage = (props) => {
         <div className="subcontentWrapper margin-top min-width">
           <div className="characterContent">
             <h2 className="subtitle">{t('characters page.title')}</h2>
-            <p>{t('characters page.description')}<br></br></p>
+            <p>{t('characters page.description')} <a href="https://www.instagram.com/carofranklyn/?hl=en">{t('characters page.credit')}</a><br></br></p>
             <div className="freeEmojiButtonWrapper">
               <img src={`/images/emojis/${randomCharacter1Emoji}.png`} alt="Random emoji" title={randomCharacter1Emoji} />
               <a href="#emojis">{t("characters page.emojisection")}</a>
@@ -56,12 +57,7 @@ const CharactersPage = (props) => {
           { characterContent }
         </GsapFadeScrub>
         <EmojiSection />
-        <GsapFadeScrub fadeIn className="fadeInTextWrapper">
-          <div className="subcontentWrapper characterContent">
-            <h3 className="moretocome">{t('characters page.moretocome')}</h3>
-            <p><a href="https://www.instagram.com/carofranklyn/?hl=en">{t('characters page.credit')}</a></p>
-          </div>
-        </GsapFadeScrub>
+        <CarouselSection random totalPictures={15} directory="/images/photoshoot/characters/character"/>
       </div>
     )
   }

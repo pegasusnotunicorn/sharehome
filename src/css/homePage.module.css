@@ -276,12 +276,16 @@
   }
   .lcmContainer.topOne{
     width:350px !important;
-    height:125%;
+    height:100%;
+    padding-top:0.5em;
   }
   .sharehomegame{
     width: 100% !important;
     margin-top: 25px !important;
     text-align:center;
+  }
+  .mobileTagLine{
+    margin-top:1em !important;
   }
   .heroImage{
     top:20%;
@@ -295,26 +299,29 @@
     padding:0;
     padding-top:2em;
     width:calc(100vw - 2em);
+    top:calc(100vh - 275px);
   }
 }
 
 /* low height mobile */
 @media only screen and (max-height: 750px) {
   .lcmContainer{
-    width:300px !important;
+    width:250px !important;
   }
   .lcmContainer.topOne{
     width:300px !important;
     height:100%;
-    padding-top:1em;
-  }
-  .mobileTagLine{
-    margin-top:2em !important;
   }
   .heroImage{
-    top:18%;
+    top:15.5%;
     width:140vw;
     height:auto;
+  }
+  .scrollHorizontalContainer p{
+    font-size:0.65em;
+  }
+  .scrollContainer{
+    top:calc(100vh - 260px) !important;
   }
 }
 

@@ -382,6 +382,11 @@
     width:60%;
     height:35px;
   }
+
+  .forminputText{
+    font-size:.65em;
+    margin-bottom:.25em;
+  }
 }
 
 /* low height mobile */

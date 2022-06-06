@@ -54,13 +54,14 @@ const HomePage = forwardRef((props, ref) => {
 
       <div ref={topLogoRef} id={`${homeStyles.heroContainer}`} className={`${homeStyles.mainContentWrapper} noselect`}>
         <GsapFadeDelay delay={0} className={`${homeStyles.heroImage}`} >
-          <img alt="Box and components of the card game."  src="/images/mainbox.jpg" />
+          <img alt="Box and components of the card game." src="/images/mainbox.jpg" />
         </GsapFadeDelay>
         <GsapFadeDelay delay={1500} className={`${homeStyles.titleWrapper} ${homeStyles.topOne}`} >
-          <div className={`${homeStyles.lcmContainer} ${homeStyles.topOne}`}>
+          <div onClick={scrollToDescription} className={`${homeStyles.lcmContainer} ${homeStyles.topOne}`}>
             <div className={`${homeStyles.lcmMaskWrapper} floating noselect`}>
               <div className={`${homeStyles.lcmMask}`}></div>
             </div>
+            <h4 className={`${homeStyles.mobileTagLine} is-hidden-desktop`}>{t('main page.mobile tag line')}</h4>
           </div>
         </GsapFadeDelay>
         <GsapFadeDelay delay={1500} className={homeStyles.scrollContainer}>
@@ -71,7 +72,7 @@ const HomePage = forwardRef((props, ref) => {
               <div className={homeStyles.scrollVerticalContainer}></div>
             </div>
             <div className={homeStyles.scrollHorizontalContainer}>
-              <p onClick={scrollToDescription}>Scroll down</p>
+              <p onClick={scrollToDescription} className="noselect">Scroll down to learn more</p>
             </div>
           </GsapFadeScrub>
         </GsapFadeDelay>
@@ -91,6 +92,7 @@ const HomePage = forwardRef((props, ref) => {
             <div className={`${homeStyles.descriptionTextWrapper} subcontentWrapper min-width`}>
               <p>{t('main page.description.subtitle2')}</p>
               <p>{t('main page.description.subtitle3')}</p>
+              <p>{t('main page.description.subtitle4')}</p>
               <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
             </div>
           </GsapFadeScrub>

@@ -149,6 +149,7 @@ p, li {
   .defaultButton{
     margin:auto;
     width:100%;
+    font-size:.85em;
   }
 }
 

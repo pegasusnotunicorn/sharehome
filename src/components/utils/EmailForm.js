@@ -76,7 +76,7 @@ const CustomForm = ({ status, message, onValidated, isActiveAndDesktop, hideTitl
           ref={node => (email = node)}
           type="email"
           className="emailInput"
-          placeholder="minasan@konbanwa.com"
+          placeholder="Enter your email"
           required
         />
         <DefaultButton shadowless icon="forward" onClick={submit} button="submit" className="subscribeButton" text={submitButtonText} />

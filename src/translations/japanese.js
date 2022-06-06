@@ -43,6 +43,7 @@ const japanese = {
     },
 
     "main page":{
+      "mobile tag line": "異世界のリアリティ番組に出ちゃった！\n\nザ・カードゲーム",
       "hero": {
         "subtitle": "<span class='fantasyEmphasis'>異世界</span>の中のリアリティ番組を\nベースにしたカードゲーム",
         "player count": "3〜20+ 人用",
@@ -51,6 +52,7 @@ const japanese = {
       "description": {
         "subtitle2": "「Love, Career & Magic」はファンタジアの世界に住む見ず知らずの6人が共同する生活をただただ記録したリアリティ番組「SHAREHOME」をベースにしたカードゲームです。",
         "subtitle3": "番組のキャラクターになって名シーンを再現したり事件に巻き込まれたり！ワクワクするゲームにぜひ試してみてください。",
+        "subtitle4": "スクロールしてもっと詳しく！",
       },
       "how to play": {
         "description" : "ゲームの遊び方",

@@ -141,6 +141,16 @@
   width: calc(100% - 4em);
 }
 
+@media only screen and (max-width: 900px) {
+  .eventGoalBottomTextWrapper{
+    padding-top:1em !important;
+    padding-bottom:1em !important;
+  }
+  .eventGoalTextWrapper{
+    font-size: 1.25em !important;
+  }
+}
+
 .eventGoalBottomTextWrapper.yellowBackground{
   color: #323232;
 }

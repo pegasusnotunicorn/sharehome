@@ -321,7 +321,7 @@
 
 .emailInput {
   padding:1em;
-  background:transparent;
+  background:white;
   font-family:"Roboto Light", 'NotoSansJP Light';
   font-size:1em;
   margin-bottom:2em;
@@ -350,7 +350,7 @@
 
 #mainpageEmail .formWrapper {
   flex-direction:row;
-  margin-bottom:2em;
+  margin-bottom:1em;
 }
 
 #mainpageEmail .emailInput {
@@ -373,11 +373,27 @@
   #mainpageEmail .emailInput {
     font-size:.8em;
     width:50%;
+    height:35px;
+    text-align: left;
   }
 
   #mainpageEmail .subscribeButton {
     font-size:.8em;
     width:60%;
+    height:35px;
+  }
+}
+
+/* low height mobile */
+@media only screen and (max-height: 750px) {
+  #mainpageEmail .emailInput {
+    font-size:.65em;
+    width:90%;
+  }
+
+  #mainpageEmail .subscribeButton {
+    font-size:.65em;
+    padding:5px 10px 5px 5px !important;
   }
 }
 

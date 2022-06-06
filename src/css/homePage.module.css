@@ -36,7 +36,7 @@
 /* mobile */
 @media only screen and (max-width: 900px) {
   .mainpageContainer h1{
-    font-size:2em;
+    font-size:1.5em;
     line-height: 125%;
   }
 
@@ -158,7 +158,7 @@
 
 .scrollContainer {
   position:absolute;
-  top:calc(100vh - 275px);
+  top:calc(100vh - 250px);
   display:flex;
   flex-direction:column;
   justify-content: space-between;
@@ -192,9 +192,15 @@
 
 .scrollHorizontalContainer p{
   margin-bottom:0;
-  font-size:0.65em;
+  font-size:0.85em;
   line-height: 100%;
   cursor:pointer;
+}
+
+.mobileTagLine{
+  white-space: pre;
+  line-height:70%;
+  margin-top:0;
 }
 
 #animatedScroll {
@@ -269,7 +275,7 @@
     width:500px !important;
   }
   .lcmContainer.topOne{
-    width:400px !important;
+    width:350px !important;
     height:125%;
   }
   .sharehomegame{
@@ -278,12 +284,37 @@
     text-align:center;
   }
   .heroImage{
-    top:15.5%;
+    top:20%;
     width:140vw;
     height:auto;
   }
   .titleWrapper.topOne {
     margin-left:0%;
+  }
+  .scrollContainer{
+    padding:0;
+    padding-top:2em;
+    width:calc(100vw - 2em);
+  }
+}
+
+/* low height mobile */
+@media only screen and (max-height: 750px) {
+  .lcmContainer{
+    width:300px !important;
+  }
+  .lcmContainer.topOne{
+    width:300px !important;
+    height:100%;
+    padding-top:1em;
+  }
+  .mobileTagLine{
+    margin-top:2em !important;
+  }
+  .heroImage{
+    top:18%;
+    width:140vw;
+    height:auto;
   }
 }
 
@@ -327,6 +358,16 @@
   white-space: pre-line;
   font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
   margin:0 !important;
+}
+
+/* low height mobile */
+@media only screen and (max-width: 900px) {
+  .subtitle{
+    font-size: 1.5em !important;
+  }
+  .gameDetails{
+    font-size:1em !important;
+  }
 }
 
 .gameDetails{

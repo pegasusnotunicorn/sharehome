@@ -93,6 +93,7 @@ const HomePage = forwardRef((props, ref) => {
               <p>{t('main page.description.subtitle2')}</p>
               <p>{t('main page.description.subtitle3')}</p>
               <EmailForm className="mainpageEmail" hideTitle />
+              <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
             </div>
           </GsapFadeScrub>
         </div>

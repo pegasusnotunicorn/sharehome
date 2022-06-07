@@ -285,7 +285,7 @@
     text-align:center;
   }
   .mobileTagLine{
-    margin-top:1em !important;
+    margin-top:2em !important;
   }
   .heroImage{
     top:20%;
@@ -298,7 +298,7 @@
   .scrollContainer{
     padding:0;
     padding-top:2em;
-    width:calc(100vw - 2em);
+    width:calc(100vw - 4em);
     top:calc(100vh - 275px);
   }
 }
@@ -316,6 +316,9 @@
     top:15.5%;
     width:140vw;
     height:auto;
+  }
+  .mobileTagLine{
+    margin-top:1em !important;
   }
   .scrollHorizontalContainer p{
     font-size:0.65em;

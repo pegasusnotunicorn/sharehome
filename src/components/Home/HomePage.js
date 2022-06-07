@@ -72,7 +72,7 @@ const HomePage = forwardRef((props, ref) => {
               <div className={homeStyles.scrollVerticalContainer}></div>
             </div>
             <div className={homeStyles.scrollHorizontalContainer}>
-              <p onClick={scrollToDescription} className="noselect">Scroll down to learn more</p>
+              <p onClick={scrollToDescription} className="noselect">Scroll down for free stuff!</p>
             </div>
           </GsapFadeScrub>
         </GsapFadeDelay>

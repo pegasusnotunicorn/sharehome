@@ -244,7 +244,7 @@ const japanese = {
       "credit": "イラストレーターCarolyn Frank",
       "title": "キャラクター紹介",
       "description": "「Love, Career & Magic」にはユニークでどこか変わったハウスメンバーがたくさんいます！面白そうなキャラクターをタップして詳しく見てください！",
-      "moretocome": "毎週新キャラ一人が紹介されます！",
+      "moretocome": "オークのハッカー、ドラゴンのシェフ、魔法使い等等！",
       "race" : "種族",
       "job" : "職業",
       "age" : "年齢",

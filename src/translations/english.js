@@ -61,7 +61,7 @@ const english = {
       "character": {
         "description": "Choose one of 25 unique characters to play as!",
         "click me": "CLICK ME",
-        "moretocome": "More characters will be added every week!",
+        "moretocome": "Orc hackers, dragon chefs, troll lawyers and many many more!",
         "clicktoseemore" : "View all characters",
       },
       "events": {

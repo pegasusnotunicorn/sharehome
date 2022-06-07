@@ -7,6 +7,11 @@
   justify-content: center;
 }
 
+.characterContent .defaultButton {
+  margin:auto;
+  margin-bottom:2em;
+}
+
 .moretocome{
   font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
   font-size:2em;

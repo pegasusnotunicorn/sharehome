@@ -32,6 +32,12 @@ const english = {
       "task 5": "Click here to follow on Twitter.",
     },
 
+    "artbook page": {
+      "title": "Free digital artbook!",
+      "description": "Thank you so much for signing up for my newsletter. Here is the free digital artbook!",
+      "button": "Download Artbook",
+    },
+
     "navbar":{
       "home":"Home",
       "how to play": "How to play",
@@ -101,10 +107,10 @@ const english = {
     },
 
     "email form":{
-      "joinbutton": "Join mailing list",
-      "prompt": "Sign up to stay updated on the latest news!",
-      "button": "Submit",
-      "promise": "&nbsp;",
+      "joinbutton": "Free Artbook!",
+      "prompt": "Stay updated on the latest news!",
+      "button": "Free Artbook!",
+      "promise": "Sign up now to get a free digital artbook!",
       "sending": "Submitting...",
       "success": "Thank you for signing up!"
     },

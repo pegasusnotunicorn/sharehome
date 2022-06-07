@@ -11,7 +11,7 @@ const url = "https://sharehomethegame.us1.list-manage.com/subscribe/post?u=49228
 export const EmailForm = (props) => {
   const hideTitle = props.hideTitle;
   const isActiveAndDesktop = props.isActiveAndDesktop;
-  const idFromParent = props.id;
+  const classFromParent = props.className;
 
   return (
     <MailchimpSubscribe
@@ -23,14 +23,14 @@ export const EmailForm = (props) => {
           onValidated={formData => subscribe(formData)}
           isActiveAndDesktop={isActiveAndDesktop}
           hideTitle={hideTitle}
-          idFromParent={idFromParent}
+          classFromParent={classFromParent}
         />
       )}
     />
   );
 };
 
-const CustomForm = ({ status, message, onValidated, isActiveAndDesktop, hideTitle, idFromParent }) => {
+const CustomForm = ({ status, message, onValidated, isActiveAndDesktop, hideTitle, classFromParent}) => {
   const { t } = useTranslation();
   let text = t('email form.promise');
   let email;
@@ -66,7 +66,7 @@ const CustomForm = ({ status, message, onValidated, isActiveAndDesktop, hideTitl
   let submitButtonText = (hideTitle) ? t('email form.joinbutton') : t('email form.button');
 
   return (
-    <div id={idFromParent} className="emailWrapper">
+    <div className={`emailWrapper ${classFromParent}`}>
       { !hideTitle &&
         <h1 className="formPrompt">{t('email form.prompt')}</h1>
       }
@@ -79,7 +79,7 @@ const CustomForm = ({ status, message, onValidated, isActiveAndDesktop, hideTitl
           placeholder="Enter your email"
           required
         />
-        <DefaultButton shadowless icon="forward" onClick={submit} button="submit" className="subscribeButton" text={submitButtonText} />
+        <DefaultButton animated shadowless icon="forward" onClick={submit} button="submit" className="subscribeButton" text={submitButtonText} />
       </form>
     </div>
   )

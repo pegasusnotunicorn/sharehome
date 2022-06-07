@@ -65,14 +65,14 @@ const HomePage = forwardRef((props, ref) => {
           </div>
         </GsapFadeDelay>
         <GsapFadeDelay delay={1500} className={homeStyles.scrollContainer}>
-          <EmailForm id="mainpageEmail" hideTitle={true} isActiveAndDesktop={true} />
+          <EmailForm className="mainpageEmail" hideTitle isActiveAndDesktop />
           <GsapFadeScrub scrub startScreenTop fadeOut >
             <div className={homeStyles.scrollHorizontalContainer}>
               <div id={homeStyles.animatedScroll} className={homeStyles.scrollVerticalContainer}></div>
               <div className={homeStyles.scrollVerticalContainer}></div>
             </div>
             <div className={homeStyles.scrollHorizontalContainer}>
-              <p onClick={scrollToDescription} className="noselect">Scroll down for free stuff!</p>
+              <p onClick={scrollToDescription} className="noselect">Scroll to learn how to play!</p>
             </div>
           </GsapFadeScrub>
         </GsapFadeDelay>
@@ -92,8 +92,7 @@ const HomePage = forwardRef((props, ref) => {
             <div className={`${homeStyles.descriptionTextWrapper} subcontentWrapper min-width`}>
               <p>{t('main page.description.subtitle2')}</p>
               <p>{t('main page.description.subtitle3')}</p>
-              <p>{t('main page.description.subtitle4')}</p>
-              <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+              <EmailForm className="mainpageEmail" hideTitle />
             </div>
           </GsapFadeScrub>
         </div>

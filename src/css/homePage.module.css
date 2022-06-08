@@ -112,24 +112,36 @@
   width:250px;
 }
 
+.titleWrapper.botOne {
+  height:500px;
+  width:500px;
+}
+@media only screen and (max-width: 900px) {
+  .titleWrapper.botOne {
+    width:350px !important;
+    height:350px !important;
+  }
+}
+
+
 /* mobile */
 @media only screen and (max-width: 900px) {
-  .titleWrapper {
+  .titleWrapper:not(.botOne) {
     position:static !important;
     height:100% !important;
   }
 }
 
 /* mobile widths */
-@media only screen and (min-width: 800px) and (max-width: 900px) {.titleWrapper {width:250px !important;}}
-@media only screen and (min-width: 700px) and (max-width: 800px) {.titleWrapper {width:300px !important;}}
-@media only screen and (max-width: 700px) {.titleWrapper {width:350px !important;}}
+@media only screen and (min-width: 800px) and (max-width: 900px) {.titleWrapper:not(.botOne) {width:250px !important;}}
+@media only screen and (min-width: 700px) and (max-width: 800px) {.titleWrapper:not(.botOne) {width:300px !important;}}
+@media only screen and (max-width: 700px) {.titleWrapper:not(.botOne) {width:350px !important;}}
 
 /* low height */
 
-@media only screen and (min-height: 800px) and (max-height: 900px) {.titleWrapper {width:250px !important;}}
-@media only screen and (min-height: 650px) and (max-height: 800px) {.titleWrapper {width:150px !important;}}
-@media only screen and (max-height: 650px) {.titleWrapper {display:none;} .mobileTagLine{padding-top:5vh;padding-bottom:2.5vh;}}
+@media only screen and (min-height: 800px) and (max-height: 900px) {.titleWrapper:not(.botOne) {width:250px !important;}}
+@media only screen and (min-height: 650px) and (max-height: 800px) {.titleWrapper:not(.botOne) {width:150px !important;}}
+@media only screen and (max-height: 650px) {.titleWrapper:not(.botOne) {display:none;} .mobileTagLine{padding-top:5vh;padding-bottom:2.5vh;}}
 
 .lcmMaskWrapper{
   -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
@@ -182,6 +194,7 @@
   flex-direction:column;
   justify-content: space-between;
   padding:2em;
+  padding-bottom:calc(2em + 50px);
 }
 
 .scrollContainer > div{
@@ -742,7 +755,11 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding-top:15vh;
+  padding-top:5vh;
+}
+
+#finalContainer > div{
+  margin-bottom:10vh;
 }
 
 .finalButtonsWrapper{
@@ -769,7 +786,6 @@
 
 .finalButtonsWrapper > a, .finalButtonsWrapper > div{
   font-size:1em;
-  /* color:#FFF !important; */
 }
 
 /* </editor-fold> */

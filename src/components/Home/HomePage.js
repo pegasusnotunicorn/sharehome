@@ -202,7 +202,7 @@ const HomePage = forwardRef((props, ref) => {
           </div>
         </GsapFadeScrub>
         <div onClick={scrollToTop} className={`${homeStyles.titleWrapper} ${homeStyles.botOne}`} >
-          <div className={`${homeStyles.lcmMaskWrapper} floating noselect`}>
+          <div  className={`${homeStyles.lcmMaskWrapper} floating noselect`}>
             <div className={`${homeStyles.lcmMask}`}></div>
           </div>
         </div>

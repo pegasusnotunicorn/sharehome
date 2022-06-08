@@ -56,8 +56,8 @@ const english = {
         "play time": "20+ minutes",
       },
       "description": {
-        "subtitle2": "Welcome to SHAREHOME, the reality TV show that documents the everyday lives of six mythical strangers living together.",
-        "subtitle3": "Love, Career & Magic is a card game that lets you relive your favorite scenes by playing as the characters from the show!",
+        "subtitle2": "Welcome to SHAREHOME! A reality TV show that documents the lives of six mythical creatures living together.",
+        "subtitle3": "Love, Career & Magic is a party game where you fall in love, stir up drama, or fulfill secret goals!",
         "subtitle4": "Keep scrolling to learn more!",
       },
       "how to play": {
@@ -67,7 +67,7 @@ const english = {
       "character": {
         "description": "Choose one of 25 unique characters to play as!",
         "click me": "CLICK ME",
-        "moretocome": "Orc hackers, dragon chefs, troll lawyers and many many more!",
+        "moretocome": "Orc hackers, dragon chefs, troll lawyers and many more!",
         "clicktoseemore" : "View all characters",
       },
       "events": {
@@ -107,10 +107,10 @@ const english = {
     },
 
     "email form":{
-      "joinbutton": "Free Artbook!",
+      "joinbutton": "Sign up!",
       "prompt": "Stay updated on the latest news!",
-      "button": "Free Artbook!",
-      "promise": "Sign up now to get a free digital artbook!",
+      "button": "Sign up!",
+      "promise": "Sign up now to get a <span class='is-bold'>free digital artbook</span> and to be notified when we launch!",
       "sending": "Submitting...",
       "success": "Thank you for signing up!"
     },

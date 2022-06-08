@@ -155,7 +155,7 @@ const ParallaxCards = (props) => {
         tlFirst.killTweensOf(cardRefs.current[index]);
 
         //one missing card
-        if (missing && index === missingCardIndex){
+        if (missing && index === missingCardIndex && width > 900){
           tlFirst.fromTo(cardRefs.current[index], {
             y:"-400%",
             x:offscreenX,

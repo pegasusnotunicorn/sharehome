@@ -61,7 +61,7 @@ export const EmojiSection = (props) => {
 
   // <DefaultButton href="/allEmojis.zip" download="allEmojis.zip" className="emojiPackDownloadButton" icon="download" inverted borderedBlack shadowless text={t('characters page.emojiall')}/>
   return (
-    <div id="emojis" className="emojiSection">
+    <div id="emojis" className={`emojiSection ${props.className}`}>
       <div className="subcontentWrapper padding-top min-width">
         <GsapFadeScrub fadeIn className="fadeInTextWrapper">
           <div className="characterContent emojiDescriptionWrapper">

@@ -68,12 +68,10 @@ export const CarouselSection = (props) => {
   }
 
   return (
-    <GsapFadeScrub fadeIn scrub >
-      <div className="carouselSection">
-        <Swiper {...swiperProps} >
-          { allPictures }
-        </Swiper>
-      </div>
+    <GsapFadeScrub fadeIn scrub className={`carouselSection ${props.className}`} >
+      <Swiper {...swiperProps} >
+        { allPictures }
+      </Swiper>
     </GsapFadeScrub>
   );
 }

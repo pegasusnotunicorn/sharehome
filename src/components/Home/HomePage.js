@@ -46,6 +46,7 @@ const HomePage = forwardRef((props, ref) => {
   const scrollToTop = () => topLogoRef.current.scrollIntoView({behavior: 'smooth'});
 
   // <DefaultButton shadowless icon="email_white" ref={navbarButton} className={`${homeStyles.topMailButton} GTMtoggleEmailButton` } text={t('email form.joinbutton')}/>
+  // <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
 
   return (
     <div className="content">
@@ -53,29 +54,32 @@ const HomePage = forwardRef((props, ref) => {
       <ParallaxSection />
 
       <div ref={topLogoRef} id={`${homeStyles.heroContainer}`} className={`${homeStyles.mainContentWrapper} noselect`}>
-        <GsapFadeDelay delay={0} className={`${homeStyles.heroImage}`} >
-          <img alt="Box and components of the card game." src="/images/mainbox.jpg" />
-        </GsapFadeDelay>
-        <GsapFadeDelay delay={1500} className={`${homeStyles.titleWrapper} ${homeStyles.topOne}`} >
-          <div onClick={scrollToDescription} className={`${homeStyles.lcmContainer} ${homeStyles.topOne}`}>
-            <div className={`${homeStyles.lcmMaskWrapper} floating noselect`}>
+        <div className={homeStyles.screenHeight}>
+          <GsapFadeDelay delay={1500} className={`${homeStyles.titleWrapper} ${homeStyles.topOne}`} >
+            <div onClick={scrollToDescription} className={`${homeStyles.lcmMaskWrapper} noselect`}>
               <div className={`${homeStyles.lcmMask}`}></div>
             </div>
-            <h4 className={`${homeStyles.mobileTagLine} is-hidden-desktop`}>{t('main page.mobile tag line')}</h4>
-          </div>
-        </GsapFadeDelay>
-        <GsapFadeDelay delay={1500} className={homeStyles.scrollContainer}>
-          <EmailForm className="mainpageEmail" hideTitle isActiveAndDesktop />
-          <GsapFadeScrub scrub startScreenTop fadeOut >
-            <div className={homeStyles.scrollHorizontalContainer}>
-              <div id={homeStyles.animatedScroll} className={homeStyles.scrollVerticalContainer}></div>
-              <div className={homeStyles.scrollVerticalContainer}></div>
-            </div>
-            <div className={homeStyles.scrollHorizontalContainer}>
-              <p onClick={scrollToDescription} className="noselect">Scroll to learn how to play!</p>
-            </div>
-          </GsapFadeScrub>
-        </GsapFadeDelay>
+          </GsapFadeDelay>
+          <GsapFadeDelay delay={1500}>
+            <h4 onClick={scrollToDescription} className={`${homeStyles.mobileTagLine} is-hidden-desktop`}>{t('main page.mobile tag line')}</h4>
+          </GsapFadeDelay>
+          <GsapFadeDelay delay={0} className={`${homeStyles.heroImage}`} >
+            <img onClick={scrollToDescription} alt="Box and components of the card game." src="/images/mainbox.jpg" />
+          </GsapFadeDelay>
+          <GsapFadeDelay delay={1500} className={homeStyles.scrollContainer}>
+            <EmailForm className="mainpageEmail" hideTitle isActiveAndDesktop />
+            <GsapFadeScrub scrub startScreenTop fadeOut >
+              <div className={homeStyles.scrollHorizontalContainer}>
+                <div id={homeStyles.animatedScroll} className={homeStyles.scrollVerticalContainer}></div>
+                <div className={homeStyles.scrollVerticalContainer}></div>
+              </div>
+              <div className={homeStyles.scrollHorizontalContainer}>
+                <p onClick={scrollToDescription} className="noselect">Scroll to learn how to play!</p>
+              </div>
+            </GsapFadeScrub>
+          </GsapFadeDelay>
+        </div>
+        <div className={homeStyles.screenHeight}></div>
       </div>
 
       <div ref={descriptionSectionRef} id={`${homeStyles.descriptionContainer}`} className={`${homeStyles.mainpageContainer}`}>
@@ -90,14 +94,27 @@ const HomePage = forwardRef((props, ref) => {
                 />
             </div>
             <div className={`${homeStyles.descriptionTextWrapper} subcontentWrapper min-width`}>
-              <p>{t('main page.description.subtitle2')}</p>
               <p>{t('main page.description.subtitle3')}</p>
-              <EmailForm className="mainpageEmail" hideTitle />
-              <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+              <EmailForm className="mainpageEmail secondMainpageEmail" hideTitle />
             </div>
           </GsapFadeScrub>
         </div>
       </div>
+
+      <div id={`${homeStyles.mechanicsContainer}`} className={`${homeStyles.mainpageContainer}`}>
+        <GsapFadeScrub fadeIn>
+          <h1>{t('main page.mechanics.description')}</h1>
+        </GsapFadeScrub>
+        <div className={`${homeStyles.mechanicsWrapper}`}>
+          <GsapFadeScrub fadeIn><img src="/images/illustrations/laughing.png" alt="Laughing icon" />{t('main page.mechanics.laughing')}</GsapFadeScrub>
+          <GsapFadeScrub fadeIn><img src="/images/illustrations/party.png" alt="Party icon" />{t('main page.mechanics.party')}</GsapFadeScrub>
+          <GsapFadeScrub fadeIn><img src="/images/illustrations/stories.png" alt="Stories icon" />{t('main page.mechanics.stories')}</GsapFadeScrub>
+          <GsapFadeScrub fadeIn><img src="/images/illustrations/improv.png" alt="Improv icon" />{t('main page.mechanics.improv')}</GsapFadeScrub>
+          <GsapFadeScrub fadeIn><img src="/images/illustrations/acting.png" alt="Roleplay icon" />{t('main page.mechanics.roleplay')}</GsapFadeScrub>
+        </div>
+      </div>
+
+      <CarouselSection className={homeStyles.mainpageCarousel} totalPictures={8} directory="/images/photoshoot/game/pictures"/>
 
       <GsapFadeScrub fadeIn scrubStartBot id={`${homeStyles.howToPlay}`} className={`${homeStyles.mainpageContainer}`}>
         <h1>{t('main page.how to play.description')}</h1>
@@ -113,7 +130,7 @@ const HomePage = forwardRef((props, ref) => {
               <p className="is-hidden-mobile">{t('main page.character.click me')}</p>
             </GsapWiggle>
             <h1>{t('main page.character.description')}</h1>
-            <h3>{t('main page.character.moretocome')}</h3>
+            <p>{t('main page.character.moretocome')}</p>
             <div className={`${homeStyles.buttonWrapper}`}>
               <DefaultButton shadowless icon="people_white" navlink="/characters" text={t('main page.character.clicktoseemore')}/>
             </div>
@@ -134,7 +151,7 @@ const HomePage = forwardRef((props, ref) => {
           </GsapWiggle>
           <div className={`${homeStyles.eventsTextContainer}`}>
             <h1>{t('main page.events.description')}</h1>
-            <h3>{t('main page.events.subdescription')}</h3>
+            <p>{t('main page.events.subdescription')}</p>
           </div>
         </GsapFadeScrub>
         <EventsDeckSection />
@@ -156,33 +173,25 @@ const HomePage = forwardRef((props, ref) => {
           </GsapWiggle>
           <div className={`${homeStyles.goalsTextContainer}`}>
             <h1>{t('main page.goals.description')}</h1>
-            <h3>{t('main page.goals.subdescription')}</h3>
+            <p>{t('main page.goals.subdescription')}</p>
           </div>
         </GsapFadeScrub>
       </div>
 
-      <GsapFadeScrub fadeIn id={`${homeStyles.mechanicsContainer}`} className={`${homeStyles.mainpageContainer}`}>
-        <h1>{t('main page.mechanics.description')}</h1>
-        <div className={`${homeStyles.mechanicsWrapper}`}>
-          <div><img src="/images/illustrations/laughing.png" alt="Laughing icon" />{t('main page.mechanics.laughing')}</div>
-          <div><img src="/images/illustrations/party.png" alt="Party icon" />{t('main page.mechanics.party')}</div>
-          <div><img src="/images/illustrations/stories.png" alt="Stories icon" />{t('main page.mechanics.stories')}</div>
-          <div><img src="/images/illustrations/improv.png" alt="Improv icon" />{t('main page.mechanics.improv')}</div>
-          <div><img src="/images/illustrations/acting.png" alt="Roleplay icon" />{t('main page.mechanics.roleplay')}</div>
-        </div>
-        <div className={`${homeStyles.rulebookWrapper}`}>
-          <DefaultButton inverted borderedBlack shadowless icon="faq" navlink="/howtoplay" text={t('main page.mechanics.howtoplay')}/>
-          <DefaultButton shadowless icon="rulebookWhite" href="/rulebook.pdf" text={t('main page.mechanics.rulebook')}/>
-        </div>
-      </GsapFadeScrub>
-
-      <CarouselSection totalPictures={8} directory="/images/photoshoot/game/pictures"/>
+      <div className={`${homeStyles.rulebookSection} subcontentWrapper`}>
+        <GsapFadeScrub fadeIn>
+          <div className={`${homeStyles.rulebookWrapper}`}>
+            <DefaultButton inverted borderedBlack shadowless icon="faq" navlink="/howtoplay" text={t('main page.mechanics.howtoplay')}/>
+            <DefaultButton shadowless icon="rulebookWhite" href="/rulebook.pdf" text={t('main page.mechanics.rulebook')}/>
+          </div>
+        </GsapFadeScrub>
+      </div>
 
       <div id={`${homeStyles.spotlightContainer}`} className={`${homeStyles.mainpageContainer}`}>
         <CharacterSpotlight invert allCharsButton sectionTitle={t('main page.spotlight.description')} />
       </div>
 
-      <EmojiSection />
+      <EmojiSection className={`${homeStyles.mainpageContainer}`} />
 
       <div id={`${homeStyles.finalContainer}`} className={`${homeStyles.mainpageContainer}`}>
         <GsapFadeScrub fadeIn className={`subcontentWrapper`}>
@@ -192,14 +201,11 @@ const HomePage = forwardRef((props, ref) => {
             <DefaultButton inverted borderedBlack shadowless icon="favorite" href="https://sysifuscorp.com" text={t('main page.final.otherworks')}/>
           </div>
         </GsapFadeScrub>
-        <GsapFadeDelay delay={0} className={`${homeStyles.titleWrapper}`} >
-          <div className={`${homeStyles.lcmContainer}`}>
-            <div className={`${homeStyles.lcmMaskWrapper} floating noselect`}>
-              <div onClick={scrollToTop} className={`${homeStyles.lcmMask}`}></div>
-            </div>
-            <p className={`${homeStyles.sharehomegame}`}>a SHAREHOME game</p>
+        <div onClick={scrollToTop} className={`${homeStyles.titleWrapper} ${homeStyles.botOne}`} >
+          <div className={`${homeStyles.lcmMaskWrapper} floating noselect`}>
+            <div className={`${homeStyles.lcmMask}`}></div>
           </div>
-        </GsapFadeDelay>
+        </div>
       </div>
 
     </div>

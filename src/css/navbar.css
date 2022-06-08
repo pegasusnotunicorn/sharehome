@@ -321,7 +321,6 @@
 
 .emailInput {
   padding:1em;
-  background:white;
   font-family:"Roboto Light", 'NotoSansJP Light';
   font-size:1em;
   margin-bottom:2em;
@@ -343,10 +342,6 @@
 /* </editor-fold> */
 
 /* <editor-fold>--------------------------------------MAIN PAGE EMAIL */
-
-.mainpageEmail {
-  background-color:white;
-}
 
 .mainpageEmail .formWrapper {
   flex-direction:row;
@@ -372,20 +367,20 @@
 
 @media only screen and (max-width: 900px) {
   .mainpageEmail .emailInput {
-    font-size:.8em;
+    font-size:.85em;
     width:50%;
     height:35px;
   }
 
   .mainpageEmail .subscribeButton {
-    font-size:.8em;
+    font-size:.85em;
     width:50%;
     height:35px;
     padding-left:5px;
     padding-right:5px;
   }
 
-  .forminputText{
+  .mainpageEmail:not(.secondMainpageEmail) .forminputText{
     font-size:.65em !important;
     margin-bottom:.25em;
   }
@@ -400,6 +395,7 @@
 
   .mainpageEmail .subscribeButton {
     font-size:.65em;
+    width:65%;
     padding:5px 10px 5px 5px !important;
   }
 }

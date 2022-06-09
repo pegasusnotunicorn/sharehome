@@ -3,13 +3,13 @@ import { Helmet } from "react-helmet";
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-import DefaultButton from './utils/DefaultButton.js';
+import EmailForm from './utils/EmailForm.js';
 
-const StickersPage = (props) => {
+const FreeArtbookPage = (props) => {
   const { t } = useTranslation();
 
   //custom meta tags for this page
-  const title = "Love, Career & Magic — Free stickers!";
+  const title = "Love, Career & Magic — Free Digital Artbook!";
   const splashImage = `https://sharehomethegame.com/images/illustrations/splash.jpg`;
   const description = t("artbook page.description");
 
@@ -40,9 +40,9 @@ const StickersPage = (props) => {
 
       <div className="subcontentWrapper margin-top min-width">
         <div className="characterContent">
-          <h2 className="subtitle">{t("artbook page.title")}</h2>
-          <p>{t("artbook page.description")}</p>
-          <DefaultButton shadowless icon="rulebookWhite" href="/artbook v1.pdf" text={t("artbook page.button")}/>
+          <h2 className="subtitle">{t("free artbook page.title")}</h2>
+          <p>{t("free artbook page.description")}</p>
+          <EmailForm className="artbookEmail" hideTitle isActiveAndDesktop />
         </div>
       </div>
 
@@ -57,4 +57,4 @@ const StickersPage = (props) => {
   )
 }
 
-export default StickersPage;
+export default FreeArtbookPage;

@@ -7,8 +7,9 @@ import ScrollToTop from './ScrollToTop.js';
 import HomePage from './components/Home/HomePage.js';
 import AboutPage from './components/About/AboutPage.js';
 import CharactersPage from './components/Characters/CharactersPage.js';
-import StickersPage from './components/StickersPage.js';
-import ArtbookPage from './components/ArtbookPage.js';
+import FreeStickersPage from './components/FreeStickersPage.js';
+import ArtbookDownloadPage from './components/ArtbookDownloadPage.js';
+import FreeArtbookPage from './components/FreeArtbookPage.js';
 import ContactPage from './components/ContactPage.js';
 import ErrorPage from './components/ErrorPage.js';
 import Footer from './components/Footer.js';
@@ -48,10 +49,13 @@ const Router = (props) => {
             return <ContactPage />
           }} />
           <Route exact path="/freesticker" render={() => {
-            return <StickersPage />
+            return <FreeStickersPage />
           }} />
           <Route exact path="/freeartbook" render={() => {
-            return <ArtbookPage />
+              return <FreeArtbookPage />
+            }} />
+          <Route exact path="/digitalartbook" render={() => {
+            return <ArtbookDownloadPage />
           }} />
           <Route render={() => {
             return <ErrorPage />

@@ -18,7 +18,7 @@ const japanese = {
       "link": "メインページへ戻る",
     },
 
-    "sticker page": {
+    "free sticker page": {
       "title": "Free character sticker!",
       "description": "Complete the following tasks for a free sticker! Sorry, but free stickers are limited to US residents and only while supplies last.",
       "description2": "Also it's literally just one guy who is printing and mailing all of these out so please be patient when requesting your free sticker.",
@@ -30,6 +30,18 @@ const japanese = {
       "task 2": "You must share this page publicly on social media. Include a link to your post in the signup sheet.",
       "task 4": "Click here to follow on Instagram.",
       "task 5": "Click here to follow on Twitter.",
+    },
+
+    "free artbook page": {
+      "title": "Free digital artbook!",
+      "description_meta": "For a limited time, sign up for my newsletter and get a free digital artbook!",
+      "description": "For a limited time only! Until the Kickstarter campaign launches at the end of Summer 2022.",
+    },
+
+    "artbook download page": {
+      "title": "Here's your digital artbook!",
+      "description": "Thank you so much for signing up for my newsletter. Here is the free digital artbook!",
+      "button": "Download Artbook",
     },
 
     "navbar":{

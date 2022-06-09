@@ -285,11 +285,18 @@
 
 .navbarRightWrapper{
   display:flex;
+  flex-direction: column;
   width:calc(50% - 4em);
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding:2em;
   position:relative;
+}
+
+@media only screen and (max-height: 825px) and (max-width: 900px){
+  .navbarRightWrapper{
+    justify-content: center;
+  }
 }
 
 .emailWrapper{
@@ -337,6 +344,16 @@
   padding-left:4em;
   padding-right:4em;
   font-size:1em;
+}
+
+.artbookMockup{
+  width:100%;
+}
+
+@media only screen and (min-width: 900px) {
+  .artbookMockup{
+    width:50% !important;
+  }
 }
 
 /* </editor-fold> */

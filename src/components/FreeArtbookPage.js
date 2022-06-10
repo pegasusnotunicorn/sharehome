@@ -48,8 +48,8 @@ const FreeArtbookPage = (props) => {
 
       <div className="subcontentWrapper">
         <div className="couchContainer">
-          <img className="couch" style={{width:"100%"}} src="/images/artbook/mockup2.jpg" alt={t('free artbook page.description')}></img>
-          <img className="couch" style={{width:"100%"}} src="/images/artbook/mockup1.jpg" alt={t('free artbook page.description')}></img>
+          <img className="couch" style={{width:"100%"}} src="/images/artbook/small_mockup2.jpg" alt={t('free artbook page.description')}></img>
+          <img className="couch" style={{width:"100%"}} src="/images/artbook/small_mockup1.jpg" alt={t('free artbook page.description')}></img>
           <p style={{marginTop:"1em"}}><NavLink to="/">{t("error page.link")}</NavLink></p>
         </div>
       </div>

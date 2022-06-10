@@ -90,7 +90,7 @@ export const CharacterSpotlight = (props) => {
             }
             <LinkTo {...props}>
               <div className="imageCircleMask noselect">
-                <img className="characterImage" src={character.image.url} style={{objectPosition:backgroundPosition}} alt={character.name} />
+                <img className="characterImage" src={character.image.url.replace("big", "small")} style={{objectPosition:backgroundPosition}} alt={character.name} />
                 <div className="magnifierWrapper">
                   <img className="imageCircleIcons" src="/images/icons/magnifier.svg" alt="Look closer" />
                 </div>

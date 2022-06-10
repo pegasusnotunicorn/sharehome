@@ -57,7 +57,7 @@ const CharactersPage = (props) => {
           { characterContent }
         </GsapFadeScrub>
         <EmojiSection />
-        <CarouselSection random totalPictures={15} directory="/images/photoshoot/characters/character"/>
+        <CarouselSection random totalPictures={15} directory="/images/photoshoot/characters" filename="character" />
       </div>
     )
   }

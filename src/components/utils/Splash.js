@@ -8,7 +8,7 @@ export const Splash = (props) => {
     <div className="subcontentWrapper">
       <div className="couchContainer">
         <a href="./images/illustrations/splash.jpg" target="_blank">
-          <img className="couch" style={{width:"100%"}} src="/images/illustrations/splash.jpg" alt={t('main page.splashalt')}></img>
+          <img className="couch" style={{width:"100%"}} src="/images/illustrations/small_splash.jpg" alt={t('main page.splashalt')}></img>
         </a>
       </div>
     </div>

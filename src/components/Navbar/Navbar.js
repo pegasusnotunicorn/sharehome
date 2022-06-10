@@ -117,7 +117,7 @@ export const NavbarMain = (props) => {
             <ShootingStar className="leftStar" isActive={visible} orientation="up" delay="4"/>
             <ShootingStar className="leftStar" isActive={visible} orientation="down" delay="6"/>
             <EmailForm hideTitle={false} isActiveAndDesktop={isActiveAndDesktop}/>
-            <img className="artbookMockup" src="/images/artbook/mockup1.jpg" alt={t('artbook page.description')}></img>
+            <img className="artbookMockup" src="/images/artbook/small_mockup1.jpg" alt={t('artbook page.description')}></img>
           </div>
         </div>
       </div>

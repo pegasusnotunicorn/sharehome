@@ -64,7 +64,7 @@ const HomePage = forwardRef((props, ref) => {
             <h4 onClick={scrollToDescription} className={`${homeStyles.mobileTagLine} is-hidden-desktop`}>{t('main page.mobile tag line')}</h4>
           </GsapFadeDelay>
           <GsapFadeDelay delay={0} className={`${homeStyles.heroImage}`} >
-            <img onClick={scrollToDescription} alt="Box and components of the card game." src="/images/mainbox.jpg" />
+            <img onClick={scrollToDescription} alt="Box and components of the card game." src="/images/small_mainbox.jpg" />
           </GsapFadeDelay>
           <GsapFadeDelay delay={1500} className={homeStyles.scrollContainer}>
             <EmailForm className="mainpageEmail" hideTitle isActiveAndDesktop />
@@ -106,15 +106,15 @@ const HomePage = forwardRef((props, ref) => {
           <h1>{t('main page.mechanics.description')}</h1>
         </GsapFadeScrub>
         <div className={`${homeStyles.mechanicsWrapper}`}>
-          <GsapFadeScrub fadeIn><img src="/images/illustrations/laughing.png" alt="Laughing icon" />{t('main page.mechanics.laughing')}</GsapFadeScrub>
-          <GsapFadeScrub fadeIn><img src="/images/illustrations/party.png" alt="Party icon" />{t('main page.mechanics.party')}</GsapFadeScrub>
-          <GsapFadeScrub fadeIn><img src="/images/illustrations/stories.png" alt="Stories icon" />{t('main page.mechanics.stories')}</GsapFadeScrub>
-          <GsapFadeScrub fadeIn><img src="/images/illustrations/improv.png" alt="Improv icon" />{t('main page.mechanics.improv')}</GsapFadeScrub>
-          <GsapFadeScrub fadeIn><img src="/images/illustrations/acting.png" alt="Roleplay icon" />{t('main page.mechanics.roleplay')}</GsapFadeScrub>
+          <GsapFadeScrub fadeIn><img src="/images/illustrations/laughing.jpg" alt="Laughing icon" />{t('main page.mechanics.laughing')}</GsapFadeScrub>
+          <GsapFadeScrub fadeIn><img src="/images/illustrations/party.jpg" alt="Party icon" />{t('main page.mechanics.party')}</GsapFadeScrub>
+          <GsapFadeScrub fadeIn><img src="/images/illustrations/stories.jpg" alt="Stories icon" />{t('main page.mechanics.stories')}</GsapFadeScrub>
+          <GsapFadeScrub fadeIn><img src="/images/illustrations/improv.jpg" alt="Improv icon" />{t('main page.mechanics.improv')}</GsapFadeScrub>
+          <GsapFadeScrub fadeIn><img src="/images/illustrations/acting.jpg" alt="Roleplay icon" />{t('main page.mechanics.roleplay')}</GsapFadeScrub>
         </div>
       </div>
 
-      <CarouselSection className={homeStyles.mainpageCarousel} totalPictures={8} directory="/images/photoshoot/game/pictures"/>
+      <CarouselSection className={homeStyles.mainpageCarousel} totalPictures={8} directory="/images/photoshoot/game" filename="pictures"/>
 
       <GsapFadeScrub fadeIn scrubStartBot id={`${homeStyles.howToPlay}`} className={`${homeStyles.mainpageContainer}`}>
         <h1>{t('main page.how to play.description')}</h1>

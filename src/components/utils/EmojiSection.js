@@ -13,7 +13,7 @@ const EmojiWrapper = ({urlName, emoji, index}) => {
   return (
     <a href={`/characters/${urlName}`}>
       <div id={`emojiWrapper${index}`} className="emojiWrapper">
-        <img src={`/images/emojis/${emoji}.png`} className="emojiImage" title={emoji} alt={`${emoji}`}/>
+        <img src={`/images/emojis/${emoji}.jpg`} className="emojiImage" title={emoji} alt={`${emoji}`}/>
       </div>
     </a>
   )
@@ -65,8 +65,8 @@ export const EmojiSection = (props) => {
       <div className="subcontentWrapper padding-top min-width">
         <GsapFadeScrub fadeIn className="fadeInTextWrapper">
           <div className="characterContent emojiDescriptionWrapper">
-              <h2>{t('characters page.emojisection')}</h2>
-              <p>{t('characters page.emojidescription')}</p>
+            <h2>{t('characters page.emojisection')}</h2>
+            <p>{t('characters page.emojidescription')}</p>
             <ul>
               <li>{t('characters page.emojidesc1')}</li>
               <li>{t('characters page.emojidesc2')}</li>

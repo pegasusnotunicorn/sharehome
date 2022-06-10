@@ -38,8 +38,8 @@ const DefaultButton = forwardRef(({
     return (<NavLink {...props}><IconText {...iconTextProps} /></NavLink>);
   }
   else if (emoji){
-    props.href = `/images/emojis/${emoji}.png`;
-    props.download = `${emoji}.png`;
+    props.href = `/images/emojis/${emoji}.jpg`;
+    props.download = `${emoji}.jpg`;
     return (<a target="_blank" rel="noreferrer" {...props}><IconText {...iconTextProps} /></a>);
   }
   else if (href){
@@ -57,7 +57,7 @@ const DefaultButton = forwardRef(({
 });
 
 const Icon = ({icon, emoji}) => {
-  if (emoji) return ((<span><img className="defaultButtonIcon" src={`/images/emojis/${emoji}.png`} alt="button icon" /></span> ))
+  if (emoji) return ((<span><img className="defaultButtonIcon" src={`/images/emojis/${emoji}.jpg`} alt="button icon" /></span> ))
   if (icon) return (<span><img className="defaultButtonIcon" src={`/images/icons/${icon}.svg`} alt="button icon" /></span> )
   return false;
 }

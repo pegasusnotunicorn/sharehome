@@ -17,7 +17,7 @@ const ContactPage = (props) => {
         <div className="characterContent">
           <h2 className="subtitle">{t("contact page.title")}</h2>
           <div className="socialIconsWrapper">
-            <a href="mailto:hello@sharehomethegame.com" target="_blank" rel="noreferrer"><img src="/images/icons/email2.svg" alt="Email"/></a>
+            <a href="mailto:hello@lovecareermagic.com" target="_blank" rel="noreferrer"><img src="/images/icons/email2.svg" alt="Email"/></a>
             <a href="https://instagram.com/sysifuscorp" target="_blank" rel="noreferrer"><img src="/images/icons/instagram.svg" alt="Instagram"/></a>
             <a href="https://www.tiktok.com/@pegasusgamesnyc" target="_blank" rel="noreferrer"><img src="/images/icons/tiktok.svg" alt="TikTok"/></a>
             <a href="https://www.reddit.com/user/sysifuscorp" target="_blank" rel="noreferrer"><img src="/images/icons/reddit.svg" alt="Reddit"/></a>

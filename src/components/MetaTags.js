@@ -28,7 +28,7 @@ const MetaTags = (props) => {
   }
 
   //add absolute image path for Twitter
-  splashImage = `https://sharehomethegame.com${splashImage}`;
+  splashImage = `https://lovecareermagic.com${splashImage}`;
 
   return (
     <Helmet>

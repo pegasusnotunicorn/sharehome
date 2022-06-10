@@ -10,7 +10,7 @@ const ArtbookDownloadPage = (props) => {
 
   //custom meta tags for this page
   const title = "Love, Career & Magic — Digital Artbook!";
-  const splashImage = `https://sharehomethegame.com/images/artbook/mockup2.jpg`;
+  const splashImage = `https://lovecareermagic.com/images/artbook/mockup2.jpg`;
   const description = t("artbook download page.description");
 
   //change title of page

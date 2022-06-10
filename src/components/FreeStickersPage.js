@@ -8,7 +8,7 @@ const FreeStickersPage = (props) => {
 
   //custom meta tags for this page
   const title = "Love, Career & Magic — Free stickers!";
-  const splashImage = `https://sharehomethegame.com/images/freesticker.jpg`;
+  const splashImage = `https://lovecareermagic.com/images/freesticker.jpg`;
   const description = t("free sticker page.description");
 
   //change title of page

@@ -47,9 +47,9 @@ const CharactersPage = (props) => {
             <h2 className="subtitle">{t('characters page.title')}</h2>
             <p>{t('characters page.description')} <a href="https://www.instagram.com/carofranklyn/?hl=en">{t('characters page.credit')}</a><br></br></p>
             <div className="freeEmojiButtonWrapper">
-              <img src={`/images/emojis/${randomCharacter1Emoji}.png`} alt="Random emoji" title={randomCharacter1Emoji} />
+              <img src={`/images/emojis/${randomCharacter1Emoji}.jpg`} alt="Random emoji" title={randomCharacter1Emoji} />
               <a href="#emojis">{t("characters page.emojisection")}</a>
-              <img src={`/images/emojis/${randomCharacter2Emoji}.png`} alt="Random emoji" title={randomCharacter2Emoji} />
+              <img src={`/images/emojis/${randomCharacter2Emoji}.jpg`} alt="Random emoji" title={randomCharacter2Emoji} />
             </div>
           </div>
         </div>

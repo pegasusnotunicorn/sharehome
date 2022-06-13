@@ -41,9 +41,9 @@ const FreeStickersPage = (props) => {
           <h2 className="subtitle">{t("free sticker page.title")}</h2>
           <p>{t("free sticker page.description")}</p>
           <p>{t("free sticker page.description2")}</p>
-          <p>{t("free sticker page.description3")}</p>
           <p style={{fontWeight:"bold", color:"red"}}>{t("free sticker page.description4")}</p>
           <p style={{fontWeight:"bold", color:"red"}}>{t("free sticker page.description5")}</p>
+          <p style={{fontWeight:"bold", color:"red"}}>{t("free sticker page.description6")}</p>
 
           <form className="stickerTasksWrapper">
             <div style={{textDecoration:"underline", cursor:"pointer"}} onClick={()=>{

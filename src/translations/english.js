@@ -105,7 +105,7 @@ const english = {
         "description": "Photos",
       },
       "spotlight": {
-        "description": "This Week's Spotlight",
+        "description": "Character Spotlight",
       },
       "final": {
         "description": "Coming soon to Kickstarter in 2022!",

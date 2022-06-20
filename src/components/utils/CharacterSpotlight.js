@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 //custom files
 import useWindowDimensions from '../utils/useWindowDimensions.js';
 import ShootingStar from '../Navbar/ShootingStar.js';
-import { getSpecificPerson, getLatestPerson } from '../Characters/Characters.js';
+import { getSpecificPerson, getRandomPerson } from '../Characters/Characters.js';
 import '../../css/utils/spotlight.css';
 import { GsapFadeScrub } from "./useGsap.js";
 import DefaultButton from '../utils/DefaultButton.js';
@@ -15,7 +15,7 @@ export const CharacterSpotlight = (props) => {
   const { t } = useTranslation();
 
   //get a specific or the latest character if not defined
-  const character = (props.name) ? getSpecificPerson(props.name) : getLatestPerson();
+  const character = (props.name) ? getSpecificPerson(props.name) : getRandomPerson();
   const invertClass = (props.invert) ? "invert" : "";
 
   //language specific

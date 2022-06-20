@@ -1011,9 +1011,10 @@ const allCharacters = [
       name: "characters24.jpg",
       width: 2000,
       height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
+      credit: "https://www.fiverr.com/carolynfrank",
+      objectPosition: "35%",
     },
-    ignoreInRandom: true,
+    ignoreInRandom: false,
  	 	type: "member",
   },
   {
@@ -1023,7 +1024,7 @@ const allCharacters = [
     job: "Construction Worker",
     employer: "Onyx Construction & Demolition",
     race:"Giant",
-    emoji:[""],
+    emoji:["susomNervous"],
     description:[
       "Giants reach adulthood around age 50. Giants rarely have surnames because they often travel solo and are so big they don't need a surname to further specify who they are.",
       "Susom is very shy despite her stature and size. She always wanted a surname to fit in with the rest of the world. She doesn't like standing out in a crowd or being picked for anything. She is a people pleaser and wants to be accepted by a group. She prefers to wear very simple loose-fitting clothing without any intricate designs or patterns.",
@@ -1047,13 +1048,14 @@ const allCharacters = [
     japaneseJob: "建設労働者",
     japaneseName: "巨人のスソム",
     image: {
-      url: "/images/members/big/temp.png",
-      name: "temp.png",
+      url: "/images/members/big/characters25.jpg",
+      name: "characters25.jpg",
       width: 2000,
       height: 1200,
-      credit: "https://www.fiverr.com/carolynfrank"
+      credit: "https://www.fiverr.com/carolynfrank",
+      objectPosition: "65%",
     },
-    ignoreInRandom: true,
+    ignoreInRandom: false,
     type: "member",
   },
 ]

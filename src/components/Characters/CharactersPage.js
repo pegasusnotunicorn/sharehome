@@ -117,7 +117,7 @@ const AllCharacters = (props) => {
             <p className="notDoneName">{name}</p>
             <p className="comingSoon">{t("characters page.comingsoon")}</p>
           </div>
-          <img className="boxes" src={elem.image.url} style={{objectPosition:elem.image.objectPosition || "center"}} alt={elem.name}></img>
+          <img className="boxes" src={elem.image.url.replace("big", "small")} style={{objectPosition:elem.image.objectPosition || "center"}} alt={elem.name}></img>
           <div className="caption noselect">
             <p className="name">{name}</p>
             <p className="details is-hidden-mobile">

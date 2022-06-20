@@ -105,7 +105,7 @@ const japanese = {
         "description": "フォトギャラリー",
       },
       "spotlight": {
-        "description": "新キャラ紹介",
+        "description": "キャラ紹介",
       },
       "final": {
         "description": "2022年キックスターターで発売予定！",

@@ -254,6 +254,7 @@ const japanese = {
     },
 
     "characters page":{
+      "og_desc": "「Love, Career & Magic」にはユニークでどこか変わったハウスメンバーがたくさんいます！",
       "credit": "イラストレーターCarolyn Frank",
       "title": "キャラクター紹介",
       "description": "「Love, Career & Magic」にはユニークでどこか変わったハウスメンバーがたくさんいます！面白そうなキャラクターをタップして詳しく見てください！",

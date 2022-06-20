@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { Helmet } from "react-helmet";
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import EmailForm from './utils/EmailForm.js';
+import CustomHelmet from './utils/CustomHelmet.js';
 
 const FreeArtbookPage = (props) => {
   const { t } = useTranslation();
@@ -21,22 +21,7 @@ const FreeArtbookPage = (props) => {
   return (
     <div className="content max-width">
 
-      <Helmet>
-        <meta name="description" data-react-helmet="true" content={ description } />
-
-        <meta itemprop="name" data-react-helmet="true" content={ description } />
-        <meta itemprop="description" data-react-helmet="true" content={ description } />
-        <meta itemprop="image" data-react-helmet="true" content={ splashImage } />
-
-        <meta property="og:title" data-react-helmet="true" content={ title } />
-        <meta property="og:description" data-react-helmet="true" content={ description } />
-        <meta property="og:image" data-react-helmet="true" content={ splashImage } />
-        <meta property="og:url" data-react-helmet="true" content={ window.location.href } />
-
-        <meta name="twitter:title" data-react-helmet="true" content={ title }></meta>
-        <meta name="twitter:description" data-react-helmet="true" content={ description } />
-        <meta name="twitter:image" data-react-helmet="true" content={ splashImage } />
-      </Helmet>
+      <CustomHelmet title={title} splashImage={splashImage} description={description} />
 
       <div className="subcontentWrapper margin-top min-width">
         <div className="characterContent">

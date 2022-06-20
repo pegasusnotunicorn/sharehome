@@ -6,6 +6,7 @@ import { getAllCharacters, getSpecificPersonByURL, getRandomPerson } from '../Ch
 import { CharacterSpotlight } from '../utils/CharacterSpotlight.js';
 import { GsapFadeScrub } from "../utils/useGsap.js";
 import { EmojiSection } from '../utils/EmojiSection.js';
+import CustomHelmet from '../utils/CustomHelmet.js';
 import CarouselSection from "../utils/CarouselSection.js";
 import DefaultButton from '../utils/DefaultButton.js';
 
@@ -22,7 +23,7 @@ const CharactersPage = (props) => {
   let { name } = useParams();
 
   useEffect(() => {
-    document.title = "Love, Career & Magic - Characters";
+    document.title = "Love, Career & Magic — All Playable Characters!";
   });
 
   //if there is a specifc character name, render that character page
@@ -40,8 +41,16 @@ const CharactersPage = (props) => {
       (<IndividualCharacter character={chosenCharacter} />) :
       (<AllCharacters />);
 
+    //custom meta tags for this page
+    const title = "Love, Career & Magic — All Playable Characters!";
+    const splashImage = `https://lovecareermagic.com/images/photoshoot/game/pictures8.jpg`;
+    const description = t("characters page.og_desc");
+
     return (
       <div className="content">
+
+        <CustomHelmet title={title} splashImage={splashImage} description={description} />
+
         <div className="subcontentWrapper margin-top min-width">
           <div className="characterContent">
             <h2 className="subtitle">{t('characters page.title')}</h2>

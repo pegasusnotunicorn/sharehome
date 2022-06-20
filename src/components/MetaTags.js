@@ -1,9 +1,9 @@
 import React from 'react';
-import { Helmet } from "react-helmet";
 import { matchPath } from 'react-router';
 import { useLocation } from 'react-router-dom';
 
 import { getSpecificPersonByURL } from './Characters/Characters.js';
+import CustomHelmet from './utils/CustomHelmet.js';
 
 const MetaTags = (props) => {
   let splashImage = "/images/mainbox.jpg";
@@ -31,22 +31,7 @@ const MetaTags = (props) => {
   splashImage = `https://lovecareermagic.com${splashImage}`;
 
   return (
-    <Helmet>
-      <meta name="description" data-react-helmet="true" content={ description } />
-
-      <meta itemprop="name" data-react-helmet="true" content={ description } />
-      <meta itemprop="description" data-react-helmet="true" content={ description } />
-      <meta itemprop="image" data-react-helmet="true" content={ splashImage } />
-
-      <meta property="og:title" data-react-helmet="true" content={ title } />
-      <meta property="og:description" data-react-helmet="true" content={ description } />
-      <meta property="og:image" data-react-helmet="true" content={ splashImage } />
-      <meta property="og:url" data-react-helmet="true" content={ window.location.href } />
-
-      <meta name="twitter:title" data-react-helmet="true" content={ title }></meta>
-      <meta name="twitter:description" data-react-helmet="true" content={ description } />
-      <meta name="twitter:image" data-react-helmet="true" content={ splashImage } />
-    </Helmet>
+    <CustomHelmet title={title} splashImage={splashImage} description={description} />
   )
 }
 

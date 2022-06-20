@@ -254,6 +254,7 @@ const english = {
     },
 
     "characters page":{
+      "og_desc": "All playable characters from the reality TV show card game— Love, Career & Magic!",
       "credit": "Illustrations by Carolyn Frank.",
       "title": "Characters",
       "description": "The various mythical beings that have appeared on the reality TV show, SHAREHOME. Click on any of them to learn more about who they are!",

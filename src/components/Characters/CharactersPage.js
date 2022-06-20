@@ -42,9 +42,20 @@ const CharactersPage = (props) => {
       (<AllCharacters />);
 
     //custom meta tags for this page
-    const title = "Love, Career & Magic — All Playable Characters!";
-    const splashImage = `https://lovecareermagic.com/images/photoshoot/game/pictures8.jpg`;
-    const description = t("characters page.og_desc");
+    let title = "Love, Career & Magic — All Playable Characters!";
+    let splashImage = `https://lovecareermagic.com/images/photoshoot/game/pictures8.jpg`;
+    let description = t("characters page.og_desc");
+
+    if (chosenCharacter) {
+      title = `Love, Career & Magic — ${chosenCharacter.name}`;
+      splashImage = `https://lovecareermagic.com${chosenCharacter.image.url}`;
+
+      description = "Introducing ";
+      description += (chosenCharacter.title) ? chosenCharacter.title : `${chosenCharacter.name}, the ${chosenCharacter.race}`;
+      description += `. A ${chosenCharacter.age} year old ${chosenCharacter.job}`;
+      description += (chosenCharacter.employer) ? ` at ${chosenCharacter.employer}` : ``
+      description += ` and member of SHAREHOME—A reality TV show about 6 mythical strangers living together in the same house.`
+    }
 
     return (
       <div className="content">

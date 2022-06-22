@@ -27,7 +27,7 @@ const ArtbookDownloadPage = (props) => {
         <div className="characterContent">
           <h2 className="subtitle">{t("artbook download page.title")}</h2>
           <p>{t("artbook download page.description")}</p>
-          <DefaultButton shadowless icon="rulebookWhite" href="/artbook v1.pdf" className="artbookDownload" text={t("artbook download page.button")}/>
+          <DefaultButton shadowless icon="rulebookWhite" href="/artbook v2.pdf" className="artbookDownload" text={t("artbook download page.button")}/>
         </div>
       </div>
 

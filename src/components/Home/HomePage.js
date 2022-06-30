@@ -25,7 +25,7 @@ const HomePage = forwardRef((props, ref) => {
   const navbarButton = useRef(null);
 
   useEffect(() => {
-    document.title = "Love, Career & Magic — a SHAREHOME game";
+    document.title = "Love, Career & Magic — a reality TV icebreaker game";
 
     if (navbarButton.current) {
       navbarButton.current.onclick = ref.current;
@@ -114,7 +114,7 @@ const HomePage = forwardRef((props, ref) => {
         </div>
       </div>
 
-      <CarouselSection className={homeStyles.mainpageCarousel} totalPictures={8} directory="/images/photoshoot/game" filename="pictures"/>
+      <CarouselSection className={homeStyles.mainpageCarousel} totalPictures={14} directory="/images/photoshoot/game" filename="pictures"/>
 
       <GsapFadeScrub fadeIn scrubStartBot id={`${homeStyles.howToPlay}`} className={`${homeStyles.mainpageContainer}`}>
         <h1>{t('main page.how to play.description')}</h1>

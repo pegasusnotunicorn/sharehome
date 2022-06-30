@@ -58,13 +58,13 @@ const english = {
     "main page":{
       "mobile tag line": "The only reality TV card game\n\nwith orcs, dragons, and wizards!",
       "hero": {
-        "subtitle": "A reality TV card game\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world",
+        "subtitle": "A reality TV icebreaker game\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world",
         "player count": "4 ~ 20+ players",
         "play time": "20+ minutes",
       },
       "description": {
         "subtitle2": "Welcome to SHAREHOME! A reality TV show that documents the lives of six mythical creatures living together.",
-        "subtitle3": "Love, Career & Magic is a party game where you fall in love, stir up drama, or fulfill secret goals!",
+        "subtitle3": "Love, Career & Magic is an icebreaker party game where you fall in love, stir up drama, and fulfill secret goals!",
         "subtitle4": "Keep scrolling to learn more!",
       },
       "how to play": {
@@ -125,7 +125,7 @@ const english = {
     "about page":{
       "main page":{
         "how to play": "How to play",
-        "description": "Love, Career & Magic is a very flexible party game with multiple ways of playing. Feel free to add your own house rules to change it up!",
+        "description": "Love, Career & Magic is a very flexible icebreaker party game with multiple ways of playing. Feel free to add your own house rules to change it up!",
         "and many more": "...and many more!",
         "how will you play": "How will you play?",
       },
@@ -154,7 +154,7 @@ const english = {
           "description": "Show me the game rules instead",
           "step1 1": "Decide who will be playing as Members of the house. Everyone else will be playing as Commentators on the reality show.",
           "step1 2": "You need four to six Members to play.",
-          "step1 3": "If you have fewer than seven players, each Member also plays as a Commentator.",
+          "step1 3": "If you have fewer than seven players, each Member also plays as a Commentator (receive two Character Cards—one is a Member, one is a Commentator).",
           "step2": "Step 2",
           "step2m 1": "Members are given a random Character Card, a secret Goal Card, and two Signal Tokens.",
           "step2m 2": "Your goal is to finish your secret Goal Card or find love and leave the house.",

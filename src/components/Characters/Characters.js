@@ -523,7 +523,7 @@ const allCharacters = [
       "Stealing sugary food from work or from other people.",
       "Eating the snacks left behind at movie theaters.",
       "Sitting inside open candy boxes and jumping out to scare people.",
-      "Listening to electronic dance music. Particularly music with strong bass undertones",
+      "Listening to electronic dance music. Particularly music with strong bass undertones.",
     ],
     japaneseRace:"ジンジャーブレッド人間",
     japaneseDescription:[

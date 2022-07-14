@@ -58,7 +58,7 @@ const english = {
     "main page":{
       "mobile tag line": "The only reality TV card game\n\nwith orcs, dragons, and wizards!",
       "hero": {
-        "subtitle": "A reality TV icebreaker game\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world",
+        "subtitle": "A collaborative storytelling RPG\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world",
         "player count": "4 ~ 20+ players",
         "play time": "20+ minutes",
       },
@@ -82,8 +82,8 @@ const english = {
         "subdescription": "You decide what kind of reality TV star you want to be!\n Will you build long lasting relationships or stir up drama?",
       },
       "goals": {
-        "description": "Complete goals to earn even more points.",
-        "subdescription": "Graduate from the show by completing your secret life goals or becoming a couple!",
+        "description": "Complete secret life goals.",
+        "subdescription": "Graduate from the show by completing your secret life goals and earn even more points!",
       },
       "likehate": {
         "description1": "Correctly guess who",
@@ -268,13 +268,13 @@ const english = {
       "prev" : "Prev",
       "comingsoon" : "Coming Soon",
       "emojisection": "Free Character Emojis!",
-      "emojidescription": "Join my Discord community to use these emojis for free right now!",
+      "emojidescription": "Join the Discord community to use these emojis for free right now!",
       "emoji": "Download Emoji",
       "emojiall": "Download Emoji Pack",
       "discordjoin": "Get Free Emojis",
       "emojidesc1":"See previews and unreleased content before anyone else.",
       "emojidesc2":"Be a part of the developer journey from the beginning.",
-      "emojidesc3":"Give feedback and help me make this game a reality.",
+      "emojidesc3":"Give feedback and help make this game a reality.",
     },
 
     "contact page":{

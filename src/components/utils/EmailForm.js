@@ -71,12 +71,13 @@ const CustomForm = ({ status, message, onValidated, isActiveAndDesktop, hideTitl
         <h1 className="formPrompt">{t('email form.prompt')}</h1>
       }
       <p className="forminputText" dangerouslySetInnerHTML={{ __html: text }}></p>
-      <form className="formWrapper" onSubmit={(e)=>e.preventDefault()}>
+      <form className="formWrapper" autoComplete="on" onSubmit={(e)=>e.preventDefault()}>
         <input
           ref={node => (email = node)}
           type="email"
           className="emailInput"
           placeholder="Enter your email"
+          autoComplete="email"
           required
         />
         <DefaultButton animated shadowless icon="forward" onClick={submit} button="submit" className="subscribeButton" text={submitButtonText} />

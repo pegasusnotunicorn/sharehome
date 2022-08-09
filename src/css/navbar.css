@@ -384,7 +384,7 @@
 
 @media only screen and (max-width: 900px) {
   .mainpageEmail .emailInput {
-    font-size:.85em;
+    font-size:16px;
     width:50%;
     height:35px;
   }

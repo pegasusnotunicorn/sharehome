@@ -56,15 +56,15 @@ const HomePage = forwardRef((props, ref) => {
       <div ref={topLogoRef} id={`${homeStyles.heroContainer}`} className={`${homeStyles.mainContentWrapper} noselect`}>
         <div className={homeStyles.screenHeight}>
           <GsapFadeDelay delay={1500} className={`${homeStyles.titleWrapper} ${homeStyles.topOne}`} >
-            <div onClick={scrollToDescription} className={`${homeStyles.lcmMaskWrapper} noselect`}>
+            <div className={`${homeStyles.lcmMaskWrapper} noselect`}>
               <div className={`${homeStyles.lcmMask}`}></div>
             </div>
           </GsapFadeDelay>
           <GsapFadeDelay delay={1500}>
-            <h4 onClick={scrollToDescription} className={`${homeStyles.mobileTagLine} is-hidden-desktop`}>{t('main page.mobile tag line')}</h4>
+            <h4 className={`${homeStyles.mobileTagLine} is-hidden-desktop`}>{t('main page.mobile tag line')}</h4>
           </GsapFadeDelay>
           <GsapFadeDelay delay={0} className={`${homeStyles.heroImage}`} >
-            <img onClick={scrollToDescription} alt="Box and components of the card game." src="/images/small_mainbox.jpg" />
+            <img alt="Box and components of the card game." src="/images/small_mainbox.jpg" />
           </GsapFadeDelay>
           <GsapFadeDelay delay={1500} className={homeStyles.scrollContainer}>
             <EmailForm className="mainpageEmail" hideTitle isActiveAndDesktop />

@@ -47,6 +47,11 @@ const HomePage = forwardRef((props, ref) => {
 
   // <DefaultButton shadowless icon="email_white" ref={navbarButton} className={`${homeStyles.topMailButton} GTMtoggleEmailButton` } text={t('email form.joinbutton')}/>
   // <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+  // <GsapFadeDelay delay={1500} className={`${homeStyles.titleWrapper} ${homeStyles.topOne}`} >
+  //   <div className={`${homeStyles.lcmMaskWrapper} noselect`}>
+  //     <div className={`${homeStyles.lcmMask}`}></div>
+  //   </div>
+  // </GsapFadeDelay>
 
   return (
     <div className="content">
@@ -55,16 +60,11 @@ const HomePage = forwardRef((props, ref) => {
 
       <div ref={topLogoRef} id={`${homeStyles.heroContainer}`} className={`${homeStyles.mainContentWrapper} noselect`}>
         <div className={homeStyles.screenHeight}>
-          <GsapFadeDelay delay={1500} className={`${homeStyles.titleWrapper} ${homeStyles.topOne}`} >
-            <div className={`${homeStyles.lcmMaskWrapper} noselect`}>
-              <div className={`${homeStyles.lcmMask}`}></div>
-            </div>
-          </GsapFadeDelay>
           <GsapFadeDelay delay={1500}>
             <h4 className={`${homeStyles.mobileTagLine} is-hidden-desktop`}>{t('main page.mobile tag line')}</h4>
           </GsapFadeDelay>
           <GsapFadeDelay delay={0} className={`${homeStyles.heroImage}`} >
-            <img alt="Box and components of the card game." src="/images/small_mainbox.jpg" />
+            <img alt="Box and components of the card game." src="/images/mainbox.jpg" />
           </GsapFadeDelay>
           <GsapFadeDelay delay={1500} className={homeStyles.scrollContainer}>
             <EmailForm className="mainpageEmail" hideTitle isActiveAndDesktop />

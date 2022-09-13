@@ -7,10 +7,10 @@ import ScrollToTop from './ScrollToTop.js';
 import HomePage from './components/Home/HomePage.js';
 import AboutPage from './components/About/AboutPage.js';
 import CharactersPage from './components/Characters/CharactersPage.js';
-import FreeStickersPage from './components/FreeStickersPage.js';
 import ContactPage from './components/ContactPage.js';
 import ErrorPage from './components/ErrorPage.js';
 import Footer from './components/Footer.js';
+// import FreeStickersPage from './components/FreeStickersPage.js';
 // import ArtbookDownloadPage from './components/ArtbookDownloadPage.js';
 // import FreeArtbookPage from './components/FreeArtbookPage.js';
 

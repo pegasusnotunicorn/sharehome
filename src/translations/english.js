@@ -52,7 +52,7 @@ const english = {
       "contact us":"About / Contact",
       "card designer":"Card Designer",
       "blog":"Blog",
-      "kickstarter":"Remind me on Kickstarter",
+      "kickstarter":"LIVE on Kickstarter!",
     },
 
     "main page":{
@@ -108,7 +108,7 @@ const english = {
         "description": "Character Spotlight",
       },
       "final": {
-        "description": "Coming to Kickstarter Sep 13!",
+        "description": "Live now on Kickstarter!",
         "otherworks": "Check out my other game",
       },
     },
@@ -117,7 +117,7 @@ const english = {
       "joinbutton": "Sign up!",
       "prompt": "Stay updated on the latest news!",
       "button": "Sign up!",
-      "promise": "Sign up now to get a <span class='is-bold'>free digital artbook</span> and to be notified when we launch!",
+      "promise": "Sign up to stay updated on the latest news!",
       "sending": "Submitting...",
       "success": "Thank you for signing up!"
     },
@@ -274,7 +274,7 @@ const english = {
       "discordjoin": "Get Free Emojis",
       "emojidesc1":"See previews and unreleased content before anyone else.",
       "emojidesc2":"Be a part of the developer journey from the beginning.",
-      "emojidesc3":"Give feedback and help make this game a reality.",
+      "emojidesc3":"Give feedback for all upcoming projects.",
     },
 
     "contact page":{
@@ -282,7 +282,7 @@ const english = {
       "about me 1": "Hello, my name is Wonmin.\nI'm the game designer.",
       "about me 2": `I quit my corporate job back in 2016 to pursue my dreams of becoming a game developer. And in March of 2021, that dream became a reality when my first game, <a href="https://sysifuscorp.com" target="_blank" rel="noreferrer">Welcome to Sysifus Corp</a> was successfully funded on Kickstarter.`,
       "about me 3": "I had no idea what I was doing when I quit my job. Even now, I'm still terrified for my future. But it is thanks to the support of strangers like you that I am able to do what I love. And for that, I am incredibly thankful.",
-      "about me 4": `I've been hard at work on Love, Career & Magic and I know it'll be amazing. Thanks for visiting my humble page and please do consider <a href="https://bit.ly/lovecareermagic" target="_blank" rel="noreferrer">signing up to be reminded when I launch on Kickstarter on Sep 13!</a>`,
+      "about me 4": `I've been hard at work on Love, Career & Magic and I know it'll be amazing. Thanks for visiting my humble page and please do consider <a href="https://bit.ly/lovecareermagic" target="_blank" rel="noreferrer">backing on Kickstarter!</a>`,
       "description 1": "Love, Career & Magic is made by ",
       "description 2": " and is not affiliated with any existing reality TV show.",
       "description 3": "Although I would absolutely love to be, wink wink.",

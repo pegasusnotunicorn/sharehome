@@ -7,7 +7,7 @@ import { CharacterSpotlight } from '../utils/CharacterSpotlight.js';
 import { GsapFadeDelay, GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";
 import useWindowDimensions from '../utils/useWindowDimensions.js';
 import DefaultButton from '../utils/DefaultButton.js';
-import EmailForm from '../utils/EmailForm.js';
+// import EmailForm from '../utils/EmailForm.js';
 
 // sections
 import CarouselSection from "../utils/CarouselSection.js";
@@ -45,6 +45,9 @@ const HomePage = forwardRef((props, ref) => {
   const scrollToDescription = () => descriptionSectionRef.current.scrollIntoView({behavior: 'smooth'});
   const scrollToTop = () => topLogoRef.current.scrollIntoView({behavior: 'smooth'});
 
+  //redirect to live KS
+  const redirectToKS = () => window.location.href = "http://bit.ly/lovecareermagic";
+
   // <DefaultButton shadowless icon="email_white" ref={navbarButton} className={`${homeStyles.topMailButton} GTMtoggleEmailButton` } text={t('email form.joinbutton')}/>
   // <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
   // <GsapFadeDelay delay={1500} className={`${homeStyles.titleWrapper} ${homeStyles.topOne}`} >
@@ -53,34 +56,37 @@ const HomePage = forwardRef((props, ref) => {
   //   </div>
   // </GsapFadeDelay>
 
+  // <EmailForm className="mainpageEmail" hideTitle isActiveAndDesktop />
+  // <EmailForm className="mainpageEmail secondMainpageEmail" hideTitle />
+
   return (
     <div className="content">
 
       <ParallaxSection />
 
-      <div ref={topLogoRef} id={`${homeStyles.heroContainer}`} className={`${homeStyles.mainContentWrapper} noselect`}>
-        <div className={homeStyles.screenHeight}>
-          <GsapFadeDelay delay={1500}>
-            <h4 className={`${homeStyles.mobileTagLine} is-hidden-desktop`}>{t('main page.mobile tag line')}</h4>
-          </GsapFadeDelay>
-          <GsapFadeDelay delay={0} className={`${homeStyles.heroImage}`} >
-            <img alt="Box and components of the card game." src="/images/mainbox.jpg" />
-          </GsapFadeDelay>
-          <GsapFadeDelay delay={1500} className={homeStyles.scrollContainer}>
-            <EmailForm className="mainpageEmail" hideTitle isActiveAndDesktop />
-            <GsapFadeScrub scrub startScreenTop fadeOut >
-              <div className={homeStyles.scrollHorizontalContainer}>
-                <div id={homeStyles.animatedScroll} className={homeStyles.scrollVerticalContainer}></div>
-                <div className={homeStyles.scrollVerticalContainer}></div>
-              </div>
-              <div className={homeStyles.scrollHorizontalContainer}>
-                <p onClick={scrollToDescription} className="noselect">Scroll to learn how to play!</p>
-              </div>
-            </GsapFadeScrub>
-          </GsapFadeDelay>
+        <div ref={topLogoRef} id={`${homeStyles.heroContainer}`} className={`${homeStyles.mainContentWrapper} noselect`}>
+          <div className={homeStyles.screenHeight}>
+            <GsapFadeDelay delay={0} className={`${homeStyles.heroImage}`} >
+              <img onClick={redirectToKS} alt="Box and components of the card game." src="/images/mainbox.jpg" />
+            </GsapFadeDelay>
+            <GsapFadeDelay delay={1500}>
+              <h4 className={`${homeStyles.mobileTagLine} is-hidden-desktop`}>{t('main page.mobile tag line')}</h4>
+            </GsapFadeDelay>
+            <GsapFadeDelay delay={1500} className={homeStyles.scrollContainer}>
+              <DefaultButton shadowless animated icon="arrowRightWhite" style={{marginBottom:"50px",width:"calc(100% - 2em)"}} className="liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+              <GsapFadeScrub scrub startScreenTop fadeOut >
+                <div className={homeStyles.scrollHorizontalContainer}>
+                  <div id={homeStyles.animatedScroll} className={homeStyles.scrollVerticalContainer}></div>
+                  <div className={homeStyles.scrollVerticalContainer}></div>
+                </div>
+                <div className={homeStyles.scrollHorizontalContainer}>
+                  <p onClick={scrollToDescription} className="noselect">Scroll to learn how to play!</p>
+                </div>
+              </GsapFadeScrub>
+            </GsapFadeDelay>
+          </div>
+          <div className={homeStyles.screenHeight}></div>
         </div>
-        <div className={homeStyles.screenHeight}></div>
-      </div>
 
       <div ref={descriptionSectionRef} id={`${homeStyles.descriptionContainer}`} className={`${homeStyles.mainpageContainer}`}>
         <div className={`${homeStyles.descriptionWrapper}`}>
@@ -95,7 +101,7 @@ const HomePage = forwardRef((props, ref) => {
             </div>
             <div className={`${homeStyles.descriptionTextWrapper} subcontentWrapper min-width`}>
               <p>{t('main page.description.subtitle3')}</p>
-              <EmailForm className="mainpageEmail secondMainpageEmail" hideTitle />
+              <DefaultButton shadowless animated icon="arrowRightWhite" className="liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
             </div>
           </GsapFadeScrub>
         </div>
@@ -194,10 +200,10 @@ const HomePage = forwardRef((props, ref) => {
       <EmojiSection className={`${homeStyles.mainpageContainer}`} />
 
       <div id={`${homeStyles.finalContainer}`} className={`${homeStyles.mainpageContainer}`}>
-        <GsapFadeScrub fadeIn className={`subcontentWrapper`}>
+        <GsapFadeScrub fadeIn className={`${homeStyles.finalButtonsContainer} subcontentWrapper`}>
           <h1>{t('main page.final.description')}</h1>
           <div className={`${homeStyles.finalButtonsWrapper}`}>
-            <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+            <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
             <DefaultButton inverted borderedBlack shadowless icon="favorite" href="https://sysifuscorp.com" text={t('main page.final.otherworks')}/>
           </div>
         </GsapFadeScrub>

@@ -149,6 +149,10 @@ span.is-bold {
   width:fit-content;
 }
 
+.defaultButton.liveKS{
+  background-color:#05ce78;
+}
+
 @media only screen and (max-width: 900px) {
   .defaultButton{
     margin:auto;

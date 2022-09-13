@@ -70,6 +70,9 @@ export const NavbarMain = (props) => {
 
   //email sign up button
   // <DefaultButton shadowless animated icon="arrowRightWhite" href="https://bit.ly/lovecareermagic" id="kickstarterButton" className="kickstarterButton" text={t('navbar.kickstarter')}/>
+
+  //navbar open
+  // <DefaultButton shadowless animated icon="forward" id="emailToggleButtonMobile" className={`${mailButtonVisibleClass} GTMtoggleEmailButton`} onClick={toggleMail} text={t('email form.joinbutton')}/>
   return (
     <div className={`navbarClass ${isVisibleClass}`}>
 
@@ -79,7 +82,7 @@ export const NavbarMain = (props) => {
         </GsapFadeScrub>
         <div className="navbarFloatRight">
           <GsapFadeScrub scrub startScreenTop fadeIn >
-            <DefaultButton shadowless animated icon="forward" id="emailToggleButtonMobile" className={`${mailButtonVisibleClass} GTMtoggleEmailButton`} onClick={toggleMail} text={t('email form.joinbutton')}/>
+            <DefaultButton shadowless animated icon="forward" id="emailToggleButtonMobile" className={`${mailButtonVisibleClass} liveKS`} href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
           </GsapFadeScrub>
           <button
             id="navbarOpenClose"
@@ -117,7 +120,7 @@ export const NavbarMain = (props) => {
             <ShootingStar className="leftStar" isActive={visible} orientation="up" delay="4"/>
             <ShootingStar className="leftStar" isActive={visible} orientation="down" delay="6"/>
             <EmailForm hideTitle={false} isActiveAndDesktop={isActiveAndDesktop}/>
-            <img className="artbookMockup" src="/images/artbook/small_mockup1.jpg" alt={t('artbook page.description')}></img>
+            <img className="artbookMockup" src="/images/photoshoot/game/small/small_pictures1.jpg" alt={t('artbook page.description')}></img>
           </div>
         </div>
       </div>

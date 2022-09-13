@@ -8,17 +8,26 @@ import HomePage from './components/Home/HomePage.js';
 import AboutPage from './components/About/AboutPage.js';
 import CharactersPage from './components/Characters/CharactersPage.js';
 import FreeStickersPage from './components/FreeStickersPage.js';
-import ArtbookDownloadPage from './components/ArtbookDownloadPage.js';
-import FreeArtbookPage from './components/FreeArtbookPage.js';
 import ContactPage from './components/ContactPage.js';
 import ErrorPage from './components/ErrorPage.js';
 import Footer from './components/Footer.js';
+// import ArtbookDownloadPage from './components/ArtbookDownloadPage.js';
+// import FreeArtbookPage from './components/FreeArtbookPage.js';
 
 const Router = (props) => {
 
   // <Route path="/designer" render={() => {
   //   return <DesignerPage />
   // }} />
+  // <Route exact path="/freeartbook" render={() => {
+  //     return <FreeArtbookPage />
+  //   }} />
+  // <Route exact path="/digitalartbook" render={() => {
+  //   return <ArtbookDownloadPage />
+  // }} />
+  // <Route exact path="/freesticker" render={() => {
+  //     return <FreeStickersPage />
+  //   }} />
 
   //magic to open the navbar from inside homepage
   let setNavbarActive = useRef(null);
@@ -47,15 +56,6 @@ const Router = (props) => {
           }} />
           <Route exact path="/contact" render={() => {
             return <ContactPage />
-          }} />
-          <Route exact path="/freesticker" render={() => {
-            return <FreeStickersPage />
-          }} />
-          <Route exact path="/freeartbook" render={() => {
-              return <FreeArtbookPage />
-            }} />
-          <Route exact path="/digitalartbook" render={() => {
-            return <ArtbookDownloadPage />
           }} />
           <Route render={() => {
             return <ErrorPage />

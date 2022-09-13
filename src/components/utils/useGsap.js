@@ -42,7 +42,7 @@ export const GsapFadeScrub = (props) => {
   const target = useRef(null);
 
   //for when the element is in view from load
-  let startScreenTop = props.startScreenTop || false;
+  let startScreenTop = (props.startScreenTop && window.location.pathname === "/" );
   let scrubStartBot = props.scrubStartBot || false;
   let scrubStartCenter = props.scrubStartCenter || false;
 

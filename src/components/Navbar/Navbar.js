@@ -68,11 +68,10 @@ export const NavbarMain = (props) => {
     onMount(toggleMail);
   },[onMount, visible, toggleMail]);
 
-  //email sign up button
-  // <DefaultButton shadowless animated icon="arrowRightWhite" href="https://bit.ly/lovecareermagic" id="kickstarterButton" className="kickstarterButton" text={t('navbar.kickstarter')}/>
+  //kickstarter
+  // <DefaultButton shadowless animated icon="forward" id="emailToggleButtonMobile" className={`${mailButtonVisibleClass} liveKS`} href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
 
   //navbar open
-  // <DefaultButton shadowless animated icon="forward" id="emailToggleButtonMobile" className={`${mailButtonVisibleClass} GTMtoggleEmailButton`} onClick={toggleMail} text={t('email form.joinbutton')}/>
   return (
     <div className={`navbarClass ${isVisibleClass}`}>
 
@@ -82,7 +81,7 @@ export const NavbarMain = (props) => {
         </GsapFadeScrub>
         <div className="navbarFloatRight">
           <GsapFadeScrub scrub startScreenTop fadeIn >
-            <DefaultButton shadowless animated icon="forward" id="emailToggleButtonMobile" className={`${mailButtonVisibleClass} liveKS`} href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+            <DefaultButton shadowless animated icon="forward" id="emailToggleButtonMobile" className={`${mailButtonVisibleClass} GTMtoggleEmailButton`} onClick={toggleMail} text={t('email form.joinbutton')}/>
           </GsapFadeScrub>
           <button
             id="navbarOpenClose"

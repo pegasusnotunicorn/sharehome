@@ -7,7 +7,7 @@ import { CharacterSpotlight } from '../utils/CharacterSpotlight.js';
 import { GsapFadeDelay, GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";
 import useWindowDimensions from '../utils/useWindowDimensions.js';
 import DefaultButton from '../utils/DefaultButton.js';
-// import EmailForm from '../utils/EmailForm.js';
+import EmailForm from '../utils/EmailForm.js';
 
 // sections
 import CarouselSection from "../utils/CarouselSection.js";
@@ -56,8 +56,11 @@ const HomePage = forwardRef((props, ref) => {
   //   </div>
   // </GsapFadeDelay>
 
-  // <EmailForm className="mainpageEmail" hideTitle isActiveAndDesktop />
-  // <EmailForm className="mainpageEmail secondMainpageEmail" hideTitle />
+  // <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+
+
+  // <DefaultButton shadowless animated icon="arrowRightWhite" style={{marginBottom:"50px",width:"calc(100% - 2em)"}} className="liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+  // <DefaultButton shadowless animated icon="arrowRightWhite" className="liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
 
   return (
     <div className="content">
@@ -73,7 +76,7 @@ const HomePage = forwardRef((props, ref) => {
               <h4 className={`${homeStyles.mobileTagLine} is-hidden-desktop`}>{t('main page.mobile tag line')}</h4>
             </GsapFadeDelay>
             <GsapFadeDelay delay={1500} className={homeStyles.scrollContainer}>
-              <DefaultButton shadowless animated icon="arrowRightWhite" style={{marginBottom:"50px",width:"calc(100% - 2em)"}} className="liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+              <EmailForm className="mainpageEmail" hideTitle isActiveAndDesktop />
               <GsapFadeScrub scrub startScreenTop fadeOut >
                 <div className={homeStyles.scrollHorizontalContainer}>
                   <div id={homeStyles.animatedScroll} className={homeStyles.scrollVerticalContainer}></div>
@@ -101,7 +104,7 @@ const HomePage = forwardRef((props, ref) => {
             </div>
             <div className={`${homeStyles.descriptionTextWrapper} subcontentWrapper min-width`}>
               <p>{t('main page.description.subtitle3')}</p>
-              <DefaultButton shadowless animated icon="arrowRightWhite" className="liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+              <EmailForm className="mainpageEmail secondMainpageEmail" hideTitle />
             </div>
           </GsapFadeScrub>
         </div>
@@ -203,7 +206,7 @@ const HomePage = forwardRef((props, ref) => {
         <GsapFadeScrub fadeIn className={`${homeStyles.finalButtonsContainer} subcontentWrapper`}>
           <h1>{t('main page.final.description')}</h1>
           <div className={`${homeStyles.finalButtonsWrapper}`}>
-            <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+            <DefaultButton shadowless icon="email_white" ref={navbarButton} className={`${homeStyles.topMailButton} GTMtoggleEmailButton` } text={t('email form.joinbutton')}/>
             <DefaultButton inverted borderedBlack shadowless icon="favorite" href="https://sysifuscorp.com" text={t('main page.final.otherworks')}/>
           </div>
         </GsapFadeScrub>

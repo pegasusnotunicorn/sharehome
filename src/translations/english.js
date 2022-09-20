@@ -108,7 +108,7 @@ const english = {
         "description": "Character Spotlight",
       },
       "final": {
-        "description": "Live now on Kickstarter!",
+        "description": "Coming to Kickstarter!",
         "otherworks": "Check out my other game",
       },
     },

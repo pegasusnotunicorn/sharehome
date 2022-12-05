@@ -3,14 +3,14 @@ import { initReactI18next } from "react-i18next";
 import LanguageDetector from 'i18next-browser-languagedetector';
 
 import english from "./translations/english.js";
-import japanese from "./translations/japanese.js";
+// import japanese from "./translations/japanese.js";
 
 // the translations
 // (tip move them in a JSON file and import them,
 // or even better, manage them via a UI: https://react.i18next.com/guides/multiple-translation-files#manage-your-translations-with-a-management-gui)
 const resources = {
   "en-US": english,
-  "ja": japanese
+  // "ja": japanese
 };
 
 i18n
@@ -19,7 +19,8 @@ i18n
   .init({
     resources,
     lng: "en-US",
-    supportedLngs: ["en-US", "ja"],
+    // supportedLngs: ["en-US", "ja"],
+    supportedLngs: ["en-US"],
     fallbackLng: "en-US",
     // lng: "en-US", // language to use, more information here: https://www.i18next.com/overview/configuration-options#languages-namespaces-resources
     // // you can use the i18n.changeLanguage function to change the language manually: https://www.i18next.com/overview/api#changelanguage

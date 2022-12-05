@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import i18n from "i18next";
+// import i18n from "i18next";
 
 import { GsapFadeDelay, GsapFadeScrub } from "../utils/useGsap.js";
 import ShootingStar from './ShootingStar.js';
@@ -20,10 +20,10 @@ export const NavbarMain = (props) => {
 
   //function to change language
   const { t } = useTranslation();
-  const changeLanguage = (lang) => {
-    i18n.changeLanguage(lang);
-    document.getElementById('sharehome').setAttribute("language", lang);
-  }
+  // const changeLanguage = (lang) => {
+  //   i18n.changeLanguage(lang);
+  //   document.getElementById('sharehome').setAttribute("language", lang);
+  // }
 
   //toggle email logic
   const { width } = useWindowDimensions();
@@ -71,6 +71,11 @@ export const NavbarMain = (props) => {
   //kickstarter
   // <DefaultButton shadowless animated icon="forward" id="emailToggleButtonMobile" className={`${mailButtonVisibleClass} liveKS`} href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
 
+  // <p className="languageChangeWrapper noselect"><span className="languageChangeSpan noselect"
+  //   onClick={()=>{ changeLanguage("en-US")}}>English</span> / <span className="languageChangeSpan noselect"
+  //   onClick={()=>{ changeLanguage("ja")}}>日本語</span>
+  // </p>
+
   //navbar open
   return (
     <div className={`navbarClass ${isVisibleClass}`}>
@@ -106,10 +111,6 @@ export const NavbarMain = (props) => {
               <NavLink onClick={toggleNav} to="/characters" activeClassName="is-active" className="navbarButton noselect">{t('navbar.characters')}</NavLink>
               <NavLink onClick={toggleNav} to="/contact" activeClassName="is-active" className="navbarButton noselect">{t('navbar.contact us')}</NavLink>
               <a href="https://pegasusgames.medium.com/" rel="noopener noreferrer" target="_blank" className="navbarButton noselect" dangerouslySetInnerHTML={{__html: t("navbar.blog") }}></a>
-              <p className="languageChangeWrapper noselect"><span className="languageChangeSpan noselect"
-                onClick={()=>{ changeLanguage("en-US")}}>English</span> / <span className="languageChangeSpan noselect"
-                onClick={()=>{ changeLanguage("ja")}}>日本語</span>
-              </p>
             </div>
           </div>
           <div className="navbarChildren navbarCenterBorder"></div>

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 //custom files
 import GameModeIcons from "../About/utils/GameModeIcons.js";
 import { CharacterSpotlight } from '../utils/CharacterSpotlight.js';
-import { GsapFadeDelay, GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";
+import { GsapFadeDelay, GsapFadeScrub } from "../utils/useGsap.js";
 import useWindowDimensions from '../utils/useWindowDimensions.js';
 import DefaultButton from '../utils/DefaultButton.js';
 import EmailForm from '../utils/EmailForm.js';
@@ -12,9 +12,9 @@ import EmailForm from '../utils/EmailForm.js';
 // sections
 import CarouselSection from "../utils/CarouselSection.js";
 import ParallaxSection from "./ParallaxSection.js";
-import CharactersDeckSection from "./CharactersDeckSection.js";
-import { EventsDeckSection, GoalsDeckSection } from "./EventsGoalsDeckSection.js";
-import LikeHateSection from "./LikeHateSection.js";
+// import CharactersDeckSection from "./CharactersDeckSection.js";
+// import { EventsDeckSection, GoalsDeckSection } from "./EventsGoalsDeckSection.js";
+// import LikeHateSection from "./LikeHateSection.js";
 import { EmojiSection } from "../utils/EmojiSection.js";
 
 import homeStyles from '../../css/homePage.module.css';
@@ -58,9 +58,80 @@ const HomePage = forwardRef((props, ref) => {
 
   // <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
 
-
   // <DefaultButton shadowless animated icon="arrowRightWhite" style={{marginBottom:"50px",width:"calc(100% - 2em)"}} className="liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
   // <DefaultButton shadowless animated icon="arrowRightWhite" className="liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+
+  // <GsapFadeScrub fadeIn scrubStartBot id={`${homeStyles.howToPlay}`} className={`${homeStyles.mainpageContainer}`}>
+  //   <h1>{t('main page.how to play.description')}</h1>
+  //   <p>{t('main page.how to play.steps')}</p>
+  // </GsapFadeScrub>
+  //
+  // <div id={`${homeStyles.characterContainer}`} className={`${homeStyles.mainpageContainer}`}>
+  //   <CharactersDeckSection />
+  //   <div className={`${homeStyles.characterTextContainer}`}>
+  //     <GsapFadeScrub fadeIn>
+  //       <GsapWiggle className={`${homeStyles.characterContainerSVG}`}>
+  //         <img src="/images/icons/pointer.svg" alt="point finger" />
+  //         <p className="is-hidden-mobile">{t('main page.character.click me')}</p>
+  //       </GsapWiggle>
+  //       <h1>{t('main page.character.description')}</h1>
+  //       <p>{t('main page.character.moretocome')}</p>
+  //       <div className={`${homeStyles.buttonWrapper}`}>
+  //         <DefaultButton shadowless icon="people_white" navlink="/characters" text={t('main page.character.clicktoseemore')}/>
+  //       </div>
+  //     </GsapFadeScrub>
+  //   </div>
+  // </div>
+  //
+  // <div id={`${homeStyles.eventsContainer}`} className={`${homeStyles.mainpageContainer}`}>
+  //   <GsapFadeScrub fadeIn scrubStartCenter className={`${homeStyles.eventsLeftContainer}`}>
+  //     <GsapWiggle id={`${homeStyles.eventsContainerSVGcake}`} className={`${homeStyles.eventsContainerSVG}`}>
+  //       <img src="/images/icons/cake.svg" alt="cake" />
+  //     </GsapWiggle>
+  //     <GsapWiggle id={`${homeStyles.eventsContainerSVGlovekey}`} className={`${homeStyles.eventsContainerSVG}`}>
+  //       <img src="/images/icons/lovekey.svg" alt="cake" />
+  //     </GsapWiggle>
+  //     <GsapWiggle id={`${homeStyles.eventsContainerSVGplanet}`} className={`${homeStyles.eventsContainerSVG}`}>
+  //       <img src="/images/icons/planet.svg" alt="cake" />
+  //     </GsapWiggle>
+  //     <div className={`${homeStyles.eventsTextContainer}`}>
+  //       <h1>{t('main page.events.description')}</h1>
+  //       <p>{t('main page.events.subdescription')}</p>
+  //     </div>
+  //   </GsapFadeScrub>
+  //   <EventsDeckSection />
+  // </div>
+  //
+  // <LikeHateSection
+  //   id={`${homeStyles.likehateContainer}`}
+  //   className={`${homeStyles.mainpageContainer}`}
+  // />
+  //
+  // <div id={`${homeStyles.goalsContainer}`} className={`${homeStyles.mainpageContainer}`}>
+  //   <GoalsDeckSection />
+  //   <GsapFadeScrub fadeIn scrubStartCenter className={`${homeStyles.goalsRightContainer}`}>
+  //     <GsapWiggle id={`${homeStyles.goalsContainerSVGflag}`} className={`${homeStyles.goalsContainerSVG}`}>
+  //       <img src="/images/icons/flag.svg" alt="flag" />
+  //     </GsapWiggle>
+  //     <GsapWiggle id={`${homeStyles.goalsContainerSVGscroll}`} className={`${homeStyles.goalsContainerSVG}`}>
+  //       <img src="/images/icons/scroll.svg" alt="scroll" />
+  //     </GsapWiggle>
+  //     <div className={`${homeStyles.goalsTextContainer}`}>
+  //       <h1>{t('main page.goals.description')}</h1>
+  //       <p>{t('main page.goals.subdescription')}</p>
+  //     </div>
+  //   </GsapFadeScrub>
+  // </div>
+  //
+  // <div className={`${homeStyles.rulebookSection} subcontentWrapper`}>
+  //   <GsapFadeScrub fadeIn>
+  //     <div className={`${homeStyles.rulebookWrapper}`}>
+  //       <DefaultButton inverted borderedBlack shadowless icon="faq" navlink="/howtoplay" text={t('main page.mechanics.howtoplay')}/>
+  //       <DefaultButton shadowless icon="rulebookWhite" href="/rulebook.pdf" text={t('main page.mechanics.rulebook')}/>
+  //     </div>
+  //   </GsapFadeScrub>
+  // </div>
+
 
   return (
     <div className="content">
@@ -124,77 +195,6 @@ const HomePage = forwardRef((props, ref) => {
       </div>
 
       <CarouselSection className={homeStyles.mainpageCarousel} totalPictures={14} directory="/images/photoshoot/game" filename="pictures"/>
-
-      <GsapFadeScrub fadeIn scrubStartBot id={`${homeStyles.howToPlay}`} className={`${homeStyles.mainpageContainer}`}>
-        <h1>{t('main page.how to play.description')}</h1>
-        <p>{t('main page.how to play.steps')}</p>
-      </GsapFadeScrub>
-
-      <div id={`${homeStyles.characterContainer}`} className={`${homeStyles.mainpageContainer}`}>
-        <CharactersDeckSection />
-        <div className={`${homeStyles.characterTextContainer}`}>
-          <GsapFadeScrub fadeIn>
-            <GsapWiggle className={`${homeStyles.characterContainerSVG}`}>
-              <img src="/images/icons/pointer.svg" alt="point finger" />
-              <p className="is-hidden-mobile">{t('main page.character.click me')}</p>
-            </GsapWiggle>
-            <h1>{t('main page.character.description')}</h1>
-            <p>{t('main page.character.moretocome')}</p>
-            <div className={`${homeStyles.buttonWrapper}`}>
-              <DefaultButton shadowless icon="people_white" navlink="/characters" text={t('main page.character.clicktoseemore')}/>
-            </div>
-          </GsapFadeScrub>
-        </div>
-      </div>
-
-      <div id={`${homeStyles.eventsContainer}`} className={`${homeStyles.mainpageContainer}`}>
-        <GsapFadeScrub fadeIn scrubStartCenter className={`${homeStyles.eventsLeftContainer}`}>
-          <GsapWiggle id={`${homeStyles.eventsContainerSVGcake}`} className={`${homeStyles.eventsContainerSVG}`}>
-            <img src="/images/icons/cake.svg" alt="cake" />
-          </GsapWiggle>
-          <GsapWiggle id={`${homeStyles.eventsContainerSVGlovekey}`} className={`${homeStyles.eventsContainerSVG}`}>
-            <img src="/images/icons/lovekey.svg" alt="cake" />
-          </GsapWiggle>
-          <GsapWiggle id={`${homeStyles.eventsContainerSVGplanet}`} className={`${homeStyles.eventsContainerSVG}`}>
-            <img src="/images/icons/planet.svg" alt="cake" />
-          </GsapWiggle>
-          <div className={`${homeStyles.eventsTextContainer}`}>
-            <h1>{t('main page.events.description')}</h1>
-            <p>{t('main page.events.subdescription')}</p>
-          </div>
-        </GsapFadeScrub>
-        <EventsDeckSection />
-      </div>
-
-      <LikeHateSection
-        id={`${homeStyles.likehateContainer}`}
-        className={`${homeStyles.mainpageContainer}`}
-      />
-
-      <div id={`${homeStyles.goalsContainer}`} className={`${homeStyles.mainpageContainer}`}>
-        <GoalsDeckSection />
-        <GsapFadeScrub fadeIn scrubStartCenter className={`${homeStyles.goalsRightContainer}`}>
-          <GsapWiggle id={`${homeStyles.goalsContainerSVGflag}`} className={`${homeStyles.goalsContainerSVG}`}>
-            <img src="/images/icons/flag.svg" alt="flag" />
-          </GsapWiggle>
-          <GsapWiggle id={`${homeStyles.goalsContainerSVGscroll}`} className={`${homeStyles.goalsContainerSVG}`}>
-            <img src="/images/icons/scroll.svg" alt="scroll" />
-          </GsapWiggle>
-          <div className={`${homeStyles.goalsTextContainer}`}>
-            <h1>{t('main page.goals.description')}</h1>
-            <p>{t('main page.goals.subdescription')}</p>
-          </div>
-        </GsapFadeScrub>
-      </div>
-
-      <div className={`${homeStyles.rulebookSection} subcontentWrapper`}>
-        <GsapFadeScrub fadeIn>
-          <div className={`${homeStyles.rulebookWrapper}`}>
-            <DefaultButton inverted borderedBlack shadowless icon="faq" navlink="/howtoplay" text={t('main page.mechanics.howtoplay')}/>
-            <DefaultButton shadowless icon="rulebookWhite" href="/rulebook.pdf" text={t('main page.mechanics.rulebook')}/>
-          </div>
-        </GsapFadeScrub>
-      </div>
 
       <div id={`${homeStyles.spotlightContainer}`} className={`${homeStyles.mainpageContainer}`}>
         <CharacterSpotlight invert allCharsButton sectionTitle={t('main page.spotlight.description')} />

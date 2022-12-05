@@ -58,13 +58,13 @@ const english = {
     "main page":{
       "mobile tag line": "The only reality TV card game\n\nwith orcs, dragons, and wizards!",
       "hero": {
-        "subtitle": "A collaborative storytelling RPG\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world",
+        "subtitle": "A collaborative storytelling game\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world",
         "player count": "4 ~ 20+ players",
         "play time": "20+ minutes",
       },
       "description": {
         "subtitle2": "Welcome to SHAREHOME! A reality TV show that documents the lives of six mythical creatures living together.",
-        "subtitle3": "Love, Career & Magic is an icebreaker party game where you fall in love, stir up drama, and fulfill secret goals!",
+        "subtitle3": "Play as a mythological creature in a reality TV show, complete chaotic character arcs, and achieve high ratings for the show!",
         "subtitle4": "Keep scrolling to learn more!",
       },
       "how to play": {
@@ -117,7 +117,7 @@ const english = {
       "joinbutton": "Sign up!",
       "prompt": "Stay updated on the latest news!",
       "button": "Sign up!",
-      "promise": "Sign up to stay updated on the latest news!",
+      "promise": "Sign up for virtual playtesting and general updates!",
       "sending": "Submitting...",
       "success": "Thank you for signing up!"
     },
@@ -274,7 +274,7 @@ const english = {
       "discordjoin": "Get Free Emojis",
       "emojidesc1":"See previews and unreleased content before anyone else.",
       "emojidesc2":"Be a part of the developer journey from the beginning.",
-      "emojidesc3":"Give feedback for all upcoming projects.",
+      "emojidesc3":"Playtest and give feedback to help shape the game.",
     },
 
     "contact page":{

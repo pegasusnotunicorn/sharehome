@@ -59,8 +59,8 @@ const english = {
       "mobile tag line": "The only reality TV card game\n\nwith orcs, dragons, and wizards!",
       "hero": {
         "subtitle": "A collaborative storytelling game\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world",
-        "player count": "4 ~ 20+ players",
-        "play time": "20+ minutes",
+        "player count": "3 ~ 6 players",
+        "play time": "20 minutes",
       },
       "description": {
         "subtitle2": "Welcome to SHAREHOME! A reality TV show that documents the lives of six mythical creatures living together.",

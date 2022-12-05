@@ -36,7 +36,7 @@ const english = {
     "free artbook page": {
       "title": "Free digital artbook!",
       "description_meta": "For a limited time, sign up for my newsletter and get a free digital artbook!",
-      "description": "For a limited time only! Until the Kickstarter campaign launches at the end of Summer 2022.",
+      "description": "For a limited time only until the Kickstarter campaign launches!",
     },
 
     "artbook download page": {
@@ -119,7 +119,8 @@ const english = {
       "button": "Sign up!",
       "promise": "Sign up for virtual playtesting and general updates!",
       "sending": "Submitting...",
-      "success": "Thank you for signing up!"
+      "success": "Thank you! You should be receiving an email soon.",
+      "error": "Something went wrong! Please refresh and try again."
     },
 
     "about page":{

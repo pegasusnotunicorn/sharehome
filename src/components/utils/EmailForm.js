@@ -1,11 +1,7 @@
-import React, { useEffect } from 'react';
-import MailchimpSubscribe from "react-mailchimp-subscribe";
+import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DefaultButton from '../utils/DefaultButton.js';
-
-const url = "https://sharehomethegame.us1.list-manage.com/subscribe/post?u=492281ef78974a5a81ee73e99&amp;id=53c3e28f07";
-// const url = "https://faketest.com";
 
 //form for mailchimp email
 export const EmailForm = (props) => {
@@ -13,77 +9,84 @@ export const EmailForm = (props) => {
   const isActiveAndDesktop = props.isActiveAndDesktop;
   const classFromParent = props.className;
 
-  return (
-    <MailchimpSubscribe
-      url={url}
-      render={({ subscribe, status, message }) => (
-        <CustomForm
-          status={status}
-          message={message}
-          onValidated={formData => subscribe(formData)}
-          isActiveAndDesktop={isActiveAndDesktop}
-          hideTitle={hideTitle}
-          classFromParent={classFromParent}
-        />
-      )}
-    />
-  );
-};
-
-const CustomForm = ({ status, message, onValidated, isActiveAndDesktop, hideTitle, classFromParent}) => {
   const { t } = useTranslation();
-  let text = t('email form.promise');
-  let email;
-
-  //function to submit to mailchimp
-  const submit = () => {
-    email &&
-    email.value.indexOf("@") > -1 &&
-    onValidated({
-      EMAIL: email.value
-    });
-  }
+  let emailRef = useRef(null);
+  let [response, setResponse] = useState(t('email form.promise'));
 
   //focus the email input on desktop
   useEffect(()=>{
-    if (isActiveAndDesktop && email){
-      email.focus();
+    if (isActiveAndDesktop && emailRef){
+      emailRef.current.focus();
     }
-  }, [email, isActiveAndDesktop]);
-
-  //status text above the form
-  if (status === "success"){
-    text = t('email form.success');
-  }
-  else if (status === "error"){
-    text = message.replace("0 - ", "");
-  }
-  else if (status === "sending"){
-    text = t('email form.sending');
-  }
+  }, [isActiveAndDesktop]);
 
   //submit button text depending on if navbar or main page
   let submitButtonText = (hideTitle) ? t('email form.joinbutton') : t('email form.button');
+
+  //function to submit email
+  let submitEmail = (e) => {
+    e.preventDefault();
+
+    if (e.target.checkValidity()){
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fields:{
+            email: emailRef.current.value
+          }
+        })
+      };
+
+      setResponse(t('email form.sending'));
+
+      fetch('https://assets.mailerlite.com/jsonp/248479/forms/73678789967611030/subscribe', requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        if (!data.success || data.errors){
+          if (data.errors.fields.email)
+          setResponse(data.errors.fields.email[0]);
+        }
+        else {
+          setResponse(t('email form.success'));
+        }
+      });
+    }
+    else {
+      setResponse(t('email form.error'));
+    }
+  }
 
   return (
     <div className={`emailWrapper ${classFromParent}`}>
       { !hideTitle &&
         <h1 className="formPrompt">{t('email form.prompt')}</h1>
       }
-      <p className="forminputText" dangerouslySetInnerHTML={{ __html: text }}></p>
-      <form className="formWrapper" autoComplete="on" onSubmit={(e)=>e.preventDefault()}>
+      <p className="forminputText" dangerouslySetInnerHTML={{ __html: response }}></p>
+      <form
+        className="formWrapper"
+        autoComplete="on"
+        action=""
+        data-code=""
+        method="post"
+        target="_blank"
+        onSubmit={submitEmail}
+      >
         <input
-          ref={node => (email = node)}
+          ref={emailRef}
           type="email"
           className="emailInput"
+          data-inputmask=""
+          name="fields[email]"
           placeholder="Enter your email"
           autoComplete="email"
           required
         />
-        <DefaultButton animated shadowless icon="forward" onClick={submit} button="submit" className="subscribeButton" text={submitButtonText} />
+        <DefaultButton animated shadowless icon="forward" button="submit" className="subscribeButton" text={submitButtonText} />
       </form>
+
     </div>
   )
-}
+};
 
 export default EmailForm;

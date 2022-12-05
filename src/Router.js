@@ -11,19 +11,13 @@ import ContactPage from './components/ContactPage.js';
 import ErrorPage from './components/ErrorPage.js';
 import Footer from './components/Footer.js';
 // import FreeStickersPage from './components/FreeStickersPage.js';
-// import ArtbookDownloadPage from './components/ArtbookDownloadPage.js';
-// import FreeArtbookPage from './components/FreeArtbookPage.js';
+import ArtbookDownloadPage from './components/ArtbookDownloadPage.js';
+import FreeArtbookPage from './components/FreeArtbookPage.js';
 
 const Router = (props) => {
 
   // <Route path="/designer" render={() => {
   //   return <DesignerPage />
-  // }} />
-  // <Route exact path="/freeartbook" render={() => {
-  //     return <FreeArtbookPage />
-  //   }} />
-  // <Route exact path="/digitalartbook" render={() => {
-  //   return <ArtbookDownloadPage />
   // }} />
   // <Route exact path="/freesticker" render={() => {
   //     return <FreeStickersPage />
@@ -50,6 +44,12 @@ const Router = (props) => {
           }} />
           <Route path="/howtoplay" render={() => {
             return <AboutPage />
+          }} />
+          <Route exact path="/freeartbook" render={() => {
+            return <FreeArtbookPage />
+          }} />
+          <Route exact path="/digitalartbook" render={() => {
+            return <ArtbookDownloadPage />
           }} />
           <Route path={["/characters/:name", "/characters"]} render={() => {
             return <CharactersPage />

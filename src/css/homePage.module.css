@@ -65,9 +65,22 @@
   justify-content: space-between;
 }
 
+.heroLogo{
+  position: absolute;
+  width: 200px !important;
+  height: 200px !important;
+  border-radius: 50px;
+  padding-left: 6px;
+  background-color: rgba(255,255,255,1);
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+}
+
 .heroImage {
   height:50%;
-  padding-top:10vh;
+  padding-top:5vh;
+  box-shadow:  0 2px 2px -2px #323232;
 }
 
 .heroImage > img {
@@ -84,13 +97,18 @@
     height:100%;
     padding-top:0;
     display:flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  .heroLogo{
+    width: 150px !important;
+    height: 150px !important;
+    top:35%;
   }
   .heroImage > img {
-    width:calc(100% - 4em);
+    width:calc(100%);
     max-width:500px;
-    margin:auto;
+    margin:0;
     height:auto;
   }
   .mobileTagLine{
@@ -98,7 +116,7 @@
     line-height:70%;
     margin:0;
     margin-bottom:2em;
-    margin-top:1em;
+    margin-top:6em;
   }
 }
 
@@ -326,6 +344,7 @@
 #howToPlay{
   height:15vh;
   margin:auto;
+  margin-top:5vh;
   text-align: center;
   display:flex;
   flex-direction: column;
@@ -362,10 +381,6 @@
 
   .descriptionTextWrapper > a{
     width:calc(100% - 2em);
-  }
-
-  #howToPlay{
-    height:5vh;
   }
 }
 

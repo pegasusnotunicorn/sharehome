@@ -119,7 +119,7 @@
 /* <editor-fold> -------------------------------------------EVENT / GOAL CARD */
 
 .eventGoalCardWrapper{
-  font-family: 'Roboto Regular';
+  font-family: 'Futura', 'Roboto Regular';
   height: 100%;
   width: 100%;
   display: flex;
@@ -129,16 +129,17 @@
 
 .eventGoalTextWrapper{
   color: #323232;
-  font-size: 1.75em;
+  font-size: 3.5em;
   line-height: 125%;
   text-align: left;
   overflow: hidden;
-  border-radius: 1em;
-  padding: 1em;
+  border-radius: .25em;
+  padding: .5em;
+  padding-top:.25em;
   margin: auto;
   background: #FFF;
-  height: calc(100% - 4em);
-  width: calc(100% - 4em);
+  height: calc(100% - 1.75em);
+  width: calc(100% - 2em);
 }
 
 @media only screen and (max-width: 900px) {
@@ -147,7 +148,7 @@
     padding-bottom:1em !important;
   }
   .eventGoalTextWrapper{
-    font-size: 1.25em !important;
+    font-size: 2em !important;
   }
 }
 
@@ -162,7 +163,7 @@
   bottom: 0;
   color: #FFF;
   width: calc(100% - 4em);
-  padding: 2em;
+  padding: 1em;
   padding-left: 2em;
   padding-right: 2em;
   margin: auto;
@@ -172,6 +173,10 @@
 /* </editor-fold> ----------------------------------------------------------- */
 
 /* <editor-fold> -------------------------------------------------- CARD BACK */
+
+.cardBack {
+  width:100%;
+}
 
 .cardBack img {
   width:100%;

@@ -123,6 +123,8 @@ const CardFront = (props) => {
         );
       case ("goal"):
       case ("event"):
+      case ("direction"):
+      case ("episode"):
       default:
         return (
           <div className="noselect flipcardFront">

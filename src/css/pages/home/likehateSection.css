@@ -29,6 +29,8 @@
   height:490px;
   position:relative;
   display:flex;
+  background-color:#222;
+  border-radius:4px;
 }
 
 .tableSplash, .arrowContainer {
@@ -45,14 +47,59 @@
   z-index:1;
 }
 
+.tableSplash.lydia{
+  -webkit-mask-image:radial-gradient(circle at 88% 66%, white 15%, rgba(0, 0, 0, 50%) 0%);
+  mask-image:radial-gradient(circle at 88% 66%, white 15%, rgba(0, 0, 0, 50%) 0%);
+}
+
+.tableSplash.tsukasa{
+  -webkit-mask-image:radial-gradient(circle at 74% 50%, white 18%, rgba(0, 0, 0, 50%) 0%);
+  mask-image:radial-gradient(circle at 74% 50%, white 18%, rgba(0, 0, 0, 50%) 0%);
+}
+
+.tableSplash.ahxi{
+  -webkit-mask-image:radial-gradient(circle at 63% 32%, white 21%, rgba(0, 0, 0, 50%) 0%);
+  mask-image:radial-gradient(circle at 63% 32%, white 21%, rgba(0, 0, 0, 50%) 0%);
+}
+
+.tableSplash.beatrice{
+  -webkit-mask-image:radial-gradient(circle at 47% 22%, white 25%, rgba(0, 0, 0, 50%) 0%);
+  mask-image:radial-gradient(circle at 47% 22%, white 25%, rgba(0, 0, 0, 50%) 0%);
+}
+
+.tableSplash.urg{
+  -webkit-mask-image:radial-gradient(circle at 37% 60%, white 25%, rgba(0, 0, 0, 50%) 0%);
+  mask-image:radial-gradient(circle at 37% 60%, white 25%, rgba(0, 0, 0, 50%) 0%);
+}
+
+.tableSplash.kottr{
+  -webkit-mask-image:radial-gradient(circle at 19% 52%, white 21%, rgba(0, 0, 0, 50%) 0%);
+  mask-image:radial-gradient(circle at 19% 52%, white 21%, rgba(0, 0, 0, 50%) 0%);
+}
+
+.characterArcContainer{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction:row;
+  position:absolute;
+}
+
 .arrowsContainer{
   width:100%;
   height:100%;
   z-index:2;
+  flex-grow:0;
 }
 
 .arrowWrapper {
-  position:absolute;
+  transform:rotate(90deg) scaleX(1.5);
+  margin-left:-2em;
+  margin-right:-2em;
+}
+
+.arrowWrapper.flipped {
+  transform:rotate(90deg) scaleX(1.5) scaleY(-1);
 }
 
 .arrowWrapperSVG {
@@ -74,6 +121,42 @@
   height:100%;
   width:100px;
   z-index:1;
+}
+
+.characterArcWrapper {
+  display:flex;
+  flex-direction:column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.characterArc {
+  margin:.25em;
+  width:300px;
+  padding:.35em;
+  border-radius:.25em;
+  font-size:1.5em;
+}
+
+.characterArc.goodArc {
+  background-color:#5F5AA2;
+}
+
+.characterArc.badArc {
+  background-color:#DD7373;
+}
+
+.characterArc.chaoticArc {
+  background-color:#F1DB4B;
+}
+
+.characterArcText {
+  color:#222;
+  background-color:#FFF;
+  border-radius:.25em;
+  width:calc(100% - .3em);
+  height:calc(100% - .3em);
+  padding:.15em;
 }
 
 /* </editor-fold> */
@@ -112,7 +195,7 @@
   }
   .likehateRightContainer {
     width:calc(100% - 4em);
-    margin-top:-3em;
+    margin-top:-5em;
     padding-top:0;
     justify-content: flex-start;
     height:40%;
@@ -156,9 +239,6 @@ span.hateMode{
 @media only screen and (max-width: 900px) {
   .likeHateSVG {
 
-  }
-  .likehateTextContainer h1{
-    margin-bottom:0;
   }
 }
 

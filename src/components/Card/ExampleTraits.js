@@ -1,0 +1,111 @@
+const badTraits = [
+  "HATED",
+  "JEALOUS",
+  "DUMB",
+  "CONCEITED",
+  "CRINGEY",
+  "ROWDY",
+  "PRIDEFUL",
+  "RUDE",
+  "LAZY",
+  "SARCASTIC",
+  "UNEMPLOYED",
+  "DRAMATIC",
+  "GROUCHY",
+  "SELFISH",
+  "DISHONEST",
+  "OPINIONATED",
+  "IMPULSIVE",
+  "JUDGMENTAL",
+  "INSATIABLE",
+  "FORGETFUL",
+  "GLUTTONOUS",
+  "INFLEXIBLE",
+  "MANIPULATIVE",
+  "UNHEALTHY",
+  "DIVORCED",
+  "EXCESSIVE",
+  "CALCULATING",
+  "MISANTHROPIC",
+  "COLD-BLOODED",
+  "BIASED",
+]
+
+const goodTraits = [
+  "DISCIPLINED",
+  "CONFIDENT",
+  "CONSIDERATE",
+  "SELFLESS",
+  "OUTGOING",
+  "LOYAL",
+  "HUMBLE",
+  "HARD-WORKING",
+  "ADVENTUROUS",
+  "WISE",
+  "LOVEABLE",
+  "SMART",
+  "AMBITIOUS",
+  "TRUSTWORTHY",
+  "CHILL",
+  "EMPATHETIC",
+  "BROAD-MINDED",
+  "THOUGHTFUL",
+  "FORGIVING",
+  "ATTENTIVE",
+  "DETAIL ORIENTED",
+  "DECISIVE",
+  "AGREEABLE",
+  "DEPENDABLE",
+  "HEALTHY",
+  "MARRIED",
+  "SELF-SUFFICIENT",
+  "SOCIABLE",
+  "PHILANTHROPIC",
+  "COMPASSIONATE",
+]
+
+const chaoticTraits = [
+  "MURDERED",
+  "HYPNOTIZED",
+  "JAILED",
+  "ENLARGED",
+  "HEXED",
+  "BLINDED",
+  "GODFORSAKEN",
+  "POISONED",
+  "INDOCTRINATED",
+  "ENCHANTED",
+  "FERALIZED",
+  "HOSPITALIZED",
+  "INFLAMED",
+  "THUNDERSTRUCK",
+  "WATERLOGGED",
+  "FROZEN",
+  "UNEARTHED",
+  "CLONED",
+  "SMITTEN",
+  "DISSECTED",
+  "DIAGNOSED",
+  "FERTILIZED",
+  "POLYAMOROUS",
+  "EXPLODED",
+  "PIXELATED",
+  "GLOOPED",
+  "HYDRO-GALACTED",
+  "QUIXEOLTED",
+  "FLOBDRAKENED",
+  "PLUMBUZZLED",
+]
+
+// export a random trait given type
+export function getRandomTrait(type){
+  if (type === "good"){
+    return goodTraits[Math.floor(Math.random() * goodTraits.length)];
+  }
+  else if (type === "bad") {
+    return badTraits[Math.floor(Math.random() * badTraits.length)];
+  }
+  else {
+    return chaoticTraits[Math.floor(Math.random() * chaoticTraits.length)];
+  }
+}

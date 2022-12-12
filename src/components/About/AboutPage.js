@@ -4,13 +4,11 @@ import { useTranslation } from 'react-i18next';
 //custom files
 import GameModeDetails from './utils/GameModeDetails.js';
 import Roleplay from './components/Roleplay.js';
-import useWindowDimensions from '../utils/useWindowDimensions.js';
 
 import '../../css/pages/aboutPage.css';
 
 const AboutPage = (props) => {
   const { t } = useTranslation();
-  let { width } = useWindowDimensions();
 
   // styling for character cards on about page
   let cardStyle = {

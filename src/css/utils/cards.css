@@ -107,6 +107,25 @@
   background-image:linear-gradient(rgba(255,0,0,0), rgba(0,0,0,.75));
 }
 
+.memberCommCardFullShadow{
+  height:100%;
+  width:100%;
+  position:absolute;
+  background-color:rgba(0,0,0,.35);
+}
+
+.memberCommCardQuestionMark{
+  color:#FFF;
+  font-size:40em;
+  position:absolute;
+  margin:0;
+  font-family: 'Rowdies-Light', 'NotoSansJP Bold';
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  z-index:9;
+}
+
 .memberCommCardImage{
   object-fit:cover;
   width:100%;

@@ -80,7 +80,9 @@ const HomePage = forwardRef((props, ref) => {
         <div className={homeStyles.screenHeight}>
           <GsapFadeDelay delay={0} className={`${homeStyles.heroImage}`} >
             <img alt="Box and components of the card game." src="/images/newsplash.png" />
-            <img className={`${homeStyles.heroLogo}`} alt="Logo of the game." src="/images/lcm.png" />
+            <div className={`${homeStyles.heroLogo}`}>
+              <img className="floating" alt="Logo of the game." src="/images/lcm.png" />
+            </div>
           </GsapFadeDelay>
           <GsapFadeDelay delay={1500}>
             <h4 className={`${homeStyles.mobileTagLine} is-hidden-desktop`}>{t('main page.mobile tag line')}</h4>
@@ -110,7 +112,7 @@ const HomePage = forwardRef((props, ref) => {
                 className={`${homeStyles.gameDetails}`}
                 playerCount={t('main page.hero.player count')}
                 playTime={t('main page.hero.play time')}
-                />
+              />
             </div>
             <div className={`${homeStyles.descriptionTextWrapper} subcontentWrapper min-width`}>
               <p>{t('main page.description.subtitle3')}</p>

@@ -9,6 +9,7 @@ export const CardFrontPerson = (props) => {
   //check if there is a person name, if not get a random
   let cardPerson = (props.personName) ? getSpecificPerson(props.personName) : cardPersonState;
   let disableText = (typeof props.disableText !== "undefined") ? props.disableText : false;
+  let enableQuestionMark = (props.enableQuestionMark) ? props.enableQuestionMark : false;
 
   //object position offset (ratio scales according to size of the card set in parent)
   let cardWidth = Number.parseInt(props.mainStyle.width);
@@ -31,6 +32,16 @@ export const CardFrontPerson = (props) => {
       </div>
     </>
   );
+
+  //enable question mark to signify random character card
+  if (enableQuestionMark) {
+    mainText = (
+      <>
+        <h1 className="memberCommCardQuestionMark">?</h1>
+        <div className="memberCommCardFullShadow"></div>
+      </>
+    )
+  }
 
   return (
     <div className="memberCommCardWrapper">

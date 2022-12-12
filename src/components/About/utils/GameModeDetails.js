@@ -16,6 +16,9 @@ const GameModeDetails = (props) => {
     textDecoration:"underline",
   }
 
+  // rulebook PDF link
+  // <DefaultButton style={rulebookStyle} shadowless icon="rulebook" href="/rulebook.pdf" text={t('main page.mechanics.rulebook')}/>
+
   return (
     <div className="subcontentWrapper margin-top">
       <div className="characterContent">
@@ -25,7 +28,6 @@ const GameModeDetails = (props) => {
         <p>
           {props.description}
         </p>
-        <DefaultButton style={rulebookStyle} shadowless icon="rulebook" href="/rulebook.pdf" text={t('main page.mechanics.rulebook')}/>
         <GameModeIcons
           playerCount={props.playerCount}
           playTime={props.playTime}

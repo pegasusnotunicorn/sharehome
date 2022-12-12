@@ -182,6 +182,10 @@
   padding-left:2em;
 }
 
+.stepBlockRight.paddless{
+  padding-left:0;
+}
+
 .stepBlockDividerHorizontal{
   border-bottom:1px solid rgba(0,0,0,.15);
   width:100%;
@@ -205,6 +209,9 @@
 .stepBlockHorizontal.topAlign{
   align-items: flex-start;
 }
+.stepBlockHorizontal.bottomAlign{
+  align-items: flex-end;
+}
 .stepBlockHorizontal.spaceBetween{
   justify-content: space-between;
 }
@@ -223,6 +230,9 @@
 .stepBlockHorizontal.paddingBottom, .stepBlockVertical.paddingBottom{
   padding-bottom:2em;
 }
+.stepBlockHorizontal.paddingBottomHalf, .stepBlockVertical.paddingBottomHalf{
+  padding-bottom:1em;
+}
 
 .stepBlockVertical{
   display:flex;
@@ -232,12 +242,19 @@
   flex-direction: column;
 }
 
+.cardVertical {
+  flex-direction:row !important;
+}
+
 .stepBlockVertical.leftAlign{
   align-items: flex-start;
   text-align: left;
 }
 
 @media only screen and (max-width:900px) {
+  .cardVertical {
+    flex-direction:column !important;
+  }
   .stepBlockHorizontal.evenWidthChildren.paddingTop{
     padding-top:1em !important;
   }
@@ -270,6 +287,10 @@
 
 /* <editor-fold>--------------------------------------STEP BLOCK STUFF */
 
+.stepBlockFlex {
+  display:flex;
+}
+
 .stepBlockWrapper .boldText {
   text-align:left;
   font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
@@ -297,9 +318,45 @@
   margin:0;
 }
 
-.stepBlockWrapper img {
+.stepBlockWrapper img.iconImage {
   width:50px;
   height:50px;
+}
+
+.stepBlockWrapper img.arrowArc {
+  -webkit-filter: invert(100%); /* safari 6.0 - 9.0 */
+          filter: invert(100%);
+}
+
+.stepBlockWrapper .arrowWrapper {
+  transform: rotate(90deg) scaleX(.75);
+  display:flex;
+}
+
+.stepBlockWrapper .cardImg {
+  height:75px !important;
+  width:100px !important;
+  padding:.25em;
+  border-radius:.5em;
+}
+
+.stepBlockWrapper .halfCardImg {
+  height:50px !important;
+  width:75px !important;
+}
+
+.stepBlockWrapper .doubleCardImg {
+  height:100px !important;
+  width:150px !important;
+}
+
+@media only screen and (max-width:900px) {
+  .stepBlockWrapper .cardImg {
+    height:50px !important;
+    width:75px !important;
+    padding:.15em;
+    border-radius:.5em;
+  }
 }
 
 .stepBlockWrapper img.smallImage {
@@ -314,6 +371,10 @@
 
 .stepBlockWrapper img.paddingRight{
   padding-right:1em;
+}
+
+.stepBlockWrapper img.paddingLeft{
+  padding-left:1em;
 }
 
 .stepBlockWrapper img.translateYUp {
@@ -333,6 +394,15 @@
   float:left;
   padding-left:10px;
   list-style-type:disclosure-closed;
+}
+
+.characterArcWrapperAbout {
+  font-size:.5em;
+  padding-left:3em;
+}
+
+.characterArcWrapperAbout > .characterArc {
+  width: 100% !important;
 }
 
 /* </editor-fold> */

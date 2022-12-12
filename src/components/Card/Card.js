@@ -118,7 +118,8 @@ const CardFront = (props) => {
               personName={props.personName}
               mainStyle={props.mainStyle}
               disableText={props.disableText}
-              />
+              enableQuestionMark={props.enableQuestionMark}
+            />
           </div>
         );
       case ("goal"):

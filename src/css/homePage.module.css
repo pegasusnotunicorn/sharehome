@@ -132,11 +132,11 @@
   }
   .tagLine{
     white-space: pre;
-    line-height:120%;
+    line-height:100%;
     margin:0;
     margin-bottom:2em;
     margin-top:4em;
-    font-size:1em;
+    font-size:0.9em;
   }
   .heroBottomWrapper {
     margin-bottom: 1em;
@@ -798,6 +798,9 @@
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  padding-left:2em;
+  padding-right:2em;
+  width: calc(100% - 4em);
 }
 
 #playthroughContainer h1 {

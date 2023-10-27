@@ -125,7 +125,7 @@ const english = {
       },
       playthrough: {
         description: "Playthrough videos",
-        subdescription: "Watch a playlist of playthroughs on YouTube!",
+        subdescription: "Click to watch a playlist of playthroughs.",
       },
       photoshoot: {
         description: "Photos",

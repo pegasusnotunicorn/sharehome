@@ -348,8 +348,7 @@ const HomePage = forwardRef((props, ref) => {
         id={`${homeStyles.finalContainer}`}
         className={`${homeStyles.mainpageContainer}`}
       >
-        <GsapFadeScrub
-          fadeIn
+        <div
           className={`${homeStyles.finalButtonsContainer} subcontentWrapper`}
         >
           <h1>{t("main page.final.description")}</h1>
@@ -370,7 +369,7 @@ const HomePage = forwardRef((props, ref) => {
               text={t("main page.final.otherworks")}
             />
           </div>
-        </GsapFadeScrub>
+        </div>
         <div
           onClick={scrollToTop}
           className={`${homeStyles.titleWrapper} ${homeStyles.botOne}`}

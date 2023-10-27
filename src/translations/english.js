@@ -143,7 +143,7 @@ const english = {
       joinbutton: "Sign up!",
       prompt: "Stay updated on the latest news!",
       button: "Sign up!",
-      promise: "Sign up for virtual playtesting and general updates!",
+      promise: "Sign up for virtual playtesting and updates on the game!",
       sending: "Submitting...",
       success: "Thank you! You should be receiving an email soon.",
       error: "Something went wrong! Please refresh and try again.",

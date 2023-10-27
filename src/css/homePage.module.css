@@ -91,7 +91,7 @@
   height:100%;
   width:100%;
   z-index:-99;
-  filter: brightness(80%) blur(2px);
+  filter: brightness(70%) blur(3px);
   /* for live KS */
   cursor:pointer;
 }
@@ -802,9 +802,6 @@
   margin-right:2em;
   width: calc(100% - 4em);
   position:relative;
-  padding-bottom: 56.25%; /* 16:9 */
-  height: 0;
-  overflow: hidden;
 }
 
 #playthroughContainer h1 {
@@ -815,12 +812,23 @@
   margin-bottom: 5vh;
 }
 
-#playthroughContainer iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+@media only screen and (max-width: 900px) {
+  #playthroughContainer {
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+    max-width: 1000px;
+    max-height:300px;
+  }
+
+  #playthroughContainer iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
 }
 
 /* </editor-fold> */

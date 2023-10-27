@@ -405,7 +405,7 @@
   }
 
   .mainpageEmail:not(.secondMainpageEmail) .forminputText{
-    font-size:.9em !important;
+    font-size:1em !important;
     margin-bottom:.25em;
   }
 }

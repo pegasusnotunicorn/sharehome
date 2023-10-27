@@ -28,6 +28,10 @@
   white-space: pre-line;
 }
 
+.aboutMeVerticalWrapper img {
+  border-radius: 5px;
+}
+
 .wonminImage{
   width:100%;
 }

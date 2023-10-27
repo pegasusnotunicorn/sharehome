@@ -42,8 +42,8 @@ const HomePage = forwardRef((props, ref) => {
     subtitle = subtitle.replace("\n", "");
   }
 
-  const iframeWidth = width > 1000 ? 900 : width - 100;
-  const iframeHeight = iframeWidth * 0.5625;
+  const iframeWidth = width > 900 ? 800 : "100%";
+  const iframeHeight = width > 1000 ? iframeWidth * 0.5625 : "500px";
 
   //click logo to scroll to description
   const descriptionSectionRef = useRef(null);
@@ -312,23 +312,27 @@ const HomePage = forwardRef((props, ref) => {
         id={`${homeStyles.playthroughContainer}`}
         className={`${homeStyles.mainpageContainer}`}
       >
-        <h1>{t("main page.playthrough.description")}</h1>
-        <a
-          href="https://www.youtube.com/playlist?list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {t("main page.playthrough.subdescription")}
-        </a>
-        <iframe
-          width={iframeWidth}
-          height={iframeHeight}
-          src="https://www.youtube.com/embed/videoseries?si=s6rFntDA-CQjC-GY&amp;list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-        ></iframe>
+        <div className={`${homeStyles.playthroughTextContainer}`}>
+          <h1>{t("main page.playthrough.description")}</h1>
+          <a
+            href="https://www.youtube.com/playlist?list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t("main page.playthrough.subdescription")}
+          </a>
+        </div>
+        <div className={`${homeStyles.playthroughVideoContainer}`}>
+          <iframe
+            width={iframeWidth}
+            height={iframeHeight}
+            src="https://www.youtube.com/embed/videoseries?si=s6rFntDA-CQjC-GY&amp;list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          ></iframe>
+        </div>
       </div>
 
       <div

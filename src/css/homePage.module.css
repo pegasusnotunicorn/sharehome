@@ -102,7 +102,7 @@
   margin-bottom: 3em;
   left: 50%;
   color: #FFF;
-  width:90%;
+  width:calc(100% - 4em);
   transform: translateX(-50%);
   -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
   -moz-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
@@ -131,12 +131,11 @@
     height: 300px !important;
   }
   .tagLine{
-    white-space: pre;
-    line-height:100%;
+    line-height:120%;
     margin:0;
     margin-bottom:2em;
     margin-top:4em;
-    font-size:0.9em;
+    font-size:1.25em;
   }
   .heroBottomWrapper {
     margin-bottom: 1em;
@@ -804,6 +803,17 @@
   position:relative;
 }
 
+#playthroughContainer .playthroughTextContainer {
+  display:flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#playthroughContainer .playthroughVideoContainer {
+  border-radius: 5px;
+  overflow:hidden;
+}
+
 #playthroughContainer h1 {
   margin-bottom: 1vh;
 }
@@ -814,14 +824,22 @@
 
 @media only screen and (max-width: 900px) {
   #playthroughContainer {
-    padding-bottom: 56.25%; /* 16:9 */
-    height: 0;
-    overflow: hidden;
-    max-width: 1000px;
-    max-height:300px;
+    display: flex;
+    width: calc(100% - 4em);
   }
 
-  #playthroughContainer iframe {
+  #playthroughContainer .playthroughTextContainer {
+    flex: 1;
+  }
+
+  #playthroughContainer .playthroughVideoContainer {
+    flex: 1;
+    position: relative;
+    padding-bottom: 56.25%;
+    width: 100%;
+  }
+
+  #playthroughContainer .playthroughVideoContainer iframe {
     position: absolute;
     top: 0;
     left: 0;

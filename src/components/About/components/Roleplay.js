@@ -376,7 +376,7 @@ const Rules = ({ showRules, setshowRules, cardStyle }) => {
                 alt="member icon"
               />
               <img
-                className="translateYDown iconImage"
+                className="translateYDown iconImage is-hidden-mobile"
                 src="/images/icons/darkperson.svg"
                 alt="member icon"
               />
@@ -532,7 +532,7 @@ const Rules = ({ showRules, setshowRules, cardStyle }) => {
                     alt="point tokens"
                   />
                   <img
-                    className="paddedBottomVertical translateYDown iconImage"
+                    className="paddedBottomVertical translateYDown iconImage is-hidden-mobile"
                     src="/images/icons/1point.png"
                     alt="point tokens"
                   />

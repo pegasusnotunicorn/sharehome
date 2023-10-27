@@ -25,11 +25,12 @@ const getPictureSlide = (index, directory, filename) => {
       <a
         rel="noreferrer"
         target="_blank"
+        className="noselect"
         href={`${directory}/${filename}${index}.jpg`}
       >
         <img
           alt={`Photoshoot ${index}`}
-          className="carouselImage"
+          className="noselect carouselImage"
           src={`${directory}/small/small_${filename}${index}.jpg`}
         />
       </a>
@@ -41,7 +42,7 @@ const getPictureSlide = (index, directory, filename) => {
 export const CarouselSection = (props) => {
   const { width } = useWindowDimensions();
 
-  let cardsPerView = width >= 1400 ? 4 : width >= 900 ? 2 : 1;
+  let cardsPerView = width >= 1400 ? 4 : width >= 900 ? 2 : 1.25;
   let directory = props.directory;
   let filename = props.filename;
 
@@ -55,11 +56,11 @@ export const CarouselSection = (props) => {
       type: "bullets",
       clickable: true,
     },
-    // autoplay: {
-    //   delay: 2000,
-    //   pauseOnMouseEnter: false,
-    //   disableOnInteraction: true,
-    // },
+    autoplay: {
+      delay: 2000,
+      pauseOnMouseEnter: false,
+      disableOnInteraction: true,
+    },
     onSlideChange: () => {},
     onSwiper: (swiper) => {},
   };

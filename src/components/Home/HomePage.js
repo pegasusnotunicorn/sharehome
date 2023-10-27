@@ -163,13 +163,24 @@ const HomePage = forwardRef((props, ref) => {
         </div>
       </div>
 
-      <CarouselSection
-        className={homeStyles.mainpageCarousel}
-        totalPictures={27}
-        directory="/images/photoshoot/playtest"
-        filename="playtest"
-        random
-      />
+      <div
+        id={`${homeStyles.carouselContainer}`}
+        className={`${homeStyles.mainpageContainer}`}
+      >
+        <div className={`${homeStyles.carouselTextContainer}`}>
+          <h1 className={homeStyles.mainpageCarouselTitle}>
+            {t("main page.carousel.description")}
+          </h1>
+          <p>{t("main page.carousel.subdescription")}</p>
+        </div>
+        <CarouselSection
+          className={homeStyles.mainpageCarousel}
+          totalPictures={27}
+          directory="/images/photoshoot/playtest"
+          filename="playtest"
+          random
+        />
+      </div>
 
       <div
         id={`${homeStyles.mechanicsContainer}`}

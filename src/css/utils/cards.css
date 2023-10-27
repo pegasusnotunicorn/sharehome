@@ -168,9 +168,10 @@
   }
   .footer .eventGoalTextWrapper{
     font-size: 3.5em;
+    font-family: 'Rowdies-Light', 'NotoSansJP Bold';
   }
   .eventGoalDecksContainer .eventGoalTextWrapper{
-    font-size: 2.25em;
+    font-size: 2.75em;
   }
 }
 

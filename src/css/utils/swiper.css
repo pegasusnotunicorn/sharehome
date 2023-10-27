@@ -1,8 +1,8 @@
 .carouselSection{
   height:50vh;
-  padding: 2em;
-  padding-bottom:4em;
   position: relative;
+  padding:2em;
+  padding-top:0;
 }
 
 .carouselSection > h2{
@@ -35,19 +35,25 @@
 }
 
 .swiper-button-prev{
-  left:20px;
+  left: 2em;
 }
 .swiper-button-next{
-  right:20px;
+  right: 2em;
 }
 
 .swiper-pagination {
   position: absolute;
-  bottom: 0px !important;
+  bottom:0 !important;
   width: calc(100% - 4em);
 }
 
 @media only screen and (max-width: 900px) {
+  .swiper-button-prev{
+    left: 10px;
+  }
+  .swiper-button-next{
+    right: 10px;
+  }
   .swiper-pagination {
     display:flex;
     flex-wrap: wrap;

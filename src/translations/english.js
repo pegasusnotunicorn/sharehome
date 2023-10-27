@@ -110,7 +110,9 @@ const english = {
           "Will you have the evil villain arc? Or the good person redemption arc?",
       },
       carousel: {
-        description: "Candid photos",
+        description: "Photos from playtests",
+        subdescription:
+          "All photos were taken with consent from the various playtesters.",
       },
       mechanics: {
         description:

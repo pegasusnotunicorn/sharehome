@@ -45,8 +45,11 @@
 }
 
 .madeby {
-  font-size:.75em;
   padding:2em;
+}
+
+.madeby p {
+  font-size:.75em;
 }
 
 /* tablet */

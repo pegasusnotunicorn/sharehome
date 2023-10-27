@@ -42,26 +42,33 @@
   align-items: center;
   justify-content: center;
   height: 20px;
+  -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  -moz-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  -ms-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  -o-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
 }
 
 #navbarOpenClose{
   height: 42px;
   width: 58px;
   cursor: pointer;
-  color: #323232;
+  color: #222222;
   font-size: 25px;
   display: flex;
   justify-content: center;
   align-items: center;
   outline: 0;
   margin-left: 20px;
+  -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  -moz-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  -ms-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  -o-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
 }
 
 .navbarClass:not(.is-active) #navbarOpenClose {
   background:#FFF;
-  /* box-shadow:1px 1px 4px 0px #323232; */
   border-radius:4px;
-  margin-left:15px;
+  margin-left:20px;
 }
 
 @media only screen and (max-width: 900px) {
@@ -74,7 +81,8 @@
   #navbarOpenClose{
     height: 32px;
     width: 54px;
-    margin-left:10px;
+    margin-left:20px;
+    margin-right:0px;
   }
   .navbarFloatLeft{
     width:40px;
@@ -89,13 +97,6 @@
 /* </editor-fold>
 
 /* <editor-fold>--------------------------------------NAVBAR */
-
-.navbarClass{
-
-}
-.navbarClass.is-active{
-
-}
 
 .navbarMain{
   /* background-color:rgba(255,255,255,.95); */
@@ -205,10 +206,6 @@
   #kickstarterButton img{
     width:20px;
     height:20px;
-  }
-  #navbarOpenClose{
-    margin-left:10px;
-    margin-right:0px;
   }
 }
 

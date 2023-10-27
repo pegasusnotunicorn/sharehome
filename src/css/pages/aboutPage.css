@@ -195,7 +195,7 @@
 .stepBlockHorizontal{
   display:flex;
   width:100%;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   flex-direction: row;
 }
@@ -337,6 +337,7 @@
   height:75px !important;
   width:100px !important;
   padding:.25em;
+  padding-left:0;
   border-radius:.5em;
 }
 
@@ -355,7 +356,13 @@
     height:50px !important;
     width:75px !important;
     padding:.15em;
+    padding-bottom:.3em;
+    padding-left:0;
     border-radius:.5em;
+  }
+
+  .allStepsContainer .eventGoalTextWrapper {
+    font-size: 2em !important;
   }
 }
 
@@ -365,7 +372,7 @@
 }
 
 .stepBlockWrapper img.wideImage {
-  width:250px;
+  width:150px;
   height:100px;
 }
 
@@ -397,8 +404,8 @@
 }
 
 .characterArcWrapperAbout {
-  font-size:.5em;
-  padding-left:3em;
+  font-size:.45em;
+  padding-left:1.5em;
 }
 
 .characterArcWrapperAbout > .characterArc {

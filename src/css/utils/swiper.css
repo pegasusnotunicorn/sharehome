@@ -44,6 +44,7 @@
 .swiper-pagination {
   position: absolute;
   bottom: 0px !important;
+  width: calc(100% - 4em);
 }
 
 @media only screen and (max-width: 900px) {
@@ -53,7 +54,6 @@
     align-items: center;
     justify-content: center;
     height: 35px;
-    width: 60% !important;
     left: 50% !important;
     transform: translateX(-50%);
   }

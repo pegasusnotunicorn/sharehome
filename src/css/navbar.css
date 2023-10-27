@@ -316,10 +316,12 @@
   align-items: center;
   flex-direction: column;
   width:100%;
+  max-width:600px;
 }
 
 .forminputText{
   max-width:500px;
+  font-size:1.1em;
 }
 
 .forminputText a{
@@ -363,12 +365,16 @@
 .mainpageEmail .formWrapper {
   flex-direction:row;
   margin-bottom:1em;
+  -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  -moz-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  -ms-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  -o-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
 }
 
 .mainpageEmail .emailInput {
   width:300px;
   margin-bottom:0;
-  border:1px solid #222 !important;
+  border:1px solid #FFF !important;
   border-radius: 4px 0 0 4px;
   padding:10px !important;
   height:47px;
@@ -380,6 +386,7 @@
   border-radius: 0 4px 4px 0;
   width:50%;
   height:47px;
+  background-color: #7DAF9C;
 }
 
 @media only screen and (max-width: 900px) {

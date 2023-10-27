@@ -9,13 +9,29 @@
   margin-top:0;
 }
 
+.carouselSection a {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.carouselSection img {
+  border-radius:2em;
+  height:100%;
+  object-fit: contain;
+}
+
 .swiper-container{
   padding-bottom:0;
 }
 
 .swiper-button-next, .swiper-button-prev{
-  color:rgba(0,0,0,.45);
+  color:rgba(255,255,255,1);
   top:50%;
+  -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  -moz-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  -ms-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  -o-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
 }
 
 .swiper-button-prev{
@@ -27,8 +43,22 @@
 
 .swiper-pagination {
   position: absolute;
-  bottom: 0px ​!important;
+  bottom: 0px !important;
 }
+
+@media only screen and (max-width: 900px) {
+  .swiper-pagination {
+    display:flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+    width: 60% !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+  }
+}
+
 .swiper-pagination-bullet {
   width: 0.5em;
   height: 0.5em;
@@ -40,6 +70,7 @@
 .swiper-slide{
   display:flex;
   align-items: center;
+  justify-content: center;
 }
 
 .carouselImage{

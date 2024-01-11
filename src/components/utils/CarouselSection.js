@@ -26,7 +26,8 @@ const getPictureSlide = (index, directory, filename) => {
         rel="noreferrer"
         target="_blank"
         className="noselect"
-        href={`${directory}/${filename}${index}.jpg`}
+        // href={`${directory}/${filename}${index}.jpg`}
+        href="https://www.youtube.com/playlist?list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
       >
         <img
           alt={`Photoshoot ${index}`}

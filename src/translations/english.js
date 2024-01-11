@@ -62,12 +62,12 @@ const english = {
       "contact us": "About / Contact",
       "card designer": "Card Designer",
       blog: "Blog",
-      kickstarter: "LIVE on Kickstarter!",
+      kickstarter: "Follow on Kickstarter!",
     },
 
     "main page": {
       "mobile tag line":
-        "A mythical reality TV RPG for 2 ~ 6 players.\n\nComing soon to Kickstarter!",
+        "A 12 min reality TV board game for 2 ~ 6 players.\n\nComing soon to Kickstarter!",
       hero: {
         subtitle:
           "A collaborative storytelling game\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world",
@@ -110,9 +110,10 @@ const english = {
           "Will you have the evil villain arc? Or the good person redemption arc?",
       },
       carousel: {
-        description: "Photos from playtests",
+        description: "12 min playthrough videos",
         subdescription:
-          "All photos were taken with consent from the various playtesters.",
+          "Check out the YouTube playlist of playthrough videos. Each game is only 12 minutes!",
+        linkText: "Click here to see the videos",
       },
       mechanics: {
         description:
@@ -126,8 +127,8 @@ const english = {
         rulebook: "Read the full rulebook PDF",
       },
       playthrough: {
-        description: "Playthrough videos",
-        subdescription: "Click here to watch a playlist of playthroughs.",
+        description: "Professional improv comedians play the game!",
+        subdescription: "Click here for the YouTube playlist of playthroughs.",
       },
       photoshoot: {
         description: "Photos",
@@ -145,7 +146,7 @@ const english = {
       joinbutton: "Sign up!",
       prompt: "Stay updated on the latest news!",
       button: "Sign up!",
-      promise: "Sign up for virtual playtesting and updates on the game!",
+      promise: "Sign up to play online and receive a free digital artbook!",
       sending: "Submitting...",
       success: "Thank you! You should be receiving an email soon.",
       error: "Something went wrong! Please refresh and try again.",
@@ -174,7 +175,7 @@ const english = {
       roleplay: {
         name: "Roleplay",
         description:
-          "You are a mythological creature in a reality TV show. The producers of the show are trying to instill some chaos into the narrative. Try to fulfill as many of their directions as you can in a race against the clock!",
+          "You are a mythological creature in a reality TV show. The executives of the show are trying to instill some chaos into the narrative. Try to fulfill as many of their directions as you can in a race against the clock!",
         "player count": "2+ Players",
         "play time": "15+ Minutes",
         members: "Members",

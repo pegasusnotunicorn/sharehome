@@ -1,15 +1,20 @@
-import React from 'react';
+import React from "react";
 
-import CustomHelmet from './utils/CustomHelmet.js';
+import CustomHelmet from "./utils/CustomHelmet.js";
 
 const MetaTags = (props) => {
   let splashImage = "/images/main.jpg";
-  let description = "A fantastical reality TV card game about laughing, acting, and storytelling. Form relationships, stir up drama, and achieve your secret life goals!"
-  let title = "Love, Career & Magic — A SHAREHOME Game";
+  let description =
+    "A collaborative storytelling game set in a fictional reality TV show. Play as a mythical creature, complete chaotic character arcs, and achieve high ratings for the season!";
+  let title = "Love, Career & Magic - 12 minute game for 2-6 players";
 
   return (
-    <CustomHelmet title={title} splashImage={splashImage} description={description} />
-  )
-}
+    <CustomHelmet
+      title={title}
+      splashImage={splashImage}
+      description={description}
+    />
+  );
+};
 
 export default MetaTags;

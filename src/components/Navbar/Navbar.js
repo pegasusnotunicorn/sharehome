@@ -91,7 +91,7 @@ export const NavbarMain = (props) => {
               animated
               icon="forward"
               id="emailToggleButtonMobile"
-              className={`${mailButtonVisibleClass} GTMtoggleEmailButton`}
+              className={`${mailButtonVisibleClass} GTMtoggleEmailButton is-green`}
               onClick={toggleMail}
               text={t("email form.joinbutton")}
             />

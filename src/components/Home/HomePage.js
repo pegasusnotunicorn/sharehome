@@ -28,7 +28,7 @@ const HomePage = forwardRef((props, ref) => {
   const navbarButton = useRef(null);
 
   useEffect(() => {
-    document.title = "Love, Career & Magic — a reality TV icebreaker game";
+    document.title = "Love, Career & Magic — a reality TV board game";
 
     if (navbarButton.current) {
       navbarButton.current.onclick = ref.current;
@@ -172,6 +172,14 @@ const HomePage = forwardRef((props, ref) => {
             {t("main page.carousel.description")}
           </h1>
           <p>{t("main page.carousel.subdescription")}</p>
+          <div className={`${homeStyles.finalButtonsWrapper}`}>
+            <DefaultButton
+              shadowless
+              icon="whiteStar"
+              href="https://www.youtube.com/playlist?list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
+              text={t("main page.carousel.linkText")}
+            />
+          </div>
         </div>
         <CarouselSection
           className={homeStyles.mainpageCarousel}
@@ -368,12 +376,20 @@ const HomePage = forwardRef((props, ref) => {
         >
           <h1>{t("main page.final.description")}</h1>
           <div className={`${homeStyles.finalButtonsWrapper}`}>
-            <DefaultButton
+            {/* <DefaultButton
               shadowless
               icon="email_white"
               ref={navbarButton}
               className={`${homeStyles.topMailButton} GTMtoggleEmailButton`}
               text={t("email form.joinbutton")}
+            /> */}
+            <DefaultButton
+              shadowless
+              animated
+              icon="forward"
+              className="kickstarterButton liveKS"
+              href="https://bit.ly/lovecareermagic"
+              text={t("navbar.kickstarter")}
             />
             <DefaultButton
               inverted

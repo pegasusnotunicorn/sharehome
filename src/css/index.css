@@ -165,6 +165,10 @@ span.is-bold {
   background-color: #474747;
 }
 
+.defaultButton.is-green{
+  background-color:#7DAF9C;
+}
+
 .defaultButton.is-inverted{
   background-color:#FFF;
   color:#323232;

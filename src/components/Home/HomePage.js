@@ -388,7 +388,7 @@ const HomePage = forwardRef((props, ref) => {
               animated
               icon="forward"
               className="kickstarterButton liveKS"
-              href="https://bit.ly/lovecareermagic"
+              href="https://bit.ly/lovecareerandmagic"
               text={t("navbar.kickstarter")}
             />
             <DefaultButton

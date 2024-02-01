@@ -179,7 +179,7 @@ const HomePage = forwardRef((props, ref) => {
           <div className={`${homeStyles.finalButtonsWrapper}`}>
             <DefaultButton
               shadowless
-              icon="whiteStar"
+              icon="watchWhite"
               href="https://www.youtube.com/playlist?list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
               text={t("main page.carousel.linkText")}
             />

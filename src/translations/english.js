@@ -113,7 +113,7 @@ const english = {
         description: "Watch an entire game in just 12 minutes!",
         subdescription:
           "Click below to check out the YouTube playlist of playthrough videos.",
-        linkText: "Click here to see the videos",
+        linkText: "Watch the videos",
       },
       mechanics: {
         description:

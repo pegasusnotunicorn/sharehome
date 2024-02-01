@@ -92,7 +92,11 @@ const HomePage = forwardRef((props, ref) => {
           <GsapFadeDelay delay={0} className={`${homeStyles.heroImage}`}>
             <img
               alt="Box and components of the card game."
-              src="/images/newsplash.jpeg"
+              src={
+                width > 900
+                  ? "/images/newsplash.jpeg"
+                  : "/images/newsplash_vertical.jpeg"
+              }
             />
             <div className={`${homeStyles.heroLogo}`}>
               <img

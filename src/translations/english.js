@@ -67,7 +67,7 @@ const english = {
 
     "main page": {
       "mobile tag line":
-        "A 12 min reality TV board game for 2 ~ 6 players.\n\nComing soon to Kickstarter!",
+        "A board game where fantasy meets reality TV.\n\nComing soon to Kickstarter!",
       hero: {
         subtitle:
           "A collaborative storytelling game\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world",
@@ -78,7 +78,7 @@ const english = {
         subtitle2:
           "Welcome to SHAREHOME! A reality TV show that documents the lives of six mythical creatures living together.",
         subtitle3:
-          "Play as a mythological creature in a reality TV show, complete chaotic character arcs and achieve high ratings for the season!",
+          "Play as a mythological creature in a reality TV show, complete chaotic character arcs, and achieve high ratings for the season!",
         subtitle4: "Keep scrolling to learn more!",
       },
       "how to play": {
@@ -110,9 +110,9 @@ const english = {
           "Will you have the evil villain arc? Or the good person redemption arc?",
       },
       carousel: {
-        description: "12 min playthrough videos",
+        description: "Watch an entire game in just 12 minutes!",
         subdescription:
-          "Check out the YouTube playlist of playthrough videos. Each game is only 12 minutes!",
+          "Click below to check out the YouTube playlist of playthrough videos.",
         linkText: "Click here to see the videos",
       },
       mechanics: {
@@ -121,7 +121,7 @@ const english = {
         laughing: "Laughing",
         improv: "RPGs",
         party: "Party Games",
-        roleplay: "Storytelling",
+        roleplay: "Storytelling / Improv",
         stories: "Unique Stories",
         howtoplay: "How to play",
         rulebook: "Read the full rulebook PDF",
@@ -144,9 +144,9 @@ const english = {
 
     "email form": {
       joinbutton: "Sign up!",
-      prompt: "Stay updated on the latest news!",
+      prompt: "Stay updated on the latest news.",
       button: "Sign up!",
-      promise: "Sign up to play online and receive a free digital artbook!",
+      promise: "Sign up and get a free digital artbook!",
       sending: "Submitting...",
       success: "Thank you! You should be receiving an email soon.",
       error: "Something went wrong! Please refresh and try again.",

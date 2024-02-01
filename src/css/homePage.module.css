@@ -67,8 +67,8 @@
 
 .heroLogo{
   position: absolute;
-  width: 400px !important;
-  height: 400px !important;
+  width: 500px !important;
+  height: 500px !important;
   padding-left: 6px;
   left: 50%;
   top: 25%;
@@ -91,7 +91,7 @@
   height:100%;
   width:100%;
   z-index:-99;
-  filter: brightness(70%) blur(3px);
+  /* filter: brightness(90%); */
   /* for live KS */
   cursor:pointer;
 }
@@ -128,13 +128,14 @@
     padding-top:0;
   }
   .heroLogo{
-    width: 300px !important;
-    height: 300px !important;
+    width: 250px !important;
+    height: 250px !important;
+    top: 17.5%;
   }
   .tagLine{
     line-height:120%;
     margin:0;
-    margin-bottom:2em;
+    margin-bottom:1em;
     margin-top:4em;
     font-size:1.25em;
   }
@@ -154,8 +155,8 @@
 }
 
 .titleWrapper.topOne {
-  height:250px;
-  width:250px;
+  height:300px;
+  width:300px;
 }
 
 .titleWrapper.botOne {
@@ -260,7 +261,7 @@
 
 .scrollHorizontalContainer:first-child{
   padding-bottom:1em;
-  padding-top:3em;
+  padding-top:2em;
 }
 
 .scrollHorizontalContainer p{

@@ -7,7 +7,7 @@ import { CharacterSpotlight } from "../utils/CharacterSpotlight.js";
 import { GsapFadeDelay, GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import DefaultButton from "../utils/DefaultButton.js";
-import EmailForm from "../utils/EmailForm.js";
+// import EmailForm from "../utils/EmailForm.js";
 
 // sections
 import CarouselSection from "../utils/CarouselSection.js";

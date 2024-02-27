@@ -57,12 +57,12 @@ const HomePage = forwardRef((props, ref) => {
   // const redirectToKS = () => window.location.href = "http://bit.ly/lovecareermagic";
 
   //old buttons for KS
-  // <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
-  // <DefaultButton shadowless animated icon="arrowRightWhite" style={{marginBottom:"50px",width:"calc(100% - 2em)"}} className="liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
-  // <DefaultButton shadowless animated icon="arrowRightWhite" className="liveKS" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+  // <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton liveKS" href="https://bit.ly/lovecareerandmagic" text={t('navbar.kickstarter')}/>
+  // <DefaultButton shadowless animated icon="arrowRightWhite" style={{marginBottom:"50px",width:"calc(100% - 2em)"}} className="liveKS" href="https://bit.ly/lovecareerandmagic" text={t('navbar.kickstarter')}/>
+  // <DefaultButton shadowless animated icon="arrowRightWhite" className="liveKS" href="https://bit.ly/lovecareerandmagic" text={t('navbar.kickstarter')}/>
 
   // <DefaultButton shadowless icon="email_white" ref={navbarButton} className={`${homeStyles.topMailButton} GTMtoggleEmailButton` } text={t('email form.joinbutton')}/>
-  // <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton" href="https://bit.ly/lovecareermagic" text={t('navbar.kickstarter')}/>
+  // <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton" href="https://bit.ly/lovecareerandmagic" text={t('navbar.kickstarter')}/>
   // <GsapFadeDelay delay={1500} className={`${homeStyles.titleWrapper} ${homeStyles.topOne}`} >
   //   <div className={`${homeStyles.lcmMaskWrapper} noselect`}>
   //     <div className={`${homeStyles.lcmMask}`}></div>
@@ -111,11 +111,23 @@ const HomePage = forwardRef((props, ref) => {
               <h4 className={`${homeStyles.tagLine}`}>
                 {t("main page.mobile tag line")}
               </h4>
-              <EmailForm
-                className="mainpageEmail"
-                hideTitle
-                isActiveAndDesktop
-              />
+              {/* 
+                <EmailForm
+                  className="mainpageEmail"
+                  hideTitle
+                  isActiveAndDesktop
+                />
+               */}
+              <div className={homeStyles.scrollHorizontalContainer}>
+                <DefaultButton
+                  shadowless
+                  animated
+                  icon="arrowRightWhite"
+                  className="kickstarterButton liveKS"
+                  href="https://bit.ly/lovecareerandmagic"
+                  text={t("navbar.kickstarter")}
+                />
+              </div>
               <GsapFadeScrub scrub startScreenTop fadeOut>
                 <div className={homeStyles.scrollHorizontalContainer}>
                   <div
@@ -158,9 +170,17 @@ const HomePage = forwardRef((props, ref) => {
               className={`${homeStyles.descriptionTextWrapper} subcontentWrapper min-width`}
             >
               <p>{t("main page.description.subtitle3")}</p>
-              <EmailForm
+              {/* <EmailForm
                 className="mainpageEmail secondMainpageEmail"
                 hideTitle
+              /> */}
+              <DefaultButton
+                shadowless
+                animated
+                icon="arrowRightWhite"
+                className="kickstarterButton liveKS"
+                href="https://bit.ly/lovecareerandmagic"
+                text={t("navbar.kickstarter")}
               />
             </div>
           </GsapFadeScrub>

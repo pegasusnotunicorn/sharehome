@@ -86,7 +86,7 @@ export const NavbarMain = (props) => {
         </GsapFadeScrub>
         <div className="navbarFloatRight">
           <GsapFadeScrub scrub startScreenTop fadeIn>
-            <DefaultButton
+            {/* <DefaultButton
               shadowless
               animated
               icon="forward"
@@ -94,16 +94,16 @@ export const NavbarMain = (props) => {
               className={`${mailButtonVisibleClass} GTMtoggleEmailButton is-green`}
               onClick={toggleMail}
               text={t("email form.joinbutton")}
-            />
-            {/* <DefaultButton
+            /> */}
+            <DefaultButton
               shadowless
               animated
               icon="forward"
               id="emailToggleButtonMobile"
               className={`${mailButtonVisibleClass} liveKS`}
-              href="https://bit.ly/lovecareermagic"
+              href="https://bit.ly/lovecareerandmagic"
               text={t("navbar.kickstarter")}
-            /> */}
+            />
           </GsapFadeScrub>
           <button
             id="navbarOpenClose"

@@ -62,12 +62,12 @@ const english = {
       "contact us": "About / Contact",
       "card designer": "Card Designer",
       blog: "Blog",
-      kickstarter: "Live now on Kickstarter!",
+      kickstarter: "Check out the Kickstarter!",
     },
 
     "main page": {
       "mobile tag line":
-        "A party game where fantasy meets reality TV.\n\nNow live on Kickstarter!",
+        "A party game where fantasy meets reality TV.\n\nFully funded on Kickstarter!",
       hero: {
         subtitle:
           "A collaborative storytelling game\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world",
@@ -95,7 +95,7 @@ const english = {
       events: {
         description: "Follow directions in a race against the clock!",
         subdescription:
-          "The producer's of the show are trying to instill a little chaos into the plot. Fulfill as many of their Direction Cards as you can to earn more points!",
+          "The executives of the show are trying to instill a little chaos into the plot. Fulfill as many of their Direction Cards as you can to earn more points!",
       },
       goals: {
         description: "Chaotic locations for chaotic episodes.",
@@ -137,7 +137,7 @@ const english = {
         description: "Character Spotlight",
       },
       final: {
-        description: "Now live on Kickstarter!",
+        description: "Fully funded on Kickstarter!",
         otherworks: "Check out my other game",
       },
     },
@@ -231,7 +231,7 @@ const english = {
           "step2 1":
             "Flip over three cards from both Direction Card decks. Six total cards should be face up at all times.",
           "step2 2":
-            "The producers of the show are trying to instill a little chaos into the plot!",
+            "The executives of the show are trying to instill a little chaos into the plot!",
           "step2 3":
             "In three minutes, complete as many Direction Cards as you can as a group.",
           "step2 4": "Each Direction Card is worth one or two points.",

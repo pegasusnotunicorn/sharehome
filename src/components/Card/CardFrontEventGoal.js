@@ -1,23 +1,29 @@
-import React, { useState } from 'react';
-import { getRandomEventGoal } from './ExampleEventGoal.js';
+import React, { useState } from "react";
+import { getRandomEventGoal } from "./ExampleEventGoal.js";
 
 export const EventGoalCard = (props) => {
-
   let [eventGoalDetails] = useState(getRandomEventGoal(props.type));
-  let eventGoalBackgroundColor = (props.type === "goal") ? "greenBackground" : "yellowBackground";
-  let eventGoalNumber = (eventGoalDetails.exampleID) ? eventGoalDetails.exampleID : Math.round(Math.random() * 25);
+
+  let type = props.type;
+  if (
+    props.type === "goal" ||
+    props.type === "location" ||
+    props.type === "episode"
+  )
+    type = "location";
 
   return (
-    <div className={`eventGoalCardWrapper ${eventGoalBackgroundColor}`}>
-      <div className="eventGoalTextWrapper">
+    <div className={`eventGoalCardWrapper`}>
+      <div className={`eventGoalTextWrapper ${type}`}>
         {eventGoalDetails.description}
       </div>
-      <div className={`eventGoalBottomTextWrapper ${eventGoalBackgroundColor}`}>
-        <span>{eventGoalDetails.deckName}</span>
-        <span>#{eventGoalNumber}</span>
-      </div>
+      <img
+        className={type}
+        src={`/images/illustrations/${type}cardfront${props.randomNumber}.png`}
+        alt={`${type} card`}
+      />
     </div>
-  )
-}
+  );
+};
 
 export default EventGoalCard;

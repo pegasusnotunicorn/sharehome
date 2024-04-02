@@ -139,15 +139,15 @@
 }
 
 .characterArc.goodArc {
-  background-color:#5F5AA2;
+  background-color:#94de8f;
 }
 
 .characterArc.badArc {
-  background-color:#DD7373;
+  background-color:#a769d4;
 }
 
 .characterArc.chaoticArc {
-  background-color:#F1DB4B;
+  background-color:#9b9b9b;
 }
 
 .characterArcText {

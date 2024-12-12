@@ -122,10 +122,10 @@ const HomePage = forwardRef((props, ref) => {
                 <DefaultButton
                   shadowless
                   animated
-                  icon="arrowRightWhite"
-                  className="kickstarterButton liveKS"
-                  href="https://bit.ly/lovecareerandmagic"
-                  text={t("navbar.kickstarter")}
+                  icon="forward"
+                  className="is-blue"
+                  href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
+                  text={t("navbar.buynow")}
                 />
               </div>
               <GsapFadeScrub scrub startScreenTop fadeOut>
@@ -177,10 +177,10 @@ const HomePage = forwardRef((props, ref) => {
               <DefaultButton
                 shadowless
                 animated
-                icon="arrowRightWhite"
-                className="kickstarterButton liveKS"
-                href="https://bit.ly/lovecareerandmagic"
-                text={t("navbar.kickstarter")}
+                icon="forward"
+                className="is-blue"
+                href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
+                text={t("navbar.buynow")}
               />
             </div>
           </GsapFadeScrub>
@@ -411,9 +411,9 @@ const HomePage = forwardRef((props, ref) => {
               shadowless
               animated
               icon="forward"
-              className="kickstarterButton liveKS"
-              href="https://bit.ly/lovecareerandmagic"
-              text={t("navbar.kickstarter")}
+              className="is-blue"
+              href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
+              text={t("navbar.buynow")}
             />
             <DefaultButton
               inverted

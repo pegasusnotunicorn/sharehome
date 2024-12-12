@@ -63,6 +63,7 @@ const english = {
       "card designer": "Card Designer",
       blog: "Blog",
       kickstarter: "Check out the Kickstarter!",
+      buynow: "Buy now!",
     },
 
     "main page": {

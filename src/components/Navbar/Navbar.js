@@ -100,9 +100,9 @@ export const NavbarMain = (props) => {
               animated
               icon="forward"
               id="emailToggleButtonMobile"
-              className={`${mailButtonVisibleClass} liveKS`}
-              href="https://bit.ly/lovecareerandmagic"
-              text={t("navbar.kickstarter")}
+              className={`${mailButtonVisibleClass} is-blue`}
+              href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
+              text={t("navbar.buynow")}
             />
           </GsapFadeScrub>
           <button

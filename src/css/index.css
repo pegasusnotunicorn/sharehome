@@ -23,9 +23,6 @@ body {
   display:none !important;
 }
 
-a {
-}
-
 h1, h2, h3, h4, h5, p, li, ul, a, span {
   line-height:150%;
 }
@@ -69,7 +66,6 @@ span.is-bold {
   background: linear-gradient(-45deg, #5F5AA2 20%, #F1DB4B 40%, #7DAF9C 60%, #DD7373 80%);
   background-size: 200% auto;
   background-clip: text;
-  text-fill-color: transparent;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: animated_text 5s ease-in-out infinite;
@@ -167,6 +163,10 @@ span.is-bold {
 
 .defaultButton.is-green{
   background-color:#7DAF9C;
+}
+
+.defaultButton.is-blue{
+  background-color:#5F5AA2;
 }
 
 .defaultButton.is-inverted{

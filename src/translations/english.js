@@ -340,7 +340,7 @@ const english = {
       "about me 2": `I quit my corporate job back in 2016 to pursue my dreams of becoming a game developer. And in March of 2021, that dream became a reality when my first game, <a href="https://sysifuscorp.com" target="_blank" rel="noreferrer">Welcome to Sysifus Corp</a> was successfully funded on Kickstarter.`,
       "about me 3":
         "I had no idea what I was doing when I quit my job. Even now, I'm still terrified for my future. But it is thanks to the support of strangers like you that I am able to do what I love. And for that, I am incredibly thankful.",
-      "about me 4": `I've been hard at work on Love, Career & Magic and I know it'll be amazing. Thanks for visiting my humble page and please do consider <a href="https://bit.ly/lovecareerandmagic" target="_blank" rel="noreferrer">following on Kickstarter!</a>`,
+      "about me 4": `I've been hard at work on Love, Career & Magic and I know it'll be amazing. Thanks for visiting my humble page and please do consider <a href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy" target="_blank" rel="noreferrer">buying the game!</a>`,
       "description 1": "Love, Career & Magic is made by ",
       "description 2":
         " and is not affiliated with any existing reality TV show.",

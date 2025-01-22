@@ -90,6 +90,15 @@ const Router = (props) => {
             }}
           />
           <Route
+            exact
+            path="/buy"
+            render={() => {
+              window.location.href =
+                "https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy";
+              return null;
+            }}
+          />
+          <Route
             render={() => {
               return <ErrorPage />;
             }}

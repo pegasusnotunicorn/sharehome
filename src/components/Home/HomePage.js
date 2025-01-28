@@ -43,8 +43,8 @@ const HomePage = forwardRef((props, ref) => {
     subtitle = subtitle.replace("\n", "");
   }
 
-  const iframeWidth = width > 900 ? 1000 : "100%";
-  const iframeHeight = width > 1000 ? iframeWidth * 0.5625 : "500px";
+  const iframeWidth = width > 900 ? 1000 : 400;
+  const iframeHeight = iframeWidth * 0.5625;
 
   //click logo to scroll to description
   const descriptionSectionRef = useRef(null);

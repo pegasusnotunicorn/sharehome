@@ -28,7 +28,7 @@ const AboutPage = (props) => {
         description={t('about page.roleplay.description')}
         playerCount={t('main page.hero.player count')}
         playTime={t('main page.hero.play time')}
-        />
+      />
       <Roleplay cardStyle={cardStyle} />
     </div>
   );

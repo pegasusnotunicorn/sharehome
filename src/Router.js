@@ -14,6 +14,7 @@ import Footer from "./components/Footer.js";
 import ArtbookDownloadPage from "./components/ArtbookDownloadPage.js";
 import FreeArtbookPage from "./components/FreeArtbookPage.js";
 import ThankYouPage from "./components/ThankYouPage.js";
+import RulebookRedirect from "./components/RulebookRedirect.js";
 
 const Router = (props) => {
   // <Route path="/designer" render={() => {
@@ -88,6 +89,11 @@ const Router = (props) => {
             render={() => {
               return <ThankYouPage />;
             }}
+          />
+          <Route
+            exact
+            path="/rulebook"
+            component={RulebookRedirect}
           />
           <Route
             exact

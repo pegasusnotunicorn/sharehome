@@ -553,11 +553,13 @@
     margin-bottom: 0;
   }
 
-  .descriptionTextWrapper {
+  .descriptionTextWrapper,
+  .heroBottomWrapper {
     width: calc(100% - 4em);
   }
 
-  .descriptionTextWrapper > a {
+  .descriptionTextWrapper > a,
+  .scrollHorizontalContainer > a {
     width: calc(100% - 2em);
   }
 }

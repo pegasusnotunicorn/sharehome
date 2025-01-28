@@ -149,6 +149,16 @@ export const NavbarMain = (props) => {
               >
                 {t("navbar.characters")}
               </NavLink>
+              <a
+                onClick={toggleNav}
+                href="https://screentop.gg/@PegasusGames/lcm"
+                activeClassName="is-active"
+                className="navbarButton noselect"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t("navbar.playonline")}
+              </a>
               <NavLink
                 onClick={toggleNav}
                 to="/contact"
@@ -200,9 +210,9 @@ export const NavbarMain = (props) => {
             />
             <img
               className="artbookMockup"
-              src="/images/photoshoot/game/small/small_pictures1.jpg"
+              src="/images/bizz_fukidashi.png"
               alt={t("artbook page.description")}
-            ></img>
+            />
           </div>
         </div>
       </div>

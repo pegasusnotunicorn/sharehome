@@ -64,6 +64,8 @@ const english = {
       blog: "Blog",
       kickstarter: "Check out the Kickstarter!",
       buynow: "Buy now!",
+      playonline: "Play online",
+      watchtrailer: "Watch video",
     },
 
     "main page": {

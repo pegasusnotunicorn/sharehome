@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, forwardRef } from "react";
+import React, { useEffect, useRef, forwardRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 //custom files
@@ -22,6 +22,7 @@ import { EmojiSection } from "../utils/EmojiSection.js";
 
 import homeStyles from "../../css/homePage.module.css";
 import "../../css/utils/colors.css";
+import ShootingStar from "../Navbar/ShootingStar.js";
 
 const HomePage = forwardRef((props, ref) => {
   const { t } = useTranslation();
@@ -42,7 +43,7 @@ const HomePage = forwardRef((props, ref) => {
     subtitle = subtitle.replace("\n", "");
   }
 
-  const iframeWidth = width > 900 ? 800 : "100%";
+  const iframeWidth = width > 900 ? 1000 : "100%";
   const iframeHeight = width > 1000 ? iframeWidth * 0.5625 : "500px";
 
   //click logo to scroll to description
@@ -52,6 +53,9 @@ const HomePage = forwardRef((props, ref) => {
     descriptionSectionRef.current.scrollIntoView({ behavior: "smooth" });
   const scrollToTop = () =>
     topLogoRef.current.scrollIntoView({ behavior: "smooth" });
+
+  //video modal logic
+  const [videoModalVisible, setVideoModalVisible] = useState(false);
 
   //redirect to live KS
   // const redirectToKS = () => window.location.href = "http://bit.ly/lovecareermagic";
@@ -84,40 +88,69 @@ const HomePage = forwardRef((props, ref) => {
       <ParallaxSection />
 
       <div
+        style={{ display: videoModalVisible ? "flex" : "none" }}
+        id={`${homeStyles.videoModalWrapper}`}
+        className={homeStyles.screenHeight}
+        onClick={() => {
+          setVideoModalVisible(false);
+          // turn off the youtube iframe video if it's playing
+          let iframe = document.querySelector("iframe");
+          if (iframe) {
+            iframe.contentWindow.postMessage(
+              '{"event":"command","func":"stopVideo","args":""}',
+              "*"
+            );
+          }
+        }}
+      >
+        <iframe
+          width={iframeWidth}
+          height={iframeHeight}
+          src="https://www.youtube.com/embed/videoseries?si=s6rFntDA-CQjC-GY&list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql&cc_load_policy=1&enablejsapi=1"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        />
+      </div>
+
+      <div id={`${homeStyles.shootingStarsContainer}`}>
+        <div id={`${homeStyles.shootingStarsWrapper}`}>
+          {Array.from({ length: 10 }).map((_, i) => (
+            <ShootingStar
+              key={i}
+              className={i % 2 === 0 ? "leftStar" : "rightStar"}
+              isActive
+              orientation={["left", "up", "right", "down"][i % 4]}
+              mirror={i % 2 === 0 ? "mirror" : ""}
+              delay={i * 2}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div
         ref={topLogoRef}
         id={`${homeStyles.heroContainer}`}
         className={`${homeStyles.mainContentWrapper} noselect`}
       >
+        <div
+          id={`${homeStyles.heroBgImage}`}
+          className={homeStyles.screenHeight}
+        />
         <div className={homeStyles.screenHeight}>
           <GsapFadeDelay delay={0} className={`${homeStyles.heroImage}`}>
             <img
+              id={`${homeStyles.jitterHeroImage}`}
               alt="Box and components of the card game."
-              src={
-                width > 900
-                  ? "/images/newsplash.jpeg"
-                  : "/images/newsplash_vertical.jpeg"
-              }
+              src="/images/box_white_outline.png"
+              onClick={() => {
+                setVideoModalVisible(true);
+              }}
             />
-            <div className={`${homeStyles.heroLogo}`}>
-              <img
-                className="floating"
-                alt="Logo of the game."
-                src="/images/lcm.png"
-              />
-            </div>
           </GsapFadeDelay>
           <GsapFadeDelay delay={1500}>
             <div className={homeStyles.heroBottomWrapper}>
-              <h4 className={`${homeStyles.tagLine}`}>
-                {t("main page.mobile tag line")}
-              </h4>
-              {/* 
-                <EmailForm
-                  className="mainpageEmail"
-                  hideTitle
-                  isActiveAndDesktop
-                />
-               */}
               <div className={homeStyles.scrollHorizontalContainer}>
                 <DefaultButton
                   shadowless
@@ -126,6 +159,15 @@ const HomePage = forwardRef((props, ref) => {
                   className="is-blue"
                   href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
                   text={t("navbar.buynow")}
+                />
+                <DefaultButton
+                  shadowless
+                  icon="watchWhite"
+                  id="videoModalToggleButton"
+                  onClick={() => {
+                    setVideoModalVisible(true);
+                  }}
+                  text={t("navbar.watchtrailer")}
                 />
               </div>
               <GsapFadeScrub scrub startScreenTop fadeOut>
@@ -181,6 +223,14 @@ const HomePage = forwardRef((props, ref) => {
                 className="is-blue"
                 href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
                 text={t("navbar.buynow")}
+              />
+              <DefaultButton
+                shadowless
+                borderedBlack
+                icon="star"
+                className="is-inverted"
+                href="https://screentop.gg/@PegasusGames/lcm"
+                text={t("navbar.playonline")}
               />
             </div>
           </GsapFadeScrub>
@@ -350,7 +400,7 @@ const HomePage = forwardRef((props, ref) => {
           </div>
         </GsapFadeScrub>
       </div>
-
+      {/* 
       <div
         id={`${homeStyles.playthroughContainer}`}
         className={`${homeStyles.mainpageContainer}`}
@@ -366,17 +416,9 @@ const HomePage = forwardRef((props, ref) => {
           </a>
         </div>
         <div className={`${homeStyles.playthroughVideoContainer}`}>
-          <iframe
-            width={iframeWidth}
-            height={iframeHeight}
-            src="https://www.youtube.com/embed/videoseries?si=s6rFntDA-CQjC-GY&amp;list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
+
         </div>
-      </div>
+      </div> */}
 
       <div
         id={`${homeStyles.spotlightContainer}`}
@@ -415,13 +457,21 @@ const HomePage = forwardRef((props, ref) => {
               href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
               text={t("navbar.buynow")}
             />
-            <DefaultButton
+            {/* <DefaultButton
               inverted
               borderedBlack
               shadowless
               icon="favorite"
               href="https://sysifuscorp.com"
               text={t("main page.final.otherworks")}
+            /> */}
+            <DefaultButton
+              shadowless
+              borderedBlack
+              icon="star"
+              className="is-inverted"
+              href="https://screentop.gg/@PegasusGames/lcm"
+              text={t("navbar.playonline")}
             />
           </div>
         </div>

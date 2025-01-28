@@ -64,7 +64,7 @@
 
 #shootingStarsContainer {
   position: absolute;
-  z-index: 99;
+  z-index: 1;
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -228,6 +228,7 @@
 }
 
 .heroBottomWrapper {
+  z-index: 10;
   position: absolute;
   bottom: 0;
   margin-bottom: 3em;

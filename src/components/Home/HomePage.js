@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 //custom files
 import GameModeIcons from "../About/utils/GameModeIcons.js";
 import { CharacterSpotlight } from "../utils/CharacterSpotlight.js";
-import { GsapFadeDelay, GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";
+import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import DefaultButton from "../utils/DefaultButton.js";
 // import EmailForm from "../utils/EmailForm.js";
@@ -54,34 +54,7 @@ const HomePage = forwardRef((props, ref) => {
   const scrollToTop = () =>
     topLogoRef.current.scrollIntoView({ behavior: "smooth" });
 
-  //video modal logic
   const [videoModalVisible, setVideoModalVisible] = useState(false);
-
-  //redirect to live KS
-  // const redirectToKS = () => window.location.href = "http://bit.ly/lovecareermagic";
-
-  //old buttons for KS
-  // <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton liveKS" href="https://bit.ly/lovecareerandmagic" text={t('navbar.kickstarter')}/>
-  // <DefaultButton shadowless animated icon="arrowRightWhite" style={{marginBottom:"50px",width:"calc(100% - 2em)"}} className="liveKS" href="https://bit.ly/lovecareerandmagic" text={t('navbar.kickstarter')}/>
-  // <DefaultButton shadowless animated icon="arrowRightWhite" className="liveKS" href="https://bit.ly/lovecareerandmagic" text={t('navbar.kickstarter')}/>
-
-  // <DefaultButton shadowless icon="email_white" ref={navbarButton} className={`${homeStyles.topMailButton} GTMtoggleEmailButton` } text={t('email form.joinbutton')}/>
-  // <DefaultButton shadowless animated icon="arrowRightWhite" className="kickstarterButton" href="https://bit.ly/lovecareerandmagic" text={t('navbar.kickstarter')}/>
-  // <GsapFadeDelay delay={1500} className={`${homeStyles.titleWrapper} ${homeStyles.topOne}`} >
-  //   <div className={`${homeStyles.lcmMaskWrapper} noselect`}>
-  //     <div className={`${homeStyles.lcmMask}`}></div>
-  //   </div>
-  // </GsapFadeDelay>
-
-  //how to play / rulebook PDF
-  // <div className={`${homeStyles.rulebookSection} subcontentWrapper`}>
-  //   <GsapFadeScrub fadeIn>
-  //     <div className={`${homeStyles.rulebookWrapper}`}>
-  //       <DefaultButton inverted borderedBlack shadowless icon="faq" navlink="/howtoplay" text={t('main page.mechanics.howtoplay')}/>
-  //       <DefaultButton shadowless icon="rulebookWhite" href="/rulebook.pdf" text={t('main page.mechanics.rulebook')}/>
-  //     </div>
-  //   </GsapFadeScrub>
-  // </div>
 
   return (
     <div className="content">
@@ -138,54 +111,53 @@ const HomePage = forwardRef((props, ref) => {
           id={`${homeStyles.heroBgImage}`}
           className={homeStyles.screenHeight}
         />
-        <div className={homeStyles.screenHeight}>
-          <GsapFadeDelay delay={0} className={`${homeStyles.heroImage}`}>
-            <img
-              id={`${homeStyles.jitterHeroImage}`}
-              alt="Box and components of the card game."
-              src="/images/box_white_outline.png"
-              onClick={() => {
-                setVideoModalVisible(true);
-              }}
-            />
-          </GsapFadeDelay>
-          <GsapFadeDelay delay={1500}>
-            <div className={homeStyles.heroBottomWrapper}>
-              <div className={homeStyles.scrollHorizontalContainer}>
-                <DefaultButton
-                  shadowless
-                  animated
-                  icon="forward"
-                  className="is-blue"
-                  href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
-                  text={t("navbar.buynow")}
-                />
-                <DefaultButton
-                  shadowless
-                  icon="watchWhite"
-                  id="videoModalToggleButton"
-                  onClick={() => {
-                    setVideoModalVisible(true);
-                  }}
-                  text={t("navbar.watchtrailer")}
-                />
-              </div>
-              <GsapFadeScrub scrub startScreenTop fadeOut>
-                <div className={homeStyles.scrollHorizontalContainer}>
-                  <div
-                    id={homeStyles.animatedScroll}
-                    className={homeStyles.scrollVerticalContainer}
-                  ></div>
-                  <div className={homeStyles.scrollVerticalContainer}></div>
-                </div>
-                <div className={homeStyles.scrollHorizontalContainer}>
-                  <p onClick={scrollToDescription} className="noselect">
-                    Scroll to learn how to play!
-                  </p>
-                </div>
-              </GsapFadeScrub>
+        <div
+          id={`${homeStyles.heroImageWrapper}`}
+          className={homeStyles.screenHeight}
+        >
+          <img
+            alt="Box and components of the card game."
+            src="/images/box_white_outline.webp"
+            className={`${homeStyles.heroImage}`}
+            onClick={() => {
+              setVideoModalVisible(true);
+            }}
+          />
+          <div className={homeStyles.heroBottomWrapper}>
+            <div className={homeStyles.scrollHorizontalContainer}>
+              <DefaultButton
+                shadowless
+                animated
+                icon="forward"
+                className="is-blue"
+                href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
+                text={t("navbar.buynow")}
+              />
+              <DefaultButton
+                shadowless
+                icon="watchWhite"
+                id="videoModalToggleButton"
+                onClick={() => {
+                  setVideoModalVisible(true);
+                }}
+                text={t("navbar.watchtrailer")}
+              />
             </div>
-          </GsapFadeDelay>
+            <GsapFadeScrub scrub startScreenTop fadeOut>
+              <div className={homeStyles.scrollHorizontalContainer}>
+                <div
+                  id={homeStyles.animatedScroll}
+                  className={homeStyles.scrollVerticalContainer}
+                ></div>
+                <div className={homeStyles.scrollVerticalContainer}></div>
+              </div>
+              <div className={homeStyles.scrollHorizontalContainer}>
+                <p onClick={scrollToDescription} className="noselect">
+                  Scroll to learn how to play!
+                </p>
+              </div>
+            </GsapFadeScrub>
+          </div>
         </div>
         <div className={homeStyles.screenHeight}></div>
       </div>
@@ -261,6 +233,7 @@ const HomePage = forwardRef((props, ref) => {
           directory="/images/photoshoot/playtest"
           filename="playtest"
           random
+          href="https://www.youtube.com/playlist?list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
         />
       </div>
 
@@ -273,23 +246,26 @@ const HomePage = forwardRef((props, ref) => {
         </GsapFadeScrub>
         <div className={`${homeStyles.mechanicsWrapper}`}>
           <GsapFadeScrub fadeIn>
-            <img src="/images/illustrations/laughing.jpg" alt="Laughing icon" />
+            <img
+              src="/images/illustrations/laughing.webp"
+              alt="Laughing icon"
+            />
             {t("main page.mechanics.laughing")}
           </GsapFadeScrub>
           <GsapFadeScrub fadeIn>
-            <img src="/images/illustrations/party.jpg" alt="Party icon" />
+            <img src="/images/illustrations/party.webp" alt="Party icon" />
             {t("main page.mechanics.party")}
           </GsapFadeScrub>
           <GsapFadeScrub fadeIn>
-            <img src="/images/illustrations/stories.jpg" alt="Stories icon" />
+            <img src="/images/illustrations/stories.webp" alt="Stories icon" />
             {t("main page.mechanics.stories")}
           </GsapFadeScrub>
           <GsapFadeScrub fadeIn>
-            <img src="/images/illustrations/improv.jpg" alt="Improv icon" />
+            <img src="/images/illustrations/improv.webp" alt="Improv icon" />
             {t("main page.mechanics.improv")}
           </GsapFadeScrub>
           <GsapFadeScrub fadeIn>
-            <img src="/images/illustrations/acting.jpg" alt="Roleplay icon" />
+            <img src="/images/illustrations/acting.webp" alt="Roleplay icon" />
             {t("main page.mechanics.roleplay")}
           </GsapFadeScrub>
         </div>
@@ -442,13 +418,6 @@ const HomePage = forwardRef((props, ref) => {
         >
           <h1>{t("main page.final.description")}</h1>
           <div className={`${homeStyles.finalButtonsWrapper}`}>
-            {/* <DefaultButton
-              shadowless
-              icon="email_white"
-              ref={navbarButton}
-              className={`${homeStyles.topMailButton} GTMtoggleEmailButton`}
-              text={t("email form.joinbutton")}
-            /> */}
             <DefaultButton
               shadowless
               animated
@@ -457,14 +426,6 @@ const HomePage = forwardRef((props, ref) => {
               href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
               text={t("navbar.buynow")}
             />
-            {/* <DefaultButton
-              inverted
-              borderedBlack
-              shadowless
-              icon="favorite"
-              href="https://sysifuscorp.com"
-              text={t("main page.final.otherworks")}
-            /> */}
             <DefaultButton
               shadowless
               borderedBlack

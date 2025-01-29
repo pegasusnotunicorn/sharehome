@@ -10,20 +10,12 @@ import CharactersPage from "./components/Characters/CharactersPage.js";
 import ContactPage from "./components/ContactPage.js";
 import ErrorPage from "./components/ErrorPage.js";
 import Footer from "./components/Footer.js";
-// import FreeStickersPage from './components/FreeStickersPage.js';
 import ArtbookDownloadPage from "./components/ArtbookDownloadPage.js";
 import FreeArtbookPage from "./components/FreeArtbookPage.js";
 import ThankYouPage from "./components/ThankYouPage.js";
 import RulebookRedirect from "./components/RulebookRedirect.js";
 
 const Router = (props) => {
-  // <Route path="/designer" render={() => {
-  //   return <DesignerPage />
-  // }} />
-  // <Route exact path="/freesticker" render={() => {
-  //     return <FreeStickersPage />
-  //   }} />
-
   //magic to open the navbar from inside homepage
   let setNavbarActive = useRef(null);
   const onChildMount = (setterFromChild) => {
@@ -90,11 +82,7 @@ const Router = (props) => {
               return <ThankYouPage />;
             }}
           />
-          <Route
-            exact
-            path="/rulebook"
-            component={RulebookRedirect}
-          />
+          <Route exact path="/rulebook" component={RulebookRedirect} />
           <Route
             exact
             path="/buy"

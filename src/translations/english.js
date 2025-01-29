@@ -13,31 +13,9 @@ const english = {
     deck: "Deck",
 
     "error page": {
-      title: "Oops, something went wrong!",
-      description: "You tried to go to a page that doesn't exist! ",
+      title: "Something went wrong!",
+      description: "You tried to go to a page that doesn't exist.",
       link: "Click here to go back home.",
-    },
-
-    "free sticker page": {
-      title: "Free character sticker!",
-      description:
-        "Complete the following tasks for a free sticker! Sorry, but free stickers are limited to US residents and only while supplies last.",
-      description2:
-        "Also it's literally just one guy who is printing and mailing all of these out so please be patient when requesting your free sticker.",
-      description3:
-        "Please use the hashtag #lovecareermagic to show off your sticker when you receive it!",
-      description4:
-        "UPDATE 3/29 — Due to overwhelming demand, if you don't complete ALL of the tasks I will not send you a sticker.",
-      description5:
-        "UPDATE 4/24 — Due to increasing demand, I cannot give out stickers to people whose social media is obviously fake, used only for obtaining free things, or have very little followers / friends. I'm really sorry but it's literally impossible for me to mail out thousands of stickers by myself.",
-      description6:
-        "UPDATE 6/13 — If you don't want to share this page on social media, you can also send me a self-addressed stamped envelope (SASE) to 971 Stewart Ave, Garden City, NY 11530 labeled ATN: WONMIN LEE.",
-      "task 3": "Click here to follow on Kickstarter.",
-      "task 0": "Click here for the sign up sheet.",
-      "task 2":
-        "Share this page publicly on your social media. Or send me a self-addressed stamped envelope.",
-      "task 4": "Click here to follow on Instagram.",
-      "task 5": "Click here to follow on Twitter.",
     },
 
     "free artbook page": {
@@ -69,8 +47,7 @@ const english = {
     },
 
     "main page": {
-      "mobile tag line":
-        "A party game where fantasy meets reality TV.\n\nFully funded on Kickstarter!",
+      "mobile tag line": "A party game where fantasy meets reality TV.",
       hero: {
         subtitle:
           "A collaborative storytelling game\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world",
@@ -98,7 +75,7 @@ const english = {
       events: {
         description: "Follow directions in a race against the clock!",
         subdescription:
-          "The executives of the show are trying to instill a little chaos into the plot. Fulfill as many of their Direction Cards as you can to earn more points!",
+          "The executives of the show are trying to instill chaos into the plot. Fulfill as many of their Direction Cards as you can to earn more points!",
       },
       goals: {
         description: "Chaotic locations for chaotic episodes.",
@@ -140,7 +117,7 @@ const english = {
         description: "Character Spotlight",
       },
       final: {
-        description: "Fully funded on Kickstarter!",
+        description: "Ready for some Love, Career & Magic?",
         otherworks: "Check out my other game",
       },
     },
@@ -234,7 +211,7 @@ const english = {
           "step2 1":
             "Flip over three cards from both Direction Card decks. Six total cards should be face up at all times.",
           "step2 2":
-            "The executives of the show are trying to instill a little chaos into the plot!",
+            "The executives of the show are trying to instill chaos into the plot!",
           "step2 3":
             "In three minutes, complete as many Direction Cards as you can as a group.",
           "step2 4": "Each Direction Card is worth one or two points.",
@@ -333,7 +310,7 @@ const english = {
       discordjoin: "Get Free Emojis",
       emojidesc1: "See previews and unreleased content before anyone else.",
       emojidesc2: "Be a part of the developer journey from the beginning.",
-      emojidesc3: "Playtest and give feedback to help shape the game.",
+      emojidesc3: "Playtest and give feedback to help shape the games.",
     },
 
     "contact page": {

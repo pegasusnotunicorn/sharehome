@@ -10,7 +10,7 @@ const ThankYouPage = (props) => {
 
   //custom meta tags for this page
   const title = "Thank you for your order!";
-  const splashImage = `https://lovecareermagic.com/images/artbook/mockup2.jpg`;
+  const splashImage = `https://lovecareermagic.com/images/artbook/mockup2.webp`;
   const description = t("free artbook page.description");
 
   //change title of page
@@ -32,7 +32,7 @@ const ThankYouPage = (props) => {
           <img
             className="couch"
             style={{ width: "100%", marginBottom: "1em" }}
-            src="/images/loucheck.jpg"
+            src="/images/loucheck.webp"
             alt="Lou the cat is checking your order"
           />
           <p>

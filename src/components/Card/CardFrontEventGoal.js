@@ -19,7 +19,7 @@ export const EventGoalCard = (props) => {
       </div>
       <img
         className={type}
-        src={`/images/illustrations/${type}cardfront${props.randomNumber}.png`}
+        src={`/images/illustrations/${type}cardfront${props.randomNumber}.webp`}
         alt={`${type} card`}
       />
     </div>

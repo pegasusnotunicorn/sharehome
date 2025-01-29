@@ -1,54 +1,53 @@
 /* <editor-fold>--------------------------------------NAVBAR TOGGLE */
 
-.fixedButtonsWrapper{
-  position:fixed;
-  top:0px;
-  right:10px;
-  display:flex;
+.fixedButtonsWrapper {
+  position: fixed;
+  top: 0px;
+  right: 10px;
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index:99999;
-  width:100%;
+  z-index: 99999;
+  width: 100%;
 }
 
-.navbarFloatLeft{
-  display:block;
-  margin-left:20px;
-  width:50px;
-  height:50px;
-  background:url("./images/simplelogoColor.png");
+.navbarFloatLeft {
+  display: block;
+  margin-left: 20px;
+  width: 50px;
+  height: 50px;
+  background: url("./images/simplelogoColor.webp");
   background-size: 50px;
-  user-drag: none;
   user-select: none;
   -webkit-user-drag: none;
 }
 
-.navbarFloatLeft:hover{
-  background:url("./images/simplelogoBlack.png");
+.navbarFloatLeft:hover {
+  background: url("./images/simplelogoBlack.webp");
   background-size: 50px;
 }
 
-.navbarFloatRight{
-  display:flex;
+.navbarFloatRight {
+  display: flex;
   align-items: center;
 }
 
-#emailToggleButtonMobile{
-  display:none;
+#emailToggleButtonMobile {
+  display: none;
 }
 
-#emailToggleButtonMobile.is-active{
+#emailToggleButtonMobile.is-active {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 20px;
-  -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-  -moz-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-  -ms-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-  -o-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -moz-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -ms-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
 }
 
-#navbarOpenClose{
+#navbarOpenClose {
   height: 42px;
   width: 58px;
   cursor: pointer;
@@ -59,37 +58,37 @@
   align-items: center;
   outline: 0;
   margin-left: 20px;
-  -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-  -moz-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-  -ms-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-  -o-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -moz-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -ms-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
 }
 
 .navbarClass:not(.is-active) #navbarOpenClose {
-  background:#FFF;
-  border-radius:4px;
-  margin-left:20px;
+  background: #fff;
+  border-radius: 4px;
+  margin-left: 20px;
 }
 
 @media only screen and (max-width: 900px) {
-  #emailToggleButtonMobile{
-    font-size:.75em;
-    padding:5px;
-    padding-left:5px;
-    padding-right:5px;
+  #emailToggleButtonMobile {
+    font-size: 0.75em;
+    padding: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
   }
-  #navbarOpenClose{
+  #navbarOpenClose {
     height: 32px;
     width: 54px;
-    margin-left:20px;
-    margin-right:0px;
+    margin-left: 20px;
+    margin-right: 0px;
   }
-  .navbarFloatLeft{
-    width:40px;
-    height:40px;
+  .navbarFloatLeft {
+    width: 40px;
+    height: 40px;
     background-size: 40px;
   }
-  .navbarFloatLeft:hover{
+  .navbarFloatLeft:hover {
     background-size: 40px;
   }
 }
@@ -98,29 +97,44 @@
 
 /* <editor-fold>--------------------------------------NAVBAR */
 
-.navbarMain{
+.navbarMain {
   /* background-color:rgba(255,255,255,.95); */
-  background-image: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 40vw, rgba(255,255,255,1) 100%);
-  left:100%;
-  top:0;
-  position:fixed;
-  width:125%;
-  height:100%;
-  z-index:99998;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 1) 40vw,
+    rgba(255, 255, 255, 1) 100%
+  );
+  left: 100%;
+  top: 0;
+  position: fixed;
+  width: 125%;
+  height: 100%;
+  z-index: 99998;
   transition-property: left;
   transition-duration: 0.25s;
-  overflow:hidden;
+  overflow: hidden;
 }
 
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
-  .navbarMain{
-    background-image: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 35vw, rgba(255,255,255,1) 100%);
+  .navbarMain {
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 1) 35vw,
+      rgba(255, 255, 255, 1) 100%
+    );
   }
 }
 
 @media only screen and (min-width: 900px) and (max-width: 1200px) {
-  .navbarMain{
-    background-image: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 33vw, rgba(255,255,255,1) 100%);
+  .navbarMain {
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 1) 33vw,
+      rgba(255, 255, 255, 1) 100%
+    );
   }
 }
 
@@ -143,215 +157,224 @@
 } */
 
 @media only screen and (max-width: 900px) {
-  .navbarMain{
-    background-image: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 8vw, rgba(255,255,255,1) 100%);
+  .navbarMain {
+    background-image: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 1) 8vw,
+      rgba(255, 255, 255, 1) 100%
+    );
   }
 }
 
-.navbarMain.is-active{
-  left:-25%;
+.navbarMain.is-active {
+  left: -25%;
 }
 
-.navbarChildrenWrapper{
-  display:flex;
+.navbarChildrenWrapper {
+  display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction:row;
-  height:100%;
-  width:100vw;
-  position:absolute;
-  right:0;
-  top:0;
+  flex-direction: row;
+  height: 100%;
+  width: 100vw;
+  position: absolute;
+  right: 0;
+  top: 0;
   /* fade in the menus after navbar scrolls in */
-  opacity:0;
-  transition:none;
+  opacity: 0;
+  transition: none;
 }
 
-.navbarMain.is-active .navbarChildrenWrapper{
-  opacity:1 !important;
+.navbarMain.is-active .navbarChildrenWrapper {
+  opacity: 1 !important;
   transition-property: opacity;
   transition-duration: 0.25s;
   transition-delay: 0.25s;
 }
 
 .navbarChildren {
-  height:50%;
-  margin:auto;
+  height: 50%;
+  margin: auto;
 }
 
-.navbarClass p, .navbarClass a:not(.defaultButton), .navbarClass h1, .navbarClass h2, .navbarClass h3{
-  color:#323232;
+.navbarClass p,
+.navbarClass a:not(.defaultButton),
+.navbarClass h1,
+.navbarClass h2,
+.navbarClass h3 {
+  color: #323232;
 }
 
 @media only screen and (max-width: 900px) {
-  .navbarMain{
+  .navbarMain {
     flex-direction: column;
   }
   .navbarMain .navbarChildren {
-    opacity:0;
-    width:0;
+    opacity: 0;
+    width: 0;
   }
-  .navbarMain .navbarChildren.is-active{
-    width:calc(100% - 4em) !important;
-    opacity:1 !important;
-    transition-property:opacity;
-    transition-duration:0.25s;
+  .navbarMain .navbarChildren.is-active {
+    width: calc(100% - 4em) !important;
+    opacity: 1 !important;
+    transition-property: opacity;
+    transition-duration: 0.25s;
   }
-  #kickstarterButton{
-    font-size:.75em;
+  #kickstarterButton {
+    font-size: 0.75em;
     padding: 6px;
     padding-left: 7.5px;
     padding-right: 7.5px;
   }
-  #kickstarterButton img{
-    width:20px;
-    height:20px;
+  #kickstarterButton img {
+    width: 20px;
+    height: 20px;
   }
 }
 
-.navbarCenterBorder{
-  border-left:1px solid rgba(0,0,0,.1);
-  height:50%;
-  width:0;
+.navbarCenterBorder {
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  height: 50%;
+  width: 0;
 }
 
 /* </editor-fold> */
 
 /* <editor-fold>--------------------------------------NAVBAR LEFT */
 
-.navbarLeftWrapper{
-  display:flex;
-  width:calc(50% - 4em);
-  height:100%;
+.navbarLeftWrapper {
+  display: flex;
+  width: calc(50% - 4em);
+  height: 100%;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
-.navbarButtonWrapper{
-  display:flex;
+.navbarButtonWrapper {
+  display: flex;
   justify-content: center;
   align-items: flex-start;
   flex-direction: column;
-  color:#323232;
+  color: #323232;
 }
 
-.navbarButton{
-  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
-  padding:0.5em;
-  padding-top:0.25em;
-  padding-bottom:0.25em;
-  font-size:2em;
-  text-align:left;
-  text-decoration:none;
-  text-transform:none;
-  user-select:none;
-  -webkit-user-drag:none;
-  border:0;
-  margin:0;
-  border-left:4px solid transparent;
+.navbarButton {
+  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  padding: 0.5em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  font-size: 2em;
+  text-align: left;
+  text-decoration: none;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  border: 0;
+  margin: 0;
+  border-left: 4px solid transparent;
 }
 
-.navbarButton.is-active{
-  border-left:4px solid #DD7373;
-  color:#828282;
+.navbarButton.is-active {
+  border-left: 4px solid #dd7373;
+  color: #828282;
 }
 
-.navbarButton:hover{
-  color:#828282;
+.navbarButton:hover {
+  color: #828282;
 }
 
-.navbarButton:active{
-  color:#b3b3b3;
+.navbarButton:active {
+  color: #b3b3b3;
 }
 
 .languageChangeWrapper {
-  font-size:1.25em;
+  font-size: 1.25em;
   padding-left: 1em;
   padding-top: 3em;
 }
 
 .languageChangeSpan {
-  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
-  cursor:pointer;
+  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  cursor: pointer;
 }
 
 /* </editor-fold> */
 
 /* <editor-fold>--------------------------------------NAVBAR RIGHT */
 
-.navbarRightWrapper{
-  display:flex;
+.navbarRightWrapper {
+  display: flex;
   flex-direction: column;
-  width:calc(50% - 4em);
+  width: calc(50% - 4em);
   justify-content: space-between;
   align-items: center;
-  padding:2em;
-  position:relative;
+  padding: 2em;
+  position: relative;
 }
 
-@media only screen and (max-height: 825px) and (max-width: 900px){
-  .navbarRightWrapper{
+@media only screen and (max-height: 825px) and (max-width: 900px) {
+  .navbarRightWrapper {
     justify-content: center;
   }
 }
 
-.emailWrapper{
-  display:flex;
+.emailWrapper {
+  display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
 .formPrompt {
-  font-size:1.5em;
+  font-size: 1.5em;
 }
 
 .formWrapper {
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  width:100%;
-  max-width:600px;
+  width: 100%;
+  max-width: 600px;
 }
 
-.forminputText{
-  max-width:500px;
-  font-size:1.1em;
+.forminputText {
+  max-width: 500px;
+  font-size: 1.1em;
 }
 
-.forminputText a{
-  color:#323232;
+.forminputText a {
+  color: #323232;
 }
 
 .emailInput {
-  padding:1em;
-  font-family:"Roboto Light", 'NotoSansJP Light';
-  font-size:1em;
-  margin-bottom:2em;
-  border:0;
-  border-bottom:1px solid #323232;
-  outline:0;
+  padding: 1em;
+  font-family: "Roboto Light", "NotoSansJP Light";
+  font-size: 1em;
+  margin-bottom: 2em;
+  border: 0;
+  border-bottom: 1px solid #323232;
+  outline: 0;
   width: 100%;
-  color:#323232;
-  text-align:center;
-  line-height:100%;
+  color: #323232;
+  text-align: center;
+  line-height: 100%;
 }
 
-.subscribeButton{
-  padding-left:4em;
-  padding-right:4em;
-  font-size:1em;
+.subscribeButton {
+  padding-left: 4em;
+  padding-right: 4em;
+  font-size: 1em;
 }
 
-.artbookMockup{
-  width:100%;
+.artbookMockup {
+  width: 100%;
 }
 
 @media only screen and (min-width: 900px) {
-  .artbookMockup{
-    width:50% !important;
+  .artbookMockup {
+    width: 50% !important;
   }
 }
 
@@ -360,72 +383,72 @@
 /* <editor-fold>--------------------------------------MAIN PAGE EMAIL */
 
 .mainpageEmail .formWrapper {
-  flex-direction:row;
-  margin-bottom:1em;
-  -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-  -moz-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-  -ms-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-  -o-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  flex-direction: row;
+  margin-bottom: 1em;
+  -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -moz-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -ms-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
 }
 
 .mainpageEmail .emailInput {
-  width:300px;
-  margin-bottom:0;
-  border:1px solid #FFF !important;
+  width: 300px;
+  margin-bottom: 0;
+  border: 1px solid #fff !important;
   border-radius: 4px 0 0 4px;
-  padding:10px !important;
-  height:47px;
+  padding: 10px !important;
+  height: 47px;
   text-align: left !important;
 }
 
 .mainpageEmail .subscribeButton {
-  padding:10px 15px 10px 10px !important;
+  padding: 10px 15px 10px 10px !important;
   border-radius: 0 4px 4px 0;
-  width:50%;
-  height:47px;
-  background-color: #7DAF9C;
+  width: 50%;
+  height: 47px;
+  background-color: #7daf9c;
 }
 
 @media only screen and (max-width: 900px) {
   .mainpageEmail .formWrapper {
-    margin-bottom:0;
+    margin-bottom: 0;
   }
 
   .mainpageEmail .emailInput {
-    font-size:16px;
-    width:50%;
-    height:35px;
+    font-size: 16px;
+    width: 50%;
+    height: 35px;
   }
 
   .mainpageEmail .subscribeButton {
-    font-size:.85em;
-    width:50%;
-    height:35px;
-    padding-left:5px;
-    padding-right:5px;
+    font-size: 0.85em;
+    width: 50%;
+    height: 35px;
+    padding-left: 5px;
+    padding-right: 5px;
   }
 
-  .mainpageEmail:not(.secondMainpageEmail) .forminputText{
-    font-size:1em !important;
-    margin-bottom:.25em;
-    -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-    -moz-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-    -ms-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-    -o-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+  .mainpageEmail:not(.secondMainpageEmail) .forminputText {
+    font-size: 1em !important;
+    margin-bottom: 0.25em;
+    -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+    -moz-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+    -ms-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+    -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
   }
 }
 
 /* low height mobile */
 @media only screen and (max-height: 750px) {
   .mainpageEmail .emailInput {
-    font-size:.65em;
-    width:90%;
+    font-size: 0.65em;
+    width: 90%;
   }
 
   .mainpageEmail .subscribeButton {
-    font-size:.65em;
-    width:65%;
-    padding:5px 10px 5px 5px !important;
+    font-size: 0.65em;
+    width: 65%;
+    padding: 5px 10px 5px 5px !important;
   }
 }
 

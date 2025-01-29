@@ -5,42 +5,57 @@ html {
 }
 
 body {
-  margin:0;
-  padding:0;
-  border:0;
-  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
-  text-align:center;
-  letter-spacing:1px;
-  font-size:1.1em;
-  color:#323232;
-  overflow-x:hidden;
-  position:relative;
-  min-height:100vh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  text-align: center;
+  letter-spacing: 1px;
+  font-size: 1.1em;
+  color: #323232;
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
   min-height: -webkit-fill-available;
 }
 
-.is-hidden{
-  display:none !important;
+.is-hidden {
+  display: none !important;
 }
 
-h1, h2, h3, h4, h5, p, li, ul, a, span {
-  line-height:150%;
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+li,
+ul,
+a,
+span {
+  line-height: 150%;
 }
 
-h2, h2 a {
-  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
+h2,
+h2 a {
+  font-family: "Rowdies-Regular", "NotoSansJP Bold";
 }
 
-h3, p, a, input, li {
-  font-family:"Roboto Light", 'NotoSansJP Light';
+h3,
+p,
+a,
+input,
+li {
+  font-family: "Roboto Light", "NotoSansJP Light";
 }
 
-p, li {
-  opacity:.85;
+p,
+li {
+  opacity: 0.85;
 }
 
 span.is-bold {
-  font-family:'Rowdies-Light', 'NotoSansJP Bold';
+  font-family: "Rowdies-Light", "NotoSansJP Bold";
 }
 
 .prelineWhiteSpace {
@@ -49,21 +64,27 @@ span.is-bold {
 
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Opera and Firefox */
 }
 
 /* to let the image underneath be clicked and dragged */
-.nopointerevent{
+.nopointerevent {
   pointer-events: none;
 }
 
 .fantasyEmphasis {
-  background: linear-gradient(-45deg, #5F5AA2 20%, #F1DB4B 40%, #7DAF9C 60%, #DD7373 80%);
+  background: linear-gradient(
+    -45deg,
+    #5f5aa2 20%,
+    #f1db4b 40%,
+    #7daf9c 60%,
+    #dd7373 80%
+  );
   background-size: 200% auto;
   background-clip: text;
   -webkit-background-clip: text;
@@ -72,9 +93,15 @@ span.is-bold {
 }
 
 @keyframes animated_text {
-	0% { background-position: 0px 50%; }
-	50% { background-position: 100% 50%; }
-	100% { background-position: 0px 50%; }
+  0% {
+    background-position: 0px 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0px 50%;
+  }
 }
 
 .mirrored {
@@ -83,122 +110,123 @@ span.is-bold {
 }
 
 @media only screen and (min-width: 901px) {
-  .is-hidden-desktop{
-    display:none !important;
+  .is-hidden-desktop {
+    display: none !important;
   }
 }
 
 @media only screen and (max-width: 900px) {
-  .is-hidden-mobile{
-    display:none !important;
+  .is-hidden-mobile {
+    display: none !important;
   }
 }
 
-.stickerTasksWrapper{
-  text-align:left;
-  font-size:1.5em;
+.stickerTasksWrapper {
+  text-align: left;
+  font-size: 1.5em;
 }
 
-.stickerTasksWrapper .taskWrapper:not(:last-child){
-  margin-bottom:1em;
-  margin-top:1em;
+.stickerTasksWrapper .taskWrapper:not(:last-child) {
+  margin-bottom: 1em;
+  margin-top: 1em;
 }
 
-.stickerTasksWrapper div{
-  display:flex;
+.stickerTasksWrapper div {
+  display: flex;
 }
 
-.taskWrapper, .taskWrapper label{
-  cursor:pointer;
+.taskWrapper,
+.taskWrapper label {
+  cursor: pointer;
 }
 
-.checkWrapper{
-  margin-top:.15em;
+.checkWrapper {
+  margin-top: 0.15em;
 }
 
 .stickerTasksWrapper input {
-  margin-right:1em;
-  width:1.5em;
-  height:1.5em;
+  margin-right: 1em;
+  width: 1.5em;
+  height: 1.5em;
 }
 
 /* </editor-fold> */
 
 /* <editor-fold>------------------------------------------------------------------BUTTONS */
 
-.defaultButton{
-  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
-  cursor:pointer;
-  padding:10px;
-  padding-left:15px;
-  padding-right:15px;
-  background-color:#323232;
-  color:#FFF;
-  border-radius:4px;
-  text-decoration:none;
-  border:1px solid transparent;
+.defaultButton {
+  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  cursor: pointer;
+  padding: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: #323232;
+  color: #fff;
+  border-radius: 4px;
+  text-decoration: none;
+  border: 1px solid transparent;
   box-shadow: 1px 1px 4px 0px #323232;
-  line-height:125%;
-  display:flex;
+  line-height: 125%;
+  display: flex;
   justify-content: center;
   align-items: center;
-  width:fit-content;
+  width: fit-content;
 }
 
-.defaultButton.liveKS{
-  background-color:#05ce78;
+.defaultButton.liveKS {
+  background-color: #05ce78;
 }
 
 @media only screen and (max-width: 900px) {
-  .defaultButton{
-    margin:auto;
-    width:100%;
-    font-size:.85em;
+  .defaultButton {
+    margin: auto;
+    width: 100%;
+    font-size: 0.85em;
   }
 }
 
-.defaultButton:active{
+.defaultButton:active {
   background-color: #474747;
 }
 
-.defaultButton.is-green{
-  background-color:#7DAF9C;
+.defaultButton.is-green {
+  background-color: #7daf9c;
 }
 
-.defaultButton.is-blue{
-  background-color:#5F5AA2;
+.defaultButton.is-blue {
+  background-color: #5f5aa2;
 }
 
-.defaultButton.is-inverted{
-  background-color:#FFF;
-  color:#323232;
+.defaultButton.is-inverted {
+  background-color: #fff;
+  color: #323232;
 }
 
-.defaultButton.is-inverted:active{
-  background-color:#f0f0f0;
+.defaultButton.is-inverted:active {
+  background-color: #f0f0f0;
 }
 
-.defaultButton.is-bordered-black{
+.defaultButton.is-bordered-black {
   border: 1px solid #323232;
 }
 
-.defaultButton.is-bordered-white{
-  border: 1px solid #FFF;
+.defaultButton.is-bordered-white {
+  border: 1px solid #fff;
 }
 
-.defaultButton.is-shadowless{
-  box-shadow:none;
+.defaultButton.is-shadowless {
+  box-shadow: none;
 }
 
-.defaultButtonIcon{
-  width:25px;
-  height:25px;
-  margin-right:10px;
+.defaultButtonIcon {
+  width: 25px;
+  height: 25px;
+  margin-right: 10px;
 }
 
-.defaultButton.is-reversed .defaultButtonIcon{
-  margin-right:0;
-  margin-left:10px;
+.defaultButton.is-reversed .defaultButtonIcon {
+  margin-right: 0;
+  margin-left: 10px;
 }
 
 .defaultButton.is-animated img {
@@ -209,87 +237,95 @@ span.is-bold {
 }
 
 @keyframes animedButtonSVG {
-  0% { transform: translate(0,  0px); }
-  50%  { transform: translate(5px, 0px); }
-  100%   { transform: translate(-0, 0px); }
+  0% {
+    transform: translate(0, 0px);
+  }
+  50% {
+    transform: translate(5px, 0px);
+  }
+  100% {
+    transform: translate(-0, 0px);
+  }
 }
 
 /* </editor-fold> */
 
 /* <editor-fold>------------------------------------------------------------------CONTENT BLOCKS */
 
-.content{
-  text-align:center;
-  display:block;
-  width:100%;
-  padding-bottom:25vh;
-  margin:auto;
-  overflow:hidden;
+.content {
+  text-align: center;
+  display: block;
+  width: 100%;
+  padding-bottom: 15vh;
+  margin: auto;
+  overflow: hidden;
 }
 
-.content.max-width{
-  max-width:900px;
+.content.max-width {
+  max-width: 900px;
 }
 
 .content p {
-  margin-top:0;
+  margin-top: 0;
 }
 
-.contentWrapper{
-  margin:auto;
-  display:block;
-  margin-top:10px;
+.contentWrapper {
+  margin: auto;
+  display: block;
+  margin-top: 10px;
 }
 
-.subcontentWrapper{
-  max-width:900px;
-  margin:auto;
-  padding-left:2em;
-  padding-right:2em;
+.subcontentWrapper {
+  max-width: 900px;
+  margin: auto;
+  padding-left: 2em;
+  padding-right: 2em;
   white-space: pre-line;
 }
 
-.subcontentWrapper h1, .subcontentWrapper h2, .subcontentWrapper h3{
-  font-weight:normal;
+.subcontentWrapper h1,
+.subcontentWrapper h2,
+.subcontentWrapper h3 {
+  font-weight: normal;
 }
 
 @media only screen and (max-width: 900px) {
-  .subcontentWrapper.margin-top{
-    margin-top:5vh;
+  .subcontentWrapper.margin-top {
+    margin-top: 5vh;
   }
-  .subcontentWrapper.padding-top{
-    padding-top:5vh;
+  .subcontentWrapper.padding-top {
+    padding-top: 5vh;
   }
 }
 
-.subcontentWrapper.min-width{
-  max-width:600px;
+.subcontentWrapper.min-width {
+  max-width: 600px;
 }
 
-.subcontentWrapper.is-wider{
-  max-width:1250px;
+.subcontentWrapper.is-wider {
+  max-width: 1250px;
 }
 
-.subcontentWrapper.border-bottom{
-  border-bottom:1px solid rgba(0,0,0,.15);
-  margin-bottom:20px;
+.subcontentWrapper.border-bottom {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  margin-bottom: 20px;
 }
 
-.subcontentWrapper.border-top{
-  border-top:1px solid rgba(0,0,0,.15);
-  margin-top:20px;
+.subcontentWrapper.border-top {
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  margin-top: 20px;
 }
 
-.subtitle{
-  position:relative;
-  word-break:break-word;
-  font-weight:normal;
+.subtitle {
+  position: relative;
+  word-break: break-word;
+  font-weight: normal;
 }
 
-.subsubtitle{
-  margin-top:0px;
-  position:relative;
-  font-weight:normal;
+.subsubtitle {
+  margin-top: 0px;
+  position: relative;
+  font-weight: normal;
 }
 
 /* </editor-fold> */
@@ -304,9 +340,15 @@ span.is-bold {
 }
 
 @keyframes floating {
-  0% { transform: translate(0,  0px); }
-  50%  { transform: translate(0, 5px); }
-  100%   { transform: translate(0, -0px); }
+  0% {
+    transform: translate(0, 0px);
+  }
+  50% {
+    transform: translate(0, 5px);
+  }
+  100% {
+    transform: translate(0, -0px);
+  }
 }
 
 .floating-counter {
@@ -317,30 +359,36 @@ span.is-bold {
 }
 
 @keyframes floating-counter {
-  0% { transform: translate(0,  0px); }
-  50%  { transform: translate(0, -5px); }
-  100%   { transform: translate(0, -0px); }
+  0% {
+    transform: translate(0, 0px);
+  }
+  50% {
+    transform: translate(0, -5px);
+  }
+  100% {
+    transform: translate(0, -0px);
+  }
 }
 
-.lcmContainer{
-  margin:auto;
-  padding-top:5px;
-  width:250px;
+.lcmContainer {
+  margin: auto;
+  padding-top: 5px;
+  width: 250px;
 }
 
-.lcmImage{
-  background:transparent;
-  width:100%;
-  margin:0;
-  min-height:271.66px;
+.lcmImage {
+  background: transparent;
+  width: 100%;
+  margin: 0;
+  min-height: 271.66px;
 }
 
-.sharehomegame{
+.sharehomegame {
   text-align: right;
   width: 109%;
   margin-top: -10px !important;
   font-size: 1.3em;
-  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
+  font-family: "Rowdies-Regular", "NotoSansJP Bold";
 }
 
 /* </editor-fold> */

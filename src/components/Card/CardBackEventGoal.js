@@ -13,7 +13,7 @@ export const CardBackEventGoal = (props) => {
   return (
     <div className="noselect cardBack">
       <img
-        src={`/images/illustrations/${type}card${props.randomNumber}.jpg`}
+        src={`/images/illustrations/${type}card${props.randomNumber}.webp`}
         alt={`${type} card`}
       />
     </div>

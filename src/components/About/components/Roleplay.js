@@ -213,17 +213,17 @@ const Setup = ({ showRules, setshowRules, cardStyle, toggleSteps }) => {
             <div className="stepBlockVertical cardVertical">
               <img
                 className="paddedBottomVertical cardImg"
-                src="/images/illustrations/locationcard.jpg"
+                src="/images/illustrations/locationcard.webp"
                 alt="episode cards"
               />
               <img
                 className="paddedBottomVertical cardImg"
-                src="/images/illustrations/directioncard0.jpg"
+                src="/images/illustrations/directioncard0.webp"
                 alt="direction cards"
               />
               <img
                 className="paddedBottomVertical cardImg"
-                src="/images/illustrations/directioncard1.jpg"
+                src="/images/illustrations/directioncard1.webp"
                 alt="direction cards"
               />
             </div>
@@ -425,34 +425,34 @@ const Rules = ({ showRules, setshowRules, cardStyle }) => {
                 <div className="stepBlockHorizontal">
                   <img
                     className="paddedBottomVertical cardImg halfCardImg"
-                    src="/images/illustrations/directioncard0.jpg"
+                    src="/images/illustrations/directioncard0.webp"
                     alt="direction cards"
                   />
                   <img
                     className="paddedBottomVertical cardImg halfCardImg"
-                    src="/images/illustrations/directioncard1.jpg"
+                    src="/images/illustrations/directioncard1.webp"
                     alt="direction cards"
                   />
                   <img
                     className="paddedBottomVertical cardImg halfCardImg"
-                    src="/images/illustrations/directioncard2.jpg"
+                    src="/images/illustrations/directioncard2.webp"
                     alt="direction cards"
                   />
                 </div>
                 <div className="stepBlockHorizontal">
                   <img
                     className="paddedBottomVertical cardImg halfCardImg"
-                    src="/images/illustrations/directioncard0.jpg"
+                    src="/images/illustrations/directioncard0.webp"
                     alt="direction cards"
                   />
                   <img
                     className="paddedBottomVertical cardImg halfCardImg"
-                    src="/images/illustrations/directioncard1.jpg"
+                    src="/images/illustrations/directioncard1.webp"
                     alt="direction cards"
                   />
                   <img
                     className="paddedBottomVertical cardImg halfCardImg"
-                    src="/images/illustrations/directioncard2.jpg"
+                    src="/images/illustrations/directioncard2.webp"
                     alt="direction cards"
                   />
                 </div>

@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import React, { useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-import EmailForm from './utils/EmailForm.js';
-import CustomHelmet from './utils/CustomHelmet.js';
+import EmailForm from "./utils/EmailForm.js";
+import CustomHelmet from "./utils/CustomHelmet.js";
 
 const FreeArtbookPage = (props) => {
   const { t } = useTranslation();
 
   //custom meta tags for this page
   const title = "Love, Career & Magic — Free Digital Artbook!";
-  const splashImage = `https://lovecareermagic.com/images/artbook/mockup2.jpg`;
+  const splashImage = `https://lovecareermagic.com/images/artbook/mockup2.webp`;
   const description = t("free artbook page.description");
 
   //change title of page
@@ -20,8 +20,11 @@ const FreeArtbookPage = (props) => {
 
   return (
     <div className="content max-width">
-
-      <CustomHelmet title={title} splashImage={splashImage} description={description} />
+      <CustomHelmet
+        title={title}
+        splashImage={splashImage}
+        description={description}
+      />
 
       <div className="subcontentWrapper margin-top min-width">
         <div className="characterContent">
@@ -33,14 +36,25 @@ const FreeArtbookPage = (props) => {
 
       <div className="subcontentWrapper">
         <div className="couchContainer">
-          <img className="couch" style={{width:"100%"}} src="/images/artbook/mockup2.jpg" alt={t('free artbook page.description')}></img>
-          <img className="couch" style={{width:"100%"}} src="/images/artbook/mockup1.jpg" alt={t('free artbook page.description')}></img>
-          <p style={{marginTop:"1em"}}><NavLink to="/">{t("error page.link")}</NavLink></p>
+          <img
+            className="couch"
+            style={{ width: "100%" }}
+            src="/images/artbook/mockup2.webp"
+            alt={t("free artbook page.description")}
+          ></img>
+          <img
+            className="couch"
+            style={{ width: "100%" }}
+            src="/images/artbook/mockup1.webp"
+            alt={t("free artbook page.description")}
+          ></img>
+          <p style={{ marginTop: "1em" }}>
+            <NavLink to="/">{t("error page.link")}</NavLink>
+          </p>
         </div>
       </div>
-
     </div>
-  )
-}
+  );
+};
 
 export default FreeArtbookPage;

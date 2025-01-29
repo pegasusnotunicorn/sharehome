@@ -210,7 +210,7 @@ export const NavbarMain = (props) => {
             />
             <img
               className="artbookMockup"
-              src="/images/bizz_fukidashi.png"
+              src="/images/bizz_fukidashi.webp"
               alt={t("artbook page.description")}
             />
           </div>

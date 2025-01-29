@@ -88,7 +88,7 @@
   top: 0;
   left: 0;
   opacity: 0.1;
-  background-image: url("images/bg_seamless.jpg");
+  background-image: url("images/bg_seamless.webp");
   background-repeat: repeat;
 }
 
@@ -103,21 +103,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.heroLogo {
-  position: absolute;
-  width: 500px !important;
-  height: 500px !important;
-  padding-left: 6px;
-  left: 50%;
-  top: 25%;
-  transform: translate(-50%, -50%);
-}
-
-.heroLogo > img {
-  width: 100%;
-  height: 100%;
 }
 
 @keyframes monsterBurstAnimation1 {
@@ -220,6 +205,18 @@
     monsterBurstAnimation2 3s infinite;
 }
 
+@media only screen and (max-height: 900px) {
+  /* #heroImageWrapper {
+    position: absolute;
+    top: 0;
+    min-height: 1000px;
+  } */
+  .heroImage {
+    max-height: 500px;
+    object-fit: contain;
+  }
+}
+
 .heroImage > img {
   object-fit: cover;
   height: 100%;
@@ -236,19 +233,11 @@
   color: #fff;
   width: calc(100% - 4em);
   transform: translateX(-50%);
-  -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -moz-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -ms-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
 }
 
 .tagLine {
   font-size: 1.5em;
   white-space: pre-wrap;
-  -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -moz-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -ms-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
   line-height: 70%;
   margin-bottom: 4em;
   width: 100%;
@@ -341,13 +330,6 @@
   }
 }
 
-.lcmMaskWrapper {
-  -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -moz-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -ms-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-}
-
 .lcmMask {
   -webkit-mask-image: url("images/lcm.svg");
   mask-image: url("images/lcm.svg");
@@ -367,7 +349,7 @@
   left: -25%;
   top: -25%;
   z-index: -1;
-  background: url("images/background watercolor.png");
+  background: url("images/background watercolor.webp");
   background-repeat: repeat;
   background-size: 100% 100%;
   background-origin: center center;
@@ -763,8 +745,6 @@
   #eventsContainerSVGlovekey {
     right: 22vw;
   }
-  #eventsContainerSVGplanet {
-  }
   #goalsContainerSVGflag {
     right: 14vw;
   }
@@ -1052,7 +1032,6 @@
 /* <editor-fold>--------------------------------------FINAL CONTAINER */
 
 #finalContainer {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -1060,12 +1039,9 @@
   padding-top: 5vh;
 }
 
-#finalContainer > div {
-  margin-bottom: 10vh;
-}
-
 .finalButtonsContainer {
   padding: 0;
+  margin-bottom: 5vh;
   width: calc(100% - 4em);
 }
 

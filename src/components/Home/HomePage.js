@@ -22,6 +22,7 @@ import { EmojiSection } from "../utils/EmojiSection.js";
 import homeStyles from "../../css/homePage.module.css";
 import "../../css/utils/colors.css";
 import ShootingStar from "../Navbar/ShootingStar.js";
+import { LazyYoutube } from "./LazyLoadYouTube.js";
 
 const HomePage = forwardRef((props, ref) => {
   const navbarButton = useRef(null);
@@ -75,14 +76,11 @@ const HomePage = forwardRef((props, ref) => {
           }
         }}
       >
-        <iframe
+        <LazyYoutube
+          isLoaded={videoModalVisible}
           width={iframeWidth}
           height={iframeHeight}
           src="https://www.youtube.com/embed/videoseries?si=s6rFntDA-CQjC-GY&list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql&cc_load_policy=1&enablejsapi=1"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
         />
       </div>
 

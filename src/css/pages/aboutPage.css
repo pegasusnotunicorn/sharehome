@@ -1,96 +1,97 @@
 /* <editor-fold>--------------------------------------TOP */
 
 .howToPlayContainer {
-  display:flex;
+  display: flex;
   justify-content: space-between;
-  flex-wrap:wrap;
-  padding:2em;
+  flex-wrap: wrap;
+  padding: 2em;
 }
 
-.howToPlayWrapper{
-  width:100%;
-  display:inline-block;
-  border:5px solid #323232;
-  border-radius:5px;
+.howToPlayWrapper {
+  width: 100%;
+  display: inline-block;
+  border: 5px solid #323232;
+  border-radius: 5px;
   color: #323232;
-  padding:2em;
+  padding: 2em;
   vertical-align: top;
-  margin-bottom:2em;
+  margin-bottom: 2em;
   text-decoration: none;
-  transition:transform 0.5s ease 0s, -webkit-transform 0.5s ease 0s;
+  transition: transform 0.5s ease 0s, -webkit-transform 0.5s ease 0s;
 }
 
-@media only screen and (max-width:900px) {
-  .howToPlayWrapper{
-    width:100%;
+@media only screen and (max-width: 900px) {
+  .howToPlayWrapper {
+    width: 100%;
   }
 }
 
-.timePlayerInfoWrapper{
-  display:flex;
-  margin-top:2em;
-  margin-bottom:2em;
-  justify-content:center;
-  align-items:center;
-  text-transform:uppercase;
-  font-size:1em;
+.timePlayerInfoWrapper {
+  display: flex;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  font-size: 1em;
 }
 
-.timePlayerInfoWrapper div:not(:last-child){
-  margin-right:1em;
+.timePlayerInfoWrapper div:not(:last-child) {
+  margin-right: 1em;
 }
 
-.timePlayerInfoWrapper div{
-  font-family: 'Rowdies-Light', 'NotoSansJP Bold';
+.timePlayerInfoWrapper div {
+  font-family: "Rowdies-Light", "NotoSansJP Bold";
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.timePlayerInfoWrapper svg, .timePlayerInfoWrapper img{
-  margin-right:.5em;
+.timePlayerInfoWrapper svg,
+.timePlayerInfoWrapper img {
+  margin-right: 0.5em;
 }
 
-.setupRulesButtonWrapper{
-  display:flex;
+.setupRulesButtonWrapper {
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  width:calc(100% - 4em);
-  margin:auto;
-  margin-top:1em;
-  margin-bottom:0;
+  width: calc(100% - 4em);
+  margin: auto;
+  margin-top: 1em;
+  margin-bottom: 0;
 }
 
-.showRulesButton{
-  width:45%;
+.showRulesButton {
+  width: 45%;
 }
 
-.showRulesButton.is-active{
-  cursor:default;
+.showRulesButton.is-active {
+  cursor: default;
 }
 
-.showRulesButton.is-active:active{
-  background-color:#FFFFFF;
+.showRulesButton.is-active:active {
+  background-color: #ffffff;
 }
 
-.showRulesButtonBottom{
+.showRulesButtonBottom {
   text-decoration: underline;
-  width:fit-content;
-  margin:auto;
-  margin-top:2em !important;
-  cursor:pointer;
+  width: fit-content;
+  margin: auto;
+  margin-top: 2em !important;
+  cursor: pointer;
 }
 
-@media only screen and (max-width:900px) {
-  .setupRulesButtonWrapper{
+@media only screen and (max-width: 900px) {
+  .setupRulesButtonWrapper {
     flex-direction: column;
   }
-  .showRulesButton{
-    width:calc(100% - 2em);
-    margin:0;
+  .showRulesButton {
+    width: calc(100% - 2em);
+    margin: 0;
   }
-  .showRulesButton:not(:last-child){
-    margin-bottom:1em;
+  .showRulesButton:not(:last-child) {
+    margin-bottom: 1em;
   }
 }
 
@@ -98,188 +99,189 @@
 
 /* <editor-fold>--------------------------------------ALL STEPS */
 
-.allStepsContainer{
-  display:none;
-  padding-left:2em;
-  padding-right:2em;
+.allStepsContainer {
+  display: none;
+  padding-left: 2em;
+  padding-right: 2em;
 }
 
-.allStepsContainer.is-active{
-  display:block;
-  margin-bottom:5vh;
+.allStepsContainer.is-active {
+  display: block;
+  margin-bottom: 5vh;
 }
 
-@media only screen and (max-width:900px) {
-  .allStepsContainer{
-    width:calc(100% - 4em);
+@media only screen and (max-width: 900px) {
+  .allStepsContainer {
+    width: calc(100% - 4em);
   }
 }
 
-.stepWrapper{
-  background-color:white;
-  width:calc(100% - 4em - 10px);
-  vertical-align:middle;
-  margin:0;
-  padding:2em;
-  border-radius:5px;
-  border-width:5px;
-  border-style:solid;
-  border-color:#323232;
-  display:flex;
+.stepWrapper {
+  background-color: white;
+  width: calc(100% - 4em - 10px);
+  vertical-align: middle;
+  margin: 0;
+  padding: 2em;
+  border-radius: 5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #323232;
+  display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  position:relative;
+  position: relative;
 }
 
-@media only screen and (max-width:900px) {
-  .stepWrapper{
-    width:calc(100% - 4em - 10px);
+@media only screen and (max-width: 900px) {
+  .stepWrapper {
+    width: calc(100% - 4em - 10px);
   }
 }
 
-.allStepsContainer .stepWrapper{
-  margin-top:4em;
+.allStepsContainer .stepWrapper {
+  margin-top: 4em;
 }
 
 .stepWrapper .stepTitle {
   width: fit-content;
-  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
+  font-family: "Rowdies-Regular", "NotoSansJP Bold";
   background: #323232;
-  color: #FFF;
+  color: #fff;
   padding-left: 0.75em;
   padding-right: 0.75em;
   padding-bottom: 0.5em;
   padding-top: 0.4em;
   border-radius: 5px;
   font-size: 1em !important;
-  left:2em;
-  top:-1.25em;
-  margin:0;
-  position:absolute;
+  left: 2em;
+  top: -1.25em;
+  margin: 0;
+  position: absolute;
   text-transform: uppercase;
 }
 
-.stepWrapper.greenBorder {
+.stepBlockWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 }
-
-.stepBlockWrapper{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  width:100%;
-}
-.stepBlockWrapper.vertical{
+.stepBlockWrapper.vertical {
   flex-direction: column;
 }
 
-.stepBlockLeft{
-  width:50%;
+.stepBlockLeft {
+  width: 50%;
 }
 
-.stepBlockRight{
-  width:50%;
-  padding-left:2em;
+.stepBlockRight {
+  width: 50%;
+  padding-left: 2em;
 }
 
-.stepBlockRight.paddless{
-  padding-left:0;
+.stepBlockRight.paddless {
+  padding-left: 0;
 }
 
-.stepBlockDividerHorizontal{
-  border-bottom:1px solid rgba(0,0,0,.15);
-  width:100%;
-  padding-top:2em;
+.stepBlockDividerHorizontal {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  width: 100%;
+  padding-top: 2em;
 }
 
-.stepBlockHorizontal{
-  display:flex;
-  width:100%;
+.stepBlockHorizontal {
+  display: flex;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
 }
 
-.stepBlockHorizontal.evenWidthChildren{
+.stepBlockHorizontal.evenWidthChildren {
   justify-content: space-between;
 }
-.stepBlockHorizontal.evenWidthChildren > *{
-  width:calc(50% - 1em);
+.stepBlockHorizontal.evenWidthChildren > * {
+  width: calc(50% - 1em);
 }
-.stepBlockHorizontal.topAlign{
+.stepBlockHorizontal.topAlign {
   align-items: flex-start;
 }
-.stepBlockHorizontal.bottomAlign{
+.stepBlockHorizontal.bottomAlign {
   align-items: flex-end;
 }
-.stepBlockHorizontal.spaceBetween{
+.stepBlockHorizontal.spaceBetween {
   justify-content: space-between;
 }
-.stepBlockHorizontal.spaceAround{
+.stepBlockHorizontal.spaceAround {
   justify-content: space-around;
 }
-.stepBlockHorizontal.leftAlign{
+.stepBlockHorizontal.leftAlign {
   justify-content: flex-start;
 }
-.stepBlockHorizontal.paddingTop, .stepBlockVertical.paddingTop{
-  padding-top:2em;
+.stepBlockHorizontal.paddingTop,
+.stepBlockVertical.paddingTop {
+  padding-top: 2em;
 }
-.stepBlockHorizontal.paddingTopHalf, .stepBlockVertical.paddingTopHalf{
-  padding-top:1em;
+.stepBlockHorizontal.paddingTopHalf,
+.stepBlockVertical.paddingTopHalf {
+  padding-top: 1em;
 }
-.stepBlockHorizontal.paddingBottom, .stepBlockVertical.paddingBottom{
-  padding-bottom:2em;
+.stepBlockHorizontal.paddingBottom,
+.stepBlockVertical.paddingBottom {
+  padding-bottom: 2em;
 }
-.stepBlockHorizontal.paddingBottomHalf, .stepBlockVertical.paddingBottomHalf{
-  padding-bottom:1em;
+.stepBlockHorizontal.paddingBottomHalf,
+.stepBlockVertical.paddingBottomHalf {
+  padding-bottom: 1em;
 }
 
-.stepBlockVertical{
-  display:flex;
-  width:100%;
+.stepBlockVertical {
+  display: flex;
+  width: 100%;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
 .cardVertical {
-  flex-direction:row !important;
+  flex-direction: row !important;
 }
 
-.stepBlockVertical.leftAlign{
+.stepBlockVertical.leftAlign {
   align-items: flex-start;
   text-align: left;
 }
 
-@media only screen and (max-width:900px) {
+@media only screen and (max-width: 900px) {
   .cardVertical {
-    flex-direction:column !important;
+    flex-direction: column !important;
   }
-  .stepBlockHorizontal.evenWidthChildren.paddingTop{
-    padding-top:1em !important;
+  .stepBlockHorizontal.evenWidthChildren.paddingTop {
+    padding-top: 1em !important;
   }
-  .stepBlockHorizontal.evenWidthChildren{
+  .stepBlockHorizontal.evenWidthChildren {
     justify-content: space-between;
     flex-direction: column;
   }
-  .stepBlockHorizontal.evenWidthChildren > *{
-    width:100%;
+  .stepBlockHorizontal.evenWidthChildren > * {
+    width: 100%;
   }
-  .stepBlockHorizontal.spaceAround{
+  .stepBlockHorizontal.spaceAround {
     flex-direction: column;
     justify-content: space-around;
   }
-  .stepBlockHorizontal.spaceAround > *:first-child{
-    padding-bottom:1em;
+  .stepBlockHorizontal.spaceAround > *:first-child {
+    padding-bottom: 1em;
   }
-  .stepBlockLeft{
-    width:100% !important;
-    padding-bottom:1em;
+  .stepBlockLeft {
+    width: 100% !important;
+    padding-bottom: 1em;
   }
-  .stepBlockRight{
-    width:100% !important;
-    padding-left:0;
-    padding-bottom:1em;
+  .stepBlockRight {
+    width: 100% !important;
+    padding-left: 0;
+    padding-bottom: 1em;
   }
 }
 
@@ -288,77 +290,77 @@
 /* <editor-fold>--------------------------------------STEP BLOCK STUFF */
 
 .stepBlockFlex {
-  display:flex;
+  display: flex;
 }
 
 .stepBlockWrapper .boldText {
-  text-align:left;
-  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
-  margin:0;
+  text-align: left;
+  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  margin: 0;
 }
 
 .stepBlockWrapper .subtext {
-  text-align:left;
-  font-size:0.8em;
-  line-height:150%;
-  text-align:left;
-  margin-top:.5em;
-  font-family: 'Rowdies-Light', 'NotoSansJP Bold';
+  text-align: left;
+  font-size: 0.8em;
+  line-height: 150%;
+  text-align: left;
+  margin-top: 0.5em;
+  font-family: "Rowdies-Light", "NotoSansJP Bold";
 }
 
 .stepBlockWrapper p.marginTopDbl {
-  margin-top:1em !important;
+  margin-top: 1em !important;
 }
 
 .stepBlockWrapper p.marginTop {
-  margin-top:0.5em !important;
+  margin-top: 0.5em !important;
 }
 
-.stepBlockWrapper p{
-  margin:0;
+.stepBlockWrapper p {
+  margin: 0;
 }
 
 .stepBlockWrapper img.iconImage {
-  width:50px;
-  height:50px;
+  width: 50px;
+  height: 50px;
 }
 
 .stepBlockWrapper img.arrowArc {
   -webkit-filter: invert(100%); /* safari 6.0 - 9.0 */
-          filter: invert(100%);
+  filter: invert(100%);
 }
 
 .stepBlockWrapper .arrowWrapper {
-  transform: rotate(90deg) scaleX(.75);
-  display:flex;
+  transform: rotate(90deg) scaleX(0.75);
+  display: flex;
 }
 
 .stepBlockWrapper .cardImg {
-  height:75px !important;
-  width:100px !important;
-  padding:.25em;
-  padding-left:0;
-  border-radius:.5em;
+  height: 75px !important;
+  width: 100px !important;
+  padding: 0.25em;
+  padding-left: 0;
+  border-radius: 0.5em;
 }
 
 .stepBlockWrapper .halfCardImg {
-  height:50px !important;
-  width:75px !important;
+  height: 50px !important;
+  width: 75px !important;
 }
 
 .stepBlockWrapper .doubleCardImg {
-  height:100px !important;
-  width:150px !important;
+  height: 100px !important;
+  width: 150px !important;
 }
 
-@media only screen and (max-width:900px) {
+@media only screen and (max-width: 900px) {
   .stepBlockWrapper .cardImg {
-    height:50px !important;
-    width:75px !important;
-    padding:.15em;
-    padding-bottom:.3em;
-    padding-left:0;
-    border-radius:.5em;
+    height: 50px !important;
+    width: 75px !important;
+    padding: 0.15em;
+    padding-bottom: 0.3em;
+    padding-left: 0;
+    border-radius: 0.5em;
   }
 
   .allStepsContainer .eventGoalTextWrapper {
@@ -367,45 +369,45 @@
 }
 
 .stepBlockWrapper img.smallImage {
-  width:25px;
-  height:25px;
+  width: 25px;
+  height: 25px;
 }
 
 .stepBlockWrapper img.wideImage {
-  width:150px;
-  height:100px;
+  width: 150px;
+  height: 100px;
 }
 
-.stepBlockWrapper img.paddingRight{
-  padding-right:1em;
+.stepBlockWrapper img.paddingRight {
+  padding-right: 1em;
 }
 
-.stepBlockWrapper img.paddingLeft{
-  padding-left:1em;
+.stepBlockWrapper img.paddingLeft {
+  padding-left: 1em;
 }
 
 .stepBlockWrapper img.translateYUp {
-  margin-bottom:10%;
+  margin-bottom: 10%;
 }
 
 .stepBlockWrapper img.translateYDown {
-  margin-top:10%;
+  margin-top: 10%;
 }
 
-.repeatFrom1{
+.repeatFrom1 {
   text-decoration: underline;
-  cursor:pointer;
+  cursor: pointer;
 }
 
-.listOfTaboo li{
-  float:left;
-  padding-left:10px;
-  list-style-type:disclosure-closed;
+.listOfTaboo li {
+  float: left;
+  padding-left: 10px;
+  list-style-type: disclosure-closed;
 }
 
 .characterArcWrapperAbout {
-  font-size:.45em;
-  padding-left:1.5em;
+  font-size: 0.45em;
+  padding-left: 1.5em;
 }
 
 .characterArcWrapperAbout > .characterArc {

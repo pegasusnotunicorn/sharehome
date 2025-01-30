@@ -1,11 +1,11 @@
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client"; // Change from "react-dom" to "react-dom/client"
 import WebFont from "webfontloader";
 
 import "./css/index.css";
 import "./css/utils/fonts.css";
 import Router from "./Router.js";
 
-//load font first
+// Load fonts
 WebFont.load({
   custom: {
     families: [
@@ -18,4 +18,8 @@ WebFont.load({
   },
 });
 
-ReactDOM.render(<Router />, document.getElementById("sharehome"));
+// Initialize createRoot and render the app
+const container = document.getElementById("sharehome");
+const root = ReactDOM.createRoot(container);
+
+root.render(<Router />);

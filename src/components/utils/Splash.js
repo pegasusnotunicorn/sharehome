@@ -11,8 +11,8 @@ export const Splash = () => (
           className="couch"
           style={{ width: "100%" }}
           src="/images/illustrations/splash.webp"
-          alt="Image of characters in the kitchen"
-        ></img>
+          alt="Characters in the kitchen"
+        />
       </a>
     </div>
   </div>

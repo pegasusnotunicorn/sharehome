@@ -14,7 +14,7 @@
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "^5.0.0",
+    "react-scripts": "^5.0.1",
     "swiper": "^6.8.4",
     "webfontloader": "^1.6.28"
   },
@@ -24,9 +24,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "postinstall": "react-scripts build"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
   },
   "browserslist": {
     "production": [
@@ -43,8 +40,9 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "critical": "^7.2.1",
+    "eslint": "^8.24.0",
     "eslint-config-react-app": "^7.0.1",
-    "eslint-plugin-react": "^7.37.4",
+    "eslint-plugin-react": "^7.32.0",
     "typescript": "^3.9.3"
   }
 }

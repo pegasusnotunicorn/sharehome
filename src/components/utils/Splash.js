@@ -1,7 +1,11 @@
 export const Splash = () => (
   <div className="subcontentWrapper">
     <div className="couchContainer">
-      <a href="./images/illustrations/splash.webp" target="_blank">
+      <a
+        aria-label="Characters in the kitchen"
+        href="./images/illustrations/splash.webp"
+        target="_blank"
+      >
         <img
           loading="lazy"
           className="couch"

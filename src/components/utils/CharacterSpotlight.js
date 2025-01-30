@@ -96,7 +96,12 @@ export const CharacterSpotlight = (props) => {
       );
     else
       return (
-        <a target="_blank" rel="noreferrer" href={character.image.url}>
+        <a
+          aria-label="Character image"
+          target="_blank"
+          rel="noreferrer"
+          href={character.image.url}
+        >
           {props.children}
         </a>
       );

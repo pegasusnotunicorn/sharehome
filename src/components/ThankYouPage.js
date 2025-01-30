@@ -38,8 +38,15 @@ const ThankYouPage = () => {
           <p>
             You will soon receive the details about your purchase via email. If
             you do not receive anything within the hour, please{" "}
-            <a href="/contact">let me know</a> and I will try to sort out the
-            issue.
+            <a
+              aria-label="Contact us"
+              target="_blank"
+              rel="noreferrer"
+              href="/contact"
+            >
+              let me know
+            </a>{" "}
+            and I will try to sort out the issue.
           </p>
           <p>
             I am just one person running this shop, so I appreciate your

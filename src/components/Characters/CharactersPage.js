@@ -85,7 +85,12 @@ const CharactersPage = () => {
               The various mythical beings that have appeared on the reality TV
               show, SHAREHOME. Click on any of them to learn more about who they
               are!{" "}
-              <a href="https://www.instagram.com/carofranklyn/?hl=en">
+              <a
+                aria-label="Illustrations by Carolyn Frank"
+                target="_blank"
+                rel="noreferrer"
+                href="https://www.instagram.com/carofranklyn/?hl=en"
+              >
                 Illustrations by Carolyn Frank.
               </a>
               <br />

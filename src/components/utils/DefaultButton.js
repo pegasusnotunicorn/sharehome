@@ -59,7 +59,7 @@ const DefaultButton = forwardRef(
       props.href = `/images/emojis/${emoji}.webp`;
       props.download = `${emoji}.webp`;
       return (
-        <a target="_blank" rel="noreferrer" {...props}>
+        <a aria-label={text} target="_blank" rel="noreferrer" {...props}>
           <IconText {...iconTextProps} />
         </a>
       );
@@ -69,14 +69,14 @@ const DefaultButton = forwardRef(
         props.download = download;
       }
       return (
-        <a target="_blank" rel="noreferrer" {...props}>
+        <a aria-label={text} target="_blank" rel="noreferrer" {...props}>
           <IconText {...iconTextProps} />
         </a>
       );
     } else if (button) {
       props.type = button;
       return (
-        <button {...props}>
+        <button aria-label={props.text} {...props}>
           <IconText {...iconTextProps} />
         </button>
       );

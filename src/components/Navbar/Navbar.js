@@ -100,6 +100,7 @@ export const NavbarMain = (props) => {
             className={`hamburger hamburger--slider ${isVisibleClass}`}
             onClick={toggleNav}
             type="button"
+            aria-label="Toggle navigation"
           >
             <span className="hamburger-box">
               <span className="hamburger-inner"></span>
@@ -140,6 +141,7 @@ export const NavbarMain = (props) => {
                 Characters
               </NavLink>
               <a
+                aria-label="Play online"
                 onClick={toggleNav}
                 href="https://screentop.gg/@PegasusGames/lcm"
                 className="navbarButton noselect"
@@ -157,6 +159,7 @@ export const NavbarMain = (props) => {
                 About / contact
               </NavLink>
               <a
+                aria-label="Blog"
                 href="https://pegasusgames.medium.com/"
                 rel="noopener noreferrer"
                 target="_blank"

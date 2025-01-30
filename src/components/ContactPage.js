@@ -16,6 +16,7 @@ const ContactPage = () => {
               href="mailto:hello@lovecareermagic.com"
               target="_blank"
               rel="noreferrer"
+              aria-label="Email"
             >
               <img loading="lazy" src="/images/icons/email2.svg" alt="Email" />
             </a>
@@ -23,6 +24,7 @@ const ContactPage = () => {
               href="https://instagram.com/sysifuscorp"
               target="_blank"
               rel="noreferrer"
+              aria-label="Instagram"
             >
               <img
                 loading="lazy"
@@ -34,6 +36,7 @@ const ContactPage = () => {
               href="https://www.tiktok.com/@pegasusgamesnyc"
               target="_blank"
               rel="noreferrer"
+              aria-label="TikTok"
             >
               <img loading="lazy" src="/images/icons/tiktok.svg" alt="TikTok" />
             </a>
@@ -41,6 +44,7 @@ const ContactPage = () => {
               href="https://www.reddit.com/user/sysifuscorp"
               target="_blank"
               rel="noreferrer"
+              aria-label="Reddit"
             >
               <img loading="lazy" src="/images/icons/reddit.svg" alt="Reddit" />
             </a>
@@ -48,6 +52,7 @@ const ContactPage = () => {
               href="https://discord.com/invite/nv89cRgEsS"
               target="_blank"
               rel="noreferrer"
+              aria-label="Discord"
             >
               <img
                 loading="lazy"
@@ -59,6 +64,7 @@ const ContactPage = () => {
               href="https://twitter.com/sysifuscorp"
               target="_blank"
               rel="noreferrer"
+              aria-label="Twitter"
             >
               <img
                 loading="lazy"
@@ -70,6 +76,7 @@ const ContactPage = () => {
               href="https://www.facebook.com/sysifuscorp"
               target="_blank"
               rel="noreferrer"
+              aria-label="Facebook"
             >
               <img
                 loading="lazy"

@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 //a single emoji wrapper
 const EmojiWrapper = ({ urlName, emoji, index }) => {
   return (
-    <a href={`/characters/${urlName}`}>
+    <a aria-label={emoji} href={`/characters/${urlName}`}>
       <div id={`emojiWrapper${index}`} className="emojiWrapper">
         <img
           loading="lazy"

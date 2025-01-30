@@ -15,6 +15,7 @@ const getPictureSlide = (index, directory, filename, href) => {
   return (
     <SwiperSlide key={`carouselImage${index}`}>
       <a
+        aria-label={`Photoshoot ${index}`}
         rel="noreferrer"
         target="_blank"
         className="noselect"

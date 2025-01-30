@@ -8,7 +8,7 @@ body {
   margin: 0;
   padding: 0;
   border: 0;
-  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  font-family: "Rowdies-Regular";
   text-align: center;
   letter-spacing: 1px;
   font-size: 1.1em;
@@ -38,7 +38,7 @@ span {
 
 h2,
 h2 a {
-  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  font-family: "Rowdies-Regular";
 }
 
 h3,
@@ -46,7 +46,7 @@ p,
 a,
 input,
 li {
-  font-family: "Roboto Light", "NotoSansJP Light";
+  font-family: "Roboto Light";
 }
 
 p,
@@ -55,7 +55,7 @@ li {
 }
 
 span.is-bold {
-  font-family: "Rowdies-Light", "NotoSansJP Bold";
+  font-family: "Rowdies-Light";
 }
 
 .prelineWhiteSpace {
@@ -155,7 +155,7 @@ span.is-bold {
 /* <editor-fold>------------------------------------------------------------------BUTTONS */
 
 .defaultButton {
-  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  font-family: "Rowdies-Regular";
   cursor: pointer;
   padding: 10px;
   padding-left: 15px;
@@ -388,7 +388,7 @@ span.is-bold {
   width: 109%;
   margin-top: -10px !important;
   font-size: 1.3em;
-  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  font-family: "Rowdies-Regular";
 }
 
 /* </editor-fold> */

@@ -260,7 +260,7 @@
 }
 
 .navbarButton {
-  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  font-family: "Rowdies-Regular";
   padding: 0.5em;
   padding-top: 0.25em;
   padding-bottom: 0.25em;
@@ -295,7 +295,7 @@
 }
 
 .languageChangeSpan {
-  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  font-family: "Rowdies-Regular";
   cursor: pointer;
 }
 
@@ -350,7 +350,7 @@
 
 .emailInput {
   padding: 1em;
-  font-family: "Roboto Light", "NotoSansJP Light";
+  font-family: "Roboto Light";
   font-size: 1em;
   margin-bottom: 2em;
   border: 0;

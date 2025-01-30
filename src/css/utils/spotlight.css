@@ -1,169 +1,171 @@
 /* <editor-fold>--------------------------------------GENERAL */
 
 .characterSpotlightWrapper {
-  display:flex;
-  justify-content:center;
+  display: flex;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
-  color:#323232;
-  background:#FFF;
-  padding:2em;
+  color: #323232;
+  background: #fff;
+  padding: 2em;
 }
 
 .characterSpotlightWrapper.invert {
-  background:#323232;
-  color:#FFF;
+  background: #323232;
+  color: #fff;
 }
 
-.fadeInTextWrapper{
-  width:100%;
+.fadeInTextWrapper {
+  width: 100%;
 }
 
-.spotlightTopWrapper, .spotlightBottomWrapper {
-  display:flex;
+.spotlightTopWrapper,
+.spotlightBottomWrapper {
+  display: flex;
   align-items: center;
-  flex-direction:row;
-  width:calc(100% - 4em);
+  flex-direction: row;
+  width: calc(100% - 4em);
   text-align: center;
-  justify-content:center;
-  padding:2em;
+  justify-content: center;
+  padding: 2em;
 }
 
-.spotlightTopWrapper{
-  padding-top:1em;
-  justify-content:center;
+.spotlightTopWrapper {
+  padding-top: 1em;
+  justify-content: center;
 }
-.spotlightTopWrapper h1{
-  margin:0;
+.spotlightTopWrapper h1 {
+  margin: 0;
   line-height: 125%;
 }
 
-.starWrapperLeft{
-  position:relative;
-  display:block;
-  transform:translateX(-2em);
+.starWrapperLeft {
+  position: relative;
+  display: block;
+  transform: translateX(-2em);
 }
 
-.starWrapperRight{
-  position:relative;
-  display:block;
-  transform:translateX(2em);
+.starWrapperRight {
+  position: relative;
+  display: block;
+  transform: translateX(2em);
 }
 
-.spotlightBottomWrapper{
+.spotlightBottomWrapper {
   align-items: flex-start;
 }
 
 @media only screen and (min-width: 900px) and (max-width: 1200px) {
-  .spotlightLeftWrapper{
-    min-width:300px !important;
+  .spotlightLeftWrapper {
+    min-width: 300px !important;
   }
 }
 
-@media only screen and (max-width: 900px){
-  .spotlightTopWrapper, .spotlightBottomWrapper {
-    flex-direction:column;
+@media only screen and (max-width: 900px) {
+  .spotlightTopWrapper,
+  .spotlightBottomWrapper {
+    flex-direction: column;
   }
-  .spotlightTopWrapper{
-    padding-bottom:0;
+  .spotlightTopWrapper {
+    padding-bottom: 0;
   }
-  .spotlightRightWrapper{
-    width:100%;
+  .spotlightRightWrapper {
+    width: 100%;
   }
-  .spotlightLeftWrapper{
-    padding-bottom:2em;
+  .spotlightLeftWrapper {
+    padding-bottom: 2em;
     min-width: unset !important;
-    margin:auto;
-    margin-top:2em;
+    margin: auto;
+    margin-top: 2em;
   }
-  .spotlightBottomWrapper{
-    padding:0;
-    width:100%;
+  .spotlightBottomWrapper {
+    padding: 0;
+    width: 100%;
   }
-  .spotlightRightTopWrapper{
-    margin-left:0 !important;
-    padding-left:1.5em !important;
-    padding-right:1.5em !important;
-    padding-bottom:2em !important;
+  .spotlightRightTopWrapper {
+    margin-left: 0 !important;
+    padding-left: 1.5em !important;
+    padding-right: 1.5em !important;
+    padding-bottom: 2em !important;
   }
-  .spotlightTopWrapper{
-    padding-left:0;
-    padding-right:0;
-    width:100%;
+  .spotlightTopWrapper {
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
   }
-  .showDetailsButton{
+  .showDetailsButton {
     text-align: center;
-    margin-top:1em;
-    margin-bottom:0em;
+    margin-top: 1em;
+    margin-bottom: 0em;
     text-decoration: underline;
-    cursor:pointer;
+    cursor: pointer;
   }
-  .showDetailsButton p{
-    width:fit-content;
-    margin:auto;
+  .showDetailsButton p {
+    width: fit-content;
+    margin: auto;
   }
-  .spotlightDetailsSection{
-    display:none;
+  .spotlightDetailsSection {
+    display: none;
   }
-  .spotlightDetailsSection.is-active{
-    display:block;
+  .spotlightDetailsSection.is-active {
+    display: block;
   }
 }
 
-.allCharsButtonWrapper{
-  width:100%;
-  display:flex;
+.allCharsButtonWrapper {
+  width: 100%;
+  display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-top:1em;
+  margin-top: 1em;
 }
 
 /* </editor-fold> */
 
 /* <editor-fold>--------------------------------------LEFT */
 
-.spotlightLeftWrapper{
+.spotlightLeftWrapper {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   flex-direction: column;
-  min-width:500px;
+  min-width: 500px;
 }
 
-.indexTotalWrapper{
-  font-size:1.35em;
+.indexTotalWrapper {
+  font-size: 1.35em;
   position: absolute;
-  top:-30px;
-  left:-10px;
+  top: -30px;
+  left: -10px;
 }
 
-.indexWrapper{
-  font-size:1.65em;
+.indexWrapper {
+  font-size: 1.65em;
 }
 
-.imageCircleMask{
-  position:relative;
+.imageCircleMask {
+  position: relative;
 }
 
 .spotlightLeftWrapper .characterImage {
-  width:350px;
-  height:350px;
-  border-radius:100%;
+  width: 350px;
+  height: 350px;
+  border-radius: 100%;
   object-fit: cover;
 }
 
-.magnifierWrapper{
+.magnifierWrapper {
   border-radius: 100%;
   padding: 0.5em;
   border: 1px solid #323232;
-  position:absolute;
+  position: absolute;
   bottom: 2em;
   right: 1.5em;
-  background:#FFF;
+  background: #fff;
 }
 
-.imageCircleIcons{
+.imageCircleIcons {
   width: 25px;
   height: 25px;
 }
@@ -171,139 +173,140 @@
 /* mobile */
 @media only screen and (max-width: 900px) {
   .spotlightLeftWrapper .characterImage {
-    width:250px;
-    height:250px;
+    width: 250px;
+    height: 250px;
   }
 }
 
 .leftDetailsWrapper {
-  display:flex;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
 .leftDetailsWrapper h1 {
-  margin-bottom:0;
-  margin-top:0.25em;
-  font-size:2em;
-  line-height:125%;
+  margin-bottom: 0;
+  margin-top: 0.25em;
+  font-size: 2em;
+  line-height: 125%;
 }
 
 .leftDetailsWrapper h3 {
-  font-family: 'Rowdies-Regular', 'NotoSansJP Bold';
-  font-size:1em;
+  font-family: "Rowdies-Regular";
+  font-size: 1em;
   text-transform: uppercase;
-  margin-top:0.5em;
-  margin-bottom:1em;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
 }
 
 .leftAgeJobWrapper {
-  display:flex;
+  display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width:100%;
+  width: 100%;
 }
 
 .leftAgeJobWrapper p {
-  margin-bottom:0;
+  margin-bottom: 0;
 }
 
 .leftAgeJobWrapper .divider {
-  margin-left:.5em;
-  margin-right:.5em;
-  width:1px;
-  height:1px;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  width: 1px;
+  height: 1px;
 }
 
 /* </editor-fold> */
 
 /* <editor-fold>--------------------------------------RIGHT */
 
-.characterSpotlightWrapper.invert .spotlightRightTopWrapper{
-  background:#FFF;
-  color:#323232;
-  font-size:1em;
+.characterSpotlightWrapper.invert .spotlightRightTopWrapper {
+  background: #fff;
+  color: #323232;
+  font-size: 1em;
 }
 
 .spotlightRightTopWrapper {
-  text-align:left;
-  padding:2em;
-  margin-left:4em;
-  border-radius:5px;
-  max-width:700px;
+  text-align: left;
+  padding: 2em;
+  margin-left: 4em;
+  border-radius: 5px;
+  max-width: 700px;
 }
 
-.spotlightHobbiesSection{
-  display:flex;
+.spotlightHobbiesSection {
+  display: flex;
   flex-direction: column;
-  padding-bottom:1em;
+  padding-bottom: 1em;
 }
 
-.spotlightHobbiesSection > ul{
-  margin:0;
+.spotlightHobbiesSection > ul {
+  margin: 0;
 }
 
 .spotlightDetailsSection .spotlightBold {
-  font-family:"Roboto Regular";
+  font-family: "Roboto Regular";
 }
 
-.descriptionsList:not(:last-child){
-  margin-bottom:0.5em;
+.descriptionsList:not(:last-child) {
+  margin-bottom: 0.5em;
 }
 
 .spotlightDetailsSection li {
   text-align: left;
 }
 
-.spotlightRightTopWrapper h2, .spotlightRightTopWrapper h3, .spotlightRightTopWrapper p {
-  margin-top:0;
-  margin-bottom:0;
+.spotlightRightTopWrapper h2,
+.spotlightRightTopWrapper h3,
+.spotlightRightTopWrapper p {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
-.discordEmojiWrapper{
-  display:flex;
-  flex-direction:row;
-  flex-wrap:wrap;
+.discordEmojiWrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: flex-start;
 }
 
 /* mobile */
 @media only screen and (max-width: 900px) {
-  .discordEmojiWrapper{
-    margin-top:1em;
+  .discordEmojiWrapper {
+    margin-top: 1em;
   }
-  .characterSpotlightContainer{
-    padding-bottom:2em;
+  .characterSpotlightContainer {
+    padding-bottom: 2em;
   }
 }
 
-.discordEmojiWrapper .defaultButton{
-  padding:0;
-  padding-right:1em;
-  font-size:.9em;
+.discordEmojiWrapper .defaultButton {
+  padding: 0;
+  padding-right: 1em;
+  font-size: 0.9em;
   text-decoration: underline;
 }
 
 @media only screen and (min-width: 982px) {
-  .discordEmojiWrapper .defaultButton:nth-child(2){
-    padding-bottom:1em;
+  .discordEmojiWrapper .defaultButton:nth-child(2) {
+    padding-bottom: 1em;
   }
 }
 
 /* mobile */
 @media only screen and (max-width: 900px) {
-  .discordEmojiWrapper .defaultButton{
-    font-size:1em;
-    padding-bottom:0.5em;
-    padding-right:0;
+  .discordEmojiWrapper .defaultButton {
+    font-size: 1em;
+    padding-bottom: 0.5em;
+    padding-right: 0;
   }
 }
 
-
-.discordEmojiWrapper .defaultButton:hover{
-  background-color:#FFF;
+.discordEmojiWrapper .defaultButton:hover {
+  background-color: #fff;
 }
 
 /* </editor-fold> */

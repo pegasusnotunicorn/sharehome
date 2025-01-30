@@ -21,7 +21,7 @@
 }
 
 .moretocome {
-  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  font-family: "Rowdies-Regular";
   font-size: 2em;
 }
 
@@ -35,7 +35,7 @@
 
 .freeEmojiButtonWrapper a {
   color: #323232;
-  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  font-family: "Rowdies-Regular";
 }
 
 .freeEmojiButtonWrapper img {
@@ -178,7 +178,7 @@
 
 .caption p {
   line-height: 100% !important;
-  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  font-family: "Rowdies-Regular";
   margin: 0;
   padding: 10px;
 }
@@ -189,7 +189,7 @@
 }
 
 .caption > .details {
-  font-family: "Rowdies-Light", "NotoSansJP Bold";
+  font-family: "Rowdies-Light";
   font-size: 1em;
 }
 

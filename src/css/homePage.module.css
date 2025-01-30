@@ -485,7 +485,7 @@
 .subtitle {
   font-size: 2em;
   white-space: pre-line;
-  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  font-family: "Rowdies-Regular";
   margin: 0 !important;
 }
 
@@ -897,7 +897,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: "Rowdies-Light", "NotoSansJP Bold";
+  font-family: "Rowdies-Light";
 }
 
 .mechanicsWrapper div > img {

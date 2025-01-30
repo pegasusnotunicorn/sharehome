@@ -1,55 +1,34 @@
 @font-face {
-    font-family: 'Rowdies-Light';
-    src: url('../../fonts/Rowdies-Light.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+  font-family: "Rowdies-Light";
+  src: url("../../fonts/Rowdies-Light.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Rowdies-Regular';
-    src: url('../../fonts/Rowdies-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+  font-family: "Rowdies-Regular";
+  src: url("../../fonts/Rowdies-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Rowdies-Bold';
-    src: url('../../fonts/Rowdies-Bold.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+  font-family: "Rowdies-Bold";
+  src: url("../../fonts/Rowdies-Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Roboto Thin';
-    src: url('../../fonts/Roboto-Thin.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+  font-family: "Roboto Light";
+  src: url("../../fonts/Roboto-Light.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-    font-family: 'Roboto Light';
-    src: url('../../fonts/Roboto-Light.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto Regular';
-    src: url('../../fonts/Roboto-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'NotoSansJP Light';
-    src: url('../../fonts/NotoSansJP-Light.otf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'NotoSansJP Bold';
-    src: url('../../fonts/NotoSansJP-Bold.otf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
+  font-family: "Roboto Regular";
+  src: url("../../fonts/Roboto-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }

@@ -116,7 +116,7 @@ const HomePage = forwardRef((props, ref) => {
         >
           <img
             alt="Box and components of the card game."
-            src="/images/box_white_outline_full.webp"
+            src="/images/box_white_outline.webp"
             className={`${homeStyles.heroImage}`}
             onClick={() => {
               setVideoModalVisible(true);

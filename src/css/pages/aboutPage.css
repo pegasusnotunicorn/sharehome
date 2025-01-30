@@ -41,7 +41,7 @@
 }
 
 .timePlayerInfoWrapper div {
-  font-family: "Rowdies-Light", "NotoSansJP Bold";
+  font-family: "Rowdies-Light";
   display: flex;
   justify-content: center;
   align-items: center;
@@ -145,7 +145,7 @@
 
 .stepWrapper .stepTitle {
   width: fit-content;
-  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  font-family: "Rowdies-Regular";
   background: #323232;
   color: #fff;
   padding-left: 0.75em;
@@ -295,7 +295,7 @@
 
 .stepBlockWrapper .boldText {
   text-align: left;
-  font-family: "Rowdies-Regular", "NotoSansJP Bold";
+  font-family: "Rowdies-Regular";
   margin: 0;
 }
 
@@ -305,7 +305,7 @@
   line-height: 150%;
   text-align: left;
   margin-top: 0.5em;
-  font-family: "Rowdies-Light", "NotoSansJP Bold";
+  font-family: "Rowdies-Light";
 }
 
 .stepBlockWrapper p.marginTopDbl {

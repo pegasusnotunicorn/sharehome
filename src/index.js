@@ -8,13 +8,7 @@ import Router from "./Router.js";
 // Load fonts
 WebFont.load({
   custom: {
-    families: [
-      "Rowdies-Light",
-      "Rowdies-Regular",
-      "Rowdies-Bold",
-      "NotoSansJP Light",
-      "NotoSansJP Bold",
-    ],
+    families: ["Rowdies-Light", "Rowdies-Regular", "Rowdies-Bold"],
   },
 });
 

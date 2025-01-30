@@ -1,18 +1,18 @@
 /* <editor-fold> -------------------------------------------------- FLIP CARD */
 
-.flipcard{
+.flipcard {
   background-color: transparent;
-  display:inline-block;
-  position:relative;
+  display: inline-block;
+  position: relative;
   perspective: 1000px; /* Remove this if you don't want the 3D effect */
   -webkit-perspective: 1000px; /* Remove this if you don't want the 3D effect */
   -moz-perspective: 1000px; /* Remove this if you don't want the 3D effect */
   -o-perspective: 1000px; /* Remove this if you don't want the 3D effect */
-  pointer-events:all;
-  font-family: 'Roboto Regular';
+  pointer-events: all;
+  font-family: "Roboto Regular";
 }
 
-.flipcardInner{
+.flipcardInner {
   position: relative;
   width: 100%;
   height: 100%;
@@ -24,7 +24,8 @@
   -o-transform-style: preserve-3d;
 }
 
-.flipcard:not(.disable-flip):not(.is-clicked):hover .flipcardInner, .flipcard.is-flipped .flipcardInner {
+.flipcard:not(.disable-flip):not(.is-clicked):hover .flipcardInner,
+.flipcard.is-flipped .flipcardInner {
   transform: rotateY(180deg);
 }
 
@@ -33,18 +34,19 @@
 }
 
 .flipcard:not(.disable-shadow) .flipcardBack,
-.flipcard:not(.disable-shadow) .flipcardFront{
-  box-shadow:0px 0px 15px rgb(0 0 0 / 33%);
+.flipcard:not(.disable-shadow) .flipcardFront {
+  box-shadow: 0px 0px 15px rgb(0 0 0 / 33%);
 }
 
-.flipcardFront, .flipcardBack {
+.flipcardFront,
+.flipcardBack {
   position: absolute;
-  border-radius:2em;
+  border-radius: 2em;
   width: 100%;
   height: 100%;
-  overflow:hidden;
-  z-index:10;
-  display:flex;
+  overflow: hidden;
+  z-index: 10;
+  display: flex;
   justify-content: center;
   align-items: center;
   -webkit-backface-visibility: hidden; /* Safari */
@@ -55,120 +57,120 @@
 
 .flipcardBack {
   transform: rotateY(180deg);
-  background-color:#FFF;
-  display:flex;
+  background-color: #fff;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .flipcardBack.name {
-  background-color:#323232;
+  background-color: #323232;
 }
 
 /* </editor-fold> ----------------------------------------------------------- */
 
 /* <editor-fold> ------------------------------------------------ MEMBER CARD */
 
-.memberCommCardWrapper{
-  height:100%;
-  width:100%;
+.memberCommCardWrapper {
+  height: 100%;
+  width: 100%;
 }
 
-.memberCommCardText{
-  width:calc(100% - 4em);
-  position:absolute;
-  bottom:0;
-  text-align:left;
-  white-space:nowrap;
-  -webkit-font-smoothing:antialiased;
-  overflow:hidden;
-  color:#FFF;
-  margin:2em;
-  z-index:9;
+.memberCommCardText {
+  width: calc(100% - 4em);
+  position: absolute;
+  bottom: 0;
+  text-align: left;
+  white-space: nowrap;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  color: #fff;
+  margin: 2em;
+  z-index: 9;
 }
 
-.memberCommCardMainText{
-  font-size:4em;
-  line-height:100%;
-  font-family: 'Roboto Regular';
+.memberCommCardMainText {
+  font-size: 4em;
+  line-height: 100%;
+  font-family: "Roboto Regular";
 }
 
-.memberCommCardSubText{
-  font-size:2.5em;
-  line-height:100%;
-  font-family:"Roboto Light", 'NotoSansJP Light';
+.memberCommCardSubText {
+  font-size: 2.5em;
+  line-height: 100%;
+  font-family: "Roboto Light";
 }
 
-.memberCommCardShadow{
-  height:50%;
-  width:100%;
-  position:absolute;
-  bottom:-1px;
-  background-image:linear-gradient(rgba(255,0,0,0), rgba(0,0,0,.75));
+.memberCommCardShadow {
+  height: 50%;
+  width: 100%;
+  position: absolute;
+  bottom: -1px;
+  background-image: linear-gradient(rgba(255, 0, 0, 0), rgba(0, 0, 0, 0.75));
 }
 
-.memberCommCardFullShadow{
-  height:100%;
-  width:100%;
-  position:absolute;
-  background-color:rgba(0,0,0,.35);
+.memberCommCardFullShadow {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.35);
 }
 
-.memberCommCardQuestionMark{
-  color:#FFF;
-  font-size:40em;
-  position:absolute;
-  margin:0;
-  font-family: 'Rowdies-Light', 'NotoSansJP Bold';
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -50%);
-  z-index:9;
+.memberCommCardQuestionMark {
+  color: #fff;
+  font-size: 40em;
+  position: absolute;
+  margin: 0;
+  font-family: "Rowdies-Light";
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
 }
 
-.memberCommCardImage{
-  object-fit:cover;
-  width:100%;
-  height:100%;
-  object-position:center center;
+.memberCommCardImage {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-position: center center;
 }
 
 /* </editor-fold> ----------------------------------------------------------- */
 
 /* <editor-fold> -------------------------------------------EVENT / GOAL CARD */
 
-.eventGoalCardWrapper{
-  font-family: 'Futura', 'Roboto Regular';
+.eventGoalCardWrapper {
+  font-family: "Futura", "Roboto Regular";
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #FFF;
+  background-color: #fff;
 }
 
-.eventGoalTextWrapper{
+.eventGoalTextWrapper {
   color: #323232;
   font-size: 3.5em;
   line-height: 125%;
   text-align: left;
   overflow: hidden;
-  border-radius: .25em;
+  border-radius: 0.25em;
   margin: auto;
-  background: #FFF;
+  background: #fff;
   text-align: center;
-  display:flex;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .eventGoalTextWrapper.location {
   height: calc(100% - 2.5em);
-  padding:1.25em;
+  padding: 1.25em;
 }
 
 .eventGoalTextWrapper.event {
   width: calc(100% - 3em);
-  padding:1.5em;
+  padding: 1.5em;
 }
 
 .eventGoalCardWrapper img {
@@ -189,29 +191,29 @@
 }
 
 @media only screen and (max-width: 900px) {
-  .eventGoalBottomTextWrapper{
-    padding-top:1em !important;
-    padding-bottom:1em !important;
+  .eventGoalBottomTextWrapper {
+    padding-top: 1em !important;
+    padding-bottom: 1em !important;
   }
-  .footer .eventGoalTextWrapper{
+  .footer .eventGoalTextWrapper {
     font-size: 3.5em;
-    font-family: 'Rowdies-Light', 'NotoSansJP Bold';
+    font-family: "Rowdies-Light";
   }
-  .eventGoalDecksContainer .eventGoalTextWrapper{
+  .eventGoalDecksContainer .eventGoalTextWrapper {
     font-size: 2.5em;
   }
 }
 
-.eventGoalBottomTextWrapper.yellowBackground{
+.eventGoalBottomTextWrapper.yellowBackground {
   color: #323232;
 }
 
-.eventGoalBottomTextWrapper{
+.eventGoalBottomTextWrapper {
   display: flex;
   justify-content: space-between;
   position: absolute;
   bottom: 0;
-  color: #FFF;
+  color: #fff;
   width: calc(100% - 4em);
   padding: 1em;
   padding-left: 2em;
@@ -225,12 +227,12 @@
 /* <editor-fold> -------------------------------------------------- CARD BACK */
 
 .cardBack {
-  width:100%;
+  width: 100%;
 }
 
 .cardBack img {
-  width:100%;
-  height:100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -238,44 +240,45 @@
 
 /* <editor-fold> -------------------------------------------------- CARD BACK NAME */
 
-.cardBackText{
-  -webkit-font-smoothing:antialiased;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  width:100%;
-  font-family: 'Rowdies-Bold', 'NotoSansJP Bold';
-  padding-left:1em;
-  padding-right:1em;
+.cardBackText {
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  font-family: "Rowdies-Bold";
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
-.cardBack.name{
-  width:calc(100% - 2em);
-  height:calc(100% - 2em);
-  border-radius:2em;
-  background-color:#FFF;
-  display:flex;
+.cardBack.name {
+  width: calc(100% - 2em);
+  height: calc(100% - 2em);
+  border-radius: 2em;
+  background-color: #fff;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.cardBackName{
-  font-size:3em;
-  margin-top:0;
-  line-height:125%;
-  margin-bottom:0.5em;
+.cardBackName {
+  font-size: 3em;
+  margin-top: 0;
+  line-height: 125%;
+  margin-bottom: 0.5em;
 }
 
-.cardBackTitle{
-  font-size:1.5em;
-  margin-top:0;
+.cardBackTitle {
+  font-size: 1.5em;
+  margin-top: 0;
   text-transform: uppercase;
 }
 
-.cardBackAge, .cardBackJob{
-  font-size:1.5em;
-  margin:0;
+.cardBackAge,
+.cardBackJob {
+  font-size: 1.5em;
+  margin: 0;
   text-transform: lowercase;
 }
 

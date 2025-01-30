@@ -65,8 +65,8 @@
 #shootingStarsContainer {
   position: absolute;
   z-index: 1;
-  height: 100vh;
-  width: 100vw;
+  height: 100dvh;
+  width: 100dvw;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -445,7 +445,7 @@
 /* <editor-fold>--------------------------------------SHAREHOME DESCRIPTION */
 
 #descriptionContainer {
-  min-height: 100vh;
+  min-height: 100dvh;
   justify-content: center;
   align-items: center;
   color: #323232;
@@ -496,9 +496,9 @@
 }
 
 #howToPlay {
-  height: 15vh;
+  height: 200px;
   margin: auto;
-  margin-top: 5vh;
+  margin-top: 50px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -547,7 +547,7 @@
 #characterContainer {
   color: #323232;
   display: flex;
-  height: 100vh;
+  height: 100dvh;
   width: 100%;
   flex-direction: row;
   align-items: center;
@@ -573,8 +573,8 @@
 
 .characterContainerSVG {
   position: absolute;
-  top: 15vh;
-  left: 40vw;
+  top: 150px;
+  left: 700px;
 }
 
 .characterContainerSVG p {
@@ -627,8 +627,8 @@
     text-align: center;
   }
   .characterContainerSVG {
-    top: 15vh;
-    left: 60vw;
+    top: 15%;
+    left: 60%;
     transform: scale(0.75);
   }
 }
@@ -641,7 +641,7 @@
 #goalsContainer {
   color: #323232;
   display: flex;
-  height: 100vh;
+  height: 100dvh;
   width: 100%;
   flex-direction: row;
   align-items: center;
@@ -703,70 +703,70 @@
 }
 
 #eventsContainerSVGcake {
-  top: 69vh;
-  right: 20vw;
+  top: 69%;
+  right: 20%;
 }
 
 #eventsContainerSVGlovekey {
-  top: 15vh;
-  right: 25vw;
+  top: 15%;
+  right: 25%;
 }
 
 #eventsContainerSVGplanet {
-  top: 20vh;
-  left: 20vw;
+  top: 20%;
+  left: 20%;
   transform: scale(0.65);
 }
 
 #goalsContainerSVGflag {
-  top: 58vh;
-  right: 27vw;
+  top: 58%;
+  right: 27%;
   transform: scale(0.65);
 }
 
 #goalsContainerSVGscroll {
-  top: 24vh;
-  right: 24vw;
+  top: 24%;
+  right: 24%;
   transform: scale(0.65);
 }
 
 /* small desktop */
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
   #eventsContainerSVGcake {
-    right: 20vw;
-    top: 65vh;
+    right: 20%;
+    top: 65%;
   }
   #eventsContainerSVGlovekey {
-    right: 22vw;
+    right: 22%;
   }
   #goalsContainerSVGflag {
-    right: 14vw;
+    right: 14%;
   }
 
   #goalsContainerSVGscroll {
-    right: 17vw;
+    right: 17%;
   }
 }
 
 /* tablet */
 @media only screen and (min-width: 900px) and (max-width: 1200px) {
   #eventsContainerSVGcake {
-    right: 65vw;
-    top: 65vh;
+    right: 65%;
+    top: 65%;
   }
   #eventsContainerSVGlovekey {
-    right: 6vw;
+    right: 6%;
   }
   .eventsTextContainer {
     max-width: 400px;
   }
   #goalsContainerSVGflag {
-    right: 70vw;
-    top: 70vh;
+    right: 70%;
+    top: 70%;
   }
   #goalsContainerSVGscroll {
-    right: 70vw;
-    top: 17vh;
+    right: 70%;
+    top: 17%;
   }
 }
 
@@ -781,16 +781,16 @@
     align-items: center;
   }
   #eventsContainerSVGcake {
-    top: 70vh;
-    right: 5vw;
+    top: 70%;
+    right: 5%;
   }
   #eventsContainerSVGlovekey {
-    top: 20vh;
-    right: 10vw;
+    top: 20%;
+    right: 10%;
   }
   #eventsContainerSVGplanet {
-    top: 75vh;
-    left: -5vw;
+    top: 75%;
+    left: -5%;
   }
   .goalsRightContainer {
     width: calc(100% - 4em);
@@ -801,12 +801,12 @@
     width: calc(100% - 4em);
   }
   #goalsContainerSVGflag {
-    right: 15vw;
-    top: 70vh;
+    right: 15%;
+    top: 70%;
   }
   #goalsContainerSVGscroll {
-    right: 7.5vw;
-    top: 5vh;
+    right: 7.5%;
+    top: 5%;
   }
 }
 
@@ -815,7 +815,7 @@
 /* <editor-fold>--------------------------------------CAROUSEL  */
 
 #carouselContainer {
-  margin-top: 10vh;
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -823,7 +823,7 @@
 }
 
 .mainpageCarousel {
-  margin-bottom: 0vh;
+  margin-bottom: 0;
 }
 
 .carouselTextContainer {
@@ -848,7 +848,7 @@
 #likehateContainer {
   color: #323232;
   display: flex;
-  margin-top: 10vh;
+  margin-top: 100px;
   width: 100%;
   flex-direction: row;
   align-items: center;
@@ -868,7 +868,7 @@
 /* <editor-fold>--------------------------------------MECHANICS CONTAINER */
 
 #mechanicsContainer {
-  min-height: 65vh;
+  min-height: 650px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -943,75 +943,6 @@
 
 /* </editor-fold> */
 
-/* <editor-fold>--------------------------------------RULEBOOK  */
-
-.rulebookSection {
-  margin-bottom: 20vh;
-}
-
-/* </editor-fold> */
-
-/* <editor-fold>--------------------------------------TITLE MASK */
-
-#playthroughContainer {
-  margin-bottom: 20vh;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  margin-left: 2em;
-  margin-right: 2em;
-  width: calc(100% - 4em);
-  position: relative;
-}
-
-#playthroughContainer .playthroughTextContainer {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-}
-
-#playthroughContainer .playthroughVideoContainer {
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-#playthroughContainer h1 {
-  margin-bottom: 1vh;
-}
-
-#playthroughContainer a {
-  margin-bottom: 5vh;
-}
-
-@media only screen and (max-width: 900px) {
-  #playthroughContainer {
-    display: flex;
-    width: calc(100% - 4em);
-  }
-
-  #playthroughContainer .playthroughTextContainer {
-    flex: 1;
-  }
-
-  #playthroughContainer .playthroughVideoContainer {
-    flex: 1;
-    position: relative;
-    padding-bottom: 56.25%;
-    width: 100%;
-  }
-
-  #playthroughContainer .playthroughVideoContainer iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-}
-
-/* </editor-fold> */
-
 /* <editor-fold>--------------------------------------SPOTLIGHT CONTAINER */
 
 #spotlightContainer {
@@ -1032,12 +963,12 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  padding-top: 5vh;
+  padding-top: 25px;
 }
 
 .finalButtonsContainer {
   padding: 0;
-  margin-bottom: 5vh;
+  margin-bottom: 25px;
   width: calc(100% - 4em);
 }
 

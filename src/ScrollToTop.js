@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, Fragment } from "react";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -5,7 +6,7 @@ import PropTypes from "prop-types";
 function ScrollToTop({ history, children }) {
   useEffect(() => {
     const unlisten = history.listen(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0 });
     });
     return () => {
       unlisten();

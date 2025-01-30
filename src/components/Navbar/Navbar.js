@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { NavLink } from "react-router-dom";
-
 import { GsapFadeDelay, GsapFadeScrub } from "../utils/useGsap.js";
 import ShootingStar from "./ShootingStar.js";
 import EmailForm from "../utils/EmailForm.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import DefaultButton from "../utils/DefaultButton.js";
-
 import "../../css/navbar.css";
 import "../../css/utils/hamburger.css";
+import PropTypes from "prop-types";
 
 //main navbar for page navigation on the website
 export const NavbarMain = (props) => {
@@ -210,6 +209,10 @@ export const NavbarMain = (props) => {
       </div>
     </div>
   );
+};
+
+NavbarMain.propTypes = {
+  onMount: PropTypes.func,
 };
 
 export default NavbarMain;

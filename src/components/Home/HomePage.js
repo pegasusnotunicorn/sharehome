@@ -1,14 +1,9 @@
-import React, { useEffect, useRef, forwardRef, useState } from "react";
-
-//custom files
+import { useEffect, useRef, forwardRef, useState } from "react";
 import GameModeIcons from "../About/utils/GameModeIcons.js";
 import { CharacterSpotlight } from "../utils/CharacterSpotlight.js";
 import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import DefaultButton from "../utils/DefaultButton.js";
-// import EmailForm from "../utils/EmailForm.js";
-
-// sections
 import CarouselSection from "../utils/CarouselSection.js";
 import ParallaxSection from "./ParallaxSection.js";
 import CharactersDeckSection from "./CharactersDeckSection.js";
@@ -18,7 +13,6 @@ import {
 } from "./EventsGoalsDeckSection.js";
 import LikeHateSection from "./LikeHateSection.js";
 import { EmojiSection } from "../utils/EmojiSection.js";
-
 import homeStyles from "../../css/homePage.module.css";
 import "../../css/utils/colors.css";
 import ShootingStar from "../Navbar/ShootingStar.js";
@@ -240,7 +234,9 @@ const HomePage = forwardRef((props, ref) => {
         className={`${homeStyles.mainpageContainer}`}
       >
         <GsapFadeScrub fadeIn>
-          <h1>If you like any of these things, then you'll love this game!</h1>
+          <h1>
+            If you like any of these things, then you&apos;ll love this game!
+          </h1>
         </GsapFadeScrub>
         <div className={`${homeStyles.mechanicsWrapper}`}>
           <GsapFadeScrub fadeIn>
@@ -433,5 +429,7 @@ const HomePage = forwardRef((props, ref) => {
     </div>
   );
 });
+
+HomePage.displayName = "HomePage";
 
 export default HomePage;

@@ -1,11 +1,10 @@
-import React, { useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "gsap";
-
 import { randomNum } from "../utils/useMath.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
-
 import "../../css/utils/shootingStar.css";
+import PropTypes from "prop-types";
 
 //function to get a random X Y
 const getRandomXY = () => {
@@ -219,6 +218,14 @@ export const ShootingStar = (props) => {
       </div>
     </div>
   );
+};
+
+ShootingStar.propTypes = {
+  className: PropTypes.string,
+  orientation: PropTypes.string,
+  mirror: PropTypes.bool,
+  delay: PropTypes.string,
+  isActive: PropTypes.bool,
 };
 
 export default ShootingStar;

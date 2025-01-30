@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import "../css/pages/contactPage.css";
 
-const ContactPage = (props) => {
+const ContactPage = () => {
   useEffect(() => {
     document.title = "Contact us";
   });
@@ -88,7 +88,7 @@ const ContactPage = (props) => {
             , was successfully funded on Kickstarter.
           </p>
           <p>
-            I had no idea what I was doing when I quit my job. Even now, I'm
+            I had no idea what I was doing when I quit my job. Even now, I am
             still terrified for my future. But it is thanks to the support of
             fans like you that I am able to do what I love. And for that, I am
             truly thankful.

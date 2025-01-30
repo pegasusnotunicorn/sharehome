@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import CardFrontPerson from "./CardFrontPerson.js";
 import CardFrontEventGoal from "./CardFrontEventGoal.js";
 import CardBackName from "./CardBackName.js";
 import CardBackEventGoal from "./CardBackEventGoal.js";
 import "../../css/utils/cards.css";
+import PropTypes from "prop-types";
 
 //a flip-able card based on the actual cards
 //props are - showFront, disableFlip, id, type, mainStyle (width/height/fontSize)
@@ -105,6 +106,20 @@ export const Card = (props) => {
   );
 };
 
+Card.propTypes = {
+  showFront: PropTypes.bool,
+  disableFlip: PropTypes.bool,
+  id: PropTypes.string,
+  type: PropTypes.string,
+  mainStyle: PropTypes.object,
+  disableShadow: PropTypes.bool,
+  flipPercentage: PropTypes.number,
+  className: PropTypes.string,
+  randomBottom: PropTypes.string,
+  transition: PropTypes.string,
+  randomDegree: PropTypes.string,
+};
+
 //the front of the card
 const CardFront = (props) => {
   let cardType = props.type;
@@ -142,6 +157,16 @@ const CardFront = (props) => {
   }
 };
 
+CardFront.propTypes = {
+  type: PropTypes.string,
+  hideFront: PropTypes.bool,
+  personName: PropTypes.string,
+  mainStyle: PropTypes.object,
+  disableText: PropTypes.bool,
+  enableQuestionMark: PropTypes.bool,
+  randomNumber: PropTypes.number,
+};
+
 //the back of the card (name / details for member, the image for goal / event)
 const CardBack = (props) => {
   let cardType = props.type;
@@ -167,6 +192,12 @@ const CardBack = (props) => {
         );
     }
   }
+};
+
+CardBack.propTypes = {
+  type: PropTypes.string,
+  hideBack: PropTypes.bool,
+  randomNumber: PropTypes.number,
 };
 
 export default Card;

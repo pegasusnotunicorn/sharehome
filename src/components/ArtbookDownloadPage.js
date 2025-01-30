@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 import CustomHelmet from "./utils/CustomHelmet.js";
 import DefaultButton from "./utils/DefaultButton.js";
 
-const ArtbookDownloadPage = (props) => {
+const ArtbookDownloadPage = () => {
   //custom meta tags for this page
   const title = "Digital artbook download";
   const splashImage = "https://lovecareermagic.com/images/artbook/mockup2.webp";
@@ -26,7 +26,7 @@ const ArtbookDownloadPage = (props) => {
 
       <div className="subcontentWrapper margin-top min-width">
         <div className="characterContent">
-          <h2 className="subtitle">Here's your digital artbook!</h2>
+          <h2 className="subtitle">Here is your digital artbook!</h2>
           <p>{description}</p>
           <DefaultButton
             shadowless

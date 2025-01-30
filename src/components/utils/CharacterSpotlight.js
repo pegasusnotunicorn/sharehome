@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-
-//custom files
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import ShootingStar from "../Navbar/ShootingStar.js";
 import {
@@ -11,6 +9,7 @@ import {
 import "../../css/utils/spotlight.css";
 import { GsapFadeScrub } from "./useGsap.js";
 import DefaultButton from "../utils/DefaultButton.js";
+import PropTypes from "prop-types";
 
 export const CharacterSpotlight = (props) => {
   //get a specific or the latest character if not defined
@@ -171,6 +170,16 @@ export const CharacterSpotlight = (props) => {
   );
 };
 
+CharacterSpotlight.propTypes = {
+  name: PropTypes.string,
+  invert: PropTypes.bool,
+  sectionTitle: PropTypes.string,
+  index: PropTypes.number,
+  total: PropTypes.number,
+  allCharsButton: PropTypes.bool,
+  children: PropTypes.node,
+};
+
 //#what out of total (for character page)
 const IndexTotal = ({ index, total }) => {
   return (
@@ -178,6 +187,11 @@ const IndexTotal = ({ index, total }) => {
       <span className="indexWrapper">{index}</span> / {total}
     </div>
   );
+};
+
+IndexTotal.propTypes = {
+  index: PropTypes.number,
+  total: PropTypes.number,
 };
 
 //title for homepage
@@ -195,16 +209,18 @@ const SectionTitle = ({ title }) => {
   );
 };
 
-const AllCharactersButton = () => {
-  return (
-    <div className="allCharsButtonWrapper">
-      <DefaultButton
-        icon="people_white"
-        borderedWhite
-        shadowless
-        navlink="/characters"
-        text="View all characters"
-      />
-    </div>
-  );
+SectionTitle.propTypes = {
+  title: PropTypes.string,
 };
+
+const AllCharactersButton = () => (
+  <div className="allCharsButtonWrapper">
+    <DefaultButton
+      icon="people_white"
+      borderedWhite
+      shadowless
+      navlink="/characters"
+      text="View all characters"
+    />
+  </div>
+);

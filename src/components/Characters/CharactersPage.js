@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Redirect, useParams, useHistory } from "react-router-dom";
-
 import {
   getAllCharacters,
   getSpecificPersonByURL,
@@ -12,8 +11,8 @@ import { EmojiSection } from "../utils/EmojiSection.js";
 import CustomHelmet from "../utils/CustomHelmet.js";
 import CarouselSection from "../utils/CarouselSection.js";
 import DefaultButton from "../utils/DefaultButton.js";
-
 import "../../css/pages/characterPage.css";
+import PropTypes from "prop-types";
 
 //get a random elem from array
 const randomFromArray = (array) => {
@@ -21,7 +20,7 @@ const randomFromArray = (array) => {
 };
 
 //render all characters or a specific one depending on URL
-const CharactersPage = (props) => {
+const CharactersPage = () => {
   let { name } = useParams();
 
   useEffect(() => {
@@ -121,6 +120,10 @@ const CharactersPage = (props) => {
   }
 };
 
+CharactersPage.propTypes = {
+  name: PropTypes.string,
+};
+
 const IndividualCharacter = ({ character }) => {
   const prevButton = character.prevCharURL ? (
     <DefaultButton
@@ -172,8 +175,12 @@ const IndividualCharacter = ({ character }) => {
   );
 };
 
+IndividualCharacter.propTypes = {
+  character: PropTypes.object,
+};
+
 //get all characters and their details
-const AllCharacters = (props) => {
+const AllCharacters = () => {
   let history = useHistory();
   let { name } = useParams();
   let chosenCharacter = getSpecificPersonByURL(name);

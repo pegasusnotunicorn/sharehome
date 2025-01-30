@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-
 import EmailForm from "./utils/EmailForm.js";
 import CustomHelmet from "./utils/CustomHelmet.js";
 
-const FreeArtbookPage = (props) => {
+const FreeArtbookPage = () => {
   //custom meta tags for this page
   const title = "Free digital artbook!";
   const splashImage = `https://lovecareermagic.com/images/artbook/mockup2.webp`;

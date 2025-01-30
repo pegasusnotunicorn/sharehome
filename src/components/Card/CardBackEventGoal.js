@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types";
 
 export const CardBackEventGoal = (props) => {
   let type = props.type;
@@ -18,6 +18,11 @@ export const CardBackEventGoal = (props) => {
       />
     </div>
   );
+};
+
+CardBackEventGoal.propTypes = {
+  type: PropTypes.string,
+  randomNumber: PropTypes.number,
 };
 
 export default CardBackEventGoal;

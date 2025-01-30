@@ -8,12 +8,11 @@
     "node": "^12.16.2"
   },
   "dependencies": {
-    "@react-pdf/renderer": "^1.6.9",
     "gsap": "^3.9.1",
+    "prop-types": "^15.8.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-helmet": "^6.1.0",
-    "react-i18next": "^11.11.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.0",
     "swiper": "^6.8.4",
@@ -43,6 +42,7 @@
   },
   "devDependencies": {
     "eslint-config-react-app": "^7.0.1",
+    "eslint-plugin-react": "^7.37.4",
     "typescript": "^3.9.3"
   }
 }

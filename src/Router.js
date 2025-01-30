@@ -1,6 +1,5 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-
 import MetaTags from "./components/MetaTags.js";
 import Navbar from "./components/Navbar/Navbar.js";
 import ScrollToTop from "./ScrollToTop.js";
@@ -15,7 +14,7 @@ import FreeArtbookPage from "./components/FreeArtbookPage.js";
 import ThankYouPage from "./components/ThankYouPage.js";
 import RulebookRedirect from "./components/RulebookRedirect.js";
 
-const Router = (props) => {
+const Router = () => {
   //magic to open the navbar from inside homepage
   let setNavbarActive = useRef(null);
   const onChildMount = (setterFromChild) => {

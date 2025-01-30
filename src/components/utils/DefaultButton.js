@@ -1,5 +1,6 @@
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
 import { NavLink } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const DefaultButton = forwardRef(
   (
@@ -89,6 +90,27 @@ const DefaultButton = forwardRef(
   }
 );
 
+DefaultButton.displayName = "DefaultButton";
+DefaultButton.propTypes = {
+  id: PropTypes.string,
+  className: PropTypes.string,
+  text: PropTypes.string,
+  navlink: PropTypes.string,
+  href: PropTypes.string,
+  button: PropTypes.string,
+  borderedBlack: PropTypes.bool,
+  borderedWhite: PropTypes.bool,
+  inverted: PropTypes.bool,
+  shadowless: PropTypes.bool,
+  animated: PropTypes.bool,
+  onClick: PropTypes.func,
+  style: PropTypes.object,
+  icon: PropTypes.string,
+  emoji: PropTypes.string,
+  reversed: PropTypes.bool,
+  download: PropTypes.string,
+};
+
 const Icon = ({ icon, emoji }) => {
   if (emoji)
     return (
@@ -113,6 +135,11 @@ const Icon = ({ icon, emoji }) => {
   return false;
 };
 
+Icon.propTypes = {
+  icon: PropTypes.string,
+  emoji: PropTypes.string,
+};
+
 const IconText = ({ text, icon, emoji, reversed }) => {
   if (reversed)
     return (
@@ -128,6 +155,13 @@ const IconText = ({ text, icon, emoji, reversed }) => {
         {text}
       </>
     );
+};
+
+IconText.propTypes = {
+  text: PropTypes.string,
+  icon: PropTypes.string,
+  emoji: PropTypes.string,
+  reversed: PropTypes.bool,
 };
 
 export default DefaultButton;

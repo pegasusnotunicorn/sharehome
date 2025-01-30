@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-
-import DefaultButton from '../utils/DefaultButton.js';
+import { useState, useEffect, useRef } from "react";
+import DefaultButton from "../utils/DefaultButton.js";
+import PropTypes from "prop-types";
 
 //form for mailchimp email
 export const EmailForm = (props) => {
@@ -9,60 +8,65 @@ export const EmailForm = (props) => {
   const isActiveAndDesktop = props.isActiveAndDesktop;
   const classFromParent = props.className;
 
-  const { t } = useTranslation();
   let emailRef = useRef(null);
-  let [response, setResponse] = useState(t('email form.promise'));
+  let [response, setResponse] = useState(
+    "Sign up and get a free digital artbook!"
+  );
 
   //focus the email input on desktop
-  useEffect(()=>{
-    if (isActiveAndDesktop && emailRef){
+  useEffect(() => {
+    if (isActiveAndDesktop && emailRef) {
       emailRef.current.focus();
     }
   }, [isActiveAndDesktop]);
 
   //submit button text depending on if navbar or main page
-  let submitButtonText = (hideTitle) ? t('email form.joinbutton') : t('email form.button');
+  let submitButtonText = "Sign up!";
 
   //function to submit email
   let submitEmail = (e) => {
     e.preventDefault();
 
-    if (e.target.checkValidity()){
+    if (e.target.checkValidity()) {
       const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          fields:{
-            email: emailRef.current.value
-          }
-        })
+          fields: {
+            email: emailRef.current.value,
+          },
+        }),
       };
 
-      setResponse(t('email form.sending'));
+      setResponse("Submitting...");
 
-      fetch('https://assets.mailerlite.com/jsonp/248479/forms/73678789967611030/subscribe', requestOptions)
-      .then(response => response.json())
-      .then(data => {
-        if (!data.success || data.errors){
-          if (data.errors.fields.email)
-          setResponse(data.errors.fields.email[0]);
-        }
-        else {
-          setResponse(t('email form.success'));
-        }
-      });
+      fetch(
+        "https://assets.mailerlite.com/jsonp/248479/forms/73678789967611030/subscribe",
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          if (!data.success || data.errors) {
+            if (data.errors.fields.email)
+              setResponse(data.errors.fields.email[0]);
+          } else {
+            setResponse("Thank you! You're all signed up.");
+          }
+        });
+    } else {
+      setResponse("Something went wrong. Please try again.");
     }
-    else {
-      setResponse(t('email form.error'));
-    }
-  }
+  };
 
   return (
     <div className={`emailWrapper ${classFromParent}`}>
-      { !hideTitle &&
-        <h1 className="formPrompt">{t('email form.prompt')}</h1>
-      }
-      <p className="forminputText" dangerouslySetInnerHTML={{ __html: response }}></p>
+      {!hideTitle && (
+        <h1 className="formPrompt">Stay updated on the latest news.</h1>
+      )}
+      <p
+        className="forminputText"
+        dangerouslySetInnerHTML={{ __html: response }}
+      ></p>
       <form
         className="formWrapper"
         autoComplete="on"
@@ -82,11 +86,23 @@ export const EmailForm = (props) => {
           autoComplete="email"
           required
         />
-        <DefaultButton animated shadowless icon="forward" button="submit" className="subscribeButton" text={submitButtonText} />
+        <DefaultButton
+          animated
+          shadowless
+          icon="forward"
+          button="submit"
+          className="subscribeButton"
+          text={submitButtonText}
+        />
       </form>
-
     </div>
-  )
+  );
+};
+
+EmailForm.propTypes = {
+  hideTitle: PropTypes.bool,
+  isActiveAndDesktop: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 export default EmailForm;

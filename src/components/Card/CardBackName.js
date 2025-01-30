@@ -1,5 +1,5 @@
-import React from "react";
 import { getSpecificPerson } from "../Characters/Characters.js";
+import PropTypes from "prop-types";
 
 export const CardBack = (props) => {
   let character = getSpecificPerson(props.personName);
@@ -20,6 +20,10 @@ export const CardBack = (props) => {
       </div>
     </div>
   );
+};
+
+CardBack.propTypes = {
+  personName: PropTypes.string,
 };
 
 export default CardBack;

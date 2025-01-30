@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-
+import { useState } from "react";
 import Card from "../../Card/Card.js";
 import { getRandomTrait } from "../../Card/ExampleTraits.js";
 import DefaultButton from "../../utils/DefaultButton.js";
 import useWindowDimensions from "../../utils/useWindowDimensions.js";
+import PropTypes from "prop-types";
 
 const Roleplay = (props) => {
   //sizing for about page card styles
@@ -57,8 +57,12 @@ const Roleplay = (props) => {
   );
 };
 
+Roleplay.propTypes = {
+  cardStyle: PropTypes.object.isRequired,
+};
+
 //show the setup
-const Setup = ({ showRules, setshowRules, cardStyle, toggleSteps }) => {
+const Setup = ({ showRules, cardStyle, toggleSteps }) => {
   let cardProps = {
     type: "member",
     mainStyle: cardStyle,
@@ -82,7 +86,7 @@ const Setup = ({ showRules, setshowRules, cardStyle, toggleSteps }) => {
       text: getRandomTrait("chaotic"),
       type: "chaotic",
     },
-  ].sort((a, b) => 0.5 - Math.random());
+  ].sort(() => 0.5 - Math.random());
 
   return (
     <div className={"allStepsContainer" + (!showRules ? " is-active" : "")}>
@@ -328,8 +332,14 @@ const Setup = ({ showRules, setshowRules, cardStyle, toggleSteps }) => {
   );
 };
 
+Setup.propTypes = {
+  showRules: PropTypes.bool.isRequired,
+  cardStyle: PropTypes.object.isRequired,
+  toggleSteps: PropTypes.func.isRequired,
+};
+
 //show the rules
-const Rules = ({ showRules, setshowRules, cardStyle }) => {
+const Rules = ({ showRules }) => {
   let { width } = useWindowDimensions();
 
   const goalCardStyle = {
@@ -403,7 +413,7 @@ const Rules = ({ showRules, setshowRules, cardStyle }) => {
             </div>
             <div className="stepBlockRight leftAlign">
               <li className="subtext">
-                Every episode is one "round" of the game.
+                Every episode is one &quot;round&quot; of the game.
               </li>
               <li className="subtext">Each episode lasts three minutes.</li>
               <li className="subtext">You will play four episodes in total.</li>
@@ -616,13 +626,13 @@ const Rules = ({ showRules, setshowRules, cardStyle }) => {
                 </h2>
                 <li className="subtext">
                   It does not matter how convoluted, far-fetched, or shoe-horned
-                  in your story is. As long as it makes sense, it's okay.
+                  in your story is. As long as it makes sense, it&apos;s okay.
                 </li>
               </div>
             </div>
             <div className="stepBlockRight leftAlign">
               <h2 className="boldText">
-                The golden improv rule of "Yes, and..."
+                The golden improv rule of &quot;Yes, and...&quot;
               </h2>
               <li className="subtext">
                 If something is said, it is true unless it directly contradicts
@@ -634,6 +644,10 @@ const Rules = ({ showRules, setshowRules, cardStyle }) => {
       </div>
     </div>
   );
+};
+
+Rules.propTypes = {
+  showRules: PropTypes.bool.isRequired,
 };
 
 export default Roleplay;

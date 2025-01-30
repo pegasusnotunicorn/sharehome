@@ -1,10 +1,9 @@
-import React, { useState, useLayoutEffect, useRef } from "react";
+import { useState, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
-
 import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";
 import { getRandomTrait } from "../Card/ExampleTraits.js";
-
 import "../../css/pages/home/likehateSection.css";
+import PropTypes from "prop-types";
 
 const LikeHateSection = (props) => {
   const characterCoords = [
@@ -156,6 +155,11 @@ const LikeHateSection = (props) => {
   );
 };
 
+LikeHateSection.propTypes = {
+  id: PropTypes.string,
+  className: PropTypes.string,
+};
+
 const CharacterArc = ({
   goodTrait,
   badTrait,
@@ -176,7 +180,7 @@ const CharacterArc = ({
       text: chaoticTrait,
       type: "chaotic",
     },
-  ].sort((a, b) => 0.5 - Math.random());
+  ].sort(() => 0.5 - Math.random());
 
   return (
     <div className="characterArcContainer" style={coords.wrapper}>
@@ -225,6 +229,14 @@ const CharacterArc = ({
       )}
     </div>
   );
+};
+
+CharacterArc.propTypes = {
+  goodTrait: PropTypes.string,
+  badTrait: PropTypes.string,
+  chaoticTrait: PropTypes.string,
+  coords: PropTypes.object,
+  showLeft: PropTypes.bool,
 };
 
 export default LikeHateSection;

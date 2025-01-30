@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   getRandomPerson,
   getSpecificPerson,
 } from "../Characters/Characters.js";
 import { pdfDimensions, getCoverFitObject } from "../utils/cardConstants.js";
+import PropTypes from "prop-types";
 
 export const CardFrontPerson = (props) => {
   let [cardPersonState] = useState(getRandomPerson());
@@ -84,6 +85,13 @@ export const CardFrontPerson = (props) => {
       />
     </div>
   );
+};
+
+CardFrontPerson.propTypes = {
+  mainStyle: PropTypes.object.isRequired,
+  personName: PropTypes.string,
+  disableText: PropTypes.bool,
+  enableQuestionMark: PropTypes.bool,
 };
 
 export default CardFrontPerson;

@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-
 import EmailForm from "./utils/EmailForm.js";
 import CustomHelmet from "./utils/CustomHelmet.js";
 
-const ThankYouPage = (props) => {
+const ThankYouPage = () => {
   //custom meta tags for this page
   const title = "Thank you for your order!";
 

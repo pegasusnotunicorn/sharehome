@@ -1,19 +1,11 @@
-import React from "react";
-
-//import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Navigation, Pagination, A11y, Autoplay } from "swiper";
 import { GsapFadeScrub } from "../utils/useGsap.js";
-
-//import Swiper styles
 import "swiper/swiper.min.css";
 import "swiper/swiper-bundle.css";
-// import 'swiper/components/navigation/navigation.min.css'
-// import 'swiper/components/pagination/pagination.min.css'
-
-//custom files
 import "../../css/utils/swiper.css";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
+import PropTypes from "prop-types";
 
 // configure Swiper to use modules
 SwiperCore.use([Navigation, Pagination, A11y, Autoplay]);
@@ -62,8 +54,6 @@ export const CarouselSection = (props) => {
       pauseOnMouseEnter: false,
       disableOnInteraction: true,
     },
-    onSlideChange: () => {},
-    onSwiper: (swiper) => {},
   };
 
   //get all photos in /images/photoshoot (total of 8)
@@ -75,7 +65,7 @@ export const CarouselSection = (props) => {
 
   //randomize array
   if (props.random) {
-    allPictures.sort((a, b) => 0.5 - Math.random());
+    allPictures.sort(() => 0.5 - Math.random());
   }
 
   return (
@@ -87,6 +77,16 @@ export const CarouselSection = (props) => {
       <Swiper {...swiperProps}>{allPictures}</Swiper>
     </GsapFadeScrub>
   );
+};
+
+// PropTypes
+CarouselSection.propTypes = {
+  directory: PropTypes.string.isRequired,
+  filename: PropTypes.string.isRequired,
+  totalPictures: PropTypes.number.isRequired,
+  random: PropTypes.bool,
+  href: PropTypes.string,
+  className: PropTypes.string,
 };
 
 export default CarouselSection;

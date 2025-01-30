@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { getRandomEventGoal } from "./ExampleEventGoal.js";
+import PropTypes from "prop-types";
 
 export const EventGoalCard = (props) => {
   let [eventGoalDetails] = useState(getRandomEventGoal(props.type));
@@ -24,6 +25,11 @@ export const EventGoalCard = (props) => {
       />
     </div>
   );
+};
+
+EventGoalCard.propTypes = {
+  type: PropTypes.string.isRequired,
+  randomNumber: PropTypes.number.isRequired,
 };
 
 export default EventGoalCard;

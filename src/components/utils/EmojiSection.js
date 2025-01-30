@@ -1,12 +1,10 @@
-import React, { useEffect } from "react";
-import { useTranslation } from "react-i18next";
-
-//custom files
+import { useEffect } from "react";
 import { getAllFinishedPeople } from "../Characters/Characters.js";
 import "../../css/utils/emojisection.css";
 import { GsapFadeScrub } from "./useGsap.js";
 import DefaultButton from "../utils/DefaultButton.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
+import PropTypes from "prop-types";
 
 //a single emoji wrapper
 const EmojiWrapper = ({ urlName, emoji, index }) => {
@@ -24,9 +22,13 @@ const EmojiWrapper = ({ urlName, emoji, index }) => {
   );
 };
 
-export const EmojiSection = (props) => {
-  const { t } = useTranslation();
+EmojiWrapper.propTypes = {
+  urlName: PropTypes.string,
+  emoji: PropTypes.string,
+  index: PropTypes.number,
+};
 
+export const EmojiSection = (props) => {
   //how many emojis should display
   let { width } = useWindowDimensions();
   const cutoffNumber = width <= 900 ? 12 : 24;
@@ -49,9 +51,9 @@ export const EmojiSection = (props) => {
   //get all emojis
   let allCharacters = getAllFinishedPeople(true);
   let allEmojis = [];
-  allCharacters.forEach((elem, index) => {
+  allCharacters.forEach((elem) => {
     let emojiObj = [];
-    elem.emoji.forEach((x, y) => {
+    elem.emoji.forEach((x) => {
       emojiObj.push({
         urlName: elem.urlName,
         emoji: x,
@@ -78,12 +80,14 @@ export const EmojiSection = (props) => {
       <div className="subcontentWrapper padding-top min-width">
         <GsapFadeScrub fadeIn className="fadeInTextWrapper">
           <div className="characterContent emojiDescriptionWrapper">
-            <h2>{t("characters page.emojisection")}</h2>
-            <p>{t("characters page.emojidescription")}</p>
+            <h2>Free character emojis!</h2>
+            <p>
+              Join the Discord community to use these emojis for free right now!
+            </p>
             <ul>
-              <li>{t("characters page.emojidesc1")}</li>
-              <li>{t("characters page.emojidesc2")}</li>
-              <li>{t("characters page.emojidesc3")}</li>
+              <li>See previews and unreleased content before anyone else.</li>
+              <li>Be a part of the developer journey from the beginning.</li>
+              <li>Playtest and give feedback to help shape the games.</li>
             </ul>
           </div>
           <div className="emojiButtonsWrapper">
@@ -92,7 +96,7 @@ export const EmojiSection = (props) => {
               className="emojiPackDownloadButton"
               icon="discordWhite"
               shadowless
-              text={t("characters page.discordjoin")}
+              text="Get free emojis"
             />
           </div>
         </GsapFadeScrub>
@@ -100,4 +104,8 @@ export const EmojiSection = (props) => {
       </div>
     </div>
   );
+};
+
+EmojiSection.propTypes = {
+  className: PropTypes.string,
 };

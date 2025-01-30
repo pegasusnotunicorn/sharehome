@@ -1,6 +1,6 @@
-import React from "react";
 import GameModeIcons from "./GameModeIcons.js";
 import DefaultButton from "../../utils/DefaultButton.js";
+import PropTypes from "prop-types";
 
 //the subtitle with the description and the title in how-to-play page
 const GameModeDetails = (props) => {
@@ -33,6 +33,13 @@ const GameModeDetails = (props) => {
       </div>
     </div>
   );
+};
+
+GameModeDetails.propTypes = {
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  playerCount: PropTypes.string.isRequired,
+  playTime: PropTypes.string.isRequired,
 };
 
 export default GameModeDetails;

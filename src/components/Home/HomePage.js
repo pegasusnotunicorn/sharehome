@@ -110,10 +110,7 @@ const HomePage = forwardRef((props, ref) => {
           id={`${homeStyles.heroBgImage}`}
           className={homeStyles.screenHeight}
         />
-        <div
-          id={`${homeStyles.heroImageWrapper}`}
-          className={homeStyles.screenHeight}
-        >
+        <div className={homeStyles.screenHeight}>
           <img
             alt="Box and components of the card game."
             src="/images/box_white_outline.webp"

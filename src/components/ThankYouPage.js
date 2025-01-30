@@ -1,17 +1,12 @@
 import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 
 import EmailForm from "./utils/EmailForm.js";
 import CustomHelmet from "./utils/CustomHelmet.js";
 
 const ThankYouPage = (props) => {
-  const { t } = useTranslation();
-
   //custom meta tags for this page
   const title = "Thank you for your order!";
-  const splashImage = `https://lovecareermagic.com/images/artbook/mockup2.webp`;
-  const description = t("free artbook page.description");
 
   //change title of page
   useEffect(() => {
@@ -22,8 +17,8 @@ const ThankYouPage = (props) => {
     <div className="content max-width">
       <CustomHelmet
         title={title}
-        splashImage={splashImage}
-        description={description}
+        splashImage="https://lovecareermagic.com/images/loucheck.webp"
+        description="We have received your order and will ship your game to you within 3-5 business days."
       />
 
       <div className="subcontentWrapper margin-top min-width">
@@ -57,7 +52,7 @@ const ThankYouPage = (props) => {
       <div className="subcontentWrapper">
         <div className="couchContainer">
           <p style={{ marginTop: "1em" }}>
-            <NavLink to="/">{t("error page.link")}</NavLink>
+            <NavLink to="/">Click here to go back home.</NavLink>
           </p>
         </div>
       </div>

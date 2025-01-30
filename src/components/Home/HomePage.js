@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, forwardRef, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 //custom files
 import GameModeIcons from "../About/utils/GameModeIcons.js";
@@ -25,7 +24,6 @@ import "../../css/utils/colors.css";
 import ShootingStar from "../Navbar/ShootingStar.js";
 
 const HomePage = forwardRef((props, ref) => {
-  const { t } = useTranslation();
   const navbarButton = useRef(null);
 
   useEffect(() => {
@@ -37,7 +35,8 @@ const HomePage = forwardRef((props, ref) => {
   }, [ref]);
 
   //emphasis
-  let subtitle = t("main page.hero.subtitle");
+  let subtitle =
+    "A collaborative storytelling game\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world";
   let { width } = useWindowDimensions();
   if (width <= 900) {
     subtitle = subtitle.replace("\n", "");
@@ -131,7 +130,7 @@ const HomePage = forwardRef((props, ref) => {
                 icon="forward"
                 className="is-blue"
                 href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
-                text={t("navbar.buynow")}
+                text="Buy now"
               />
               <DefaultButton
                 shadowless
@@ -140,7 +139,7 @@ const HomePage = forwardRef((props, ref) => {
                 onClick={() => {
                   setVideoModalVisible(true);
                 }}
-                text={t("navbar.watchtrailer")}
+                text="Watch video"
               />
             </div>
             <GsapFadeScrub scrub startScreenTop fadeOut>
@@ -176,25 +175,24 @@ const HomePage = forwardRef((props, ref) => {
               ></h1>
               <GameModeIcons
                 className={`${homeStyles.gameDetails}`}
-                playerCount={t("main page.hero.player count")}
-                playTime={t("main page.hero.play time")}
+                playerCount="2 - 6 players"
+                playTime="12 minutes"
               />
             </div>
             <div
               className={`${homeStyles.descriptionTextWrapper} subcontentWrapper min-width`}
             >
-              <p>{t("main page.description.subtitle3")}</p>
-              {/* <EmailForm
-                className="mainpageEmail secondMainpageEmail"
-                hideTitle
-              /> */}
+              <p>
+                Play as a mythological creature in a reality TV show, complete
+                chaotic character arcs, and achieve high ratings for the season!
+              </p>
               <DefaultButton
                 shadowless
                 animated
                 icon="forward"
                 className="is-blue"
                 href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
-                text={t("navbar.buynow")}
+                text="Buy now"
               />
               <DefaultButton
                 shadowless
@@ -202,7 +200,7 @@ const HomePage = forwardRef((props, ref) => {
                 icon="star"
                 className="is-inverted"
                 href="https://screentop.gg/@PegasusGames/lcm"
-                text={t("navbar.playonline")}
+                text="Play online"
               />
             </div>
           </GsapFadeScrub>
@@ -215,15 +213,17 @@ const HomePage = forwardRef((props, ref) => {
       >
         <div className={`${homeStyles.carouselTextContainer}`}>
           <h1 className={homeStyles.mainpageCarouselTitle}>
-            {t("main page.carousel.description")}
+            Watch an entire game in just 12 minutes!
           </h1>
-          <p>{t("main page.carousel.subdescription")}</p>
+          <p>
+            Click below to check out the YouTube playlist of playthrough videos.
+          </p>
           <div className={`${homeStyles.finalButtonsWrapper}`}>
             <DefaultButton
               shadowless
               icon="watchWhite"
               href="https://www.youtube.com/playlist?list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
-              text={t("main page.carousel.linkText")}
+              text="Watch videos"
             />
           </div>
         </div>
@@ -242,7 +242,7 @@ const HomePage = forwardRef((props, ref) => {
         className={`${homeStyles.mainpageContainer}`}
       >
         <GsapFadeScrub fadeIn>
-          <h1>{t("main page.mechanics.description")}</h1>
+          <h1>If you like any of these things, then you'll love this game!</h1>
         </GsapFadeScrub>
         <div className={`${homeStyles.mechanicsWrapper}`}>
           <GsapFadeScrub fadeIn>
@@ -250,23 +250,23 @@ const HomePage = forwardRef((props, ref) => {
               src="/images/illustrations/laughing.webp"
               alt="Laughing icon"
             />
-            {t("main page.mechanics.laughing")}
+            Laughing
           </GsapFadeScrub>
           <GsapFadeScrub fadeIn>
             <img src="/images/illustrations/party.webp" alt="Party icon" />
-            {t("main page.mechanics.party")}
+            Party games
           </GsapFadeScrub>
           <GsapFadeScrub fadeIn>
             <img src="/images/illustrations/stories.webp" alt="Stories icon" />
-            {t("main page.mechanics.stories")}
+            Storytelling
           </GsapFadeScrub>
           <GsapFadeScrub fadeIn>
             <img src="/images/illustrations/improv.webp" alt="Improv icon" />
-            {t("main page.mechanics.improv")}
+            TTRPGs
           </GsapFadeScrub>
           <GsapFadeScrub fadeIn>
             <img src="/images/illustrations/acting.webp" alt="Roleplay icon" />
-            {t("main page.mechanics.roleplay")}
+            Improv
           </GsapFadeScrub>
         </div>
       </div>
@@ -277,8 +277,8 @@ const HomePage = forwardRef((props, ref) => {
         id={`${homeStyles.howToPlay}`}
         className={`${homeStyles.mainpageContainer}`}
       >
-        <h1>{t("main page.how to play.description")}</h1>
-        <p>{t("main page.how to play.steps")}</p>
+        <h1>How to play</h1>
+        <p>(in 4 easy steps)</p>
       </GsapFadeScrub>
 
       <div
@@ -290,18 +290,18 @@ const HomePage = forwardRef((props, ref) => {
           <GsapFadeScrub fadeIn>
             <GsapWiggle className={`${homeStyles.characterContainerSVG}`}>
               <img src="/images/icons/pointer.svg" alt="point finger" />
-              <p className="is-hidden-mobile">
-                {t("main page.character.click me")}
-              </p>
+              <p className="is-hidden-mobile">CLICK ME</p>
             </GsapWiggle>
-            <h1>{t("main page.character.description")}</h1>
-            <p>{t("main page.character.moretocome")}</p>
+            <h1>Choose from 25 unique characters!</h1>
+            <p>
+              Mythological creatures with modern day jobs just like us humans.
+            </p>
             <div className={`${homeStyles.buttonWrapper}`}>
               <DefaultButton
                 shadowless
                 icon="people_white"
                 navlink="/characters"
-                text={t("main page.character.clicktoseemore")}
+                text="View all characters"
               />
             </div>
           </GsapFadeScrub>
@@ -336,8 +336,12 @@ const HomePage = forwardRef((props, ref) => {
             <img src="/images/icons/planet.svg" alt="cake" />
           </GsapWiggle>
           <div className={`${homeStyles.eventsTextContainer}`}>
-            <h1>{t("main page.events.description")}</h1>
-            <p>{t("main page.events.subdescription")}</p>
+            <h1>Follow chaotic stage directions</h1>
+            <p>
+              The executives of the show are trying to instill chaos into the
+              narrative. Complete as many of their Direction Cards as you can to
+              earn points!
+            </p>
           </div>
         </GsapFadeScrub>
         <EventsDeckSection />
@@ -371,31 +375,14 @@ const HomePage = forwardRef((props, ref) => {
             <img src="/images/icons/scroll.svg" alt="scroll" />
           </GsapWiggle>
           <div className={`${homeStyles.goalsTextContainer}`}>
-            <h1>{t("main page.goals.description")}</h1>
-            <p>{t("main page.goals.subdescription")}</p>
+            <h1>Crazy locations never before seen on TV</h1>
+            <p>
+              Every episode of the reality TV show occurs in a random exotic
+              location carefully hand-picked for maximum excitement!
+            </p>
           </div>
         </GsapFadeScrub>
       </div>
-      {/* 
-      <div
-        id={`${homeStyles.playthroughContainer}`}
-        className={`${homeStyles.mainpageContainer}`}
-      >
-        <div className={`${homeStyles.playthroughTextContainer}`}>
-          <h1>{t("main page.playthrough.description")}</h1>
-          <a
-            href="https://www.youtube.com/playlist?list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {t("main page.playthrough.subdescription")}
-          </a>
-        </div>
-        <div className={`${homeStyles.playthroughVideoContainer}`}>
-
-        </div>
-      </div> */}
-
       <div
         id={`${homeStyles.spotlightContainer}`}
         className={`${homeStyles.mainpageContainer}`}
@@ -403,7 +390,7 @@ const HomePage = forwardRef((props, ref) => {
         <CharacterSpotlight
           invert
           allCharsButton
-          sectionTitle={t("main page.spotlight.description")}
+          sectionTitle="Character spotlight"
         />
       </div>
 
@@ -416,7 +403,7 @@ const HomePage = forwardRef((props, ref) => {
         <div
           className={`${homeStyles.finalButtonsContainer} subcontentWrapper`}
         >
-          <h1>{t("main page.final.description")}</h1>
+          <h1>Ready for some Love, Career & Magic?</h1>
           <div className={`${homeStyles.finalButtonsWrapper}`}>
             <DefaultButton
               shadowless
@@ -424,7 +411,7 @@ const HomePage = forwardRef((props, ref) => {
               icon="forward"
               className="is-blue"
               href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
-              text={t("navbar.buynow")}
+              text="Buy now"
             />
             <DefaultButton
               shadowless
@@ -432,7 +419,7 @@ const HomePage = forwardRef((props, ref) => {
               icon="star"
               className="is-inverted"
               href="https://screentop.gg/@PegasusGames/lcm"
-              text={t("navbar.playonline")}
+              text="Play online"
             />
           </div>
         </div>

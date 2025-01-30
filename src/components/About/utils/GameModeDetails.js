@@ -1,13 +1,9 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
-
 import GameModeIcons from "./GameModeIcons.js";
 import DefaultButton from "../../utils/DefaultButton.js";
 
 //the subtitle with the description and the title in how-to-play page
 const GameModeDetails = (props) => {
-  const { t } = useTranslation();
-
   const rulebookStyle = {
     padding: "0",
     background: "transparent",
@@ -28,7 +24,7 @@ const GameModeDetails = (props) => {
           shadowless
           icon="rulebook"
           href="/rulebook.pdf"
-          text={t("main page.mechanics.rulebook")}
+          text="Read the full rulebook PDF"
         />
         <GameModeIcons
           playerCount={props.playerCount}

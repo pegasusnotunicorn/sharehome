@@ -1,37 +1,31 @@
-import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-
-//custom files
-import GameModeDetails from './utils/GameModeDetails.js';
-import Roleplay from './components/Roleplay.js';
-
-import '../../css/pages/aboutPage.css';
+import React, { useEffect } from "react";
+import GameModeDetails from "./utils/GameModeDetails.js";
+import Roleplay from "./components/Roleplay.js";
+import "../../css/pages/aboutPage.css";
 
 const AboutPage = (props) => {
-  const { t } = useTranslation();
-
   // styling for character cards on about page
   let cardStyle = {
-    width:"175px",
-    height:"100px",
-    fontSize:"1.5px",
-  }
+    width: "175px",
+    height: "100px",
+    fontSize: "1.5px",
+  };
 
   useEffect(() => {
-    document.title = "Love, Career & Magic — How To Play";
+    document.title = "How to play";
   });
 
   return (
     <div className="content max-width">
       <GameModeDetails
-        name={t('about page.main page.how to play')}
-        description={t('about page.roleplay.description')}
-        playerCount={t('main page.hero.player count')}
-        playTime={t('main page.hero.play time')}
+        name="How to play"
+        description="Love, Career & Magic is a very flexible party game with multiple ways of playing. Feel free to add your own house rules to change it up!"
+        playerCount="2 - 6 players"
+        playTime="12 minutes"
       />
       <Roleplay cardStyle={cardStyle} />
     </div>
   );
-}
+};
 
 export default AboutPage;

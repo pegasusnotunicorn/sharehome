@@ -1,31 +1,29 @@
-import React, { useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-
-//custom files
-import { Splash } from './utils/Splash.js';
+import React, { useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { Splash } from "./utils/Splash.js";
 
 const ErrorPage = (props) => {
-  const { t } = useTranslation();
-
   useEffect(() => {
-    document.title = "Love, Career & Magic — Something went wrong!";
+    document.title = "Something went wrong!";
   });
 
   return (
     <div className="content max-width">
-
       <div className="subcontentWrapper margin-top min-width">
         <div className="characterContent">
-          <h2 className="subtitle">{t("error page.title")}</h2>
-          <p>{t("error page.description")}</p>
-          <p><NavLink to="/">{t("error page.link")}</NavLink></p>
+          <h2 className="subtitle">Something went wrong!</h2>
+          <p>
+            We're sorry, but we couldn't find the page you were looking for.
+          </p>
+          <p>
+            <NavLink to="/">Click here to go back to the home page.</NavLink>
+          </p>
         </div>
       </div>
 
       <Splash />
     </div>
-  )
-}
+  );
+};
 
 export default ErrorPage;

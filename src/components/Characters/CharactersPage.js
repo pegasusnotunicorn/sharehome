@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { Redirect, useParams, useHistory } from "react-router-dom";
 
 import {
@@ -23,7 +22,6 @@ const randomFromArray = (array) => {
 
 //render all characters or a specific one depending on URL
 const CharactersPage = (props) => {
-  const { t } = useTranslation();
   let { name } = useParams();
 
   useEffect(() => {
@@ -53,9 +51,10 @@ const CharactersPage = (props) => {
       );
 
     //custom meta tags for this page
-    let title = "Love, Career & Magic — All Playable Characters!";
-    let splashImage = `https://lovecareermagic.com/images/photoshoot/game/pictures8.webp`;
-    let description = t("characters page.og_desc");
+    let title = "All playable characters";
+    let splashImage =
+      "https://lovecareermagic.com/images/photoshoot/game/pictures8.webp";
+    let description = "All playable characters from the game.";
 
     if (chosenCharacter) {
       title = `Love, Career & Magic — ${chosenCharacter.name}`;
@@ -82,13 +81,15 @@ const CharactersPage = (props) => {
 
         <div className="subcontentWrapper margin-top min-width">
           <div className="characterContent">
-            <h2 className="subtitle">{t("characters page.title")}</h2>
+            <h2 className="subtitle">Characters</h2>
             <p>
-              {t("characters page.description")}{" "}
+              The various mythical beings that have appeared on the reality TV
+              show, SHAREHOME. Click on any of them to learn more about who they
+              are!{" "}
               <a href="https://www.instagram.com/carofranklyn/?hl=en">
-                {t("characters page.credit")}
+                Illustrations by Carolyn Frank.
               </a>
-              <br></br>
+              <br />
             </p>
             <div className="freeEmojiButtonWrapper">
               <img
@@ -96,7 +97,7 @@ const CharactersPage = (props) => {
                 alt="Random emoji"
                 title={randomCharacter1Emoji}
               />
-              <a href="#emojis">{t("characters page.emojisection")}</a>
+              <a href="#emojis">Free character emojis</a>
               <img
                 src={`/images/emojis/${randomCharacter2Emoji}.webp`}
                 alt="Random emoji"
@@ -121,8 +122,6 @@ const CharactersPage = (props) => {
 };
 
 const IndividualCharacter = ({ character }) => {
-  const { t } = useTranslation();
-
   const prevButton = character.prevCharURL ? (
     <DefaultButton
       inverted
@@ -130,7 +129,7 @@ const IndividualCharacter = ({ character }) => {
       shadowless
       icon="prev"
       navlink={`/characters/${character.prevCharURL}`}
-      text={t("characters page.prev")}
+      text="Prev"
     />
   ) : (
     <div style={{ width: "100px" }}></div>
@@ -144,7 +143,7 @@ const IndividualCharacter = ({ character }) => {
       borderedBlack
       icon="next"
       navlink={`/characters/${character.nextCharURL}`}
-      text={t("characters page.next")}
+      text="Next"
     />
   ) : (
     <div style={{ width: "100px" }}></div>
@@ -165,7 +164,7 @@ const IndividualCharacter = ({ character }) => {
           shadowless
           icon="list"
           navlink="/characters"
-          text={t("characters page.list")}
+          text="Return to list"
         />
         {nextButton}
       </div>
@@ -178,8 +177,6 @@ const AllCharacters = (props) => {
   let history = useHistory();
   let { name } = useParams();
   let chosenCharacter = getSpecificPersonByURL(name);
-  const { i18n } = useTranslation("home");
-  const { t } = useTranslation();
 
   const redirectToSpecificCharacter = (character) => {
     if (chosenCharacter !== character && !character.ignoreInRandom) {
@@ -189,14 +186,11 @@ const AllCharacters = (props) => {
 
   const allCharacters = getAllCharacters();
   const expansionCharacters = allCharacters.map((elem, index) => {
-    const name = i18n.language === "en-US" ? elem.name : elem.japaneseName;
-    const race = i18n.language === "en-US" ? elem.race : elem.japaneseRace;
-    let job = i18n.language === "en-US" ? elem.job : elem.japaneseJob;
+    const name = elem.name;
+    const race = elem.race;
+    let job = elem.job;
     if (elem.job2) {
-      job =
-        i18n.language === "en-US"
-          ? `${elem.job} / ${elem.job2}`
-          : `${elem.japanseJob} / ${elem.japanseJob2}`;
+      job = `${elem.job} / ${elem.job2}`;
     }
 
     let ignoreInRandom = elem.ignoreInRandom ? "notDone" : "";
@@ -208,16 +202,12 @@ const AllCharacters = (props) => {
             redirectToSpecificCharacter(elem);
           }}
         >
-          <div className="ignoreFilter noselect">
-            <p className="notDoneName">{name}</p>
-            <p className="comingSoon">{t("characters page.comingsoon")}</p>
-          </div>
           <img
             className="boxes"
             src={elem.image.url.replace("big", "small")}
             style={{ objectPosition: elem.image.objectPosition || "center" }}
             alt={elem.name}
-          ></img>
+          />
           <div className="caption noselect">
             <p className="name">{name}</p>
             <p className="details is-hidden-mobile">

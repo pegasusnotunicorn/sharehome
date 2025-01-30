@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { NavLink } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-// import i18n from "i18next";
 
 import { GsapFadeDelay, GsapFadeScrub } from "../utils/useGsap.js";
 import ShootingStar from "./ShootingStar.js";
@@ -17,13 +15,6 @@ export const NavbarMain = (props) => {
   const [visible, setVisibility] = useState(false);
 
   const isVisibleClass = visible ? "is-active" : ""; //class to append if visible
-
-  //function to change language
-  const { t } = useTranslation();
-  // const changeLanguage = (lang) => {
-  //   i18n.changeLanguage(lang);
-  //   document.getElementById('sharehome').setAttribute("language", lang);
-  // }
 
   //toggle email logic
   const { width } = useWindowDimensions();
@@ -102,7 +93,7 @@ export const NavbarMain = (props) => {
               id="emailToggleButtonMobile"
               className={`${mailButtonVisibleClass} is-blue`}
               href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
-              text={t("navbar.buynow")}
+              text="Buy now!"
             />
           </GsapFadeScrub>
           <button
@@ -131,7 +122,7 @@ export const NavbarMain = (props) => {
                 activeClassName="is-active"
                 className="navbarButton noselect"
               >
-                {t("navbar.home")}
+                Home
               </NavLink>
               <NavLink
                 onClick={toggleNav}
@@ -139,7 +130,7 @@ export const NavbarMain = (props) => {
                 activeClassName="is-active"
                 className="navbarButton noselect"
               >
-                {t("navbar.how to play")}
+                How to play
               </NavLink>
               <NavLink
                 onClick={toggleNav}
@@ -147,7 +138,7 @@ export const NavbarMain = (props) => {
                 activeClassName="is-active"
                 className="navbarButton noselect"
               >
-                {t("navbar.characters")}
+                Characters
               </NavLink>
               <a
                 onClick={toggleNav}
@@ -157,7 +148,7 @@ export const NavbarMain = (props) => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {t("navbar.playonline")}
+                Play online
               </a>
               <NavLink
                 onClick={toggleNav}
@@ -165,15 +156,16 @@ export const NavbarMain = (props) => {
                 activeClassName="is-active"
                 className="navbarButton noselect"
               >
-                {t("navbar.contact us")}
+                About / contact
               </NavLink>
               <a
                 href="https://pegasusgames.medium.com/"
                 rel="noopener noreferrer"
                 target="_blank"
                 className="navbarButton noselect"
-                dangerouslySetInnerHTML={{ __html: t("navbar.blog") }}
-              ></a>
+              >
+                Blog
+              </a>
             </div>
           </div>
           <div className="navbarChildren navbarCenterBorder"></div>
@@ -211,7 +203,7 @@ export const NavbarMain = (props) => {
             <img
               className="artbookMockup"
               src="/images/bizz_fukidashi.webp"
-              alt={t("artbook page.description")}
+              alt="Navbar illustration"
             />
           </div>
         </div>

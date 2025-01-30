@@ -1,5 +1,4 @@
 import React, { useState, useLayoutEffect, useRef } from "react";
-import { useTranslation } from "react-i18next";
 import gsap from "gsap";
 
 import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";
@@ -122,7 +121,6 @@ const LikeHateSection = (props) => {
   }, [characterCoords.length, setCurrentChar]);
 
   //text to display depending on like/hate
-  const { t } = useTranslation();
   return (
     <div id={props.id} className={props.className}>
       <div className="likehateLeftContainer likehateContainers">
@@ -146,8 +144,11 @@ const LikeHateSection = (props) => {
       <div className="likehateRightContainer likehateContainers">
         <GsapFadeScrub fadeIn scrubStartCenter>
           <div className="likehateTextContainer">
-            <h1>{`${t("main page.likehate.description1")} `}</h1>
-            <p>{`${t("main page.likehate.description2")} `}</p>
+            <h1>Complete character arcs for extra points!</h1>
+            <p>
+              Will you have the evil villain arc? Or the good person redemption
+              arc?
+            </p>
           </div>
         </GsapFadeScrub>
       </div>

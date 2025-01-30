@@ -1,20 +1,16 @@
 import React, { useEffect } from "react";
-import { useTranslation } from "react-i18next";
-
 import "../css/pages/contactPage.css";
 
 const ContactPage = (props) => {
-  const { t } = useTranslation();
-
   useEffect(() => {
-    document.title = "Love, Career & Magic — Contact Us";
+    document.title = "Contact us";
   });
 
   return (
     <div className="content">
       <div className="subcontentWrapper margin-top min-width">
         <div className="characterContent">
-          <h2 className="subtitle">{t("contact page.title")}</h2>
+          <h2 className="subtitle">Get in touch!</h2>
           <div className="socialIconsWrapper">
             <a
               href="mailto:hello@lovecareermagic.com"
@@ -78,23 +74,47 @@ const ContactPage = (props) => {
           />
         </div>
         <div className="aboutMeVerticalWrapper">
-          <h2>{t("contact page.about me 1")}</h2>
-          <p
-            dangerouslySetInnerHTML={{ __html: t("contact page.about me 2") }}
-          ></p>
-          <p>{t("contact page.about me 3")}</p>
-          <p
-            dangerouslySetInnerHTML={{ __html: t("contact page.about me 4") }}
-          ></p>
+          <h2>
+            Hello👋My name is Wonmin.
+            <br />I am the game designer.
+          </h2>
+          <p>
+            I quit my cushy corporate job in 2016 to pursue my dreams of
+            becoming a game developer. And in March of 2021, that dream became a
+            reality when my first game,{" "}
+            <a href="https://sysifuscorp.com" target="_blank" rel="noreferrer">
+              Welcome to Sysifus Corp
+            </a>
+            , was successfully funded on Kickstarter.
+          </p>
+          <p>
+            I had no idea what I was doing when I quit my job. Even now, I'm
+            still terrified for my future. But it is thanks to the support of
+            fans like you that I am able to do what I love. And for that, I am
+            truly thankful.
+          </p>
+          <p>
+            Thanks for visiting my humble page and please consider{" "}
+            <a
+              href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
+              target="_blank"
+              rel="noreferrer"
+            >
+              buying the game!
+            </a>
+          </p>
         </div>
       </div>
       <div className="madeby">
         <p>
-          {t("contact page.description 1")}
-          <a href="https://unicornwithwings.com">Pegasus Games</a>
-          {t("contact page.description 2")}
+          Love, Career & Magic is made by{" "}
+          <a href="https://unicornwithwings.com">Pegasus Games</a> and is not
+          affiliated with any existing reality TV show.
+          <br />
+          <sup>
+            <i>(although I would love to be😏)</i>
+          </sup>
         </p>
-        <p>{t("contact page.description 3")}</p>
       </div>
     </div>
   );

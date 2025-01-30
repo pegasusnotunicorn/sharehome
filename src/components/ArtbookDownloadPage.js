@@ -1,17 +1,15 @@
 import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 
 import CustomHelmet from "./utils/CustomHelmet.js";
 import DefaultButton from "./utils/DefaultButton.js";
 
 const ArtbookDownloadPage = (props) => {
-  const { t } = useTranslation();
-
   //custom meta tags for this page
-  const title = "Love, Career & Magic — Digital Artbook!";
-  const splashImage = `https://lovecareermagic.com/images/artbook/mockup2.webp`;
-  const description = t("artbook download page.description");
+  const title = "Digital artbook download";
+  const splashImage = "https://lovecareermagic.com/images/artbook/mockup2.webp";
+  const description =
+    "Thank you so much for signing up for my newsletter. Here is the free digital artbook!";
 
   //change title of page
   useEffect(() => {
@@ -28,14 +26,14 @@ const ArtbookDownloadPage = (props) => {
 
       <div className="subcontentWrapper margin-top min-width">
         <div className="characterContent">
-          <h2 className="subtitle">{t("artbook download page.title")}</h2>
-          <p>{t("artbook download page.description")}</p>
+          <h2 className="subtitle">Here's your digital artbook!</h2>
+          <p>{description}</p>
           <DefaultButton
             shadowless
             icon="rulebookWhite"
             href="/artbook v2.pdf"
             className="artbookDownload"
-            text={t("artbook download page.button")}
+            text="Download artbook"
           />
         </div>
       </div>
@@ -46,16 +44,16 @@ const ArtbookDownloadPage = (props) => {
             className="couch"
             style={{ width: "100%" }}
             src="/images/artbook/mockup2.webp"
-            alt={t("artbook page.description")}
+            alt={description}
           ></img>
           <img
             className="couch"
             style={{ width: "100%" }}
             src="/images/artbook/mockup1.webp"
-            alt={t("artbook page.description")}
+            alt={description}
           ></img>
           <p style={{ marginTop: "1em" }}>
-            <NavLink to="/">{t("error page.link")}</NavLink>
+            <NavLink to="/">Click here to go back home.</NavLink>
           </p>
         </div>
       </div>

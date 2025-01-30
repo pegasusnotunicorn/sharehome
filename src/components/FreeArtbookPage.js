@@ -1,17 +1,14 @@
 import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 
 import EmailForm from "./utils/EmailForm.js";
 import CustomHelmet from "./utils/CustomHelmet.js";
 
 const FreeArtbookPage = (props) => {
-  const { t } = useTranslation();
-
   //custom meta tags for this page
-  const title = "Love, Career & Magic — Free Digital Artbook!";
+  const title = "Free digital artbook!";
   const splashImage = `https://lovecareermagic.com/images/artbook/mockup2.webp`;
-  const description = t("free artbook page.description");
+  const description = `Get your free digital artbook, Love, Career & Magic, by signing up for the newsletter!`;
 
   //change title of page
   useEffect(() => {
@@ -28,8 +25,7 @@ const FreeArtbookPage = (props) => {
 
       <div className="subcontentWrapper margin-top min-width">
         <div className="characterContent">
-          <h2 className="subtitle">{t("free artbook page.title")}</h2>
-          <p>{t("free artbook page.description")}</p>
+          <h2 className="subtitle">Free digital artbook</h2>
           <EmailForm className="artbookEmail" hideTitle isActiveAndDesktop />
         </div>
       </div>
@@ -40,16 +36,16 @@ const FreeArtbookPage = (props) => {
             className="couch"
             style={{ width: "100%" }}
             src="/images/artbook/mockup2.webp"
-            alt={t("free artbook page.description")}
+            alt="Love, Career & Magic artbook cover"
           ></img>
           <img
             className="couch"
             style={{ width: "100%" }}
             src="/images/artbook/mockup1.webp"
-            alt={t("free artbook page.description")}
+            alt="Love, Career & Magic artbook cover"
           ></img>
           <p style={{ marginTop: "1em" }}>
-            <NavLink to="/">{t("error page.link")}</NavLink>
+            <NavLink to="/">Click here to go back home.</NavLink>
           </p>
         </div>
       </div>

@@ -778,11 +778,13 @@
 
 /* mobile */
 @media only screen and (max-width: 900px) {
-  .eventsTextContainer {
+  .eventsTextContainer,
+  .goalsTextContainer {
     width: 100%;
     margin: auto;
     max-width: 500px;
-    text-align: left;
+    text-align: center;
+    align-items: center;
   }
   #eventsContainerSVGcake {
     top: 70vh;

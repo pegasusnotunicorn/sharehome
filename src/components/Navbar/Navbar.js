@@ -142,7 +142,6 @@ export const NavbarMain = (props) => {
               <a
                 onClick={toggleNav}
                 href="https://screentop.gg/@PegasusGames/lcm"
-                activeClassName="is-active"
                 className="navbarButton noselect"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -200,6 +199,7 @@ export const NavbarMain = (props) => {
               isActiveAndDesktop={isActiveAndDesktop}
             />
             <img
+              loading="lazy"
               className="artbookMockup"
               src="/images/bizz_fukidashi.webp"
               alt="Navbar illustration"

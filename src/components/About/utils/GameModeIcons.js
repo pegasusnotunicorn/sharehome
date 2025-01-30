@@ -8,11 +8,15 @@ const GameModeIcons = (props) => {
   return (
     <div className={classes}>
       <div>
-        <img src="/images/icons/playercount.svg" alt="Player Count" />
+        <img
+          loading="lazy"
+          src="/images/icons/playercount.svg"
+          alt="Player Count"
+        />
         {props.playerCount}
       </div>
       <div>
-        <img src="/images/icons/sandclock.svg" alt="Time" />
+        <img loading="lazy" src="/images/icons/sandclock.svg" alt="Time" />
         {props.playTime}
       </div>
     </div>

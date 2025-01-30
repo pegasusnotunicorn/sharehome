@@ -241,25 +241,42 @@ const HomePage = forwardRef((props, ref) => {
         <div className={`${homeStyles.mechanicsWrapper}`}>
           <GsapFadeScrub fadeIn>
             <img
+              loading="lazy"
               src="/images/illustrations/laughing.webp"
               alt="Laughing icon"
             />
             Laughing
           </GsapFadeScrub>
           <GsapFadeScrub fadeIn>
-            <img src="/images/illustrations/party.webp" alt="Party icon" />
+            <img
+              loading="lazy"
+              src="/images/illustrations/party.webp"
+              alt="Party icon"
+            />
             Party games
           </GsapFadeScrub>
           <GsapFadeScrub fadeIn>
-            <img src="/images/illustrations/stories.webp" alt="Stories icon" />
+            <img
+              loading="lazy"
+              src="/images/illustrations/stories.webp"
+              alt="Stories icon"
+            />
             Storytelling
           </GsapFadeScrub>
           <GsapFadeScrub fadeIn>
-            <img src="/images/illustrations/improv.webp" alt="Improv icon" />
+            <img
+              loading="lazy"
+              src="/images/illustrations/improv.webp"
+              alt="Improv icon"
+            />
             TTRPGs
           </GsapFadeScrub>
           <GsapFadeScrub fadeIn>
-            <img src="/images/illustrations/acting.webp" alt="Roleplay icon" />
+            <img
+              loading="lazy"
+              src="/images/illustrations/acting.webp"
+              alt="Roleplay icon"
+            />
             Improv
           </GsapFadeScrub>
         </div>
@@ -283,7 +300,11 @@ const HomePage = forwardRef((props, ref) => {
         <div className={`${homeStyles.characterTextContainer}`}>
           <GsapFadeScrub fadeIn>
             <GsapWiggle className={`${homeStyles.characterContainerSVG}`}>
-              <img src="/images/icons/pointer.svg" alt="point finger" />
+              <img
+                loading="lazy"
+                src="/images/icons/pointer.svg"
+                alt="point finger"
+              />
               <p className="is-hidden-mobile">CLICK ME</p>
             </GsapWiggle>
             <h1>Choose from 25 unique characters!</h1>
@@ -315,19 +336,19 @@ const HomePage = forwardRef((props, ref) => {
             id={`${homeStyles.eventsContainerSVGcake}`}
             className={`${homeStyles.eventsContainerSVG}`}
           >
-            <img src="/images/icons/cake.svg" alt="cake" />
+            <img loading="lazy" src="/images/icons/cake.svg" alt="cake" />
           </GsapWiggle>
           <GsapWiggle
             id={`${homeStyles.eventsContainerSVGlovekey}`}
             className={`${homeStyles.eventsContainerSVG}`}
           >
-            <img src="/images/icons/lovekey.svg" alt="cake" />
+            <img loading="lazy" src="/images/icons/lovekey.svg" alt="cake" />
           </GsapWiggle>
           <GsapWiggle
             id={`${homeStyles.eventsContainerSVGplanet}`}
             className={`${homeStyles.eventsContainerSVG}`}
           >
-            <img src="/images/icons/planet.svg" alt="cake" />
+            <img loading="lazy" src="/images/icons/planet.svg" alt="cake" />
           </GsapWiggle>
           <div className={`${homeStyles.eventsTextContainer}`}>
             <h1>Follow chaotic stage directions</h1>
@@ -360,13 +381,13 @@ const HomePage = forwardRef((props, ref) => {
             id={`${homeStyles.goalsContainerSVGflag}`}
             className={`${homeStyles.goalsContainerSVG}`}
           >
-            <img src="/images/icons/flag.svg" alt="flag" />
+            <img loading="lazy" src="/images/icons/flag.svg" alt="flag" />
           </GsapWiggle>
           <GsapWiggle
             id={`${homeStyles.goalsContainerSVGscroll}`}
             className={`${homeStyles.goalsContainerSVG}`}
           >
-            <img src="/images/icons/scroll.svg" alt="scroll" />
+            <img loading="lazy" src="/images/icons/scroll.svg" alt="scroll" />
           </GsapWiggle>
           <div className={`${homeStyles.goalsTextContainer}`}>
             <h1>Crazy locations never before seen on TV</h1>

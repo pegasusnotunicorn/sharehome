@@ -4,6 +4,7 @@ export const LazyYoutube = ({ isLoaded, src, width, height }) => {
   if (!isLoaded) {
     return (
       <img
+        loading="lazy"
         src="/images/main.webp"
         alt="YouTube video thumbnail"
         style={{

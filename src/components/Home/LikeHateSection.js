@@ -125,6 +125,7 @@ const LikeHateSection = (props) => {
       <div className="likehateLeftContainer likehateContainers">
         <GsapFadeScrub fadeIn className="imageAndArrowContainer">
           <img
+            loading="lazy"
             className={`tableSplash ${characterCoords[currentChar].name}`}
             src="/images/illustrations/splash.webp"
             alt="dinner table"
@@ -188,11 +189,13 @@ const CharacterArc = ({
         <div className="arrowWrapper flipped">
           <GsapWiggle degree={2} className="arrowWrapperSVG">
             <img
+              loading="lazy"
               className="arrowTailSVG"
               src="/images/icons/arrowtail.svg"
               alt="part of the arrow"
             />
             <img
+              loading="lazy"
               className="arrowHeadSVG"
               src="/images/icons/arrowhead.svg"
               alt="part of the arrow"
@@ -215,11 +218,13 @@ const CharacterArc = ({
         <div className="arrowWrapper">
           <GsapWiggle degree={2} className="arrowWrapperSVG">
             <img
+              loading="lazy"
               className="arrowTailSVG"
               src="/images/icons/arrowtail.svg"
               alt="part of the arrow"
             />
             <img
+              loading="lazy"
               className="arrowHeadSVG"
               src="/images/icons/arrowhead.svg"
               alt="part of the arrow"

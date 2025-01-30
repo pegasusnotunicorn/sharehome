@@ -116,6 +116,7 @@ const Icon = ({ icon, emoji }) => {
     return (
       <span>
         <img
+          loading="lazy"
           className="defaultButtonIcon"
           src={`/images/emojis/${emoji}.webp`}
           alt="button icon"
@@ -126,6 +127,7 @@ const Icon = ({ icon, emoji }) => {
     return (
       <span>
         <img
+          loading="lazy"
           className="defaultButtonIcon"
           src={`/images/icons/${icon}.svg`}
           alt="button icon"

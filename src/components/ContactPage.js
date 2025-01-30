@@ -17,49 +17,65 @@ const ContactPage = () => {
               target="_blank"
               rel="noreferrer"
             >
-              <img src="/images/icons/email2.svg" alt="Email" />
+              <img loading="lazy" src="/images/icons/email2.svg" alt="Email" />
             </a>
             <a
               href="https://instagram.com/sysifuscorp"
               target="_blank"
               rel="noreferrer"
             >
-              <img src="/images/icons/instagram.svg" alt="Instagram" />
+              <img
+                loading="lazy"
+                src="/images/icons/instagram.svg"
+                alt="Instagram"
+              />
             </a>
             <a
               href="https://www.tiktok.com/@pegasusgamesnyc"
               target="_blank"
               rel="noreferrer"
             >
-              <img src="/images/icons/tiktok.svg" alt="TikTok" />
+              <img loading="lazy" src="/images/icons/tiktok.svg" alt="TikTok" />
             </a>
             <a
               href="https://www.reddit.com/user/sysifuscorp"
               target="_blank"
               rel="noreferrer"
             >
-              <img src="/images/icons/reddit.svg" alt="Reddit" />
+              <img loading="lazy" src="/images/icons/reddit.svg" alt="Reddit" />
             </a>
             <a
               href="https://discord.com/invite/nv89cRgEsS"
               target="_blank"
               rel="noreferrer"
             >
-              <img src="/images/icons/discord.svg" alt="Discord" />
+              <img
+                loading="lazy"
+                src="/images/icons/discord.svg"
+                alt="Discord"
+              />
             </a>
             <a
               href="https://twitter.com/sysifuscorp"
               target="_blank"
               rel="noreferrer"
             >
-              <img src="/images/icons/twitter.svg" alt="Twitter" />
+              <img
+                loading="lazy"
+                src="/images/icons/twitter.svg"
+                alt="Twitter"
+              />
             </a>
             <a
               href="https://www.facebook.com/sysifuscorp"
               target="_blank"
               rel="noreferrer"
             >
-              <img src="/images/icons/facebook.svg" alt="Facebook" />
+              <img
+                loading="lazy"
+                src="/images/icons/facebook.svg"
+                alt="Facebook"
+              />
             </a>
           </div>
         </div>

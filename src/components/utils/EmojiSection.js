@@ -12,6 +12,7 @@ const EmojiWrapper = ({ urlName, emoji, index }) => {
     <a href={`/characters/${urlName}`}>
       <div id={`emojiWrapper${index}`} className="emojiWrapper">
         <img
+          loading="lazy"
           src={`/images/emojis/${emoji}.webp`}
           className="emojiImage"
           title={emoji}

@@ -41,12 +41,14 @@ const ArtbookDownloadPage = () => {
       <div className="subcontentWrapper">
         <div className="couchContainer">
           <img
+            loading="lazy"
             className="couch"
             style={{ width: "100%" }}
             src="/images/artbook/mockup2.webp"
             alt={description}
           ></img>
           <img
+            loading="lazy"
             className="couch"
             style={{ width: "100%" }}
             src="/images/artbook/mockup1.webp"

@@ -21,6 +21,7 @@ const getPictureSlide = (index, directory, filename, href) => {
         href={href ?? `${directory}/${filename}${index}.webp`}
       >
         <img
+          loading="lazy"
           alt={`Photoshoot ${index}`}
           className="noselect carouselImage"
           src={`${directory}/${filename}${index}.webp`}

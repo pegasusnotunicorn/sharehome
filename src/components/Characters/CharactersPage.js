@@ -92,12 +92,14 @@ const CharactersPage = () => {
             </p>
             <div className="freeEmojiButtonWrapper">
               <img
+                loading="lazy"
                 src={`/images/emojis/${randomCharacter1Emoji}.webp`}
                 alt="Random emoji"
                 title={randomCharacter1Emoji}
               />
               <a href="#emojis">Free character emojis</a>
               <img
+                loading="lazy"
                 src={`/images/emojis/${randomCharacter2Emoji}.webp`}
                 alt="Random emoji"
                 title={randomCharacter2Emoji}
@@ -210,6 +212,7 @@ const AllCharacters = () => {
           }}
         >
           <img
+            loading="lazy"
             className="boxes"
             src={elem.image.url.replace("big", "small")}
             style={{ objectPosition: elem.image.objectPosition || "center" }}

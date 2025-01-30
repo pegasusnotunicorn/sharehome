@@ -3,6 +3,7 @@ export const Splash = () => (
     <div className="couchContainer">
       <a href="./images/illustrations/splash.webp" target="_blank">
         <img
+          loading="lazy"
           className="couch"
           style={{ width: "100%" }}
           src="/images/illustrations/splash.webp"

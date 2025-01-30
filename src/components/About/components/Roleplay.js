@@ -98,16 +98,19 @@ const Setup = ({ showRules, cardStyle, toggleSteps }) => {
           <div className="stepBlockHorizontal">
             <div className="stepBlockFlex is-hidden-mobile">
               <img
+                loading="lazy"
                 className="translateYDown iconImage is-hidden-mobile"
                 src="/images/icons/darkperson.svg"
                 alt="member icon"
               />
               <img
+                loading="lazy"
                 className="translateYUp iconImage is-hidden-mobile"
                 src="/images/icons/darkperson.svg"
                 alt="member icon"
               />
               <img
+                loading="lazy"
                 className="translateYDown iconImage is-hidden-mobile"
                 src="/images/icons/darkperson.svg"
                 alt="member icon"
@@ -128,11 +131,13 @@ const Setup = ({ showRules, cardStyle, toggleSteps }) => {
               </div>
               <div className="arrowWrapper">
                 <img
+                  loading="lazy"
                   className="arrowArc arrowTailSVG"
                   src="/images/icons/arrowtail.svg"
                   alt="part of the arrow"
                 />
                 <img
+                  loading="lazy"
                   className="arrowArc arrowHeadSVG"
                   src="/images/icons/arrowhead.svg"
                   alt="part of the arrow"
@@ -170,6 +175,7 @@ const Setup = ({ showRules, cardStyle, toggleSteps }) => {
           {/* MEMBERS TITLE */}
           <div className="stepBlockHorizontal leftAlign paddingTopHalf">
             <img
+              loading="lazy"
               className="paddingRight iconImage"
               src="/images/icons/flag.svg"
               alt="flag icon"
@@ -194,16 +200,19 @@ const Setup = ({ showRules, cardStyle, toggleSteps }) => {
               <div className="stepBlockVertical">
                 <div className="stepBlockHorizontal">
                   <img
+                    loading="lazy"
                     className="translateYDown iconImage"
                     src="/images/icons/darkperson.svg"
                     alt="member icon"
                   />
                   <img
+                    loading="lazy"
                     className="translateYUp iconImage"
                     src="/images/icons/darkperson.svg"
                     alt="member icon"
                   />
                   <img
+                    loading="lazy"
                     className="translateYDown iconImage is-hidden-mobile"
                     src="/images/icons/darkperson.svg"
                     alt="member icon"
@@ -214,16 +223,19 @@ const Setup = ({ showRules, cardStyle, toggleSteps }) => {
 
             <div className="stepBlockVertical cardVertical">
               <img
+                loading="lazy"
                 className="paddedBottomVertical cardImg"
                 src="/images/illustrations/locationcard.webp"
                 alt="episode cards"
               />
               <img
+                loading="lazy"
                 className="paddedBottomVertical cardImg"
                 src="/images/illustrations/directioncard0.webp"
                 alt="direction cards"
               />
               <img
+                loading="lazy"
                 className="paddedBottomVertical cardImg"
                 src="/images/illustrations/directioncard1.webp"
                 alt="direction cards"
@@ -234,16 +246,19 @@ const Setup = ({ showRules, cardStyle, toggleSteps }) => {
               <div className="stepBlockVertical">
                 <div className="stepBlockHorizontal">
                   <img
+                    loading="lazy"
                     className="translateYDown iconImage"
                     src="/images/icons/whiteperson.svg"
                     alt="commentator icon"
                   />
                   <img
+                    loading="lazy"
                     className="translateYUp iconImage"
                     src="/images/icons/whiteperson.svg"
                     alt="commentator icon"
                   />
                   <img
+                    loading="lazy"
                     className="translateYDown iconImage is-hidden-mobile"
                     src="/images/icons/whiteperson.svg"
                     alt="commentator icon"
@@ -286,6 +301,7 @@ const Setup = ({ showRules, cardStyle, toggleSteps }) => {
           <div className="stepBlockHorizontal">
             <Card {...cardProps} enableQuestionMark={false} />
             <img
+              loading="lazy"
               className="wideImage paddingLeft"
               src="/images/illustrations/rules/membertalk.svg"
               alt="members talking icon"
@@ -370,31 +386,37 @@ const Rules = ({ showRules }) => {
             </div>
             <div className="stepBlockFlex">
               <img
+                loading="lazy"
                 className="translateYDown iconImage paddingLeft"
                 src="/images/icons/darkperson.svg"
                 alt="member icon"
               />
               <img
+                loading="lazy"
                 className="translateYUp iconImage"
                 src="/images/icons/darkperson.svg"
                 alt="member icon"
               />
               <img
+                loading="lazy"
                 className="translateYDown iconImage is-hidden-mobile"
                 src="/images/icons/darkperson.svg"
                 alt="member icon"
               />
               <img
+                loading="lazy"
                 className="translateYUp iconImage is-hidden-mobile"
                 src="/images/icons/darkperson.svg"
                 alt="member icon"
               />
               <img
+                loading="lazy"
                 className="translateYDown iconImage is-hidden-mobile"
                 src="/images/icons/darkperson.svg"
                 alt="member icon"
               />
               <img
+                loading="lazy"
                 className="translateYUp iconImage is-hidden-mobile"
                 src="/images/icons/darkperson.svg"
                 alt="member icon"
@@ -433,16 +455,19 @@ const Rules = ({ showRules }) => {
               <div className="stepBlockVertical leftAlign">
                 <div className="stepBlockHorizontal">
                   <img
+                    loading="lazy"
                     className="paddedBottomVertical cardImg halfCardImg"
                     src="/images/illustrations/directioncard0.webp"
                     alt="direction cards"
                   />
                   <img
+                    loading="lazy"
                     className="paddedBottomVertical cardImg halfCardImg"
                     src="/images/illustrations/directioncard1.webp"
                     alt="direction cards"
                   />
                   <img
+                    loading="lazy"
                     className="paddedBottomVertical cardImg halfCardImg"
                     src="/images/illustrations/directioncard2.webp"
                     alt="direction cards"
@@ -450,16 +475,19 @@ const Rules = ({ showRules }) => {
                 </div>
                 <div className="stepBlockHorizontal">
                   <img
+                    loading="lazy"
                     className="paddedBottomVertical cardImg halfCardImg"
                     src="/images/illustrations/directioncard0.webp"
                     alt="direction cards"
                   />
                   <img
+                    loading="lazy"
                     className="paddedBottomVertical cardImg halfCardImg"
                     src="/images/illustrations/directioncard1.webp"
                     alt="direction cards"
                   />
                   <img
+                    loading="lazy"
                     className="paddedBottomVertical cardImg halfCardImg"
                     src="/images/illustrations/directioncard2.webp"
                     alt="direction cards"
@@ -471,6 +499,7 @@ const Rules = ({ showRules }) => {
               <div className="stepBlockVertical leftAlign">
                 <div className="stepBlockVertical paddingBottomHalf">
                   <img
+                    loading="lazy"
                     className="wideImage"
                     src="/images/illustrations/rules/commentatortalk.svg"
                     alt="commentators talking icon"
@@ -519,31 +548,37 @@ const Rules = ({ showRules }) => {
               <div className="stepBlockVertical leftAlign">
                 <div className="stepBlockHorizontal">
                   <img
+                    loading="lazy"
                     className="paddedBottomVertical translateYUp iconImage"
                     src="/images/icons/5point.png"
                     alt="point tokens"
                   />
                   <img
+                    loading="lazy"
                     className="paddedBottomVertical translateYDown iconImage"
                     src="/images/icons/1point.png"
                     alt="point tokens"
                   />
                   <img
+                    loading="lazy"
                     className="paddedBottomVertical translateYUp iconImage"
                     src="/images/icons/5point.png"
                     alt="point tokens"
                   />
                   <img
+                    loading="lazy"
                     className="paddedBottomVertical translateYDown iconImage"
                     src="/images/icons/1point.png"
                     alt="point tokens"
                   />
                   <img
+                    loading="lazy"
                     className="paddedBottomVertical translateYUp iconImage"
                     src="/images/icons/5point.png"
                     alt="point tokens"
                   />
                   <img
+                    loading="lazy"
                     className="paddedBottomVertical translateYDown iconImage is-hidden-mobile"
                     src="/images/icons/1point.png"
                     alt="point tokens"
@@ -555,6 +590,7 @@ const Rules = ({ showRules }) => {
               <div className="stepBlockVertical leftAlign">
                 <div className="stepBlockVertical paddingBottomHalf">
                   <img
+                    loading="lazy"
                     className="wideImage"
                     src="/images/illustrations/rules/membertalk.svg"
                     alt="commentators talking icon"
@@ -598,6 +634,7 @@ const Rules = ({ showRules }) => {
               <div className="stepBlockVertical leftAlign">
                 <div className="stepBlockVertical paddingBottomHalf">
                   <img
+                    loading="lazy"
                     className="wideImage"
                     src="/images/illustrations/rules/commentatorpoint2.svg"
                     alt="commentators talking icon"
@@ -609,6 +646,7 @@ const Rules = ({ showRules }) => {
               <div className="stepBlockVertical leftAlign">
                 <div className="stepBlockVertical paddingBottomHalf">
                   <img
+                    loading="lazy"
                     className="wideImage"
                     src="/images/illustrations/rules/reveal2.svg"
                     alt="commentators talking icon"

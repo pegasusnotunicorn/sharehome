@@ -19,6 +19,7 @@ export const EventGoalCard = (props) => {
         {eventGoalDetails.description}
       </div>
       <img
+        loading="lazy"
         className={type}
         src={`/images/illustrations/${type}cardfront${props.randomNumber}.webp`}
         alt={`${type} card`}

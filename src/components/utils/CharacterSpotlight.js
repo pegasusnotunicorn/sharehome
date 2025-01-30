@@ -113,6 +113,7 @@ export const CharacterSpotlight = (props) => {
             <LinkTo {...props}>
               <div className="imageCircleMask noselect">
                 <img
+                  loading="lazy"
                   className="characterImage"
                   src={character.image.url.replace("big", "small")}
                   style={{ objectPosition: backgroundPosition }}
@@ -120,6 +121,7 @@ export const CharacterSpotlight = (props) => {
                 />
                 <div className="magnifierWrapper">
                   <img
+                    loading="lazy"
                     className="imageCircleIcons"
                     src="/images/icons/magnifier.svg"
                     alt="Look closer"

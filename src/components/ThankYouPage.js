@@ -24,6 +24,7 @@ const ThankYouPage = () => {
         <div className="characterContent">
           <h2 className="subtitle">Thank you for your order!</h2>
           <img
+            loading="lazy"
             className="couch"
             style={{ width: "100%", marginBottom: "1em" }}
             src="/images/loucheck.webp"

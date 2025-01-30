@@ -74,6 +74,7 @@ export const CardFrontPerson = (props) => {
     <div className="memberCommCardWrapper">
       {mainText}
       <img
+        loading="lazy"
         draggable={false}
         className="memberCommCardImage nopointerevent"
         alt={"Image credit - " + cardPerson.image.credit}

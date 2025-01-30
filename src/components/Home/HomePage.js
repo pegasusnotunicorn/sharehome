@@ -29,6 +29,14 @@ const HomePage = forwardRef((props, ref) => {
     }
   }, [ref]);
 
+  // Hide the static image once React is ready
+  useEffect(() => {
+    const staticHero = document.getElementById("hero-static");
+    if (staticHero) {
+      staticHero.style.display = "none";
+    }
+  }, []);
+
   //emphasis
   let subtitle =
     "A collaborative storytelling game\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world";

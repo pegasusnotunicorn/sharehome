@@ -134,9 +134,40 @@
       name="twitter:image"
       content="https://lovecareermagic.com/images/main.webp"
     />
+    <style>
+      #hero-static {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh; /* Full screen height */
+        background-color: #ffffff; /* Optional: background color to match your design */
+      }
+
+      .hero-static-container {
+        text-align: center;
+      }
+
+      .heroImageStatic {
+        display: block;
+        max-width: 800px;
+        width: 100%;
+        height: auto;
+      }
+    </style>
   </head>
   <body>
     <div id="modal"></div>
     <div id="sharehome"></div>
+    <div id="hero-static">
+      <div class="hero-static-container">
+        <img
+          src="/images/box_white_outline.webp"
+          alt="Box and components of the card game."
+          class="heroImageStatic"
+          width="800"
+          height="600"
+        />
+      </div>
+    </div>
   </body>
 </html>

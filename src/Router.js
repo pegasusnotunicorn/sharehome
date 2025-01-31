@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import MetaTags from "./components/MetaTags.js";
 import Navbar from "./components/Navbar/Navbar.js";
@@ -20,6 +20,14 @@ const Router = () => {
   const onChildMount = (setterFromChild) => {
     setNavbarActive.current = setterFromChild;
   };
+
+  // Hide the static image once React is ready
+  useEffect(() => {
+    const staticHero = document.getElementById("hero-static");
+    if (staticHero) {
+      staticHero.style.display = "none";
+    }
+  }, []);
 
   return (
     <BrowserRouter>

@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom"; // To access URL params
 import { NavLink } from "react-router-dom";
 import EmailForm from "./utils/EmailForm.js";
 import CustomHelmet from "./utils/CustomHelmet.js";
@@ -7,10 +8,23 @@ const ThankYouPage = () => {
   //custom meta tags for this page
   const title = "Thank you for your order!";
 
-  //change title of page
+  // Get checkout_session_id from the URL
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const checkoutSessionId = params.get("checkout_session_id");
+
+  // Change the page title and trigger Google Ads conversion tracking
   useEffect(() => {
     document.title = title;
-  }, [title]);
+
+    if (checkoutSessionId) {
+      // Google Ads conversion tracking with the session ID as the transaction_id
+      window.gtag("event", "conversion", {
+        send_to: "AW-16828802079/rZXLCJXiqJcaEJ_IzNg-",
+        transaction_id: checkoutSessionId,
+      });
+    }
+  }, [title, checkoutSessionId]);
 
   return (
     <div className="content max-width">

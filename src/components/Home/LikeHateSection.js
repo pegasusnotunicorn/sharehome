@@ -222,12 +222,14 @@ const CharacterArc = ({
               className="arrowTailSVG"
               src="/images/icons/arrowtail.svg"
               alt="part of the arrow"
+              width="25"
             />
             <img
               loading="lazy"
               className="arrowHeadSVG"
               src="/images/icons/arrowhead.svg"
               alt="part of the arrow"
+              width="25"
             />
           </GsapWiggle>
         </div>

@@ -106,7 +106,7 @@ const HomePage = forwardRef((props, ref) => {
           <img
             alt="Box and components of the card game."
             src="/images/box_white_outline.webp"
-            className={`${homeStyles.heroImage}`}
+            className={`${homeStyles.heroImage} openYouTubeModalButton`}
             onClick={() => {
               setVideoModalVisible(true);
             }}
@@ -125,6 +125,7 @@ const HomePage = forwardRef((props, ref) => {
                 shadowless
                 icon="watchWhite"
                 id="videoModalToggleButton"
+                className="openYouTubeModalButton"
                 onClick={() => {
                   setVideoModalVisible(true);
                 }}

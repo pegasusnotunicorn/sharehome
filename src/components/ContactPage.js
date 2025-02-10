@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import "../css/pages/contactPage.css";
+import { NavLink } from "react-router";
 
 const ContactPage = () => {
   useEffect(() => {
@@ -118,13 +119,7 @@ const ContactPage = () => {
           </p>
           <p>
             Thanks for visiting my humble page and please consider{" "}
-            <a
-              href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
-              target="_blank"
-              rel="noreferrer"
-            >
-              buying the game!
-            </a>
+            <NavLink to="/buy">buying the game!</NavLink>
           </p>
         </div>
       </div>

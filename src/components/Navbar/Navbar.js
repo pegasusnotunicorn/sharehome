@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 import { GsapFadeDelay, GsapFadeScrub } from "../utils/useGsap.js";
 import ShootingStar from "./ShootingStar.js";
 import EmailForm from "../utils/EmailForm.js";
@@ -76,22 +76,13 @@ export const NavbarMain = (props) => {
         </GsapFadeScrub>
         <div className="navbarFloatRight">
           <GsapFadeScrub scrub startScreenTop fadeIn>
-            {/* <DefaultButton
-              shadowless
-              animated
-              icon="forward"
-              id="emailToggleButtonMobile"
-              className={`${mailButtonVisibleClass} GTMtoggleEmailButton is-green`}
-              onClick={toggleMail}
-              text={t("email form.joinbutton")}
-            /> */}
             <DefaultButton
               shadowless
               animated
               icon="forward"
               id="emailToggleButtonMobile"
               className={`${mailButtonVisibleClass} is-blue`}
-              href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
+              navlink="/buy"
               text="Buy now!"
             />
           </GsapFadeScrub>

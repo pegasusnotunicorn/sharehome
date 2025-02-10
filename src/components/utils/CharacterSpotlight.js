@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import ShootingStar from "../Navbar/ShootingStar.js";
 import {

@@ -118,7 +118,7 @@ const HomePage = forwardRef((props, ref) => {
                 animated
                 icon="forward"
                 className="is-blue"
-                href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
+                navlink="/buy"
                 text="Buy now"
               />
               <DefaultButton
@@ -181,7 +181,7 @@ const HomePage = forwardRef((props, ref) => {
                 animated
                 icon="forward"
                 className="is-blue"
-                href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
+                navlink="/buy"
                 text="Buy now"
               />
               <DefaultButton
@@ -423,7 +423,7 @@ const HomePage = forwardRef((props, ref) => {
               animated
               icon="forward"
               className="is-blue"
-              href="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy"
+              navlink="/buy"
               text="Buy now"
             />
             <DefaultButton

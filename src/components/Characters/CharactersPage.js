@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Redirect, useParams, useHistory } from "react-router-dom";
+import { useParams, useNavigate } from "react-router";
 import {
   getAllCharacters,
   getSpecificPersonByURL,
@@ -21,6 +21,8 @@ const randomFromArray = (array) => {
 
 //render all characters or a specific one depending on URL
 const CharactersPage = () => {
+  const navigate = useNavigate();
+
   let { name } = useParams();
 
   useEffect(() => {
@@ -40,7 +42,7 @@ const CharactersPage = () => {
       !chosenCharacter ||
       chosenCharacter.ignoreInRandom)
   ) {
-    return <Redirect to="/characters" />;
+    navigate("/characters");
   } else {
     let characterContent =
       chosenCharacter && !chosenCharacter.ignoreInRandom ? (
@@ -188,13 +190,13 @@ IndividualCharacter.propTypes = {
 
 //get all characters and their details
 const AllCharacters = () => {
-  let history = useHistory();
+  const navigate = useNavigate();
   let { name } = useParams();
   let chosenCharacter = getSpecificPersonByURL(name);
 
   const redirectToSpecificCharacter = (character) => {
     if (chosenCharacter !== character && !character.ignoreInRandom) {
-      history.push(`/characters/${character.urlName}`);
+      navigate(`/characters/${character.urlName}`);
     }
   };
 

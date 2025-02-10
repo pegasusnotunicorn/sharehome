@@ -146,6 +146,15 @@
     <!-- End Google Tag Manager (noscript) -->
     <div id="modal"></div>
     <div id="sharehome"></div>
+
+    <!-- Hide the hero image if the path is not / -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if (window.location.pathname !== "/") {
+          document.getElementById("hero-static").style.display = "none";
+        }
+      });
+    </script>
     <div id="hero-static">
       <div class="hero-static-container">
         <img

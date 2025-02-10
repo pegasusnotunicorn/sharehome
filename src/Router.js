@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import MetaTags from "./components/MetaTags.js";
 import Navbar from "./components/Navbar/Navbar.js";
 import ScrollToTop from "./ScrollToTop.js";
@@ -12,10 +12,16 @@ import Footer from "./components/Footer.js";
 import ArtbookDownloadPage from "./components/ArtbookDownloadPage.js";
 import FreeArtbookPage from "./components/FreeArtbookPage.js";
 import ThankYouPage from "./components/ThankYouPage.js";
-import RulebookRedirect from "./components/RulebookRedirect.js";
+import ExternalRedirect from "./components/ExternalRedirect.js";
+import useStoreUtmParams from "./hooks/useStoreUtmParams";
+
+const stripeUrl =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_STRIPE_TEST_URL
+    : process.env.REACT_APP_STRIPE_PROD_URL;
 
 const Router = () => {
-  //magic to open the navbar from inside homepage
+  // Magic to open the navbar from inside homepage
   let setNavbarActive = useRef(null);
   const onChildMount = (setterFromChild) => {
     setNavbarActive.current = setterFromChild;
@@ -29,83 +35,32 @@ const Router = () => {
     }
   }, []);
 
+  useStoreUtmParams();
+
   return (
     <BrowserRouter>
-      <MetaTags></MetaTags>
+      <MetaTags />
       <Navbar onMount={onChildMount} />
 
       <ScrollToTop>
-        <Switch>
+        <Routes>
+          <Route path="/" element={<HomePage ref={setNavbarActive} />} />
+          <Route path="/about" element={<Navigate to="/howtoplay" replace />} />
+          <Route path="/howtoplay" element={<AboutPage />} />
+          <Route path="/freeartbook" element={<FreeArtbookPage />} />
+          <Route path="/digitalartbook" element={<ArtbookDownloadPage />} />
+          <Route path="/characters" element={<CharactersPage />} />
+          <Route path="/characters/:name" element={<CharactersPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/thankyou" element={<ThankYouPage />} />
           <Route
-            exact
-            path="/"
-            render={() => {
-              return <HomePage ref={setNavbarActive} />;
-            }}
+            path="/rulebook"
+            element={<ExternalRedirect url="/rulebook.pdf" />}
           />
-          <Route
-            path="/about"
-            render={() => {
-              return <Redirect to="/howtoplay" />;
-            }}
-          />
-          <Route
-            path="/howtoplay"
-            render={() => {
-              return <AboutPage />;
-            }}
-          />
-          <Route
-            exact
-            path="/freeartbook"
-            render={() => {
-              return <FreeArtbookPage />;
-            }}
-          />
-          <Route
-            exact
-            path="/digitalartbook"
-            render={() => {
-              return <ArtbookDownloadPage />;
-            }}
-          />
-          <Route
-            path={["/characters/:name", "/characters"]}
-            render={() => {
-              return <CharactersPage />;
-            }}
-          />
-          <Route
-            exact
-            path="/contact"
-            render={() => {
-              return <ContactPage />;
-            }}
-          />
-          <Route
-            exact
-            path="/thankyou"
-            render={() => {
-              return <ThankYouPage />;
-            }}
-          />
-          <Route exact path="/rulebook" component={RulebookRedirect} />
-          <Route
-            exact
-            path="/buy"
-            render={() => {
-              window.location.href =
-                "https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy";
-              return null;
-            }}
-          />
-          <Route
-            render={() => {
-              return <ErrorPage />;
-            }}
-          />
-          <Redirect to="/" />
-        </Switch>
+          <Route path="/buy" element={<ExternalRedirect url={stripeUrl} />} />
+          {/* Fallback for undefined routes */}
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
       </ScrollToTop>
 
       <Footer key={Date.now()} />

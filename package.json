@@ -13,7 +13,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
-    "react-router-dom": "^5.2.0",
+    "react-router": "^7.1.5",
     "react-scripts": "^5.0.1",
     "swiper": "^6.8.4",
     "webfontloader": "^1.6.28"

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom"; // To access URL params
-import { NavLink } from "react-router-dom";
+import { useLocation } from "react-router"; // To access URL params
+import { NavLink } from "react-router";
 import EmailForm from "./utils/EmailForm.js";
 import CustomHelmet from "./utils/CustomHelmet.js";
 

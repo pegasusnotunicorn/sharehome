@@ -22,7 +22,7 @@ const HomePage = forwardRef((props, ref) => {
   const navbarButton = useRef(null);
 
   useEffect(() => {
-    document.title = "Love, Career & Magic — a reality TV board game";
+    document.title = "Love, Career & Magic - 12m game for 2-6 players";
 
     if (navbarButton.current) {
       navbarButton.current.onclick = ref.current;

@@ -89,7 +89,8 @@ const HomePage = forwardRef((props, ref) => {
           <img
             alt="Box and components of the card game."
             src="/images/click_to_learn.webp"
-            className={`${homeStyles.heroImage} openYouTubeModalButton`}
+            draggable={false}
+            className={`${homeStyles.heroImage} noselect openYouTubeModalButton`}
             onClick={() => {
               setVideoModalVisible(true);
             }}
@@ -97,7 +98,8 @@ const HomePage = forwardRef((props, ref) => {
           <img
             alt="Click the box to learn more!"
             src="/images/box_transparent.webp"
-            className={`${homeStyles.heroImage} openYouTubeModalButton ${homeStyles.monsterBurstAnimation}`}
+            draggable={false}
+            className={`${homeStyles.heroImage} noselect openYouTubeModalButton ${homeStyles.monsterBurstAnimation}`}
             onClick={() => {
               setVideoModalVisible(true);
             }}

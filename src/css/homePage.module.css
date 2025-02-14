@@ -365,6 +365,7 @@
 /* <editor-fold>--------------------------------------SHAREHOME DESCRIPTION */
 
 #descriptionContainer {
+  margin-top: 100dvh;
   min-height: 100dvh;
   justify-content: center;
   align-items: center;

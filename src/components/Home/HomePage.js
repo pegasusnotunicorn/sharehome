@@ -45,7 +45,7 @@ const HomePage = forwardRef((props, ref) => {
     topLogoRef.current.scrollIntoView({ behavior: "smooth" });
 
   const [videoModalVisible, setVideoModalVisible] = useState(false);
-  const youTubeVideoCode = isDesktop ? "P7vhHCrPfQ8" : "co-3qUhuH8Y";
+  const youTubeVideoCode = isDesktop ? "EoQ2VTipXPA" : "fNq9hS6DsTU";
   const enableCC = isDesktop
     ? "&cc_load_policy=1&iv_load_policy=1"
     : "&cc_load_policy=3&iv_load_policy=3";
@@ -152,7 +152,7 @@ const HomePage = forwardRef((props, ref) => {
             <div className={`subcontentWrapper`}>
               <h1 className={`${homeStyles.subtitle}`}>
                 A party game where <br />{" "}
-                <span class="fantasyEmphasis">fantasy</span> meets reality TV!
+                <span class="fantasyEmphasis">fantasy</span> meets reality TV.
               </h1>
               <GameModeIcons
                 className={`${homeStyles.gameDetails}`}

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { NavLink } from "react-router";
-import { GsapFadeDelay, GsapFadeScrub } from "../utils/useGsap.js";
+import { GsapFadeDelay } from "../utils/useGsap.js";
 import ShootingStar from "./ShootingStar.js";
 import EmailForm from "../utils/EmailForm.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";

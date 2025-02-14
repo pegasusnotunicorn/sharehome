@@ -32,7 +32,7 @@ const HomePage = forwardRef((props, ref) => {
 
   let { width } = useWindowDimensions();
   const isDesktop = width > 1000;
-  const iframeWidth = isDesktop ? 1000 : 400;
+  const iframeWidth = isDesktop ? 1000 : width - 100;
   const iframeHeight = isDesktop
     ? (iframeWidth * 9) / 16
     : (iframeWidth * 16) / 9;
@@ -116,7 +116,6 @@ const HomePage = forwardRef((props, ref) => {
             </div>
           </div>
         </div>
-        <div className={homeStyles.screenHeight}></div>
       </div>
 
       <div

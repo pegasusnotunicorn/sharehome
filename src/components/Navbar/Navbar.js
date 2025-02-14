@@ -49,7 +49,7 @@ export const NavbarMain = (props) => {
         }
       }
     },
-    [width, mailButtonVisible, visible]
+    [width, mailButtonVisible, visible, setVideoModalVisible]
   );
 
   const toggleMail = useCallback(() => {

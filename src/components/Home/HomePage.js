@@ -1,4 +1,4 @@
-import { useEffect, useRef, forwardRef, useState } from "react";
+import { useEffect, useRef, forwardRef } from "react";
 import GameModeIcons from "../About/utils/GameModeIcons.js";
 import { CharacterSpotlight } from "../utils/CharacterSpotlight.js";
 import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";

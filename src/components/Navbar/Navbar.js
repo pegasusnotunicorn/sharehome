@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { NavLink } from "react-router";
+import { NavLink, useLocation } from "react-router";
 import { GsapFadeDelay, GsapFadeScrub } from "../utils/useGsap.js";
 import ShootingStar from "./ShootingStar.js";
 import EmailForm from "../utils/EmailForm.js";
@@ -12,6 +12,9 @@ import PropTypes from "prop-types";
 //main navbar for page navigation on the website
 export const NavbarMain = (props) => {
   const { setVideoModalVisible } = props;
+
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   const [visible, setVisibility] = useState(false);
 
@@ -74,15 +77,17 @@ export const NavbarMain = (props) => {
       >
         <NavLink to="/" className="navbarFloatLeft noselect"></NavLink>
         <div className="navbarFloatRight">
-          <DefaultButton
-            shadowless
-            animated
-            icon="forward"
-            id="emailToggleButtonMobile"
-            className={`${mailButtonVisibleClass} is-red`}
-            navlink="/buy"
-            text="Buy now!"
-          />
+          {!isHomePage && (
+            <DefaultButton
+              shadowless
+              animated
+              icon="forward"
+              id="emailToggleButtonMobile"
+              className={`${mailButtonVisibleClass} is-red`}
+              navlink="/buy"
+              text="Buy now!"
+            />
+          )}
           <button
             id="navbarOpenClose"
             className={`hamburger hamburger--slider ${isVisibleClass}`}

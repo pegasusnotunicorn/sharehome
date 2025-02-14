@@ -197,7 +197,7 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 100%;
+  width: calc(100% - 40px);
   max-width: 1000px;
   z-index: 50;
   transform: translate(-50%, -50%);
@@ -240,6 +240,9 @@
 
 /* mobile */
 @media only screen and (max-width: 900px) {
+  .heroBottomWrapper {
+    position: fixed;
+  }
   .heroImage {
     padding-top: 0;
   }

@@ -146,7 +146,7 @@ const HomePage = forwardRef((props, ref) => {
                 shadowless
                 animated
                 icon="forward"
-                className="is-red"
+                className="is-red is-hidden-mobile"
                 navlink="/buy"
                 text="Buy now"
               />
@@ -387,16 +387,15 @@ const HomePage = forwardRef((props, ref) => {
           <div className={`${homeStyles.finalButtonsWrapper}`}>
             <DefaultButton
               shadowless
-              animated
-              icon="forward"
-              className="is-red"
-              navlink="/buy"
-              text="Buy now"
+              icon="starWhite"
+              className="is-blue"
+              href="https://screentop.gg/@PegasusGames/lcm"
+              text="Play online"
             />
             <DefaultButton
               shadowless
               icon="watchWhite"
-              className="is-blue"
+              className="is-green"
               text="Watch video"
               onClick={() => {
                 setVideoModalVisible(true);

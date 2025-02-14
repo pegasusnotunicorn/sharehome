@@ -103,17 +103,15 @@ const HomePage = forwardRef((props, ref) => {
             }}
           />
           <div className={homeStyles.heroBottomWrapper}>
-            <div className={homeStyles.scrollHorizontalContainer}>
-              <DefaultButton
-                shadowless
-                animated
-                icon="forward"
-                className="is-red"
-                navlink="/buy"
-                text="Buy now"
-                size="large"
-              />
-            </div>
+            <DefaultButton
+              shadowless
+              animated
+              icon="forward"
+              className="is-red"
+              navlink="/buy"
+              text="Buy now"
+              size="large"
+            />
           </div>
         </div>
       </div>

@@ -226,6 +226,8 @@
   color: #fff;
   width: calc(100% - 4em);
   transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
 }
 
 .tagLine {
@@ -452,8 +454,7 @@
     width: calc(100% - 4em);
   }
 
-  .descriptionTextWrapper > a,
-  .scrollHorizontalContainer > a {
+  .descriptionTextWrapper > a {
     width: calc(100% - 2em);
   }
 }

@@ -29,16 +29,12 @@ const HomePage = forwardRef((props, ref) => {
     }
   }, [ref]);
 
-  //emphasis
-  let subtitle =
-    "A collaborative storytelling game\n set in a <span class='fantasyEmphasis'>fantastical</span> modern world";
   let { width } = useWindowDimensions();
-  if (width <= 900) {
-    subtitle = subtitle.replace("\n", "");
-  }
-
-  const iframeWidth = width > 900 ? 1000 : 400;
-  const iframeHeight = iframeWidth * 0.5625;
+  const isDesktop = width > 1000;
+  const iframeWidth = isDesktop ? 1000 : 450;
+  const iframeHeight = isDesktop
+    ? (iframeWidth * 9) / 16
+    : (iframeWidth * 16) / 9;
 
   //click logo to scroll to description
   const descriptionSectionRef = useRef(null);
@@ -49,6 +45,10 @@ const HomePage = forwardRef((props, ref) => {
     topLogoRef.current.scrollIntoView({ behavior: "smooth" });
 
   const [videoModalVisible, setVideoModalVisible] = useState(false);
+  const youTubeVideoCode = isDesktop ? "P7vhHCrPfQ8" : "co-3qUhuH8Y";
+  const enableCC = isDesktop
+    ? "&cc_load_policy=1&iv_load_policy=1"
+    : "&cc_load_policy=3&iv_load_policy=3";
 
   return (
     <div className="content">
@@ -60,21 +60,13 @@ const HomePage = forwardRef((props, ref) => {
         className={homeStyles.screenHeight}
         onClick={() => {
           setVideoModalVisible(false);
-          // turn off the youtube iframe video if it's playing
-          let iframe = document.querySelector("iframe");
-          if (iframe) {
-            iframe.contentWindow.postMessage(
-              '{"event":"command","func":"stopVideo","args":""}',
-              "*"
-            );
-          }
         }}
       >
         <LazyYoutube
           isLoaded={videoModalVisible}
           width={iframeWidth}
           height={iframeHeight}
-          src="https://www.youtube.com/embed/videoseries?si=s6rFntDA-CQjC-GY&list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql&cc_load_policy=1&enablejsapi=1"
+          src={`https://www.youtube.com/embed/${youTubeVideoCode}?si=JyFz4WBy_u2p8ot1&rel=0&controls=0&rel=0&modestbranding=1&playlist=${youTubeVideoCode}${enableCC}&enablejsapi=1&autoplay=1&loop=1`}
         />
       </div>
 
@@ -105,8 +97,16 @@ const HomePage = forwardRef((props, ref) => {
         <div className={homeStyles.screenHeight}>
           <img
             alt="Box and components of the card game."
-            src="/images/box_white_outline.webp"
+            src="/images/click_to_learn.webp"
             className={`${homeStyles.heroImage} openYouTubeModalButton`}
+            onClick={() => {
+              setVideoModalVisible(true);
+            }}
+          />
+          <img
+            alt="Click the box to learn more!"
+            src="/images/box_transparent.webp"
+            className={`${homeStyles.heroImage} openYouTubeModalButton ${homeStyles.monsterBurstAnimation}`}
             onClick={() => {
               setVideoModalVisible(true);
             }}
@@ -117,19 +117,10 @@ const HomePage = forwardRef((props, ref) => {
                 shadowless
                 animated
                 icon="forward"
-                className="is-blue"
+                className="is-red"
                 navlink="/buy"
                 text="Buy now"
-              />
-              <DefaultButton
-                shadowless
-                icon="watchWhite"
-                id="videoModalToggleButton"
-                className="openYouTubeModalButton"
-                onClick={() => {
-                  setVideoModalVisible(true);
-                }}
-                text="Watch video"
+                size="large"
               />
             </div>
             <GsapFadeScrub scrub startScreenTop fadeOut>
@@ -159,10 +150,10 @@ const HomePage = forwardRef((props, ref) => {
         <div className={`${homeStyles.descriptionWrapper}`}>
           <GsapFadeScrub fadeIn scrub>
             <div className={`subcontentWrapper`}>
-              <h1
-                dangerouslySetInnerHTML={{ __html: subtitle }}
-                className={`${homeStyles.subtitle}`}
-              ></h1>
+              <h1 className={`${homeStyles.subtitle}`}>
+                A party game where <br />{" "}
+                <span class="fantasyEmphasis">fantasy</span> meets reality TV!
+              </h1>
               <GameModeIcons
                 className={`${homeStyles.gameDetails}`}
                 playerCount="2 - 6 players"
@@ -173,58 +164,27 @@ const HomePage = forwardRef((props, ref) => {
               className={`${homeStyles.descriptionTextWrapper} subcontentWrapper min-width`}
             >
               <p>
-                Play as a mythological creature in a reality TV show, complete
-                chaotic character arcs, and achieve high ratings for the season!
+                Can you work together to secure a second season? Or will you be
+                canceled halfway through?
               </p>
               <DefaultButton
                 shadowless
                 animated
                 icon="forward"
-                className="is-blue"
+                className="is-red"
                 navlink="/buy"
                 text="Buy now"
               />
               <DefaultButton
                 shadowless
-                borderedBlack
-                icon="star"
-                className="is-inverted"
+                icon="starWhite"
+                className="is-blue"
                 href="https://screentop.gg/@PegasusGames/lcm"
                 text="Play online"
               />
             </div>
           </GsapFadeScrub>
         </div>
-      </div>
-
-      <div
-        id={`${homeStyles.carouselContainer}`}
-        className={`${homeStyles.mainpageContainer}`}
-      >
-        <div className={`${homeStyles.carouselTextContainer}`}>
-          <h1 className={homeStyles.mainpageCarouselTitle}>
-            Watch an entire game in just 12 minutes!
-          </h1>
-          <p>
-            Click below to check out the YouTube playlist of playthrough videos.
-          </p>
-          <div className={`${homeStyles.finalButtonsWrapper}`}>
-            <DefaultButton
-              shadowless
-              icon="watchWhite"
-              href="https://www.youtube.com/playlist?list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
-              text="Watch videos"
-            />
-          </div>
-        </div>
-        <CarouselSection
-          className={homeStyles.mainpageCarousel}
-          totalPictures={27}
-          directory="/images/photoshoot/playtest"
-          filename="playtest"
-          random
-          href="https://www.youtube.com/playlist?list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
-        />
       </div>
 
       <div
@@ -240,22 +200,6 @@ const HomePage = forwardRef((props, ref) => {
           <GsapFadeScrub fadeIn>
             <img
               loading="lazy"
-              src="/images/illustrations/laughing.webp"
-              alt="Laughing icon"
-            />
-            Laughing
-          </GsapFadeScrub>
-          <GsapFadeScrub fadeIn>
-            <img
-              loading="lazy"
-              src="/images/illustrations/party.webp"
-              alt="Party icon"
-            />
-            Party games
-          </GsapFadeScrub>
-          <GsapFadeScrub fadeIn>
-            <img
-              loading="lazy"
               src="/images/illustrations/stories.webp"
               alt="Stories icon"
             />
@@ -268,6 +212,22 @@ const HomePage = forwardRef((props, ref) => {
               alt="Improv icon"
             />
             TTRPGs
+          </GsapFadeScrub>
+          <GsapFadeScrub fadeIn>
+            <img
+              loading="lazy"
+              src="/images/illustrations/laughing.webp"
+              alt="Laughing icon"
+            />
+            Laughing
+          </GsapFadeScrub>
+          <GsapFadeScrub fadeIn>
+            <img
+              loading="lazy"
+              src="/images/illustrations/party.webp"
+              alt="Party icon"
+            />
+            Party games
           </GsapFadeScrub>
           <GsapFadeScrub fadeIn>
             <img
@@ -303,7 +263,6 @@ const HomePage = forwardRef((props, ref) => {
                 src="/images/icons/pointer.svg"
                 alt="point finger"
               />
-              <p className="is-hidden-mobile">CLICK ME</p>
             </GsapWiggle>
             <h1>Choose from 25 unique characters!</h1>
             <p>
@@ -352,7 +311,7 @@ const HomePage = forwardRef((props, ref) => {
             <h1>Follow chaotic stage directions</h1>
             <p>
               The executives of the show are trying to instill chaos into the
-              narrative. Complete as many of their Direction Cards as you can to
+              narrative.Complete as many of their Direction Cards as you can to
               earn points!
             </p>
           </div>
@@ -396,6 +355,37 @@ const HomePage = forwardRef((props, ref) => {
           </div>
         </GsapFadeScrub>
       </div>
+
+      <div
+        id={`${homeStyles.carouselContainer}`}
+        className={`${homeStyles.mainpageContainer}`}
+      >
+        <div className={`${homeStyles.carouselTextContainer}`}>
+          <h1 className={homeStyles.mainpageCarouselTitle}>
+            Watch an entire game in just 12 minutes!
+          </h1>
+          <p>
+            Click below to check out the YouTube playlist of playthrough videos.
+          </p>
+          <div className={`${homeStyles.finalButtonsWrapper}`}>
+            <DefaultButton
+              shadowless
+              icon="watchWhite"
+              href="https://www.youtube.com/playlist?list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
+              text="Watch videos"
+            />
+          </div>
+        </div>
+        <CarouselSection
+          className={homeStyles.mainpageCarousel}
+          totalPictures={27}
+          directory="/images/photoshoot/playtest"
+          filename="playtest"
+          random
+          href="https://www.youtube.com/playlist?list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
+        />
+      </div>
+
       <div
         id={`${homeStyles.spotlightContainer}`}
         className={`${homeStyles.mainpageContainer}`}
@@ -416,21 +406,22 @@ const HomePage = forwardRef((props, ref) => {
         <div
           className={`${homeStyles.finalButtonsContainer} subcontentWrapper`}
         >
-          <h1>Ready for some Love, Career & Magic?</h1>
+          <h1>
+            Ready for <span class="fantasyEmphasis">Love, Career & Magic</span>?
+          </h1>
           <div className={`${homeStyles.finalButtonsWrapper}`}>
             <DefaultButton
               shadowless
               animated
               icon="forward"
-              className="is-blue"
+              className="is-red"
               navlink="/buy"
               text="Buy now"
             />
             <DefaultButton
               shadowless
-              borderedBlack
-              icon="star"
-              className="is-inverted"
+              icon="starWhite"
+              className="is-blue"
               href="https://screentop.gg/@PegasusGames/lcm"
               text="Play online"
             />

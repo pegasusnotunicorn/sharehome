@@ -173,6 +173,12 @@ span.is-bold {
   width: fit-content;
 }
 
+.defaultButton.is-large {
+  font-size: 1.2em;
+  padding: 15px;
+  min-width: 400px;
+}
+
 .defaultButton.liveKS {
   background-color: #05ce78;
 }
@@ -197,6 +203,15 @@ span.is-bold {
   background-color: #5f5aa2;
 }
 
+.defaultButton.is-red {
+  background-color: #d95555;
+}
+
+.defaultButton.is-yellow {
+  background-color: #f1db4b;
+  color: #323232;
+}
+
 .defaultButton.is-inverted {
   background-color: #fff;
   color: #323232;
@@ -212,6 +227,10 @@ span.is-bold {
 
 .defaultButton.is-bordered-white {
   border: 1px solid #fff;
+}
+
+.defaultButton.is-bordered-transparent {
+  border: 1px solid rgba(0, 0, 0, 0);
 }
 
 .defaultButton.is-shadowless {

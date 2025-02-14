@@ -190,6 +190,12 @@
   }
 }
 
+.monsterBurstAnimation {
+  animation: monsterBurstAnimation1 5s infinite,
+    monsterBurstAnimation2 2s infinite, monsterBurstAnimation3 5s infinite,
+    monsterBurstAnimation2 3s infinite;
+}
+
 .heroImage {
   cursor: pointer;
   position: absolute;
@@ -197,11 +203,8 @@
   left: 50%;
   width: calc(100% - 40px);
   max-width: 1000px;
-  z-index: 100;
+  z-index: 50;
   transform: translate(-50%, -50%);
-  animation: monsterBurstAnimation1 5s infinite,
-    monsterBurstAnimation2 2s infinite, monsterBurstAnimation3 5s infinite,
-    monsterBurstAnimation2 3s infinite;
 }
 
 @media only screen and (max-height: 900px) {
@@ -219,7 +222,7 @@
 }
 
 .heroBottomWrapper {
-  z-index: 10;
+  z-index: 100;
   position: absolute;
   bottom: 0;
   margin-bottom: 3em;
@@ -678,11 +681,13 @@
   text-align: right;
   justify-content: flex-end;
   align-items: flex-end;
+  text-wrap: balance;
 }
 .goalsTextContainer {
   text-align: left;
   justify-content: flex-start;
   align-items: flex-start;
+  text-wrap: balance;
 }
 
 .eventsTextContainer h1,
@@ -854,6 +859,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  text-wrap: balance;
 }
 
 @media only screen and (max-width: 1400px) {

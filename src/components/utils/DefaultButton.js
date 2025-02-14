@@ -13,6 +13,7 @@ const DefaultButton = forwardRef(
       button,
       borderedBlack,
       borderedWhite,
+      borderedTransparent,
       inverted,
       shadowless,
       animated,
@@ -22,19 +23,24 @@ const DefaultButton = forwardRef(
       emoji,
       reversed,
       download,
+      size,
     },
     ref
   ) => {
     const borderedBlackClass = borderedBlack ? "is-bordered-black" : "";
     const borderedWhiteClass = borderedWhite ? "is-bordered-white" : "";
+    const borderedTransparentClass = borderedTransparent
+      ? "is-bordered-transparent"
+      : "";
     const invertedClass = inverted ? "is-inverted" : "";
     const shadowlessClass = shadowless ? "is-shadowless" : "";
     const reversedClass = reversed ? "is-reversed" : "";
     const animatedClass = animated ? "is-animated" : "";
+    const largeClass = size === "large" ? "is-large" : "";
 
     const props = {
       id: id,
-      className: `defaultButton noselect ${invertedClass} ${animatedClass} ${borderedBlackClass} ${borderedWhiteClass} ${reversedClass} ${shadowlessClass} ${className}`,
+      className: `defaultButton noselect ${largeClass} ${invertedClass} ${animatedClass} ${borderedTransparentClass} ${borderedBlackClass} ${borderedWhiteClass} ${reversedClass} ${shadowlessClass} ${className}`,
       onClick: onClick,
       ref: ref,
       style: style,
@@ -100,6 +106,7 @@ DefaultButton.propTypes = {
   button: PropTypes.string,
   borderedBlack: PropTypes.bool,
   borderedWhite: PropTypes.bool,
+  borderedTransparent: PropTypes.bool,
   inverted: PropTypes.bool,
   shadowless: PropTypes.bool,
   animated: PropTypes.bool,
@@ -109,6 +116,7 @@ DefaultButton.propTypes = {
   emoji: PropTypes.string,
   reversed: PropTypes.bool,
   download: PropTypes.string,
+  size: PropTypes.string,
 };
 
 const Icon = ({ icon, emoji }) => {

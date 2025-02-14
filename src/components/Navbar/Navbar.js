@@ -60,32 +60,21 @@ export const NavbarMain = (props) => {
     onMount(toggleMail);
   }, [onMount, visible, toggleMail]);
 
-  //kickstarter
-
-  // <p className="languageChangeWrapper noselect"><span className="languageChangeSpan noselect"
-  //   onClick={()=>{ changeLanguage("en-US")}}>English</span> / <span className="languageChangeSpan noselect"
-  //   onClick={()=>{ changeLanguage("ja")}}>日本語</span>
-  // </p>
-
   //navbar open
   return (
     <div className={`navbarClass ${isVisibleClass}`}>
       <GsapFadeDelay delay={1500} className="fixedButtonsWrapper noselect">
-        <GsapFadeScrub scrub startScreenTop fadeIn>
-          <NavLink to="/" className="navbarFloatLeft noselect"></NavLink>
-        </GsapFadeScrub>
+        <NavLink to="/" className="navbarFloatLeft noselect"></NavLink>
         <div className="navbarFloatRight">
-          <GsapFadeScrub scrub startScreenTop fadeIn>
-            <DefaultButton
-              shadowless
-              animated
-              icon="forward"
-              id="emailToggleButtonMobile"
-              className={`${mailButtonVisibleClass} is-blue`}
-              navlink="/buy"
-              text="Buy now!"
-            />
-          </GsapFadeScrub>
+          <DefaultButton
+            shadowless
+            animated
+            icon="forward"
+            id="emailToggleButtonMobile"
+            className={`${mailButtonVisibleClass} is-red`}
+            navlink="/buy"
+            text="Buy now!"
+          />
           <button
             id="navbarOpenClose"
             className={`hamburger hamburger--slider ${isVisibleClass}`}

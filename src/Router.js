@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import MetaTags from "./components/MetaTags.js";
 import Navbar from "./components/Navbar/Navbar.js";
@@ -37,14 +37,28 @@ const Router = () => {
 
   useStoreUtmParams();
 
+  const [videoModalVisible, setVideoModalVisible] = useState(false);
+
   return (
     <BrowserRouter>
       <MetaTags />
-      <Navbar onMount={onChildMount} />
+      <Navbar
+        onMount={onChildMount}
+        setVideoModalVisible={setVideoModalVisible}
+      />
 
       <ScrollToTop>
         <Routes>
-          <Route path="/" element={<HomePage ref={setNavbarActive} />} />
+          <Route
+            path="/"
+            element={
+              <HomePage
+                ref={setNavbarActive}
+                videoModalVisible={videoModalVisible}
+                setVideoModalVisible={setVideoModalVisible}
+              />
+            }
+          />
           <Route path="/about" element={<Navigate to="/howtoplay" replace />} />
           <Route path="/howtoplay" element={<AboutPage />} />
           <Route path="/freeartbook" element={<FreeArtbookPage />} />

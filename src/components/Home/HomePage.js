@@ -19,6 +19,7 @@ import ShootingStar from "../Navbar/ShootingStar.js";
 import { LazyYoutube } from "./LazyLoadYouTube.js";
 
 const HomePage = forwardRef((props, ref) => {
+  const { videoModalVisible, setVideoModalVisible } = props;
   const navbarButton = useRef(null);
 
   useEffect(() => {
@@ -31,20 +32,11 @@ const HomePage = forwardRef((props, ref) => {
 
   let { width } = useWindowDimensions();
   const isDesktop = width > 1000;
-  const iframeWidth = isDesktop ? 1000 : 450;
+  const iframeWidth = isDesktop ? 1000 : 400;
   const iframeHeight = isDesktop
     ? (iframeWidth * 9) / 16
     : (iframeWidth * 16) / 9;
 
-  //click logo to scroll to description
-  const descriptionSectionRef = useRef(null);
-  const topLogoRef = useRef(null);
-  const scrollToDescription = () =>
-    descriptionSectionRef.current.scrollIntoView({ behavior: "smooth" });
-  const scrollToTop = () =>
-    topLogoRef.current.scrollIntoView({ behavior: "smooth" });
-
-  const [videoModalVisible, setVideoModalVisible] = useState(false);
   const youTubeVideoCode = isDesktop ? "EoQ2VTipXPA" : "fNq9hS6DsTU";
   const enableCC = isDesktop
     ? "&cc_load_policy=1&iv_load_policy=1"
@@ -86,7 +78,6 @@ const HomePage = forwardRef((props, ref) => {
       </div>
 
       <div
-        ref={topLogoRef}
         id={`${homeStyles.heroContainer}`}
         className={`${homeStyles.mainContentWrapper} noselect`}
       >
@@ -123,27 +114,12 @@ const HomePage = forwardRef((props, ref) => {
                 size="large"
               />
             </div>
-            <GsapFadeScrub scrub startScreenTop fadeOut>
-              <div className={homeStyles.scrollHorizontalContainer}>
-                <div
-                  id={homeStyles.animatedScroll}
-                  className={homeStyles.scrollVerticalContainer}
-                ></div>
-                <div className={homeStyles.scrollVerticalContainer}></div>
-              </div>
-              <div className={homeStyles.scrollHorizontalContainer}>
-                <p onClick={scrollToDescription} className="noselect">
-                  Scroll to learn how to play!
-                </p>
-              </div>
-            </GsapFadeScrub>
           </div>
         </div>
         <div className={homeStyles.screenHeight}></div>
       </div>
 
       <div
-        ref={descriptionSectionRef}
         id={`${homeStyles.descriptionContainer}`}
         className={`${homeStyles.mainpageContainer}`}
       >
@@ -420,17 +396,16 @@ const HomePage = forwardRef((props, ref) => {
             />
             <DefaultButton
               shadowless
-              icon="starWhite"
+              icon="watchWhite"
               className="is-blue"
-              href="https://screentop.gg/@PegasusGames/lcm"
-              text="Play online"
+              text="Watch video"
+              onClick={() => {
+                setVideoModalVisible(true);
+              }}
             />
           </div>
         </div>
-        <div
-          onClick={scrollToTop}
-          className={`${homeStyles.titleWrapper} ${homeStyles.botOne}`}
-        >
+        <div className={`${homeStyles.titleWrapper} ${homeStyles.botOne}`}>
           <div className={`${homeStyles.lcmMaskWrapper} floating noselect`}>
             <div className={`${homeStyles.lcmMask}`}></div>
           </div>

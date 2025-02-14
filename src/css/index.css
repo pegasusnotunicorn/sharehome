@@ -186,8 +186,9 @@ span.is-bold {
 @media only screen and (max-width: 900px) {
   .defaultButton {
     margin: auto;
-    width: 100%;
+    width: calc(100% - 10px);
     font-size: 0.85em;
+    min-width: 100px !important;
   }
 }
 

@@ -169,6 +169,22 @@
   justify-content: space-between;
 }
 
+@media only screen and (max-width: 900px) {
+  .navbarMain {
+    flex-direction: column;
+  }
+  .navbarMain .navbarChildren {
+    opacity: 0;
+    width: 0;
+  }
+  .navbarMain .navbarChildren.is-active {
+    width: calc(100% - 4em) !important;
+    opacity: 1 !important;
+    transition-property: opacity;
+    transition-duration: 0.25s;
+  }
+}
+
 /* </editor-fold> */
 
 /* <editor-fold>--------------------------------------NAVBAR LEFT */

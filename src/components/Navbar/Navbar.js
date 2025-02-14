@@ -11,6 +11,8 @@ import PropTypes from "prop-types";
 
 //main navbar for page navigation on the website
 export const NavbarMain = (props) => {
+  const { setVideoModalVisible } = props;
+
   const [visible, setVisibility] = useState(false);
 
   const isVisibleClass = visible ? "is-active" : ""; //class to append if visible
@@ -28,6 +30,7 @@ export const NavbarMain = (props) => {
   const toggleNav = useCallback(
     (mailButton) => {
       setVisibility(!visible);
+      setVideoModalVisible(false);
 
       //desktop
       if (width > 900) {

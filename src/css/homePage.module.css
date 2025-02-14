@@ -28,10 +28,6 @@
   margin: 0;
 }
 
-/* tablet */
-@media only screen and (max-width: 1200px) {
-}
-
 /* mobile */
 @media only screen and (max-width: 900px) {
   .mainpageContainer h1 {
@@ -224,7 +220,7 @@
 .heroBottomWrapper {
   z-index: 100;
   position: absolute;
-  bottom: 0;
+  bottom: 1em;
   margin-bottom: 3em;
   left: 50%;
   color: #fff;
@@ -359,87 +355,6 @@
   }
   to {
     -webkit-transform: rotate(360deg);
-  }
-}
-
-/* </editor-fold> */
-
-/* <editor-fold>--------------------------------------SCROLL */
-
-.scrollContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 2em;
-  padding-bottom: calc(2em + 50px);
-}
-
-.scrollContainer > div {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.scrollHorizontalContainer {
-  color: #000;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  text-align: center;
-  align-items: top;
-  gap: 1em;
-}
-
-.scrollHorizontalContainer:first-child {
-  padding-bottom: 1em;
-  padding-top: 2em;
-}
-
-.scrollHorizontalContainer p {
-  margin-bottom: 0;
-  font-size: 0.65em;
-  line-height: 100%;
-  cursor: pointer;
-}
-
-#animatedScroll {
-  animation: scrolling 1s ease-in-out infinite;
-}
-
-@keyframes scrolling {
-  from {
-    height: 0;
-  }
-  to {
-    height: 50px;
-  }
-}
-
-.scrollVerticalContainer {
-  height: 50px;
-}
-
-.scrollHorizontalContainer div:first-child {
-  border-right: 0.25px solid #000;
-}
-
-.buttonWrapper {
-  display: flex;
-  flex-direction: flex-start;
-}
-
-/* mobile */
-@media only screen and (max-width: 900px) {
-  .scrollContainer {
-    width: calc(100% - 4em);
-  }
-}
-
-/* low height mobile */
-@media only screen and (max-height: 750px) {
-  .scrollHorizontalContainer p {
-    font-size: 0.65em;
   }
 }
 

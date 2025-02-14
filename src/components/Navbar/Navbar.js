@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { NavLink } from "react-router";
-import { GsapFadeDelay } from "../utils/useGsap.js";
+import { GsapFadeDelay, GsapFadeScrub } from "../utils/useGsap.js";
 import ShootingStar from "./ShootingStar.js";
 import EmailForm from "../utils/EmailForm.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
@@ -65,8 +65,13 @@ export const NavbarMain = (props) => {
 
   //navbar open
   return (
-    <div className={`navbarClass ${isVisibleClass}`}>
-      <GsapFadeDelay delay={1500} className="fixedButtonsWrapper noselect">
+    <GsapFadeDelay delay={1500} className={`navbarClass ${isVisibleClass}`}>
+      <GsapFadeScrub
+        scrub
+        startScreenTop
+        fadeIn
+        className="fixedButtonsWrapper"
+      >
         <NavLink to="/" className="navbarFloatLeft noselect"></NavLink>
         <div className="navbarFloatRight">
           <DefaultButton
@@ -90,7 +95,7 @@ export const NavbarMain = (props) => {
             </span>
           </button>
         </div>
-      </GsapFadeDelay>
+      </GsapFadeScrub>
 
       <div className={`navbarMain ${isVisibleClass}`}>
         <div className="navbarChildrenWrapper">
@@ -193,7 +198,7 @@ export const NavbarMain = (props) => {
           </div>
         </div>
       </div>
-    </div>
+    </GsapFadeDelay>
   );
 };
 

@@ -3,7 +3,6 @@
 .fixedButtonsWrapper {
   position: fixed;
   top: 0px;
-  right: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -13,7 +12,7 @@
 
 .navbarFloatLeft {
   display: block;
-  margin-left: 20px;
+  margin-left: 10px;
   width: 50px;
   height: 50px;
   background: url("./images/simplelogoColor.webp");
@@ -51,7 +50,6 @@
   justify-content: center;
   align-items: center;
   outline: 0;
-  margin-left: 20px;
   -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
   -moz-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
   -ms-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
@@ -61,7 +59,6 @@
 .navbarClass:not(.is-active) #navbarOpenClose {
   background: #fff;
   border-radius: 4px;
-  margin-left: 20px;
 }
 
 /* </editor-fold>
@@ -252,7 +249,7 @@
 
 .navbarRightWrapper {
   display: flex;
-  gap: 10px;
+  gap: 5px;
 }
 
 .emailWrapper {

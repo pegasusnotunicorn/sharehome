@@ -6,9 +6,13 @@ function ScrollToTop({ children }) {
   const location = useLocation();
 
   useEffect(() => {
-    setTimeout(() => {
+    window.onbeforeunload = function () {
       window.scrollTo(0, 0);
-    }, 0); // A small delay ensures the scroll reset overrides the browser's behavior
+    };
+
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+    });
   }, [location.pathname]);
 
   return <>{children}</>;

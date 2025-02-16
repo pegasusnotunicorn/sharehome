@@ -41,6 +41,7 @@ export const YoutubeModal = ({ videoModalVisible, setPlayer, stopVideo }) => {
             if (isIOS) {
               event.target.stopVideo();
             } else {
+              event.target.stopVideo();
               event.target.seekTo(0);
               event.target.unMute();
             }

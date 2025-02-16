@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { NavLink, useLocation } from "react-router";
 import { GsapFadeScrub } from "../utils/useGsap.js";
 import ShootingStar from "./ShootingStar.js";
@@ -12,8 +12,6 @@ import useWindowScroll from "../utils/useWindowScroll.js";
 
 //main navbar for page navigation on the website
 export const NavbarMain = (props) => {
-  const { setVideoModalVisible } = props;
-
   const location = useLocation();
   const isHomePage = location.pathname === "/";
 
@@ -35,7 +33,6 @@ export const NavbarMain = (props) => {
   const toggleNav = useCallback(
     (mailButton) => {
       setVisibility(!visible);
-      setVideoModalVisible(false);
 
       //desktop
       if (width > 900) {
@@ -47,26 +44,16 @@ export const NavbarMain = (props) => {
         if (mailButton === true) {
           setMobileShowMail(true);
           setVisibility(true);
-          setMailButtonVisible(false);
         } else {
           setMailButtonVisible(true);
           setMobileShowMail(false);
         }
       }
     },
-    [width, mailButtonVisible, visible, setVideoModalVisible]
+    [width, mailButtonVisible, visible]
   );
 
-  const toggleMail = useCallback(() => {
-    toggleNav(width <= 900 && !mobileShowMail);
-  }, [width, toggleNav, mobileShowMail]);
   const isActiveAndDesktop = width > 900 && visible;
-
-  //set the parent setter
-  const onMount = props.onMount;
-  useEffect(() => {
-    onMount(toggleMail);
-  }, [onMount, visible, toggleMail]);
 
   // if homepage and the scroll is all the way at the time, don't show
   const scrollPosition = useWindowScroll();

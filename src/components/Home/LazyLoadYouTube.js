@@ -1,38 +1,79 @@
+import { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+import useWindowDimensions from "../utils/useWindowDimensions.js";
+import DefaultButton from "../utils/DefaultButton.js";
+import "../../css/utils/lazyYoutube.css";
 
-export const LazyYoutube = ({ isLoaded, src, width, height }) => {
-  if (!isLoaded) {
-    return (
-      <img
-        loading="lazy"
-        src="/images/main.webp"
-        alt="YouTube video thumbnail"
-        style={{
-          width,
-          height,
-          objectFit: "cover",
-          cursor: "pointer",
-        }}
-      />
-    );
-  }
+export const LazyYoutube = ({ videoModalVisible, setPlayer, stopVideo }) => {
+  const iframeRef = useRef(null);
+
+  let { width, height } = useWindowDimensions();
+  const emToPx = parseFloat(
+    getComputedStyle(document.documentElement).fontSize
+  ); // Convert 2em to pixels
+
+  const isDesktop = width > 1000;
+  const iframeWidth = isDesktop ? 1000 : width - 4 - emToPx * 2;
+  const iframeHeight = isDesktop
+    ? (iframeWidth * 9) / 16
+    : Math.min((iframeWidth * 16) / 9, height - 4 - 45 - emToPx * 4);
+
+  const youTubeVideoCode = isDesktop ? "EoQ2VTipXPA" : "fNq9hS6DsTU";
+  const enableCC = isDesktop
+    ? "&cc_load_policy=1&iv_load_policy=1"
+    : "&cc_load_policy=3&iv_load_policy=3";
+
+  useEffect(() => {
+    if (!window.YT) {
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      tag.async = true;
+      document.body.appendChild(tag);
+    }
+
+    window.onYouTubeIframeAPIReady = () => {
+      new window.YT.Player(iframeRef.current, {
+        events: {
+          onReady: (event) => {
+            setPlayer(event.target);
+          },
+        },
+      });
+    };
+  }, [setPlayer]);
 
   return (
-    <iframe
-      width={width}
-      height={height}
-      src={src}
-      title="YouTube video player"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      allowFullScreen
-      frameBorder="0"
-    />
+    <div
+      style={{ display: videoModalVisible ? "flex" : "none" }}
+      id="videoModalWrapper"
+      className="screenHeight"
+      onClick={stopVideo}
+    >
+      <iframe
+        ref={iframeRef}
+        width={iframeWidth}
+        height={iframeHeight}
+        src={`https://www.youtube.com/embed/${youTubeVideoCode}?si=JyFz4WBy_u2p8ot1&rel=0&controls=0&rel=0&modestbranding=1&playlist=${youTubeVideoCode}${enableCC}&enablejsapi=1&loop=1`}
+        title="YouTube video player"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+        frameBorder="0"
+      />
+      <div className="videoModalCloseButtonWrapper">
+        <DefaultButton
+          icon="whiteCross"
+          className="is-black"
+          onClick={stopVideo}
+          text="Close video"
+          shadowless
+        />
+      </div>
+    </div>
   );
 };
 
 LazyYoutube.propTypes = {
-  isLoaded: PropTypes.bool.isRequired,
-  src: PropTypes.string.isRequired,
-  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  videoModalVisible: PropTypes.bool.isRequired,
+  setPlayer: PropTypes.func.isRequired,
+  stopVideo: PropTypes.func.isRequired,
 };

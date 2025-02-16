@@ -1,8 +1,7 @@
-import { useEffect, useRef, forwardRef } from "react";
+import { useEffect, useState } from "react";
 import GameModeIcons from "../About/utils/GameModeIcons.js";
 import { CharacterSpotlight } from "../utils/CharacterSpotlight.js";
 import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";
-import useWindowDimensions from "../utils/useWindowDimensions.js";
 import DefaultButton from "../utils/DefaultButton.js";
 import CarouselSection from "../utils/CarouselSection.js";
 import ParallaxSection from "./ParallaxSection.js";
@@ -18,64 +17,37 @@ import "../../css/utils/colors.css";
 import ShootingStar from "../Navbar/ShootingStar.js";
 import { LazyYoutube } from "./LazyLoadYouTube.js";
 
-const HomePage = forwardRef((props, ref) => {
-  const { videoModalVisible, setVideoModalVisible } = props;
-  const navbarButton = useRef(null);
+const HomePage = () => {
+  const [player, setPlayer] = useState(null);
+  const [videoModalVisible, setVideoModalVisible] = useState(false);
+
+  const playVideo = () => {
+    setVideoModalVisible(true);
+    if (player) {
+      player.playVideo();
+    }
+  };
+
+  const stopVideo = () => {
+    setVideoModalVisible(false);
+    if (player) {
+      player.stopVideo();
+    }
+  };
 
   useEffect(() => {
     document.title = "Love, Career & Magic - 12m game for 2-6 players";
-
-    if (navbarButton.current) {
-      navbarButton.current.onclick = ref.current;
-    }
-  }, [ref]);
-
-  let { width, height } = useWindowDimensions();
-  const emToPx = parseFloat(
-    getComputedStyle(document.documentElement).fontSize
-  ); // Convert 2em to pixels
-
-  const isDesktop = width > 1000;
-  const iframeWidth = isDesktop ? 1000 : width - 4 - emToPx * 2;
-  const iframeHeight = isDesktop
-    ? (iframeWidth * 9) / 16
-    : Math.min((iframeWidth * 16) / 9, height - 4 - 45 - emToPx * 4);
-
-  const youTubeVideoCode = isDesktop ? "EoQ2VTipXPA" : "fNq9hS6DsTU";
-  const enableCC = isDesktop
-    ? "&cc_load_policy=1&iv_load_policy=1"
-    : "&cc_load_policy=3&iv_load_policy=3";
+  }, []);
 
   return (
     <div className="content">
       <ParallaxSection />
 
-      <div
-        style={{ display: videoModalVisible ? "flex" : "none" }}
-        id={`${homeStyles.videoModalWrapper}`}
-        className={homeStyles.screenHeight}
-        onClick={() => {
-          setVideoModalVisible(false);
-        }}
-      >
-        <LazyYoutube
-          isLoaded={videoModalVisible}
-          width={iframeWidth}
-          height={iframeHeight}
-          src={`https://www.youtube.com/embed/${youTubeVideoCode}?si=JyFz4WBy_u2p8ot1&rel=0&controls=0&rel=0&modestbranding=1&playlist=${youTubeVideoCode}${enableCC}&enablejsapi=1&autoplay=1&loop=1`}
-        />
-        <div className={homeStyles.videoModalCloseButtonWrapper}>
-          <DefaultButton
-            icon="whiteCross"
-            className="is-black"
-            onClick={() => {
-              setVideoModalVisible(false);
-            }}
-            text="Close video"
-            shadowless
-          />
-        </div>
-      </div>
+      <LazyYoutube
+        videoModalVisible={videoModalVisible}
+        setPlayer={setPlayer}
+        stopVideo={stopVideo}
+      />
 
       <div id={`${homeStyles.shootingStarsContainer}`}>
         <div id={`${homeStyles.shootingStarsWrapper}`}>
@@ -106,18 +78,14 @@ const HomePage = forwardRef((props, ref) => {
             src="/images/click_to_learn.webp"
             draggable={false}
             className={`${homeStyles.heroImage} noselect openYouTubeModalButton`}
-            onClick={() => {
-              setVideoModalVisible(true);
-            }}
+            onClick={playVideo}
           />
           <img
             alt="Click the box to learn more!"
             src="/images/box_transparent.webp"
             draggable={false}
             className={`${homeStyles.heroImage} noselect openYouTubeModalButton ${homeStyles.monsterBurstAnimation}`}
-            onClick={() => {
-              setVideoModalVisible(true);
-            }}
+            onClick={playVideo}
           />
           <div className={homeStyles.heroBottomWrapper}>
             <DefaultButton
@@ -419,9 +387,7 @@ const HomePage = forwardRef((props, ref) => {
               icon="watchWhite"
               className="is-green"
               text="Watch video"
-              onClick={() => {
-                setVideoModalVisible(true);
-              }}
+              onClick={playVideo}
             />
           </div>
         </div>
@@ -433,7 +399,7 @@ const HomePage = forwardRef((props, ref) => {
       </div>
     </div>
   );
-});
+};
 
 HomePage.displayName = "HomePage";
 

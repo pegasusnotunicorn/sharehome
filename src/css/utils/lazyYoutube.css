@@ -1,0 +1,47 @@
+#videoModalWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(5px);
+  display: flex;
+  z-index: 1000;
+  display: flex;
+  gap: 1em;
+  flex-direction: column-reverse;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.videoModalCloseButtonWrapper {
+  width: calc(100% - 2em);
+  margin-top: -4em;
+  max-width: 1000px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media only screen and (max-height: 900px) {
+  #videoModalWrapper {
+    flex-direction: column;
+    justify-content: center;
+  }
+  .videoModalCloseButtonWrapper {
+    justify-content: center;
+    margin-top: 0;
+  }
+}
+
+.screenHeight {
+  height: 100svh; /* Modern browsers handle dynamic resizing correctly */
+  width: 100%;
+  position: relative;
+  text-align: center;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

@@ -12,7 +12,7 @@
 @media only screen and (max-width: 900px) {
 }
 
-/* <editor-fold>--------------------------------------LEFT SIDE */
+/* #region--------------------------------------LEFT SIDE */
 
 .arrowTextContainer.cornerUpRight,
 .arrowTextContainer.cornerDownRight {
@@ -31,9 +31,9 @@
   flex-direction: column-reverse;
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------TOP SIDE */
+/* #region--------------------------------------TOP SIDE */
 
 .arrowTextContainer.cornerLeftDown,
 .arrowTextContainer.cornerRightDown {
@@ -52,9 +52,9 @@
   flex-direction: row-reverse;
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------RIGHT SIDE */
+/* #region--------------------------------------RIGHT SIDE */
 
 .arrowTextContainer.cornerDownLeft,
 .arrowTextContainer.cornerUpLeft {
@@ -73,9 +73,9 @@
   flex-direction: column;
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------BOTTOM SIDE */
+/* #region--------------------------------------BOTTOM SIDE */
 
 .arrowTextContainer.cornerLeftUp,
 .arrowTextContainer.cornerRightUp {
@@ -94,9 +94,9 @@
   flex-direction: row-reverse;
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------INNARDS */
+/* #region--------------------------------------INNARDS */
 
 .arrowTextWrapper > * {
   margin: auto;
@@ -113,4 +113,4 @@
   font-size: 1.5em;
 }
 
-/* </editor-fold> */
+/* #endregion */

@@ -68,8 +68,9 @@ const RandomCardsForFooter = (totalPeopleCards, totalEventGoalCards) => {
         randomBottom: randomBottom + "vh",
         randomDegree: "rotate(" + randomDegree + "deg)",
       };
+      const { key, ...rest } = props;
 
-      return <Card key={"card" + index} {...props} />;
+      return <Card key={"card" + index} {...rest} />;
     }
   );
 };

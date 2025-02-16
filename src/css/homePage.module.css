@@ -1,4 +1,4 @@
-/* <editor-fold>--------------------------------------GENERAL */
+/* #region--------------------------------------GENERAL */
 
 .mainContentWrapper {
   position: relative;
@@ -41,7 +41,7 @@
   }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
 #videoModalWrapper {
   position: fixed;
@@ -53,11 +53,20 @@
   backdrop-filter: blur(5px);
   display: flex;
   z-index: 1000;
+  display: flex;
+  gap: 1em;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 
-/* <editor-fold>--------------------------------------HERO IMAGE */
+.videoModalCloseButtonWrapper {
+  width: calc(100% - 2em);
+  display: flex;
+  justify-content: center;
+}
+
+/* #region--------------------------------------HERO IMAGE */
 
 #shootingStarsContainer {
   position: absolute;
@@ -243,6 +252,9 @@
 @media only screen and (max-width: 900px) {
   .heroBottomWrapper {
     position: fixed;
+    width: calc(100% - 2em);
+    margin-bottom: 1em;
+    bottom: 0;
   }
   .heroImage {
     padding-top: 0;
@@ -254,14 +266,11 @@
     margin-top: 4em;
     font-size: 1.25em;
   }
-  .heroBottomWrapper {
-    margin-bottom: 1em;
-  }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------TITLE MASK */
+/* #region--------------------------------------TITLE MASK */
 
 .titleWrapper.topOne {
   position: absolute;
@@ -364,9 +373,9 @@
   }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------SHAREHOME DESCRIPTION */
+/* #region--------------------------------------SHAREHOME DESCRIPTION */
 
 #descriptionContainer {
   margin-top: 100svh;
@@ -375,6 +384,7 @@
   align-items: center;
   color: #323232;
   margin-bottom: 0;
+  z-index: 20;
 }
 
 .descriptionOpaque {
@@ -390,6 +400,12 @@
   text-align: center;
 }
 
+.descriptionButtonWrapper {
+  display: flex;
+  gap: 1em;
+  justify-content: center;
+}
+
 .descriptionWrapper > div {
   padding-left: 0;
   padding-right: 0;
@@ -397,7 +413,7 @@
 
 .descriptionTextWrapper > a {
   margin: auto;
-  margin-top: 2em;
+  margin-top: 1em;
 }
 
 .subtitle {
@@ -451,22 +467,17 @@
   }
 
   #descriptionContainer {
-    margin-bottom: 0;
+    margin-bottom: -20svh;
   }
 
-  .descriptionTextWrapper,
-  .heroBottomWrapper {
-    width: calc(100% - 4em);
-  }
-
-  .descriptionTextWrapper > a {
+  .descriptionTextWrapper {
     width: calc(100% - 2em);
   }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------CHARACTER DECKS  */
+/* #region--------------------------------------CHARACTER DECKS  */
 
 #characterContainer {
   color: #323232;
@@ -546,6 +557,7 @@
   }
   .characterTextContainer {
     width: 100%;
+    padding: 1em;
     margin: auto;
     max-width: 500px;
     text-align: center;
@@ -557,9 +569,9 @@
   }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------EVENTS DECKS  */
+/* #region--------------------------------------EVENTS DECKS  */
 
 #eventsContainer,
 #goalsContainer {
@@ -736,9 +748,9 @@
   }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------CAROUSEL  */
+/* #region--------------------------------------CAROUSEL  */
 
 #carouselContainer {
   margin-top: 50px;
@@ -757,6 +769,10 @@
 }
 
 @media only screen and (max-width: 900px) {
+  .carouselTextContainer {
+    padding: 1em;
+    width: calc(100% - 2em);
+  }
   .mainpageCarouselTitle {
     margin-top: 0;
   }
@@ -767,9 +783,9 @@
   }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------LIKES / HATES  */
+/* #region--------------------------------------LIKES / HATES  */
 
 #likehateContainer {
   color: #323232;
@@ -790,9 +806,9 @@
   }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------MECHANICS CONTAINER */
+/* #region--------------------------------------MECHANICS CONTAINER */
 
 #mechanicsContainer {
   min-height: 650px;
@@ -868,9 +884,9 @@
   }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------SPOTLIGHT CONTAINER */
+/* #region--------------------------------------SPOTLIGHT CONTAINER */
 
 #spotlightContainer {
   display: flex;
@@ -881,9 +897,9 @@
   margin-bottom: 0 !important;
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------FINAL CONTAINER */
+/* #region--------------------------------------FINAL CONTAINER */
 
 #finalContainer {
   display: flex;
@@ -905,17 +921,12 @@
 }
 
 @media only screen and (max-width: 900px) {
+  .finalButtonsContainer {
+    width: calc(100% - 2em);
+  }
   .finalButtonsWrapper {
     flex-direction: column;
-  }
-  .finalButtonsWrapper > div,
-  .finalButtonsWrapper > a {
-    width: calc(100% - 2em);
-    margin-right: 0 !important;
-  }
-  .finalButtonsWrapper > div,
-  .finalButtonsWrapper > a {
-    margin-bottom: 1em;
+    gap: 1em;
   }
 }
 
@@ -929,4 +940,4 @@
   font-size: 1em;
 }
 
-/* </editor-fold> */
+/* #endregion */

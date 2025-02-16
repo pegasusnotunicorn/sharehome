@@ -6,7 +6,9 @@ function ScrollToTop({ children }) {
   const location = useLocation();
 
   useEffect(() => {
-    window.scrollTo({ top: 0 });
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 0); // A small delay ensures the scroll reset overrides the browser's behavior
   }, [location.pathname]);
 
   return <>{children}</>;

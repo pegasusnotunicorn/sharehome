@@ -33,6 +33,6 @@ export const LazyYoutube = ({ isLoaded, src, width, height }) => {
 LazyYoutube.propTypes = {
   isLoaded: PropTypes.bool.isRequired,
   src: PropTypes.string.isRequired,
-  width: PropTypes.string.isRequired,
-  height: PropTypes.string.isRequired,
+  width: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+  height: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };

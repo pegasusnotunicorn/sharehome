@@ -1,18 +1,18 @@
-/* <editor-fold>--------------------------------------GENERAL  */
+/* #region--------------------------------------GENERAL  */
 
-.likehateContainers{
-  display:flex;
-  position:relative;
-  padding:2em;
+.likehateContainers {
+  display: flex;
+  position: relative;
+  padding: 2em;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height:50%;
+  height: 50%;
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------LEFT  */
+/* #region--------------------------------------LEFT  */
 
 .likehateLeftContainer {
   justify-content: flex-start;
@@ -20,168 +20,217 @@
 
 @media only screen and (min-width: 1000px) {
   .likehateLeftContainer {
-    transform:rotate(-2deg);
+    transform: rotate(-2deg);
   }
 }
 
-.imageAndArrowContainer{
-  width:1000px;
-  height:490px;
-  position:relative;
-  display:flex;
-  background-color:#222;
-  border-radius:4px;
+.imageAndArrowContainer {
+  width: 1000px;
+  height: 490px;
+  position: relative;
+  display: flex;
+  background-color: #222;
+  border-radius: 4px;
 }
 
-.tableSplash, .arrowContainer {
-  width:100%;
-  height:100%;
-  border-radius:4px;
-  position:absolute;
+.tableSplash,
+.arrowContainer {
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  position: absolute;
 }
 
 .tableSplash {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  z-index:1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
 }
 
-.tableSplash.lydia{
-  -webkit-mask-image:radial-gradient(circle at 88% 66%, white 15%, rgba(0, 0, 0, 50%) 0%);
-  mask-image:radial-gradient(circle at 88% 66%, white 15%, rgba(0, 0, 0, 50%) 0%);
+.tableSplash.lydia {
+  -webkit-mask-image: radial-gradient(
+    circle at 88% 66%,
+    white 15%,
+    rgba(0, 0, 0, 50%) 0%
+  );
+  mask-image: radial-gradient(
+    circle at 88% 66%,
+    white 15%,
+    rgba(0, 0, 0, 50%) 0%
+  );
 }
 
-.tableSplash.tsukasa{
-  -webkit-mask-image:radial-gradient(circle at 74% 50%, white 18%, rgba(0, 0, 0, 50%) 0%);
-  mask-image:radial-gradient(circle at 74% 50%, white 18%, rgba(0, 0, 0, 50%) 0%);
+.tableSplash.tsukasa {
+  -webkit-mask-image: radial-gradient(
+    circle at 74% 50%,
+    white 18%,
+    rgba(0, 0, 0, 50%) 0%
+  );
+  mask-image: radial-gradient(
+    circle at 74% 50%,
+    white 18%,
+    rgba(0, 0, 0, 50%) 0%
+  );
 }
 
-.tableSplash.ahxi{
-  -webkit-mask-image:radial-gradient(circle at 63% 32%, white 21%, rgba(0, 0, 0, 50%) 0%);
-  mask-image:radial-gradient(circle at 63% 32%, white 21%, rgba(0, 0, 0, 50%) 0%);
+.tableSplash.ahxi {
+  -webkit-mask-image: radial-gradient(
+    circle at 63% 32%,
+    white 21%,
+    rgba(0, 0, 0, 50%) 0%
+  );
+  mask-image: radial-gradient(
+    circle at 63% 32%,
+    white 21%,
+    rgba(0, 0, 0, 50%) 0%
+  );
 }
 
-.tableSplash.beatrice{
-  -webkit-mask-image:radial-gradient(circle at 47% 22%, white 25%, rgba(0, 0, 0, 50%) 0%);
-  mask-image:radial-gradient(circle at 47% 22%, white 25%, rgba(0, 0, 0, 50%) 0%);
+.tableSplash.beatrice {
+  -webkit-mask-image: radial-gradient(
+    circle at 47% 22%,
+    white 25%,
+    rgba(0, 0, 0, 50%) 0%
+  );
+  mask-image: radial-gradient(
+    circle at 47% 22%,
+    white 25%,
+    rgba(0, 0, 0, 50%) 0%
+  );
 }
 
-.tableSplash.urg{
-  -webkit-mask-image:radial-gradient(circle at 37% 60%, white 25%, rgba(0, 0, 0, 50%) 0%);
-  mask-image:radial-gradient(circle at 37% 60%, white 25%, rgba(0, 0, 0, 50%) 0%);
+.tableSplash.urg {
+  -webkit-mask-image: radial-gradient(
+    circle at 37% 60%,
+    white 25%,
+    rgba(0, 0, 0, 50%) 0%
+  );
+  mask-image: radial-gradient(
+    circle at 37% 60%,
+    white 25%,
+    rgba(0, 0, 0, 50%) 0%
+  );
 }
 
-.tableSplash.kottr{
-  -webkit-mask-image:radial-gradient(circle at 19% 52%, white 21%, rgba(0, 0, 0, 50%) 0%);
-  mask-image:radial-gradient(circle at 19% 52%, white 21%, rgba(0, 0, 0, 50%) 0%);
+.tableSplash.kottr {
+  -webkit-mask-image: radial-gradient(
+    circle at 19% 52%,
+    white 21%,
+    rgba(0, 0, 0, 50%) 0%
+  );
+  mask-image: radial-gradient(
+    circle at 19% 52%,
+    white 21%,
+    rgba(0, 0, 0, 50%) 0%
+  );
 }
 
-.characterArcContainer{
-  display:flex;
+.characterArcContainer {
+  display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction:row;
-  position:absolute;
+  flex-direction: row;
+  position: absolute;
 }
 
-.arrowsContainer{
-  width:100%;
-  height:100%;
-  z-index:2;
-  flex-grow:0;
+.arrowsContainer {
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  flex-grow: 0;
 }
 
 .arrowWrapper {
-  transform:rotate(90deg) scaleX(1.5);
-  margin-left:-2em;
-  margin-right:-2em;
+  transform: rotate(90deg) scaleX(1.5);
+  margin-left: -2em;
+  margin-right: -2em;
 }
 
 .arrowWrapper.flipped {
-  transform:rotate(90deg) scaleX(1.5) scaleY(-1);
+  transform: rotate(90deg) scaleX(1.5) scaleY(-1);
 }
 
 .arrowWrapperSVG {
-  min-width:150px;
-  z-index:1;
-  display:flex;
+  min-width: 150px;
+  z-index: 1;
+  display: flex;
   justify-content: center;
   flex-direction: row;
   align-items: center;
 }
 
 .arrowHeadSVG {
-  width:25px;
-  margin-left:-7px;
-  z-index:2;
+  width: 25px;
+  margin-left: -7px;
+  z-index: 2;
 }
 
 .arrowTailSVG {
-  height:100%;
-  width:100px;
-  z-index:1;
+  height: 100%;
+  width: 100px;
+  z-index: 1;
 }
 
 .characterArcWrapper {
-  display:flex;
-  flex-direction:column;
+  display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
 }
 
 .characterArc {
-  margin:.25em;
-  width:300px;
-  padding:.35em;
-  border-radius:.25em;
-  font-size:1.5em;
+  margin: 0.25em;
+  width: 300px;
+  padding: 0.35em;
+  border-radius: 0.25em;
+  font-size: 1.5em;
 }
 
 .characterArc.goodArc {
-  background-color:#94de8f;
+  background-color: #94de8f;
 }
 
 .characterArc.badArc {
-  background-color:#a769d4;
+  background-color: #a769d4;
 }
 
 .characterArc.chaoticArc {
-  background-color:#9b9b9b;
+  background-color: #9b9b9b;
 }
 
 .characterArcText {
-  color:#222;
-  background-color:#FFF;
-  border-radius:.25em;
-  width:calc(100% - .3em);
-  height:calc(100% - .3em);
-  padding:.15em;
+  color: #222;
+  background-color: #fff;
+  border-radius: 0.25em;
+  width: calc(100% - 0.3em);
+  height: calc(100% - 0.3em);
+  padding: 0.15em;
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------RIGHT  */
+/* #region--------------------------------------RIGHT  */
 
 .likehateRightContainer {
-  width:25%;
+  width: 25%;
 }
 
 /* small desktop */
 @media only screen and (min-width: 1400px) and (max-width: 1600px) {
   .likehateRightContainer {
-    padding-left:0;
-    padding-top:0;
-    padding-bottom:0;
+    padding-left: 0;
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }
 
 /* tablet */
 @media only screen and (min-width: 1000px) and (max-width: 1400px) {
   .likehateRightContainer {
-    width:50%;
-    margin-top:0;
-    padding-top:0;
+    width: 50%;
+    margin-top: 0;
+    padding-top: 0;
     justify-content: flex-start;
   }
 }
@@ -189,26 +238,32 @@
 /* mobile */
 @media only screen and (max-width: 1000px) {
   .likehateLeftContainer {
-    transform:scale(0.5);
-    padding-top:0;
-    padding-bottom:0
+    transform: scale(0.5);
+    padding-top: 0;
+    padding-bottom: 0;
   }
   .likehateRightContainer {
-    width:calc(100% - 4em);
-    margin-top:-5em;
-    padding-top:0;
+    width: calc(100% - 4em);
+    margin-top: -5em;
+    padding-top: 0;
     justify-content: flex-start;
-    height:40%;
+    height: 40%;
   }
 }
 
 .likehateTextContainer {
-  display:flex;
+  display: flex;
   flex-direction: column;
 }
 
-span.likeMode{
-  background: linear-gradient(-45deg, #9e0b0b 20%, #DD7373 40%, #FF5e5e 60%, #ffcccc 80%);
+span.likeMode {
+  background: linear-gradient(
+    -45deg,
+    #9e0b0b 20%,
+    #dd7373 40%,
+    #ff5e5e 60%,
+    #ffcccc 80%
+  );
   background-size: 200% auto;
   background-clip: text;
   text-fill-color: transparent;
@@ -217,8 +272,14 @@ span.likeMode{
   animation: animated_text 5s ease-in-out infinite;
 }
 
-span.hateMode{
-  background: linear-gradient(-45deg, #372f9e 20%, #5F5AA2 40%, #7b74d4 60%, #918aff 80%);
+span.hateMode {
+  background: linear-gradient(
+    -45deg,
+    #372f9e 20%,
+    #5f5aa2 40%,
+    #7b74d4 60%,
+    #918aff 80%
+  );
   background-size: 200% auto;
   background-clip: text;
   text-fill-color: transparent;
@@ -227,32 +288,28 @@ span.hateMode{
   animation: animated_text 5s ease-in-out infinite;
 }
 
-.likeHateSVGWrapper{
-  margin-top:2em;
-  width:100%;
+.likeHateSVGWrapper {
+  margin-top: 2em;
+  width: 100%;
 }
 
 .likeHateSVG {
-
 }
 
 @media only screen and (max-width: 900px) {
   .likeHateSVG {
-
   }
 }
 
-.thumbup{
-
+.thumbup {
 }
 
-.thumbdown{
-
+.thumbdown {
 }
 
 .likeHateSVG img {
-  width:125px;
-  height:125px;
+  width: 125px;
+  height: 125px;
 }
 
-/* </editor-fold> */
+/* #endregion */

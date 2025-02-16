@@ -135,6 +135,22 @@
       .heroImageStatic img {
         max-width: 1000px;
       }
+
+      .bgTexture {
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        z-index: -1;
+        opacity: 0.1;
+        background-color: rgba(244, 236, 194);
+      }
+
+      .bgTexture.with-texture {
+        opacity: 0.15;
+        background: url("images/bg_texture.webp");
+        background-repeat: repeat;
+        background-size: 500px;
+      }
     </style>
   </head>
   <body>
@@ -148,6 +164,9 @@
       ></iframe
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
+    <div class="bgTexture"></div>
+    <div class="bgTexture with-texture"></div>
+
     <div id="modal"></div>
     <div id="sharehome"></div>
 

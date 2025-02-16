@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { NavLink, useLocation } from "react-router";
-import { GsapFadeDelay, GsapFadeScrub } from "../utils/useGsap.js";
+import { GsapFadeScrub } from "../utils/useGsap.js";
 import ShootingStar from "./ShootingStar.js";
 import EmailForm from "../utils/EmailForm.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
@@ -8,6 +8,7 @@ import DefaultButton from "../utils/DefaultButton.js";
 import "../../css/navbar.css";
 import "../../css/utils/hamburger.css";
 import PropTypes from "prop-types";
+import useWindowScroll from "../utils/useWindowScroll.js";
 
 //main navbar for page navigation on the website
 export const NavbarMain = (props) => {
@@ -22,6 +23,7 @@ export const NavbarMain = (props) => {
 
   //toggle email logic
   const { width } = useWindowDimensions();
+  const isDesktop = width > 900;
   const [mailButtonVisible, setMailButtonVisible] = useState(true);
   const mailButtonVisibleClass = mailButtonVisible ? "is-active" : ""; //class to append if visible
 
@@ -66,28 +68,28 @@ export const NavbarMain = (props) => {
     onMount(toggleMail);
   }, [onMount, visible, toggleMail]);
 
+  // if homepage and the scroll is all the way at the time, don't show
+  const scrollPosition = useWindowScroll();
+  if (isHomePage && scrollPosition === 0) return null;
+
   //navbar open
   return (
-    <GsapFadeDelay delay={1500} className={`navbarClass ${isVisibleClass}`}>
-      <GsapFadeScrub
-        scrub
-        startScreenTop
-        fadeIn
-        className="fixedButtonsWrapper"
-      >
+    <div className={`navbarClass ${isVisibleClass}`}>
+      <GsapFadeScrub scrub fadeIn className="fixedButtonsWrapper">
         <NavLink to="/" className="navbarFloatLeft noselect"></NavLink>
         <div className="navbarFloatRight">
-          {!isHomePage && (
-            <DefaultButton
-              shadowless
-              animated
-              icon="forward"
-              id="emailToggleButtonMobile"
-              className={`${mailButtonVisibleClass} is-red`}
-              navlink="/buy"
-              text="Buy now!"
-            />
-          )}
+          {!isHomePage ||
+            (isDesktop && (
+              <DefaultButton
+                shadowless
+                animated
+                icon="forward"
+                id="emailToggleButtonMobile"
+                className={`${mailButtonVisibleClass} is-red`}
+                navlink="/buy"
+                text="Buy now!"
+              />
+            ))}
           <button
             id="navbarOpenClose"
             className={`hamburger hamburger--slider ${isVisibleClass}`}
@@ -110,9 +112,7 @@ export const NavbarMain = (props) => {
             <div className="navbarButtonWrapper">
               <NavLink
                 onClick={toggleNav}
-                exact={true}
                 to="/"
-                activeClassName="is-active"
                 className="navbarButton noselect"
               >
                 Home
@@ -120,7 +120,6 @@ export const NavbarMain = (props) => {
               <NavLink
                 onClick={toggleNav}
                 to="/howtoplay"
-                activeClassName="is-active"
                 className="navbarButton noselect"
               >
                 How to play
@@ -128,7 +127,6 @@ export const NavbarMain = (props) => {
               <NavLink
                 onClick={toggleNav}
                 to="/characters"
-                activeClassName="is-active"
                 className="navbarButton noselect"
               >
                 Characters
@@ -146,7 +144,6 @@ export const NavbarMain = (props) => {
               <NavLink
                 onClick={toggleNav}
                 to="/contact"
-                activeClassName="is-active"
                 className="navbarButton noselect"
               >
                 About / contact
@@ -203,7 +200,7 @@ export const NavbarMain = (props) => {
           </div>
         </div>
       </div>
-    </GsapFadeDelay>
+    </div>
   );
 };
 

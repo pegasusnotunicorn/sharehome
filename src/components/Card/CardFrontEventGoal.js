@@ -30,7 +30,7 @@ export const EventGoalCard = (props) => {
 
 EventGoalCard.propTypes = {
   type: PropTypes.string.isRequired,
-  randomNumber: PropTypes.number.isRequired,
+  randomNumber: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default EventGoalCard;

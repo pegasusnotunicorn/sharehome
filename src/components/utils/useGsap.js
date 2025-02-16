@@ -3,7 +3,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "gsap";
 import { randomDeg } from "../utils/useMath.js";
 import PropTypes from "prop-types";
-import { useLocation } from "react-router";
 
 //just a simple fade in with a delay, not tied to scroll
 export const GsapFadeDelay = (props) => {
@@ -59,10 +58,8 @@ export const GsapFadeScrub = (props) => {
   gsap.registerPlugin(ScrollTrigger);
   const target = useRef(null);
 
-  const location = useLocation();
-
   //for when the element is in view from load
-  let startScreenTop = props.startScreenTop && location.pathname === "/";
+  let startScreenTop = props.startScreenTop;
   let scrubStartBot = props.scrubStartBot || false;
   let scrubStartCenter = props.scrubStartCenter || false;
 

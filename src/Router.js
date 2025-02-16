@@ -47,35 +47,35 @@ const Router = () => {
         setVideoModalVisible={setVideoModalVisible}
       />
 
-      <ScrollToTop>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <HomePage
-                ref={setNavbarActive}
-                videoModalVisible={videoModalVisible}
-                setVideoModalVisible={setVideoModalVisible}
-              />
-            }
-          />
-          <Route path="/about" element={<Navigate to="/howtoplay" replace />} />
-          <Route path="/howtoplay" element={<AboutPage />} />
-          <Route path="/freeartbook" element={<FreeArtbookPage />} />
-          <Route path="/digitalartbook" element={<ArtbookDownloadPage />} />
-          <Route path="/characters" element={<CharactersPage />} />
-          <Route path="/characters/:name" element={<CharactersPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/thankyou" element={<ThankYouPage />} />
-          <Route
-            path="/rulebook"
-            element={<ExternalRedirect url="/rulebook.pdf" />}
-          />
-          <Route path="/buy" element={<ExternalRedirect url={stripeUrl} />} />
-          {/* Fallback for undefined routes */}
-          <Route path="*" element={<ErrorPage />} />
-        </Routes>
-      </ScrollToTop>
+      <ScrollToTop />
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomePage
+              ref={setNavbarActive}
+              videoModalVisible={videoModalVisible}
+              setVideoModalVisible={setVideoModalVisible}
+            />
+          }
+        />
+        <Route path="/about" element={<Navigate to="/howtoplay" replace />} />
+        <Route path="/howtoplay" element={<AboutPage />} />
+        <Route path="/freeartbook" element={<FreeArtbookPage />} />
+        <Route path="/digitalartbook" element={<ArtbookDownloadPage />} />
+        <Route path="/characters" element={<CharactersPage />} />
+        <Route path="/characters/:name" element={<CharactersPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/thankyou" element={<ThankYouPage />} />
+        <Route
+          path="/rulebook"
+          element={<ExternalRedirect url="/rulebook.pdf" />}
+        />
+        <Route path="/buy" element={<ExternalRedirect url={stripeUrl} />} />
+        {/* Fallback for undefined routes */}
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
 
       <Footer key={Date.now()} />
     </BrowserRouter>

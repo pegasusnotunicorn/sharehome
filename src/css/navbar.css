@@ -1,4 +1,4 @@
-/* <editor-fold>--------------------------------------NAVBAR TOGGLE */
+/* #region--------------------------------------NAVBAR TOGGLE */
 
 .fixedButtonsWrapper {
   position: fixed;
@@ -57,13 +57,12 @@
 }
 
 .navbarClass:not(.is-active) #navbarOpenClose {
-  background: #fff;
   border-radius: 4px;
 }
 
-/* </editor-fold>
+/* #endregion
 
-/* <editor-fold>--------------------------------------NAVBAR */
+/* #region--------------------------------------NAVBAR */
 
 .navbarMain {
   /* background-color:rgba(255,255,255,.95); */
@@ -182,9 +181,9 @@
   }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------NAVBAR LEFT */
+/* #region--------------------------------------NAVBAR LEFT */
 
 .navbarLeftWrapper {
   display: flex;
@@ -243,9 +242,9 @@
   cursor: pointer;
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------NAVBAR RIGHT */
+/* #region--------------------------------------NAVBAR RIGHT */
 
 .navbarRightWrapper {
   display: flex;
@@ -311,9 +310,9 @@
   }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------MAIN PAGE EMAIL */
+/* #region--------------------------------------MAIN PAGE EMAIL */
 
 .mainpageEmail .formWrapper {
   flex-direction: row;
@@ -385,4 +384,4 @@
   }
 }
 
-/* </editor-fold> */
+/* #endregion */

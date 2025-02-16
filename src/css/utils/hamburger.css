@@ -24,12 +24,6 @@
   height: 55px;
   overflow: visible;
 }
-.hamburger:hover {
-  opacity: 0.8;
-}
-.hamburger.is-active:hover {
-  opacity: 0.8;
-}
 
 .hamburger-box {
   width: 50px;

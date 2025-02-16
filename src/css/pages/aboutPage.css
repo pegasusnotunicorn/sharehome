@@ -1,4 +1,4 @@
-/* <editor-fold>--------------------------------------TOP */
+/* #region--------------------------------------TOP */
 
 .howToPlayContainer {
   display: flex;
@@ -95,9 +95,9 @@
   }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------ALL STEPS */
+/* #region--------------------------------------ALL STEPS */
 
 .allStepsContainer {
   display: none;
@@ -285,9 +285,9 @@
   }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>--------------------------------------STEP BLOCK STUFF */
+/* #region--------------------------------------STEP BLOCK STUFF */
 
 .stepBlockFlex {
   display: flex;
@@ -414,4 +414,4 @@
   width: 100% !important;
 }
 
-/* </editor-fold> */
+/* #endregion */

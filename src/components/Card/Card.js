@@ -164,7 +164,7 @@ CardFront.propTypes = {
   mainStyle: PropTypes.object,
   disableText: PropTypes.bool,
   enableQuestionMark: PropTypes.bool,
-  randomNumber: PropTypes.number,
+  randomNumber: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 //the back of the card (name / details for member, the image for goal / event)
@@ -197,7 +197,7 @@ const CardBack = (props) => {
 CardBack.propTypes = {
   type: PropTypes.string,
   hideBack: PropTypes.bool,
-  randomNumber: PropTypes.number,
+  randomNumber: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default Card;

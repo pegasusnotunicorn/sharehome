@@ -1,4 +1,4 @@
-/* <editor-fold>---------------------------------------------------------PAGE */
+/* #region---------------------------------------------------------PAGE */
 
 .characterContent {
   min-height: 25vh;
@@ -44,9 +44,9 @@
   margin: 0.5em;
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>---------------------------------------------------------SPOTLIGHT */
+/* #region---------------------------------------------------------SPOTLIGHT */
 
 .characterSpotlightContainer {
   display: flex;
@@ -100,9 +100,9 @@
   }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>---------------------------------------------------------ALL CHARACTERS */
+/* #region---------------------------------------------------------ALL CHARACTERS */
 
 .allcharactersWrapper {
   padding-bottom: 2em;
@@ -233,4 +233,4 @@
   }
 }
 
-/* </editor-fold> */
+/* #endregion */

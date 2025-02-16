@@ -1,4 +1,4 @@
-/* <editor-fold>------------------------------------------------------------------GLOBALS */
+/* #region------------------------------------------------------------------GLOBALS */
 
 html {
   height: -webkit-fill-available;
@@ -150,9 +150,9 @@ span.is-bold {
   height: 1.5em;
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>------------------------------------------------------------------BUTTONS */
+/* #region------------------------------------------------------------------BUTTONS */
 
 .defaultButton {
   font-family: "Rowdies-Regular";
@@ -164,7 +164,6 @@ span.is-bold {
   color: #fff;
   border-radius: 4px;
   text-decoration: none;
-  border: 1px solid transparent;
   box-shadow: 1px 1px 4px 0px #323232;
   line-height: 125%;
   display: flex;
@@ -186,9 +185,17 @@ span.is-bold {
 @media only screen and (max-width: 900px) {
   .defaultButton {
     margin: auto;
-    width: calc(100% - 10px);
+    width: 100%;
+    padding: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
     font-size: 0.85em;
     min-width: 100px !important;
+  }
+  .defaultButton.is-large {
+    font-size: 0.85em;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
 }
 
@@ -268,9 +275,9 @@ span.is-bold {
   }
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>------------------------------------------------------------------CONTENT BLOCKS */
+/* #region------------------------------------------------------------------CONTENT BLOCKS */
 
 .content {
   text-align: center;
@@ -310,6 +317,10 @@ span.is-bold {
 }
 
 @media only screen and (max-width: 900px) {
+  .subcontentWrapper {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
   .subcontentWrapper.margin-top {
     margin-top: 5vh;
   }
@@ -348,9 +359,9 @@ span.is-bold {
   font-weight: normal;
 }
 
-/* </editor-fold> */
+/* #endregion */
 
-/* <editor-fold>------------------------------------------------------------------TITLE */
+/* #region------------------------------------------------------------------TITLE */
 
 .floating {
   animation-name: floating;
@@ -411,4 +422,4 @@ span.is-bold {
   font-family: "Rowdies-Regular";
 }
 
-/* </editor-fold> */
+/* #endregion */

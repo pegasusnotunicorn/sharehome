@@ -223,8 +223,8 @@ export const ShootingStar = (props) => {
 ShootingStar.propTypes = {
   className: PropTypes.string,
   orientation: PropTypes.string,
-  mirror: PropTypes.bool,
-  delay: PropTypes.string,
+  mirror: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
+  delay: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   isActive: PropTypes.bool,
 };
 

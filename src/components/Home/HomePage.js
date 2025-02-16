@@ -30,12 +30,16 @@ const HomePage = forwardRef((props, ref) => {
     }
   }, [ref]);
 
-  let { width } = useWindowDimensions();
+  let { width, height } = useWindowDimensions();
+  const emToPx = parseFloat(
+    getComputedStyle(document.documentElement).fontSize
+  ); // Convert 2em to pixels
+
   const isDesktop = width > 1000;
-  const iframeWidth = isDesktop ? 1000 : width - 100;
+  const iframeWidth = isDesktop ? 1000 : width - 4 - emToPx * 2;
   const iframeHeight = isDesktop
     ? (iframeWidth * 9) / 16
-    : (iframeWidth * 16) / 9;
+    : Math.min((iframeWidth * 16) / 9, height - 4 - 45 - emToPx * 4);
 
   const youTubeVideoCode = isDesktop ? "EoQ2VTipXPA" : "fNq9hS6DsTU";
   const enableCC = isDesktop
@@ -60,6 +64,17 @@ const HomePage = forwardRef((props, ref) => {
           height={iframeHeight}
           src={`https://www.youtube.com/embed/${youTubeVideoCode}?si=JyFz4WBy_u2p8ot1&rel=0&controls=0&rel=0&modestbranding=1&playlist=${youTubeVideoCode}${enableCC}&enablejsapi=1&autoplay=1&loop=1`}
         />
+        <div className={homeStyles.videoModalCloseButtonWrapper}>
+          <DefaultButton
+            icon="whiteCross"
+            className="is-black"
+            onClick={() => {
+              setVideoModalVisible(false);
+            }}
+            text="Close video"
+            shadowless
+          />
+        </div>
       </div>
 
       <div id={`${homeStyles.shootingStarsContainer}`}>
@@ -127,7 +142,8 @@ const HomePage = forwardRef((props, ref) => {
             <div className={`subcontentWrapper`}>
               <h1 className={`${homeStyles.subtitle}`}>
                 A party game where <br />{" "}
-                <span class="fantasyEmphasis">fantasy</span> meets reality TV.
+                <span className="fantasyEmphasis">fantasy</span> meets reality
+                TV.
               </h1>
               <GameModeIcons
                 className={`${homeStyles.gameDetails}`}
@@ -142,21 +158,26 @@ const HomePage = forwardRef((props, ref) => {
                 Can you work together to secure a second season? Or will you be
                 canceled halfway through?
               </p>
-              <DefaultButton
-                shadowless
-                animated
-                icon="forward"
-                className="is-red is-hidden-mobile"
-                navlink="/buy"
-                text="Buy now"
-              />
-              <DefaultButton
-                shadowless
-                icon="starWhite"
-                className="is-blue"
-                href="https://screentop.gg/@PegasusGames/lcm"
-                text="Play online"
-              />
+              <p className="is-hidden-desktop">
+                Keep scrolling to learn how to play!
+              </p>
+              <div className={homeStyles.descriptionButtonWrapper}>
+                <DefaultButton
+                  shadowless
+                  animated
+                  icon="forward"
+                  className="is-red is-hidden-mobile"
+                  navlink="/buy"
+                  text="Buy now"
+                />
+                <DefaultButton
+                  shadowless
+                  icon="starWhite"
+                  className="is-blue is-hidden-mobile"
+                  href="https://screentop.gg/@PegasusGames/lcm"
+                  text="Play online"
+                />
+              </div>
             </div>
           </GsapFadeScrub>
         </div>
@@ -175,16 +196,8 @@ const HomePage = forwardRef((props, ref) => {
           <GsapFadeScrub fadeIn>
             <img
               loading="lazy"
-              src="/images/illustrations/stories.webp"
-              alt="Stories icon"
-            />
-            Storytelling
-          </GsapFadeScrub>
-          <GsapFadeScrub fadeIn>
-            <img
-              loading="lazy"
               src="/images/illustrations/improv.webp"
-              alt="Improv icon"
+              alt="TTRPG icon"
             />
             TTRPGs
           </GsapFadeScrub>
@@ -199,16 +212,24 @@ const HomePage = forwardRef((props, ref) => {
           <GsapFadeScrub fadeIn>
             <img
               loading="lazy"
-              src="/images/illustrations/party.webp"
-              alt="Party icon"
+              src="/images/illustrations/stories.webp"
+              alt="Storytelling icon"
             />
-            Party games
+            Storytelling
           </GsapFadeScrub>
           <GsapFadeScrub fadeIn>
             <img
               loading="lazy"
+              src="/images/illustrations/party.webp"
+              alt="Party games icon"
+            />
+            Party games
+          </GsapFadeScrub>
+          <GsapFadeScrub fadeIn className="is-hidden-mobile">
+            <img
+              loading="lazy"
               src="/images/illustrations/acting.webp"
-              alt="Roleplay icon"
+              alt="Improv icon"
             />
             Improv
           </GsapFadeScrub>
@@ -382,7 +403,8 @@ const HomePage = forwardRef((props, ref) => {
           className={`${homeStyles.finalButtonsContainer} subcontentWrapper`}
         >
           <h1>
-            Ready for <span class="fantasyEmphasis">Love, Career & Magic</span>?
+            Ready for{" "}
+            <span className="fantasyEmphasis">Love, Career & Magic</span>?
           </h1>
           <div className={`${homeStyles.finalButtonsWrapper}`}>
             <DefaultButton

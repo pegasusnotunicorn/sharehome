@@ -1,62 +1,55 @@
-.emojiSection{
-  background-color:rgba(0,0,0,.1);
-  padding-bottom:3em;
+.emojiSection {
+  background-color: rgba(0, 0, 0, 0.1);
+  padding-bottom: 3em;
 }
 
-.emojiDescriptionWrapper p{
-  margin-bottom:0;
+.emojiDescriptionWrapper p {
+  margin-bottom: 0;
 }
 
-.emojiDescriptionWrapper ul{
-  text-align:left;
+.emojiDescriptionWrapper ul {
+  text-align: left;
 }
 
-.emojisWrapper{
-  width:100%;
-  display:flex;
-  margin:auto;
-  flex-wrap:wrap;
+.emojisWrapper {
+  width: 100%;
+  display: flex;
+  margin: auto;
+  flex-wrap: wrap;
   text-align: center;
   justify-content: center;
 }
 
-.emojiWrapper{
-  margin:auto;
-  border-radius:100%;
-  padding:calc(1em - 5px);
-  border:5px solid #FFF;
-  background:#FFF;
-  margin:.25em;
-  box-shadow:0px 0px 5px rgb(0 0 0 / 5%);
-  cursor:pointer;
-  transition: all .25s ease-in-out;
+.emojiWrapper {
+  margin: auto;
+  border-radius: 100%;
+  padding: calc(1em - 5px);
+  border: 5px solid #fff;
+  background: #fff;
+  margin: 0.25em;
+  box-shadow: 0px 0px 5px rgb(0 0 0 / 5%);
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
 }
 
-.emojiWrapper.active{
-  transform:scale(1.75);
-  border:5px solid #222;
-  z-index:8;
+.emojiWrapper.active {
+  transform: scale(1.75);
+  border: 5px solid #222;
+  z-index: 8;
 }
 
-.emojiWrapper img{
-  width:50px;
-  height:50px;
+.emojiWrapper img {
+  width: 50px;
+  height: 50px;
 }
 
-.emojiButtonsWrapper{
-  margin:auto;
-  display:flex;
-  margin-top:0em;
-  margin-bottom:2em;
+.emojiButtonsWrapper {
+  margin: auto;
+  display: flex;
+  margin-top: 0em;
+  margin-bottom: 2em;
 }
 
-.emojiPackDownloadButton{
-  margin:auto;
-}
-
-/* mobile */
-@media only screen and (max-width: 900px) {
-  .emojiPackDownloadButton{
-    width:calc(100% - 2em);
-  }
+.emojiPackDownloadButton {
+  margin: auto;
 }

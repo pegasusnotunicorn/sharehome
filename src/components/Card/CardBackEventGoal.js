@@ -23,7 +23,7 @@ export const CardBackEventGoal = (props) => {
 
 CardBackEventGoal.propTypes = {
   type: PropTypes.string,
-  randomNumber: PropTypes.number,
+  randomNumber: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default CardBackEventGoal;

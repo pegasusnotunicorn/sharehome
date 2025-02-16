@@ -56,7 +56,7 @@ const CharactersDeckRow = (props) => (
 CharactersDeckRow.propTypes = {
   cards: PropTypes.array.isRequired,
   rowIndex: PropTypes.number.isRequired,
-  rowTl: PropTypes.object.isRequired,
+  rowTl: PropTypes.object,
 };
 
 //a row of animations

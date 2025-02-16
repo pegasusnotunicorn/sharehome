@@ -15,7 +15,7 @@ import { EmojiSection } from "../utils/EmojiSection.js";
 import homeStyles from "../../css/homePage.module.css";
 import "../../css/utils/colors.css";
 import ShootingStar from "../Navbar/ShootingStar.js";
-import { LazyYoutube } from "./LazyLoadYouTube.js";
+import { YoutubeModal } from "./YoutubeModal.js";
 
 const HomePage = () => {
   const [player, setPlayer] = useState(null);
@@ -36,25 +36,6 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    const button = document.querySelector(".lty-playbtn");
-
-    if (!button) return;
-
-    function createObserver() {
-      let observer;
-
-      let options = {
-        rootMargin: "-50%",
-        threshold: 1,
-      };
-
-      observer = new IntersectionObserver(() => button.click(), options);
-      observer.observe(button);
-    }
-    return createObserver();
-  }, []);
-
-  useEffect(() => {
     document.title = "Love, Career & Magic - 12m game for 2-6 players";
   }, []);
 
@@ -62,12 +43,13 @@ const HomePage = () => {
     <div className="content">
       <ParallaxSection />
 
-      <LazyYoutube
+      <YoutubeModal
         videoModalVisible={videoModalVisible}
         setPlayer={setPlayer}
         stopVideo={stopVideo}
       />
 
+      {/* shooting stars */}
       <div id={`${homeStyles.shootingStarsContainer}`}>
         <div id={`${homeStyles.shootingStarsWrapper}`}>
           {Array.from({ length: 10 }).map((_, i) => (
@@ -106,7 +88,12 @@ const HomePage = () => {
             className={`${homeStyles.heroImage} noselect openYouTubeModalButton ${homeStyles.monsterBurstAnimation}`}
             onClick={playVideo}
           />
-          <div className={homeStyles.heroBottomWrapper}>
+          <div
+            style={{
+              display: videoModalVisible ? "none" : "flex",
+            }}
+            className={homeStyles.heroBottomWrapper}
+          >
             <DefaultButton
               shadowless
               animated

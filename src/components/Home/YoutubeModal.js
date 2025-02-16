@@ -3,8 +3,9 @@ import PropTypes from "prop-types";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import DefaultButton from "../utils/DefaultButton.js";
 import "../../css/utils/lazyYoutube.css";
+import useDeviceType from "../utils/useDeviceType.js";
 
-export const LazyYoutube = ({ videoModalVisible, setPlayer, stopVideo }) => {
+export const YoutubeModal = ({ videoModalVisible, setPlayer, stopVideo }) => {
   const iframeRef = useRef(null);
 
   let { width, height } = useWindowDimensions();
@@ -23,7 +24,11 @@ export const LazyYoutube = ({ videoModalVisible, setPlayer, stopVideo }) => {
     ? "&cc_load_policy=1&iv_load_policy=1"
     : "&cc_load_policy=3&iv_load_policy=3";
 
+  const { isIOS, isAndroid } = useDeviceType();
+  const shouldAutoplay = isAndroid || isDesktop || !isIOS;
+
   useEffect(() => {
+    if (shouldAutoplay) return;
     if (!window.YT) {
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
@@ -35,13 +40,32 @@ export const LazyYoutube = ({ videoModalVisible, setPlayer, stopVideo }) => {
       new window.YT.Player(iframeRef.current, {
         events: {
           onReady: (event) => {
-            event.target.stopVideo();
+            if (!shouldAutoplay) event.target.stopVideo();
             setPlayer(event.target);
           },
         },
       });
     };
-  }, [setPlayer]);
+  }, [setPlayer, shouldAutoplay]);
+
+  useEffect(() => {
+    const button = document.querySelector(".lty-playbtn");
+    if (!button) return;
+    function createObserver() {
+      let observer;
+      let options = {
+        rootMargin: "-50%",
+        threshold: 1,
+      };
+      console.log(sasss);
+      observer = new IntersectionObserver(() => button.click(), options);
+      observer.observe(button);
+    }
+    return createObserver();
+  }, []);
+
+  const autoPlayParam = shouldAutoplay ? "&autoplay=1" : "";
+  if (shouldAutoplay && !videoModalVisible) return null;
 
   return (
     <div
@@ -54,7 +78,7 @@ export const LazyYoutube = ({ videoModalVisible, setPlayer, stopVideo }) => {
         ref={iframeRef}
         width={iframeWidth}
         height={iframeHeight}
-        src={`https://www.youtube.com/embed/${youTubeVideoCode}?si=JyFz4WBy_u2p8ot1&rel=0&controls=0&rel=0&modestbranding=1&playlist=${youTubeVideoCode}${enableCC}&enablejsapi=1&loop=1&autoplay=1`}
+        src={`https://www.youtube.com/embed/${youTubeVideoCode}?si=JyFz4WBy_u2p8ot1&rel=0&controls=0&rel=0&modestbranding=1&playlist=${youTubeVideoCode}${enableCC}&enablejsapi=1&loop=1${autoPlayParam}`}
         title="YouTube video player"
         allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowFullScreen
@@ -73,7 +97,7 @@ export const LazyYoutube = ({ videoModalVisible, setPlayer, stopVideo }) => {
   );
 };
 
-LazyYoutube.propTypes = {
+YoutubeModal.propTypes = {
   videoModalVisible: PropTypes.bool.isRequired,
   setPlayer: PropTypes.func.isRequired,
   stopVideo: PropTypes.func.isRequired,

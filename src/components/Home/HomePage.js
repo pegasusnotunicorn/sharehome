@@ -22,18 +22,37 @@ const HomePage = () => {
   const [videoModalVisible, setVideoModalVisible] = useState(false);
 
   const playVideo = () => {
-    setVideoModalVisible(true);
     if (player) {
       player.playVideo();
     }
+    setVideoModalVisible(true);
   };
 
   const stopVideo = () => {
-    setVideoModalVisible(false);
     if (player) {
       player.stopVideo();
     }
+    setVideoModalVisible(false);
   };
+
+  useEffect(() => {
+    const button = document.querySelector(".lty-playbtn");
+
+    if (!button) return;
+
+    function createObserver() {
+      let observer;
+
+      let options = {
+        rootMargin: "-50%",
+        threshold: 1,
+      };
+
+      observer = new IntersectionObserver(() => button.click(), options);
+      observer.observe(button);
+    }
+    return createObserver();
+  }, []);
 
   useEffect(() => {
     document.title = "Love, Career & Magic - 12m game for 2-6 players";

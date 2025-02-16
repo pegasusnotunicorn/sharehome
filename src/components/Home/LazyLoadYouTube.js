@@ -43,8 +43,6 @@ export const LazyYoutube = ({ videoModalVisible, setPlayer, stopVideo }) => {
     };
   }, [setPlayer]);
 
-  if (!videoModalVisible) return null;
-
   return (
     <div
       style={{ display: videoModalVisible ? "flex" : "none" }}

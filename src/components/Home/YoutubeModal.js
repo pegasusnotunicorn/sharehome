@@ -38,9 +38,7 @@ export const YoutubeModal = ({ videoModalVisible, setPlayer, stopVideo }) => {
       new window.YT.Player(iframeRef.current, {
         events: {
           onReady: (event) => {
-            console.log("player ready");
             if (isIOS) {
-              console.log("stopping video");
               event.target.stopVideo();
             } else {
               event.target.seekTo(0);
@@ -55,7 +53,6 @@ export const YoutubeModal = ({ videoModalVisible, setPlayer, stopVideo }) => {
 
   useEffect(() => {
     const button = document.querySelector(".lty-playbtn");
-    console.log(button, "button");
     if (!button) return;
 
     function createObserver() {
@@ -64,9 +61,7 @@ export const YoutubeModal = ({ videoModalVisible, setPlayer, stopVideo }) => {
         rootMargin: "-50%",
         threshold: 1,
       };
-      console.log("Observer created");
       observer = new IntersectionObserver(() => {
-        console.log("button clicked");
         button.click();
       }, options);
       observer.observe(button);

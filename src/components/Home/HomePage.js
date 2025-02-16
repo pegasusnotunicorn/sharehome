@@ -23,6 +23,7 @@ const HomePage = () => {
 
   const playVideo = () => {
     if (player) {
+      player.unMute();
       player.playVideo();
     }
     setVideoModalVisible(true);
@@ -30,6 +31,7 @@ const HomePage = () => {
 
   const stopVideo = () => {
     if (player) {
+      player.unMute();
       player.stopVideo();
     }
     setVideoModalVisible(false);

@@ -24,11 +24,9 @@ export const YoutubeModal = ({ videoModalVisible, setPlayer, stopVideo }) => {
     ? "&cc_load_policy=1&iv_load_policy=1"
     : "&cc_load_policy=3&iv_load_policy=3";
 
-  const { isIOS, isAndroid } = useDeviceType();
-  const shouldAutoplayOnYoutubeParams = isAndroid || isDesktop || !isIOS;
+  const { isIOS } = useDeviceType();
 
   useEffect(() => {
-    if (shouldAutoplayOnYoutubeParams) return;
     if (!window.YT) {
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
@@ -41,19 +39,21 @@ export const YoutubeModal = ({ videoModalVisible, setPlayer, stopVideo }) => {
         events: {
           onReady: (event) => {
             console.log("player ready");
-            if (!shouldAutoplayOnYoutubeParams) {
+            if (isIOS) {
               console.log("stopping video");
               event.target.stopVideo();
+            } else {
+              event.target.seekTo(0);
+              event.target.unMute();
             }
             setPlayer(event.target);
           },
         },
       });
     };
-  }, [setPlayer, shouldAutoplayOnYoutubeParams]);
+  }, [setPlayer, isIOS]);
 
   useEffect(() => {
-    if (shouldAutoplayOnYoutubeParams) return;
     const button = document.querySelector(".lty-playbtn");
     console.log(button, "button");
     if (!button) return;
@@ -72,20 +72,7 @@ export const YoutubeModal = ({ videoModalVisible, setPlayer, stopVideo }) => {
       observer.observe(button);
     }
     return createObserver();
-  }, [shouldAutoplayOnYoutubeParams]);
-
-  const autoPlayParam = shouldAutoplayOnYoutubeParams ? "&autoplay=1" : "";
-  console.log(
-    "shouldAutoplayOnYoutubeParams",
-    shouldAutoplayOnYoutubeParams,
-    "isIOS",
-    isIOS,
-    "isAndroid",
-    isAndroid,
-    "isDesktop",
-    isDesktop
-  );
-  if (shouldAutoplayOnYoutubeParams && !videoModalVisible) return null;
+  }, []);
 
   return (
     <div
@@ -98,9 +85,9 @@ export const YoutubeModal = ({ videoModalVisible, setPlayer, stopVideo }) => {
         ref={iframeRef}
         width={iframeWidth}
         height={iframeHeight}
-        src={`https://www.youtube.com/embed/${youTubeVideoCode}?si=JyFz4WBy_u2p8ot1&rel=0&controls=0&rel=0&modestbranding=1&playlist=${youTubeVideoCode}${enableCC}&enablejsapi=1&loop=1${autoPlayParam}`}
+        src={`https://www.youtube.com/embed/${youTubeVideoCode}?si=JyFz4WBy_u2p8ot1&rel=0&controls=0&rel=0&modestbranding=1&playlist=${youTubeVideoCode}${enableCC}&enablejsapi=1&loop=1&autoplay=1&mute=1`}
         title="YouTube video player"
-        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowFullScreen
         frameBorder="0"
       />

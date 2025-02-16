@@ -25,10 +25,10 @@ export const YoutubeModal = ({ videoModalVisible, setPlayer, stopVideo }) => {
     : "&cc_load_policy=3&iv_load_policy=3";
 
   const { isIOS, isAndroid } = useDeviceType();
-  const shouldAutoplay = isAndroid || isDesktop || !isIOS;
+  const shouldAutoplayOnYoutubeParams = isAndroid || isDesktop || !isIOS;
 
   useEffect(() => {
-    if (shouldAutoplay) return;
+    if (shouldAutoplayOnYoutubeParams) return;
     if (!window.YT) {
       const tag = document.createElement("script");
       tag.src = "https://www.youtube.com/iframe_api";
@@ -40,32 +40,52 @@ export const YoutubeModal = ({ videoModalVisible, setPlayer, stopVideo }) => {
       new window.YT.Player(iframeRef.current, {
         events: {
           onReady: (event) => {
-            if (!shouldAutoplay) event.target.stopVideo();
+            console.log("player ready");
+            if (!shouldAutoplayOnYoutubeParams) {
+              console.log("stopping video");
+              event.target.stopVideo();
+            }
             setPlayer(event.target);
           },
         },
       });
     };
-  }, [setPlayer, shouldAutoplay]);
+  }, [setPlayer, shouldAutoplayOnYoutubeParams]);
 
   useEffect(() => {
+    if (shouldAutoplayOnYoutubeParams) return;
     const button = document.querySelector(".lty-playbtn");
+    console.log(button, "button");
     if (!button) return;
+
     function createObserver() {
       let observer;
       let options = {
         rootMargin: "-50%",
         threshold: 1,
       };
-      console.log(sasss);
-      observer = new IntersectionObserver(() => button.click(), options);
+      console.log("Observer created");
+      observer = new IntersectionObserver(() => {
+        console.log("button clicked");
+        button.click();
+      }, options);
       observer.observe(button);
     }
     return createObserver();
-  }, []);
+  }, [shouldAutoplayOnYoutubeParams]);
 
-  const autoPlayParam = shouldAutoplay ? "&autoplay=1" : "";
-  if (shouldAutoplay && !videoModalVisible) return null;
+  const autoPlayParam = shouldAutoplayOnYoutubeParams ? "&autoplay=1" : "";
+  console.log(
+    "shouldAutoplayOnYoutubeParams",
+    shouldAutoplayOnYoutubeParams,
+    "isIOS",
+    isIOS,
+    "isAndroid",
+    isAndroid,
+    "isDesktop",
+    isDesktop
+  );
+  if (shouldAutoplayOnYoutubeParams && !videoModalVisible) return null;
 
   return (
     <div

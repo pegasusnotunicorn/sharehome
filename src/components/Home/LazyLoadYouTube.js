@@ -35,12 +35,15 @@ export const LazyYoutube = ({ videoModalVisible, setPlayer, stopVideo }) => {
       new window.YT.Player(iframeRef.current, {
         events: {
           onReady: (event) => {
+            event.target.stopVideo();
             setPlayer(event.target);
           },
         },
       });
     };
   }, [setPlayer]);
+
+  if (!videoModalVisible) return null;
 
   return (
     <div
@@ -53,7 +56,7 @@ export const LazyYoutube = ({ videoModalVisible, setPlayer, stopVideo }) => {
         ref={iframeRef}
         width={iframeWidth}
         height={iframeHeight}
-        src={`https://www.youtube.com/embed/${youTubeVideoCode}?si=JyFz4WBy_u2p8ot1&rel=0&controls=0&rel=0&modestbranding=1&playlist=${youTubeVideoCode}${enableCC}&enablejsapi=1&loop=1`}
+        src={`https://www.youtube.com/embed/${youTubeVideoCode}?si=JyFz4WBy_u2p8ot1&rel=0&controls=0&rel=0&modestbranding=1&playlist=${youTubeVideoCode}${enableCC}&enablejsapi=1&loop=1&autoplay=1`}
         title="YouTube video player"
         allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowFullScreen

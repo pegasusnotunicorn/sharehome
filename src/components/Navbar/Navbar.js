@@ -62,8 +62,8 @@ export const NavbarMain = (props) => {
   //navbar open
   return (
     <div className={`navbarClass ${isVisibleClass}`}>
-      <GsapFadeScrub scrub fadeIn className="fixedButtonsWrapper">
-        <NavLink to="/" className="navbarFloatLeft noselect"></NavLink>
+      <GsapFadeScrub scrub fadeIn className="fixedButtonsWrapper noselect">
+        <NavLink to="/" className="navbarFloatLeft"></NavLink>
         <div className="navbarFloatRight">
           {!isHomePage ||
             (isDesktop && (

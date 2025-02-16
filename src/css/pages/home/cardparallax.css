@@ -1,5 +1,6 @@
 .parallaxSection {
   height: 300svh;
+  overflow-x: hidden;
   z-index: 1;
   position: absolute;
   width: 100%;

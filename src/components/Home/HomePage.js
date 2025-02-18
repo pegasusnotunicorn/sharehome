@@ -404,6 +404,10 @@ const HomePage = () => {
             <div className={`${homeStyles.lcmMask}`}></div>
           </div>
         </div>
+
+        <small>
+          <a href="/terms">Terms and conditions</a>
+        </small>
       </div>
     </div>
   );

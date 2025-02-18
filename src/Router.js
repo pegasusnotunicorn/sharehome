@@ -6,6 +6,7 @@ import ScrollToTop from "./ScrollToTop.js";
 import HomePage from "./components/Home/HomePage.js";
 import AboutPage from "./components/About/AboutPage.js";
 import CharactersPage from "./components/Characters/CharactersPage.js";
+import TermsPage from "./components/TermsPage.js";
 import ContactPage from "./components/ContactPage.js";
 import ErrorPage from "./components/ErrorPage.js";
 import Footer from "./components/Footer.js";
@@ -53,6 +54,7 @@ const Router = () => {
           element={<ExternalRedirect url="/rulebook.pdf" />}
         />
         <Route path="/buy" element={<ExternalRedirect url={stripeUrl} />} />
+        <Route path="/terms" element={<TermsPage />} />
         {/* Fallback for undefined routes */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>

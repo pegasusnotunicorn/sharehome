@@ -11,7 +11,6 @@ import {
   GoalsDeckSection,
 } from "./EventsGoalsDeckSection.js";
 import LikeHateSection from "./LikeHateSection.js";
-import { EmojiSection } from "../utils/EmojiSection.js";
 import homeStyles from "../../css/homePage.module.css";
 import "../../css/utils/colors.css";
 import ShootingStar from "../Navbar/ShootingStar.js";
@@ -134,26 +133,7 @@ const HomePage = () => {
                 Can you work together to secure a second season? Or will you be
                 canceled halfway through?
               </p>
-              <p className="is-hidden-desktop">
-                Keep scrolling to learn how to play!
-              </p>
-              <div className={homeStyles.descriptionButtonWrapper}>
-                <DefaultButton
-                  shadowless
-                  animated
-                  icon="forward"
-                  className="is-red is-hidden-mobile"
-                  navlink="/buy"
-                  text="Buy now"
-                />
-                <DefaultButton
-                  shadowless
-                  icon="starWhite"
-                  className="is-blue is-hidden-mobile"
-                  href="https://screentop.gg/@PegasusGames/lcm"
-                  text="Play online"
-                />
-              </div>
+              <p>Keep scrolling to learn how to play!</p>
             </div>
           </GsapFadeScrub>
         </div>
@@ -368,8 +348,6 @@ const HomePage = () => {
           sectionTitle="Character spotlight"
         />
       </div>
-
-      <EmojiSection className={`${homeStyles.mainpageContainer}`} />
 
       <div
         id={`${homeStyles.finalContainer}`}

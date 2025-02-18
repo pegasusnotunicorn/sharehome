@@ -24,7 +24,7 @@
   justify-content: flex-end;
 }
 
-@media only screen and (max-height: 900px) {
+@media only screen and (max-width: 900px) {
   #videoModalWrapper {
     flex-direction: column;
     justify-content: center;

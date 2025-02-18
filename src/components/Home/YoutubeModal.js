@@ -8,7 +8,7 @@ import useDeviceType from "../utils/useDeviceType.js";
 export const YoutubeModal = ({ videoModalVisible, setPlayer, stopVideo }) => {
   const iframeRef = useRef(null);
 
-  let { width, height } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const emToPx = parseFloat(
     getComputedStyle(document.documentElement).fontSize
   ); // Convert 2em to pixels

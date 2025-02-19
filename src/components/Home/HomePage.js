@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import GameModeIcons from "../About/utils/GameModeIcons.js";
-import { CharacterSpotlight } from "../utils/CharacterSpotlight.js";
 import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";
 import DefaultButton from "../utils/DefaultButton.js";
 import CarouselSection from "../utils/CarouselSection.js";
@@ -15,6 +14,7 @@ import homeStyles from "../../css/homePage.module.css";
 import "../../css/utils/colors.css";
 import ShootingStar from "../Navbar/ShootingStar.js";
 import { YoutubeModal } from "./YoutubeModal.js";
+import { testimonials } from "../testimonials.js";
 
 const HomePage = () => {
   const [player, setPlayer] = useState(null);
@@ -194,6 +194,27 @@ const HomePage = () => {
 
       <GsapFadeScrub
         fadeIn
+        className={`${homeStyles.mainpageContainer} ${homeStyles.carouselContainer}`}
+      >
+        <div className={`${homeStyles.carouselTextContainer}`}>
+          <h1 className={homeStyles.mainpageCarouselTitle}>
+            Real players, real stories
+          </h1>
+        </div>
+        <CarouselSection
+          className={homeStyles.mainpageCarousel}
+          totalPictures={8}
+          directory="/images/testimonials"
+          filename="testimonial"
+          random
+          loop
+          delay={5000}
+          specificFiles={testimonials}
+        />
+      </GsapFadeScrub>
+
+      <GsapFadeScrub
+        fadeIn
         scrubStartBot
         id={`${homeStyles.howToPlay}`}
         className={`${homeStyles.mainpageContainer}`}
@@ -309,53 +330,9 @@ const HomePage = () => {
       </div>
 
       <div
-        id={`${homeStyles.carouselContainer}`}
-        className={`${homeStyles.mainpageContainer}`}
+        className={`${homeStyles.mainpageContainer} ${homeStyles.carouselContainer}`}
       >
         <div className={`${homeStyles.carouselTextContainer}`}>
-          <h1 className={homeStyles.mainpageCarouselTitle}>
-            Watch an entire game in just 12 minutes!
-          </h1>
-          <p>
-            Click below to check out the YouTube playlist of playthrough videos.
-          </p>
-          <div className={`${homeStyles.finalButtonsWrapper}`}>
-            <DefaultButton
-              shadowless
-              icon="watchWhite"
-              href="https://www.youtube.com/playlist?list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
-              text="Watch videos"
-            />
-          </div>
-        </div>
-        <CarouselSection
-          className={homeStyles.mainpageCarousel}
-          totalPictures={27}
-          directory="/images/photoshoot/playtest"
-          filename="playtest"
-          random
-          href="https://www.youtube.com/playlist?list=PLSLy9oTFPgBYp0dmBjwxEpp7pwrsj7tql"
-        />
-      </div>
-
-      <div
-        id={`${homeStyles.spotlightContainer}`}
-        className={`${homeStyles.mainpageContainer}`}
-      >
-        <CharacterSpotlight
-          invert
-          allCharsButton
-          sectionTitle="Character spotlight"
-        />
-      </div>
-
-      <div
-        id={`${homeStyles.finalContainer}`}
-        className={`${homeStyles.mainpageContainer}`}
-      >
-        <div
-          className={`${homeStyles.finalButtonsContainer} subcontentWrapper`}
-        >
           <h1>
             Ready for{" "}
             <span className="fantasyEmphasis">Love, Career & Magic</span>?
@@ -377,6 +354,21 @@ const HomePage = () => {
             />
           </div>
         </div>
+        <CarouselSection
+          className={homeStyles.mainpageCarousel}
+          totalPictures={15}
+          directory="/images/photoshoot/playtest"
+          filename="playtest"
+          random
+          loop
+          delay={5000}
+        />
+      </div>
+
+      <div
+        id={`${homeStyles.finalContainer}`}
+        className={`${homeStyles.mainpageContainer}`}
+      >
         <div className={`${homeStyles.titleWrapper} ${homeStyles.botOne}`}>
           <div className={`${homeStyles.lcmMaskWrapper} floating noselect`}>
             <div className={`${homeStyles.lcmMask}`}></div>

@@ -6,6 +6,7 @@ import "swiper/swiper-bundle.css";
 import "../../css/utils/swiper.css";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import PropTypes from "prop-types";
+import DefaultButton from "./DefaultButton.js";
 
 // configure Swiper to use modules
 SwiperCore.use([Navigation, Pagination, A11y, Autoplay]);
@@ -18,15 +19,22 @@ const getPictureSlide = (index, directory, filename, href) => {
         aria-label={`Photoshoot ${index}`}
         rel="noreferrer"
         target="_blank"
-        className="noselect"
-        href={href ?? `${directory}/${filename}${index}.webp`}
+        className="noselect carouselImageContainer"
+        href={href ?? `${directory}/${filename}.webp`}
       >
         <img
           loading="lazy"
-          alt={`Photoshoot ${index}`}
-          className="noselect carouselImage"
-          src={`${directory}/${filename}${index}.webp`}
+          alt={`Carousel ${filename} ${index}`}
+          className={`noselect carouselImage ${href ? "has-link" : ""}`}
+          src={`${directory}/${filename}.webp`}
         />
+        {href && (
+          <DefaultButton
+            className="buttonForLink is-inverted is-outlined"
+            text="Watch video"
+            icon="watch"
+          />
+        )}
       </a>
     </SwiperSlide>
   );
@@ -36,15 +44,17 @@ const getPictureSlide = (index, directory, filename, href) => {
 export const CarouselSection = (props) => {
   const { width } = useWindowDimensions();
 
-  let cardsPerView = width >= 1400 ? 4 : width >= 900 ? 2 : 1.25;
-  let directory = props.directory;
-  let filename = props.filename;
-  let href = props.href;
+  const cardsPerView = width >= 1400 ? 4 : width >= 900 ? 2 : 1.25;
+  const directory = props.directory;
+  const filename = props.filename;
+  const href = props.href;
 
-  let swiperProps = {
+  const specificFiles = props.specificFiles;
+
+  const swiperProps = {
     modules: [Navigation, Pagination, A11y, Autoplay],
     navigation: true,
-    loop: false,
+    loop: props.loop ?? false,
     spaceBetween: 25,
     slidesPerView: cardsPerView,
     pagination: {
@@ -52,17 +62,30 @@ export const CarouselSection = (props) => {
       clickable: true,
     },
     autoplay: {
-      delay: 2000,
+      delay: props.delay ?? 2000,
       pauseOnMouseEnter: false,
       disableOnInteraction: true,
     },
   };
 
-  //get all photos in /images/photoshoot (total of 8)
-  let totalPictures = props.totalPictures;
-  let allPictures = [];
-  for (let x = 1; x <= totalPictures; x++) {
-    allPictures.push(getPictureSlide(x, directory, filename, href));
+  //get all photos
+  const allPictures = [];
+  if (!specificFiles) {
+    const totalPictures = props.totalPictures;
+    for (let x = 1; x <= totalPictures; x++) {
+      allPictures.push(getPictureSlide(x, directory, `${filename}${x}`, href));
+    }
+  } else {
+    for (let x = 0; x < specificFiles.length; x++) {
+      allPictures.push(
+        getPictureSlide(
+          x,
+          directory,
+          specificFiles[x].filename,
+          specificFiles[x].href
+        )
+      );
+    }
   }
 
   //randomize array
@@ -89,6 +112,7 @@ CarouselSection.propTypes = {
   random: PropTypes.bool,
   href: PropTypes.string,
   className: PropTypes.string,
+  specificFiles: PropTypes.arrayOf(PropTypes.object),
 };
 
 export default CarouselSection;

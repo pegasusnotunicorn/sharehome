@@ -1,12 +1,12 @@
-.carouselSection{
-  height:50vh;
+.carouselSection {
+  height: 50vh;
   position: relative;
-  padding:2em;
-  padding-top:0;
+  padding: 2em;
+  padding-top: 0;
 }
 
-.carouselSection > h2{
-  margin-top:0;
+.carouselSection > h2 {
+  margin-top: 0;
 }
 
 .carouselSection a {
@@ -16,46 +16,47 @@
 }
 
 .carouselSection img {
-  border-radius:2em;
-  height:100%;
+  border-radius: 2em;
+  height: 100%;
   object-fit: contain;
 }
 
-.swiper-container{
-  padding-bottom:0;
+.swiper-container {
+  padding-bottom: 0;
 }
 
-.swiper-button-next, .swiper-button-prev{
-  color:rgba(255,255,255,1);
-  top:50%;
-  -webkit-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-  -moz-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-  -ms-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
-  -o-filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.25));
+.swiper-button-next,
+.swiper-button-prev {
+  color: rgba(255, 255, 255, 1);
+  top: 50%;
+  -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -moz-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -ms-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
 }
 
-.swiper-button-prev{
+.swiper-button-prev {
   left: 2em;
 }
-.swiper-button-next{
+.swiper-button-next {
   right: 2em;
 }
 
 .swiper-pagination {
   position: absolute;
-  bottom:0 !important;
+  bottom: 0 !important;
   width: calc(100% - 4em);
 }
 
 @media only screen and (max-width: 900px) {
-  .swiper-button-prev{
+  .swiper-button-prev {
     left: 10px;
   }
-  .swiper-button-next{
+  .swiper-button-next {
     right: 10px;
   }
   .swiper-pagination {
-    display:flex;
+    display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
@@ -70,16 +71,26 @@
   height: 0.5em;
 }
 .swiper-pagination-bullet-active {
-  background: #DD7373;
+  background: #dd7373;
 }
 
-.swiper-slide{
-  display:flex;
+.swiper-slide {
+  display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.carouselImage{
-  width:100%;
-  border-radius:.5em;
+.carouselImageContainer {
+  position: relative;
+}
+
+.carouselImage {
+  width: 100%;
+  border-radius: 0.5em;
+}
+
+.buttonForLink {
+  position: absolute;
+  top: -1em;
+  right: 2em;
 }

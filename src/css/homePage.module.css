@@ -729,7 +729,8 @@
 
 /* #region--------------------------------------CAROUSEL  */
 
-#carouselContainer {
+.carouselContainer {
+  z-index: 10;
   margin-top: 50px;
   display: flex;
   flex-direction: column;

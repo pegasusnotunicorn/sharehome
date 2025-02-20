@@ -5,7 +5,16 @@ import DefaultButton from "../utils/DefaultButton.js";
 import "../../css/utils/lazyYoutube.css";
 import useDeviceType from "../utils/useDeviceType.js";
 
-export const YoutubeModal = ({ videoModalVisible, setPlayer, stopVideo }) => {
+const DEFAULT_DESKTOP_CODE = "EoQ2VTipXPA";
+const DEFAULT_MOBILE_CODE = "fNq9hS6DsTU";
+
+export const YoutubeModal = ({
+  videoModalVisible,
+  setPlayer,
+  stopVideo,
+  desktopCodeOverride,
+  mobileCodeOverride,
+}) => {
   const iframeRef = useRef(null);
 
   const { width, height } = useWindowDimensions();
@@ -19,7 +28,10 @@ export const YoutubeModal = ({ videoModalVisible, setPlayer, stopVideo }) => {
     ? (iframeWidth * 9) / 16
     : Math.min((iframeWidth * 16) / 9, height - 4 - 45 - emToPx * 4);
 
-  const youTubeVideoCode = isDesktop ? "EoQ2VTipXPA" : "fNq9hS6DsTU";
+  const youTubeVideoCode = isDesktop
+    ? desktopCodeOverride ?? DEFAULT_DESKTOP_CODE
+    : mobileCodeOverride ?? DEFAULT_MOBILE_CODE;
+
   const enableCC = isDesktop
     ? "&cc_load_policy=1&iv_load_policy=1"
     : "&cc_load_policy=3&iv_load_policy=3";
@@ -104,4 +116,6 @@ YoutubeModal.propTypes = {
   videoModalVisible: PropTypes.bool.isRequired,
   setPlayer: PropTypes.func.isRequired,
   stopVideo: PropTypes.func.isRequired,
+  desktopCodeOverride: PropTypes.string,
+  mobileCodeOverride: PropTypes.string,
 };

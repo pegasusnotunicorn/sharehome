@@ -96,7 +96,6 @@ const DefaultButton = forwardRef(
   }
 );
 
-DefaultButton.displayName = "DefaultButton";
 DefaultButton.propTypes = {
   id: PropTypes.string,
   className: PropTypes.string,

@@ -6,6 +6,8 @@ import "../../css/pages/home/likehateSection.css";
 import PropTypes from "prop-types";
 
 const LikeHateSection = (props) => {
+  const { title, description } = props;
+
   const characterCoords = [
     {
       name: "lydia",
@@ -144,11 +146,8 @@ const LikeHateSection = (props) => {
       <div className="likehateRightContainer likehateContainers">
         <GsapFadeScrub fadeIn scrubStartCenter>
           <div className="likehateTextContainer">
-            <h1>Complete character arcs for extra points!</h1>
-            <p>
-              Will you have the evil villain arc? Or the good person redemption
-              arc?
-            </p>
+            {title}
+            {description}
           </div>
         </GsapFadeScrub>
       </div>
@@ -159,6 +158,9 @@ const LikeHateSection = (props) => {
 LikeHateSection.propTypes = {
   id: PropTypes.string,
   className: PropTypes.string,
+  title: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired,
+  description: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
+    .isRequired,
 };
 
 const CharacterArc = ({

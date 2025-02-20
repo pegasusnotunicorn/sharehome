@@ -4,7 +4,6 @@ import DefaultButton from "../utils/DefaultButton.js";
 import { YoutubeModal } from "./YoutubeModal.js";
 import CarouselSection from "../utils/CarouselSection.js";
 import ParallaxSection from "./ParallaxSection.js";
-import MechanicsSection from "./MechanicsSection.js";
 import CharactersDeckSection from "./CharactersDeckSection.js";
 import {
   EventsDeckSection,
@@ -18,7 +17,7 @@ import landingPageStyles from "../../css/landingPage.module.css";
 import "../../css/utils/colors.css";
 import DescriptionContainer from "./DescriptionContainer.js";
 
-const LandingPage = () => {
+export default function TTRPGPage() {
   const [player, setPlayer] = useState(null);
   const [videoModalVisible, setVideoModalVisible] = useState(false);
 
@@ -39,7 +38,7 @@ const LandingPage = () => {
   };
 
   useEffect(() => {
-    document.title = "Love, Career & Magic - 12m game for 2-6 players";
+    document.title = "Teach TTRPGs in just 12m";
   }, []);
 
   return (
@@ -50,6 +49,8 @@ const LandingPage = () => {
         videoModalVisible={videoModalVisible}
         setPlayer={setPlayer}
         stopVideo={stopVideo}
+        // desktopCodeOverride="88Q0Z88Q0Z"
+        // mobileCodeOverride="88Q0Z88Q0Z"
       />
 
       <ShootingStarSection />
@@ -62,19 +63,27 @@ const LandingPage = () => {
       <DescriptionContainer
         title={
           <h1 className={`${landingPageStyles.subtitle}`}>
-            A party game where <br />{" "}
-            <span className="fantasyEmphasis">fantasy</span> meets reality TV.
+            A TTRPG you can finish
+            <br /> in just <span className="fantasyEmphasis">12 minutes</span>!
           </h1>
         }
         description={
-          <p>
-            Can you work together to secure a second season? Or will you be
-            canceled halfway through?
-          </p>
+          <ul
+            style={{
+              textAlign: "left",
+              maxWidth: 400,
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
+          >
+            <li>No need for a dedicated DM or prep work.</li>
+            <li>No wasting time with characters or dice.</li>
+            <li>Teach the game in 1 minute.</li>
+            <li>Fun for newcomers and veterans.</li>
+            <li>No age limits.</li>
+          </ul>
         }
       />
-
-      <MechanicsSection />
 
       <TestimonialsSection />
 
@@ -84,8 +93,19 @@ const LandingPage = () => {
         id={`${landingPageStyles.howToPlay}`}
         className={`${landingPageStyles.mainpageContainer}`}
       >
-        <h1>How to play</h1>
-        <p>(in 4 easy steps)</p>
+        <h1>The perfect gateway to TTRPGs</h1>
+        <p>
+          Getting your board game friends to try a full-length campaign? Nearly
+          impossible.
+        </p>
+        <p>
+          Getting them to try a 12 min game? Super easy, barely an
+          inconvenience.
+        </p>
+        <p>
+          Give them a taste of roleplaying—
+          <b>without the huge time commitment</b>.
+        </p>
       </GsapFadeScrub>
 
       <div
@@ -104,11 +124,14 @@ const LandingPage = () => {
                 alt="point finger"
               />
             </GsapWiggle>
-            <h1>Choose from 25 unique characters!</h1>
+            <h1>No wasting time</h1>
+            <p className={landingPageStyles.textWrapper}>
+              There is no required reading, no character sheets you have to
+              build, no waiting around for dice rolling and skill checks.
+              Everything you need to play is written on the provided cards.
+            </p>
             <p>
-              Mythological creatures with modern day jobs just like us humans.
-              <br />
-              <a href="/characters">Click here</a> to see all characters.
+              You just pick up and <b>start playing immediately</b>.
             </p>
           </GsapFadeScrub>
         </div>
@@ -142,11 +165,15 @@ const LandingPage = () => {
             <img loading="lazy" src="/images/icons/planet.svg" alt="cake" />
           </GsapWiggle>
           <div className={`${landingPageStyles.eventsTextContainer}`}>
-            <h1>Follow chaotic stage directions</h1>
+            <h1>No dedicated DM required</h1>
+            <p className={landingPageStyles.textWrapper}>
+              There is no "main" campaign. The Direction Cards provide a simple
+              framework for everyone to roleplay together. No single person is
+              shouldering the burden of having to come up with a story.
+            </p>
             <p>
-              The executives of the show are trying to instill chaos into the
-              narrative.Complete as many of their Direction Cards as you can to
-              earn points!
+              Everyone is a character and <b>everyone is a part of the story</b>
+              .
             </p>
           </div>
         </GsapFadeScrub>
@@ -156,12 +183,19 @@ const LandingPage = () => {
       <LikeHateSection
         id={`${landingPageStyles.likehateContainer}`}
         className={`${landingPageStyles.mainpageContainer}`}
-        title={<h1>Complete character arcs for extra points!</h1>}
+        title={<h1>Easy to learn, endless replayability</h1>}
         description={
-          <p>
-            Will you have the evil villain arc? Or the good person redemption
-            arc?
-          </p>
+          <>
+            <p>
+              Randomized character traits provide the motivations and growth
+              arcs for your characters. You just fill in the gaps and let the
+              story unfold.
+            </p>
+            <p>
+              Every game is different and{" "}
+              <b>fun for both newcomers and veterans alike</b>.
+            </p>
+          </>
         }
       />
 
@@ -188,10 +222,13 @@ const LandingPage = () => {
             <img loading="lazy" src="/images/icons/scroll.svg" alt="scroll" />
           </GsapWiggle>
           <div className={`${landingPageStyles.goalsTextContainer}`}>
-            <h1>Crazy locations never before seen on TV</h1>
+            <h1>Fun for all ages</h1>
             <p>
-              Every episode of the reality TV show occurs in a random exotic
-              location carefully hand-picked for maximum excitement!
+              If you can read and talk, then you can play this game. The game is
+              as kid friendly or adult oriented as you make it.
+            </p>
+            <p>
+              You decides where the story goes <b>as a group</b>.
             </p>
           </div>
         </GsapFadeScrub>
@@ -257,6 +294,4 @@ const LandingPage = () => {
       </div>
     </div>
   );
-};
-
-export default LandingPage;
+}

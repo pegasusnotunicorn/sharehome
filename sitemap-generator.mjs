@@ -16,6 +16,7 @@ const hostname = "https://lovecareermagic.com";
 // Define static routes
 const routes = [
   "/",
+  "/ttrpg",
   "/howtoplay",
   "/freeartbook",
   "/digitalartbook",

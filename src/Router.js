@@ -4,6 +4,7 @@ import MetaTags from "./components/MetaTags.js";
 import Navbar from "./components/Navbar/Navbar.js";
 import ScrollToTop from "./ScrollToTop.js";
 import LandingPage from "./components/Home/LandingPage.js";
+import TTRPGPage from "./components/Home/TTRPGPage.js";
 import AboutPage from "./components/About/AboutPage.js";
 import CharactersPage from "./components/Characters/CharactersPage.js";
 import TermsPage from "./components/TermsPage.js";
@@ -41,6 +42,7 @@ const Router = () => {
 
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/ttrpg" element={<TTRPGPage />} />
         <Route path="/about" element={<Navigate to="/howtoplay" replace />} />
         <Route path="/howtoplay" element={<AboutPage />} />
         <Route path="/freeartbook" element={<FreeArtbookPage />} />

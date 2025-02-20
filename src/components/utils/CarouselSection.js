@@ -1,15 +1,15 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import SwiperCore, { Navigation, Pagination, A11y, Autoplay } from "swiper";
+import { Navigation, Pagination, A11y, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/autoplay";
+import "swiper/css/a11y";
 import { GsapFadeScrub } from "../utils/useGsap.js";
-import "swiper/swiper.min.css";
-import "swiper/swiper-bundle.css";
-import "../../css/utils/swiper.css";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import PropTypes from "prop-types";
 import DefaultButton from "./DefaultButton.js";
-
-// configure Swiper to use modules
-SwiperCore.use([Navigation, Pagination, A11y, Autoplay]);
+import "../../css/utils/swiper.css";
 
 //return a single slide
 const getPictureSlide = (index, directory, filename, href) => {

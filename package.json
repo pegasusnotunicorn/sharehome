@@ -17,7 +17,7 @@
     "react-router": "^7.1.5",
     "react-scripts": "^5.0.1",
     "sitemap": "^8.0.0",
-    "swiper": "^6.8.4",
+    "swiper": "^11.2.4",
     "webfontloader": "^1.6.28"
   },
   "scripts": {

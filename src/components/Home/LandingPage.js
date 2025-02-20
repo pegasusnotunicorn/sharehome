@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import GameModeIcons from "../About/utils/GameModeIcons.js";
 import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";
 import DefaultButton from "../utils/DefaultButton.js";
+import { YoutubeModal } from "./YoutubeModal.js";
 import CarouselSection from "../utils/CarouselSection.js";
 import ParallaxSection from "./ParallaxSection.js";
 import CharactersDeckSection from "./CharactersDeckSection.js";
@@ -9,14 +10,14 @@ import {
   EventsDeckSection,
   GoalsDeckSection,
 } from "./EventsGoalsDeckSection.js";
-import LikeHateSection from "./LikeHateSection.js";
-import homeStyles from "../../css/homePage.module.css";
-import "../../css/utils/colors.css";
-import ShootingStar from "../Navbar/ShootingStar.js";
-import { YoutubeModal } from "./YoutubeModal.js";
 import TestimonialsSection from "./TestimonialsSection.js";
+import LikeHateSection from "./LikeHateSection.js";
+import ShootingStarSection from "./ShootingStarSection.js";
+import HeroImageSection from "./HeroImageSection.js";
+import landingPageStyles from "../../css/landingPage.module.css";
+import "../../css/utils/colors.css";
 
-const HomePage = () => {
+const LandingPage = () => {
   const [player, setPlayer] = useState(null);
   const [videoModalVisible, setVideoModalVisible] = useState(false);
 
@@ -50,84 +51,33 @@ const HomePage = () => {
         stopVideo={stopVideo}
       />
 
-      {/* shooting stars */}
-      <div id={`${homeStyles.shootingStarsContainer}`}>
-        <div id={`${homeStyles.shootingStarsWrapper}`}>
-          {Array.from({ length: 10 }).map((_, i) => (
-            <ShootingStar
-              key={i}
-              className={i % 2 === 0 ? "leftStar" : "rightStar"}
-              isActive
-              orientation={["left", "up", "right", "down"][i % 4]}
-              mirror={i % 2 === 0 ? "mirror" : ""}
-              delay={i * 2}
-            />
-          ))}
-        </div>
-      </div>
+      <ShootingStarSection />
+
+      <HeroImageSection
+        videoModalVisible={videoModalVisible}
+        playVideo={playVideo}
+      />
 
       <div
-        id={`${homeStyles.heroContainer}`}
-        className={`${homeStyles.mainContentWrapper} noselect`}
+        id={`${landingPageStyles.descriptionContainer}`}
+        className={`${landingPageStyles.mainpageContainer}`}
       >
-        <div
-          id={`${homeStyles.heroBgImage}`}
-          className={homeStyles.screenHeight}
-        />
-        <div className={homeStyles.screenHeight}>
-          <img
-            alt="Box and components of the card game."
-            src="/images/click_to_learn.webp"
-            draggable={false}
-            className={`${homeStyles.heroImage} noselect openYouTubeModalButton`}
-            onClick={playVideo}
-          />
-          <img
-            alt="Click the box to learn more!"
-            src="/images/box_transparent.webp"
-            draggable={false}
-            className={`${homeStyles.heroImage} noselect openYouTubeModalButton ${homeStyles.monsterBurstAnimation}`}
-            onClick={playVideo}
-          />
-          <div
-            style={{
-              display: videoModalVisible ? "none" : "flex",
-            }}
-            className={homeStyles.heroBottomWrapper}
-          >
-            <DefaultButton
-              shadowless
-              animated
-              icon="forward"
-              className="is-red"
-              navlink="/buy"
-              text="Buy now"
-              size="large"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div
-        id={`${homeStyles.descriptionContainer}`}
-        className={`${homeStyles.mainpageContainer}`}
-      >
-        <div className={`${homeStyles.descriptionWrapper}`}>
+        <div className={`${landingPageStyles.descriptionWrapper}`}>
           <GsapFadeScrub fadeIn scrub>
             <div className={`subcontentWrapper`}>
-              <h1 className={`${homeStyles.subtitle}`}>
+              <h1 className={`${landingPageStyles.subtitle}`}>
                 A party game where <br />{" "}
                 <span className="fantasyEmphasis">fantasy</span> meets reality
                 TV.
               </h1>
               <GameModeIcons
-                className={`${homeStyles.gameDetails}`}
+                className={`${landingPageStyles.gameDetails}`}
                 playerCount="2 - 6 players"
                 playTime="12 minutes"
               />
             </div>
             <div
-              className={`${homeStyles.descriptionTextWrapper} subcontentWrapper min-width`}
+              className={`${landingPageStyles.descriptionTextWrapper} subcontentWrapper min-width`}
             >
               <p>
                 Can you work together to secure a second season? Or will you be
@@ -140,15 +90,15 @@ const HomePage = () => {
       </div>
 
       <div
-        id={`${homeStyles.mechanicsContainer}`}
-        className={`${homeStyles.mainpageContainer}`}
+        id={`${landingPageStyles.mechanicsContainer}`}
+        className={`${landingPageStyles.mainpageContainer}`}
       >
         <GsapFadeScrub fadeIn>
           <h1>
             If you like any of these things, then you&apos;ll love this game!
           </h1>
         </GsapFadeScrub>
-        <div className={`${homeStyles.mechanicsWrapper}`}>
+        <div className={`${landingPageStyles.mechanicsWrapper}`}>
           <GsapFadeScrub fadeIn>
             <img
               loading="lazy"
@@ -197,21 +147,23 @@ const HomePage = () => {
       <GsapFadeScrub
         fadeIn
         scrubStartBot
-        id={`${homeStyles.howToPlay}`}
-        className={`${homeStyles.mainpageContainer}`}
+        id={`${landingPageStyles.howToPlay}`}
+        className={`${landingPageStyles.mainpageContainer}`}
       >
         <h1>How to play</h1>
         <p>(in 4 easy steps)</p>
       </GsapFadeScrub>
 
       <div
-        id={`${homeStyles.characterContainer}`}
-        className={`${homeStyles.mainpageContainer}`}
+        id={`${landingPageStyles.characterContainer}`}
+        className={`${landingPageStyles.mainpageContainer}`}
       >
         <CharactersDeckSection />
-        <div className={`${homeStyles.characterTextContainer}`}>
+        <div className={`${landingPageStyles.characterTextContainer}`}>
           <GsapFadeScrub fadeIn>
-            <GsapWiggle className={`${homeStyles.characterContainerSVG}`}>
+            <GsapWiggle
+              className={`${landingPageStyles.characterContainerSVG}`}
+            >
               <img
                 loading="lazy"
                 src="/images/icons/pointer.svg"
@@ -229,33 +181,33 @@ const HomePage = () => {
       </div>
 
       <div
-        id={`${homeStyles.eventsContainer}`}
-        className={`${homeStyles.mainpageContainer}`}
+        id={`${landingPageStyles.eventsContainer}`}
+        className={`${landingPageStyles.mainpageContainer}`}
       >
         <GsapFadeScrub
           fadeIn
           scrubStartCenter
-          className={`${homeStyles.eventsLeftContainer}`}
+          className={`${landingPageStyles.eventsLeftContainer}`}
         >
           <GsapWiggle
-            id={`${homeStyles.eventsContainerSVGcake}`}
-            className={`${homeStyles.eventsContainerSVG}`}
+            id={`${landingPageStyles.eventsContainerSVGcake}`}
+            className={`${landingPageStyles.eventsContainerSVG}`}
           >
             <img loading="lazy" src="/images/icons/cake.svg" alt="cake" />
           </GsapWiggle>
           <GsapWiggle
-            id={`${homeStyles.eventsContainerSVGlovekey}`}
-            className={`${homeStyles.eventsContainerSVG}`}
+            id={`${landingPageStyles.eventsContainerSVGlovekey}`}
+            className={`${landingPageStyles.eventsContainerSVG}`}
           >
             <img loading="lazy" src="/images/icons/lovekey.svg" alt="cake" />
           </GsapWiggle>
           <GsapWiggle
-            id={`${homeStyles.eventsContainerSVGplanet}`}
-            className={`${homeStyles.eventsContainerSVG}`}
+            id={`${landingPageStyles.eventsContainerSVGplanet}`}
+            className={`${landingPageStyles.eventsContainerSVG}`}
           >
             <img loading="lazy" src="/images/icons/planet.svg" alt="cake" />
           </GsapWiggle>
-          <div className={`${homeStyles.eventsTextContainer}`}>
+          <div className={`${landingPageStyles.eventsTextContainer}`}>
             <h1>Follow chaotic stage directions</h1>
             <p>
               The executives of the show are trying to instill chaos into the
@@ -268,33 +220,33 @@ const HomePage = () => {
       </div>
 
       <LikeHateSection
-        id={`${homeStyles.likehateContainer}`}
-        className={`${homeStyles.mainpageContainer}`}
+        id={`${landingPageStyles.likehateContainer}`}
+        className={`${landingPageStyles.mainpageContainer}`}
       />
 
       <div
-        id={`${homeStyles.goalsContainer}`}
-        className={`${homeStyles.mainpageContainer}`}
+        id={`${landingPageStyles.goalsContainer}`}
+        className={`${landingPageStyles.mainpageContainer}`}
       >
         <GoalsDeckSection />
         <GsapFadeScrub
           fadeIn
           scrubStartCenter
-          className={`${homeStyles.goalsRightContainer}`}
+          className={`${landingPageStyles.goalsRightContainer}`}
         >
           <GsapWiggle
-            id={`${homeStyles.goalsContainerSVGflag}`}
-            className={`${homeStyles.goalsContainerSVG}`}
+            id={`${landingPageStyles.goalsContainerSVGflag}`}
+            className={`${landingPageStyles.goalsContainerSVG}`}
           >
             <img loading="lazy" src="/images/icons/flag.svg" alt="flag" />
           </GsapWiggle>
           <GsapWiggle
-            id={`${homeStyles.goalsContainerSVGscroll}`}
-            className={`${homeStyles.goalsContainerSVG}`}
+            id={`${landingPageStyles.goalsContainerSVGscroll}`}
+            className={`${landingPageStyles.goalsContainerSVG}`}
           >
             <img loading="lazy" src="/images/icons/scroll.svg" alt="scroll" />
           </GsapWiggle>
-          <div className={`${homeStyles.goalsTextContainer}`}>
+          <div className={`${landingPageStyles.goalsTextContainer}`}>
             <h1>Crazy locations never before seen on TV</h1>
             <p>
               Every episode of the reality TV show occurs in a random exotic
@@ -305,14 +257,14 @@ const HomePage = () => {
       </div>
 
       <div
-        className={`${homeStyles.mainpageContainer} ${homeStyles.carouselContainer}`}
+        className={`${landingPageStyles.mainpageContainer} ${landingPageStyles.carouselContainer}`}
       >
-        <div className={`${homeStyles.carouselTextContainer}`}>
+        <div className={`${landingPageStyles.carouselTextContainer}`}>
           <h1>
             Ready for{" "}
             <span className="fantasyEmphasis">Love, Career & Magic</span>?
           </h1>
-          <div className={`${homeStyles.finalButtonsWrapper}`}>
+          <div className={`${landingPageStyles.finalButtonsWrapper}`}>
             <DefaultButton
               shadowless
               animated
@@ -325,7 +277,7 @@ const HomePage = () => {
           </div>
         </div>
         <CarouselSection
-          className={homeStyles.mainpageCarousel}
+          className={landingPageStyles.mainpageCarousel}
           totalPictures={15}
           directory="/images/photoshoot/playtest"
           filename="playtest"
@@ -336,17 +288,21 @@ const HomePage = () => {
       </div>
 
       <div
-        id={`${homeStyles.finalContainer}`}
-        className={`${homeStyles.mainpageContainer}`}
+        id={`${landingPageStyles.finalContainer}`}
+        className={`${landingPageStyles.mainpageContainer}`}
       >
-        <div className={`${homeStyles.titleWrapper} ${homeStyles.botOne}`}>
-          <div className={`${homeStyles.lcmMaskWrapper} floating noselect`}>
-            <div className={`${homeStyles.lcmMask}`}></div>
+        <div
+          className={`${landingPageStyles.titleWrapper} ${landingPageStyles.botOne}`}
+        >
+          <div
+            className={`${landingPageStyles.lcmMaskWrapper} floating noselect`}
+          >
+            <div className={`${landingPageStyles.lcmMask}`}></div>
           </div>
         </div>
 
-        <div className={homeStyles.termsWrapper}>
-          <div className={homeStyles.pegasusWrapper}>
+        <div className={landingPageStyles.termsWrapper}>
+          <div className={landingPageStyles.pegasusWrapper}>
             <img src="/images/pegasus_logo.png" alt="Pegasus Games logo" />
             <p>
               Designed by{" "}
@@ -362,6 +318,6 @@ const HomePage = () => {
   );
 };
 
-HomePage.displayName = "HomePage";
+LandingPage.displayName = "LandingPage";
 
-export default HomePage;
+export default LandingPage;

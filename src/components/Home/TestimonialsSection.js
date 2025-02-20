@@ -1,6 +1,6 @@
 import { GsapFadeScrub } from "../utils/useGsap.js";
 import CarouselSection from "../utils/CarouselSection.js";
-import homeStyles from "../../css/homePage.module.css";
+import landingPageStyles from "../../css/landingPage.module.css";
 
 const testimonials = [
   {
@@ -52,15 +52,15 @@ export default function TestimonialsSection() {
   return (
     <GsapFadeScrub
       fadeIn
-      className={`${homeStyles.mainpageContainer} ${homeStyles.carouselContainer}`}
+      className={`${landingPageStyles.mainpageContainer} ${landingPageStyles.carouselContainer}`}
     >
-      <div className={`${homeStyles.carouselTextContainer}`}>
-        <h1 className={homeStyles.mainpageCarouselTitle}>
+      <div className={`${landingPageStyles.carouselTextContainer}`}>
+        <h1 className={landingPageStyles.mainpageCarouselTitle}>
           Real players, real stories
         </h1>
       </div>
       <CarouselSection
-        className={homeStyles.mainpageCarousel}
+        className={landingPageStyles.mainpageCarousel}
         directory="/images/testimonials"
         filename="testimonial"
         loop

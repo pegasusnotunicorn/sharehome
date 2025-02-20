@@ -375,9 +375,18 @@ const HomePage = () => {
           </div>
         </div>
 
-        <small>
-          <a href="/terms">Terms and conditions</a>
-        </small>
+        <div className={homeStyles.termsWrapper}>
+          <div className={homeStyles.pegasusWrapper}>
+            <img src="/images/pegasus_logo.png" alt="Pegasus Games logo" />
+            <p>
+              Designed by{" "}
+              <a href="https://unicornwithwings.com">Pegasus Games</a>
+            </p>
+          </div>
+          <p>
+            <a href="/terms">Terms and conditions</a>
+          </p>
+        </div>
       </div>
     </div>
   );

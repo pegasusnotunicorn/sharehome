@@ -918,4 +918,30 @@
   font-size: 1em;
 }
 
+.termsWrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.termsWrapper p {
+  font-size: 0.75em;
+}
+
+.pegasusWrapper {
+  display: flex;
+  gap: 0.25em;
+  justify-content: center;
+  align-items: center;
+}
+
+.pegasusWrapper > p {
+  margin: 0;
+}
+
+.pegasusWrapper > img {
+  width: 50px;
+}
+
 /* #endregion */

@@ -11,7 +11,7 @@ import { getAllCharacters } from "./src/components/Characters/Characters.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const hostname = "https://yourdomain.com"; // Replace with your actual domain
+const hostname = "https://lovecareermagic.com"; // Replace with your actual domain
 
 // Define static routes
 const routes = [

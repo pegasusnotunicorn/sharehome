@@ -2,6 +2,7 @@
   "name": "sharehome",
   "homepage": "https://lovecareermagic.com",
   "version": "1.0.0",
+  "type": "module",
   "private": true,
   "engines": {
     "npm": ">=8.3.0",
@@ -26,7 +27,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "postinstall": "react-scripts build",
-    "generate-sitemap": "node sitemap-generator.js"
+    "generate-sitemap": "node sitemap-generator.mjs"
   },
   "browserslist": {
     "production": [

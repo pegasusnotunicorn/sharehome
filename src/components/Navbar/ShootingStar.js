@@ -1,5 +1,5 @@
 import { useState, useRef, useLayoutEffect } from "react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollTrigger } from "gsap/ScrollTrigger.js";
 import gsap from "gsap";
 import { randomNum } from "../utils/useMath.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";

@@ -1,6 +1,6 @@
 import { useRef, useLayoutEffect } from "react";
 import { NavLink } from "react-router";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollTrigger } from "gsap/ScrollTrigger.js";
 import gsap from "gsap";
 import Card from "../Card/Card.js";
 import DeckRow from "./utils/DeckRow.js";

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useLayoutEffect } from "react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollTrigger } from "gsap/ScrollTrigger.js";
 import gsap from "gsap";
 import Card from "../Card/Card.js";
 import getHomePageCardProps from "./utils/getHomePageCardProps.js";

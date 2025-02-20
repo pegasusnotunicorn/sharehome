@@ -15,15 +15,18 @@
     "react-helmet": "^6.1.0",
     "react-router": "^7.1.5",
     "react-scripts": "^5.0.1",
+    "sitemap": "^8.0.0",
     "swiper": "^6.8.4",
     "webfontloader": "^1.6.28"
   },
   "scripts": {
+    "prebuild": "npm run generate-sitemap",
     "start": "react-scripts start",
     "build": "react-scripts build && node critical.mjs",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postinstall": "react-scripts build"
+    "postinstall": "react-scripts build",
+    "generate-sitemap": "node sitemap-generator.js"
   },
   "browserslist": {
     "production": [

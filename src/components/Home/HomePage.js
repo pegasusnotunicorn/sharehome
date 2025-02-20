@@ -14,7 +14,7 @@ import homeStyles from "../../css/homePage.module.css";
 import "../../css/utils/colors.css";
 import ShootingStar from "../Navbar/ShootingStar.js";
 import { YoutubeModal } from "./YoutubeModal.js";
-import { testimonials } from "../testimonials.js";
+import TestimonialsSection from "./TestimonialsSection.js";
 
 const HomePage = () => {
   const [player, setPlayer] = useState(null);
@@ -192,26 +192,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      <GsapFadeScrub
-        fadeIn
-        className={`${homeStyles.mainpageContainer} ${homeStyles.carouselContainer}`}
-      >
-        <div className={`${homeStyles.carouselTextContainer}`}>
-          <h1 className={homeStyles.mainpageCarouselTitle}>
-            Real players, real stories
-          </h1>
-        </div>
-        <CarouselSection
-          className={homeStyles.mainpageCarousel}
-          totalPictures={8}
-          directory="/images/testimonials"
-          filename="testimonial"
-          random
-          loop
-          delay={5000}
-          specificFiles={testimonials}
-        />
-      </GsapFadeScrub>
+      <TestimonialsSection />
 
       <GsapFadeScrub
         fadeIn
@@ -240,15 +221,9 @@ const HomePage = () => {
             <h1>Choose from 25 unique characters!</h1>
             <p>
               Mythological creatures with modern day jobs just like us humans.
+              <br />
+              <a href="/characters">Click here</a> to see all characters.
             </p>
-            <div className={`${homeStyles.buttonWrapper}`}>
-              <DefaultButton
-                shadowless
-                icon="people_white"
-                navlink="/characters"
-                text="View all characters"
-              />
-            </div>
           </GsapFadeScrub>
         </div>
       </div>
@@ -340,17 +315,12 @@ const HomePage = () => {
           <div className={`${homeStyles.finalButtonsWrapper}`}>
             <DefaultButton
               shadowless
-              icon="starWhite"
-              className="is-blue"
-              href="https://screentop.gg/@PegasusGames/lcm"
-              text="Play online"
-            />
-            <DefaultButton
-              shadowless
-              icon="watchWhite"
-              className="is-green"
-              text="Watch video"
-              onClick={playVideo}
+              animated
+              icon="forward"
+              className="is-red is-large"
+              navlink="/buy"
+              text="Buy now"
+              size="large"
             />
           </div>
         </div>

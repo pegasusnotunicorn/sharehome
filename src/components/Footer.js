@@ -32,11 +32,6 @@ const RandomCardsForFooter = (totalPeopleCards, totalEventGoalCards) => {
       let randomZ = Math.round(Math.random() * array.length);
       let randomLeft = Math.round((index - 1) * (100 / array.length));
 
-      //u shaped distribution
-      let uShapeVar =
-        Math.floor(Math.pow(index + 1 - array.length / 2, 2) / 4) - 15;
-      let randomBottom = uShapeVar;
-
       let props = {
         id: broadType + index,
         key: broadType + index,
@@ -65,7 +60,7 @@ const RandomCardsForFooter = (totalPeopleCards, totalEventGoalCards) => {
           cursor: "pointer",
         },
         //used for animation later in useEffect
-        randomBottom: randomBottom + "vh",
+        randomBottom: 0 + "vh",
         randomDegree: "rotate(" + randomDegree + "deg)",
       };
       const { key, ...rest } = props;

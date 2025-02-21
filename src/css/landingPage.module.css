@@ -199,19 +199,6 @@
   cursor: pointer;
 }
 
-.heroBottomWrapper {
-  z-index: 100;
-  position: absolute;
-  bottom: 1em;
-  margin-bottom: 3em;
-  left: 50%;
-  color: #fff;
-  width: calc(100% - 4em);
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
-}
-
 .tagLine {
   font-size: 1.5em;
   white-space: pre-wrap;
@@ -222,12 +209,6 @@
 
 /* mobile */
 @media only screen and (max-width: 900px) {
-  .heroBottomWrapper {
-    position: fixed;
-    width: calc(100% - 2em);
-    margin-bottom: 1em;
-    bottom: 0;
-  }
   .heroImage {
     padding-top: 0;
   }
@@ -758,11 +739,6 @@
   }
   .mainpageCarouselTitle {
     margin-top: 0;
-  }
-
-  .mainpageCarousel {
-    padding-top: 0;
-    margin-top: -4em;
   }
 }
 

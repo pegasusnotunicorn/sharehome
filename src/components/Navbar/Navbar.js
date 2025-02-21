@@ -21,7 +21,6 @@ export const NavbarMain = (props) => {
 
   //toggle email logic
   const { width } = useWindowDimensions();
-  const isDesktop = width > 900;
   const [mailButtonVisible, setMailButtonVisible] = useState(true);
   const mailButtonVisibleClass = mailButtonVisible ? "is-active" : ""; //class to append if visible
 
@@ -65,18 +64,15 @@ export const NavbarMain = (props) => {
       <GsapFadeScrub scrub fadeIn className="fixedButtonsWrapper noselect">
         <NavLink to="/" className="navbarFloatLeft"></NavLink>
         <div className="navbarFloatRight">
-          {!isHomePage ||
-            (isDesktop && (
-              <DefaultButton
-                shadowless
-                animated
-                icon="forward"
-                id="emailToggleButtonMobile"
-                className={`${mailButtonVisibleClass} is-red`}
-                navlink="/buy"
-                text="Buy now!"
-              />
-            ))}
+          <DefaultButton
+            shadowless
+            animated
+            icon="forward"
+            id="emailToggleButtonMobile"
+            className={`${mailButtonVisibleClass} is-red navbarBuyButton`}
+            navlink="/buy"
+            text="Buy now!"
+          />
           <button
             id="navbarOpenClose"
             className={`hamburger hamburger--slider ${isVisibleClass}`}

@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import DefaultButton from "../utils/DefaultButton.js";
 import landingPageStyles from "../../css/landingPage.module.css";
 
 export default function HeroImageSection({
@@ -32,22 +31,6 @@ export default function HeroImageSection({
           className={`${landingPageStyles.heroImage} noselect openYouTubeModalButton ${landingPageStyles.monsterBurstAnimation}`}
           onClick={playVideo}
         />
-        <div
-          style={{
-            display: videoModalVisible ? "none" : "flex",
-          }}
-          className={landingPageStyles.heroBottomWrapper}
-        >
-          <DefaultButton
-            shadowless
-            animated
-            icon="forward"
-            className="is-red"
-            navlink="/buy"
-            text="Buy now"
-            size="large"
-          />
-        </div>
       </div>
     </div>
   );

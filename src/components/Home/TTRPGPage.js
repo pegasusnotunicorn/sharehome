@@ -69,14 +69,7 @@ export default function TTRPGPage() {
           </h1>
         }
         description={
-          <ul
-            style={{
-              textAlign: "left",
-              maxWidth: 400,
-              marginLeft: "auto",
-              marginRight: "auto",
-            }}
-          >
+          <ul className={`${landingPageStyles.bulletWrapper}`}>
             <li>No need for a dedicated DM or prep work.</li>
             <li>No wasting time with characters or dice.</li>
             <li>Teach the game in 1 minute.</li>

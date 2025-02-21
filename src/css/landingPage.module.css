@@ -340,6 +340,15 @@
   z-index: 20;
 }
 
+.bulletWrapper {
+  max-width: 400px;
+  text-align: left;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .descriptionOpaque {
   opacity: 0;
 }
@@ -351,6 +360,7 @@
   justify-content: center;
   flex-direction: column;
   text-align: center;
+  width: calc(100% - 2em);
 }
 
 .descriptionButtonWrapper {
@@ -362,6 +372,7 @@
 .descriptionWrapper > div {
   padding-left: 0;
   padding-right: 0;
+  width: 100%;
 }
 
 .descriptionTextWrapper > a {
@@ -400,6 +411,9 @@
 
 /* mobile */
 @media only screen and (max-width: 900px) {
+  .bulletWrapper {
+    max-width: unset;
+  }
   .gameDetails {
     font-size: 0.65em !important;
   }

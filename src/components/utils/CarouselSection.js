@@ -108,7 +108,7 @@ export const CarouselSection = (props) => {
 CarouselSection.propTypes = {
   directory: PropTypes.string.isRequired,
   filename: PropTypes.string.isRequired,
-  totalPictures: PropTypes.number.isRequired,
+  totalPictures: PropTypes.number,
   random: PropTypes.bool,
   href: PropTypes.string,
   className: PropTypes.string,

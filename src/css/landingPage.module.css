@@ -207,8 +207,26 @@
   width: 100%;
 }
 
+.heroBottomWrapper {
+  z-index: 100;
+  position: absolute;
+  bottom: 1em;
+  margin-bottom: 3em;
+  left: 50%;
+  color: #fff;
+  width: calc(100% - 2em);
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+}
+
 /* mobile */
 @media only screen and (max-width: 900px) {
+  .heroBottomWrapper {
+    position: fixed;
+    bottom: 1em;
+    margin-bottom: 0;
+  }
   .heroImage {
     padding-top: 0;
   }

@@ -3,9 +3,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger.js";
 import gsap from "gsap";
 import { randomDeg } from "../utils/useMath.js";
 import PropTypes from "prop-types";
+import { useLocation } from "react-router";
 
 //just a simple fade in with a delay, not tied to scroll
 export const GsapFadeDelay = (props) => {
+  const location = useLocation();
   gsap.registerPlugin(ScrollTrigger);
   const target = useRef(null);
 
@@ -35,6 +37,7 @@ export const GsapFadeDelay = (props) => {
 
   return (
     <div
+      key={location.pathname}
       ref={target}
       id={props.id}
       className={props.className}
@@ -55,6 +58,7 @@ GsapFadeDelay.propTypes = {
 
 //fadein or out scrubbing with viewport
 export const GsapFadeScrub = (props) => {
+  const location = useLocation();
   gsap.registerPlugin(ScrollTrigger);
   const target = useRef(null);
 
@@ -129,7 +133,12 @@ export const GsapFadeScrub = (props) => {
   ]);
 
   return (
-    <div ref={target} id={props.id} className={props.className}>
+    <div
+      key={location.pathname}
+      ref={target}
+      id={props.id}
+      className={props.className}
+    >
       {props.children}
     </div>
   );
@@ -153,6 +162,7 @@ GsapFadeScrub.propTypes = {
 
 //wiggle a element
 export const GsapWiggle = (props) => {
+  const location = useLocation();
   gsap.registerPlugin(ScrollTrigger);
   const target = useRef(null);
   const degree = props.degree || 10;
@@ -183,7 +193,12 @@ export const GsapWiggle = (props) => {
   }, [target, degree]);
 
   return (
-    <div ref={target} id={props.id} className={props.className}>
+    <div
+      key={location.pathname}
+      ref={target}
+      id={props.id}
+      className={props.className}
+    >
       {props.children}
     </div>
   );

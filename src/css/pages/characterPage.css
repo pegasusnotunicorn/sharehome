@@ -116,11 +116,11 @@
   flex-wrap: wrap;
   min-height: 100vh;
   justify-content: center;
+  gap: 1em;
 }
 
 .characterWrapper {
   width: calc(20% - 1em);
-  margin: 0.5em;
   min-height: 250px;
   position: relative;
   box-shadow: 0 12.5px 25px -15px rgba(50, 50, 73, 0.4),

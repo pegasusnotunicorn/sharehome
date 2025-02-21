@@ -13,7 +13,8 @@ import useWindowScroll from "../utils/useWindowScroll.js";
 //main navbar for page navigation on the website
 export const NavbarMain = (props) => {
   const location = useLocation();
-  const isHomePage = location.pathname === "/";
+  const isLandingPage =
+    location.pathname === "/" || location.pathname.includes("ttrpg");
 
   const [visible, setVisibility] = useState(false);
 
@@ -21,6 +22,7 @@ export const NavbarMain = (props) => {
 
   //toggle email logic
   const { width } = useWindowDimensions();
+  const isDesktop = width > 900;
   const [mailButtonVisible, setMailButtonVisible] = useState(true);
   const mailButtonVisibleClass = mailButtonVisible ? "is-active" : ""; //class to append if visible
 
@@ -54,25 +56,32 @@ export const NavbarMain = (props) => {
 
   const isActiveAndDesktop = width > 900 && visible;
 
-  // if homepage and the scroll is all the way at the time, don't show
+  // if landing and the scroll is all the way at the time, don't show
   const scrollPosition = useWindowScroll();
-  if (isHomePage && scrollPosition === 0) return null;
+  if (isLandingPage && scrollPosition === 0) return null;
 
   //navbar open
   return (
     <div className={`navbarClass ${isVisibleClass}`}>
-      <GsapFadeScrub scrub fadeIn className="fixedButtonsWrapper noselect">
+      <GsapFadeScrub
+        scrubStartCenter
+        scrub
+        fadeIn
+        className="fixedButtonsWrapper noselect"
+      >
         <NavLink to="/" className="navbarFloatLeft"></NavLink>
         <div className="navbarFloatRight">
-          <DefaultButton
-            shadowless
-            animated
-            icon="forward"
-            id="emailToggleButtonMobile"
-            className={`${mailButtonVisibleClass} is-red navbarBuyButton`}
-            navlink="/buy"
-            text="Buy now!"
-          />
+          {(!isLandingPage || isDesktop) && (
+            <DefaultButton
+              shadowless
+              animated
+              icon="forward"
+              id="emailToggleButtonMobile"
+              className={`${mailButtonVisibleClass} is-red navbarBuyButton`}
+              navlink="/buy"
+              text="Buy now!"
+            />
+          )}
           <button
             id="navbarOpenClose"
             className={`hamburger hamburger--slider ${isVisibleClass}`}

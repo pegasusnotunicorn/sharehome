@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useLayoutEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect, useMemo } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger.js";
 import gsap from "gsap";
 import Card from "../Card/Card.js";
@@ -8,9 +8,11 @@ import useWindowDimensions from "../utils/useWindowDimensions.js";
 import { randomDeg } from "../utils/useMath.js";
 import "../../css/pages/home/cardparallax.css";
 import PropTypes from "prop-types";
+import { useLocation } from "react-router";
 
 //the entire section of three rows moving with scroll
 const ParallaxSection = () => {
+  const location = useLocation();
   gsap.registerPlugin(ScrollTrigger);
 
   // Set global defaults for ScrollTrigger
@@ -65,8 +67,7 @@ const ParallaxSection = () => {
 
   //calculate how many rows / characters per row
   const numRows = 3;
-  const charactersRef = useRef(getAllFinishedPeople(true));
-  const characters = charactersRef.current;
+  const characters = useMemo(() => getAllFinishedPeople(true), []);
 
   const { width } = useWindowDimensions();
   const cardsPerRow = width >= 1400 ? 5 : width >= 900 ? 5 : 3;
@@ -90,16 +91,14 @@ const ParallaxSection = () => {
 
   //build the rows
   const parallaxRows = splitRowCharacters.map((curr, index) => {
-    const evenRow = index % 2 !== 0 ? true : false;
-    const isRowWithMissingCard = index === 0 ? true : false;
-    const first = index === 0;
+    const evenRow = index % 2 !== 0;
+    const isRowWithMissingCard = index === 0;
     return (
       <div key={`parallaxRow${index}`} className="parallaxRow">
         <ParallaxCards
           sectionRef={sectionRef}
           evenRow={evenRow}
           isRowWithMissingCard={isRowWithMissingCard}
-          first={first}
           cardsPerRow={cardsPerRow}
           randomCharacters={curr}
         />
@@ -108,7 +107,7 @@ const ParallaxSection = () => {
   });
 
   return (
-    <div ref={sectionRef} className="parallaxSection">
+    <div key={location.pathname} ref={sectionRef} className="parallaxSection">
       {parallaxRows}
     </div>
   );
@@ -122,11 +121,10 @@ const ParallaxCards = ({
   cardsPerRow,
   randomCharacters,
 }) => {
-  const cardRefs = useRef(new Array(randomCharacters.length));
-
-  useEffect(() => {
-    cardRefs.current = new Array(randomCharacters.length);
-  }, [randomCharacters]);
+  const cardRefs = useMemo(
+    () => new Array(randomCharacters.length),
+    [randomCharacters.length]
+  );
 
   //figure out the index of the one missing card
   const middleCard = Math.floor(cardsPerRow / 2);
@@ -140,7 +138,7 @@ const ParallaxCards = ({
 
   const translateEnd = "25%"; //move horizontally (direction depends on evenRow)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!sectionRef.current || randomCharacters.length === 0) return;
 
     const randomX = randomDeg(200);
@@ -158,7 +156,8 @@ const ParallaxCards = ({
 
     // set the first state of the missing card
     requestAnimationFrame(() => {
-      gsap.set(cardRefs.current[missingCardIndex], missingCardFirstState);
+      if (!isRowWithMissingCard) return;
+      gsap.set(cardRefs[missingCardIndex], missingCardFirstState);
     });
 
     const tl = gsap.timeline({
@@ -172,7 +171,7 @@ const ParallaxCards = ({
     });
 
     randomCharacters.forEach((curr, index) => {
-      const card = cardRefs.current[index];
+      const card = cardRefs[index];
       if (!card) return;
 
       const firstAnimationFrom =
@@ -231,6 +230,7 @@ const ParallaxCards = ({
       tl.kill();
     };
   }, [
+    cardRefs,
     sectionRef,
     middleCard,
     randomCharacters,
@@ -250,7 +250,7 @@ const ParallaxCards = ({
     return (
       <div
         key={`parallaxWrapperKey${index}`}
-        ref={(el) => (cardRefs.current[index] = el)}
+        ref={(el) => (cardRefs[index] = el)}
         className={`parallaxWrapper ${
           isRowWithMissingCard && index === missingCardIndex
             ? "missingCard"
@@ -267,7 +267,6 @@ ParallaxCards.propTypes = {
   sectionRef: PropTypes.object,
   evenRow: PropTypes.bool,
   missing: PropTypes.bool,
-  first: PropTypes.bool,
   cardsPerRow: PropTypes.number,
   randomCharacters: PropTypes.array,
   timeline: PropTypes.object,

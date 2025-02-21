@@ -2,7 +2,12 @@ import PropTypes from "prop-types";
 import DefaultButton from "../utils/DefaultButton.js";
 import landingPageStyles from "../../css/landingPage.module.css";
 
-export default function HeroImageSection({ videoModalVisible, playVideo }) {
+export default function HeroImageSection({
+  videoModalVisible,
+  playVideo,
+  boxArtOverride,
+  textImageOverride,
+}) {
   return (
     <div
       id={`${landingPageStyles.heroContainer}`}
@@ -15,14 +20,14 @@ export default function HeroImageSection({ videoModalVisible, playVideo }) {
       <div className={landingPageStyles.screenHeight}>
         <img
           alt="Box and components of the card game."
-          src="/images/click_to_learn.webp"
+          src={textImageOverride ?? "/images/click_to_learn.webp"}
           draggable={false}
           className={`${landingPageStyles.heroImage} noselect openYouTubeModalButton`}
           onClick={playVideo}
         />
         <img
           alt="Click the box to learn more!"
-          src="/images/box_transparent.webp"
+          src={boxArtOverride ?? "/images/box_transparent.webp"}
           draggable={false}
           className={`${landingPageStyles.heroImage} noselect openYouTubeModalButton ${landingPageStyles.monsterBurstAnimation}`}
           onClick={playVideo}

@@ -13,7 +13,6 @@
 .mainpageContainer {
   position: relative;
   display: flex;
-  width: 100%;
 }
 
 .mainpageContainer h1 {
@@ -464,7 +463,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  height: calc(100% - 4em);
+  height: calc(100% - 2em);
   width: 40%;
   padding: 2em;
   z-index: 9;
@@ -525,7 +524,7 @@
     max-width: 100% !important;
   }
   .characterTextContainer {
-    width: 100%;
+    width: calc(100% - 2em);
     padding: 1em;
     margin: auto;
     max-width: 500px;
@@ -534,7 +533,6 @@
   .characterContainerSVG {
     top: 15%;
     left: 60%;
-    transform: scale(0.75);
   }
 }
 
@@ -650,7 +648,6 @@
   #goalsContainerSVGflag {
     right: 14%;
   }
-
   #goalsContainerSVGscroll {
     right: 17%;
   }
@@ -688,6 +685,11 @@
     text-align: center;
     align-items: center;
   }
+  #likehateContainer,
+  .goalsTextContainer,
+  .eventsTextContainer {
+    text-wrap: unset !important;
+  }
   #eventsContainerSVGcake {
     top: 70%;
     right: 5%;
@@ -701,12 +703,14 @@
     left: -5%;
   }
   .goalsRightContainer {
-    width: calc(100% - 4em);
+    width: calc(100% - 2em);
+    padding-left: 1em;
+    padding-right: 1em;
   }
   .eventsLeftContainer {
     padding-left: 0 !important;
     padding-right: 0 !important;
-    width: calc(100% - 4em);
+    width: calc(100% - 2em);
   }
   #goalsContainerSVGflag {
     right: 15%;
@@ -715,6 +719,14 @@
   #goalsContainerSVGscroll {
     right: 7.5%;
     top: 5%;
+  }
+  .characterContainerSVG > img,
+  #goalsContainerSVGflag > img,
+  #goalsContainerSVGscroll > img,
+  #eventsContainerSVGlovekey > img,
+  #eventsContainerSVGcake > img,
+  #eventsContainerSVGplanet > img {
+    transform: scale(0.65);
   }
 }
 
@@ -898,6 +910,9 @@
   .finalButtonsWrapper {
     flex-direction: column;
     gap: 1em;
+  }
+  #finalContainer {
+    padding-bottom: 100px;
   }
 }
 

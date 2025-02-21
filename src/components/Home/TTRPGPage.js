@@ -58,6 +58,7 @@ export default function TTRPGPage() {
       <HeroImageSection
         videoModalVisible={videoModalVisible}
         playVideo={playVideo}
+        textImageOverride="/images/click_to_learn_ttrpg.webp"
       />
 
       <DescriptionContainer
@@ -93,19 +94,21 @@ export default function TTRPGPage() {
         id={`${landingPageStyles.howToPlay}`}
         className={`${landingPageStyles.mainpageContainer}`}
       >
-        <h1>The perfect gateway to TTRPGs</h1>
-        <p>
-          Getting your board game friends to try a full-length campaign? Nearly
-          impossible.
-        </p>
-        <p>
-          Getting them to try a 12 min game? Super easy, barely an
-          inconvenience.
-        </p>
-        <p>
-          Give them a taste of roleplaying—
-          <b>without the huge time commitment</b>.
-        </p>
+        <div className={`${landingPageStyles.carouselTextContainer}`}>
+          <h1>The perfect gateway to TTRPGs</h1>
+          <p>
+            Getting your board game friends to try a full-length campaign?
+            Nearly impossible.
+          </p>
+          <p>
+            Getting them to try a 12 min game? Super easy, barely an
+            inconvenience.
+          </p>
+          <p>
+            Give them a taste of roleplaying—
+            <b>without the huge time commitment</b>.
+          </p>
+        </div>
       </GsapFadeScrub>
 
       <div

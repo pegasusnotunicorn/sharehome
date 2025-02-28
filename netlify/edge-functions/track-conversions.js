@@ -79,7 +79,7 @@ async function sendToGA4(clientId, utmData, revenue) {
     client_id: clientId ?? crypto.randomUUID(),
     events: [
       {
-        name: "purchase",
+        name: "be_purchase",
         params: {
           currency: "USD",
           value: revenue,

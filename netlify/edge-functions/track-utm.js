@@ -43,7 +43,7 @@ const trackUtm = async (request, context) => {
 
   if (IS_DEV) console.log("📦 Stored UTM Data:", utmData);
 
-  return context.next();
+  return context.rewrite(new URL("/index.html", request.url));
 };
 
 export default trackUtm;

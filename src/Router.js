@@ -15,7 +15,6 @@ import ArtbookDownloadPage from "./components/ArtbookDownloadPage.js";
 import FreeArtbookPage from "./components/FreeArtbookPage.js";
 import ThankYouPage from "./components/ThankYouPage.js";
 import ExternalRedirect from "./components/ExternalRedirect.js";
-import useStoreUtmParams from "./hooks/useStoreUtmParams.js";
 
 const stripeUrl =
   process.env.NODE_ENV === "development"
@@ -30,8 +29,6 @@ const Router = () => {
       staticHero.style.display = "none";
     }
   }, []);
-
-  useStoreUtmParams();
 
   return (
     <BrowserRouter>

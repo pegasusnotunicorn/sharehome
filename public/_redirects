@@ -1,3 +1,7 @@
 /rulebook /rulebook.pdf 200
 
+/thankyou /.netlify/edge-functions/track-conversions 200
+
+/* /.netlify/edge-functions/track-utm 200
+
 /* /index.html 200

@@ -1,3 +1,10 @@
 [build.environment]
   NODE_VERSION = "20"
 
+[[edge_functions]]
+  function = "track-utm"
+  path = "/*"
+
+[[edge_functions]]
+  function = "track-conversions"
+  path = "/thankyou"

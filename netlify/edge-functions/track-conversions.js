@@ -11,7 +11,7 @@ const GA_API_SECRET = IS_DEV
 
 export default async function trackConversions(request, context) {
   try {
-    if (IS_DEV) console.log("🔄 Processing conversion for:", request.url);
+    console.log("🔄 Processing conversion for:", request.url);
 
     // Retrieve UTM Data and client_id from Netlify Edge Session
     const encodedUtmData = await context.cookies.get("utm_data");

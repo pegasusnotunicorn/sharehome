@@ -41,8 +41,7 @@ const trackUtm = async (request, context) => {
     maxAge: 86400, // 1-day expiration
   });
 
-  if (IS_DEV) console.log("📦 Stored UTM Data:", utmData);
-
+  console.log("📦 Stored UTM Data:", utmData);
   return context.rewrite(new URL("/index.html", request.url));
 };
 

@@ -18,7 +18,7 @@ export default async function trackConversions(request, context) {
     const clientId = await context.cookies.get("client_id");
 
     if (!encodedUtmData) {
-      if (IS_DEV) console.log("⚠️ No UTM data found, skipping tracking.");
+      console.log("⚠️ No UTM data found, skipping tracking.");
       return context.next();
     }
 
@@ -29,15 +29,14 @@ export default async function trackConversions(request, context) {
     const checkoutSessionId = url.searchParams.get("checkout_session_id");
 
     if (!checkoutSessionId) {
-      if (IS_DEV)
-        console.log("⚠️ No Stripe session ID found, skipping tracking.");
+      console.log("⚠️ No Stripe session ID found, skipping tracking.");
       return context.next();
     }
 
     // Fetch Stripe Checkout Details
     const stripeData = await getStripeCheckoutDetails(checkoutSessionId);
     if (!stripeData.id) {
-      if (IS_DEV) console.error("❌ Failed to retrieve Stripe data.");
+      console.error("❌ Failed to retrieve Stripe data.");
       return context.next();
     }
 
@@ -48,7 +47,7 @@ export default async function trackConversions(request, context) {
 
     return context.next();
   } catch (error) {
-    if (IS_DEV) console.error("❌ Error in track-conversions:", error);
+    console.error("❌ Error in track-conversions:", error);
     return context.next();
   }
 }
@@ -68,7 +67,7 @@ async function getStripeCheckoutDetails(sessionId) {
     const stripeData = await response.json();
     return stripeData;
   } catch (error) {
-    if (IS_DEV) console.error("❌ Error fetching Stripe data:", error);
+    console.error("❌ Error fetching Stripe data:", error);
     return {};
   }
 }
@@ -93,8 +92,7 @@ async function sendToGA4(clientId, utmData, revenue) {
     ],
   };
 
-  if (IS_DEV)
-    console.log("📡 Sending GA4 Event:", JSON.stringify(ga4Data, null, 2));
+  console.log("📡 Sending GA4 Event:", JSON.stringify(ga4Data, null, 2));
 
   try {
     const res = await fetch(
@@ -107,16 +105,14 @@ async function sendToGA4(clientId, utmData, revenue) {
     );
 
     if (res.ok && res.status === 204) {
-      if (IS_DEV) console.log("✅ GA4 Event Sent Successfully");
+      console.log("✅ GA4 Event Sent Successfully");
     } else {
-      if (IS_DEV) {
-        console.error("❌ GA4 Event Failed:", res.status, res.statusText);
-        const errorText = await res.text();
-        console.error("📄 GA4 Response Body:", errorText);
-      }
+      console.error("❌ GA4 Event Failed:", res.status, res.statusText);
+      const errorText = await res.text();
+      console.error("📄 GA4 Response Body:", errorText);
     }
   } catch (error) {
-    if (IS_DEV) console.error("❌ Error Sending to GA4:", error);
+    console.error("❌ Error Sending to GA4:", error);
   }
 }
 

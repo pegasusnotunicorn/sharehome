@@ -19,7 +19,7 @@ export default async function trackConversions(request, context) {
 
     if (!encodedUtmData) {
       console.log("⚠️ No UTM data found, skipping tracking.");
-      return context.next();
+      return context.rewrite(new URL("/index.html", request.url));
     }
 
     const utmData = JSON.parse(atob(encodedUtmData));
@@ -30,14 +30,14 @@ export default async function trackConversions(request, context) {
 
     if (!checkoutSessionId) {
       console.log("⚠️ No Stripe session ID found, skipping tracking.");
-      return context.next();
+      return context.rewrite(new URL("/index.html", request.url));
     }
 
     // Fetch Stripe Checkout Details
     const stripeData = await getStripeCheckoutDetails(checkoutSessionId);
     if (!stripeData.id) {
       console.error("❌ Failed to retrieve Stripe data.");
-      return context.next();
+      return context.rewrite(new URL("/index.html", request.url));
     }
 
     if (IS_DEV) console.log("✅ Stripe Data Retrieved:", stripeData);
@@ -45,10 +45,10 @@ export default async function trackConversions(request, context) {
     // Send UTM + Revenue Data to GA4
     await sendToGA4(clientId, utmData, stripeData.amount_total / 100);
 
-    return context.next();
+    return context.rewrite(new URL("/index.html", request.url));
   } catch (error) {
     console.error("❌ Error in track-conversions:", error);
-    return context.next();
+    return context.rewrite(new URL("/index.html", request.url));
   }
 }
 

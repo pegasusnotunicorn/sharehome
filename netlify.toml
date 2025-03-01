@@ -1,5 +1,6 @@
 [build.environment]
   NODE_VERSION = "20"
+  functions = "functions"
 
 [[edge_functions]]
   function = "track-conversions"
@@ -8,4 +9,4 @@
 [[edge_functions]]
   function = "track-utm"
   path = "/*"
-  excludedPath=["/thankyou"]
+  excludedPath=["/thankyou", "/.netlify/*"]

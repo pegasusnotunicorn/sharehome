@@ -9,6 +9,10 @@ const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 
 const stripe = stripeModule(STRIPE_SECRET_KEY);
 
+const MAILER_LITE_KEY = process.env.MAILER_LITE_KEY;
+const MAILERLITE_PURCHASE_GROUP_ID = process.env.MAILERLITE_PURCHASE_GROUP_ID;
+const MAILERLITE_ABANDONED_GROUP_ID = process.env.MAILERLITE_ABANDONED_GROUP_ID;
+
 export default async function stripeWebhooks(request) {
   if (request.method !== "POST") {
     return new Response("Method Not Allowed", { status: 405 });
@@ -29,7 +33,26 @@ export default async function stripeWebhooks(request) {
     case "checkout.session.completed":
       const customerEmail = event.data.object.customer_details.email;
       const name = event.data.object.customer_details.name;
-      addCustomerToMailerLite(customerEmail, name);
+      addEmailToMailerLite(customerEmail, name, MAILERLITE_PURCHASE_GROUP_ID);
+      break;
+    case "checkout.session.expired":
+      const abandonedEmail =
+        event.data.object.customer_details?.email ??
+        event.data.object.customer_email;
+      const abandonedName = event.data.object.customer_details?.name;
+
+      // if (IS_DEV) console.log(event.data.object);
+      if (!abandonedEmail) {
+        if (IS_DEV) console.log("No email found for abandoned checkout");
+        break;
+      }
+
+      // email found for abandoned checkout, add to MailerLite abandoned group
+      addEmailToMailerLite(
+        abandonedEmail,
+        abandonedName,
+        MAILERLITE_ABANDONED_GROUP_ID
+      );
       break;
     default:
       if (IS_DEV) console.log(`Unhandled event type: ${event.type}`);
@@ -38,12 +61,7 @@ export default async function stripeWebhooks(request) {
   return new Response("Webhook received", { status: 200 });
 }
 
-// #region MailerLite
-
-const MAILER_LITE_KEY = process.env.MAILER_LITE_KEY;
-const MAILERLITE_GROUP_ID = process.env.MAILERLITE_GROUP_ID;
-
-async function addCustomerToMailerLite(email, name) {
+async function addEmailToMailerLite(email, name, group_id) {
   if (!MAILER_LITE_KEY) {
     console.error("❌ MailerLite API key is missing.");
     return;
@@ -52,15 +70,16 @@ async function addCustomerToMailerLite(email, name) {
   const url = "https://connect.mailerlite.com/api/subscribers";
   const payload = {
     email,
-    fields: {
-      name,
-    },
-    groups: [MAILERLITE_GROUP_ID],
+    groups: [group_id],
     status: "active",
+    // add name to fields obj if it's defined
+    ...(name && { fields: { name } }),
   };
 
   try {
-    console.log(`📧 Adding subscriber to MailerLite: ${email} ${name}`);
+    console.log(
+      `📧 Adding subscriber to MailerLite: ${email} ${name} for group ${group_id}`
+    );
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -83,5 +102,3 @@ async function addCustomerToMailerLite(email, name) {
     return null;
   }
 }
-
-// #endregion

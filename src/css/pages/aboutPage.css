@@ -24,6 +24,10 @@
   .howToPlayWrapper {
     width: 100%;
   }
+
+  .timePlayerInfoWrapper > div {
+    font-size: 0.75em;
+  }
 }
 
 .timePlayerInfoWrapper {

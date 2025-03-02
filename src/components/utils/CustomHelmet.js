@@ -19,11 +19,13 @@ const CustomHelmet = (props) => (
       data-react-helmet="true"
       content={props.description}
     />
-    <meta
-      itemProp="image"
-      data-react-helmet="true"
-      content={props.splashImage}
-    />
+    {props.splashImage && (
+      <meta
+        itemProp="image"
+        data-react-helmet="true"
+        content={props.splashImage}
+      />
+    )}
 
     <meta property="og:title" data-react-helmet="true" content={props.title} />
     <meta
@@ -31,11 +33,13 @@ const CustomHelmet = (props) => (
       data-react-helmet="true"
       content={props.description}
     />
-    <meta
-      property="og:image"
-      data-react-helmet="true"
-      content={props.splashImage}
-    />
+    {props.splashImage && (
+      <meta
+        property="og:image"
+        data-react-helmet="true"
+        content={props.splashImage}
+      />
+    )}
     <meta
       property="og:url"
       data-react-helmet="true"
@@ -52,18 +56,20 @@ const CustomHelmet = (props) => (
       data-react-helmet="true"
       content={props.description}
     />
-    <meta
-      name="twitter:image"
-      data-react-helmet="true"
-      content={props.splashImage}
-    />
+    {props.splashImage && (
+      <meta
+        name="twitter:image"
+        data-react-helmet="true"
+        content={props.splashImage}
+      />
+    )}
   </Helmet>
 );
 
 CustomHelmet.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
-  splashImage: PropTypes.string.isRequired,
+  splashImage: PropTypes.string,
 };
 
 export default CustomHelmet;

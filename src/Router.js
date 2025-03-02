@@ -15,6 +15,7 @@ import ArtbookDownloadPage from "./components/ArtbookDownloadPage.js";
 import FreeArtbookPage from "./components/FreeArtbookPage.js";
 import ThankYouPage from "./components/ThankYouPage.js";
 import ExternalRedirect from "./components/ExternalRedirect.js";
+import CookieConsent from "./components/CookieConsent.js";
 
 const stripeUrl =
   process.env.NODE_ENV === "development"
@@ -33,9 +34,10 @@ const Router = () => {
   return (
     <BrowserRouter>
       <MetaTags />
-      <Navbar />
-
+      <CookieConsent />
       <ScrollToTop />
+
+      <Navbar />
 
       <Routes>
         <Route path="/" element={<LandingPage />} />

@@ -11,7 +11,7 @@ const TermsPage = () => {
         description="Terms & privacy policy for Love, Career & Magic."
       />
 
-      <div className="subcontentWrapper min-width">
+      <div className="subcontentWrapper margin-top min-width">
         <div className="termsWrapper">
           <h2 className="subtitle">Terms and conditions</h2>
           <p>
@@ -44,6 +44,7 @@ const TermsPage = () => {
               We do not sell, share, or store your data beyond what is required
               for order fulfillment.
             </li>
+            <li>We use cookies to find others who might enjoy the game.</li>
             <li>
               Payments are securely processed through third-party providers like
               Stripe, which have their own privacy policies.
@@ -53,9 +54,8 @@ const TermsPage = () => {
               <a href="/contact">reach out</a>.
             </li>
           </ul>
+          <p>Thank you for supporting small and independent creators!</p>
         </div>
-
-        <p>Thank you for supporting a small, independent creator!</p>
       </div>
 
       <div className="subcontentWrapper">

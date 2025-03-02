@@ -38,6 +38,8 @@ export default async function stripeWebhooks(request) {
   return new Response("Webhook received", { status: 200 });
 }
 
+// #region MailerLite
+
 const MAILER_LITE_KEY = process.env.MAILER_LITE_KEY;
 const MAILERLITE_GROUP_ID = process.env.MAILERLITE_GROUP_ID;
 
@@ -81,3 +83,5 @@ async function addCustomerToMailerLite(email, name) {
     return null;
   }
 }
+
+// #endregion

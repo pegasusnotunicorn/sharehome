@@ -318,9 +318,25 @@ span.is-bold {
 
 .termsWrapper {
   text-align: left;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1em;
+}
+
+.termsWrapper p,
+.termsWrapper ul {
+  margin: 0;
+}
+
+.termsWrapper .subtitle {
+  margin-bottom: 0;
 }
 
 @media only screen and (max-width: 900px) {
+  .content {
+    padding-bottom: 50svh;
+  }
   .subcontentWrapper {
     padding-left: 1em;
     padding-right: 1em;
@@ -330,6 +346,9 @@ span.is-bold {
   }
   .subcontentWrapper.padding-top {
     padding-top: 5vh;
+  }
+  .subtitle {
+    text-align: center;
   }
 }
 

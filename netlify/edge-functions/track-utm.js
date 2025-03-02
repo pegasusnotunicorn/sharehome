@@ -46,29 +46,3 @@ const trackUtm = async (request, context) => {
 };
 
 export default trackUtm;
-
-export const config = {
-  path: "/*", // Runs on all requests
-
-  // Ignore requests for common static files
-  excludedPath: [
-    "/favicon.ico",
-    "/manifest.json",
-    "/robots.txt",
-    "/*.css",
-    "/*.js",
-    "/*.map",
-    "/*.png",
-    "/*.jpg",
-    "/*.jpeg",
-    "/*.json",
-    "/*.webp",
-    "/*.svg",
-    "/*.gif",
-    "/*.ico",
-    "/*.woff",
-    "/*.woff2",
-    "/*.ttf",
-    "/*.otf",
-  ],
-};

@@ -9,4 +9,30 @@
 [[edge_functions]]
   function = "track-utm"
   path = "/*"
-  excludedPath=["/thankyou", "/.netlify/*"]
+  excludedPath=[
+    "/.netlify/*",
+    "/netlify/",
+    "/thankyou",
+    "/buy_test",
+    "/rulebook",
+    "/rulebook.pdf",
+    "/favicon.ico",
+    "/manifest.json",
+    "/robots.txt",
+    "/*.css",
+    "/*.js",
+    "/*.map",
+    "/*.png",
+    "/*.jpg",
+    "/*.jpeg",
+    "/*.json",
+    "/*.webp",
+    "/*.svg",
+    "/*.gif",
+    "/*.ico",
+    "/*.woff",
+    "/*.woff2",
+    "/*.ttf",
+    "/*.otf",
+    "/*.pdf",
+  ]

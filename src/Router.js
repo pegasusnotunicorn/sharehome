@@ -17,7 +17,7 @@ import ThankYouPage from "./components/ThankYouPage.js";
 import ExternalRedirect from "./components/ExternalRedirect.js";
 import CookieConsent from "./components/CookieConsent.js";
 
-const stripeUrl =
+const STRIPE_BACKUP_PAYMENT_LINK =
   process.env.NODE_ENV === "development"
     ? process.env.REACT_APP_STRIPE_TEST_URL
     : process.env.REACT_APP_STRIPE_PROD_URL;
@@ -54,7 +54,11 @@ const Router = () => {
           path="/rulebook"
           element={<ExternalRedirect url="/rulebook.pdf" />}
         />
-        <Route path="/buy" element={<ExternalRedirect url={stripeUrl} />} />
+        {/* Fallback for /buy route */}
+        <Route
+          path="/buy"
+          element={<ExternalRedirect url={STRIPE_BACKUP_PAYMENT_LINK} />}
+        />
         <Route path="/terms" element={<TermsPage />} />
         {/* Fallback for undefined routes */}
         <Route path="*" element={<ErrorPage />} />

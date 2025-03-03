@@ -92,7 +92,7 @@ const CookieConsent = ({ scrollThreshold = 10, timeDelay = 5000 }) => {
                 I consent
               </button>
               <button
-                className="details-btn"
+                className="decline-btn"
                 onClick={() => handleConsent(false)}
               >
                 No thanks, I don't want to help you.
@@ -105,18 +105,20 @@ const CookieConsent = ({ scrollThreshold = 10, timeDelay = 5000 }) => {
               I need a little help finding the right players for my game. Some
               simple data helps me do that 🙏
             </p>
+            <div>
+              <button
+                className="details-btn"
+                onClick={() => setShowDetails(!showDetails)}
+              >
+                Manage settings
+              </button>
+            </div>
             <div className="button-group">
               <button
                 className="accept-btn"
                 onClick={() => handleConsent(true)}
               >
                 I consent
-              </button>
-              <button
-                className="details-btn"
-                onClick={() => setShowDetails(!showDetails)}
-              >
-                Manage settings
               </button>
             </div>
           </div>
@@ -135,7 +137,6 @@ const CookieConsent = ({ scrollThreshold = 10, timeDelay = 5000 }) => {
           padding: 1em;
           border-radius: 4px;
           max-width: 400px;
-          font-size: 0.8em;
           text-align: left;
           box-shadow: 1px 1px 4px 0px #323232;
         }
@@ -143,11 +144,18 @@ const CookieConsent = ({ scrollThreshold = 10, timeDelay = 5000 }) => {
           .cookie-popup {
             bottom: calc(2em + 40px);
             width: calc(100% - 4em);
+            box-shadow: none;
+          }
+          .accept-btn {
+            flex-grow: 1;
+          }
+          .decline-btn {
+            width: 30%;
           }
         }
         .cookie-popup p {
           margin: 0;
-          font-size: 1em;
+          font-size: 0.8em;
         }
         .cookie-popup a {
           color: #fff;
@@ -156,6 +164,7 @@ const CookieConsent = ({ scrollThreshold = 10, timeDelay = 5000 }) => {
           display: flex;
           justify-content: flex-start;
           gap: 10px;
+          font-size: 0.75em;
         }
         .button-group.justify-in-between {
           justify-content: space-between;
@@ -165,18 +174,31 @@ const CookieConsent = ({ scrollThreshold = 10, timeDelay = 5000 }) => {
           border: none;
           cursor: pointer;
           border-radius: 5px;
-          font-size: 1em;
         }
         .accept-btn {
           background: #4caf50;
           color: white;
           font-weight: bold;
+          padding-left: 3em;
+          padding-right: 3em;
+          white-space: nowrap;
         }
         .details-btn {
           background: transparent;
           color: white;
           text-decoration: underline;
-          font-size: 0.9em;
+          font-size: 0.75em;
+          padding: 0;
+          margin: 0;
+          white-space: nowrap;
+        }
+        .decline-btn {
+          background: transparent;
+          color: #fff;
+          text-decoration: underline;
+          font-size: 0.75em;
+          padding: 0;
+          margin: 0;
         }
         .details {
           text-align: left;

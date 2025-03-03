@@ -13,7 +13,7 @@
     "/.netlify/*",
     "/netlify/",
     "/thankyou",
-    "/buy_test",
+    # "/buy_test",
     "/rulebook",
     "/rulebook.pdf",
     "/favicon.ico",

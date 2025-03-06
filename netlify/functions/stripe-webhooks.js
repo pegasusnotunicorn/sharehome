@@ -22,7 +22,14 @@ export default async function stripeWebhooks(request) {
 
   let event;
   try {
-    const body = await request.text();
+    const rawBody = await request.arrayBuffer();
+    const textBody = new TextDecoder().decode(rawBody);
+    event = stripe.webhooks.constructEvent(
+      textBody,
+      sig,
+      STRIPE_WEBHOOK_SECRET
+    );
+
     event = stripe.webhooks.constructEvent(body, sig, STRIPE_WEBHOOK_SECRET);
   } catch (err) {
     console.error("Webhook Error:", err.message);
@@ -92,6 +99,7 @@ async function addEmailToMailerLite(email, name, group_id) {
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`MailerLite API error: ${response.status} - ${errorText}`);
+      return null;
     }
 
     const data = await response.json();

@@ -40,7 +40,11 @@ export default async function stripeWebhooks(request) {
     case "checkout.session.completed":
       const customerEmail = event.data.object.customer_details.email;
       const name = event.data.object.customer_details.name;
-      addEmailToMailerLite(customerEmail, name, MAILERLITE_PURCHASE_GROUP_ID);
+      await addEmailToMailerLite(
+        customerEmail,
+        name,
+        MAILERLITE_PURCHASE_GROUP_ID
+      );
       break;
     case "checkout.session.expired":
       const abandonedEmail =

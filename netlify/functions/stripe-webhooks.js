@@ -100,10 +100,6 @@ async function addEmailToMailerLite(email, name, group_id) {
       body: JSON.stringify(payload),
     });
 
-    console.log(response);
-    console.log("📨 MailerLite Response Status:", response.status);
-    console.log("📨 MailerLite Response Headers:", response.headers);
-
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`MailerLite API error: ${response.status} - ${errorText}`);

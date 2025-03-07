@@ -84,6 +84,8 @@ async function addEmailToMailerLite(email, name, group_id) {
   };
 
   try {
+    console.log("📌 MAILER_LITE_KEY:", MAILER_LITE_KEY ? "Exists" : "Missing!");
+
     console.log(
       `📧 Adding subscriber to MailerLite: ${email} ${name} for group ${group_id}`
     );
@@ -95,6 +97,10 @@ async function addEmailToMailerLite(email, name, group_id) {
       },
       body: JSON.stringify(payload),
     });
+
+    console.log(response);
+    console.log("📨 MailerLite Response Status:", response.status);
+    console.log("📨 MailerLite Response Headers:", response.headers);
 
     if (!response.ok) {
       const errorText = await response.text();

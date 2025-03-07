@@ -55,7 +55,7 @@ export default async function stripeWebhooks(request) {
       }
 
       // email found for abandoned checkout, add to MailerLite abandoned group
-      addEmailToMailerLite(
+      await addEmailToMailerLite(
         abandonedEmail,
         abandonedName,
         MAILERLITE_ABANDONED_GROUP_ID
@@ -84,14 +84,8 @@ async function addEmailToMailerLite(email, name, group_id) {
   };
 
   try {
-    console.log("📌 MAILER_LITE_KEY:", MAILER_LITE_KEY ? "Exists" : "Missing!");
-
-    const testUrl = "https://www.google.com";
-    const testResponse = await fetch(testUrl);
-    console.log("🌐 Outbound Test:", testResponse.status);
-
     console.log(
-      `📧 Adding subscriber to MailerLite: ${email} ${name} for group ${group_id}`
+      `📧 Trying to add subscriber to MailerLite: ${email} ${name} for group ${group_id}`
     );
     const response = await fetch(url, {
       method: "POST",

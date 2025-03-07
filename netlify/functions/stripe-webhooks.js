@@ -29,8 +29,6 @@ export default async function stripeWebhooks(request) {
       sig,
       STRIPE_WEBHOOK_SECRET
     );
-
-    event = stripe.webhooks.constructEvent(body, sig, STRIPE_WEBHOOK_SECRET);
   } catch (err) {
     console.error("Webhook Error:", err.message);
     return new Response(`Webhook Error: ${err.message}`, { status: 400 });

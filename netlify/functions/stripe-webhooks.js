@@ -86,6 +86,10 @@ async function addEmailToMailerLite(email, name, group_id) {
   try {
     console.log("📌 MAILER_LITE_KEY:", MAILER_LITE_KEY ? "Exists" : "Missing!");
 
+    const testUrl = "https://www.google.com";
+    const testResponse = await fetch(testUrl);
+    console.log("🌐 Outbound Test:", testResponse.status);
+
     console.log(
       `📧 Adding subscriber to MailerLite: ${email} ${name} for group ${group_id}`
     );

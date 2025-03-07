@@ -2,6 +2,9 @@
   NODE_VERSION = "20"
   functions = "functions"
 
+[functions]
+  timeout = 30
+
 [[edge_functions]]
   function = "track-conversions"
   path = "/thankyou"

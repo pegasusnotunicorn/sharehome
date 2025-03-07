@@ -2,6 +2,10 @@
   NODE_VERSION = "20"
   functions = "functions"
 
+[functions]
+  external_node_modules = ["node-fetch", "stripe"]
+  node_bundler = "esbuild"
+
 [functions."stripe-webhooks"]
   timeout = 30
 

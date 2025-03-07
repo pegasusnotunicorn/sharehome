@@ -5,7 +5,9 @@ const IS_DEV = process.env.NETLIFY_DEV === "true";
 const STRIPE_SECRET_KEY = IS_DEV
   ? process.env.STRIPE_SECRET_KEY_DEV
   : process.env.STRIPE_SECRET_KEY;
-const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
+const STRIPE_WEBHOOK_SECRET = IS_DEV
+  ? process.env.STRIPE_WEBHOOK_SECRET_DEV
+  : process.env.STRIPE_WEBHOOK_SECRET;
 
 const stripe = stripeModule(STRIPE_SECRET_KEY);
 

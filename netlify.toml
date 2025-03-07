@@ -20,6 +20,7 @@
     "/.netlify/*",
     "/netlify/",
     "/thankyou",
+    "/sitemap.xml",
     # "/buy_test",
     "/rulebook",
     "/rulebook.pdf",
@@ -42,4 +43,5 @@
     "/*.ttf",
     "/*.otf",
     "/*.pdf",
+    "/*.xml",
   ]

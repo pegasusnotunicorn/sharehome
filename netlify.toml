@@ -2,7 +2,7 @@
   NODE_VERSION = "20"
   functions = "functions"
 
-[functions]
+[functions."stripe-webhooks"]
   timeout = 30
 
 [[edge_functions]]

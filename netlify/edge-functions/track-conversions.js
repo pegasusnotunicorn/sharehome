@@ -16,6 +16,7 @@ const GA_API_SECRET = IS_DEV
 // FACEBOOK
 const FACEBOOK_PIXEL_ID = Deno.env.get("FACEBOOK_PIXEL_ID");
 const FACEBOOK_ACCESS_TOKEN = Deno.env.get("FACEBOOK_ACCESS_TOKEN");
+const FACEBOOK_API_VERSION = Deno.env.get("FACEBOOK_API_VERSION");
 
 const hashString = (value) =>
   value
@@ -60,7 +61,7 @@ export default async function trackConversions(request, context) {
 
     // Send UTM + Revenue Data to GA4 and Facebook
     await sendToGA4(clientId, utmData, stripeData.amount_total / 100);
-    await sendToFacebook(clientId, utmData, stripeData);
+    await sendToFacebook(clientId, utmData, stripeData, request, context);
 
     return context.rewrite(new URL("/index.html", request.url));
   } catch (error) {
@@ -191,7 +192,7 @@ async function sendToFacebook(clientId, utmData, stripeData, request, context) {
 
   try {
     const res = await fetch(
-      `https://graph.facebook.com/v17.0/${FACEBOOK_PIXEL_ID}/events?access_token=${FACEBOOK_ACCESS_TOKEN}`,
+      `https://graph.facebook.com/${FACEBOOK_API_VERSION}/${FACEBOOK_PIXEL_ID}/events?access_token=${FACEBOOK_ACCESS_TOKEN}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

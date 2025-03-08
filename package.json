@@ -9,6 +9,7 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
+    "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "gsap": "^3.9.1",
     "node-fetch": "^3.3.2",

@@ -7,11 +7,10 @@ import useWindowDimensions from "../utils/useWindowDimensions.js";
 import DefaultButton from "../utils/DefaultButton.js";
 import "../../css/navbar.css";
 import "../../css/utils/hamburger.css";
-import PropTypes from "prop-types";
 import useWindowScroll from "../utils/useWindowScroll.js";
 
 //main navbar for page navigation on the website
-export const NavbarMain = (props) => {
+export const NavbarMain = () => {
   const location = useLocation();
   const isLandingPage =
     location.pathname === "/" || location.pathname.includes("ttrpg");
@@ -21,8 +20,8 @@ export const NavbarMain = (props) => {
   const isVisibleClass = visible ? "is-active" : ""; //class to append if visible
 
   //toggle email logic
-  const { width } = useWindowDimensions();
-  const isDesktop = width > 900;
+  const { width, height } = useWindowDimensions();
+  const isDesktop = width > 900 && width > height; //check if desktop
   const [mailButtonVisible, setMailButtonVisible] = useState(true);
   const mailButtonVisibleClass = mailButtonVisible ? "is-active" : ""; //class to append if visible
 
@@ -54,11 +53,11 @@ export const NavbarMain = (props) => {
     [width, mailButtonVisible, visible]
   );
 
-  const isActiveAndDesktop = width > 900 && visible;
-
   // if landing and the scroll is all the way at the time, don't show
   const scrollPosition = useWindowScroll();
-  if (isLandingPage && scrollPosition === 0) return null;
+
+  const isActiveAndDesktop = width > 900 && visible;
+  const isLandingPageAtTop = isLandingPage && scrollPosition === 0;
 
   //navbar open
   return (
@@ -71,7 +70,7 @@ export const NavbarMain = (props) => {
       >
         <NavLink to="/" className="navbarFloatLeft"></NavLink>
         <div className="navbarFloatRight">
-          {(!isLandingPage || isDesktop) && (
+          {(!isLandingPage || isDesktop) && !isLandingPageAtTop && (
             <DefaultButton
               shadowless
               animated
@@ -194,10 +193,6 @@ export const NavbarMain = (props) => {
       </div>
     </div>
   );
-};
-
-NavbarMain.propTypes = {
-  onMount: PropTypes.func,
 };
 
 export default NavbarMain;

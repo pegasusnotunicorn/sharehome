@@ -1,3 +1,4 @@
+import React from "react";
 import ReactDOM from "react-dom/client"; // Change from "react-dom" to "react-dom/client"
 import WebFont from "webfontloader";
 

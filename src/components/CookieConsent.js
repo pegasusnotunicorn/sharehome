@@ -102,8 +102,8 @@ const CookieConsent = ({ scrollThreshold = 10, timeDelay = 5000 }) => {
         ) : (
           <div className="details">
             <p>
-              I need a little help finding the right players for my game. Some
-              simple data helps me do that 🙏
+              I need help finding the right players for my game. Some simple
+              data helps me do that 🙏
             </p>
             <div>
               <button

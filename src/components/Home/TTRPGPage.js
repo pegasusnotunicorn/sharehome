@@ -58,7 +58,7 @@ export default function TTRPGPage() {
       <HeroImageSection
         videoModalVisible={videoModalVisible}
         playVideo={playVideo}
-        textImageOverride="/images/click_to_learn_ttrpg.webp"
+        textImageOverride="/images/click_to_learn_ttrpg"
       />
 
       <DescriptionContainer

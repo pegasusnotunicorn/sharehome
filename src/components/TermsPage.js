@@ -15,46 +15,69 @@ const TermsPage = () => {
         <div className="termsWrapper">
           <h2 className="subtitle">Terms and conditions</h2>
           <p>
-            By purchasing <b>Love, Career & Magic</b>, you agree to the
-            following terms:
+            Love, Career & Magic is a passion project—just me, an indie game
+            dev, bringing this game to life. When you buy from me, you agree to
+            the following:
           </p>
           <ul>
             <li>
               Your information is only used to process and ship your order.
             </li>
             <li>
-              All sales are final, except in cases of damaged or missing items.
+              All sales are final unless your order arrives damaged or something
+              goes missing.
             </li>
             <li>
-              If you encounter any issues with your order, please{" "}
-              <a href="/contact">contact me</a> and I'll do my best to resolve
-              it! But please remember, I am just one person operating this
-              business, so it may take a little while to get back to you.
+              If anything goes wrong with your order,{" "}
+              <a href="/contact">reach out</a> and I'll do my best to fix it!
+              Just keep in mind, I’m a one-person team, so it might take a
+              little time to get back to you.
             </li>
           </ul>
         </div>
+
         <div className="termsWrapper">
           <h2 className="subtitle">Privacy policy</h2>
+          <p>
+            Big game studios can throw millions at advertising—I can’t. I just
+            want my game to be played by the people who will{" "}
+            <strong>actually</strong> love it.
+          </p>
+          <p>
+            To do that, I use cookies and data to help figure out where to find
+            those players. I don't store or sell any of your personal data. I
+            just use it to connect with the right audience.
+          </p>
           <ul>
             <li>
-              We only collect the necessary information to process and ship your
-              order.
+              I only collect the bare minimum information needed to process and
+              ship your order.
             </li>
             <li>
-              We do not sell, share, or store your data beyond what is required
+              I also add your email address to my mailing list, so I can send
+              you updates about the game. You can unsubscribe at any time.
+            </li>
+            <li>
+              I don’t sell, share, or store your data beyond what’s necessary
               for order fulfillment.
             </li>
-            <li>We use cookies to find others who might enjoy the game.</li>
             <li>
-              Payments are securely processed through third-party providers like
-              Stripe, which have their own privacy policies.
+              I use cookies and analytics to figure out who might enjoy the
+              game, so I can show my ads to the right people.
             </li>
             <li>
-              If you have any concerns about your data, please{" "}
-              <a href="/contact">reach out</a>.
+              Payments are securely processed through Stripe, which has its own
+              privacy policies.
+            </li>
+            <li>
+              If you have any concerns, <a href="/contact">reach out</a>. I’m
+              happy to help.
             </li>
           </ul>
-          <p>Thank you for supporting small and independent creators!</p>
+          <p>
+            Thanks for supporting an independent creator! Every purchase helps
+            keep this dream alive.
+          </p>
         </div>
       </div>
 

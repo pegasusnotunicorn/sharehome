@@ -18,9 +18,8 @@ import landingPageStyles from "../../css/landingPage.module.css";
 import "../../css/utils/colors.css";
 import DescriptionContainer from "./DescriptionContainer.js";
 
-const LandingPage = () => {
+const LandingPage = ({ videoModalVisible, setVideoModalVisible }) => {
   const [player, setPlayer] = useState(null);
-  const [videoModalVisible, setVideoModalVisible] = useState(false);
 
   const playVideo = () => {
     if (player) {

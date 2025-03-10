@@ -8,9 +8,10 @@ export const EmailForm = (props) => {
   const isActiveAndDesktop = props.isActiveAndDesktop;
   const classFromParent = props.className;
 
-  let emailRef = useRef(null);
-  let [response, setResponse] = useState(
-    "Sign up and get a free digital artbook!"
+  const emailRef = useRef(null);
+  const [response, setResponse] = useState(
+    props.responseOverride ??
+      "Receive a free character pin with your first order when you sign up."
   );
 
   //focus the email input on desktop
@@ -21,10 +22,10 @@ export const EmailForm = (props) => {
   }, [isActiveAndDesktop]);
 
   //submit button text depending on if navbar or main page
-  let submitButtonText = "Sign up!";
+  const submitButtonText = "Sign up!";
 
   //function to submit email
-  let submitEmail = (e) => {
+  const submitEmail = (e) => {
     e.preventDefault();
 
     if (e.target.checkValidity()) {
@@ -58,8 +59,12 @@ export const EmailForm = (props) => {
     }
   };
 
+  const className = classFromParent
+    ? `emailWrapper ${classFromParent}`
+    : "emailWrapper";
+
   return (
-    <div className={`emailWrapper ${classFromParent}`}>
+    <div className={className}>
       {!hideTitle && (
         <h1 className="formPrompt">Stay updated on the latest news.</h1>
       )}
@@ -103,6 +108,7 @@ EmailForm.propTypes = {
   hideTitle: PropTypes.bool,
   isActiveAndDesktop: PropTypes.bool,
   className: PropTypes.string,
+  responseOverride: PropTypes.string,
 };
 
 export default EmailForm;

@@ -1,5 +1,11 @@
-import { useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router";
+import { useEffect, useState } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router";
 import MetaTags from "./components/MetaTags.js";
 import Navbar from "./components/Navbar/Navbar.js";
 import ScrollToTop from "./ScrollToTop.js";
@@ -12,10 +18,8 @@ import ContactPage from "./components/ContactPage.js";
 import ErrorPage from "./components/ErrorPage.js";
 import Footer from "./components/Footer.js";
 import ArtbookDownloadPage from "./components/ArtbookDownloadPage.js";
-import FreeArtbookPage from "./components/FreeArtbookPage.js";
 import ThankYouPage from "./components/ThankYouPage.js";
 import ExternalRedirect from "./components/ExternalRedirect.js";
-import CookieConsent from "./components/CookieConsent.js";
 
 const STRIPE_BACKUP_PAYMENT_LINK =
   process.env.NODE_ENV === "development"
@@ -34,17 +38,42 @@ const Router = () => {
   return (
     <BrowserRouter>
       <MetaTags />
-      <CookieConsent />
       <ScrollToTop />
+      <AppRoutes />
+    </BrowserRouter>
+  );
+};
 
-      <Navbar />
+const AppRoutes = () => {
+  const location = useLocation();
+  const isExternalRedirect = ["/rulebook", "/buy"].includes(location.pathname);
 
+  const [videoModalVisible, setVideoModalVisible] = useState(false);
+
+  return (
+    <>
+      {!isExternalRedirect && <Navbar videoModalVisible={videoModalVisible} />}
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/ttrpg" element={<TTRPGPage />} />
+        <Route
+          path="/"
+          element={
+            <LandingPage
+              videoModalVisible={videoModalVisible}
+              setVideoModalVisible={setVideoModalVisible}
+            />
+          }
+        />
+        <Route
+          path="/ttrpg"
+          element={
+            <TTRPGPage
+              videoModalVisible={videoModalVisible}
+              setVideoModalVisible={setVideoModalVisible}
+            />
+          }
+        />
         <Route path="/about" element={<Navigate to="/howtoplay" replace />} />
         <Route path="/howtoplay" element={<AboutPage />} />
-        <Route path="/freeartbook" element={<FreeArtbookPage />} />
         <Route path="/digitalartbook" element={<ArtbookDownloadPage />} />
         <Route path="/characters" element={<CharactersPage />} />
         <Route path="/characters/:name" element={<CharactersPage />} />
@@ -63,9 +92,8 @@ const Router = () => {
         {/* Fallback for undefined routes */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-
-      <Footer key={Date.now()} />
-    </BrowserRouter>
+      {!isExternalRedirect && <Footer key={Date.now()} />}
+    </>
   );
 };
 

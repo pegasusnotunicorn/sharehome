@@ -85,20 +85,9 @@ export const YoutubeModal = ({
   return (
     <div
       style={{ display: videoModalVisible ? "flex" : "none" }}
-      id="videoModalWrapper"
-      className="screenHeight"
+      className="videoModalWrapper"
       onClick={stopVideo}
     >
-      <iframe
-        ref={iframeRef}
-        width={iframeWidth}
-        height={iframeHeight}
-        src={`https://www.youtube.com/embed/${youTubeVideoCode}?si=JyFz4WBy_u2p8ot1&rel=0&controls=0&rel=0&modestbranding=1&playlist=${youTubeVideoCode}${enableCC}&enablejsapi=1&loop=1&autoplay=1&mute=1`}
-        title="YouTube video player"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowFullScreen
-        frameBorder="0"
-      />
       <div className="videoModalCloseButtonWrapper">
         <DefaultButton
           icon="whiteCross"
@@ -106,6 +95,18 @@ export const YoutubeModal = ({
           onClick={stopVideo}
           text="Close video"
           shadowless
+        />
+      </div>
+      <div className="videoWrapper">
+        <iframe
+          ref={iframeRef}
+          width={iframeWidth}
+          height={iframeHeight}
+          src={`https://www.youtube.com/embed/${youTubeVideoCode}?si=JyFz4WBy_u2p8ot1&rel=0&controls=0&rel=0&modestbranding=1&playlist=${youTubeVideoCode}${enableCC}&enablejsapi=1&loop=1&autoplay=1&mute=1`}
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+          frameBorder="0"
         />
       </div>
     </div>

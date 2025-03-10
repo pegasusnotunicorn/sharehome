@@ -47,6 +47,8 @@ const ArtbookDownloadPage = () => {
             src="/images/artbook/mockup2.webp"
             alt={description}
           ></img>
+        </div>
+        <div className="couchContainer">
           <img
             loading="lazy"
             className="couch"

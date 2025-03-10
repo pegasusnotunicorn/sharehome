@@ -183,17 +183,16 @@ span.is-bold {
 }
 
 @media only screen and (max-width: 900px) {
-  .defaultButton:not(.buttonForLink) {
+  .defaultButton:not(.buttonForLink, .topNavbarButton) {
     margin: auto;
     width: 100%;
     padding: 0;
     padding-top: 10px;
     padding-bottom: 10px;
-    font-size: 0.85em;
     min-width: 100px !important;
   }
   .defaultButton.is-large {
-    font-size: 0.85em;
+    font-size: 1em;
     padding-top: 10px;
     padding-bottom: 10px;
   }
@@ -446,3 +445,7 @@ span.is-bold {
 }
 
 /* #endregion */
+
+.couchContainer {
+  margin-top: 1em;
+}

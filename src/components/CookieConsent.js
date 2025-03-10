@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router";
 
-const CookieConsent = ({ scrollThreshold = 10, timeDelay = 5000 }) => {
+const CookieConsent = ({ scrollThreshold = 25, timeDelay = 5000 }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [hasScrolled, setHasScrolled] = useState(false);
   const [timerExpired, setTimerExpired] = useState(false);
@@ -102,8 +102,8 @@ const CookieConsent = ({ scrollThreshold = 10, timeDelay = 5000 }) => {
         ) : (
           <div className="details">
             <p>
-              I need help finding the right players for my game. Some simple
-              data helps me do that 🙏
+              I need your help finding the right players for my game. Some
+              simple data helps me do that.
             </p>
             <div>
               <button

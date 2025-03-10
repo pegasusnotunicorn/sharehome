@@ -81,7 +81,7 @@ export const EmojiSection = (props) => {
       <div className="subcontentWrapper padding-top min-width">
         <GsapFadeScrub fadeIn className="fadeInTextWrapper">
           <div className="characterContent emojiDescriptionWrapper">
-            <h2>Free character emojis!</h2>
+            <h2>Free character emojis</h2>
             <p>
               Join the Discord community to use these emojis for free right now!
             </p>

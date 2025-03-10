@@ -8,9 +8,11 @@ import DefaultButton from "../utils/DefaultButton.js";
 import "../../css/navbar.css";
 import "../../css/utils/hamburger.css";
 import useWindowScroll from "../utils/useWindowScroll.js";
+import CharacterPinPopup from "../CharacterPinPopup.js";
+import { usePinPopup } from "../utils/usePinPopup.js";
 
 //main navbar for page navigation on the website
-export const NavbarMain = () => {
+export const NavbarMain = ({ videoModalVisible }) => {
   const location = useLocation();
   const isLandingPage =
     location.pathname === "/" || location.pathname.includes("ttrpg");
@@ -59,139 +61,155 @@ export const NavbarMain = () => {
   const isActiveAndDesktop = width > 900 && visible;
   const isLandingPageAtTop = isLandingPage && scrollPosition === 0;
 
+  const { showPopup, showButton, closePopup, openPopup } = usePinPopup({});
+
   //navbar open
   return (
-    <div className={`navbarClass ${isVisibleClass}`}>
-      <GsapFadeScrub
-        scrubStartCenter
-        scrub
-        fadeIn
-        className="fixedButtonsWrapper noselect"
-      >
-        <NavLink to="/" className="navbarFloatLeft"></NavLink>
-        <div className="navbarFloatRight">
-          {(!isLandingPage || isDesktop) && !isLandingPageAtTop && (
-            <DefaultButton
-              shadowless
-              animated
-              icon="forward"
-              id="emailToggleButtonMobile"
-              className={`${mailButtonVisibleClass} is-red navbarBuyButton`}
-              navlink="/buy"
-              text="Buy now!"
-            />
-          )}
-          <button
-            id="navbarOpenClose"
-            className={`hamburger hamburger--slider ${isVisibleClass}`}
-            onClick={toggleNav}
-            type="button"
-            aria-label="Toggle navigation"
-          >
-            <span className="hamburger-box">
-              <span className="hamburger-inner"></span>
-            </span>
-          </button>
-        </div>
-      </GsapFadeScrub>
+    <>
+      {!videoModalVisible && showPopup && (
+        <CharacterPinPopup closePopup={closePopup} />
+      )}
 
-      <div className={`navbarMain ${isVisibleClass}`}>
-        <div className="navbarChildrenWrapper">
-          <div
-            className={`navbarChildren navbarLeftWrapper ${mobileShowLeftClass}`}
-          >
-            <div className="navbarButtonWrapper">
-              <NavLink
-                onClick={toggleNav}
-                to="/"
-                className="navbarButton noselect"
-              >
-                Home
-              </NavLink>
-              <NavLink
-                onClick={toggleNav}
-                to="/howtoplay"
-                className="navbarButton noselect"
-              >
-                How to play
-              </NavLink>
-              <NavLink
-                onClick={toggleNav}
-                to="/characters"
-                className="navbarButton noselect"
-              >
-                Characters
-              </NavLink>
-              <a
-                aria-label="Play online"
-                onClick={toggleNav}
-                href="https://screentop.gg/@PegasusGames/lcm"
-                className="navbarButton noselect"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Play online
-              </a>
-              <NavLink
-                onClick={toggleNav}
-                to="/contact"
-                className="navbarButton noselect"
-              >
-                About / contact
-              </NavLink>
-              <a
-                aria-label="Blog"
-                href="https://pegasusgames.medium.com/"
-                rel="noopener noreferrer"
-                target="_blank"
-                className="navbarButton noselect"
-              >
-                Blog
-              </a>
-            </div>
+      <div className={`navbarClass ${isVisibleClass}`}>
+        <GsapFadeScrub
+          scrubStartCenter
+          scrub
+          fadeIn
+          className="fixedButtonsWrapper noselect"
+        >
+          <NavLink to="/" className="navbarFloatLeft"></NavLink>
+          <div className="navbarFloatRight">
+            {(!isLandingPage || isDesktop) && !isLandingPageAtTop && (
+              <DefaultButton
+                shadowless
+                animated
+                icon="forward"
+                id="emailToggleButtonMobile"
+                className={`${mailButtonVisibleClass} is-red navbarBuyButton`}
+                navlink="/buy"
+                text="Buy now!"
+              />
+            )}
+            {showButton && !isLandingPageAtTop && (
+              <DefaultButton
+                className="free-pin-btn topNavbarButton"
+                onClick={openPopup}
+                text="Get a free pin!"
+                shadowless
+              />
+            )}
+            <button
+              id="navbarOpenClose"
+              className={`hamburger hamburger--slider ${isVisibleClass}`}
+              onClick={toggleNav}
+              type="button"
+              aria-label="Toggle navigation"
+            >
+              <span className="hamburger-box">
+                <span className="hamburger-inner"></span>
+              </span>
+            </button>
           </div>
-          <div className="navbarChildren navbarCenterBorder"></div>
-          <div
-            className={`navbarChildren navbarRightWrapper ${mobileShowRightClass}`}
-          >
-            <ShootingStar
-              className="leftStar"
-              isActive={visible}
-              orientation="right"
-              mirror
-            />
-            <ShootingStar
-              className="rightStar"
-              isActive={visible}
-              orientation="left"
-              delay="2"
-            />
-            <ShootingStar
-              className="leftStar"
-              isActive={visible}
-              orientation="up"
-              delay="4"
-            />
-            <ShootingStar
-              className="leftStar"
-              isActive={visible}
-              orientation="down"
-              delay="6"
-            />
-            <EmailForm
-              hideTitle={false}
-              isActiveAndDesktop={isActiveAndDesktop}
-            />
-            <img
-              loading="lazy"
-              className="artbookMockup"
-              src="/images/bizz_fukidashi.webp"
-              alt="Navbar illustration"
-            />
+        </GsapFadeScrub>
+
+        <div className={`navbarMain ${isVisibleClass}`}>
+          <div className="navbarChildrenWrapper">
+            <div
+              className={`navbarChildren navbarLeftWrapper ${mobileShowLeftClass}`}
+            >
+              <div className="navbarButtonWrapper">
+                <NavLink
+                  onClick={toggleNav}
+                  to="/"
+                  className="navbarButton noselect"
+                >
+                  Home
+                </NavLink>
+                <NavLink
+                  onClick={toggleNav}
+                  to="/howtoplay"
+                  className="navbarButton noselect"
+                >
+                  How to play
+                </NavLink>
+                <NavLink
+                  onClick={toggleNav}
+                  to="/characters"
+                  className="navbarButton noselect"
+                >
+                  Characters
+                </NavLink>
+                <a
+                  aria-label="Play online"
+                  onClick={toggleNav}
+                  href="https://screentop.gg/@PegasusGames/lcm"
+                  className="navbarButton noselect"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Play online
+                </a>
+                <NavLink
+                  onClick={toggleNav}
+                  to="/contact"
+                  className="navbarButton noselect"
+                >
+                  About / contact
+                </NavLink>
+                <a
+                  aria-label="Blog"
+                  href="https://pegasusgames.medium.com/"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  className="navbarButton noselect"
+                >
+                  Blog
+                </a>
+              </div>
+            </div>
+            <div className="navbarChildren navbarCenterBorder"></div>
+            <div
+              className={`navbarChildren navbarRightWrapper ${mobileShowRightClass}`}
+            >
+              <ShootingStar
+                className="leftStar"
+                isActive={visible}
+                orientation="right"
+                mirror
+              />
+              <ShootingStar
+                className="rightStar"
+                isActive={visible}
+                orientation="left"
+                delay="2"
+              />
+              <ShootingStar
+                className="leftStar"
+                isActive={visible}
+                orientation="up"
+                delay="4"
+              />
+              <ShootingStar
+                className="leftStar"
+                isActive={visible}
+                orientation="down"
+                delay="6"
+              />
+              <EmailForm
+                hideTitle={false}
+                isActiveAndDesktop={isActiveAndDesktop}
+              />
+              <img
+                loading="lazy"
+                className="artbookMockup"
+                src="/images/bizz_fukidashi.webp"
+                alt="Navbar illustration"
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

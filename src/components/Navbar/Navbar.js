@@ -22,8 +22,7 @@ export const NavbarMain = ({ videoModalVisible }) => {
   const isVisibleClass = visible ? "is-active" : ""; //class to append if visible
 
   //toggle email logic
-  const { width, height } = useWindowDimensions();
-  const isDesktop = width > 900 && width > height; //check if desktop
+  const { isDesktop } = useWindowDimensions();
   const [mailButtonVisible, setMailButtonVisible] = useState(true);
   const mailButtonVisibleClass = mailButtonVisible ? "is-active" : ""; //class to append if visible
 
@@ -37,7 +36,7 @@ export const NavbarMain = ({ videoModalVisible }) => {
       setVisibility(!visible);
 
       //desktop
-      if (width > 900) {
+      if (isDesktop) {
         setMailButtonVisible(!mailButtonVisible);
       }
       //mobile
@@ -52,13 +51,13 @@ export const NavbarMain = ({ videoModalVisible }) => {
         }
       }
     },
-    [width, mailButtonVisible, visible]
+    [isDesktop, mailButtonVisible, visible]
   );
 
   // if landing and the scroll is all the way at the time, don't show
   const scrollPosition = useWindowScroll();
 
-  const isActiveAndDesktop = width > 900 && visible;
+  const isActiveAndDesktop = isDesktop && visible;
   const isLandingPageAtTop = isLandingPage && scrollPosition === 0;
 
   const { showPopup, showButton, closePopup, openPopup } = usePinPopup({});

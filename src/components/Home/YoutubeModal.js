@@ -17,12 +17,11 @@ export const YoutubeModal = ({
 }) => {
   const iframeRef = useRef(null);
 
-  const { width, height } = useWindowDimensions();
+  const { width, height, isDesktop } = useWindowDimensions();
   const emToPx = parseFloat(
     getComputedStyle(document.documentElement).fontSize
   ); // Convert 2em to pixels
 
-  const isDesktop = width > 1000;
   const iframeWidth = isDesktop ? 1000 : width - 4 - emToPx * 2;
   const iframeHeight = isDesktop
     ? (iframeWidth * 9) / 16

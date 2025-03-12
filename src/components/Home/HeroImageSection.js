@@ -60,7 +60,7 @@ export default function HeroImageSection({
           }}
           className={landingPageStyles.heroBottomWrapper}
         >
-          <GsapFadeScrub fadeOut startScreenBot>
+          <GsapFadeScrub scrub fadeOut>
             <img
               alt="or just keep scrolling"
               src="/images/just_keep_scrolling.webp"

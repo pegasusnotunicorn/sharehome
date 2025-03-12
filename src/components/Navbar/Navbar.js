@@ -58,7 +58,8 @@ export const NavbarMain = ({ videoModalVisible }) => {
   const scrollPosition = useWindowScroll();
 
   const isActiveAndDesktop = isDesktop && visible;
-  const isLandingPageAtTop = isLandingPage && scrollPosition === 0;
+  const isAtTop = scrollPosition === 0;
+  const isLandingPageAtTop = isLandingPage && isAtTop;
 
   const { showPopup, showButton, closePopup, openPopup } = usePinPopup({});
 
@@ -75,7 +76,7 @@ export const NavbarMain = ({ videoModalVisible }) => {
           scrub
           fadeIn
           className={`fixedButtonsWrapper noselect ${
-            isLandingPageAtTop ? "isLandingPageAtTop" : ""
+            isAtTop ? "isLandingPageAtTop" : ""
           }`}
         >
           <NavLink to="/" className="navbarFloatLeft"></NavLink>
@@ -91,7 +92,7 @@ export const NavbarMain = ({ videoModalVisible }) => {
                 text="Buy now!"
               />
             )}
-            {showButton && !isLandingPageAtTop && (
+            {showButton && !isAtTop && (
               <DefaultButton
                 className="free-pin-btn topNavbarButton is-blue"
                 onClick={openPopup}

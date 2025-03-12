@@ -74,7 +74,9 @@ export const NavbarMain = ({ videoModalVisible }) => {
           scrubStartCenter
           scrub
           fadeIn
-          className="fixedButtonsWrapper noselect"
+          className={`fixedButtonsWrapper noselect ${
+            isLandingPageAtTop ? "isLandingPageAtTop" : ""
+          }`}
         >
           <NavLink to="/" className="navbarFloatLeft"></NavLink>
           <div className="navbarFloatRight">
@@ -91,15 +93,14 @@ export const NavbarMain = ({ videoModalVisible }) => {
             )}
             {showButton && !isLandingPageAtTop && (
               <DefaultButton
-                className="free-pin-btn topNavbarButton"
+                className="free-pin-btn topNavbarButton is-blue"
                 onClick={openPopup}
                 text="Get a free pin!"
                 shadowless
               />
             )}
             <button
-              id="navbarOpenClose"
-              className={`hamburger hamburger--slider ${isVisibleClass}`}
+              className={`navbarOpenClose hamburger hamburger--slider noselect`}
               onClick={toggleNav}
               type="button"
               aria-label="Toggle navigation"
@@ -112,6 +113,16 @@ export const NavbarMain = ({ videoModalVisible }) => {
         </GsapFadeScrub>
 
         <div className={`navbarMain ${isVisibleClass}`}>
+          <button
+            className={`navbarOpenClose hamburger hamburger--slider noselect ${isVisibleClass}`}
+            onClick={toggleNav}
+            type="button"
+            aria-label="Toggle navigation"
+          >
+            <span className="hamburger-box">
+              <span className="hamburger-inner"></span>
+            </span>
+          </button>
           <div className="navbarChildrenWrapper">
             <div
               className={`navbarChildren navbarLeftWrapper ${mobileShowLeftClass}`}

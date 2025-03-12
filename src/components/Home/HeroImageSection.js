@@ -2,19 +2,15 @@ import PropTypes from "prop-types";
 import DefaultButton from "../utils/DefaultButton.js";
 import landingPageStyles from "../../css/landingPage.module.css";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
-import useWindowScroll from "../utils/useWindowScroll.js";
+import { GsapFadeScrub } from "../utils/useGsap.js";
 
 export default function HeroImageSection({
   videoModalVisible,
   playVideo,
-  boxArtOverride,
   titleOverride,
 }) {
   const { isDesktop } = useWindowDimensions();
-  const scrollPosition = useWindowScroll();
-  const isPageAtTop = scrollPosition === 0;
 
-  const titleSrc = titleOverride ?? "/images/title";
   const imageSrcResponsive = isDesktop
     ? `/images/click_to_learn_desktop`
     : "/images/click_to_learn_mobile";
@@ -31,40 +27,47 @@ export default function HeroImageSection({
       <div
         className={`${landingPageStyles.screenHeight} ${landingPageStyles.heroImagesWrapper}`}
       >
-        <img
-          alt="Page title"
-          src={`${titleSrc}.webp`}
-          draggable={false}
-          className={`${landingPageStyles.heroTitle} noselect`}
-        />
-        <img
-          alt="Box and components of the card game."
-          src={`${imageSrcResponsive}.webp`}
-          draggable={false}
-          className={`${landingPageStyles.heroImage} noselect openYouTubeModalButton`}
-          onClick={playVideo}
-        />
-        <img
-          alt="Click the box to learn more!"
-          src={boxArtOverride ?? "/images/box_transparent.webp"}
-          draggable={false}
-          className={`${landingPageStyles.heroImage} noselect openYouTubeModalButton ${landingPageStyles.monsterBurstAnimation}`}
-          onClick={playVideo}
-        />
+        <div className={landingPageStyles.heroTitleWrapper}>
+          <h2 className={landingPageStyles.heroTitle}>
+            {titleOverride ?? "A party game where fantasy meets reality TV!"}
+          </h2>
+          <img
+            alt="Page title fukidashi"
+            src="images/fukidashi.webp"
+            draggable={false}
+            className={`${landingPageStyles.fukidashi} noselect`}
+          />
+        </div>
+        <div className={landingPageStyles.heroImageWrapper}>
+          <img
+            alt="Box and components of the card game."
+            src={`${imageSrcResponsive}.webp`}
+            draggable={false}
+            className={`${landingPageStyles.heroImage} noselect openYouTubeModalButton`}
+            onClick={playVideo}
+          />
+          <img
+            alt="Click the box to learn more!"
+            src="/images/box_transparent.webp"
+            draggable={false}
+            className={`${landingPageStyles.heroImage} noselect openYouTubeModalButton ${landingPageStyles.monsterBurstAnimation}`}
+            onClick={playVideo}
+          />
+        </div>
         <div
           style={{
             display: videoModalVisible ? "none" : "flex",
           }}
           className={landingPageStyles.heroBottomWrapper}
         >
-          {isPageAtTop && (
+          <GsapFadeScrub fadeOut>
             <img
               alt="or just keep scrolling"
               src="/images/just_keep_scrolling.webp"
               draggable={false}
               className={`${landingPageStyles.justKeepScrolling} noselect`}
             />
-          )}
+          </GsapFadeScrub>
           <DefaultButton
             shadowless
             animated
@@ -83,6 +86,5 @@ export default function HeroImageSection({
 HeroImageSection.propTypes = {
   videoModalVisible: PropTypes.bool.isRequired,
   playVideo: PropTypes.func.isRequired,
-  boxArtOverride: PropTypes.string,
-  textImageOverride: PropTypes.string,
+  titleOverride: PropTypes.string,
 };

@@ -6,7 +6,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 99999;
+  z-index: 99997;
   width: 100%;
 }
 
@@ -42,7 +42,7 @@
   -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
 }
 
-#navbarOpenClose {
+.navbarOpenClose {
   height: 42px;
   width: 58px;
   cursor: pointer;
@@ -58,8 +58,13 @@
   -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
 }
 
-.navbarClass:not(.is-active) #navbarOpenClose {
+.navbarClass:not(.is-active) .navbarOpenClose {
   border-radius: 4px;
+}
+
+.navbarMain .navbarOpenClose {
+  position: fixed;
+  right: 0;
 }
 
 /* #endregion
@@ -120,6 +125,9 @@
 }
 
 @media only screen and (max-width: 900px) {
+  .fixedButtonsWrapper:not(.isLandingPageAtTop) {
+    background-color: #fff;
+  }
   .navbarBuyButton {
     position: fixed;
     width: calc(100% - 2em) !important;

@@ -34,12 +34,22 @@ export default async function trackConversions(request, context) {
     const encodedUtmData = await context.cookies.get("utm_data");
     const clientId = await context.cookies.get("client_id");
 
-    if (!encodedUtmData) {
-      console.log("⚠️ No UTM data found, skipping tracking.");
-      return context.rewrite(new URL("/index.html", request.url));
-    }
+    let utmData = null;
 
-    const utmData = JSON.parse(atob(encodedUtmData));
+    if (!encodedUtmData) {
+      console.log(
+        "⚠️ No UTM data found, sending blank conversions to GA4 and Facebook."
+      );
+      utmData = {
+        utm_source: "direct",
+        utm_medium: "none",
+        utm_campaign: "none",
+        utm_term: "none",
+        utm_content: "none",
+      };
+    } else {
+      utmData = JSON.parse(atob(encodedUtmData));
+    }
 
     // Extract Stripe Session ID
     const url = new URL(request.url);
@@ -111,7 +121,7 @@ async function sendToGA4(clientId, utmData, revenue) {
     ],
   };
 
-  console.log("📡 Sending GA4 Event:", JSON.stringify(ga4Data, null, 2));
+  console.log("📡 Sending GA4 event");
 
   try {
     const res = await fetch(
@@ -136,15 +146,7 @@ async function sendToGA4(clientId, utmData, revenue) {
 }
 
 async function sendToFacebook(clientId, utmData, stripeData, request, context) {
-  const relevantSources = ["facebook", "instagram", "fb", "ig"];
-
-  if (
-    !utmData.utm_source ||
-    !relevantSources.includes(utmData.utm_source.toLowerCase())
-  ) {
-    console.log(`🚫 Skipping FB event: utm_source = ${utmData.utm_source}`);
-    return;
-  }
+  console.log(`📡 Sending FB event`);
 
   const fbClientId = await context.cookies.get("_fbp");
   const fbClickId = await context.cookies.get("_fbc");

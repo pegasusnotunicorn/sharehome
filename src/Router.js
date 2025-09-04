@@ -20,6 +20,7 @@ import Footer from "./components/Footer.js";
 import ArtbookDownloadPage from "./components/ArtbookDownloadPage.js";
 import ThankYouPage from "./components/ThankYouPage.js";
 import ExternalRedirect from "./components/ExternalRedirect.js";
+import useUTMPreservation from "./hooks/useUTMPreservation.js";
 
 const STRIPE_BACKUP_PAYMENT_LINK =
   process.env.NODE_ENV === "development"
@@ -49,6 +50,9 @@ const AppRoutes = () => {
   const isExternalRedirect = ["/rulebook", "/buy"].includes(location.pathname);
 
   const [videoModalVisible, setVideoModalVisible] = useState(false);
+
+  // Preserve UTM parameters across all page navigation
+  useUTMPreservation();
 
   return (
     <>

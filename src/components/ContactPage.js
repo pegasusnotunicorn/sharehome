@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import "../css/pages/contactPage.css";
 import { NavLink } from "react-router";
-import UTMPreservingLink from "./utils/UTMPreservingLink";
+import UTMPreservingLink from "./utils/UTMPreservingLink.js";
 
 const ContactPage = () => {
   useEffect(() => {

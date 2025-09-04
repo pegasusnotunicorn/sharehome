@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { NavLink } from "react-router";
 import PropTypes from "prop-types";
-import UTMPreservingLink from "./UTMPreservingLink";
+import UTMPreservingLink from "./UTMPreservingLink.js";
 
 const DefaultButton = forwardRef(
   (

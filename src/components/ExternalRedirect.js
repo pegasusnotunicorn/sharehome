@@ -20,11 +20,29 @@ const ExternalRedirect = ({ url }) => {
       "fbclid",
     ];
 
+    // First, try to get UTM params from current URL
+    let hasUTMParams = false;
     trackingParams.forEach((param) => {
       if (currentParams.has(param)) {
         targetUrl.searchParams.set(param, currentParams.get(param));
+        hasUTMParams = true;
       }
     });
+
+    // If no UTM params in URL, check sessionStorage
+    if (!hasUTMParams) {
+      const storedUTM = sessionStorage.getItem("utm_params");
+      if (storedUTM) {
+        try {
+          const utmData = JSON.parse(storedUTM);
+          Object.entries(utmData).forEach(([key, value]) => {
+            targetUrl.searchParams.set(key, value);
+          });
+        } catch (error) {
+          console.error("Error parsing stored UTM data:", error);
+        }
+      }
+    }
 
     window.location.replace(targetUrl.toString());
   }, [url]);

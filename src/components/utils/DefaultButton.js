@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 import { NavLink } from "react-router";
 import PropTypes from "prop-types";
+import UTMPreservingLink from "./UTMPreservingLink";
 
 const DefaultButton = forwardRef(
   (
@@ -56,10 +57,12 @@ const DefaultButton = forwardRef(
     //a tag, navlink, or div tag
     if (navlink) {
       props.to = navlink;
+      // Use UTM-preserving link for /buy, regular NavLink for others
+      const LinkComponent = navlink === "/buy" ? UTMPreservingLink : NavLink;
       return (
-        <NavLink {...props}>
+        <LinkComponent {...props}>
           <IconText {...iconTextProps} />
-        </NavLink>
+        </LinkComponent>
       );
     } else if (emoji) {
       props.href = `/images/emojis/${emoji}.webp`;

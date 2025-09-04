@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import "../css/pages/contactPage.css";
 import { NavLink } from "react-router";
+import UTMPreservingLink from "./utils/UTMPreservingLink";
 
 const ContactPage = () => {
   useEffect(() => {
@@ -119,7 +120,7 @@ const ContactPage = () => {
           </p>
           <p>
             Thanks for visiting my humble page and please consider{" "}
-            <NavLink to="/buy">buying the game!</NavLink>
+            <UTMPreservingLink to="/buy">buying the game!</UTMPreservingLink>
           </p>
         </div>
       </div>

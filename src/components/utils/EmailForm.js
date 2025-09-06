@@ -11,7 +11,7 @@ export const EmailForm = (props) => {
   const emailRef = useRef(null);
   const [response, setResponse] = useState(
     props.responseOverride ??
-      "Receive a free character pin with your first order when you sign up."
+      "Receive a coupon for a free character pin when you sign up."
   );
 
   //focus the email input on desktop

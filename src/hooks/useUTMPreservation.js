@@ -53,6 +53,10 @@ const useUTMPreservation = () => {
           // Add stored UTM parameters to current URL
           Object.entries(utmData).forEach(([key, value]) => {
             newUrl.searchParams.set(key, value);
+
+            if (key === "fbclid") {
+              newUrl.searchParams.set("client_reference_id", value);
+            }
           });
 
           // Update the URL without triggering a page reload

@@ -158,6 +158,13 @@ async function sendToFacebook(clientId, utmData, stripeData, request, context) {
   const customerId = stripeData.customer;
   const revenue = stripeData.amount_total / 100;
 
+  // check the request.url for query params
+  const queryParams = new URLSearchParams(request.url);
+  const utm_source = queryParams.get("utm_source") ?? utmData.utm_source;
+  const utm_campaign = queryParams.get("utm_campaign") ?? utmData.utm_campaign;
+  const client_reference_id =
+    queryParams.get("client_reference_id") ?? utmData.client_reference_id;
+
   const fbData = {
     event_name: "Purchase",
     event_time: Math.floor(Date.now() / 1000),
@@ -173,16 +180,16 @@ async function sendToFacebook(clientId, utmData, stripeData, request, context) {
       ln: hashString(customerLastName), // Hashed last name
       ph: hashString(customerPhone), // Hashed phone number
       external_id: hashString(customerId), // Optional if you have a user ID
-      fbc: fbClickId, // Facebook Click ID (if available)
+      fbc: client_reference_id ?? fbClickId, // Facebook Click ID (if available)
       fbp: fbClientId, // Facebook Pixel ID (if available)
     },
 
     custom_data: {
       value: revenue,
       currency: "USD",
-      attribution_value: utmData.utm_source, // UTM source as attribution value
+      attribution_value: utm_source, // UTM source as attribution value
       attribution_model: "last_click", // Example attribution model
-      campaign_id: utmData.utm_campaign,
+      campaign_id: utm_campaign,
       visit_time: Math.floor(Date.now() / 1000),
     },
   };

@@ -22,6 +22,10 @@ const trackUtm = async (request, context) => {
     console.log("🔄 Existing client_id found:", clientId);
   }
 
+  // Extract Facebook tracking data
+  const fbClientId = await context.cookies.get("_fbp");
+  const fbClickId = await context.cookies.get("_fbc");
+
   // Extract UTM parameters
   const utmData = {
     client_id: clientId,
@@ -31,8 +35,8 @@ const trackUtm = async (request, context) => {
     utm_term: searchParams.get("utm_term") || "unknown",
     utm_content: searchParams.get("utm_content") || "unknown",
     referrer: request.headers.get("referer") || "none",
-    fb_client_id: searchParams.get("fb_client_id") || "none",
-    fb_click_id: searchParams.get("fb_click_id") || "none",
+    fbclid: searchParams.get("fbclid") || fbClickId || "none",
+    fb_client_id: fbClientId || "none",
   };
 
   // Store UTM data in Netlify Edge Session (Server-Side Cookie)

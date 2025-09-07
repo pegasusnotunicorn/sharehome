@@ -35,6 +35,10 @@ const useUTMPreservation = () => {
       ].forEach((param) => {
         if (currentParams.has(param)) {
           utmData[param] = currentParams.get(param);
+
+          if (param === "fbclid") {
+            utmData.client_reference_id = currentParams.get("fbclid");
+          }
         }
       });
 

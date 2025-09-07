@@ -31,6 +31,8 @@ const trackUtm = async (request, context) => {
     utm_term: searchParams.get("utm_term") || "unknown",
     utm_content: searchParams.get("utm_content") || "unknown",
     referrer: request.headers.get("referer") || "none",
+    fb_client_id: searchParams.get("fb_client_id") || "none",
+    fb_click_id: searchParams.get("fb_click_id") || "none",
   };
 
   // Store UTM data in Netlify Edge Session (Server-Side Cookie)

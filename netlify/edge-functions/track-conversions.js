@@ -49,6 +49,7 @@ export default async function trackConversions(request, context) {
       };
     } else {
       utmData = JSON.parse(atob(encodedUtmData));
+      console.log("✅ UTM Data Found:", JSON.stringify(utmData, null, 2));
     }
 
     // Extract Stripe Session ID
@@ -102,6 +103,13 @@ async function getStripeCheckoutDetails(sessionId) {
 
 // Send Data to GA4
 async function sendToGA4(clientId, utmData, revenue) {
+  const queryParams = new URLSearchParams(request.url);
+  const utm_source = queryParams.get("utm_source") ?? utmData.utm_source;
+  const utm_campaign = queryParams.get("utm_campaign") ?? utmData.utm_campaign;
+  const utm_medium = queryParams.get("utm_medium") ?? utmData.utm_medium;
+  const utm_term = queryParams.get("utm_term") ?? utmData.utm_term;
+  const utm_content = queryParams.get("utm_content") ?? utmData.utm_content;
+
   const ga4Data = {
     client_id: clientId ?? crypto.randomUUID(),
     events: [
@@ -111,17 +119,17 @@ async function sendToGA4(clientId, utmData, revenue) {
           currency: "USD",
           value: revenue,
           price: revenue,
-          source: utmData.utm_source,
-          medium: utmData.utm_medium,
-          campaign: utmData.utm_campaign,
-          term: utmData.utm_term,
-          content: utmData.utm_content,
+          source: utm_source ?? utmData.utm_source,
+          campaign: utm_campaign ?? utmData.utm_campaign,
+          medium: utm_medium ?? utmData.utm_medium,
+          term: utm_term ?? utmData.utm_term,
+          content: utm_content ?? utmData.utm_content,
         },
       },
     ],
   };
 
-  console.log("📡 Sending GA4 event");
+  console.log("📡 Sending GA4 event", JSON.stringify(ga4Data, null, 2));
 
   try {
     const res = await fetch(

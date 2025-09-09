@@ -48,8 +48,19 @@ export default async function trackConversions(request, context) {
         utm_content: "none",
       };
     } else {
-      utmData = JSON.parse(atob(encodedUtmData));
-      console.log("✅ UTM Data Found:", JSON.stringify(utmData, null, 2));
+      try {
+        utmData = JSON.parse(atob(encodedUtmData));
+        console.log("✅ UTM Data Found:", JSON.stringify(utmData, null, 2));
+      } catch (error) {
+        console.error("❌ Error parsing UTM data:", error);
+        utmData = {
+          utm_source: "direct",
+          utm_medium: "none",
+          utm_campaign: "none",
+          utm_term: "none",
+          utm_content: "none",
+        };
+      }
     }
 
     // Extract Stripe Session ID
@@ -71,7 +82,7 @@ export default async function trackConversions(request, context) {
     if (IS_DEV) console.log("✅ Stripe Data Retrieved:", stripeData);
 
     // Send UTM + Revenue Data to GA4 and Facebook
-    await sendToGA4(clientId, utmData, stripeData.amount_total / 100);
+    await sendToGA4(clientId, utmData, stripeData.amount_total / 100, request);
     await sendToFacebook(clientId, utmData, stripeData, request, context);
 
     return context.rewrite(new URL("/index.html", request.url));
@@ -102,8 +113,9 @@ async function getStripeCheckoutDetails(sessionId) {
 }
 
 // Send Data to GA4
-async function sendToGA4(clientId, utmData, revenue) {
-  const queryParams = new URLSearchParams(request.url);
+async function sendToGA4(clientId, utmData, revenue, request) {
+  const url = new URL(request.url);
+  const queryParams = url.searchParams;
   const utm_source = queryParams.get("utm_source") ?? utmData.utm_source;
   const utm_campaign = queryParams.get("utm_campaign") ?? utmData.utm_campaign;
   const utm_medium = queryParams.get("utm_medium") ?? utmData.utm_medium;
@@ -119,11 +131,11 @@ async function sendToGA4(clientId, utmData, revenue) {
           currency: "USD",
           value: revenue,
           price: revenue,
-          source: utm_source ?? utmData.utm_source,
-          campaign: utm_campaign ?? utmData.utm_campaign,
-          medium: utm_medium ?? utmData.utm_medium,
-          term: utm_term ?? utmData.utm_term,
-          content: utm_content ?? utmData.utm_content,
+          source: utm_source,
+          campaign: utm_campaign,
+          medium: utm_medium,
+          term: utm_term,
+          content: utm_content,
         },
       },
     ],
@@ -167,7 +179,8 @@ async function sendToFacebook(clientId, utmData, stripeData, request, context) {
   const revenue = stripeData.amount_total / 100;
 
   // check the request.url for query params
-  const queryParams = new URLSearchParams(request.url);
+  const url = new URL(request.url);
+  const queryParams = url.searchParams;
   const utm_source = queryParams.get("utm_source") ?? utmData.utm_source;
   const utm_campaign = queryParams.get("utm_campaign") ?? utmData.utm_campaign;
   const client_reference_id =

@@ -2,7 +2,7 @@
 
 .fixedButtonsWrapper {
   position: fixed;
-  top: 0px;
+  top: calc(var(--banner-height, 50px) + var(--banner-navbar-spacing, 10px));
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -88,10 +88,12 @@
     rgba(255, 255, 255, 1) 100%
   );
   left: 100%;
-  top: 0;
+  top: calc(var(--banner-height, 50px) + var(--banner-navbar-spacing, 10px));
   position: fixed;
   width: 125%;
-  height: 100%;
+  height: calc(
+    100% - var(--banner-height, 50px) - var(--banner-navbar-spacing, 10px)
+  );
   z-index: 99998;
   transition-property: left;
   transition-duration: 0.25s;
@@ -125,6 +127,20 @@
 }
 
 @media only screen and (max-width: 900px) {
+  .fixedButtonsWrapper {
+    top: calc(
+      var(--banner-height-mobile, 45px) + var(--banner-navbar-spacing, 10px)
+    );
+  }
+  .navbarMain {
+    top: calc(
+      var(--banner-height-mobile, 45px) + var(--banner-navbar-spacing, 10px)
+    );
+    height: calc(
+      100% - var(--banner-height-mobile, 45px) -
+        var(--banner-navbar-spacing, 10px)
+    );
+  }
   .fixedButtonsWrapper:not(.isLandingPageAtTop) {
     background-color: #fff;
     box-shadow: 1px 1px 10px 0px rgba(0, 0, 0, 0.15);

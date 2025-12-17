@@ -8,6 +8,7 @@ import {
 } from "react-router";
 import MetaTags from "./components/MetaTags.js";
 import Navbar from "./components/Navbar/Navbar.js";
+import Banner from "./components/Banner.js";
 import ScrollToTop from "./ScrollToTop.js";
 import LandingPage from "./components/Home/LandingPage.js";
 import TTRPGPage from "./components/Home/TTRPGPage.js";
@@ -19,6 +20,7 @@ import ErrorPage from "./components/ErrorPage.js";
 import Footer from "./components/Footer.js";
 import ArtbookDownloadPage from "./components/ArtbookDownloadPage.js";
 import ThankYouPage from "./components/ThankYouPage.js";
+import SignupPage from "./components/SignupPage.js";
 import ExternalRedirect from "./components/ExternalRedirect.js";
 import useUTMPreservation from "./hooks/useUTMPreservation.js";
 
@@ -56,6 +58,7 @@ const AppRoutes = () => {
 
   return (
     <>
+      {!isExternalRedirect && <Banner />}
       {!isExternalRedirect && <Navbar videoModalVisible={videoModalVisible} />}
       <Routes>
         <Route
@@ -82,6 +85,7 @@ const AppRoutes = () => {
         <Route path="/characters" element={<CharactersPage />} />
         <Route path="/characters/:name" element={<CharactersPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/signup" element={<SignupPage />} />
         <Route path="/thankyou" element={<ThankYouPage />} />
         <Route
           path="/rulebook"

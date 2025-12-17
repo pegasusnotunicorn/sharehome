@@ -1,5 +1,11 @@
 /* #region------------------------------------------------------------------GLOBALS */
 
+:root {
+  --banner-height: 30px;
+  --banner-height-mobile: 45px;
+  --banner-navbar-spacing: 20px;
+}
+
 html {
   height: -webkit-fill-available;
 }
@@ -282,6 +288,9 @@ span.is-bold {
   text-align: center;
   display: block;
   width: 100%;
+  padding-top: calc(
+    var(--banner-height, 30px) + var(--banner-navbar-spacing, 20px)
+  );
   padding-bottom: 25svh;
   margin: auto;
   overflow: hidden;
@@ -334,6 +343,10 @@ span.is-bold {
 
 @media only screen and (max-width: 900px) {
   .content {
+    padding-top: calc(
+      var(--banner-height-mobile, 45px) + var(--banner-navbar-spacing, 20px) +
+        var(--navbar-height, 50px) + var(--banner-navbar-spacing, 20px)
+    );
     padding-bottom: 50svh;
   }
   .subcontentWrapper {

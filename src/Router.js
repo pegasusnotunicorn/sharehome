@@ -21,13 +21,9 @@ import Footer from "./components/Footer.js";
 import ArtbookDownloadPage from "./components/ArtbookDownloadPage.js";
 import ThankYouPage from "./components/ThankYouPage.js";
 import SignupPage from "./components/SignupPage.js";
+import BuyPage from "./components/BuyPage.js";
 import ExternalRedirect from "./components/ExternalRedirect.js";
 import useUTMPreservation from "./hooks/useUTMPreservation.js";
-
-const STRIPE_BACKUP_PAYMENT_LINK =
-  process.env.NODE_ENV === "development"
-    ? process.env.REACT_APP_STRIPE_TEST_URL
-    : process.env.REACT_APP_STRIPE_PROD_URL;
 
 const Router = () => {
   // Hide the static image once React is ready
@@ -49,7 +45,7 @@ const Router = () => {
 
 const AppRoutes = () => {
   const location = useLocation();
-  const isExternalRedirect = ["/rulebook", "/buy"].includes(location.pathname);
+  const isExternalRedirect = ["/rulebook"].includes(location.pathname);
 
   const [videoModalVisible, setVideoModalVisible] = useState(false);
 
@@ -91,11 +87,7 @@ const AppRoutes = () => {
           path="/rulebook"
           element={<ExternalRedirect url="/rulebook.pdf" />}
         />
-        {/* Fallback for /buy route */}
-        <Route
-          path="/buy"
-          element={<ExternalRedirect url={STRIPE_BACKUP_PAYMENT_LINK} />}
-        />
+        <Route path="/buy" element={<BuyPage />} />
         <Route path="/terms" element={<TermsPage />} />
         {/* Fallback for undefined routes */}
         <Route path="*" element={<ErrorPage />} />

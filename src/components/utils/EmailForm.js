@@ -63,15 +63,31 @@ export const EmailForm = (props) => {
     ? `emailWrapper ${classFromParent}`
     : "emailWrapper";
 
+  // Check if response contains HTML tags (for conditional rendering)
+  const hasHTML = /<[a-z][\s\S]*>/i.test(response);
+  const isLongDescription = props.responseOverride && response.length > 50;
+
   return (
     <div className={className}>
       {!hideTitle && (
         <h1 className="formPrompt">Stay updated on the latest news.</h1>
       )}
-      <p
-        className="forminputText"
-        dangerouslySetInnerHTML={{ __html: response }}
-      ></p>
+      {hasHTML ? (
+        <p
+          className={`forminputText ${
+            isLongDescription ? "forminputText-description" : ""
+          }`}
+          dangerouslySetInnerHTML={{ __html: response }}
+        />
+      ) : (
+        <p
+          className={`forminputText ${
+            isLongDescription ? "forminputText-description" : ""
+          }`}
+        >
+          {response}
+        </p>
+      )}
       <form
         className="formWrapper"
         autoComplete="on"

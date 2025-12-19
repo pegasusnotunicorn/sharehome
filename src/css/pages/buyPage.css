@@ -1,0 +1,59 @@
+.buyPageButtonWrapper {
+  margin-bottom: 2em;
+  display: flex;
+  justify-content: center;
+}
+
+.buyPageNewsletterWrapper {
+  margin: 3em 0;
+  padding: 2em;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.buyPageNewsletterWrapper p {
+  margin-bottom: 1.5em;
+}
+
+.buyPageImageWrapper {
+  margin: 2em auto;
+  max-width: 100%;
+  text-align: center;
+}
+
+.buyPageImage {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: 5px;
+  display: block;
+  margin: 0 auto;
+}
+
+.buyPageCaption {
+  margin-top: 1em;
+  color: #666;
+  text-align: center;
+}
+
+.buyPageNote {
+  margin-top: 1em;
+  font-size: 0.9em;
+  color: #666;
+}
+
+@media only screen and (max-width: 900px) {
+  .buyPageButtonWrapper {
+    margin: 1.5em 0;
+  }
+
+  .buyPageNewsletterWrapper {
+    margin: 2em 0;
+    padding: 1.5em;
+  }
+
+  .buyPageImageWrapper {
+    margin: 1.5em auto;
+  }
+}

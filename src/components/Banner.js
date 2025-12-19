@@ -1,8 +1,8 @@
 import "./Banner.css";
 
 const link =
-  "https://pegasusgames.medium.com/an-update-on-international-shipments-to-outside-the-usa-4e53a216ceb8";
-const text = "📦 An update on international shipments";
+  "https://pegasusgames.medium.com/i-cannot-believe-it-but-love-career-magic-is-sold-out-e986b8f5747a";
+const text = "😱 Love, Career & Magic is completely SOLD OUT!";
 
 const Banner = () => {
   return (

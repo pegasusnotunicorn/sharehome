@@ -324,6 +324,15 @@
 .forminputText {
   max-width: 500px;
   font-size: 1em;
+  line-height: 1.5;
+  word-wrap: break-word;
+  text-align: center;
+}
+
+.forminputText-description {
+  max-width: 600px;
+  margin-bottom: 1.5em;
+  padding: 0 1em;
 }
 
 .forminputText a {

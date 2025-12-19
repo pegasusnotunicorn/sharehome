@@ -26,8 +26,9 @@ const BuyPage = () => {
           </p>
           <p>
             If you'd like to place a back order, you can do so at the link
-            below. As a token of my appreciation, I'll include a free sticker
-            pack of all 25 characters with your purchase!
+            below. As a token of my appreciation, I will include a free mystery
+            gift with your purchase. I haven’t decided yet what that gift will
+            be 😅
           </p>
           <div className="buyPageButtonWrapper">
             <DefaultButton

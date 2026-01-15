@@ -25,7 +25,7 @@ const TermsPage = () => {
             </li>
             <li>
               All sales are final unless your order arrives damaged or something
-              goes missing.
+              goes missing. Open box returns are not accepted.
             </li>
             <li>
               If anything goes wrong with your order,{" "}
@@ -34,6 +34,26 @@ const TermsPage = () => {
               little time to get back to you.
             </li>
           </ul>
+        </div>
+
+        <div className="termsWrapper">
+          <h2 className="subtitle">Return policy</h2>
+          <p>
+            I am a one-person team. I handle everything from the initial game
+            design to hand-packaging every box and driving them to the local
+            post office myself. Because I don't have the scale or budget of a
+            large corporation, I have to be very careful with my return policy.
+          </p>
+          <p>
+            Since games that have been opened and played cannot be resold to
+            another player, I unfortunately cannot accept them as returns. Every
+            copy is a significant investment of my time and resources, and I
+            simply don't have the overhead to absorb the cost of "open box"
+            returns.
+          </p>
+          <p>
+            Thank you for understanding and for supporting independent creators.
+          </p>
         </div>
 
         <div className="termsWrapper">

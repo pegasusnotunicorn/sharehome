@@ -1,4 +1,4 @@
-import EmailForm from "./utils/EmailForm.js";
+import DefaultButton from "./utils/DefaultButton.js";
 
 const CharacterPinPopup = ({ closePopup }) => {
   return (
@@ -20,14 +20,28 @@ const CharacterPinPopup = ({ closePopup }) => {
             onClick={closePopup}
           />
           <div className="modal-content">
-            <div className="pin-images">
-              <img src="/images/urg_pin.webp" alt="Urg, the Hacker Pin" />
-              <img src="/images/bizz_pin.webp" alt="Bizz Hagglefeet Pin" />
+            <img
+              className="expansion-image"
+              src="/images/kitchen_chaos.jpeg"
+              alt="Expansion update"
+            />
+            <h2>An expansion is coming!</h2>
+            <p>
+              I am incredibly excited to announce that an expansion is currently
+              in development! Follow the link below to stay updated on the
+              release date and other updates!
+            </p>
+
+            <div className="button-wrapper">
+              <DefaultButton
+                href="https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season"
+                text="Follow on Kickstarter"
+                icon="forward"
+                className="is-green"
+              />
             </div>
-            <h2>Get a free pin!</h2>
-            <EmailForm hideTitle={true} isActiveAndDesktop={true} />
             <button className="close-btn" onClick={closePopup}>
-              No thanks, I hate free stuff.
+              No thanks, I'm not interested.
             </button>
           </div>
         </div>
@@ -78,6 +92,15 @@ const CharacterPinPopup = ({ closePopup }) => {
         }
         .modal-content h2 {
           margin: 0;
+        }
+        .expansion-image {
+          width: 100%;
+          height: auto;
+          border-radius: 5px;
+          margin-bottom: 1em;
+        }
+        .button-wrapper {
+          margin-bottom: 1em;
         }
         .pin-images {
           display: flex;

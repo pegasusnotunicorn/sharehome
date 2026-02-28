@@ -51,7 +51,7 @@ export const NavbarMain = ({ videoModalVisible }) => {
         }
       }
     },
-    [isDesktop, mailButtonVisible, visible]
+    [isDesktop, mailButtonVisible, visible],
   );
 
   // if landing and the scroll is all the way at the time, don't show
@@ -94,9 +94,9 @@ export const NavbarMain = ({ videoModalVisible }) => {
             )}
             {showButton && !isAtTop && (
               <DefaultButton
-                className="free-pin-btn topNavbarButton is-blue"
+                className="free-pin-btn topNavbarButton is-green"
                 onClick={openPopup}
-                text="Get a free pin!"
+                text="Expansion update!"
                 shadowless
               />
             )}

@@ -40,10 +40,26 @@ const BuyPage = () => {
             />
           </div>
 
+          <h2 className="subtitle">An expansion is coming!</h2>
+          <p>
+            I am incredibly excited to announce that an expansion is coming! I
+            have been working on the expansion for the past few months and I am
+            incredibly excited to share it with you.
+          </p>
+          <div className="buyPageButtonWrapper">
+            <DefaultButton
+              href="https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season"
+              text="Follow the expansion on Kickstarter"
+              icon="forward"
+              className="is-green is-large"
+              size="large"
+            />
+          </div>
+
           <EmailForm
             hideTitle={true}
             isActiveAndDesktop={false}
-            responseOverride="Want to stay updated in case something changes? Sign up for our email newsletter to be notified about restocks, expansions, and other updates!"
+            responseOverride="An expansion is officially in development! Sign up below to be notified about the release date and other updates!"
           />
 
           <div className="buyPageImageWrapper">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -10,20 +10,21 @@ import MetaTags from "./components/MetaTags.js";
 import Navbar from "./components/Navbar/Navbar.js";
 import Banner from "./components/Banner.js";
 import ScrollToTop from "./ScrollToTop.js";
-import LandingPage from "./components/Home/LandingPage.js";
-import TTRPGPage from "./components/Home/TTRPGPage.js";
-import AboutPage from "./components/About/AboutPage.js";
-import CharactersPage from "./components/Characters/CharactersPage.js";
-import TermsPage from "./components/TermsPage.js";
-import ContactPage from "./components/ContactPage.js";
-import ErrorPage from "./components/ErrorPage.js";
 import Footer from "./components/Footer.js";
-import ArtbookDownloadPage from "./components/ArtbookDownloadPage.js";
-import ThankYouPage from "./components/ThankYouPage.js";
-import SignupPage from "./components/SignupPage.js";
-import BuyPage from "./components/BuyPage.js";
 import ExternalRedirect from "./components/ExternalRedirect.js";
 import useUTMPreservation from "./hooks/useUTMPreservation.js";
+
+const LandingPage = lazy(() => import("./components/Home/LandingPage.js"));
+const TTRPGPage = lazy(() => import("./components/Home/TTRPGPage.js"));
+const AboutPage = lazy(() => import("./components/About/AboutPage.js"));
+const CharactersPage = lazy(() => import("./components/Characters/CharactersPage.js"));
+const TermsPage = lazy(() => import("./components/TermsPage.js"));
+const ContactPage = lazy(() => import("./components/ContactPage.js"));
+const ErrorPage = lazy(() => import("./components/ErrorPage.js"));
+const ArtbookDownloadPage = lazy(() => import("./components/ArtbookDownloadPage.js"));
+const ThankYouPage = lazy(() => import("./components/ThankYouPage.js"));
+const SignupPage = lazy(() => import("./components/SignupPage.js"));
+const BuyPage = lazy(() => import("./components/BuyPage.js"));
 
 const Router = () => {
   // Hide the static image once React is ready
@@ -56,6 +57,7 @@ const AppRoutes = () => {
     <>
       {!isExternalRedirect && <Banner />}
       {!isExternalRedirect && <Navbar videoModalVisible={videoModalVisible} />}
+      <Suspense fallback={null}>
       <Routes>
         <Route
           path="/"
@@ -92,6 +94,7 @@ const AppRoutes = () => {
         {/* Fallback for undefined routes */}
         <Route path="*" element={<ErrorPage />} />
       </Routes>
+      </Suspense>
       {!isExternalRedirect && <Footer key={Date.now()} />}
     </>
   );

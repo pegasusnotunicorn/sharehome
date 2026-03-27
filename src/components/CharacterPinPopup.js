@@ -1,6 +1,6 @@
 import DefaultButton from "./utils/DefaultButton.js";
 
-const CharacterPinPopup = ({ closePopup }) => {
+const CharacterPinPopup = ({ closePopup, dismissPopup }) => {
   return (
     <>
       <div
@@ -32,7 +32,7 @@ const CharacterPinPopup = ({ closePopup }) => {
               release date and other updates!
             </p>
 
-            <div className="button-wrapper">
+            <div className="button-wrapper" onClick={dismissPopup}>
               <DefaultButton
                 href="https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season"
                 text="Follow on Kickstarter"

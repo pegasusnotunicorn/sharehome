@@ -1,35 +1,44 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router";
 
 export const usePinPopup = ({ timeDelay = 5000 }) => {
   const [showPopup, setShowPopup] = useState(false);
-  const [showButton, setShowButton] = useState(false);
+  const [hasShownInitial, setHasShownInitial] = useState(false);
+  const location = useLocation();
 
+  // Show popup after delay on first load
   useEffect(() => {
-    const hasClosedPopup = localStorage.getItem("pinPopupClosed");
-    if (hasClosedPopup) {
-      setShowButton(true);
-      return;
-    }
+    if (sessionStorage.getItem("pinPopupDismissed")) return;
+    if (hasShownInitial) return;
 
-    const timer = setTimeout(() => setShowPopup(true), timeDelay);
+    const timer = setTimeout(() => {
+      setShowPopup(true);
+      setHasShownInitial(true);
+    }, timeDelay);
     return () => clearTimeout(timer);
-  }, [timeDelay]);
+  }, [timeDelay, hasShownInitial]);
 
+  // Re-show popup on navigation (if not dismissed for the session)
+  useEffect(() => {
+    if (!hasShownInitial) return;
+    if (sessionStorage.getItem("pinPopupDismissed")) return;
+    setShowPopup(true);
+  }, [location.pathname, hasShownInitial]);
+
+  // Temporary close — popup reappears on next navigation
   const closePopup = () => {
     setShowPopup(false);
-    setShowButton(true);
-    localStorage.setItem("pinPopupClosed", "true");
   };
 
-  const openPopup = () => {
-    setShowPopup(true);
-    setShowButton(false);
+  // Permanent session dismiss — popup never shows again this session
+  const dismissPopup = () => {
+    setShowPopup(false);
+    sessionStorage.setItem("pinPopupDismissed", "true");
   };
 
   return {
     showPopup,
-    showButton,
     closePopup,
-    openPopup,
+    dismissPopup,
   };
 };

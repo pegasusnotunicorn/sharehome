@@ -61,13 +61,13 @@ export const NavbarMain = ({ videoModalVisible }) => {
   const isAtTop = scrollPosition === 0;
   const isLandingPageAtTop = isLandingPage && isAtTop;
 
-  const { showPopup, showButton, closePopup, openPopup } = usePinPopup({});
+  const { showPopup, closePopup, dismissPopup } = usePinPopup({});
 
   //navbar open
   return (
     <>
       {!videoModalVisible && showPopup && (
-        <CharacterPinPopup closePopup={closePopup} />
+        <CharacterPinPopup closePopup={closePopup} dismissPopup={dismissPopup} />
       )}
 
       <div className={`navbarClass ${isVisibleClass}`}>
@@ -90,14 +90,6 @@ export const NavbarMain = ({ videoModalVisible }) => {
                 className={`${mailButtonVisibleClass} is-red navbarBuyButton`}
                 navlink="/buy"
                 text="Buy now!"
-              />
-            )}
-            {showButton && !isAtTop && (
-              <DefaultButton
-                className="free-pin-btn topNavbarButton is-green"
-                onClick={openPopup}
-                text="Expansion update!"
-                shadowless
               />
             )}
             <button

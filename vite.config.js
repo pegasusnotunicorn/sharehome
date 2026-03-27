@@ -7,5 +7,6 @@ export default defineConfig({
     loader: "jsx",
     include: /src\/.*\.js$/,
     exclude: [],
+    jsx: "automatic",
   },
 });

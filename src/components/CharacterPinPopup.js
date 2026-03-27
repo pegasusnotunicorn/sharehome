@@ -46,7 +46,7 @@ const CharacterPinPopup = ({ closePopup, dismissPopup }) => {
           </div>
         </div>
       </div>
-      <style jsx>{`
+      <style>{`
         @media only screen and (max-width: 900px) {
           .modal-popup {
             width: calc(100% - 4em);

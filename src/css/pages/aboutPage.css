@@ -24,36 +24,6 @@
   .howToPlayWrapper {
     width: 100%;
   }
-
-  .timePlayerInfoWrapper > div {
-    font-size: 0.75em;
-  }
-}
-
-.timePlayerInfoWrapper {
-  display: flex;
-  margin-top: 2em;
-  margin-bottom: 2em;
-  justify-content: center;
-  align-items: center;
-  text-transform: uppercase;
-  font-size: 1em;
-}
-
-.timePlayerInfoWrapper div:not(:last-child) {
-  margin-right: 1em;
-}
-
-.timePlayerInfoWrapper div {
-  font-family: "Rowdies-Light";
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.timePlayerInfoWrapper svg,
-.timePlayerInfoWrapper img {
-  margin-right: 0.5em;
 }
 
 .setupRulesButtonWrapper {

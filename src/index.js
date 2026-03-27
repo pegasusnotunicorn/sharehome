@@ -1,4 +1,5 @@
-import ReactDOM from "react-dom/client"; // Change from "react-dom" to "react-dom/client"
+import { createElement } from "react";
+import ReactDOM from "react-dom/client";
 import WebFont from "webfontloader";
 
 import "./css/index.css";
@@ -16,4 +17,4 @@ WebFont.load({
 const container = document.getElementById("sharehome");
 const root = ReactDOM.createRoot(container);
 
-root.render(<Router />);
+root.render(createElement(Router));

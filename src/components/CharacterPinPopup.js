@@ -1,4 +1,5 @@
 import DefaultButton from "./utils/DefaultButton.js";
+import "../css/utils/lazyYoutube.css";
 
 const CharacterPinPopup = ({ closePopup, dismissPopup }) => {
   return (

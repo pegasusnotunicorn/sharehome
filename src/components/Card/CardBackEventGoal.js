@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import "../../css/utils/cards.css";
 
 export const CardBackEventGoal = (props) => {
   let type = props.type;

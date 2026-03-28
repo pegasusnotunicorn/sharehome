@@ -1,5 +1,6 @@
 import { getSpecificPerson } from "../Characters/Characters.js";
 import PropTypes from "prop-types";
+import "../../css/utils/cards.css";
 
 export const CardBack = (props) => {
   let character = getSpecificPerson(props.personName);

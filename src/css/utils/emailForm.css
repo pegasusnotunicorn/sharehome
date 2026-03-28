@@ -1,0 +1,131 @@
+.emailWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.formPrompt {
+  font-size: 1.5em;
+}
+
+.formWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  max-width: 600px;
+}
+
+.forminputText {
+  max-width: 500px;
+  font-size: 1em;
+  line-height: 1.5;
+  word-wrap: break-word;
+  text-align: center;
+}
+
+.forminputText-description {
+  max-width: 600px;
+  margin-bottom: 1.5em;
+  padding: 0 1em;
+}
+
+.forminputText a {
+  color: #323232;
+}
+
+.emailInput {
+  padding: 1em;
+  font-family: "Roboto Light";
+  font-size: 1em;
+  margin-bottom: 2em;
+  border: 0;
+  border-bottom: 1px solid #323232;
+  outline: 0;
+  width: 100%;
+  color: #323232;
+  text-align: center;
+  line-height: 100%;
+}
+
+.subscribeButton {
+  padding-left: 4em;
+  padding-right: 4em;
+  font-size: 1em;
+}
+
+/* #region--------------------------------------MAIN PAGE EMAIL */
+
+.mainpageEmail .formWrapper {
+  flex-direction: row;
+  margin-bottom: 1em;
+  -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -moz-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -ms-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+}
+
+.mainpageEmail .emailInput {
+  width: 300px;
+  margin-bottom: 0;
+  border: 1px solid #fff !important;
+  border-radius: 4px 0 0 4px;
+  padding: 10px !important;
+  height: 47px;
+  text-align: left !important;
+}
+
+.mainpageEmail .subscribeButton {
+  padding: 10px 15px 10px 10px !important;
+  border-radius: 0 4px 4px 0;
+  width: 50%;
+  height: 47px;
+  background-color: #7daf9c;
+}
+
+@media only screen and (max-width: 900px) {
+  .mainpageEmail .formWrapper {
+    margin-bottom: 0;
+  }
+
+  .mainpageEmail .emailInput {
+    font-size: 1em;
+    width: 50%;
+    height: 35px;
+  }
+
+  .mainpageEmail .subscribeButton {
+    font-size: 0.85em;
+    width: 50%;
+    height: 35px;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  .mainpageEmail:not(.secondMainpageEmail) .forminputText {
+    font-size: 1em !important;
+    margin-bottom: 0.25em;
+    -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+    -moz-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+    -ms-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+    -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  }
+}
+
+/* low height mobile */
+@media only screen and (max-height: 750px) {
+  .mainpageEmail .emailInput {
+    font-size: 0.65em;
+    width: 90%;
+  }
+
+  .mainpageEmail .subscribeButton {
+    font-size: 0.65em;
+    width: 65%;
+    padding: 5px 10px 5px 5px !important;
+  }
+}
+
+/* #endregion */

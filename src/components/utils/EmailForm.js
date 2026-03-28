@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import DefaultButton from "../utils/DefaultButton.js";
 import PropTypes from "prop-types";
+import "../../css/utils/emailForm.css";
 
 //form for mailchimp email
 export const EmailForm = (props) => {

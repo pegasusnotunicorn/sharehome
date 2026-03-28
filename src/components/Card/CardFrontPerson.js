@@ -5,6 +5,7 @@ import {
 } from "../Characters/Characters.js";
 import { pdfDimensions, getCoverFitObject } from "../utils/cardConstants.js";
 import PropTypes from "prop-types";
+import "../../css/utils/cards.css";
 
 export const CardFrontPerson = (props) => {
   let [cardPersonState] = useState(getRandomPerson());

@@ -12,6 +12,7 @@ import CustomHelmet from "../utils/CustomHelmet.js";
 import CarouselSection from "../utils/CarouselSection.js";
 import DefaultButton from "../utils/DefaultButton.js";
 import "../../css/pages/characterPage.css";
+import "../../css/utils/spotlight.css";
 import PropTypes from "prop-types";
 
 //get a random elem from array

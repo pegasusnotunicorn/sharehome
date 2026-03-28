@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { getAllFinishedPeople } from "../Characters/Characters.js";
 import "../../css/utils/emojisection.css";
+import "../../css/utils/spotlight.css";
 import { GsapFadeScrub } from "./useGsap.js";
 import DefaultButton from "../utils/DefaultButton.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";

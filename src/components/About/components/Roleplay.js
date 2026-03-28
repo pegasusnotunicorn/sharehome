@@ -4,6 +4,7 @@ import { getRandomTrait } from "../../Card/ExampleTraits.js";
 import DefaultButton from "../../utils/DefaultButton.js";
 import useWindowDimensions from "../../utils/useWindowDimensions.js";
 import PropTypes from "prop-types";
+import "../../../css/pages/aboutPage.css";
 
 const Roleplay = (props) => {
   //sizing for about page card styles

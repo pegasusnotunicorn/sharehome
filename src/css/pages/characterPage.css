@@ -1,20 +1,5 @@
 /* #region---------------------------------------------------------PAGE */
 
-.characterContent {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-@media only screen and (max-width: 900px) {
-  .characterContent .defaultButton {
-    margin: auto;
-    margin-bottom: 2em;
-    width: calc(100% - 2em);
-  }
-}
-
 .moretocome {
   font-family: "Rowdies-Regular";
   font-size: 2em;

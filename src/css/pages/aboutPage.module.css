@@ -402,8 +402,37 @@
   padding-left: 1.5em;
 }
 
-.characterArcWrapperAbout > :global(.characterArc) {
+.characterArcWrapperAbout > .characterArc {
   width: 100% !important;
+}
+
+.characterArc {
+  margin: 0.25em;
+  width: 300px;
+  padding: 0.35em;
+  border-radius: 0.25em;
+  font-size: 1.5em;
+}
+
+.characterArc.goodArc {
+  background-color: #94de8f;
+}
+
+.characterArc.badArc {
+  background-color: #a769d4;
+}
+
+.characterArc.chaoticArc {
+  background-color: #9b9b9b;
+}
+
+.characterArcText {
+  color: #222;
+  background-color: #fff;
+  border-radius: 0.25em;
+  width: calc(100% - 0.3em);
+  height: calc(100% - 0.3em);
+  padding: 0.15em;
 }
 
 /* #endregion */

@@ -120,14 +120,14 @@ const Setup = ({ showRules, cardStyle, toggleSteps }) => {
             <Card {...cardProps} />
             <div className={aboutStyles.stepBlockFlex}>
               <div className={`${aboutStyles.stepBlockVertical} ${aboutStyles.characterArcWrapperAbout}`}>
-                <div className={`characterArc ${randomTraits[0].type}Arc`}>
-                  <div className="characterArcText">{randomTraits[0].text}</div>
+                <div className={`${aboutStyles.characterArc} ${aboutStyles[`${randomTraits[0].type}Arc`]}`}>
+                  <div className={aboutStyles.characterArcText}>{randomTraits[0].text}</div>
                 </div>
-                <div className={`characterArc ${randomTraits[1].type}Arc`}>
-                  <div className="characterArcText">{randomTraits[1].text}</div>
+                <div className={`${aboutStyles.characterArc} ${aboutStyles[`${randomTraits[1].type}Arc`]}`}>
+                  <div className={aboutStyles.characterArcText}>{randomTraits[1].text}</div>
                 </div>
-                <div className={`characterArc ${randomTraits[2].type}Arc`}>
-                  <div className="characterArcText">{randomTraits[2].text}</div>
+                <div className={`${aboutStyles.characterArc} ${aboutStyles[`${randomTraits[2].type}Arc`]}`}>
+                  <div className={aboutStyles.characterArcText}>{randomTraits[2].text}</div>
                 </div>
               </div>
               <div className={aboutStyles.arrowWrapper}>

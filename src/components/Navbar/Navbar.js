@@ -92,6 +92,14 @@ export const NavbarMain = ({ videoModalVisible }) => {
                 text="Buy now!"
               />
             )}
+            {!isAtTop && (
+              <DefaultButton
+                className="free-pin-btn topNavbarButton is-green"
+                href="https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season"
+                text="Expansion update!"
+                shadowless
+              />
+            )}
             <button
               className={`navbarOpenClose hamburger hamburger--slider noselect`}
               onClick={toggleNav}

@@ -1,6 +1,6 @@
 import { getSpecificPerson } from "../Characters/Characters.js";
 import PropTypes from "prop-types";
-import "../../css/utils/cards.css";
+import styles from "../../css/utils/cards.module.css";
 
 export const CardBack = (props) => {
   let character = getSpecificPerson(props.personName);
@@ -11,11 +11,11 @@ export const CardBack = (props) => {
   const title = character.title ? character.title : `The ${character.race}`;
 
   return (
-    <div className="noselect cardBack name">
-      <div className="cardBackText">
-        <h2 className="cardBackName">{name}</h2>
-        <h2 className="cardBackTitle">—{title}—</h2>
-        <h3 className="cardBackAge">
+    <div className={`noselect ${styles.cardBack} ${styles.name}`}>
+      <div className={styles.cardBackText}>
+        <h2 className={styles.cardBackName}>{name}</h2>
+        <h2 className={styles.cardBackTitle}>—{title}—</h2>
+        <h3 className={styles.cardBackAge}>
           {age} {job}
         </h3>
       </div>

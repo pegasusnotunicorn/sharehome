@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import "../../css/utils/cards.css";
+import styles from "../../css/utils/cards.module.css";
 
 export const CardBackEventGoal = (props) => {
   let type = props.type;
@@ -12,7 +12,7 @@ export const CardBackEventGoal = (props) => {
   if (props.type === "event") type = "direction";
 
   return (
-    <div className="noselect cardBack">
+    <div className={`noselect ${styles.cardBack}`}>
       <img
         loading="lazy"
         src={`/images/illustrations/${type}card${props.randomNumber}.webp`}

@@ -1,69 +1,66 @@
-.blue {
+:global(.blue) {
   color:#5F5AA2 !important;
 }
-.darkblue {
+:global(.darkblue) {
   color:#454176 !important;
 }
-.green {
+:global(.green) {
   color:#7DAF9C !important;
 }
-.red {
+:global(.red) {
   color:#DD7373 !important;
 }
-.yellow {
+:global(.yellow) {
   color:#F1DB4B !important;
 }
-.white {
+:global(.white) {
   color:#FFFFFF !important;
 }
 
-.blueBackground {
+:global(.blueBackground) {
   background-color:#5F5AA2 !important;
 }
-.transparentBackground {
+:global(.transparentBackground) {
   background-color:transparent !important;
 }
-.greenBackground {
+:global(.greenBackground) {
   background-color:#7DAF9C !important;
 }
-.redBackground {
+:global(.redBackground) {
   background-color:#DD7373 !important;
 }
-.yellowBackground {
+:global(.yellowBackground) {
   background-color:#F1DB4B !important;
 }
-.whiteBackground {
+:global(.whiteBackground) {
   background-color:#FFFFFF !important;
 }
 
-.blueBorder {
+:global(.blueBorder) {
   border-color:#5F5AA2 !important;
 }
-.greenBorder {
+:global(.greenBorder) {
   border-color:#7DAF9C !important;
 }
-.redBorder {
+:global(.redBorder) {
   border-color:#DD7373 !important;
 }
-.yellowBorder {
+:global(.yellowBorder) {
   border-color:#F1DB4B !important;
 }
 
-.blueStroke {
+:global(.blueStroke) {
   stroke:#5F5AA2 !important;
 }
-.greenStroke {
+:global(.greenStroke) {
   stroke:#7DAF9C !important;
 }
-.redStroke {
+:global(.redStroke) {
   stroke:#DD7373 !important;
 }
-.yellowStroke {
+:global(.yellowStroke) {
   stroke:#F1DB4B !important;
 }
-.#323232Stroke {
-  stroke:#323232 !important;
-}
-.whiteStroke {
+:global(.whiteStroke) {
   stroke:#FFFFFF !important;
 }

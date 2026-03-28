@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import GameModeDetails from "./utils/GameModeDetails.js";
 import Roleplay from "./components/Roleplay.js";
-import "../../css/pages/aboutPage.css";
+import aboutStyles from "../../css/pages/aboutPage.module.css";
 
 const AboutPage = () => {
   // styling for character cards on about page

@@ -5,7 +5,7 @@ import {
 } from "../Characters/Characters.js";
 import { pdfDimensions, getCoverFitObject } from "../utils/cardConstants.js";
 import PropTypes from "prop-types";
-import "../../css/utils/cards.css";
+import styles from "../../css/utils/cards.module.css";
 
 export const CardFrontPerson = (props) => {
   let [cardPersonState] = useState(getRandomPerson());
@@ -48,12 +48,12 @@ export const CardFrontPerson = (props) => {
     ""
   ) : (
     <>
-      <div className="memberCommCardShadow"></div>
-      <div className="memberCommCardText">
-        <div className="memberCommCardMainText">
+      <div className={styles.memberCommCardShadow}></div>
+      <div className={styles.memberCommCardText}>
+        <div className={styles.memberCommCardMainText}>
           {cardPerson.name} ({cardPerson.age})
         </div>
-        <div className="memberCommCardSubText">
+        <div className={styles.memberCommCardSubText}>
           {cardPerson.job}&nbsp;
           <span className="japaneseName">{cardPerson.japaneseName}</span>
         </div>
@@ -65,19 +65,19 @@ export const CardFrontPerson = (props) => {
   if (enableQuestionMark) {
     mainText = (
       <>
-        <h1 className="memberCommCardQuestionMark">?</h1>
-        <div className="memberCommCardFullShadow"></div>
+        <h1 className={styles.memberCommCardQuestionMark}>?</h1>
+        <div className={styles.memberCommCardFullShadow}></div>
       </>
     );
   }
 
   return (
-    <div className="memberCommCardWrapper">
+    <div className={styles.memberCommCardWrapper}>
       {mainText}
       <img
         loading="lazy"
         draggable={false}
-        className="memberCommCardImage nopointerevent"
+        className={`${styles.memberCommCardImage} nopointerevent`}
         alt={"Image credit - " + cardPerson.image.credit}
         src={cardPerson.image.url}
         style={{

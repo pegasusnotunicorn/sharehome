@@ -11,8 +11,8 @@ import { EmojiSection } from "../utils/EmojiSection.js";
 import CustomHelmet from "../utils/CustomHelmet.js";
 import CarouselSection from "../utils/CarouselSection.js";
 import DefaultButton from "../utils/DefaultButton.js";
-import "../../css/pages/characterPage.css";
-import "../../css/utils/spotlight.css";
+import charStyles from "../../css/pages/characterPage.module.css";
+import spotlightStyles from "../../css/utils/spotlight.module.css";
 import PropTypes from "prop-types";
 
 //get a random elem from array
@@ -98,7 +98,7 @@ const CharactersPage = () => {
               </a>
               <br />
             </p>
-            <div className="freeEmojiButtonWrapper">
+            <div className={charStyles.freeEmojiButtonWrapper}>
               <img
                 loading="lazy"
                 src={`/images/emojis/${randomCharacter1Emoji}.webp`}
@@ -163,13 +163,13 @@ const IndividualCharacter = ({ character }) => {
   );
 
   return (
-    <div className="characterSpotlightContainer">
+    <div className={charStyles.characterSpotlightContainer}>
       <CharacterSpotlight
         name={character.name}
         index={character.index}
         total={character.total}
       />
-      <div className="characterButtonsWrapper">
+      <div className={charStyles.characterButtonsWrapper}>
         {prevButton}
         <DefaultButton
           inverted
@@ -210,11 +210,11 @@ const AllCharacters = () => {
       job = `${elem.job} / ${elem.job2}`;
     }
 
-    let ignoreInRandom = elem.ignoreInRandom ? "notDone" : "";
+    let ignoreInRandom = elem.ignoreInRandom ? charStyles.notDone : "";
     return (
-      <div className={`characterWrapper ${ignoreInRandom}`} key={index}>
+      <div className={`${charStyles.characterWrapper} ${ignoreInRandom}`} key={index}>
         <div
-          className="characterInnerWrapper"
+          className={charStyles.characterInnerWrapper}
           onClick={() => {
             redirectToSpecificCharacter(elem);
           }}
@@ -226,9 +226,9 @@ const AllCharacters = () => {
             style={{ objectPosition: elem.image.objectPosition || "center" }}
             alt={elem.name}
           />
-          <div className="caption noselect">
-            <p className="name">{name}</p>
-            <p className="details is-hidden-mobile">
+          <div className={`${charStyles.caption} noselect`}>
+            <p className={charStyles.name}>{name}</p>
+            <p className={`${charStyles.details} is-hidden-mobile`}>
               <span>{elem.age}</span>
               <span>{race}</span>
               <span>{job}</span>
@@ -241,8 +241,8 @@ const AllCharacters = () => {
 
   return (
     <>
-      <div className="allcharactersWrapper">
-        <div className="charactersContainer">{expansionCharacters}</div>
+      <div className={charStyles.allcharactersWrapper}>
+        <div className={charStyles.charactersContainer}>{expansionCharacters}</div>
       </div>
     </>
   );

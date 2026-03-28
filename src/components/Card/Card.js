@@ -3,7 +3,7 @@ import CardFrontPerson from "./CardFrontPerson.js";
 import CardFrontEventGoal from "./CardFrontEventGoal.js";
 import CardBackName from "./CardBackName.js";
 import CardBackEventGoal from "./CardBackEventGoal.js";
-import "../../css/utils/cards.css";
+import styles from "../../css/utils/cards.module.css";
 import PropTypes from "prop-types";
 
 //a flip-able card based on the actual cards
@@ -94,11 +94,11 @@ export const Card = (props) => {
     <div
       id={props.id}
       ref={cardRef}
-      className={"noselect flipcard " + classes}
+      className={`noselect ${styles.flipcard} ` + classes}
       style={cardStyle}
       onClick={onclickFunc}
     >
-      <div className="flipcardInner">
+      <div className={styles.flipcardInner}>
         <CardFront {...props} randomNumber={randomNumber} />
         <CardBack {...props} randomNumber={randomNumber} />
       </div>
@@ -131,7 +131,7 @@ const CardFront = (props) => {
       case "member":
       case "commentator":
         return (
-          <div className="noselect flipcardFront">
+          <div className={`noselect ${styles.flipcardFront}`}>
             <CardFrontPerson
               personName={props.personName}
               mainStyle={props.mainStyle}
@@ -146,7 +146,7 @@ const CardFront = (props) => {
       case "episode":
       default:
         return (
-          <div className="noselect flipcardFront">
+          <div className={`noselect ${styles.flipcardFront}`}>
             <CardFrontEventGoal
               type={props.type}
               randomNumber={props.randomNumber}
@@ -178,7 +178,7 @@ const CardBack = (props) => {
       case "member":
       case "commentator":
         return (
-          <div className="noselect flipcardBack name">
+          <div className={`noselect ${styles.flipcardBack} ${styles.name}`}>
             <CardBackName {...props} />
           </div>
         );
@@ -186,7 +186,7 @@ const CardBack = (props) => {
       case "event":
       default:
         return (
-          <div className="noselect flipcardBack">
+          <div className={`noselect ${styles.flipcardBack}`}>
             <CardBackEventGoal {...props} randomNumber={props.randomNumber} />
           </div>
         );

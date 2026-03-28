@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import DefaultButton from "../utils/DefaultButton.js";
 import PropTypes from "prop-types";
-import "../../css/utils/emailForm.css";
+import styles from "../../css/utils/emailForm.module.css";
 
 //form for mailchimp email
 export const EmailForm = (props) => {
@@ -61,8 +61,8 @@ export const EmailForm = (props) => {
   };
 
   const className = classFromParent
-    ? `emailWrapper ${classFromParent}`
-    : "emailWrapper";
+    ? `${styles.emailWrapper} ${classFromParent}`
+    : styles.emailWrapper;
 
   // Check if response contains HTML tags (for conditional rendering)
   const hasHTML = /<[a-z][\s\S]*>/i.test(response);
@@ -71,26 +71,26 @@ export const EmailForm = (props) => {
   return (
     <div className={className}>
       {!hideTitle && (
-        <h1 className="formPrompt">Stay updated on the latest news.</h1>
+        <h1 className={styles.formPrompt}>Stay updated on the latest news.</h1>
       )}
       {hasHTML ? (
         <p
-          className={`forminputText ${
-            isLongDescription ? "forminputText-description" : ""
+          className={`${styles.forminputText} ${
+            isLongDescription ? styles["forminputText-description"] : ""
           }`}
           dangerouslySetInnerHTML={{ __html: response }}
         />
       ) : (
         <p
-          className={`forminputText ${
-            isLongDescription ? "forminputText-description" : ""
+          className={`${styles.forminputText} ${
+            isLongDescription ? styles["forminputText-description"] : ""
           }`}
         >
           {response}
         </p>
       )}
       <form
-        className="formWrapper"
+        className={styles.formWrapper}
         autoComplete="on"
         action=""
         data-code=""
@@ -101,7 +101,7 @@ export const EmailForm = (props) => {
         <input
           ref={emailRef}
           type="email"
-          className="emailInput"
+          className={styles.emailInput}
           data-inputmask=""
           name="fields[email]"
           placeholder="Enter your email"
@@ -113,7 +113,7 @@ export const EmailForm = (props) => {
           shadowless
           icon="forward"
           button="submit"
-          className="subscribeButton"
+          className={styles.subscribeButton}
           text={submitButtonText}
         />
       </form>

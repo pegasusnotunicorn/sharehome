@@ -5,9 +5,9 @@ import ShootingStar from "./ShootingStar.js";
 import EmailForm from "../utils/EmailForm.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import DefaultButton from "../utils/DefaultButton.js";
-import "../../css/navbar.css";
+import navStyles from "../../css/navbar.module.css";
 import shootingStarStyles from "../../css/utils/shootingStar.module.css";
-import "../../css/utils/hamburger.css";
+import hamburgerStyles from "../../css/utils/hamburger.module.css";
 import useWindowScroll from "../utils/useWindowScroll.js";
 import CharacterPinPopup from "../CharacterPinPopup.js";
 import { usePinPopup } from "../utils/usePinPopup.js";
@@ -71,38 +71,38 @@ export const NavbarMain = ({ videoModalVisible }) => {
         <CharacterPinPopup closePopup={closePopup} dismissPopup={dismissPopup} />
       )}
 
-      <div className={`navbarClass ${isVisibleClass}`}>
+      <div className={`${navStyles.navbarClass} ${isVisibleClass}`}>
         <GsapFadeScrub
           scrubStartCenter
           scrub
           fadeIn
-          className={`fixedButtonsWrapper noselect ${
-            isAtTop ? "isLandingPageAtTop" : ""
+          className={`${navStyles.fixedButtonsWrapper} noselect ${
+            isAtTop ? navStyles.isLandingPageAtTop : ""
           }`}
         >
-          <NavLink to="/" className="navbarFloatLeft"></NavLink>
-          <div className="navbarFloatRight">
+          <NavLink to="/" className={navStyles.navbarFloatLeft}></NavLink>
+          <div className={navStyles.navbarFloatRight}>
             {(!isLandingPage || isDesktop) && !isLandingPageAtTop && (
               <DefaultButton
                 shadowless
                 animated
                 icon="forward"
                 id="emailToggleButtonMobile"
-                className={`${mailButtonVisibleClass} is-red navbarBuyButton`}
+                className={`${mailButtonVisibleClass} is-red ${navStyles.navbarBuyButton}`}
                 navlink="/buy"
                 text="Buy now!"
               />
             )}
             {!isAtTop && (
               <DefaultButton
-                className="free-pin-btn topNavbarButton is-green"
+                className={`${navStyles["free-pin-btn"]} topNavbarButton is-green`}
                 href="https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season"
                 text="Expansion update!"
                 shadowless
               />
             )}
             <button
-              className={`navbarOpenClose hamburger hamburger--slider noselect`}
+              className={`${navStyles.navbarOpenClose} hamburger hamburger--slider noselect`}
               onClick={toggleNav}
               type="button"
               aria-label="Toggle navigation"
@@ -114,9 +114,9 @@ export const NavbarMain = ({ videoModalVisible }) => {
           </div>
         </GsapFadeScrub>
 
-        <div className={`navbarMain ${isVisibleClass}`}>
+        <div className={`${navStyles.navbarMain} ${isVisibleClass}`}>
           <button
-            className={`navbarOpenClose hamburger hamburger--slider noselect ${isVisibleClass}`}
+            className={`${navStyles.navbarOpenClose} hamburger hamburger--slider noselect ${isVisibleClass}`}
             onClick={toggleNav}
             type="button"
             aria-label="Toggle navigation"
@@ -125,29 +125,29 @@ export const NavbarMain = ({ videoModalVisible }) => {
               <span className="hamburger-inner"></span>
             </span>
           </button>
-          <div className="navbarChildrenWrapper">
+          <div className={navStyles.navbarChildrenWrapper}>
             <div
-              className={`navbarChildren navbarLeftWrapper ${mobileShowLeftClass}`}
+              className={`${navStyles.navbarChildren} ${navStyles.navbarLeftWrapper} ${mobileShowLeftClass}`}
             >
-              <div className="navbarButtonWrapper">
+              <div className={navStyles.navbarButtonWrapper}>
                 <NavLink
                   onClick={toggleNav}
                   to="/"
-                  className="navbarButton noselect"
+                  className={`${navStyles.navbarButton} noselect`}
                 >
                   Home
                 </NavLink>
                 <NavLink
                   onClick={toggleNav}
                   to="/howtoplay"
-                  className="navbarButton noselect"
+                  className={`${navStyles.navbarButton} noselect`}
                 >
                   How to play
                 </NavLink>
                 <NavLink
                   onClick={toggleNav}
                   to="/characters"
-                  className="navbarButton noselect"
+                  className={`${navStyles.navbarButton} noselect`}
                 >
                   Characters
                 </NavLink>
@@ -155,7 +155,7 @@ export const NavbarMain = ({ videoModalVisible }) => {
                   aria-label="Play online"
                   onClick={toggleNav}
                   href="https://screentop.gg/@PegasusGames/lcm"
-                  className="navbarButton noselect"
+                  className={`${navStyles.navbarButton} noselect`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -164,7 +164,7 @@ export const NavbarMain = ({ videoModalVisible }) => {
                 <NavLink
                   onClick={toggleNav}
                   to="/contact"
-                  className="navbarButton noselect"
+                  className={`${navStyles.navbarButton} noselect`}
                 >
                   About / contact
                 </NavLink>
@@ -173,15 +173,15 @@ export const NavbarMain = ({ videoModalVisible }) => {
                   href="https://pegasusgames.medium.com/"
                   rel="noopener noreferrer"
                   target="_blank"
-                  className="navbarButton noselect"
+                  className={`${navStyles.navbarButton} noselect`}
                 >
                   Blog
                 </a>
               </div>
             </div>
-            <div className="navbarChildren navbarCenterBorder"></div>
+            <div className={`${navStyles.navbarChildren} ${navStyles.navbarCenterBorder}`}></div>
             <div
-              className={`navbarChildren navbarRightWrapper ${mobileShowRightClass}`}
+              className={`${navStyles.navbarChildren} ${navStyles.navbarRightWrapper} ${mobileShowRightClass}`}
             >
               <ShootingStar
                 className={shootingStarStyles.leftStar}
@@ -213,7 +213,7 @@ export const NavbarMain = ({ videoModalVisible }) => {
               />
               <img
                 loading="lazy"
-                className="artbookMockup"
+                className={navStyles.artbookMockup}
                 src="/images/bizz_fukidashi.webp"
                 alt="Navbar illustration"
               />

@@ -40,11 +40,11 @@
   width: 45%;
 }
 
-.showRulesButton.is-active {
+.showRulesButton:global(.is-active) {
   cursor: default;
 }
 
-.showRulesButton.is-active:active {
+.showRulesButton:global(.is-active):active {
   background-color: #ffffff;
 }
 
@@ -79,7 +79,7 @@
   padding-right: 1em;
 }
 
-.allStepsContainer.is-active {
+.allStepsContainer:global(.is-active) {
   display: block;
   margin-bottom: 5vh;
 }
@@ -343,7 +343,7 @@
     border-radius: 0.5em;
   }
 
-  .allStepsContainer .eventGoalTextWrapper {
+  .allStepsContainer :global(.eventGoalTextWrapper) {
     font-size: 2em !important;
   }
 }
@@ -390,7 +390,7 @@
   padding-left: 1.5em;
 }
 
-.characterArcWrapperAbout > .characterArc {
+.characterArcWrapperAbout > :global(.characterArc) {
   width: 100% !important;
 }
 

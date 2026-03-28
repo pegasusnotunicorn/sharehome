@@ -37,14 +37,14 @@
   padding-right: 2em;
 }
 
-.characterSpotlightContainer > .characterSpotlightWrapper {
+.characterSpotlightContainer > :global(.characterSpotlightWrapper) {
   padding: 0;
   margin-bottom: 1em;
   border: 0.5em solid #323232;
   border-radius: 5px;
 }
 
-.characterSpotlightContainer .spotlightRightTopWrapper {
+.characterSpotlightContainer :global(.spotlightRightTopWrapper) {
   padding: 0;
   max-width: 500px;
 }
@@ -63,7 +63,7 @@
 }
 
 @media only screen and (max-width: 900px) {
-  .characterSpotlightContainer > .characterSpotlightWrapper {
+  .characterSpotlightContainer > :global(.characterSpotlightWrapper) {
     width: 100%;
   }
   .characterButtonsWrapper {
@@ -75,8 +75,11 @@
   .characterButtonsWrapper a:not(:last-child) {
     margin-bottom: 1em;
   }
-  .characterSpotlightContainer .spotlightLeftWrapper {
+  .characterSpotlightContainer :global(.spotlightLeftWrapper) {
     width: calc(100% - 4em);
+  }
+  .characterSpotlightContainer {
+    padding-bottom: 2em;
   }
 }
 

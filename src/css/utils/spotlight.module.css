@@ -1,6 +1,6 @@
 /* #region--------------------------------------GENERAL */
 
-.characterSpotlightWrapper {
+:global(.characterSpotlightWrapper) {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,17 +10,17 @@
   padding: 2em;
 }
 
-.characterSpotlightWrapper.invert {
+:global(.characterSpotlightWrapper.invert) {
   background: #323232;
   color: #fff;
 }
 
-.fadeInTextWrapper {
+:global(.fadeInTextWrapper) {
   width: 100%;
 }
 
-.spotlightTopWrapper,
-.spotlightBottomWrapper {
+:global(.spotlightTopWrapper),
+:global(.spotlightBottomWrapper) {
   display: flex;
   align-items: center;
   flex-direction: row;
@@ -30,93 +30,93 @@
   padding: 2em;
 }
 
-.spotlightTopWrapper {
+:global(.spotlightTopWrapper) {
   padding-top: 1em;
   justify-content: center;
 }
-.spotlightTopWrapper h1 {
+:global(.spotlightTopWrapper) h1 {
   margin: 0;
   line-height: 125%;
 }
 
-.starWrapperLeft {
+:global(.starWrapperLeft) {
   position: relative;
   display: block;
   transform: translateX(-2em);
 }
 
-.starWrapperRight {
+:global(.starWrapperRight) {
   position: relative;
   display: block;
   transform: translateX(2em);
 }
 
-.spotlightBottomWrapper {
+:global(.spotlightBottomWrapper) {
   align-items: flex-start;
 }
 
 @media only screen and (min-width: 900px) and (max-width: 1200px) {
-  .spotlightLeftWrapper {
+  :global(.spotlightLeftWrapper) {
     min-width: 300px !important;
   }
 }
 
 @media only screen and (max-width: 900px) {
-  .characterSpotlightWrapper {
+  :global(.characterSpotlightWrapper) {
     padding: 1em;
   }
-  .spotlightTopWrapper,
-  .spotlightBottomWrapper {
+  :global(.spotlightTopWrapper),
+  :global(.spotlightBottomWrapper) {
     flex-direction: column;
   }
-  .spotlightTopWrapper {
+  :global(.spotlightTopWrapper) {
     padding-bottom: 0;
   }
-  .spotlightRightWrapper {
+  :global(.spotlightRightWrapper) {
     width: 100%;
   }
-  .spotlightHobbiesSection {
+  :global(.spotlightHobbiesSection) {
     padding-bottom: 0 !important;
   }
-  .spotlightLeftWrapper {
+  :global(.spotlightLeftWrapper) {
     padding-bottom: 2em;
     min-width: unset !important;
     margin: auto;
     margin-top: 2em;
   }
-  .spotlightBottomWrapper {
+  :global(.spotlightBottomWrapper) {
     padding: 0;
     width: 100%;
   }
-  .spotlightRightTopWrapper {
+  :global(.spotlightRightTopWrapper) {
     margin-left: 0 !important;
     padding: 1em !important;
   }
-  .spotlightTopWrapper {
+  :global(.spotlightTopWrapper) {
     padding-left: 0;
     padding-right: 0;
     width: 100%;
   }
-  .showDetailsButton {
+  :global(.showDetailsButton) {
     text-align: center;
     margin-top: 1em;
     margin-bottom: 0em;
     text-decoration: underline;
     cursor: pointer;
   }
-  .showDetailsButton p {
+  :global(.showDetailsButton) p {
     width: fit-content;
     margin: auto;
   }
-  .spotlightDetailsSection {
+  :global(.spotlightDetailsSection) {
     display: none;
   }
-  .spotlightDetailsSection.is-active {
+  :global(.spotlightDetailsSection.is-active) {
     display: block;
   }
 }
 
-.allCharsButtonWrapper {
+:global(.allCharsButtonWrapper) {
   width: 100%;
   display: flex;
   justify-content: flex-end;
@@ -128,7 +128,7 @@
 
 /* #region--------------------------------------LEFT */
 
-.spotlightLeftWrapper {
+:global(.spotlightLeftWrapper) {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,29 +137,29 @@
   min-width: 500px;
 }
 
-.indexTotalWrapper {
+:global(.indexTotalWrapper) {
   font-size: 1.35em;
   position: absolute;
   top: -30px;
   left: -10px;
 }
 
-.indexWrapper {
+:global(.indexWrapper) {
   font-size: 1.65em;
 }
 
-.imageCircleMask {
+:global(.imageCircleMask) {
   position: relative;
 }
 
-.spotlightLeftWrapper .characterImage {
+:global(.spotlightLeftWrapper) :global(.characterImage) {
   width: 350px;
   height: 350px;
   border-radius: 100%;
   object-fit: cover;
 }
 
-.magnifierWrapper {
+:global(.magnifierWrapper) {
   border-radius: 100%;
   padding: 0.5em;
   border: 1px solid #323232;
@@ -169,34 +169,34 @@
   background: #fff;
 }
 
-.imageCircleIcons {
+:global(.imageCircleIcons) {
   width: 25px;
   height: 25px;
 }
 
 /* mobile */
 @media only screen and (max-width: 900px) {
-  .spotlightLeftWrapper .characterImage {
+  :global(.spotlightLeftWrapper) :global(.characterImage) {
     width: 250px;
     height: 250px;
   }
 }
 
-.leftDetailsWrapper {
+:global(.leftDetailsWrapper) {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.leftDetailsWrapper h1 {
+:global(.leftDetailsWrapper) h1 {
   margin-bottom: 0;
   margin-top: 0.25em;
   font-size: 2em;
   line-height: 125%;
 }
 
-.leftDetailsWrapper h3 {
+:global(.leftDetailsWrapper) h3 {
   font-family: "Rowdies-Regular";
   font-size: 1em;
   text-transform: uppercase;
@@ -204,7 +204,7 @@
   margin-bottom: 1em;
 }
 
-.leftAgeJobWrapper {
+:global(.leftAgeJobWrapper) {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -212,11 +212,11 @@
   width: 100%;
 }
 
-.leftAgeJobWrapper p {
+:global(.leftAgeJobWrapper) p {
   margin-bottom: 0;
 }
 
-.leftAgeJobWrapper .divider {
+:global(.leftAgeJobWrapper) :global(.divider) {
   margin-left: 0.5em;
   margin-right: 0.5em;
   width: 1px;
@@ -227,13 +227,13 @@
 
 /* #region--------------------------------------RIGHT */
 
-.characterSpotlightWrapper.invert .spotlightRightTopWrapper {
+:global(.characterSpotlightWrapper.invert) :global(.spotlightRightTopWrapper) {
   background: #fff;
   color: #323232;
   font-size: 1em;
 }
 
-.spotlightRightTopWrapper {
+:global(.spotlightRightTopWrapper) {
   text-align: left;
   padding: 2em;
   margin-left: 4em;
@@ -241,36 +241,36 @@
   max-width: 700px;
 }
 
-.spotlightHobbiesSection {
+:global(.spotlightHobbiesSection) {
   display: flex;
   flex-direction: column;
   padding-bottom: 1em;
 }
 
-.spotlightHobbiesSection > ul {
+:global(.spotlightHobbiesSection) > ul {
   margin: 0;
 }
 
-.spotlightDetailsSection .spotlightBold {
+:global(.spotlightDetailsSection) :global(.spotlightBold) {
   font-family: "Roboto Regular";
 }
 
-.descriptionsList:not(:last-child) {
+:global(.descriptionsList):not(:last-child) {
   margin-bottom: 0.5em;
 }
 
-.spotlightDetailsSection li {
+:global(.spotlightDetailsSection) li {
   text-align: left;
 }
 
-.spotlightRightTopWrapper h2,
-.spotlightRightTopWrapper h3,
-.spotlightRightTopWrapper p {
+:global(.spotlightRightTopWrapper) h2,
+:global(.spotlightRightTopWrapper) h3,
+:global(.spotlightRightTopWrapper) p {
   margin-top: 0;
   margin-bottom: 0;
 }
 
-.discordEmojiWrapper {
+:global(.discordEmojiWrapper) {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -279,15 +279,15 @@
 
 /* mobile */
 @media only screen and (max-width: 900px) {
-  .discordEmojiWrapper {
+  :global(.discordEmojiWrapper) {
     margin-top: 1em;
   }
-  .characterSpotlightContainer {
+  :global(.characterSpotlightContainer) {
     padding-bottom: 2em;
   }
 }
 
-.discordEmojiWrapper .defaultButton {
+:global(.discordEmojiWrapper) :global(.defaultButton) {
   padding: 0;
   padding-right: 1em;
   font-size: 0.9em;
@@ -295,21 +295,21 @@
 }
 
 @media only screen and (min-width: 982px) {
-  .discordEmojiWrapper .defaultButton:nth-child(2) {
+  :global(.discordEmojiWrapper) :global(.defaultButton):nth-child(2) {
     padding-bottom: 1em;
   }
 }
 
 /* mobile */
 @media only screen and (max-width: 900px) {
-  .discordEmojiWrapper .defaultButton {
+  :global(.discordEmojiWrapper) :global(.defaultButton) {
     font-size: 1em;
     padding-bottom: 0.5em;
     padding-right: 0;
   }
 }
 
-.discordEmojiWrapper .defaultButton:hover {
+:global(.discordEmojiWrapper) :global(.defaultButton):hover {
   background-color: #fff;
 }
 

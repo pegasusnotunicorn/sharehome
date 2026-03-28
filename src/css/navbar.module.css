@@ -33,7 +33,7 @@
   justify-content: space-between;
 }
 
-#emailToggleButtonMobile {
+:global(#emailToggleButtonMobile) {
   height: 20px;
   width: 100%;
   -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
@@ -58,7 +58,7 @@
   -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
 }
 
-.navbarClass:not(.is-active) .navbarOpenClose {
+.navbarClass:not(:global(.is-active)) .navbarOpenClose {
   border-radius: 4px;
 }
 
@@ -165,7 +165,7 @@
   }
 }
 
-.navbarMain.is-active {
+.navbarMain:global(.is-active) {
   left: -25%;
 }
 
@@ -184,7 +184,7 @@
   transition: none;
 }
 
-.navbarMain.is-active .navbarChildrenWrapper {
+.navbarMain:global(.is-active) .navbarChildrenWrapper {
   opacity: 1 !important;
   transition-property: opacity;
   transition-duration: 0.25s;
@@ -197,7 +197,7 @@
 }
 
 .navbarClass p,
-.navbarClass a:not(.defaultButton),
+.navbarClass a:not(:global(.defaultButton)),
 .navbarClass h1,
 .navbarClass h2,
 .navbarClass h3 {
@@ -222,7 +222,7 @@
     opacity: 0;
     width: 0;
   }
-  .navbarMain .navbarChildren.is-active {
+  .navbarMain .navbarChildren:global(.is-active) {
     width: calc(100% - 4em) !important;
     opacity: 1 !important;
     transition-property: opacity;
@@ -268,7 +268,7 @@
   white-space: nowrap;
 }
 
-.navbarButton.is-active {
+.navbarButton:global(.is-active) {
   border-left: 4px solid #dd7373;
   color: #828282;
 }

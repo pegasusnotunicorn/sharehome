@@ -6,7 +6,7 @@ import {
   getSpecificPerson,
   getRandomPerson,
 } from "../Characters/Characters.js";
-import "../../css/utils/spotlight.css";
+import spotlightStyles from "../../css/utils/spotlight.module.css";
 import { GsapFadeScrub } from "./useGsap.js";
 import DefaultButton from "../utils/DefaultButton.js";
 import PropTypes from "prop-types";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { getRandomEventGoal } from "./ExampleEventGoal.js";
 import PropTypes from "prop-types";
-import "../../css/utils/cards.css";
+import styles from "../../css/utils/cards.module.css";
 
 export const EventGoalCard = (props) => {
   let [eventGoalDetails] = useState(getRandomEventGoal(props.type));
@@ -15,13 +15,13 @@ export const EventGoalCard = (props) => {
     type = "location";
 
   return (
-    <div className={`eventGoalCardWrapper`}>
-      <div className={`eventGoalTextWrapper ${type}`}>
+    <div className={styles.eventGoalCardWrapper}>
+      <div className={`${styles.eventGoalTextWrapper} ${styles[type]}`}>
         {eventGoalDetails.description}
       </div>
       <img
         loading="lazy"
-        className={type}
+        className={styles[type]}
         src={`/images/illustrations/${type}cardfront${props.randomNumber}.webp`}
         alt={`${type} card`}
       />

@@ -1,7 +1,7 @@
 import ShootingStar from "../Navbar/ShootingStar.js";
 import landingPageStyles from "../../css/landingPage.module.css";
 import shootingStarStyles from "../../css/utils/shootingStar.module.css";
-import "../../css/utils/colors.css";
+import colorStyles from "../../css/utils/colors.module.css";
 
 export default function ShootingStarSection() {
   return (

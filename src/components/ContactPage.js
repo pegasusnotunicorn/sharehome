@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import "../css/pages/contactPage.css";
+import styles from "../css/pages/contactPage.module.css";
 import { NavLink } from "react-router";
 
 const ContactPage = () => {
@@ -12,7 +12,7 @@ const ContactPage = () => {
       <div className="subcontentWrapper margin-top min-width">
         <div className="characterContent">
           <h2 className="subtitle">Get in touch!</h2>
-          <div className="socialIconsWrapper">
+          <div className={styles.socialIconsWrapper}>
             <a
               href="mailto:hello@lovecareermagic.com"
               target="_blank"
@@ -89,15 +89,15 @@ const ContactPage = () => {
         </div>
       </div>
 
-      <div className="aboutMeWrapper">
-        <div className="aboutMeVerticalWrapper">
+      <div className={styles.aboutMeWrapper}>
+        <div className={styles.aboutMeVerticalWrapper}>
           <img
             src="/images/wonmin.webp"
             alt="Wonmin, the game designer"
-            className="wonminImage"
+            className={styles.wonminImage}
           />
         </div>
-        <div className="aboutMeVerticalWrapper">
+        <div className={styles.aboutMeVerticalWrapper}>
           <h2>
             Hello👋My name is Wonmin.
             <br />I am the game designer.
@@ -123,7 +123,7 @@ const ContactPage = () => {
           </p>
         </div>
       </div>
-      <div className="madeby">
+      <div className={styles.madeby}>
         <p>
           Love, Career & Magic is made by{" "}
           <a href="https://unicornwithwings.com">Pegasus Games</a> and is not

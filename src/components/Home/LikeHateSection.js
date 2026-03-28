@@ -2,7 +2,7 @@ import { useState, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap.js";
 import { getRandomTrait } from "../Card/ExampleTraits.js";
-import "../../css/pages/home/likehateSection.css";
+import styles from "../../css/pages/home/likehateSection.module.css";
 import PropTypes from "prop-types";
 
 const LikeHateSection = (props) => {
@@ -124,15 +124,15 @@ const LikeHateSection = (props) => {
   //text to display depending on like/hate
   return (
     <div id={props.id} className={props.className}>
-      <div className="likehateLeftContainer likehateContainers">
-        <GsapFadeScrub fadeIn className="imageAndArrowContainer">
+      <div className={`${styles.likehateLeftContainer} ${styles.likehateContainers}`}>
+        <GsapFadeScrub fadeIn className={styles.imageAndArrowContainer}>
           <img
             loading="lazy"
-            className={`tableSplash ${characterCoords[currentChar].name}`}
+            className={`${styles.tableSplash} ${styles[characterCoords[currentChar].name]}`}
             src="/images/illustrations/splash.webp"
             alt="dinner table"
           />
-          <div ref={arrowsContainerRef} className="arrowsContainer">
+          <div ref={arrowsContainerRef} className={styles.arrowsContainer}>
             <CharacterArc
               goodTrait={goodTrait}
               badTrait={badTrait}
@@ -143,9 +143,9 @@ const LikeHateSection = (props) => {
           </div>
         </GsapFadeScrub>
       </div>
-      <div className="likehateRightContainer likehateContainers">
+      <div className={`${styles.likehateRightContainer} ${styles.likehateContainers}`}>
         <GsapFadeScrub fadeIn scrubStartCenter>
-          <div className="likehateTextContainer">
+          <div className={styles.likehateTextContainer}>
             {title}
             {description}
           </div>
@@ -186,49 +186,49 @@ const CharacterArc = ({
   ].sort(() => 0.5 - Math.random());
 
   return (
-    <div className="characterArcContainer" style={coords.wrapper}>
+    <div className={styles.characterArcContainer} style={coords.wrapper}>
       {showLeft && (
-        <div className="arrowWrapper flipped">
-          <GsapWiggle degree={2} className="arrowWrapperSVG">
+        <div className={`${styles.arrowWrapper} ${styles.flipped}`}>
+          <GsapWiggle degree={2} className={styles.arrowWrapperSVG}>
             <img
               loading="lazy"
-              className="arrowTailSVG"
+              className={styles.arrowTailSVG}
               src="/images/icons/arrowtail.svg"
               alt="part of the arrow"
             />
             <img
               loading="lazy"
-              className="arrowHeadSVG"
+              className={styles.arrowHeadSVG}
               src="/images/icons/arrowhead.svg"
               alt="part of the arrow"
             />
           </GsapWiggle>
         </div>
       )}
-      <div className="characterArcWrapper">
-        <div className={`characterArc ${randomTraits[0].type}Arc`}>
-          <div className="characterArcText">{randomTraits[0].text}</div>
+      <div className={styles.characterArcWrapper}>
+        <div className={`${styles.characterArc} ${styles[`${randomTraits[0].type}Arc`]}`}>
+          <div className={styles.characterArcText}>{randomTraits[0].text}</div>
         </div>
-        <div className={`characterArc ${randomTraits[1].type}Arc`}>
-          <div className="characterArcText">{randomTraits[1].text}</div>
+        <div className={`${styles.characterArc} ${styles[`${randomTraits[1].type}Arc`]}`}>
+          <div className={styles.characterArcText}>{randomTraits[1].text}</div>
         </div>
-        <div className={`characterArc ${randomTraits[2].type}Arc`}>
-          <div className="characterArcText">{randomTraits[2].text}</div>
+        <div className={`${styles.characterArc} ${styles[`${randomTraits[2].type}Arc`]}`}>
+          <div className={styles.characterArcText}>{randomTraits[2].text}</div>
         </div>
       </div>
       {!showLeft && (
-        <div className="arrowWrapper">
-          <GsapWiggle degree={2} className="arrowWrapperSVG">
+        <div className={styles.arrowWrapper}>
+          <GsapWiggle degree={2} className={styles.arrowWrapperSVG}>
             <img
               loading="lazy"
-              className="arrowTailSVG"
+              className={styles.arrowTailSVG}
               src="/images/icons/arrowtail.svg"
               alt="part of the arrow"
               width="25"
             />
             <img
               loading="lazy"
-              className="arrowHeadSVG"
+              className={styles.arrowHeadSVG}
               src="/images/icons/arrowhead.svg"
               alt="part of the arrow"
               width="25"

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { getAllFinishedPeople } from "../Characters/Characters.js";
-import "../../css/utils/emojisection.css";
+import styles from "../../css/utils/emojisection.module.css";
 import "../../css/utils/spotlight.css";
 import { GsapFadeScrub } from "./useGsap.js";
 import DefaultButton from "../utils/DefaultButton.js";
@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 const EmojiWrapper = ({ urlName, emoji, index }) => {
   return (
     <a aria-label={emoji} href={`/characters/${urlName}`}>
-      <div id={`emojiWrapper${index}`} className="emojiWrapper">
+      <div id={`emojiWrapper${index}`} className={styles.emojiWrapper}>
         <img
           loading="lazy"
           src={`/images/emojis/${emoji}.webp`}
@@ -37,8 +37,8 @@ export const EmojiSection = (props) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      let allEmojiDom = document.getElementsByClassName("emojiWrapper");
-      let activeEmoji = document.getElementsByClassName("emojiWrapper active");
+      let allEmojiDom = document.getElementsByClassName(styles.emojiWrapper);
+      let activeEmoji = document.querySelectorAll(`.${styles.emojiWrapper}.active`);
       if (activeEmoji.length > 0 && activeEmoji[0])
         activeEmoji[0].classList.remove("active");
 
@@ -78,10 +78,10 @@ export const EmojiSection = (props) => {
 
   // <DefaultButton href="/allEmojis.zip" download="allEmojis.zip" className="emojiPackDownloadButton" icon="download" inverted borderedBlack shadowless text={t('characters page.emojiall')}/>
   return (
-    <div id="emojis" className={`emojiSection ${props.className}`}>
+    <div id="emojis" className={`${styles.emojiSection} ${props.className}`}>
       <div className="subcontentWrapper padding-top min-width">
         <GsapFadeScrub fadeIn className="fadeInTextWrapper">
-          <div className="characterContent emojiDescriptionWrapper">
+          <div className={`characterContent ${styles.emojiDescriptionWrapper}`}>
             <h2>Free character emojis</h2>
             <p>
               Join the Discord community to use these emojis for free right now!
@@ -92,17 +92,17 @@ export const EmojiSection = (props) => {
               <li>Playtest and give feedback to help shape the games.</li>
             </ul>
           </div>
-          <div className="emojiButtonsWrapper">
+          <div className={styles.emojiButtonsWrapper}>
             <DefaultButton
               href="https://discord.com/invite/nv89cRgEsS"
-              className="emojiPackDownloadButton"
+              className={styles.emojiPackDownloadButton}
               icon="discordWhite"
               shadowless
               text="Get free emojis"
             />
           </div>
         </GsapFadeScrub>
-        <div className="emojisWrapper">{allEmojis}</div>
+        <div className={styles.emojisWrapper}>{allEmojis}</div>
       </div>
     </div>
   );

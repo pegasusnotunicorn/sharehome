@@ -6,6 +6,7 @@ import EmailForm from "../utils/EmailForm.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import DefaultButton from "../utils/DefaultButton.js";
 import "../../css/navbar.css";
+import shootingStarStyles from "../../css/utils/shootingStar.module.css";
 import "../../css/utils/hamburger.css";
 import useWindowScroll from "../utils/useWindowScroll.js";
 import CharacterPinPopup from "../CharacterPinPopup.js";
@@ -183,25 +184,25 @@ export const NavbarMain = ({ videoModalVisible }) => {
               className={`navbarChildren navbarRightWrapper ${mobileShowRightClass}`}
             >
               <ShootingStar
-                className="leftStar"
+                className={shootingStarStyles.leftStar}
                 isActive={visible}
                 orientation="right"
                 mirror
               />
               <ShootingStar
-                className="rightStar"
+                className={shootingStarStyles.rightStar}
                 isActive={visible}
                 orientation="left"
                 delay="2"
               />
               <ShootingStar
-                className="leftStar"
+                className={shootingStarStyles.leftStar}
                 isActive={visible}
                 orientation="up"
                 delay="4"
               />
               <ShootingStar
-                className="leftStar"
+                className={shootingStarStyles.leftStar}
                 isActive={visible}
                 orientation="down"
                 delay="6"

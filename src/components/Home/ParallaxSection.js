@@ -6,7 +6,7 @@ import getHomePageCardProps from "./utils/getHomePageCardProps.js";
 import { getAllFinishedPeople } from "../Characters/Characters.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import { randomDeg } from "../utils/useMath.js";
-import "../../css/pages/home/cardparallax.css";
+import styles from "../../css/pages/home/cardparallax.module.css";
 import PropTypes from "prop-types";
 import { useLocation } from "react-router";
 
@@ -94,7 +94,7 @@ const ParallaxSection = () => {
     const evenRow = index % 2 !== 0;
     const isRowWithMissingCard = index === 0;
     return (
-      <div key={`parallaxRow${index}`} className="parallaxRow">
+      <div key={`parallaxRow${index}`} className={styles.parallaxRow}>
         <ParallaxCards
           sectionRef={sectionRef}
           evenRow={evenRow}
@@ -107,7 +107,7 @@ const ParallaxSection = () => {
   });
 
   return (
-    <div key={location.pathname} ref={sectionRef} className="parallaxSection">
+    <div key={location.pathname} ref={sectionRef} className={styles.parallaxSection}>
       {parallaxRows}
     </div>
   );
@@ -251,9 +251,9 @@ const ParallaxCards = ({
       <div
         key={`parallaxWrapperKey${index}`}
         ref={(el) => (cardRefs[index] = el)}
-        className={`parallaxWrapper ${
+        className={`${styles.parallaxWrapper} ${
           isRowWithMissingCard && index === missingCardIndex
-            ? "missingCard"
+            ? styles.missingCard
             : ""
         }`}
       >

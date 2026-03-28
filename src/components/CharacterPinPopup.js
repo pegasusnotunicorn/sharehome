@@ -1,11 +1,11 @@
 import DefaultButton from "./utils/DefaultButton.js";
-import "../css/utils/lazyYoutube.css";
+import styles from "../css/utils/lazyYoutube.module.css";
 
 const CharacterPinPopup = ({ closePopup, dismissPopup }) => {
   return (
     <>
       <div
-        className="videoModalWrapper"
+        className={styles.videoModalWrapper}
         style={{
           zIndex: 999997,
         }}

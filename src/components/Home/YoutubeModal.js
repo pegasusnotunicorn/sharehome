@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import DefaultButton from "../utils/DefaultButton.js";
-import "../../css/utils/lazyYoutube.css";
+import styles from "../../css/utils/lazyYoutube.module.css";
 import useDeviceType from "../utils/useDeviceType.js";
 
 const DEFAULT_DESKTOP_CODE = "EoQ2VTipXPA";
@@ -84,10 +84,10 @@ export const YoutubeModal = ({
   return (
     <div
       style={{ display: videoModalVisible ? "flex" : "none" }}
-      className="videoModalWrapper"
+      className={styles.videoModalWrapper}
       onClick={stopVideo}
     >
-      <div className="videoModalCloseButtonWrapper">
+      <div className={styles.videoModalCloseButtonWrapper}>
         <DefaultButton
           icon="whiteCross"
           className="is-black"
@@ -96,7 +96,7 @@ export const YoutubeModal = ({
           shadowless
         />
       </div>
-      <div className="videoWrapper">
+      <div className={styles.videoWrapper}>
         <iframe
           ref={iframeRef}
           width={iframeWidth}

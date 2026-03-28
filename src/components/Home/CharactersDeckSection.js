@@ -8,7 +8,7 @@ import getHomePageCardProps from "./utils/getHomePageCardProps.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import { getAllFinishedPeople } from "../Characters/Characters.js";
 import { randomDeg, randomNumFromNeg, randomNum } from "../utils/useMath.js";
-import "../../css/pages/home/charactersDeckSection.css";
+import styles from "../../css/pages/home/charactersDeckSection.module.css";
 import PropTypes from "prop-types";
 
 //the deck section covering half the screen
@@ -31,7 +31,7 @@ const CharactersDeckSection = () => {
   }
 
   return (
-    <div className="characterDecksContainer">
+    <div className={styles.characterDecksContainer}>
       {splitIntoSections.map((curr, index) => {
         return (
           <CharactersDeckRow
@@ -48,7 +48,7 @@ const CharactersDeckSection = () => {
 
 //a single row of cards
 const CharactersDeckRow = (props) => (
-  <DeckRow className="charactersDeckRow">
+  <DeckRow className={styles.charactersDeckRow}>
     <Decks cards={props.cards} rowIndex={props.rowIndex} tl={props.rowTl} />
   </DeckRow>
 );
@@ -148,7 +148,7 @@ const Decks = (props) => {
       <div
         key={`cardWrapper${index}`}
         ref={(el) => (cardRefs.current[index] = el)}
-        className="characterCardWrapper"
+        className={styles.characterCardWrapper}
       >
         <NavLink to={`/characters/${curr.urlName}`}>
           <Card {...cardProps} />

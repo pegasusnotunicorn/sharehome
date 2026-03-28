@@ -1,6 +1,6 @@
 import Card from "./Card/Card.js";
 import useWindowDimensions from "./utils/useWindowDimensions.js";
-import "../css/footer.css";
+import styles from "../css/footer.module.css";
 
 function randomIntFromInterval(min, max) {
   // min and max included
@@ -83,7 +83,7 @@ const Footer = () => {
     width
   );
 
-  return <div className="footer">{footerCards}</div>;
+  return <div className={styles.footer}>{footerCards}</div>;
 };
 
 export default Footer;

@@ -3,7 +3,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger.js";
 import gsap from "gsap";
 import { randomNum } from "../utils/useMath.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
-import "../../css/utils/shootingStar.css";
+import styles from "../../css/utils/shootingStar.module.css";
 import PropTypes from "prop-types";
 
 //function to get a random X Y
@@ -23,20 +23,20 @@ export const ShootingStar = (props) => {
   let orientation;
   switch (props.orientation) {
     case "left":
-      orientation = "goingLeft";
+      orientation = styles.goingLeft;
       break;
     case "up":
-      orientation = "goingUp";
+      orientation = styles.goingUp;
       break;
     case "right":
-      orientation = "goingRight";
+      orientation = styles.goingRight;
       break;
     default:
     case "down":
-      orientation = "goingDown";
+      orientation = styles.goingDown || "";
       break;
   }
-  const mirrorClass = props.mirror ? "mirror" : "";
+  const mirrorClass = props.mirror ? styles.mirror : "";
 
   //references for the DOMs
   const randomXRef = useRef(null);
@@ -164,7 +164,7 @@ export const ShootingStar = (props) => {
     }
   }, [isActive, width]);
 
-  let isActiveClass = isAnimationActive && isActive ? "is-active" : "";
+  let isActiveClass = isAnimationActive && isActive ? styles["is-active"] : "";
 
   // random color for the shooting star
   const randomColor = () => {
@@ -176,10 +176,10 @@ export const ShootingStar = (props) => {
   return (
     <div
       ref={randomXRef}
-      className={`shootingStar ${orientation} ${className} ${isActiveClass}`}
+      className={`${styles.shootingStar} ${orientation} ${className} ${isActiveClass}`}
     >
-      <div className={`shootingStar ${mirrorClass} ${isActiveClass}`}>
-        <div ref={starContainerRef} className="shootingStarWrapper">
+      <div className={`${styles.shootingStar} ${mirrorClass} ${isActiveClass}`}>
+        <div ref={starContainerRef} className={styles.shootingStarWrapper}>
           <svg
             width="133"
             height="125"
@@ -195,7 +195,7 @@ export const ShootingStar = (props) => {
         </div>
         <svg
           ref={pathRef}
-          className="starPathSVG"
+          className={styles.starPathSVG}
           width="101"
           height="108"
           viewBox="0 0 101 108"

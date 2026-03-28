@@ -32,7 +32,7 @@
   transition: all 0.25s ease-in-out;
 }
 
-.emojiWrapper.active {
+.emojiWrapper:global(.active) {
   transform: scale(1.75);
   border: 5px solid #222;
   z-index: 8;

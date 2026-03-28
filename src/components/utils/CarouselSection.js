@@ -9,7 +9,7 @@ import { GsapFadeScrub } from "../utils/useGsap.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import PropTypes from "prop-types";
 import DefaultButton from "./DefaultButton.js";
-import "../../css/utils/swiper.css";
+import styles from "../../css/utils/swiper.module.css";
 
 //return a single slide
 const getPictureSlide = (index, directory, filename, href) => {
@@ -19,18 +19,18 @@ const getPictureSlide = (index, directory, filename, href) => {
         aria-label={`Photoshoot ${index}`}
         rel="noreferrer"
         target="_blank"
-        className="noselect carouselImageContainer"
+        className={`noselect ${styles.carouselImageContainer}`}
         href={href ?? `${directory}/${filename}.webp`}
       >
         <img
           loading="lazy"
           alt={`Carousel ${filename} ${index}`}
-          className={`noselect carouselImage ${href ? "has-link" : ""}`}
+          className={`noselect ${styles.carouselImage} ${href ? "has-link" : ""}`}
           src={`${directory}/${filename}.webp`}
         />
         {href && (
           <DefaultButton
-            className="buttonForLink is-inverted is-outlined"
+            className={`${styles.buttonForLink} is-inverted is-outlined`}
             text="Watch video"
             icon="watch"
           />
@@ -97,7 +97,7 @@ export const CarouselSection = (props) => {
     <GsapFadeScrub
       fadeIn
       scrub
-      className={`carouselSection ${props.className}`}
+      className={`${styles.carouselSection} ${props.className}`}
     >
       <Swiper {...swiperProps}>{allPictures}</Swiper>
     </GsapFadeScrub>

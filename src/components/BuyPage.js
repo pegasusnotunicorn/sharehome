@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import "../css/pages/buyPage.css";
+import styles from "../css/pages/buyPage.module.css";
 import DefaultButton from "./utils/DefaultButton.js";
 import EmailForm from "./utils/EmailForm.js";
 
@@ -30,7 +30,7 @@ const BuyPage = () => {
             <strong>free mystery gift</strong> with your purchase. I haven’t
             decided yet what that gift will be 😅
           </p>
-          <div className="buyPageButtonWrapper">
+          <div className={styles.buyPageButtonWrapper}>
             <DefaultButton
               href="https://buy.stripe.com/28E14oahReFa6Zx74m0Jq04"
               text="Place a back order"
@@ -46,7 +46,7 @@ const BuyPage = () => {
             have been working on the expansion for the past few months and I am
             incredibly excited to share it with you.
           </p>
-          <div className="buyPageButtonWrapper">
+          <div className={styles.buyPageButtonWrapper}>
             <DefaultButton
               href="https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season"
               text="Follow the expansion on Kickstarter"
@@ -62,14 +62,14 @@ const BuyPage = () => {
             responseOverride="An expansion is officially in development! Sign up below to be notified about the release date and other updates!"
           />
 
-          <div className="buyPageImageWrapper">
+          <div className={styles.buyPageImageWrapper}>
             <img
               src="/images/final_shipment.webp"
               alt="Final shipment"
-              className="buyPageImage"
+              className={styles.buyPageImage}
             />
             <br />
-            <p className="buyPageCaption">
+            <p className={styles.buyPageCaption}>
               On my way to drop off the final shipment to the post office, the
               car was completely full!
             </p>

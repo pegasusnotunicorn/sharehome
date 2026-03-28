@@ -7,7 +7,7 @@ import getHomePageCardProps from "./utils/getHomePageCardProps.js";
 import useWindowDimensions from "../utils/useWindowDimensions.js";
 import { getRandomEventsGoals } from "../Card/ExampleEventGoal.js";
 import { randomDeg, randomNum } from "../utils/useMath.js";
-import "../../css/pages/home/eventsGoalsDeckSection.css";
+import styles from "../../css/pages/home/eventsGoalsDeckSection.module.css";
 import PropTypes from "prop-types";
 
 export const GoalsDeckSection = () => {
@@ -22,7 +22,7 @@ const DeckSection = ({ eventOrGoal }) => {
   gsap.registerPlugin(ScrollTrigger);
   let splitIntoSections = getRandomEventsGoals(eventOrGoal, 3);
   return (
-    <div className="eventGoalDecksContainer">
+    <div className={styles.eventGoalDecksContainer}>
       {splitIntoSections.map((curr, index) => {
         return (
           <EventGoalDeckRow
@@ -44,7 +44,7 @@ DeckSection.propTypes = {
 //a single row of cards
 const EventGoalDeckRow = ({ card, rowIndex, rowTl, eventOrGoal }) => {
   return (
-    <DeckRow className="eventGoalDeckRow">
+    <DeckRow className={styles.eventGoalDeckRow}>
       <AnimatedCard
         card={card}
         rowIndex={rowIndex}
@@ -141,7 +141,7 @@ const AnimatedCard = (props) => {
   if (rowIndex === 1) cardProps.hideBack = false;
 
   return (
-    <div ref={cardRef} className="EGCardWrapper">
+    <div ref={cardRef} className={styles.EGCardWrapper}>
       <Card {...cardProps} />
     </div>
   );

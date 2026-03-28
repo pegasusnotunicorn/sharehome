@@ -1,5 +1,6 @@
 import ShootingStar from "../Navbar/ShootingStar.js";
 import landingPageStyles from "../../css/landingPage.module.css";
+import shootingStarStyles from "../../css/utils/shootingStar.module.css";
 import "../../css/utils/colors.css";
 
 export default function ShootingStarSection() {
@@ -9,7 +10,7 @@ export default function ShootingStarSection() {
         {Array.from({ length: 10 }).map((_, i) => (
           <ShootingStar
             key={i}
-            className={i % 2 === 0 ? "leftStar" : "rightStar"}
+            className={i % 2 === 0 ? shootingStarStyles.leftStar : shootingStarStyles.rightStar}
             isActive
             orientation={["left", "up", "right", "down"][i % 4]}
             mirror={i % 2 === 0 ? "mirror" : ""}

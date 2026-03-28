@@ -133,13 +133,13 @@ const Setup = ({ showRules, cardStyle, toggleSteps }) => {
               <div className={aboutStyles.arrowWrapper}>
                 <img
                   loading="lazy"
-                  className={`${aboutStyles.arrowArc} arrowTailSVG`}
+                  className={`${aboutStyles.arrowArc} ${aboutStyles.arrowTailSVG}`}
                   src="/images/icons/arrowtail.svg"
                   alt="part of the arrow"
                 />
                 <img
                   loading="lazy"
-                  className={`${aboutStyles.arrowArc} arrowHeadSVG`}
+                  className={`${aboutStyles.arrowArc} ${aboutStyles.arrowHeadSVG}`}
                   src="/images/icons/arrowhead.svg"
                   alt="part of the arrow"
                 />

@@ -1,111 +1,215 @@
-/* #region--------------------------------------NAVBAR TOGGLE */
+/* ===== TOP BAR ===== */
 
-.fixedButtonsWrapper {
+.topBar {
   position: fixed;
-  top: calc(var(--banner-height, 50px) + var(--banner-navbar-spacing, 10px));
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  top: var(--banner-height, 30px);
   z-index: 99997;
   width: 100%;
+  padding: 6px 10px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
 }
 
-.navbarFloatLeft {
+.logo {
   display: block;
-  margin-left: 10px;
   width: 50px;
   height: 50px;
-  background: url("./images/simplelogoColor.webp");
+  background: url("./images/simplelogoColor.webp") no-repeat;
   background-size: 50px;
   user-select: none;
   -webkit-user-drag: none;
 }
 
-.navbarFloatLeft:hover {
-  background: url("./images/simplelogoBlack.webp");
+.logo:hover {
+  background: url("./images/simplelogoBlack.webp") no-repeat;
   background-size: 50px;
 }
 
-.navbarFloatRight {
+.topBarActions {
   display: flex;
   align-items: center;
-  gap: 1em;
-  justify-content: space-between;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
-:global(#emailToggleButtonMobile) {
-  height: 20px;
-  width: 100%;
-  -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -moz-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -ms-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-}
-
-.navbarOpenClose {
+.topBarActions > a,
+.topBarActions > div {
   height: 42px;
-  width: 58px;
-  cursor: pointer;
-  color: #222222;
-  font-size: 25px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  outline: 0;
-  -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -moz-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -ms-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
-  -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+  box-sizing: border-box;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
-.navbarClass:not(:global(.is-active)) .navbarOpenClose {
-  border-radius: 4px;
+.topBarActions > a img,
+.topBarActions > div img {
+  width: 18px;
+  height: 18px;
 }
 
-.navbarMain .navbarOpenClose {
-  position: fixed;
-  right: 0;
-}
-
-/* #endregion
-
-/* #region--------------------------------------NAVBAR */
-
-.navbarBuyButton {
+.buyButton {
   z-index: 100;
-  bottom: 1em;
   color: #fff;
-  display: flex;
-  justify-content: center;
 }
 
-.navbarMain {
-  /* background-color:rgba(255,255,255,.95); */
+.expansionButton {
+  white-space: nowrap;
+}
+
+/* ===== SLIDE-OUT MENU ===== */
+
+.menu {
+  position: fixed;
+  left: 100%;
+  top: var(--banner-height, 30px);
+  width: 125%;
+  height: calc(100% - var(--banner-height, 30px));
+  z-index: 99998;
+  overflow: hidden;
+  transition: left 0.25s ease;
   background-image: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0) 0%,
     rgba(255, 255, 255, 1) 40vw,
     rgba(255, 255, 255, 1) 100%
   );
-  left: 100%;
-  top: calc(var(--banner-height, 50px) + var(--banner-navbar-spacing, 10px));
-  position: fixed;
-  width: 125%;
-  height: calc(
-    100% - var(--banner-height, 50px) - var(--banner-navbar-spacing, 10px)
-  );
-  z-index: 99998;
-  transition-property: left;
-  transition-duration: 0.25s;
-  overflow: hidden;
 }
 
-.free-pin-btn {
+.menu:global(.is-active) {
+  left: -25%;
+}
+
+.menu :global(.hamburger) {
+  position: fixed;
+  right: 10px;
+  top: calc(var(--banner-height, 30px) + 10px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.menu:global(.is-active) :global(.hamburger) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.menuContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100vw;
+  position: absolute;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  transition: none;
+}
+
+.menu:global(.is-active) .menuContent {
+  opacity: 1 !important;
+  transition: opacity 0.25s ease 0.25s;
+}
+
+.menuSection {
+  height: 50%;
+  margin: auto;
+}
+
+.menuDivider {
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  height: 50%;
+  width: 0;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.navbar p,
+.navbar h1,
+.navbar h2,
+.navbar h3 {
+  color: #323232;
+}
+
+.navbar a {
+  color: #323232;
+}
+
+/* ===== NAV LINKS ===== */
+
+.navLinks {
+  display: flex;
+  width: calc(50% - 4rem);
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.navLinkList {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  color: #323232;
+}
+
+.navLink {
+  font-family: "Rowdies-Regular";
+  padding: 0.25rem 0.5rem;
+  font-size: 2rem;
+  text-align: left;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  border: 0;
+  margin: 0;
+  border-left: 4px solid transparent;
   white-space: nowrap;
 }
 
+.navLink:global(.is-active) {
+  border-left: 4px solid #dd7373;
+  color: #828282;
+}
+
+.navLink:hover {
+  color: #828282;
+}
+
+.navLink:active {
+  color: #b3b3b3;
+}
+
+/* ===== EMAIL / ILLUSTRATION SECTION ===== */
+
+.emailSection {
+  display: flex;
+  gap: 5px;
+  padding-left: 2rem;
+}
+
+.illustration {
+  width: 60%;
+  max-width: 300px;
+  object-fit: contain;
+}
+
+@media only screen and (min-width: 900px) {
+  .illustration {
+    width: 40% !important;
+    max-width: 250px;
+  }
+}
+
+/* ===== SLIDE-OUT GRADIENT BREAKPOINTS ===== */
+
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
-  .navbarMain {
+  .menu {
     background-image: linear-gradient(
       90deg,
       rgba(255, 255, 255, 0) 0%,
@@ -116,7 +220,7 @@
 }
 
 @media only screen and (min-width: 900px) and (max-width: 1200px) {
-  .navbarMain {
+  .menu {
     background-image: linear-gradient(
       90deg,
       rgba(255, 255, 255, 0) 0%,
@@ -126,32 +230,36 @@
   }
 }
 
+/* ===== MOBILE ===== */
+
 @media only screen and (max-width: 900px) {
-  .fixedButtonsWrapper {
-    top: calc(
-      var(--banner-height-mobile, 45px) + var(--banner-navbar-spacing, 10px)
-    );
+  .topBar {
+    top: var(--banner-height-mobile, 45px);
   }
-  .navbarMain {
-    top: calc(
-      var(--banner-height-mobile, 45px) + var(--banner-navbar-spacing, 10px)
-    );
-    height: calc(
-      100% - var(--banner-height-mobile, 45px) -
-        var(--banner-navbar-spacing, 10px)
-    );
+
+  .topBarActions {
+    font-size: 0.8rem;
   }
-  .fixedButtonsWrapper:not(.isLandingPageAtTop) {
-    background-color: #fff;
-    box-shadow: 1px 1px 10px 0px rgba(0, 0, 0, 0.15);
-  }
-  .navbarBuyButton {
+
+  .buyButton {
     position: fixed;
-    width: calc(100% - 2em) !important;
-    bottom: 1em;
-    left: 1em;
+    width: calc((100% - 2.5rem) / 2) !important;
+    bottom: 1rem;
+    left: 1rem;
   }
-  .navbarMain {
+
+  .expansionButton {
+    position: fixed;
+    width: calc((100% - 2.5rem) / 2) !important;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 100;
+  }
+
+  .menu {
+    top: var(--banner-height-mobile, 45px);
+    height: calc(100% - var(--banner-height-mobile, 45px));
+    flex-direction: column;
     background-image: linear-gradient(
       90deg,
       rgba(255, 255, 255, 0) 0%,
@@ -159,157 +267,23 @@
       rgba(255, 255, 255, 1) 100%
     );
   }
-  .navbarFloatRight {
-    gap: 0;
-    font-size: 0.8em;
+
+  .menu :global(.hamburger) {
+    top: calc(var(--banner-height-mobile, 45px) + 10px);
   }
-}
 
-.navbarMain:global(.is-active) {
-  left: -25%;
-}
-
-.navbarChildrenWrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: row;
-  height: 100%;
-  width: 100vw;
-  position: absolute;
-  right: 0;
-  top: 0;
-  /* fade in the menus after navbar scrolls in */
-  opacity: 0;
-  transition: none;
-}
-
-.navbarMain:global(.is-active) .navbarChildrenWrapper {
-  opacity: 1 !important;
-  transition-property: opacity;
-  transition-duration: 0.25s;
-  transition-delay: 0.25s;
-}
-
-.navbarChildren {
-  height: 50%;
-  margin: auto;
-}
-
-.navbarClass p,
-.navbarClass a:not(:global(.defaultButton)),
-.navbarClass h1,
-.navbarClass h2,
-.navbarClass h3 {
-  color: #323232;
-}
-.navbarCenterBorder {
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
-  height: 50%;
-  width: 0;
-}
-
-.navbarClass {
-  display: flex;
-  justify-content: space-between;
-}
-
-@media only screen and (max-width: 900px) {
-  .navbarMain {
-    flex-direction: column;
-  }
-  .navbarMain .navbarChildren {
+  .menu .menuSection {
     opacity: 0;
     width: 0;
   }
-  .navbarMain .navbarChildren:global(.is-active) {
-    width: calc(100% - 4em) !important;
+
+  .menu .menuSection:global(.is-active) {
+    width: calc(100% - 4rem) !important;
     opacity: 1 !important;
-    transition-property: opacity;
-    transition-duration: 0.25s;
+    transition: opacity 0.25s ease;
+  }
+
+  .emailSection {
+    padding-left: 0;
   }
 }
-
-/* #endregion */
-
-/* #region--------------------------------------NAVBAR LEFT */
-
-.navbarLeftWrapper {
-  display: flex;
-  width: calc(50% - 4em);
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.navbarButtonWrapper {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-direction: column;
-  color: #323232;
-}
-
-.navbarButton {
-  font-family: "Rowdies-Regular";
-  padding: 0.5em;
-  padding-top: 0.25em;
-  padding-bottom: 0.25em;
-  font-size: 2em;
-  text-align: left;
-  text-decoration: none;
-  text-transform: none;
-  user-select: none;
-  -webkit-user-drag: none;
-  border: 0;
-  margin: 0;
-  border-left: 4px solid transparent;
-  white-space: nowrap;
-}
-
-.navbarButton:global(.is-active) {
-  border-left: 4px solid #dd7373;
-  color: #828282;
-}
-
-.navbarButton:hover {
-  color: #828282;
-}
-
-.navbarButton:active {
-  color: #b3b3b3;
-}
-
-.languageChangeWrapper {
-  font-size: 1.25em;
-  padding-left: 1em;
-  padding-top: 3em;
-}
-
-.languageChangeSpan {
-  font-family: "Rowdies-Regular";
-  cursor: pointer;
-}
-
-/* #endregion */
-
-/* #region--------------------------------------NAVBAR RIGHT */
-
-.navbarRightWrapper {
-  display: flex;
-  gap: 5px;
-}
-
-.artbookMockup {
-  width: 100%;
-  object-fit: contain;
-}
-
-@media only screen and (min-width: 900px) {
-  .artbookMockup {
-    width: 50% !important;
-  }
-}
-
-/* #endregion */

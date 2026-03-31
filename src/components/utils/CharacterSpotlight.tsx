@@ -1,0 +1,242 @@
+import { useState, useEffect, ReactNode } from "react";
+import { NavLink } from "react-router";
+import useWindowDimensions from "../utils/useWindowDimensions";
+import ShootingStar from "../Navbar/ShootingStar";
+import {
+  getSpecificPerson,
+  getRandomPerson,
+} from "../Characters/Characters";
+import "../../css/utils/spotlight.css";
+import { GsapFadeScrub } from "./useGsap";
+import DefaultButton from "../utils/DefaultButton";
+
+interface CharacterSpotlightProps {
+  name?: string;
+  invert?: boolean;
+  sectionTitle?: string;
+  index?: number;
+  total?: number;
+  allCharsButton?: boolean;
+  children?: ReactNode;
+}
+
+export const CharacterSpotlight = (props: CharacterSpotlightProps) => {
+  //get a specific or the latest character if not defined
+  const result = props.name
+    ? getSpecificPerson(props.name)
+    : getRandomPerson();
+  if (!result) return null;
+  const character = result;
+  const invertClass = props.invert ? "invert" : "";
+
+  //language specific
+  const name = character.name;
+  const title = character.title ? character.title : `The ${character.race}`;
+  let job = character.job;
+  const jobTitle = character.employer
+    ? `${character.job} at ${character.employer}.`
+    : `${character.job} (Self employed).`;
+
+  //second job
+  let jobTitle2;
+  if (character.job2) {
+    job = `${character.job} / ${character.job2}`;
+    jobTitle2 = character.employer2
+      ? `${character.job2} at ${character.employer2}.`
+      : `${character.job2}.`;
+  }
+
+  const age = `${character.age} years old`;
+
+  //list of descriptions
+  const description = character.description;
+  const listOfDescriptions = description.map((elem, index) => {
+    return (
+      <p key={`description${index}`} className="descriptionsList">
+        {elem}
+      </p>
+    );
+  });
+
+  //bullet list of hobbies
+  const hobbies = character.hobbies;
+  const listOfHobbies = hobbies.map((elem, index) => {
+    return (
+      <li key={`hobbies${index}`} className="hobbiesList">
+        {elem}
+      </li>
+    );
+  });
+
+  //list of extra emojis
+  const listOfEmojis = character.emoji.map((elem, index) => {
+    return (
+      <a
+        key={`emoji${index}`}
+        href={`/images/emojis/${elem}.webp`}
+        download={`${elem}.webp`}
+        className="emojiDownloadLink"
+      >
+        <img
+          loading="lazy"
+          className="circularIconFrame"
+          src={`/images/emojis/${elem}.webp`}
+          alt={elem}
+        />
+        Download emoji
+      </a>
+    );
+  });
+
+  //hide details button on mobile
+  const [showDetails, setShowDetails] = useState(true);
+  const { width } = useWindowDimensions();
+  useEffect(() => {
+    if (width < 900) {
+      setShowDetails(false);
+    }
+  }, [width, setShowDetails]);
+  const detailsClass = showDetails ? "is-active" : "";
+  let showDetailsButtonText = showDetails
+    ? "Hide details"
+    : "Show more details";
+
+  const backgroundPosition = character.image.objectPosition
+    ? `${character.image.objectPosition} center`
+    : "center center";
+  const LinkTo = (props: { sectionTitle?: string; children?: ReactNode }) => {
+    if (props.sectionTitle)
+      return (
+        <NavLink to={`/characters/${character.urlName}`}>
+          {props.children}
+        </NavLink>
+      );
+    else
+      return (
+        <a
+          aria-label="Character image"
+          target="_blank"
+          rel="noreferrer"
+          href={character.image.url}
+        >
+          {props.children}
+        </a>
+      );
+  };
+  return (
+    <div className={`characterSpotlightWrapper ${invertClass}`}>
+      <GsapFadeScrub fadeIn className="fadeInTextWrapper">
+        {props.sectionTitle && <SectionTitle title={props.sectionTitle} />}
+        <div className="spotlightBottomWrapper">
+          {props.index && props.total && (
+            <IndexTotal index={props.index} total={props.total} />
+          )}
+          <div className="spotlightLeftWrapper">
+            <LinkTo {...props}>
+              <div className="imageCircleMask noselect">
+                <img
+                  loading="lazy"
+                  className="characterImage"
+                  src={character.image.url.replace("big", "small")}
+                  style={{ objectPosition: backgroundPosition }}
+                  alt={character.name}
+                />
+                <div className="magnifierWrapper">
+                  <img
+                    loading="lazy"
+                    className="imageCircleIcons"
+                    src="/images/icons/magnifier.svg"
+                    alt="Look closer"
+                  />
+                </div>
+              </div>
+            </LinkTo>
+            <div className="leftDetailsWrapper">
+              <h1>{name}</h1>
+              <h3>— {title} —</h3>
+              <div className="leftAgeJobWrapper">
+                <p>{age}</p>
+                <p className="divider"></p>
+                <p>{job}</p>
+              </div>
+            </div>
+          </div>
+          <div className="spotlightDivider" aria-hidden="true"></div>
+          <div className="spotlightRightWrapper">
+            <div className="spotlightRightTopWrapper">
+              <div className="spotlightDetailsSection spotlightHobbiesSection">
+                <p className="spotlightBold">Profession</p>
+                <p>{jobTitle}</p>
+                {character.job2 && <p>{jobTitle2}</p>}
+              </div>
+              <div className="spotlightDetailsSection spotlightHobbiesSection">
+                <p className="spotlightBold">Hobbies</p>
+                <ul>{listOfHobbies}</ul>
+              </div>
+              <div className={`spotlightDetailsSection ${detailsClass}`}>
+                {listOfDescriptions}
+                <div className="discordEmojiWrapper">{listOfEmojis}</div>
+              </div>
+              <div className={`showDetailsButton is-hidden-desktop`}>
+                <p
+                  onClick={() => {
+                    setShowDetails(!showDetails);
+                  }}
+                >
+                  {showDetailsButtonText}
+                </p>
+              </div>
+            </div>
+            {props.allCharsButton && <AllCharactersButton />}
+          </div>
+        </div>
+      </GsapFadeScrub>
+    </div>
+  );
+};
+
+//#what out of total (for character page)
+interface IndexTotalProps {
+  index: number;
+  total: number;
+}
+
+const IndexTotal = ({ index, total }: IndexTotalProps) => {
+  return (
+    <div className="indexTotalWrapper">
+      <span className="indexWrapper">{index}</span> / {total}
+    </div>
+  );
+};
+
+//title for homepage
+interface SectionTitleProps {
+  title: string;
+}
+
+const SectionTitle = ({ title }: SectionTitleProps) => {
+  return (
+    <div className="spotlightTopWrapper">
+      <div className="starWrapperLeft">
+        <ShootingStar isActive={true} orientation="left" whiteMode />
+      </div>
+      <h1>{title}</h1>
+      <div className="starWrapperRight">
+        <ShootingStar isActive={true} orientation="right" whiteMode mirror />
+      </div>
+    </div>
+  );
+};
+
+const AllCharactersButton = () => (
+  <div className="allCharsButtonWrapper">
+    <DefaultButton
+      variant="secondary"
+      border="light"
+      color="white"
+      icon="people_white"
+      navlink="/characters"
+      text="View all characters"
+    />
+  </div>
+);

@@ -16,7 +16,7 @@
 }
 
 .mainpageContainer h1 {
-  font-size: 2.5em;
+  font-size: 2.5rem;
 }
 
 .mainpageContainer p.noMargin {
@@ -26,12 +26,12 @@
 /* mobile */
 @media only screen and (max-width: 900px) {
   .mainpageContainer h1 {
-    font-size: 1.25em;
+    font-size: 1.25rem;
     line-height: 125%;
   }
   .mainpageContainer p,
   .mainpageContainer li {
-    font-size: 0.85em;
+    font-size: 0.85rem;
     line-height: 150%;
   }
 }
@@ -44,14 +44,14 @@
   position: absolute;
   z-index: 1;
   height: 100svh;
-  width: 100dvw;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 #shootingStarsWrapper {
-  width: 100vw;
+  width: 100%;
   height: 500px;
   position: relative;
 }
@@ -224,11 +224,11 @@
 }
 
 .heroTitle {
-  padding: 1em;
+  padding: 1rem;
   margin: 0;
   display: flex;
   justify-content: center;
-  width: calc(100% - 2em);
+  width: calc(100% - 2rem);
 }
 
 @media only screen and (max-width: 900px) {
@@ -263,7 +263,7 @@
     z-index: 26;
     transform: translateY(-30%);
     align-items: center;
-    font-size: 1.75em;
+    font-size: 1.75rem;
   }
 }
 
@@ -275,27 +275,33 @@
 }
 
 .tagLine {
-  font-size: 1.5em;
+  font-size: 1.5rem;
   white-space: pre-wrap;
   line-height: 70%;
-  margin-bottom: 4em;
+  margin-bottom: 4rem;
   width: 100%;
 }
 
 .heroBottomWrapper {
   z-index: 100;
   position: absolute;
-  bottom: 1em;
-  margin-bottom: 3em;
+  bottom: 1rem;
+  margin-bottom: 3rem;
   left: 50%;
   color: #fff;
-  width: calc(100% - 2em);
+  width: calc(100% - 2rem);
   transform: translateX(-50%);
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  gap: 1em;
+  gap: 1rem;
+}
+
+.heroBottomButtons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .justKeepScrolling {
@@ -306,8 +312,25 @@
 @media only screen and (max-width: 900px) {
   .heroBottomWrapper {
     position: fixed;
-    bottom: 1em;
+    bottom: 1rem;
     margin-bottom: 0;
+  }
+  .heroBottomButtons {
+    width: 100%;
+  }
+  .heroBottomButtons > a,
+  .heroBottomButtons > div {
+    width: calc((100% - 0.5rem) / 2) !important;
+    height: 42px;
+    box-sizing: border-box;
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: 0.8rem;
+  }
+  .heroBottomButtons > a img,
+  .heroBottomButtons > div img {
+    width: 18px;
+    height: 18px;
   }
   .heroImage {
     padding-top: 0;
@@ -315,9 +338,9 @@
   .tagLine {
     line-height: 120%;
     margin: 0;
-    margin-bottom: 1em;
-    margin-top: 4em;
-    font-size: 1.25em;
+    margin-bottom: 1rem;
+    margin-top: 4rem;
+    font-size: 1.25rem;
   }
 }
 
@@ -466,18 +489,18 @@
 }
 
 .descriptionWrapper {
-  margin-top: 4em;
+  margin-top: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
   text-align: center;
-  width: calc(100% - 2em);
+  width: calc(100% - 2rem);
 }
 
 .descriptionButtonWrapper {
   display: flex;
-  gap: 1em;
+  gap: 1rem;
   justify-content: center;
 }
 
@@ -489,19 +512,19 @@
 
 .descriptionTextWrapper > a {
   margin: auto;
-  margin-top: 1em;
+  margin-top: 1rem;
 }
 
 .subtitle {
-  font-size: 2em;
+  font-size: 2rem;
   white-space: pre-line;
   font-family: "Rowdies-Regular";
   margin: 0 !important;
 }
 
 .gameDetails {
-  font-size: 1.25em;
-  margin-top: 1em;
+  font-size: 1.25rem;
+  margin-top: 1rem;
 }
 
 .gameDetails > div {
@@ -527,14 +550,14 @@
     max-width: unset;
   }
   .gameDetails {
-    font-size: 0.65em !important;
+    font-size: 0.85rem !important;
   }
   .gameDetails img {
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
   }
   .subtitle {
-    font-size: 1.25em !important;
+    font-size: 1.25rem !important;
   }
 
   .gameDetails > div > svg {
@@ -546,7 +569,7 @@
   }
 
   .descriptionTextWrapper {
-    width: calc(100% - 2em);
+    width: calc(100% - 2rem);
   }
 }
 
@@ -570,9 +593,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  height: calc(100% - 2em);
+  height: calc(100% - 2rem);
   width: 40%;
-  padding: 2em;
+  padding: 2rem;
   z-index: 9;
 }
 
@@ -590,10 +613,10 @@
 .characterContainerSVG p {
   text-align: right;
   transform: rotate(-25deg);
-  margin-right: -2em;
-  margin-top: 1em;
+  margin-right: -2rem;
+  margin-top: 1rem;
   text-align: right;
-  font-size: 0.85em;
+  font-size: 0.85rem;
 }
 
 /* small desktop */
@@ -631,8 +654,8 @@
     max-width: 100% !important;
   }
   .characterTextContainer {
-    width: calc(100% - 2em);
-    padding: 1em;
+    width: calc(100% - 2rem);
+    padding: 1rem;
     margin: auto;
     max-width: 500px;
     text-align: center;
@@ -665,10 +688,10 @@
   text-align: right;
   flex-direction: row;
   align-items: center;
-  height: calc(100% - 4em);
+  height: calc(100% - 4rem);
   width: 50%;
-  padding: 2em;
-  padding-right: 4em;
+  padding: 2rem;
+  padding-right: 4rem;
   z-index: 10;
 }
 .eventsLeftContainer {
@@ -810,14 +833,14 @@
     left: -5%;
   }
   .goalsRightContainer {
-    width: calc(100% - 2em);
-    padding-left: 1em;
-    padding-right: 1em;
+    width: calc(100% - 2rem);
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
   .eventsLeftContainer {
     padding-left: 0 !important;
     padding-right: 0 !important;
-    width: calc(100% - 2em);
+    width: calc(100% - 2rem);
   }
   #goalsContainerSVGflag {
     right: 15%;
@@ -847,7 +870,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-bottom: 2em;
+  margin-bottom: 2rem;
 }
 
 .mainpageCarousel {
@@ -855,13 +878,13 @@
 }
 
 .carouselTextContainer {
-  padding: 2em;
+  padding: 2rem;
 }
 
 @media only screen and (max-width: 900px) {
   .carouselTextContainer {
-    padding: 1em;
-    width: calc(100% - 2em);
+    padding: 1rem;
+    width: calc(100% - 2rem);
   }
   .mainpageCarouselTitle {
     margin-top: 0;
@@ -901,8 +924,8 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 2em;
-  width: calc(100% - 4em);
+  padding: 2rem;
+  width: calc(100% - 4rem);
 }
 
 .mechanicsWrapper {
@@ -912,8 +935,8 @@
 }
 
 .mechanicsWrapper div {
-  padding: 0em;
-  font-size: 1.25em;
+  padding: 0rem;
+  font-size: 1.25rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -924,48 +947,48 @@
 .mechanicsWrapper div > img {
   width: 200px;
   height: 200px;
-  margin-right: 1em;
-  margin-left: 1em;
+  margin-right: 1rem;
+  margin-left: 1rem;
 }
 
 .rulebookWrapper {
-  margin-top: 10em;
+  margin-top: 10rem;
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
 .rulebookWrapper > a {
-  margin-left: 1em;
-  margin-right: 1em;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 @media only screen and (max-width: 900px) {
   .mechanicsWrapper li {
-    padding: 0.25em;
-    font-size: 1.25em;
+    padding: 0.25rem;
+    font-size: 1.25rem;
   }
 
   .mechanicsWrapper div > img {
     width: 125px;
     height: 125px;
-    margin-right: 0.35em;
-    margin-left: 0.35em;
+    margin-right: 0.35rem;
+    margin-left: 0.35rem;
   }
 
   .rulebookWrapper {
     flex-direction: column;
-    margin-top: 10em;
-    margin-bottom: 0em;
+    margin-top: 4rem;
+    margin-bottom: 0rem;
     width: 100%;
   }
 
   .rulebookWrapper > a {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     margin-left: 0;
     margin-right: 0;
-    width: calc(100% - 2em);
+    width: calc(100% - 2rem);
   }
 }
 
@@ -997,7 +1020,7 @@
 .finalButtonsContainer {
   padding: 0;
   margin-bottom: 25px;
-  width: calc(100% - 4em);
+  width: calc(100% - 4rem);
 }
 
 .finalButtonsWrapper {
@@ -1007,11 +1030,11 @@
 
 @media only screen and (max-width: 900px) {
   .finalButtonsContainer {
-    width: calc(100% - 2em);
+    width: calc(100% - 2rem);
   }
   .finalButtonsWrapper {
     flex-direction: column;
-    gap: 1em;
+    gap: 1rem;
   }
   #finalContainer {
     padding-bottom: 100px;
@@ -1020,12 +1043,12 @@
 
 .finalButtonsWrapper > div,
 .finalButtonsWrapper > a {
-  margin-right: 2em;
+  margin-right: 2rem;
 }
 
 .finalButtonsWrapper > a,
 .finalButtonsWrapper > div {
-  font-size: 1em;
+  font-size: 1rem;
 }
 
 .termsWrapper {
@@ -1036,12 +1059,12 @@
 }
 
 .termsWrapper p {
-  font-size: 0.75em;
+  font-size: 0.75rem;
 }
 
 .pegasusWrapper {
   display: flex;
-  gap: 0.25em;
+  gap: 0.25rem;
   justify-content: center;
   align-items: center;
 }

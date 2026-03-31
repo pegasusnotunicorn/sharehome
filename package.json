@@ -13,7 +13,6 @@
     "dotenv": "^16.4.7",
     "gsap": "^3.9.1",
     "node-fetch": "^3.3.2",
-    "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
@@ -27,7 +26,7 @@
     "prebuild": "npm run generate-sitemap",
     "start": "vite",
     "build": "vite build && node critical.mjs",
-    "generate-sitemap": "node sitemap-generator.mjs"
+    "generate-sitemap": "tsx sitemap-generator.mjs"
   },
   "browserslist": {
     "production": [
@@ -42,9 +41,14 @@
     ]
   },
   "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/react-helmet": "^6.1.11",
     "critical": "^7.2.1",
     "eslint": "^8.24.0",
     "eslint-plugin-react": "^7.32.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
     "vite": "^5.4.0"
   }
 }

@@ -1,0 +1,379 @@
+/* #region--------------------------------------GENERAL */
+
+.characterSpotlightWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: #323232;
+  background: #fff;
+  padding: 2rem;
+}
+
+.characterSpotlightWrapper.invert {
+  background: #323232;
+  color: #fff;
+}
+
+.fadeInTextWrapper {
+  width: 100%;
+}
+
+.spotlightTopWrapper,
+.spotlightBottomWrapper {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: calc(100% - 4rem);
+  text-align: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.spotlightTopWrapper {
+  padding-top: 1rem;
+  justify-content: center;
+}
+.spotlightTopWrapper h1 {
+  margin: 0;
+  line-height: 125%;
+}
+
+.starWrapperLeft {
+  position: relative;
+  display: block;
+  transform: translateX(-2rem);
+}
+
+.starWrapperRight {
+  position: relative;
+  display: block;
+  transform: translateX(2rem);
+}
+
+.spotlightBottomWrapper {
+  position: relative;
+  align-items: flex-start;
+}
+
+.spotlightDivider {
+  display: none;
+}
+
+@media only screen and (min-width: 900px) and (max-width: 1200px) {
+  .spotlightLeftWrapper {
+    min-width: 300px !important;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .characterSpotlightWrapper {
+    padding: 1rem;
+  }
+  .spotlightTopWrapper,
+  .spotlightBottomWrapper {
+    flex-direction: column;
+  }
+  .spotlightTopWrapper {
+    padding-bottom: 0;
+  }
+  .spotlightRightWrapper {
+    width: 100%;
+  }
+  .spotlightDivider {
+    display: block;
+    width: 100%;
+    border-top: 1px solid rgba(50, 50, 50, 0.12);
+  }
+  .spotlightHobbiesSection {
+    padding-bottom: 0 !important;
+  }
+  .spotlightLeftWrapper {
+    padding-bottom: 1rem;
+    min-width: unset !important;
+    margin: auto;
+    margin-top: 1rem;
+  }
+  .spotlightBottomWrapper {
+    padding: 0;
+    width: 100%;
+  }
+  .spotlightRightTopWrapper {
+    margin-left: 0 !important;
+    padding: 1rem !important;
+  }
+  .spotlightTopWrapper {
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+  }
+  .showDetailsButton {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 0rem;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .showDetailsButton p {
+    width: fit-content;
+    margin: auto;
+  }
+  .spotlightDetailsSection {
+    display: none;
+  }
+  .spotlightDetailsSection.is-active {
+    display: block;
+  }
+}
+
+.allCharsButtonWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+/* #endregion */
+
+/* #region--------------------------------------LEFT */
+
+.spotlightLeftWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-direction: column;
+  min-width: 500px;
+}
+
+.indexTotalWrapper {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.95rem;
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(50, 50, 50, 0.12);
+  box-shadow: 0 8px 18px -14px rgba(50, 50, 73, 0.45);
+  z-index: 2;
+}
+
+.indexWrapper {
+  font-size: 1.15rem;
+}
+
+.imageCircleMask {
+  position: relative;
+}
+
+.spotlightLeftWrapper .characterImage {
+  width: 350px;
+  height: 350px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.magnifierWrapper {
+  border-radius: 8px;
+  padding: 0.5rem;
+  border: 2px solid #323232;
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  background: #fff;
+  box-shadow: 0px 1px 3px rgb(0 0 0 / 10%);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease,
+    filter 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageCircleMask:hover .magnifierWrapper {
+  transform: scale(1.03);
+  filter: saturate(1.15) brightness(1.05);
+  box-shadow:
+    0 6px 16px rgba(50, 50, 50, 0.2),
+    0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.imageCircleIcons {
+  width: 25px;
+  height: 25px;
+}
+
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .indexTotalWrapper {
+    top: 1rem;
+    left: 1rem;
+    padding: 0.3rem 0.55rem;
+    font-size: 0.85rem;
+  }
+
+  .indexWrapper {
+    font-size: 1rem;
+  }
+
+  .spotlightLeftWrapper .characterImage {
+    width: 250px;
+    height: 250px;
+  }
+}
+
+.leftDetailsWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.leftDetailsWrapper h1 {
+  margin-bottom: 0;
+  margin-top: 0.25rem;
+  font-size: 2rem;
+  line-height: 125%;
+}
+
+.leftDetailsWrapper h3 {
+  font-family: "Rowdies-Regular";
+  font-size: 1rem;
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.leftAgeJobWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.leftAgeJobWrapper p {
+  margin-bottom: 0;
+}
+
+.leftAgeJobWrapper .divider {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  width: 1px;
+  height: 1px;
+}
+
+/* #endregion */
+
+/* #region--------------------------------------RIGHT */
+
+.characterSpotlightWrapper.invert .spotlightRightTopWrapper {
+  background: #fff;
+  color: #323232;
+  font-size: 1rem;
+}
+
+.spotlightRightTopWrapper {
+  text-align: left;
+  padding: 2rem;
+  margin-left: 4rem;
+  border-radius: 5px;
+  max-width: 700px;
+}
+
+.spotlightHobbiesSection {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+}
+
+.spotlightHobbiesSection > ul {
+  margin: 0;
+}
+
+.spotlightDetailsSection .spotlightBold {
+  font-family: "Roboto Regular";
+}
+
+.spotlightDetailsSection + .spotlightDetailsSection {
+  margin-top: 1rem;
+}
+
+.descriptionsList:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+
+.spotlightDetailsSection li {
+  text-align: left;
+}
+
+.spotlightRightTopWrapper h2,
+.spotlightRightTopWrapper h3,
+.spotlightRightTopWrapper p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.discordEmojiWrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .discordEmojiWrapper {
+    margin-top: 1rem;
+  }
+  .characterSpotlightContainer {
+    padding-bottom: 2rem;
+  }
+}
+
+.emojiDownloadLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  padding-right: 1rem;
+  padding-bottom: 0.1rem;
+  font-size: 0.9rem;
+  font-family: "Rowdies-Regular";
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.emojiDownloadLink:hover {
+  opacity: 0.8;
+}
+
+.emojiDownloadLink .circularIconFrame {
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0px 1px 3px rgb(0 0 0 / 10%);
+  padding: 4px;
+  width: 32px;
+  height: 32px;
+}
+
+/* mobile */
+@media only screen and (max-width: 900px) {
+  .emojiDownloadLink {
+    font-size: 1rem;
+    padding-bottom: 0.5rem;
+    padding-right: 0;
+  }
+}
+
+/* #endregion */

@@ -1,0 +1,67 @@
+import { useEffect } from "react";
+import { NavLink } from "react-router";
+
+import CustomHelmet from "./utils/CustomHelmet";
+import DefaultButton from "./utils/DefaultButton";
+
+const ArtbookDownloadPage = () => {
+  //custom meta tags for this page
+  const title = "Digital artbook download";
+  const splashImage = "https://lovecareermagic.com/images/artbook/mockup2.webp";
+  const description =
+    "Thank you so much for signing up for my newsletter. Here is the free digital artbook!";
+
+  //change title of page
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
+  return (
+    <div className="content max-width">
+      <CustomHelmet
+        title={title}
+        splashImage={splashImage}
+        description={description}
+      />
+
+      <div className="subcontentWrapper margin-top min-width">
+        <div className="characterContent">
+          <h2 className="subtitle">Here is your digital artbook!</h2>
+          <p>{description}</p>
+          <DefaultButton
+            variant="primary"
+            icon="rulebookWhite"
+            href="/artbook v2.pdf"
+            text="Download artbook"
+          />
+        </div>
+      </div>
+
+      <div className="subcontentWrapper">
+        <div className="couchContainer">
+          <img
+            loading="lazy"
+            className="couch"
+            style={{ width: "100%" }}
+            src="/images/artbook/mockup2.webp"
+            alt={description}
+          ></img>
+        </div>
+        <div className="couchContainer">
+          <img
+            loading="lazy"
+            className="couch"
+            style={{ width: "100%" }}
+            src="/images/artbook/mockup1.webp"
+            alt={description}
+          ></img>
+          <p style={{ marginTop: "1em" }}>
+            <NavLink to="/">Click here to go back home.</NavLink>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ArtbookDownloadPage;

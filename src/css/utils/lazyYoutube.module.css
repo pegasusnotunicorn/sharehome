@@ -9,7 +9,7 @@
   display: flex;
   z-index: 99999;
   display: flex;
-  gap: 1em;
+  gap: 1rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -17,24 +17,15 @@
 }
 
 .videoModalCloseButtonWrapper {
-  width: calc(100% - 2em);
+  width: calc(100% - 2rem);
   max-width: 1000px;
   display: flex;
   justify-content: flex-end;
 }
 
 .videoWrapper {
+  width: calc(100% - 2rem);
+  max-width: 1000px;
   border-radius: 4px;
   overflow: hidden;
-}
-
-@media only screen and (max-width: 900px) {
-  .videoModalWrapper {
-    flex-direction: column-reverse;
-    justify-content: center;
-  }
-  .videoModalCloseButtonWrapper {
-    justify-content: center;
-    margin-top: 0;
-  }
 }

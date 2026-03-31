@@ -3,7 +3,7 @@
 .likehateContainers {
   display: flex;
   position: relative;
-  padding: 2em;
+  padding: 2rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -143,8 +143,8 @@
 
 .arrowWrapper {
   transform: rotate(90deg) scaleX(1.5);
-  margin-left: -2em;
-  margin-right: -2em;
+  margin-left: -2rem;
+  margin-right: -2rem;
 }
 
 .arrowWrapper.flipped {
@@ -180,11 +180,11 @@
 }
 
 .characterArc {
-  margin: 0.25em;
+  margin: 0.25rem;
   width: 300px;
-  padding: 0.35em;
-  border-radius: 0.25em;
-  font-size: 1.5em;
+  padding: 0.35rem;
+  border-radius: 0.25rem;
+  font-size: 1.5rem;
 }
 
 .characterArc.goodArc {
@@ -202,10 +202,10 @@
 .characterArcText {
   color: #222;
   background-color: #fff;
-  border-radius: 0.25em;
-  width: calc(100% - 0.3em);
-  height: calc(100% - 0.3em);
-  padding: 0.15em;
+  border-radius: 0.25rem;
+  width: calc(100% - 0.3rem);
+  height: calc(100% - 0.3rem);
+  padding: 0.15rem;
 }
 
 /* #endregion */
@@ -243,8 +243,8 @@
     padding-bottom: 0;
   }
   .likehateRightContainer {
-    width: calc(100% - 2em);
-    margin-top: -5em;
+    width: calc(100% - 2rem);
+    margin-top: -5rem;
     padding-top: 0;
     justify-content: flex-start;
     height: 40%;
@@ -289,7 +289,7 @@ span.hateMode {
 }
 
 .likeHateSVGWrapper {
-  margin-top: 2em;
+  margin-top: 2rem;
   width: 100%;
 }
 

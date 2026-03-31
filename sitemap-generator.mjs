@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 
 // Dynamically import character data
-import { getAllCharacters } from "./src/components/Characters/Characters.js";
+import { getAllCharacters } from "./src/components/Characters/Characters.ts";
 
 // Convert __dirname for ES Modules
 const __filename = fileURLToPath(import.meta.url);

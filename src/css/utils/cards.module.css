@@ -81,7 +81,6 @@
   position: absolute;
   bottom: 0;
   text-align: left;
-  white-space: nowrap;
   -webkit-font-smoothing: antialiased;
   overflow: hidden;
   color: #fff;
@@ -90,15 +89,21 @@
 }
 
 .memberCommCardMainText {
-  font-size: 4em;
-  line-height: 100%;
+  font-size: 3.5em;
+  line-height: 110%;
   font-family: "Roboto Regular";
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .memberCommCardSubText {
-  font-size: 2.5em;
-  line-height: 100%;
+  font-size: 2em;
+  line-height: 110%;
   font-family: "Roboto Light";
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .memberCommCardShadow {
@@ -137,9 +142,9 @@
 
 /* #endregion ----------------------------------------------------------- */
 
-/* #region -------------------------------------------EVENT / GOAL CARD */
+/* #region ---------------------------------------- DIRECTION / EPISODE CARD */
 
-.eventGoalCardWrapper {
+.directionEpisodeCardWrapper {
   font-family: "Futura", "Roboto Regular";
   height: 100%;
   width: 100%;
@@ -148,11 +153,11 @@
   background-color: #fff;
 }
 
-.eventGoalTextWrapper {
+.directionEpisodeTextWrapper {
   color: #323232;
-  font-size: 3.5em;
-  line-height: 125%;
-  text-align: left;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  font-size: 2.8em;
+  line-height: 120%;
   overflow: hidden;
   border-radius: 0.25em;
   margin: auto;
@@ -161,19 +166,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
-.eventGoalTextWrapper.location {
+.directionEpisodeTextWrapper.episode {
   height: calc(100% - 2.5em);
-  padding: 1.25em;
+  padding: 0.75em 1.5em;
 }
 
-.eventGoalTextWrapper.event {
+.directionEpisodeTextWrapper.direction {
   width: calc(100% - 3em);
-  padding: 1.5em;
+  padding: 0.75em 1.5em;
 }
 
-.eventGoalCardWrapper img {
+.directionEpisodeCardWrapper img {
   width: 100%;
   height: 100%;
   object-fit: fill;
@@ -182,33 +190,43 @@
   top: 50%;
 }
 
-.eventGoalCardWrapper img.event {
+.directionEpisodeCardWrapper img.direction {
   transform: translate(-50%, -50%) scale(1.1);
 }
 
-.eventGoalCardWrapper img.location {
+.directionEpisodeCardWrapper img.episode {
   transform: translate(-50%, -50%) scale(1.05);
 }
 
-@media only screen and (max-width: 900px) {
-  .eventGoalBottomTextWrapper {
-    padding-top: 1em !important;
-    padding-bottom: 1em !important;
-  }
-  :global(.footer) .eventGoalTextWrapper {
-    font-size: 3.5em;
-    font-family: "Rowdies-Light";
-  }
-  :global(.eventGoalDecksContainer) .eventGoalTextWrapper {
+@media only screen and (min-width: 901px) and (max-width: 1200px) {
+  .directionEpisodeTextWrapper {
     font-size: 2.5em;
   }
 }
 
-.eventGoalBottomTextWrapper:global(.yellowBackground) {
+@media only screen and (max-width: 900px) {
+  .directionEpisodeBottomTextWrapper {
+    padding-top: 0.5em !important;
+    padding-bottom: 0.5em !important;
+    font-size: 0.85em;
+  }
+  .directionEpisodeTextWrapper {
+    font-size: 2.2em;
+  }
+  :global(.footer) .directionEpisodeTextWrapper {
+    font-size: 2em;
+    font-family: "Rowdies-Light";
+  }
+  :global(.directionEpisodeDecksContainer) .directionEpisodeTextWrapper {
+    font-size: 1.8em;
+  }
+}
+
+.directionEpisodeBottomTextWrapper:global(.yellowBackground) {
   color: #323232;
 }
 
-.eventGoalBottomTextWrapper {
+.directionEpisodeBottomTextWrapper {
   display: flex;
   justify-content: space-between;
   position: absolute;
@@ -250,6 +268,7 @@
   font-family: "Rowdies-Bold";
   padding-left: 1em;
   padding-right: 1em;
+  overflow: hidden;
 }
 
 .cardBack.name {
@@ -263,23 +282,28 @@
 }
 
 .cardBackName {
-  font-size: 3em;
+  font-size: 2.5em;
   margin-top: 0;
   line-height: 125%;
   margin-bottom: 0.5em;
+  word-break: break-word;
+  text-align: center;
 }
 
 .cardBackTitle {
-  font-size: 1.5em;
+  font-size: 1.2em;
   margin-top: 0;
   text-transform: uppercase;
+  word-break: break-word;
+  text-align: center;
 }
 
 .cardBackAge,
 .cardBackJob {
-  font-size: 1.5em;
+  font-size: 1.2em;
   margin: 0;
   text-transform: lowercase;
+  text-align: center;
 }
 
 /* #endregion ----------------------------------------------------------- */

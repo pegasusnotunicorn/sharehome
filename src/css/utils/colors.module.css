@@ -1,0 +1,66 @@
+:global(.blue) {
+  color:#5F5AA2 !important;
+}
+:global(.darkblue) {
+  color:#454176 !important;
+}
+:global(.green) {
+  color:#7DAF9C !important;
+}
+:global(.red) {
+  color:#DD7373 !important;
+}
+:global(.yellow) {
+  color:#F1DB4B !important;
+}
+:global(.white) {
+  color:#FFFFFF !important;
+}
+
+:global(.blueBackground) {
+  background-color:#5F5AA2 !important;
+}
+:global(.transparentBackground) {
+  background-color:transparent !important;
+}
+:global(.greenBackground) {
+  background-color:#7DAF9C !important;
+}
+:global(.redBackground) {
+  background-color:#DD7373 !important;
+}
+:global(.yellowBackground) {
+  background-color:#F1DB4B !important;
+}
+:global(.whiteBackground) {
+  background-color:#FFFFFF !important;
+}
+
+:global(.blueBorder) {
+  border-color:#5F5AA2 !important;
+}
+:global(.greenBorder) {
+  border-color:#7DAF9C !important;
+}
+:global(.redBorder) {
+  border-color:#DD7373 !important;
+}
+:global(.yellowBorder) {
+  border-color:#F1DB4B !important;
+}
+
+:global(.blueStroke) {
+  stroke:#5F5AA2 !important;
+}
+:global(.greenStroke) {
+  stroke:#7DAF9C !important;
+}
+:global(.redStroke) {
+  stroke:#DD7373 !important;
+}
+:global(.yellowStroke) {
+  stroke:#F1DB4B !important;
+}
+:global(.whiteStroke) {
+  stroke:#FFFFFF !important;
+}

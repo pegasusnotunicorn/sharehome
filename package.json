@@ -13,12 +13,10 @@
     "dotenv": "^16.4.7",
     "gsap": "^3.9.1",
     "node-fetch": "^3.3.2",
-    "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
     "react-router": "^7.1.5",
-    "react-scripts": "^5.0.1",
     "sitemap": "^8.0.0",
     "stripe": "^17.7.0",
     "swiper": "^11.2.4",
@@ -26,12 +24,9 @@
   },
   "scripts": {
     "prebuild": "npm run generate-sitemap",
-    "start": "react-scripts start",
-    "build": "react-scripts build && node critical.mjs",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "postinstall": "react-scripts build",
-    "generate-sitemap": "node sitemap-generator.mjs"
+    "start": "vite",
+    "build": "vite build && node critical.mjs",
+    "generate-sitemap": "tsx sitemap-generator.mjs"
   },
   "browserslist": {
     "production": [
@@ -46,11 +41,14 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/react-helmet": "^6.1.11",
     "critical": "^7.2.1",
     "eslint": "^8.24.0",
-    "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-react": "^7.32.0",
-    "typescript": "^3.9.3"
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "vite": "^5.4.0"
   }
 }

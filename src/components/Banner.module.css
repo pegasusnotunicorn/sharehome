@@ -1,0 +1,117 @@
+.top-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  color: #fff;
+  z-index: 99999;
+  padding: 0 1em;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: var(--banner-height);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+.top-banner.is-blue {
+  background-color: #5f5aa2;
+}
+
+.top-banner.is-green {
+  background-color: #7daf9c;
+}
+
+.top-banner.is-red {
+  background-color: #d95555;
+}
+
+.top-banner.is-yellow {
+  background-color: #f1db4b;
+  color: #323232;
+}
+
+.top-banner.is-yellow .top-banner-link {
+  color: #323232;
+}
+
+.top-banner-marquee-link {
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.top-banner-marquee {
+  width: 100%;
+  overflow: hidden;
+}
+
+.top-banner-track {
+  display: flex;
+  width: max-content;
+  animation: bannerMarquee 54s linear infinite;
+}
+
+.top-banner-group {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.top-banner-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  flex-shrink: 0;
+  padding-right: 2.5rem;
+  text-decoration: none;
+  color: #fff;
+  font-family: "Roboto Light";
+  font-size: 0.95em;
+  transition: opacity 0.2s ease;
+}
+
+.top-banner-link:hover {
+  opacity: 0.85;
+}
+
+.top-banner-text {
+  font-weight: 500;
+}
+
+.top-banner-arrow {
+  font-size: 1.2em;
+  transition: transform 0.2s ease;
+}
+
+.top-banner-link:hover .top-banner-arrow {
+  transform: translateX(3px);
+}
+
+@keyframes bannerMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .top-banner {
+    padding: 0 0.8em;
+    font-size: 0.9em;
+    height: var(--banner-height-mobile);
+  }
+
+  .top-banner-text {
+    font-size: 0.9em;
+  }
+
+  .top-banner-link {
+    padding-right: 2rem;
+  }
+}

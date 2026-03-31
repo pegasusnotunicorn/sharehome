@@ -1,0 +1,260 @@
+import { useState, useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
+import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap";
+import { getRandomTrait } from "../Card/ExampleTraits";
+import styles from "../../css/pages/home/likehateSection.module.css";
+
+interface LikeHateSectionProps {
+  id?: string;
+  className?: string;
+  title: React.ReactNode;
+  description: React.ReactNode;
+}
+
+interface CharacterCoord {
+  name: string;
+  coords: {
+    wrapper: {
+      left: string;
+      top: string;
+    };
+  };
+  showLeft: boolean;
+}
+
+interface CharacterArcProps {
+  goodTrait: string;
+  badTrait: string;
+  chaoticTrait: string;
+  coords: CharacterCoord["coords"];
+  showLeft: boolean;
+}
+
+const LikeHateSection = (props: LikeHateSectionProps) => {
+  const { title, description } = props;
+
+  const characterCoords: CharacterCoord[] = [
+    {
+      name: "lydia",
+      coords: {
+        wrapper: {
+          left: "30%",
+          top: "50%",
+        },
+      },
+      showLeft: false,
+    },
+    {
+      name: "tsukasa",
+      coords: {
+        wrapper: {
+          left: "15%",
+          top: "30%",
+        },
+      },
+      showLeft: false,
+    },
+    {
+      name: "ahxi",
+      coords: {
+        wrapper: {
+          left: "5%",
+          top: "10%",
+        },
+      },
+      showLeft: false,
+    },
+    {
+      name: "beatrice",
+      coords: {
+        wrapper: {
+          left: "25%",
+          top: "50%",
+        },
+      },
+      showLeft: true,
+    },
+    {
+      name: "urg",
+      coords: {
+        wrapper: {
+          left: "55%",
+          top: "40%",
+        },
+      },
+      showLeft: true,
+    },
+    {
+      name: "kottr",
+      coords: {
+        wrapper: {
+          left: "45%",
+          top: "50%",
+        },
+      },
+      showLeft: true,
+    },
+  ];
+
+  const arrowsContainerRef = useRef<HTMLDivElement>(null);
+  let [currentChar, setCurrentChar] = useState(0);
+  let [goodTrait, setGoodTrait] = useState(getRandomTrait("good"));
+  let [badTrait, setBadTrait] = useState(getRandomTrait("bad"));
+  let [chaoticTrait, setChaoticTrait] = useState(getRandomTrait("chaotic"));
+
+  //fade in and out character traits
+  useLayoutEffect(() => {
+    const delay = 1;
+    const duration = 2;
+    let tl = gsap
+      .timeline({
+        repeat: -1,
+        onRepeat: () => {
+          //cycle through the characters
+          setCurrentChar((c) => {
+            if (c + 1 >= characterCoords.length) return 0;
+            else return c + 1;
+          });
+          setGoodTrait(getRandomTrait("good"));
+          setBadTrait(getRandomTrait("bad"));
+          setChaoticTrait(getRandomTrait("chaotic"));
+        },
+      })
+      .fromTo(
+        [arrowsContainerRef.current],
+        {
+          opacity: 1,
+        },
+        {
+          opacity: 1,
+          duration: duration,
+        }
+      )
+      .fromTo(
+        [arrowsContainerRef.current],
+        {
+          opacity: 1,
+        },
+        {
+          opacity: 1,
+          duration: duration,
+        },
+        `+=${delay}`
+      );
+    return () => {
+      if (tl) tl.kill();
+    };
+  }, [characterCoords.length, setCurrentChar]);
+
+  //text to display depending on like/hate
+  return (
+    <div id={props.id} className={props.className}>
+      <div className={`${styles.likehateLeftContainer} ${styles.likehateContainers}`}>
+        <GsapFadeScrub fadeIn className={styles.imageAndArrowContainer}>
+          <img
+            loading="lazy"
+            className={`${styles.tableSplash} ${styles[characterCoords[currentChar].name]}`}
+            src="/images/illustrations/splash.webp"
+            alt="dinner table"
+          />
+          <div ref={arrowsContainerRef} className={styles.arrowsContainer}>
+            <CharacterArc
+              goodTrait={goodTrait}
+              badTrait={badTrait}
+              chaoticTrait={chaoticTrait}
+              coords={characterCoords[currentChar].coords}
+              showLeft={characterCoords[currentChar].showLeft}
+            />
+          </div>
+        </GsapFadeScrub>
+      </div>
+      <div className={`${styles.likehateRightContainer} ${styles.likehateContainers}`}>
+        <GsapFadeScrub fadeIn scrubStartCenter>
+          <div className={styles.likehateTextContainer}>
+            {title}
+            {description}
+          </div>
+        </GsapFadeScrub>
+      </div>
+    </div>
+  );
+};
+
+const CharacterArc = ({
+  goodTrait,
+  badTrait,
+  chaoticTrait,
+  coords,
+  showLeft,
+}: CharacterArcProps) => {
+  let randomTraits = [
+    {
+      text: goodTrait,
+      type: "good",
+    },
+    {
+      text: badTrait,
+      type: "bad",
+    },
+    {
+      text: chaoticTrait,
+      type: "chaotic",
+    },
+  ].sort(() => 0.5 - Math.random());
+
+  return (
+    <div className={styles.characterArcContainer} style={coords.wrapper}>
+      {showLeft && (
+        <div className={`${styles.arrowWrapper} ${styles.flipped}`}>
+          <GsapWiggle degree={2} className={styles.arrowWrapperSVG}>
+            <img
+              loading="lazy"
+              className={styles.arrowTailSVG}
+              src="/images/icons/arrowtail.svg"
+              alt="part of the arrow"
+            />
+            <img
+              loading="lazy"
+              className={styles.arrowHeadSVG}
+              src="/images/icons/arrowhead.svg"
+              alt="part of the arrow"
+            />
+          </GsapWiggle>
+        </div>
+      )}
+      <div className={styles.characterArcWrapper}>
+        <div className={`${styles.characterArc} ${styles[`${randomTraits[0].type}Arc`]}`}>
+          <div className={styles.characterArcText}>{randomTraits[0].text}</div>
+        </div>
+        <div className={`${styles.characterArc} ${styles[`${randomTraits[1].type}Arc`]}`}>
+          <div className={styles.characterArcText}>{randomTraits[1].text}</div>
+        </div>
+        <div className={`${styles.characterArc} ${styles[`${randomTraits[2].type}Arc`]}`}>
+          <div className={styles.characterArcText}>{randomTraits[2].text}</div>
+        </div>
+      </div>
+      {!showLeft && (
+        <div className={styles.arrowWrapper}>
+          <GsapWiggle degree={2} className={styles.arrowWrapperSVG}>
+            <img
+              loading="lazy"
+              className={styles.arrowTailSVG}
+              src="/images/icons/arrowtail.svg"
+              alt="part of the arrow"
+              width="25"
+            />
+            <img
+              loading="lazy"
+              className={styles.arrowHeadSVG}
+              src="/images/icons/arrowhead.svg"
+              alt="part of the arrow"
+              width="25"
+            />
+          </GsapWiggle>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default LikeHateSection;

@@ -1,0 +1,309 @@
+/* #region -------------------------------------------------- FLIP CARD */
+
+.flipcard {
+  background-color: transparent;
+  display: inline-block;
+  position: relative;
+  perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  -webkit-perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  -moz-perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  -o-perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  pointer-events: all;
+  font-family: "Roboto Regular";
+}
+
+.flipcardInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -o-transform-style: preserve-3d;
+}
+
+.flipcard:not(:global(.disable-flip)):not(:global(.is-clicked)):hover .flipcardInner,
+.flipcard:global(.is-flipped) .flipcardInner {
+  transform: rotateY(180deg);
+}
+
+.flipcard:global(.is-flipped):not(:global(.disable-flip)):not(:global(.is-clicked)):hover .flipcardInner {
+  transform: rotateY(0deg);
+}
+
+.flipcard:not(:global(.disable-shadow)) .flipcardBack,
+.flipcard:not(:global(.disable-shadow)) .flipcardFront {
+  box-shadow: 0px 0px 15px rgb(0 0 0 / 33%);
+}
+
+.flipcardFront,
+.flipcardBack {
+  position: absolute;
+  border-radius: 2em;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  -webkit-backface-visibility: hidden; /* Safari */
+  -moz-backface-visibility: hidden; /* Safari */
+  -o-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+}
+
+.flipcardBack {
+  transform: rotateY(180deg);
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flipcardBack.name {
+  background-color: #323232;
+}
+
+/* #endregion ----------------------------------------------------------- */
+
+/* #region ------------------------------------------------ MEMBER CARD */
+
+.memberCommCardWrapper {
+  height: 100%;
+  width: 100%;
+}
+
+.memberCommCardText {
+  width: calc(100% - 4em);
+  position: absolute;
+  bottom: 0;
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  color: #fff;
+  margin: 2em;
+  z-index: 9;
+}
+
+.memberCommCardMainText {
+  font-size: 3.5em;
+  line-height: 110%;
+  font-family: "Roboto Regular";
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.memberCommCardSubText {
+  font-size: 2em;
+  line-height: 110%;
+  font-family: "Roboto Light";
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.memberCommCardShadow {
+  height: 50%;
+  width: 100%;
+  position: absolute;
+  bottom: -1px;
+  background-image: linear-gradient(rgba(255, 0, 0, 0), rgba(0, 0, 0, 0.75));
+}
+
+.memberCommCardFullShadow {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.memberCommCardQuestionMark {
+  color: #fff;
+  font-size: 40em;
+  position: absolute;
+  margin: 0;
+  font-family: "Rowdies-Light";
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9;
+}
+
+.memberCommCardImage {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-position: center center;
+}
+
+/* #endregion ----------------------------------------------------------- */
+
+/* #region ---------------------------------------- DIRECTION / EPISODE CARD */
+
+.directionEpisodeCardWrapper {
+  font-family: "Futura", "Roboto Regular";
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+}
+
+.directionEpisodeTextWrapper {
+  color: #323232;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  font-size: 2.8em;
+  line-height: 120%;
+  overflow: hidden;
+  border-radius: 0.25em;
+  margin: auto;
+  background: #fff;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.directionEpisodeTextWrapper.episode {
+  height: calc(100% - 2.5em);
+  padding: 0.75em 1.5em;
+}
+
+.directionEpisodeTextWrapper.direction {
+  width: calc(100% - 3em);
+  padding: 0.75em 1.5em;
+}
+
+.directionEpisodeCardWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+
+.directionEpisodeCardWrapper img.direction {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.directionEpisodeCardWrapper img.episode {
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+@media only screen and (min-width: 901px) and (max-width: 1200px) {
+  .directionEpisodeTextWrapper {
+    font-size: 2.5em;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .directionEpisodeBottomTextWrapper {
+    padding-top: 0.5em !important;
+    padding-bottom: 0.5em !important;
+    font-size: 0.85em;
+  }
+  .directionEpisodeTextWrapper {
+    font-size: 2.2em;
+  }
+  :global(.footer) .directionEpisodeTextWrapper {
+    font-size: 2em;
+    font-family: "Rowdies-Light";
+  }
+  :global(.directionEpisodeDecksContainer) .directionEpisodeTextWrapper {
+    font-size: 1.8em;
+  }
+}
+
+.directionEpisodeBottomTextWrapper:global(.yellowBackground) {
+  color: #323232;
+}
+
+.directionEpisodeBottomTextWrapper {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 0;
+  color: #fff;
+  width: calc(100% - 4em);
+  padding: 1em;
+  padding-left: 2em;
+  padding-right: 2em;
+  margin: auto;
+  font-size: 1em;
+}
+
+/* #endregion ----------------------------------------------------------- */
+
+/* #region -------------------------------------------------- CARD BACK */
+
+.cardBack {
+  width: 100%;
+}
+
+.cardBack img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* #endregion ----------------------------------------------------------- */
+
+/* #region -------------------------------------------------- CARD BACK NAME */
+
+.cardBackText {
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  font-family: "Rowdies-Bold";
+  padding-left: 1em;
+  padding-right: 1em;
+  overflow: hidden;
+}
+
+.cardBack.name {
+  width: calc(100% - 2em);
+  height: calc(100% - 2em);
+  border-radius: 2em;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cardBackName {
+  font-size: 2.5em;
+  margin-top: 0;
+  line-height: 125%;
+  margin-bottom: 0.5em;
+  word-break: break-word;
+  text-align: center;
+}
+
+.cardBackTitle {
+  font-size: 1.2em;
+  margin-top: 0;
+  text-transform: uppercase;
+  word-break: break-word;
+  text-align: center;
+}
+
+.cardBackAge,
+.cardBackJob {
+  font-size: 1.2em;
+  margin: 0;
+  text-transform: lowercase;
+  text-align: center;
+}
+
+/* #endregion ----------------------------------------------------------- */

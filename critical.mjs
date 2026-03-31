@@ -4,12 +4,12 @@ import fs from "fs/promises";
 (async () => {
   try {
     const { html } = await generate({
-      base: "build/",
+      base: "dist/",
       src: "index.html",
       target: {
         html: "index-critical.html", // Temporary file to verify output
       },
-      css: ["build/static/css/main.*.css"],
+      css: ["dist/assets/*.css"],
       width: 1200,
       height: 900,
       inline: true,
@@ -20,7 +20,7 @@ import fs from "fs/promises";
     });
 
     // Write the modified output directly into index.html
-    await fs.writeFile("build/index.html", html);
+    await fs.writeFile("dist/index.html", html);
     console.log("✅ Critical CSS successfully inlined into index.html");
   } catch (error) {
     console.error("❌ Error generating critical CSS:", error);

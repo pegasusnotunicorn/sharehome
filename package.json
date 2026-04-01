@@ -25,7 +25,7 @@
   "scripts": {
     "prebuild": "npm run generate-sitemap",
     "start": "vite",
-    "build": "vite build && node critical.mjs",
+    "build": "vite build",
     "generate-sitemap": "tsx sitemap-generator.mjs"
   },
   "browserslist": {

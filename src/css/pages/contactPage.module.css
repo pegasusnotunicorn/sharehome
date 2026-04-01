@@ -28,7 +28,7 @@
 .aboutMeWrapper {
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: stretch;
   width: calc(100% - 4rem);
   max-width: 1040px;
   margin: 0 auto 2rem;
@@ -42,10 +42,17 @@
 .aboutMeVerticalWrapper {
   text-align: left;
   padding: 0;
+  flex: 1;
 }
 
 .aboutMeVerticalWrapper:first-child {
   padding-right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  overflow: hidden;
+  flex: 1;
+  border-radius: 6px;
 }
 
 .aboutMeVerticalWrapper:last-child {
@@ -68,18 +75,24 @@
 
 .wonminImage {
   width: 100%;
+  height: 100%;
   display: block;
-  margin-bottom: 1rem;
+  margin: 0 auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center 30%;
 }
 
-.imageCaption {
-  margin: 0;
-  font-size: 0.75rem;
+.desktopOnlyGreeting {
+  display: inline;
 }
 
-.inlineCaptionAside {
-  font-size: 0.65rem;
-  font-style: italic;
+.readMoreButton {
+  display: none;
+}
+
+.readMoreButtonWrapper {
+  display: none;
 }
 
 .contactPolaroids {
@@ -137,17 +150,51 @@
     flex-direction: column-reverse;
     width: calc(100% - 4rem);
     margin-bottom: 1rem;
+    align-items: stretch;
   }
   .aboutMeVerticalWrapper {
     padding: 0 !important;
   }
 
+  .aboutMeVerticalWrapper:first-child {
+    width: 100%;
+  }
+
   .wonminImage {
-    width: 250px;
-    height: 250px;
+    width: 100%;
+    height: auto;
     object-fit: cover;
     margin-left: auto;
     margin-right: auto;
+    aspect-ratio: 16 / 9;
+    object-position: center 10%;
+  }
+
+  .desktopOnlyGreeting {
+    display: none;
+  }
+
+  .readMoreButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: transparent;
+    color: #323232;
+    font-family: "Rowdies-Regular";
+    font-size: 0.9rem;
+    text-decoration: none;
+    border-bottom: 2px solid rgba(50, 50, 50, 0.15);
+    cursor: pointer;
+  }
+
+  .readMoreButtonWrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
 
   .socialIconsWrapper {
@@ -165,5 +212,16 @@
 
   .contactPolaroids {
     margin-bottom: 1rem;
+  }
+
+  .aboutMeVerticalWrapper h2 {
+    font-size: clamp(2rem, 6vw, 2.4rem);
+  }
+
+}
+
+@media only screen and (max-width: 400px) {
+  .aboutMeVerticalWrapper h2 {
+    font-size: 1.9rem;
   }
 }

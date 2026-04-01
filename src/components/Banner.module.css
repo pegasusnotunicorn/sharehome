@@ -54,6 +54,10 @@
   animation: bannerMarquee 54s linear infinite;
 }
 
+.top-banner-marquee-link:hover .top-banner-track {
+  animation-play-state: paused;
+}
+
 .top-banner-group {
   display: flex;
   align-items: center;

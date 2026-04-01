@@ -36,7 +36,8 @@ interface EmojiSectionProps {
 export const EmojiSection = (props: EmojiSectionProps) => {
   //how many emojis should display
   let { width } = useWindowDimensions();
-  const cutoffNumber = width <= 900 ? 10 : 24;
+  const cutoffNumber =
+    width < 389 ? 9 : width < 479 ? 12 : width >= 568 && width <= 900 ? 12 : width <= 900 ? 10 : 24;
 
   useEffect(() => {
     const interval = setInterval(() => {

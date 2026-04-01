@@ -30,7 +30,7 @@ interface CarouselSectionProps {
 //return a single slide
 const getPictureSlide = (index: number, directory: string, filename: string, href?: string) => {
   const imageContent = (
-    <>
+    <div className={styles.carouselMediaFrame}>
       <img
         loading="lazy"
         alt={`Carousel ${filename} ${index}`}
@@ -47,7 +47,7 @@ const getPictureSlide = (index: number, directory: string, filename: string, hre
           icon="watch"
         />
       )}
-    </>
+    </div>
   );
 
   return (
@@ -75,7 +75,8 @@ const getPictureSlide = (index: number, directory: string, filename: string, hre
 export const CarouselSection = (props: CarouselSectionProps) => {
   const { width } = useWindowDimensions();
 
-  const cardsPerView = width >= 1400 ? 4 : width >= 900 ? 2 : 1.25;
+  const cardsPerView =
+    width >= 1900 ? 5.25 : width >= 1600 ? 4.25 : width >= 1200 ? 3.25 : width >= 800 ? 2.25 : 1.5;
   const directory = props.directory;
   const filename = props.filename;
   const href = props.href;
@@ -88,10 +89,6 @@ export const CarouselSection = (props: CarouselSectionProps) => {
     loop: props.loop ?? false,
     spaceBetween: 25,
     slidesPerView: cardsPerView,
-    pagination: {
-      type: "bullets" as const,
-      clickable: true,
-    },
     autoplay: {
       delay: props.delay ?? 2000,
       pauseOnMouseEnter: false,

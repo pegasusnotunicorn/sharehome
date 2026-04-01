@@ -1,7 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styles from "../css/pages/contactPage.module.css";
 import { NavLink } from "react-router";
 import PolaroidGallery, { type PolaroidGalleryItem } from "./utils/PolaroidGallery";
+import useWindowDimensions from "./utils/useWindowDimensions";
 
 const CONTACT_POLAROIDS: PolaroidGalleryItem[] = [
   {
@@ -109,6 +110,9 @@ const CONTACT_POLAROIDS: PolaroidGalleryItem[] = [
 ];
 
 const ContactPage = () => {
+  const { isMobile } = useWindowDimensions();
+  const [isBioExpanded, setIsBioExpanded] = useState(false);
+
   useEffect(() => {
     document.title = "Contact us";
   }, []);
@@ -117,7 +121,7 @@ const ContactPage = () => {
     <div className={`content ${styles.contactPage}`}>
       <div className="subcontentWrapper margin-top min-width">
         <div className={`characterContent ${styles.pageIntro}`}>
-          <h2 className={`subtitle ${styles.pageIntroTitle}`}>Get in touch</h2>
+          <h2 className={`subtitle ${styles.pageIntroTitle}`}>Contact us</h2>
           <p className={styles.pageIntroLead}>
             Follow along on my game dev journey 🎮
           </p>
@@ -205,18 +209,11 @@ const ContactPage = () => {
             alt="Wonmin, the game designer"
             className={styles.wonminImage}
           />
-          <p className={styles.imageCaption}>
-            Love, Career & Magic is made by{" "}
-            <a href="https://unicornwithwings.com">Pegasus Games</a> and is not
-            affiliated with any existing reality TV show.{" "}
-            <span className={styles.inlineCaptionAside}>
-              (although I would love to be)
-            </span>
-          </p>
         </div>
         <div className={styles.aboutMeVerticalWrapper}>
           <h2>
-            Hello. My name is Wonmin 👋
+            <span className={styles.desktopOnlyGreeting}>Hello. </span>My name
+            is Wonmin 👋
             <br />I am the game designer.
           </h2>
           <p>
@@ -228,16 +225,37 @@ const ContactPage = () => {
             </a>
             , was successfully funded on Kickstarter.
           </p>
-          <p>
-            I had no idea what I was doing when I quit my job. Even now, I am
-            still terrified for my future. But it is thanks to the support of
-            fans like you that I am able to do what I love. And for that, I am
-            truly thankful.
-          </p>
-          <p>
-            Thanks for visiting my humble page and please consider{" "}
-            <NavLink to="/buy">buying the game!</NavLink>
-          </p>
+          {(!isMobile || isBioExpanded) && (
+            <>
+              <p>
+                I had no idea what I was doing when I quit my job. Even now, I
+                am still terrified for my future. But it is thanks to the
+                support of fans like you that I am able to do what I love. And
+                for that, I am truly thankful.
+              </p>
+              <p>
+                I make games through{" "}
+                <a href="https://unicornwithwings.com">Pegasus Games</a>,
+                including Love, Career & Magic, which is very much inspired by
+                reality TV but not affiliated with any existing show.
+              </p>
+              <p>
+                Thanks for visiting my humble page and please consider{" "}
+                <NavLink to="/buy">buying the game!</NavLink>
+              </p>
+            </>
+          )}
+          {isMobile && (
+            <div className={styles.readMoreButtonWrapper}>
+              <button
+                type="button"
+                className={styles.readMoreButton}
+                onClick={() => setIsBioExpanded((current) => !current)}
+              >
+                {isBioExpanded ? "Show less" : "Click here to read more"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
       <PolaroidGallery

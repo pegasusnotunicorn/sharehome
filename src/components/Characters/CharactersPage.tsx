@@ -25,7 +25,7 @@ const CharactersPage = () => {
   let { name } = useParams();
 
   useEffect(() => {
-    document.title = "Love, Career & Magic — All Playable Characters!";
+    document.title = "Characters";
   }, []);
 
   //if there is a specifc character name, render that character page

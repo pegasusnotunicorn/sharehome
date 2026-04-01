@@ -98,8 +98,8 @@ export const CharacterSpotlight = (props: CharacterSpotlightProps) => {
   }, [width, setShowDetails]);
   const detailsClass = showDetails ? "is-active" : "";
   let showDetailsButtonText = showDetails
-    ? "Hide details"
-    : "Show more details";
+    ? "Show less"
+    : "Click here to read more";
 
   const backgroundPosition = character.image.objectPosition
     ? `${character.image.objectPosition} center`

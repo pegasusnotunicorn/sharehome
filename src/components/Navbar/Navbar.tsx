@@ -16,6 +16,44 @@ interface NavbarMainProps {
   videoModalVisible?: boolean;
 }
 
+const NAV_SOCIAL_LINKS = [
+  {
+    href: "mailto:hello@lovecareermagic.com",
+    label: "Email",
+    icon: "/images/icons/email2.svg",
+  },
+  {
+    href: "https://instagram.com/sysifuscorp",
+    label: "Instagram",
+    icon: "/images/icons/instagram.svg",
+  },
+  {
+    href: "https://www.tiktok.com/@pegasusgamesnyc",
+    label: "TikTok",
+    icon: "/images/icons/tiktok.svg",
+  },
+  {
+    href: "https://www.reddit.com/user/sysifuscorp",
+    label: "Reddit",
+    icon: "/images/icons/reddit.svg",
+  },
+  {
+    href: "https://discord.com/invite/nv89cRgEsS",
+    label: "Discord",
+    icon: "/images/icons/discord.svg",
+  },
+  {
+    href: "https://twitter.com/sysifuscorp",
+    label: "Twitter",
+    icon: "/images/icons/twitter.svg",
+  },
+  {
+    href: "https://www.facebook.com/sysifuscorp",
+    label: "Facebook",
+    icon: "/images/icons/facebook.svg",
+  },
+];
+
 export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
   const location = useLocation();
   const isLandingPage =
@@ -99,10 +137,10 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
               />
             )}
             <button
-              className="hamburger noselect"
+              className={`hamburger noselect ${styles.navToggle} ${isVisibleClass}`}
               onClick={() => toggleNav()}
               type="button"
-              aria-label="Toggle navigation"
+              aria-label={visible ? "Close navigation" : "Toggle navigation"}
             >
               <span className="hamburger-box">
                 <span className="hamburger-inner" />
@@ -113,17 +151,6 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
 
         {/* Slide-out menu */}
         <div className={`${styles.menu} ${isVisibleClass}`}>
-          <button
-            className={`hamburger noselect ${isVisibleClass}`}
-            onClick={() => toggleNav()}
-            type="button"
-            aria-label="Close navigation"
-          >
-            <span className="hamburger-box">
-              <span className="hamburger-inner" />
-            </span>
-          </button>
-
           <div className={styles.menuContent}>
             <div className={`${styles.menuSection} ${styles.navLinks} ${mobileShowLeftClass}`}>
               <div className={styles.navLinkList}>
@@ -146,7 +173,7 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
                   Play online
                 </a>
                 <NavLink onClick={() => toggleNav()} to="/contact" className={`${styles.navLink} noselect`}>
-                  About / contact
+                  Contact us
                 </NavLink>
                 <a
                   href="https://pegasusgames.medium.com/"
@@ -174,6 +201,21 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
                 alt="Navbar illustration"
               />
             </div>
+          </div>
+
+          <div className={styles.navSocialBar}>
+            {NAV_SOCIAL_LINKS.map(({ href, label, icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={label}
+                className={styles.navSocialIcon}
+              >
+                <img loading="lazy" src={icon} alt={label} />
+              </a>
+            ))}
           </div>
         </div>
       </div>

@@ -126,14 +126,24 @@
     width: 100%;
   }
   .characterButtonsWrapper {
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
+    gap: 1rem;
     width: 100%;
   }
-  .characterButtonsWrapper a:not(:last-child) {
-    margin-bottom: 1rem;
+  .characterButtonsWrapper > * {
+    width: 100%;
+  }
+  .characterButtonsWrapper > :nth-child(2) {
+    grid-column: 1 / -1;
+  }
+  .characterButtonsWrapper > :nth-child(3) {
+    grid-column: 2;
+    grid-row: 1;
   }
   .characterSpotlightContainer :global(.spotlightLeftWrapper) {
-    width: calc(100% - 4rem);
+    width: calc(100% - 2rem);
   }
   .characterSpotlightContainer :global(.spotlightRightTopWrapper) {
     max-width: none;
@@ -264,6 +274,18 @@
   }
   .caption {
     border-radius: 0.5rem;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .caption > .name {
+    font-size: 1.3rem;
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  .caption > .name {
+    font-size: 1.1rem;
   }
 }
 

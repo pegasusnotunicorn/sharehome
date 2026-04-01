@@ -94,7 +94,6 @@ const CharacterPinPopup = ({ closePopup, dismissPopup }: CharacterPinPopupProps)
           transform: scale(1.03);
         }
         .modal-content {
-          max-width: 400px;
           display: flex;
           flex-direction: column;
           justify-content: space-between;

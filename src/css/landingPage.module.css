@@ -61,6 +61,17 @@
   height: 100svh;
 }
 
+@media only screen and (max-width: 900px) {
+  #heroContainer {
+    margin-top: calc(
+      -1 * (
+        var(--banner-height-mobile, 45px) + var(--banner-navbar-spacing, 0px) +
+        var(--navbar-height, 50px) + var(--banner-navbar-spacing, 0px)
+      )
+    );
+  }
+}
+
 #heroBgImage {
   position: absolute;
   top: 0;
@@ -259,15 +270,6 @@
     top: 0;
     background-color: #fff;
     text-wrap: balance;
-  }
-  .heroTitle::before {
-    content: "";
-    position: absolute;
-    bottom: 100%;
-    left: -5%;
-    width: 110%;
-    height: 50svh;
-    background-color: inherit;
   }
   .heroTitleWrapper {
     margin-top: 6svh;

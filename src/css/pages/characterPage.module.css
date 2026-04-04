@@ -308,3 +308,15 @@
 }
 
 /* #endregion */
+
+/* #region---------------------------------------------------------CAROUSEL */
+
+.carousel {
+  margin-top: 2rem;
+}
+
+.carousel :global(.swiper-wrapper) {
+  height: auto;
+}
+
+/* #endregion */

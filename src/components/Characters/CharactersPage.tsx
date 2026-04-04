@@ -106,6 +106,7 @@ const CharactersPage = () => {
         </GsapFadeScrub>
         <EmojiSection />
         <CarouselSection
+          className={charStyles.carousel}
           random
           loop
           totalPictures={15}

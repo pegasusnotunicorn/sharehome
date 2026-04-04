@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 import styles from "../../css/utils/defaultButton.module.css";
 
 interface DefaultButtonProps {
-  text?: string;
+  text?: ReactNode;
   icon?: string;
   emoji?: string;
   iconPosition?: "left" | "right";
@@ -111,7 +111,7 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
       props.download = `${emoji}.webp`;
       return (
         <a
-          aria-label={text}
+          aria-label={typeof text === "string" ? text : undefined}
           target="_blank"
           rel="noreferrer"
           {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
@@ -126,7 +126,7 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
       }
       return (
         <a
-          aria-label={text}
+          aria-label={typeof text === "string" ? text : undefined}
           target="_blank"
           rel="noreferrer"
           {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
@@ -138,7 +138,7 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
       props.type = button;
       return (
         <button
-          aria-label={text}
+          aria-label={typeof text === "string" ? text : undefined}
           {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
         >
           {iconTextContent}
@@ -186,7 +186,7 @@ const Icon = ({ icon, emoji }: IconProps): ReactNode => {
 };
 
 interface IconTextProps {
-  text?: string;
+  text?: ReactNode;
   icon?: string;
   emoji?: string;
   reversed?: boolean;

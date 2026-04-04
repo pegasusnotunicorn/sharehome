@@ -97,7 +97,7 @@ export default function HeroImageSection({
                 compact
                 className={landingPageStyles.expansionButton}
                 href="https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season"
-                text="Expansion update!"
+                text={<span>Expansion<span className={landingPageStyles.hideOnSmallPhone}> update</span>!</span>}
               />
             )}
           </div>

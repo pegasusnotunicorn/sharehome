@@ -133,7 +133,7 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
                 color="yellow"
                 className={styles.expansionButton}
                 href="https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season"
-                text="Expansion update!"
+                text={<span>Expansion<span className={styles.hideOnSmallPhone}> update</span>!</span>}
               />
             )}
             <button

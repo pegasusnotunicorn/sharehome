@@ -17,6 +17,13 @@ export default function HeroImageSection({
 }: HeroImageSectionProps) {
   const { isDesktop } = useWindowDimensions();
 
+  const hideStaticHero = () => {
+    const staticHero = document.getElementById("hero-static");
+    if (staticHero) {
+      staticHero.style.display = "none";
+    }
+  };
+
   const imageSrcResponsive = isDesktop
     ? `/images/click_to_learn_desktop`
     : "/images/click_to_learn_mobile";
@@ -67,10 +74,12 @@ export default function HeroImageSection({
           <img
             alt="Click the box to learn more!"
             src="/images/box_transparent.webp"
-            loading="lazy"
+            loading="eager"
+            fetchPriority="high"
             draggable={false}
             className={`${landingPageStyles.heroImage} noselect openYouTubeModalButton ${landingPageStyles.monsterBurstAnimation}`}
             onClick={playVideo}
+            onLoad={hideStaticHero}
           />
         </div>
         <div

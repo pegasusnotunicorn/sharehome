@@ -77,6 +77,8 @@
 
 @media only screen and (max-width: 900px) {
   #heroContainer {
+    padding-top: 4rem;
+    box-sizing: border-box;
     margin-top: calc(
       -1 * (
         var(--banner-height-mobile, 45px) + var(--banner-navbar-spacing, 0px) +
@@ -266,7 +268,7 @@
 @media only screen and (max-width: 600px) and (min-width: 451px) {
   .fukidashi {
     width: 112svw;
-    height: 22svh;
+    height: 30svh;
     margin-top: -2rem;
   }
   .heroTitle {
@@ -911,6 +913,7 @@
   #eventsContainer,
   #goalsContainer {
     height: 82svh;
+    overflow: visible;
   }
   .eventsTextContainer,
   .goalsTextContainer {

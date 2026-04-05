@@ -45,11 +45,6 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
 
   useEffect(() => {
     document.title = "Love, Career & Magic - 12m game for 2-6 players";
-
-    const staticHero = document.getElementById("hero-static");
-    if (staticHero) {
-      staticHero.style.display = "none";
-    }
   }, []);
 
   useEffect(() => {

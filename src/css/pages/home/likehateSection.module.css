@@ -257,6 +257,13 @@
   text-align: left;
 }
 
+@media only screen and (max-width: 1000px) {
+  .likehateTextContainer {
+    text-align: center;
+    align-items: center;
+  }
+}
+
 .likehateTextContainer h1 {
   line-height: 100%;
   margin-bottom: 0.5em;

@@ -79,12 +79,6 @@
   #heroContainer {
     padding-top: 4rem;
     box-sizing: border-box;
-    margin-top: calc(
-      -1 * (
-        var(--banner-height-mobile, 45px) + var(--banner-navbar-spacing, 0px) +
-        var(--navbar-height, 50px) + var(--banner-navbar-spacing, 0px)
-      )
-    );
   }
 }
 
@@ -239,11 +233,11 @@
 @media only screen and (max-width: 400px) {
   .fukidashi {
     width: 118svw;
-    height: 30svh;
-    margin-top: -1.5rem;
+    height: 40svh;
+    margin-top: -8rem;
   }
   .heroTitle {
-    top: 5.5rem !important;
+    top: 0 !important;
     height: 16svh;
     font-size: 1.25rem !important;
   }
@@ -255,11 +249,11 @@
 @media only screen and (max-width: 450px) and (min-width: 401px) {
   .fukidashi {
     width: 114svw;
-    height: 30svh;
-    margin-top: -1.75rem;
+    height: 40svh;
+    margin-top: -8rem;
   }
   .heroTitle {
-    top: 2.5rem;
+    top: 0;
     height: 17svh;
     font-size: 1.25rem !important;
   }
@@ -268,29 +262,29 @@
 @media only screen and (max-width: 600px) and (min-width: 451px) {
   .fukidashi {
     width: 112svw;
-    height: 30svh;
-    margin-top: -2rem;
+    height: 35svh;
+    margin-top: -10rem;
   }
   .heroTitle {
-    top: 2.5rem;
-    height: 18svh;
+    top: 0;
+    height: 12svh;
   }
 }
 
 @media only screen and (max-width: 650px) and (min-width: 601px) {
   .heroTitle {
-    top: 2.5rem;
+    top: 0;
   }
 }
 
 @media only screen and (max-width: 900px) and (min-width: 600px) {
   .fukidashi {
     width: 110svw;
-    height: 25svh;
-    margin-top: -2rem;
+    height: 35svh;
+    margin-top: -10rem;
   }
   .heroTitle {
-    height: 15svh;
+    height: 12svh;
   }
 }
 
@@ -308,7 +302,7 @@
     position: absolute;
     transform: translateY(-25%);
     align-items: flex-end;
-    top: 4.5rem;
+    top: 0;
     background-color: transparent;
     text-wrap: balance;
   }

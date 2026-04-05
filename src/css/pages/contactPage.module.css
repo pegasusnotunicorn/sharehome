@@ -148,8 +148,10 @@
   }
   .aboutMeWrapper {
     flex-direction: column-reverse;
-    width: calc(100% - 8rem);
-    margin-bottom: 1rem;
+    width: calc(100% - 4rem);
+    margin: 0 1rem 1rem;
+    padding: 1rem;
+    gap: 1rem;
     align-items: stretch;
   }
   .aboutMeVerticalWrapper {

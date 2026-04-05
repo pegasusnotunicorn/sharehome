@@ -17,6 +17,7 @@ import HeroImageSection from "./HeroImageSection";
 import landingPageStyles from "../../css/landingPage.module.css";
 import colorStyles from "../../css/utils/colors.module.css";
 import DescriptionContainer from "./DescriptionContainer";
+import { PENDING_SCROLL_RESTORE_KEY } from "../../ScrollToTop";
 
 interface LandingPageProps {
   videoModalVisible: boolean;
@@ -44,6 +45,68 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
 
   useEffect(() => {
     document.title = "Love, Career & Magic - 12m game for 2-6 players";
+
+    const staticHero = document.getElementById("hero-static");
+    if (staticHero) {
+      staticHero.style.display = "none";
+    }
+  }, []);
+
+  useEffect(() => {
+    let timeoutId: number | undefined;
+    let attempts = 0;
+    const maxAttempts = 30;
+
+    const currentRouteKey = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+    const pendingRestore = (() => {
+      try {
+        const rawValue = window.sessionStorage.getItem(PENDING_SCROLL_RESTORE_KEY);
+        return rawValue
+          ? (JSON.parse(rawValue) as { routeKey?: string; scrollTop?: number })
+          : null;
+      } catch {
+        return null;
+      }
+    })();
+
+    if (
+      !pendingRestore ||
+      pendingRestore.routeKey !== currentRouteKey ||
+      typeof pendingRestore.scrollTop !== "number"
+    ) {
+      return;
+    }
+
+    const restoreScroll = () => {
+      attempts += 1;
+      window.scrollTo({ top: pendingRestore.scrollTop!, left: 0, behavior: "auto" });
+
+      const currentScrollTop =
+        window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+      const canReachTarget =
+        document.documentElement.scrollHeight - window.innerHeight >=
+        pendingRestore.scrollTop!;
+
+      if (
+        Math.abs(currentScrollTop - pendingRestore.scrollTop!) < 2 ||
+        (canReachTarget && attempts >= 2) ||
+        attempts >= maxAttempts
+      ) {
+        window.sessionStorage.removeItem(PENDING_SCROLL_RESTORE_KEY);
+        return;
+      }
+
+      timeoutId = window.setTimeout(restoreScroll, 100);
+    };
+
+    timeoutId = window.setTimeout(restoreScroll, 650);
+
+    return () => {
+      if (timeoutId) {
+        window.clearTimeout(timeoutId);
+      }
+    };
   }, []);
 
   return (
@@ -71,9 +134,10 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
           </h1>
         }
         description={
-          <p>
-            Can you work together to secure a second season? Or will you be
-            canceled halfway through?
+          <p className={landingPageStyles.heroDescription}>
+            Can you work together to secure a second season?
+            <br />
+            Or will you be canceled halfway through?
           </p>
         }
       />
@@ -108,6 +172,7 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
                 alt="point finger"
               />
             </GsapWiggle>
+            <p className={landingPageStyles.stepEyebrow}>Step 1.</p>
             <h1>Choose from 25 unique characters!</h1>
             <p>
               Mythological creatures with modern day jobs just like us humans.
@@ -146,6 +211,7 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
             <img loading="lazy" src="/images/icons/planet.svg" alt="cake" />
           </GsapWiggle>
           <div className={`${landingPageStyles.eventsTextContainer}`}>
+            <p className={landingPageStyles.stepEyebrow}>Step 2.</p>
             <h1>Follow chaotic stage directions</h1>
             <p>
               The executives of the show are trying to instill chaos into the
@@ -160,7 +226,12 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
       <LikeHateSection
         id={`${landingPageStyles.likehateContainer}`}
         className={`${landingPageStyles.mainpageContainer}`}
-        title={<h1>Complete character arcs for extra points!</h1>}
+        title={
+          <>
+            <p className={landingPageStyles.stepEyebrow}>Step 3.</p>
+            <h1>Complete character arcs for extra points!</h1>
+          </>
+        }
         description={
           <p>
             Will you have the evil villain arc? Or the good person redemption
@@ -192,6 +263,7 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
             <img loading="lazy" src="/images/icons/scroll.svg" alt="scroll" />
           </GsapWiggle>
           <div className={`${landingPageStyles.goalsTextContainer}`}>
+            <p className={landingPageStyles.stepEyebrow}>Step 4.</p>
             <h1>Crazy locations never before seen on TV</h1>
             <p>
               Every episode of the reality TV show occurs in a random exotic
@@ -228,7 +300,8 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
           filename="playtest"
           random
           loop
-          delay={5000}
+          continuousAutoplay
+          autoplaySpeed={5500}
         />
       </div>
 
@@ -251,7 +324,13 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
             <img src="/images/pegasus_logo.png" alt="Pegasus Games logo" />
             <p>
               Designed by{" "}
-              <a href="https://unicornwithwings.com">Pegasus Games</a>
+              <a
+                href="https://unicornwithwings.com"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Pegasus Games
+              </a>
             </p>
           </div>
           <p>

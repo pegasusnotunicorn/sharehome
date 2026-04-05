@@ -19,7 +19,9 @@ export default function MechanicsSection() {
             src="/images/illustrations/improv.webp"
             alt="TTRPG icon"
           />
-          TTRPGs
+          <span className={landingPageStyles.mechanicsLabelTtrpg}>
+            TTRPGs
+          </span>
         </GsapFadeScrub>
         <GsapFadeScrub fadeIn>
           <img
@@ -27,7 +29,9 @@ export default function MechanicsSection() {
             src="/images/illustrations/laughing.webp"
             alt="Laughing icon"
           />
-          Laughing
+          <span className={landingPageStyles.mechanicsLabelLaughing}>
+            Laughing
+          </span>
         </GsapFadeScrub>
         <GsapFadeScrub fadeIn>
           <img
@@ -35,7 +39,9 @@ export default function MechanicsSection() {
             src="/images/illustrations/stories.webp"
             alt="Storytelling icon"
           />
-          Storytelling
+          <span className={landingPageStyles.mechanicsLabelStorytelling}>
+            Storytelling
+          </span>
         </GsapFadeScrub>
         <GsapFadeScrub fadeIn>
           <img
@@ -43,7 +49,9 @@ export default function MechanicsSection() {
             src="/images/illustrations/party.webp"
             alt="Party games icon"
           />
-          Party games
+          <span className={landingPageStyles.mechanicsLabelPartyGames}>
+            Party games
+          </span>
         </GsapFadeScrub>
         <GsapFadeScrub fadeIn className="is-hidden-mobile">
           <img
@@ -51,7 +59,9 @@ export default function MechanicsSection() {
             src="/images/illustrations/acting.webp"
             alt="Improv icon"
           />
-          Improv
+          <span className={landingPageStyles.mechanicsLabelImprov}>
+            Improv
+          </span>
         </GsapFadeScrub>
       </div>
     </div>

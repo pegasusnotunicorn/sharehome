@@ -23,6 +23,17 @@
   margin: 0;
 }
 
+.stepEyebrow {
+  margin: 0 0 -0.2rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.9rem;
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 1;
+  color: #5f5aa2;
+}
+
 /* mobile */
 @media only screen and (max-width: 900px) {
   .mainpageContainer h1 {
@@ -33,6 +44,9 @@
   .mainpageContainer li {
     font-size: 0.85rem;
     line-height: 150%;
+  }
+  .stepEyebrow {
+    font-size: 0.72rem;
   }
 }
 
@@ -90,6 +104,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+@media only screen and (min-width: 901px) {
+  .screenHeight {
+    padding-top: 2rem;
+    box-sizing: border-box;
+  }
 }
 
 @keyframes monsterBurstAnimation1 {
@@ -192,6 +213,9 @@
   left: 50%;
   width: 100%;
   max-width: 1000px;
+  max-height: calc(100svh - 13rem);
+  height: auto;
+  object-fit: contain;
   z-index: 50;
   transform: translate(-50%, -50%);
 }
@@ -212,42 +236,56 @@
 
 @media only screen and (max-width: 400px) {
   .fukidashi {
-    width: 110svw;
-    height: 12svh;
+    width: 118svw;
+    height: 30svh;
+    margin-top: -1.5rem;
   }
   .heroTitle {
-    height: 14svh;
-    font-size: 0.85rem !important;
+    top: 5.5rem !important;
+    height: 16svh;
+    font-size: 1.25rem !important;
   }
   .heroTitleWrapper {
     margin-top: 4svh;
   }
 }
 
-@media only screen and (max-width: 450px) {
+@media only screen and (max-width: 450px) and (min-width: 401px) {
   .fukidashi {
-    width: 110svw;
-    height: 15svh;
+    width: 114svw;
+    height: 30svh;
+    margin-top: -1.75rem;
   }
   .heroTitle {
+    top: 2.5rem;
+    height: 17svh;
+    font-size: 1.25rem !important;
+  }
+}
+
+@media only screen and (max-width: 600px) and (min-width: 451px) {
+  .fukidashi {
+    width: 112svw;
+    height: 22svh;
+    margin-top: -2rem;
+  }
+  .heroTitle {
+    top: 2.5rem;
     height: 18svh;
   }
 }
 
-@media only screen and (max-width: 600px) and (min-width: 450px) {
-  .fukidashi {
-    width: 110svw;
-    height: 12svh;
-  }
+@media only screen and (max-width: 650px) and (min-width: 601px) {
   .heroTitle {
-    height: 15svh;
+    top: 2.5rem;
   }
 }
 
 @media only screen and (max-width: 900px) and (min-width: 600px) {
   .fukidashi {
     width: 110svw;
-    height: 10svh;
+    height: 25svh;
+    margin-top: -2rem;
   }
   .heroTitle {
     height: 15svh;
@@ -255,6 +293,7 @@
 }
 
 .heroTitle {
+  box-sizing: border-box;
   padding: 1rem;
   margin: 0;
   display: flex;
@@ -267,8 +306,8 @@
     position: absolute;
     transform: translateY(-25%);
     align-items: flex-end;
-    top: 0;
-    background-color: #fff;
+    top: 4.5rem;
+    background-color: transparent;
     text-wrap: balance;
   }
   .heroTitleWrapper {
@@ -276,7 +315,7 @@
   }
 }
 
-@media only screen and (min-width: 900px) {
+@media only screen and (min-width: 901px) {
   .heroTitleWrapper {
     max-width: 500px;
     position: relative;
@@ -298,11 +337,10 @@
   }
 }
 
-.heroImage > img {
-  object-fit: cover;
-  height: 100%;
-  width: 100%;
-  cursor: pointer;
+@media only screen and (min-width: 901px) {
+  .heroImage {
+    width: min(88vw, 1000px, calc((100svh - 13rem) * 1.45));
+  }
 }
 
 .tagLine {
@@ -327,6 +365,13 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+}
+
+@media only screen and (min-width: 901px) {
+  .heroBottomWrapper {
+    bottom: 5rem;
+    margin-bottom: 0;
+  }
 }
 
 .heroBottomButtons {
@@ -365,6 +410,7 @@
   }
   .heroImage {
     padding-top: 0;
+    max-height: calc(100svh - 10rem);
   }
   .tagLine {
     line-height: 120%;
@@ -380,10 +426,12 @@
     display: none;
   }
   .heroTitle {
-    display: none;
+    font-size: 1rem !important;
+    max-width: min(360px, 90vw);
   }
   .fukidashi {
-    display: none;
+    opacity: 0.9;
+    max-width: min(360px, 90vw);
   }
 }
 
@@ -546,6 +594,10 @@
   margin-top: 1rem;
 }
 
+.heroDescription {
+  font-weight: 700;
+}
+
 .subtitle {
   font-size: 2rem;
   white-space: pre-line;
@@ -567,9 +619,9 @@
 }
 
 #howToPlay {
-  height: 200px;
+  height: 150px;
   margin: auto;
-  margin-top: 50px;
+  margin-top: 25px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -577,6 +629,10 @@
 
 /* mobile */
 @media only screen and (max-width: 900px) {
+  #howToPlay {
+    height: 120px;
+    margin-top: 15px;
+  }
   .bulletWrapper {
     max-width: unset;
   }
@@ -611,7 +667,7 @@
 #characterContainer {
   color: #323232;
   display: flex;
-  height: 100svh;
+  height: 88svh;
   width: 100%;
   flex-direction: row;
   align-items: center;
@@ -631,8 +687,13 @@
 }
 
 .characterTextContainer h1 {
-  line-height: 125%;
+  line-height: 100%;
   max-width: 70%;
+  margin-bottom: 0.5em;
+}
+
+.characterTextContainer p {
+  margin-top: 0;
 }
 
 .characterContainerSVG {
@@ -662,7 +723,7 @@
 }
 
 /* tablet */
-@media only screen and (min-width: 900px) and (max-width: 1200px) {
+@media only screen and (min-width: 901px) and (max-width: 1200px) {
   .characterContainerSVG {
     left: 40vw;
   }
@@ -677,6 +738,9 @@
 
 /* mobile */
 @media only screen and (max-width: 900px) {
+  #characterContainer {
+    height: 82svh;
+  }
   .characterTextContainer h1,
   .eventsTextContainer h1,
   .eventsTextContainer p,
@@ -705,7 +769,7 @@
 #goalsContainer {
   color: #323232;
   display: flex;
-  height: 100svh;
+  height: 88svh;
   width: 100%;
   flex-direction: row;
   align-items: center;
@@ -720,7 +784,7 @@
   flex-direction: row;
   align-items: center;
   height: calc(100% - 4rem);
-  width: 50%;
+  width: 60%;
   padding: 2rem;
   padding-right: 4rem;
   z-index: 10;
@@ -754,8 +818,14 @@
 
 .eventsTextContainer h1,
 .goalsTextContainer h1 {
-  line-height: 125%;
+  line-height: 100%;
   max-width: 70%;
+  margin-bottom: 0.5em;
+}
+
+.eventsTextContainer p,
+.goalsTextContainer p {
+  margin-top: 0;
 }
 
 .eventsTextContainer p,
@@ -815,7 +885,7 @@
 }
 
 /* tablet */
-@media only screen and (min-width: 900px) and (max-width: 1200px) {
+@media only screen and (min-width: 901px) and (max-width: 1200px) {
   #eventsContainerSVGcake {
     right: 65%;
     top: 65%;
@@ -838,6 +908,10 @@
 
 /* mobile */
 @media only screen and (max-width: 900px) {
+  #eventsContainer,
+  #goalsContainer {
+    height: 82svh;
+  }
   .eventsTextContainer,
   .goalsTextContainer {
     width: 100%;
@@ -929,7 +1003,7 @@
 #likehateContainer {
   color: #323232;
   display: flex;
-  margin-top: 100px;
+  margin-top: 50px;
   width: 100%;
   flex-direction: row;
   align-items: center;
@@ -940,7 +1014,7 @@
 
 @media only screen and (max-width: 1400px) {
   #likehateContainer {
-    margin-top: 0;
+    margin-top: 20px;
     flex-direction: column;
   }
 }
@@ -973,6 +1047,50 @@
   align-items: center;
   justify-content: center;
   font-family: "Rowdies-Light";
+}
+
+.mechanicsWrapper span {
+  font-family: "Rowdies-Regular";
+  letter-spacing: 0.04em;
+  text-shadow: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.8rem;
+  margin-top: 0.6rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  box-shadow: none;
+}
+
+.mechanicsLabelTtrpg {
+  color: #5f5aa2;
+  background-color: rgba(95, 90, 162, 0.12);
+  border-color: rgba(95, 90, 162, 0.25);
+}
+
+.mechanicsLabelLaughing {
+  color: #dd7373;
+  background-color: rgba(221, 115, 115, 0.12);
+  border-color: rgba(221, 115, 115, 0.25);
+}
+
+.mechanicsLabelStorytelling {
+  color: #649a85;
+  background-color: rgba(125, 175, 156, 0.14);
+  border-color: rgba(125, 175, 156, 0.28);
+}
+
+.mechanicsLabelPartyGames {
+  color: #9d7a00;
+  background-color: rgba(241, 219, 75, 0.18);
+  border-color: rgba(241, 219, 75, 0.35);
+}
+
+.mechanicsLabelImprov {
+  color: #454176;
+  background-color: rgba(69, 65, 118, 0.12);
+  border-color: rgba(69, 65, 118, 0.24);
 }
 
 .mechanicsWrapper div > img {

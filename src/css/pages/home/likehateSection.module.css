@@ -254,6 +254,16 @@
 .likehateTextContainer {
   display: flex;
   flex-direction: column;
+  text-align: left;
+}
+
+.likehateTextContainer h1 {
+  line-height: 100%;
+  margin-bottom: 0.5em;
+}
+
+.likehateTextContainer p {
+  margin-top: 0;
 }
 
 span.likeMode {

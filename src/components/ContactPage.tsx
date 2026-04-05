@@ -135,7 +135,7 @@ const ContactPage = () => {
               <img loading="lazy" src="/images/icons/email2.svg" alt="Email" />
             </a>
             <a
-              href="https://instagram.com/sysifuscorp"
+              href="https://instagram.com/pegasusgamesnyc"
               target="_blank"
               rel="noreferrer"
               aria-label="Instagram"
@@ -175,7 +175,7 @@ const ContactPage = () => {
               />
             </a>
             <a
-              href="https://twitter.com/sysifuscorp"
+              href="https://x.com/pegasusgamesnyc"
               target="_blank"
               rel="noreferrer"
               aria-label="Twitter"
@@ -187,7 +187,7 @@ const ContactPage = () => {
               />
             </a>
             <a
-              href="https://www.facebook.com/sysifuscorp"
+              href="https://www.facebook.com/PegasusGamesNYC/"
               target="_blank"
               rel="noreferrer"
               aria-label="Facebook"
@@ -235,7 +235,13 @@ const ContactPage = () => {
               </p>
               <p>
                 I make games through{" "}
-                <a href="https://unicornwithwings.com">Pegasus Games</a>,
+                <a
+                  href="https://unicornwithwings.com"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Pegasus Games
+                </a>,
                 including Love, Career & Magic, which is very much inspired by
                 reality TV but not affiliated with any existing show.
               </p>

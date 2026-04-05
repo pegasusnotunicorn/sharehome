@@ -4,6 +4,7 @@
   --banner-height: 38px;
   --banner-height-mobile: 45px;
   --banner-navbar-spacing: 0px;
+  --navbar-height: 82px;
   --footer-height: 340px;
   --footer-height-mobile: 220px;
 }
@@ -178,7 +179,9 @@ span.is-bold {
   display: block;
   width: 100%;
   padding-top: calc(
-    var(--banner-height, 30px) + var(--banner-navbar-spacing, 20px)
+    (
+        var(--banner-height, 30px) + var(--banner-navbar-spacing, 20px)
+      ) * 1.5
   );
   padding-bottom: 2rem;
   margin: auto;
@@ -233,8 +236,7 @@ span.is-bold {
 @media only screen and (max-width: 900px) {
   .content {
     padding-top: calc(
-      var(--banner-height-mobile, 45px) + var(--banner-navbar-spacing, 20px) +
-        var(--navbar-height, 50px) + var(--banner-navbar-spacing, 20px)
+      var(--banner-height-mobile, 45px) + var(--navbar-height, 50px) - 1.5rem
     );
     padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
   }

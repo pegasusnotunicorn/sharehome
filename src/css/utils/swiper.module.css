@@ -27,12 +27,45 @@
 
 :global(.swiper-button-next),
 :global(.swiper-button-prev) {
-  color: rgba(255, 255, 255, 1);
+  color: #323232;
   top: 50%;
+  width: 52px;
+  height: 52px;
+  margin-top: -26px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(50, 50, 50, 0.12);
+  box-shadow:
+    0 6px 16px rgba(50, 50, 50, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
   -webkit-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
   -moz-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
   -ms-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
   -o-filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.25));
+}
+
+:global(.swiper-button-next::after),
+:global(.swiper-button-prev::after) {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+:global(.swiper-button-next:hover),
+:global(.swiper-button-prev:hover) {
+  transform: scale(1.03);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow:
+    0 8px 18px rgba(50, 50, 50, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+:global(.swiper-button-next:active),
+:global(.swiper-button-prev:active) {
+  transform: scale(0.97);
 }
 
 :global(.swiper-button-prev) {
@@ -54,6 +87,12 @@
   }
   :global(.swiper-button-next) {
     right: 10px;
+  }
+  :global(.swiper-button-next),
+  :global(.swiper-button-prev) {
+    width: 46px;
+    height: 46px;
+    margin-top: -23px;
   }
   :global(.swiper-pagination) {
     display: flex;
@@ -84,6 +123,10 @@
 
 :global(.swiper-wrapper) {
   align-items: flex-start;
+}
+
+.continuousAutoplay :global(.swiper-wrapper) {
+  transition-timing-function: linear !important;
 }
 
 :global(.swiper-slide) {

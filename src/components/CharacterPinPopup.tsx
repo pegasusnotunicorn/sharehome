@@ -1,4 +1,4 @@
-import { MouseEvent } from "react";
+import { MouseEvent, type CSSProperties } from "react";
 import DefaultButton from "./utils/DefaultButton";
 import styles from "../css/utils/lazyYoutube.module.css";
 
@@ -41,10 +41,18 @@ const CharacterPinPopup = ({ closePopup, dismissPopup }: CharacterPinPopupProps)
             <div className="button-wrapper" onClick={dismissPopup}>
               <DefaultButton
                 variant="primary"
-                color="yellow"
+                color="green"
                 href="https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season"
                 text="Follow on Kickstarter"
                 icon="forward"
+                style={
+                  {
+                    "--btn-color": "#05ce78",
+                    "--btn-color-light": "#2bd88e",
+                    "--btn-color-dark": "#03b86b",
+                    "--btn-color-glow": "rgba(5, 206, 120, 0.3)",
+                  } as CSSProperties
+                }
               />
             </div>
             <button className="close-btn" onClick={closePopup}>

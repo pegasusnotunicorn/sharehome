@@ -6,6 +6,7 @@ interface EmailFormProps {
   hideTitle?: boolean;
   isActiveAndDesktop?: boolean;
   className?: string;
+  formClassName?: string;
   titleIcon?: string;
   inputId?: string;
   responseOverride?: string;
@@ -113,7 +114,7 @@ export const EmailForm = (props: EmailFormProps) => {
         </p>
       ) : null}
       <form
-        className={styles.formWrapper}
+        className={`${styles.formWrapper} ${props.formClassName ?? ""}`}
         autoComplete="on"
         action=""
         data-code=""

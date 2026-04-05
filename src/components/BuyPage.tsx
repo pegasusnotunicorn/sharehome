@@ -86,7 +86,10 @@ const BuyPage = () => {
             document.getElementById(RESTOCK_EMAIL_INPUT_ID)?.focus();
           }}
         >
-          <p className={styles.panelEyebrow}>Option 2</p>
+          <div className={styles.panelTopRow}>
+            <p className={styles.panelEyebrow}>Option 2</p>
+            <p className={`${styles.panelPill} ${styles.panelPillDark}`}>Stay updated</p>
+          </div>
           <h3 className={styles.panelTitle}>Get restock updates ✉️</h3>
           <p className={styles.panelBody}>
             Join the newsletter and I&apos;ll email you when the game is
@@ -96,6 +99,7 @@ const BuyPage = () => {
             hideTitle
             isActiveAndDesktop={false}
             className={styles.buyPageEmailForm}
+            formClassName={styles.buyPageFormWrapper}
             inputId={RESTOCK_EMAIL_INPUT_ID}
             responseOverride=""
             responseClassName={styles.buyPageEmailResponse}

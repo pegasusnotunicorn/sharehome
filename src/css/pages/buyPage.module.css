@@ -127,6 +127,12 @@
   line-height: 1.1;
 }
 
+.panelPillDark {
+  background: rgba(50, 50, 50, 0.08);
+  border-color: rgba(50, 50, 50, 0.2);
+  color: #323232;
+}
+
 .panelBody {
   margin: 0;
 }
@@ -167,6 +173,11 @@
 .buyPageEmailForm form {
   width: 100%;
   margin-bottom: 0;
+}
+
+.buyPageFormWrapper {
+  width: 100%;
+  margin-top: 1rem;
 }
 
 .buyPageEmailInput {
@@ -237,5 +248,9 @@
 
   .panelTitle {
     font-size: 1.4rem;
+  }
+
+  .buyPageFormWrapper {
+    max-width: none;
   }
 }

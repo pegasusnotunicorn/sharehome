@@ -17,7 +17,6 @@ import HeroImageSection from "./HeroImageSection";
 import landingPageStyles from "../../css/landingPage.module.css";
 import colorStyles from "../../css/utils/colors.module.css";
 import DescriptionContainer from "./DescriptionContainer";
-import { PENDING_SCROLL_RESTORE_KEY } from "../../ScrollToTop";
 
 interface LandingPageProps {
   videoModalVisible: boolean;
@@ -45,63 +44,6 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
 
   useEffect(() => {
     document.title = "Love, Career & Magic - 12m game for 2-6 players";
-  }, []);
-
-  useEffect(() => {
-    let timeoutId: number | undefined;
-    let attempts = 0;
-    const maxAttempts = 30;
-
-    const currentRouteKey = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-
-    const pendingRestore = (() => {
-      try {
-        const rawValue = window.sessionStorage.getItem(PENDING_SCROLL_RESTORE_KEY);
-        return rawValue
-          ? (JSON.parse(rawValue) as { routeKey?: string; scrollTop?: number })
-          : null;
-      } catch {
-        return null;
-      }
-    })();
-
-    if (
-      !pendingRestore ||
-      pendingRestore.routeKey !== currentRouteKey ||
-      typeof pendingRestore.scrollTop !== "number"
-    ) {
-      return;
-    }
-
-    const restoreScroll = () => {
-      attempts += 1;
-      window.scrollTo({ top: pendingRestore.scrollTop!, left: 0, behavior: "auto" });
-
-      const currentScrollTop =
-        window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
-      const canReachTarget =
-        document.documentElement.scrollHeight - window.innerHeight >=
-        pendingRestore.scrollTop!;
-
-      if (
-        Math.abs(currentScrollTop - pendingRestore.scrollTop!) < 2 ||
-        (canReachTarget && attempts >= 2) ||
-        attempts >= maxAttempts
-      ) {
-        window.sessionStorage.removeItem(PENDING_SCROLL_RESTORE_KEY);
-        return;
-      }
-
-      timeoutId = window.setTimeout(restoreScroll, 100);
-    };
-
-    timeoutId = window.setTimeout(restoreScroll, 650);
-
-    return () => {
-      if (timeoutId) {
-        window.clearTimeout(timeoutId);
-      }
-    };
   }, []);
 
   return (

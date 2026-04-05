@@ -73,7 +73,7 @@
   left: 100%;
   top: var(--banner-height, 30px);
   width: 125%;
-  height: calc(100% - var(--banner-height, 30px));
+  height: calc(100svh - var(--banner-height, 30px));
   z-index: 99998;
   overflow: hidden;
   transition: left 0.25s ease;
@@ -309,7 +309,7 @@
 
   .menu {
     top: var(--banner-height-mobile, 45px);
-    height: calc(100% - var(--banner-height-mobile, 45px));
+    height: calc(100svh - var(--banner-height-mobile, 45px));
     flex-direction: column;
     background-image: linear-gradient(
       90deg,

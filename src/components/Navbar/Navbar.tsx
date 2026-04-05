@@ -23,7 +23,7 @@ const NAV_SOCIAL_LINKS = [
     icon: "/images/icons/email2.svg",
   },
   {
-    href: "https://instagram.com/sysifuscorp",
+    href: "https://instagram.com/pegasusgamesnyc",
     label: "Instagram",
     icon: "/images/icons/instagram.svg",
   },
@@ -43,12 +43,12 @@ const NAV_SOCIAL_LINKS = [
     icon: "/images/icons/discord.svg",
   },
   {
-    href: "https://twitter.com/sysifuscorp",
+    href: "https://x.com/pegasusgamesnyc",
     label: "Twitter",
     icon: "/images/icons/twitter.svg",
   },
   {
-    href: "https://www.facebook.com/sysifuscorp",
+    href: "https://www.facebook.com/PegasusGamesNYC/",
     label: "Facebook",
     icon: "/images/icons/facebook.svg",
   },
@@ -56,8 +56,7 @@ const NAV_SOCIAL_LINKS = [
 
 export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
   const location = useLocation();
-  const isLandingPage =
-    location.pathname === "/" || location.pathname.includes("ttrpg");
+  const isLandingPage = location.pathname === "/";
   const isBuyPage = location.pathname === "/buy";
 
   const [visible, setVisibility] = useState(false);
@@ -96,6 +95,8 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
   const isLandingPageAtTop = isLandingPage && isAtTop;
 
   const { showPopup, closePopup, dismissPopup } = usePinPopup({});
+  const getNavLinkClassName = ({ isActive }: { isActive: boolean }) =>
+    `${styles.navLink} noselect ${isActive ? styles.navLinkActive : ""}`;
 
   return (
     <>
@@ -154,13 +155,21 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
           <div className={styles.menuContent}>
             <div className={`${styles.menuSection} ${styles.navLinks} ${mobileShowLeftClass}`}>
               <div className={styles.navLinkList}>
-                <NavLink onClick={() => toggleNav()} to="/" className={`${styles.navLink} noselect`}>
+                <NavLink onClick={() => toggleNav()} to="/" className={getNavLinkClassName}>
                   Home
                 </NavLink>
-                <NavLink onClick={() => toggleNav()} to="/howtoplay" className={`${styles.navLink} noselect`}>
+                <NavLink
+                  onClick={() => toggleNav()}
+                  to="/howtoplay"
+                  className={getNavLinkClassName}
+                >
                   How to play
                 </NavLink>
-                <NavLink onClick={() => toggleNav()} to="/characters" className={`${styles.navLink} noselect`}>
+                <NavLink
+                  onClick={() => toggleNav()}
+                  to="/characters"
+                  className={getNavLinkClassName}
+                >
                   Characters
                 </NavLink>
                 <a
@@ -172,7 +181,11 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
                 >
                   Play online
                 </a>
-                <NavLink onClick={() => toggleNav()} to="/contact" className={`${styles.navLink} noselect`}>
+                <NavLink
+                  onClick={() => toggleNav()}
+                  to="/contact"
+                  className={getNavLinkClassName}
+                >
                   Contact us
                 </NavLink>
                 <a
@@ -193,7 +206,11 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
               <ShootingStar className={shootingStarStyles.rightStar} isActive={visible} orientation="left" delay="2" />
               <ShootingStar className={shootingStarStyles.leftStar} isActive={visible} orientation="up" delay="4" />
               <ShootingStar className={shootingStarStyles.leftStar} isActive={visible} orientation="down" delay="6" />
-              <EmailForm hideTitle={false} isActiveAndDesktop={isActiveAndDesktop} />
+              <EmailForm
+                hideTitle={false}
+                isActiveAndDesktop={isActiveAndDesktop}
+                titleIcon="/images/icons/email2.svg"
+              />
               <img
                 loading="lazy"
                 className={styles.illustration}

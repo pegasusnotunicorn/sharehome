@@ -29,11 +29,11 @@
   display: flex;
   justify-content: flex-start;
   align-items: stretch;
-  width: calc(100% - 4rem);
+  width: calc(100% - 8rem);
   max-width: 1040px;
-  margin: 0 auto 2rem;
-  padding: 1rem;
-  gap: 1.5rem;
+  margin: 0 2rem 2rem;
+  padding: 2rem;
+  gap: 2rem;
   border: 2px solid #323232;
   border-radius: 8px;
   background: #fff;
@@ -148,7 +148,7 @@
   }
   .aboutMeWrapper {
     flex-direction: column-reverse;
-    width: calc(100% - 4rem);
+    width: calc(100% - 8rem);
     margin-bottom: 1rem;
     align-items: stretch;
   }

@@ -22,17 +22,15 @@ export default function useWindowDimensions(): WindowDimensions {
 
   useEffect(() => {
     function handleResize() {
-      if (window.innerWidth !== windowDimensions.width) {
-        setWindowDimensions(getWindowDimensions());
-      }
+      setWindowDimensions(getWindowDimensions());
     }
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [windowDimensions]);
+  }, []);
 
   const { width, height } = windowDimensions;
-  const isDesktop = width > 900 && width > height;
+  const isDesktop = width > 900;
 
   return {
     width,

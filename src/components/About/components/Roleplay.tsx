@@ -18,6 +18,7 @@ interface SetupProps {
 
 interface RulesProps {
   showRules: boolean;
+  toggleSteps: () => void;
 }
 
 const Roleplay = ({ cardStyle }: RoleplayProps) => {
@@ -28,6 +29,10 @@ const Roleplay = ({ cardStyle }: RoleplayProps) => {
   };
 
   const switchTab = (rules: boolean) => {
+    if (rules === showRules) {
+      return;
+    }
+
     setshowRules(rules);
     setTabKey(k => k + 1);
   };
@@ -54,7 +59,7 @@ const Roleplay = ({ cardStyle }: RoleplayProps) => {
         cardStyle={cardStyle}
         toggleSteps={toggleSteps}
       />
-      <Rules key={`rules-${tabKey}`} showRules={showRules} />
+      <Rules key={`rules-${tabKey}`} showRules={showRules} toggleSteps={toggleSteps} />
     </>
   );
 };
@@ -207,7 +212,7 @@ const tokenSources = [
   ["/images/icons/1point.png", "/images/icons/5point.png", "/images/icons/1point.png", "/images/icons/5point.png"],
 ];
 
-const Rules = ({ showRules }: RulesProps) => {
+const Rules = ({ showRules, toggleSteps }: RulesProps) => {
   const { width } = useWindowDimensions();
   const [tokenRotations] = useState(() =>
     tokenSources.map(row => row.map(() => Math.floor(Math.random() * 360)))
@@ -387,6 +392,18 @@ const Rules = ({ showRules }: RulesProps) => {
           </div>
         </div>
       </div>
+
+      <DefaultButton
+        className={`${aboutStyles.showRulesButtonBottom} ${aboutStyles.showSetupButtonBottom}`}
+        variant="secondary"
+        border="dark"
+        icon="prev"
+        onClick={() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          toggleSteps();
+        }}
+        text="Back to game setup"
+      />
     </div>
   );
 };

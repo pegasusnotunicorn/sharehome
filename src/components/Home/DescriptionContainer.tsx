@@ -28,7 +28,9 @@ export default function DescriptionContainer({ title, description }: Description
             className={`${landingPageStyles.descriptionTextWrapper} subcontentWrapper min-width`}
           >
             {description}
-            <p>Keep scrolling to learn more!</p>
+            <p className={landingPageStyles.heroDescription}>
+              Keep scrolling to learn more!
+            </p>
           </div>
         </GsapFadeScrub>
       </div>

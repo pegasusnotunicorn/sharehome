@@ -2,11 +2,12 @@ import DefaultButton from "../utils/DefaultButton";
 import landingPageStyles from "../../css/landingPage.module.css";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import { GsapFadeScrub } from "../utils/useGsap";
+import type { ReactNode } from "react";
 
 interface HeroImageSectionProps {
   videoModalVisible: boolean;
   playVideo: () => void;
-  titleOverride?: string;
+  titleOverride?: ReactNode;
 }
 
 export default function HeroImageSection({
@@ -34,7 +35,17 @@ export default function HeroImageSection({
       >
         <div className={landingPageStyles.heroTitleWrapper}>
           <h2 className={landingPageStyles.heroTitle}>
-            {titleOverride ?? "A party game where fantasy meets reality TV!"}
+            {titleOverride ?? (
+              isDesktop ? (
+                "A party game where fantasy meets reality TV!"
+              ) : (
+                <>
+                  A party game where fantasy
+                  <br />
+                  meets reality TV!
+                </>
+              )
+            )}
           </h2>
           <img
             alt="Page title fukidashi"
@@ -56,8 +67,7 @@ export default function HeroImageSection({
           <img
             alt="Click the box to learn more!"
             src="/images/box_transparent.webp"
-            loading="eager"
-            fetchPriority="high"
+            loading="lazy"
             draggable={false}
             className={`${landingPageStyles.heroImage} noselect openYouTubeModalButton ${landingPageStyles.monsterBurstAnimation}`}
             onClick={playVideo}

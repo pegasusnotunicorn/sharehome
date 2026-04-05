@@ -25,6 +25,8 @@ interface CarouselSectionProps {
   specificFiles?: SpecificFile[];
   loop?: boolean;
   delay?: number;
+  continuousAutoplay?: boolean;
+  autoplaySpeed?: number;
 }
 
 //return a single slide
@@ -82,17 +84,19 @@ export const CarouselSection = (props: CarouselSectionProps) => {
   const href = props.href;
 
   const specificFiles = props.specificFiles;
+  const isContinuousAutoplay = props.continuousAutoplay ?? false;
 
   const swiperProps = {
     modules: [Navigation, Pagination, A11y, Autoplay],
     navigation: true,
     loop: props.loop ?? false,
-    spaceBetween: 25,
+    spaceBetween: 50,
     slidesPerView: cardsPerView,
+    speed: isContinuousAutoplay ? props.autoplaySpeed ?? 4500 : 600,
     autoplay: {
-      delay: props.delay ?? 2000,
+      delay: isContinuousAutoplay ? 0 : props.delay ?? 2000,
       pauseOnMouseEnter: false,
-      disableOnInteraction: true,
+      disableOnInteraction: false,
     },
   };
 
@@ -125,7 +129,9 @@ export const CarouselSection = (props: CarouselSectionProps) => {
     <GsapFadeScrub
       fadeIn
       scrub
-      className={`${styles.carouselSection} ${props.className}`}
+      className={`${styles.carouselSection} ${
+        isContinuousAutoplay ? styles.continuousAutoplay : ""
+      } ${props.className}`}
     >
       <Swiper {...swiperProps}>{allPictures}</Swiper>
     </GsapFadeScrub>

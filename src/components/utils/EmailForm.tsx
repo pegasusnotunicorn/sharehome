@@ -6,6 +6,7 @@ interface EmailFormProps {
   hideTitle?: boolean;
   isActiveAndDesktop?: boolean;
   className?: string;
+  titleIcon?: string;
   inputId?: string;
   responseOverride?: string;
   responseClassName?: string;
@@ -79,7 +80,21 @@ export const EmailForm = (props: EmailFormProps) => {
   return (
     <div className={className}>
       {!hideTitle && (
-        <h1 className={styles.formPrompt}>Stay updated on the latest news.</h1>
+        <div className={styles.formPromptWrapper}>
+          {props.titleIcon && (
+            <img
+              loading="lazy"
+              className={styles.formPromptIcon}
+              src={props.titleIcon}
+              alt=""
+            />
+          )}
+          <h1 className={styles.formPrompt}>
+            Stay updated
+            <br />
+            on the latest news.
+          </h1>
+        </div>
       )}
       {response && hasHTML ? (
         <p

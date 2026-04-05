@@ -27,6 +27,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  margin-top: 1rem;
   color: #323232;
   font-family: "Rowdies-Regular";
   font-size: 0.9rem;
@@ -135,6 +136,12 @@
   opacity: 0.7;
 }
 
+@media only screen and (min-width: 451px) {
+  .tabSubtext {
+    font-size: 0.75rem;
+  }
+}
+
 .tab:not(.tabActive):hover {
   color: #323232;
   background-color: #fff;
@@ -151,11 +158,17 @@
 
 .showRulesButtonBottom {
   width: fit-content;
-  margin: auto;
+  margin-left: auto;
+  margin-right: 0;
   margin-top: 2rem !important;
   min-height: 42px;
   padding: 0.65rem 1rem;
   font-size: 0.95rem;
+}
+
+.showSetupButtonBottom {
+  margin-left: 0;
+  margin-right: auto;
 }
 
 .showRulesButtonBottom:hover {
@@ -218,7 +231,7 @@
   width: 100%;
   font-family: "Rowdies-Regular";
   background: transparent;
-  color: #999;
+  color: #5f5aa2;
   padding: 0 0 0.4rem;
   font-size: 0.85rem !important;
   letter-spacing: 3px;

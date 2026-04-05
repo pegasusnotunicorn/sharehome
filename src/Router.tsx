@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -15,7 +15,6 @@ import ExternalRedirect from "./components/ExternalRedirect";
 import useUTMPreservation from "./hooks/useUTMPreservation";
 
 const LandingPage = lazy(() => import("./components/Home/LandingPage"));
-const TTRPGPage = lazy(() => import("./components/Home/TTRPGPage"));
 const AboutPage = lazy(() => import("./components/About/AboutPage"));
 const CharactersPage = lazy(() => import("./components/Characters/CharactersPage"));
 const TermsPage = lazy(() => import("./components/TermsPage"));
@@ -27,14 +26,6 @@ const SignupPage = lazy(() => import("./components/SignupPage"));
 const BuyPage = lazy(() => import("./components/BuyPage"));
 
 const Router = () => {
-  // Hide the static image once React is ready
-  useEffect(() => {
-    const staticHero = document.getElementById("hero-static");
-    if (staticHero) {
-      staticHero.style.display = "none";
-    }
-  }, []);
-
   return (
     <BrowserRouter>
       <MetaTags />
@@ -56,46 +47,38 @@ const AppRoutes = () => {
   return (
     <>
       {!isExternalRedirect && <Banner />}
-      {!isExternalRedirect && <Navbar videoModalVisible={videoModalVisible} />}
       <Suspense fallback={null}>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <LandingPage
-              videoModalVisible={videoModalVisible}
-              setVideoModalVisible={setVideoModalVisible}
-            />
-          }
-        />
-        <Route
-          path="/ttrpg"
-          element={
-            <TTRPGPage
-              videoModalVisible={videoModalVisible}
-              setVideoModalVisible={setVideoModalVisible}
-            />
-          }
-        />
-        <Route path="/about" element={<Navigate to="/howtoplay" replace />} />
-        <Route path="/howtoplay" element={<AboutPage />} />
-        <Route path="/digitalartbook" element={<ArtbookDownloadPage />} />
-        <Route path="/characters" element={<CharactersPage />} />
-        <Route path="/characters/:name" element={<CharactersPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/thankyou" element={<ThankYouPage />} />
-        <Route
-          path="/rulebook"
-          element={<ExternalRedirect url="/rulebook.pdf" />}
-        />
-        <Route path="/buy" element={<BuyPage />} />
-        <Route path="/terms" element={<TermsPage />} />
-        {/* Fallback for undefined routes */}
-        <Route path="*" element={<ErrorPage />} />
-      </Routes>
+        {!isExternalRedirect && <Navbar videoModalVisible={videoModalVisible} />}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <LandingPage
+                videoModalVisible={videoModalVisible}
+                setVideoModalVisible={setVideoModalVisible}
+              />
+            }
+          />
+          <Route path="/ttrpg" element={<Navigate to="/" replace />} />
+          <Route path="/about" element={<Navigate to="/howtoplay" replace />} />
+          <Route path="/howtoplay" element={<AboutPage />} />
+          <Route path="/digitalartbook" element={<ArtbookDownloadPage />} />
+          <Route path="/characters" element={<CharactersPage />} />
+          <Route path="/characters/:name" element={<CharactersPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/thankyou" element={<ThankYouPage />} />
+          <Route
+            path="/rulebook"
+            element={<ExternalRedirect url="/rulebook.pdf" />}
+          />
+          <Route path="/buy" element={<BuyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          {/* Fallback for undefined routes */}
+          <Route path="*" element={<ErrorPage />} />
+        </Routes>
+        {!isExternalRedirect && <Footer />}
       </Suspense>
-      {!isExternalRedirect && <Footer />}
     </>
   );
 };

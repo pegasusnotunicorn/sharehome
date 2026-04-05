@@ -114,6 +114,13 @@
     <meta property="og:image:type" content="image/webp" />
 
     <style>
+      :root {
+        --hero-static-banner-height: 38px;
+        --hero-static-banner-height-mobile: 45px;
+        --hero-static-banner-navbar-spacing: 0px;
+        --hero-static-navbar-height: 82px;
+      }
+
       body {
         overflow-y: scroll;
       }
@@ -127,12 +134,7 @@
         justify-content: center;
         height: 100svh;
         position: relative;
-      }
-
-      .hero-static-container {
-        position: relative;
-        width: 100%;
-        height: 100%;
+        margin-top: var(--hero-static-banner-height);
         box-sizing: border-box;
       }
 
@@ -150,13 +152,26 @@
       }
 
       @media only screen and (min-width: 901px) {
-        .hero-static-container {
-          padding-top: 2rem;
-        }
-
         .heroImageStatic {
           width: min(88vw, 1000px, calc((100svh - 13rem) * 1.45));
           max-height: calc(100svh - 13rem);
+        }
+      }
+
+      @media only screen and (max-width: 900px) {
+        #hero-static {
+          padding-top: calc(
+            var(--hero-static-banner-height-mobile) +
+              var(--hero-static-navbar-height) - 1.5rem
+          );
+          margin-top: calc(
+            -1 * (
+                var(--hero-static-banner-height-mobile) +
+                  var(--hero-static-banner-navbar-spacing) +
+                  var(--hero-static-navbar-height) +
+                  var(--hero-static-banner-navbar-spacing)
+              )
+          );
         }
       }
 
@@ -203,17 +218,15 @@
       });
     </script>
     <div id="hero-static">
-      <div class="hero-static-container">
-        <img
-          src="/images/box_transparent.webp"
-          alt="Box and components of the card game."
-          class="heroImageStatic"
-          width="1000"
-          height="auto"
-          decoding="async"
-          fetchpriority="high"
-        />
-      </div>
+      <img
+        src="/images/box_transparent.webp"
+        alt="Box and components of the card game."
+        class="heroImageStatic"
+        width="1000"
+        height="auto"
+        decoding="async"
+        fetchpriority="high"
+      />
     </div>
     <script type="module" src="/src/index.ts"></script>
   </body>

@@ -44,6 +44,7 @@
     position:absolute;
     width:100%;
     z-index:9;
+    overflow: visible;
   }
   .directionEpisodeDeckRow {
     justify-content: center;

@@ -178,11 +178,7 @@ span.is-bold {
   text-align: center;
   display: block;
   width: 100%;
-  padding-top: calc(
-    (
-        var(--banner-height, 30px) + var(--banner-navbar-spacing, 20px)
-      ) * 1.5
-  );
+  padding-top: var(--banner-height, 38px);
   padding-bottom: 2rem;
   margin: auto;
   overflow: hidden;
@@ -235,9 +231,7 @@ span.is-bold {
 
 @media only screen and (max-width: 900px) {
   .content {
-    padding-top: calc(
-      var(--banner-height-mobile, 45px) + var(--navbar-height, 50px) - 1.5rem
-    );
+    padding-top: var(--banner-height-mobile, 45px);
     padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
   }
   .subcontentWrapper {

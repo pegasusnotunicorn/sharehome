@@ -257,9 +257,15 @@
   text-align: left;
 }
 
+@media only screen and (max-width: 1400px) {
+  .likehateTextContainer {
+    text-align: center !important;
+  }
+}
+
 @media only screen and (max-width: 1000px) {
   .likehateTextContainer {
-    text-align: center;
+    text-align: center !important;
     align-items: center;
   }
 }

@@ -81,7 +81,8 @@ const AnimatedCard = (props: AnimatedCardProps) => {
   //directions episodes
   let finalX: number, finalY: number, finalRot: string;
   if (directionOrEpisode === "direction") {
-    finalX = rowIndex % 2 === 0 ? -randomNum(15, 20) : 0;
+    finalX =
+      rowIndex === 0 ? -randomNum(28, 32) : rowIndex === 2 ? -randomNum(15, 20) : 0;
     finalY = rowIndex === 2 ? 3 : 0;
     finalRot = rowIndex % 2 === 0 ? "-5deg" : "5deg";
 
@@ -95,7 +96,7 @@ const AnimatedCard = (props: AnimatedCardProps) => {
     }
   } else {
     finalX = rowIndex % 2 === 0 ? randomNum(35, 40) : 20;
-    finalY = 0;
+    finalY = rowIndex === 0 ? -3 : rowIndex === 2 ? 3 : 0;
     finalRot = rowIndex % 2 === 0 ? "5deg" : "-5deg";
 
     //fine tune adjustments for mobile / tablet

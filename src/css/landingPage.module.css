@@ -617,7 +617,7 @@
 #howToPlay {
   height: 150px;
   margin: auto;
-  margin-top: 25px;
+  margin-top: 8rem;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -803,7 +803,6 @@
   text-align: right;
   justify-content: flex-end;
   align-items: flex-end;
-  text-wrap: balance;
 }
 .goalsTextContainer {
   text-align: left;
@@ -847,7 +846,7 @@
 
 #eventsContainerSVGplanet {
   top: 20%;
-  left: 20%;
+  left: 10%;
   transform: scale(0.65);
 }
 

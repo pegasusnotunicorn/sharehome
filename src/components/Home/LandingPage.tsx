@@ -152,7 +152,9 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
             <h1>Follow chaotic stage directions</h1>
             <p>
               The executives of the show are trying to instill chaos into the
-              narrative.Complete as many of their Direction Cards as you can to
+              narrative.
+              <br />
+              Complete as many of their Direction Cards as you can to
               earn points!
             </p>
           </div>
@@ -239,6 +241,7 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
           loop
           continuousAutoplay
           autoplaySpeed={5500}
+          showNavigation={false}
         />
       </div>
 

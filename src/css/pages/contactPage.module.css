@@ -31,7 +31,7 @@
   align-items: stretch;
   width: calc(100% - 8rem);
   max-width: 1040px;
-  margin: 0 2rem 2rem;
+  margin: 0 auto 2rem;
   padding: 2rem;
   gap: 2rem;
   border: 2px solid #323232;

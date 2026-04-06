@@ -338,7 +338,7 @@
 
   .menu {
     top: var(--banner-height-mobile, 45px);
-    height: calc(100dvh - var(--banner-height-mobile, 45px));
+    height: calc(100lvh - var(--banner-height-mobile, 45px));
     flex-direction: column;
     background-image: linear-gradient(
       90deg,

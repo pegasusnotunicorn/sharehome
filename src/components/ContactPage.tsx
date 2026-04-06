@@ -3,6 +3,7 @@ import styles from "../css/pages/contactPage.module.css";
 import { NavLink } from "react-router";
 import PolaroidGallery, { type PolaroidGalleryItem } from "./utils/PolaroidGallery";
 import useWindowDimensions from "./utils/useWindowDimensions";
+import { SOCIAL_LINKS, SocialIcon, SocialIconDefs } from "./utils/SocialIcons";
 
 const CONTACT_POLAROIDS: PolaroidGalleryItem[] = [
   {
@@ -119,6 +120,7 @@ const ContactPage = () => {
 
   return (
     <div className={`content ${styles.contactPage}`}>
+      <SocialIconDefs className={styles.socialIconDefs} />
       <div className="subcontentWrapper margin-top min-width">
         <div className={`characterContent ${styles.pageIntro}`}>
           <h2 className={`subtitle ${styles.pageIntroTitle}`}>Contact us</h2>
@@ -126,78 +128,32 @@ const ContactPage = () => {
             Follow along on my game dev journey 🎮
           </p>
           <div className={styles.socialIconsWrapper}>
-            <a
-              href="mailto:hello@lovecareermagic.com"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Email"
-            >
-              <img loading="lazy" src="/images/icons/email2.svg" alt="Email" />
-            </a>
-            <a
-              href="https://instagram.com/pegasusgamesnyc"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram"
-            >
-              <img
-                loading="lazy"
-                src="/images/icons/instagram.svg"
-                alt="Instagram"
-              />
-            </a>
-            <a
-              href="https://www.tiktok.com/@pegasusgamesnyc"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="TikTok"
-            >
-              <img loading="lazy" src="/images/icons/tiktok.svg" alt="TikTok" />
-            </a>
-            <a
-              href="https://www.reddit.com/user/sysifuscorp"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Reddit"
-            >
-              <img loading="lazy" src="/images/icons/reddit.svg" alt="Reddit" />
-            </a>
-            <a
-              href="https://discord.com/invite/nv89cRgEsS"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Discord"
-            >
-              <img
-                loading="lazy"
-                src="/images/icons/discord.svg"
-                alt="Discord"
-              />
-            </a>
-            <a
-              href="https://x.com/pegasusgamesnyc"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Twitter"
-            >
-              <img
-                loading="lazy"
-                src="/images/icons/twitter.svg"
-                alt="Twitter"
-              />
-            </a>
-            <a
-              href="https://www.facebook.com/PegasusGamesNYC/"
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Facebook"
-            >
-              <img
-                loading="lazy"
-                src="/images/icons/facebook.svg"
-                alt="Facebook"
-              />
-            </a>
+            {SOCIAL_LINKS.map(
+              ({
+                href,
+                label,
+                iconId,
+                external = true,
+                brandColor,
+                hoverBackground,
+                hoverIconColor = "#fff",
+              }) => (
+              <a
+                key={label}
+                href={href}
+                target={external ? "_blank" : undefined}
+                rel={external ? "noreferrer" : undefined}
+                aria-label={label}
+                style={{
+                  ["--social-brand-color" as string]: brandColor,
+                  ["--social-brand-background" as string]: hoverBackground ?? brandColor,
+                  ["--social-brand-icon-color" as string]: hoverIconColor,
+                }}
+              >
+                <SocialIcon className={styles.socialIcon} iconId={iconId} />
+              </a>
+              ),
+            )}
           </div>
         </div>
       </div>

@@ -11,48 +11,11 @@ import "../../css/utils/hamburger.css";
 import useWindowScroll from "../utils/useWindowScroll";
 import CharacterPinPopup from "../CharacterPinPopup";
 import { usePinPopup } from "../utils/usePinPopup";
+import { SOCIAL_LINKS, SocialIcon, SocialIconDefs } from "../utils/SocialIcons";
 
 interface NavbarMainProps {
   videoModalVisible?: boolean;
 }
-
-const NAV_SOCIAL_LINKS = [
-  {
-    href: "mailto:hello@lovecareermagic.com",
-    label: "Email",
-    icon: "/images/icons/email2.svg",
-  },
-  {
-    href: "https://instagram.com/pegasusgamesnyc",
-    label: "Instagram",
-    icon: "/images/icons/instagram.svg",
-  },
-  {
-    href: "https://www.tiktok.com/@pegasusgamesnyc",
-    label: "TikTok",
-    icon: "/images/icons/tiktok.svg",
-  },
-  {
-    href: "https://www.reddit.com/user/sysifuscorp",
-    label: "Reddit",
-    icon: "/images/icons/reddit.svg",
-  },
-  {
-    href: "https://discord.com/invite/nv89cRgEsS",
-    label: "Discord",
-    icon: "/images/icons/discord.svg",
-  },
-  {
-    href: "https://x.com/pegasusgamesnyc",
-    label: "Twitter",
-    icon: "/images/icons/twitter.svg",
-  },
-  {
-    href: "https://www.facebook.com/PegasusGamesNYC/",
-    label: "Facebook",
-    icon: "/images/icons/facebook.svg",
-  },
-];
 
 export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
   const location = useLocation();
@@ -100,6 +63,7 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
 
   return (
     <>
+      <SocialIconDefs className={styles.navSocialDefs} />
       {!videoModalVisible && showPopup && (
         <CharacterPinPopup closePopup={closePopup} dismissPopup={dismissPopup} />
       )}
@@ -113,6 +77,35 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
           className={`${styles.topBar} noselect`}
         >
           <NavLink to="/" className={styles.logo} />
+          <div className={styles.navSocialBar}>
+            {SOCIAL_LINKS.map(
+              ({
+                href,
+                label,
+                iconId,
+                external = true,
+                brandColor,
+                hoverBackground,
+                hoverIconColor = "#fff",
+              }) => (
+              <a
+                key={label}
+                href={href}
+                target={external ? "_blank" : undefined}
+                rel={external ? "noreferrer" : undefined}
+                aria-label={label}
+                className={styles.navSocialIcon}
+                style={{
+                  ["--social-brand-color" as string]: brandColor,
+                  ["--social-brand-background" as string]: hoverBackground ?? brandColor,
+                  ["--social-brand-icon-color" as string]: hoverIconColor,
+                }}
+              >
+                <SocialIcon className={styles.navSocialSvg} iconId={iconId} />
+              </a>
+              ),
+            )}
+          </div>
           <div className={styles.topBarActions}>
             {!isBuyPage && (!isLandingPage || isDesktop) && !isLandingPageAtTop && (
               <DefaultButton
@@ -218,21 +211,6 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
                 alt="Navbar illustration"
               />
             </div>
-          </div>
-
-          <div className={styles.navSocialBar}>
-            {NAV_SOCIAL_LINKS.map(({ href, label, icon }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={label}
-                className={styles.navSocialIcon}
-              >
-                <img loading="lazy" src={icon} alt={label} />
-              </a>
-            ))}
           </div>
         </div>
       </div>

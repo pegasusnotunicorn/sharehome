@@ -91,9 +91,7 @@ export const EmailForm = (props: EmailFormProps) => {
             />
           )}
           <h1 className={styles.formPrompt}>
-            Stay updated
-            <br />
-            on the latest news.
+            Don’t miss the latest news.
           </h1>
         </div>
       )}

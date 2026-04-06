@@ -27,6 +27,7 @@ interface CarouselSectionProps {
   delay?: number;
   continuousAutoplay?: boolean;
   autoplaySpeed?: number;
+  showNavigation?: boolean;
 }
 
 //return a single slide
@@ -85,10 +86,11 @@ export const CarouselSection = (props: CarouselSectionProps) => {
 
   const specificFiles = props.specificFiles;
   const isContinuousAutoplay = props.continuousAutoplay ?? false;
+  const showNavigation = props.showNavigation ?? true;
 
   const swiperProps = {
     modules: [Navigation, Pagination, A11y, Autoplay],
-    navigation: true,
+    navigation: showNavigation,
     loop: props.loop ?? false,
     spaceBetween: 50,
     slidesPerView: cardsPerView,

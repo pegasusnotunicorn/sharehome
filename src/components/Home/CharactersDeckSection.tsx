@@ -84,7 +84,8 @@ const Decks = (props: DecksProps) => {
     let distanceRanges = [6, 14];
     let isEvenMult = rowIndex % 2 === 0 ? -1 : 1;
     let isEvenMultTemp = isEvenMult;
-    let finalY: number | string = randomNumFromNeg(10);
+    let finalY: number | string =
+      rowIndex === 0 ? randomNumFromNeg(10) - 35 : rowIndex === 2 ? randomNumFromNeg(10) + 35 : randomNumFromNeg(10);
 
     //small desktop specific
     if (width > 1200 && width <= 1600) {

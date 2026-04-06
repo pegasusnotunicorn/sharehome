@@ -10,15 +10,6 @@ export interface SocialLink {
 
 export const SOCIAL_LINKS: SocialLink[] = [
   {
-    href: "mailto:hello@lovecareermagic.com",
-    label: "Email",
-    iconId: "social-icon-email",
-    external: false,
-    brandColor: "#649a85",
-    hoverBackground:
-      "linear-gradient(to right, #dd7373 0 50%, #5f5aa2 50% 100%) top / 100% 50% no-repeat, linear-gradient(to right, #649a85 0 50%, #f1db4b 50% 100%) bottom / 100% 50% no-repeat",
-  },
-  {
     href: "https://www.tiktok.com/@pegasusgamesnyc",
     label: "TikTok",
     iconId: "social-icon-tiktok",
@@ -33,22 +24,16 @@ export const SOCIAL_LINKS: SocialLink[] = [
     brandColor: "#e4405f",
   },
   {
+    href: "https://www.youtube.com/channel/UCLVCLQPt9jIGwWOA2kaaaxA",
+    label: "YouTube",
+    iconId: "social-icon-youtube",
+    brandColor: "#ff0000",
+  },
+  {
     href: "https://discord.com/invite/nv89cRgEsS",
     label: "Discord",
     iconId: "social-icon-discord",
     brandColor: "#5865f2",
-  },
-  {
-    href: "https://www.facebook.com/PegasusGamesNYC/",
-    label: "Facebook",
-    iconId: "social-icon-facebook",
-    brandColor: "#1877f2",
-  },
-  {
-    href: "https://www.threads.com/@pegasusgamesnyc",
-    label: "Threads",
-    iconId: "social-icon-threads",
-    brandColor: "#101010",
   },
   {
     href: "https://bsky.app/profile/pegasusgamesnyc.bsky.social",
@@ -63,10 +48,25 @@ export const SOCIAL_LINKS: SocialLink[] = [
     brandColor: "#000000",
   },
   {
-    href: "https://www.youtube.com/channel/UCLVCLQPt9jIGwWOA2kaaaxA",
-    label: "YouTube",
-    iconId: "social-icon-youtube",
-    brandColor: "#ff0000",
+    href: "https://www.threads.com/@pegasusgamesnyc",
+    label: "Threads",
+    iconId: "social-icon-threads",
+    brandColor: "#101010",
+  },
+  {
+    href: "https://www.facebook.com/PegasusGamesNYC/",
+    label: "Facebook",
+    iconId: "social-icon-facebook",
+    brandColor: "#1877f2",
+  },
+  {
+    href: "mailto:hello@lovecareermagic.com",
+    label: "Email",
+    iconId: "social-icon-email",
+    external: false,
+    brandColor: "#649a85",
+    hoverBackground:
+      "linear-gradient(to right, #dd7373 0 50%, #5f5aa2 50% 100%) top / 100% 50.5% no-repeat, linear-gradient(to right, #649a85 0 50%, #f1db4b 50% 100%) bottom / 100% 50.5% no-repeat",
   },
 ];
 

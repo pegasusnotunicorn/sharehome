@@ -18,6 +18,94 @@ interface IndividualCharacterProps {
   character: CharacterWithNav;
 }
 
+interface CharacterGridCardProps {
+  name: string;
+  details: string[];
+  imageSrc: string;
+  imageAlt: string;
+  imageObjectPosition?: string;
+  overlayText?: string;
+  onClick?: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  className?: string;
+}
+
+const expansionPlaceholderImage = `data:image/svg+xml;utf8,${encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1200" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#2f314f"/>
+        <stop offset="100%" stop-color="#4b2a33"/>
+      </linearGradient>
+      <radialGradient id="glow" cx="50%" cy="45%" r="60%">
+        <stop offset="0%" stop-color="rgba(255,255,255,0.08)"/>
+        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+      </radialGradient>
+    </defs>
+    <rect width="2000" height="1200" fill="url(#bg)"/>
+    <rect width="2000" height="1200" fill="url(#glow)"/>
+  </svg>
+`)}`;
+
+const expansionPlaceholders = [
+  { id: 1, name: "Petra Anguis", race: "Gorgon", job: "Sculptor", imageSrc: "/images/members/expansion-petra.webp" },
+  { id: 2, name: "Trinity Melange", race: "Chimera", job: "Bartender", imageSrc: "/images/members/expansion-trinity.webp" },
+  { id: 3, name: "Bellerophon \"Belly\" Skybound", race: "Pegasus", job: "Entertainer / Performer" },
+  { id: 4, name: "Vex \"PAN-IQ!\" Hoofprint", race: "Satyr", job: "Rock Star" },
+  { id: 5, name: "Sierra Colt", race: "Centaur", job: "Personal Trainer" },
+  { id: 6, name: "Aquila Leonis", race: "Griffin", job: "Investigative Journalist" },
+  { id: 7, name: "Asty Monolithos", race: "Minotaur", job: "Architect" },
+  { id: 8, name: "Vespera Skryre", race: "Harpy", job: "Paparazzo" },
+  { id: 9, name: "Xylia Aenigmata", race: "Sphinx", job: "Curator" },
+  { id: 10, name: "Phido", race: "Cerberus", job: "Body Guard" },
+];
+
+const CharacterGridCard = ({
+  name,
+  details,
+  imageSrc,
+  imageAlt,
+  imageObjectPosition,
+  overlayText,
+  onClick,
+  onMouseEnter,
+  onMouseLeave,
+  className,
+}: CharacterGridCardProps) => {
+  return (
+    <div
+      className={`${charStyles.characterWrapper} ${className || ""}`.trim()}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      <div
+        className={charStyles.characterInnerWrapper}
+        onClick={onClick}
+      >
+        <img
+          loading="lazy"
+          className="boxes"
+          src={imageSrc}
+          style={{ objectPosition: imageObjectPosition || "center" }}
+          alt={imageAlt}
+        />
+        {overlayText && (
+          <div className={charStyles.cardOverlayText}>{overlayText}</div>
+        )}
+        <div className={`${charStyles.caption} noselect`}>
+          <p className={charStyles.name}>{name}</p>
+          <p className={`${charStyles.details} is-hidden-mobile`}>
+            {details.map((detail) => (
+              <span key={`${name}-${detail}`}>{detail}</span>
+            ))}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 //render all characters or a specific one depending on URL
 const CharactersPage = () => {
   const navigate = useNavigate();
@@ -104,6 +192,7 @@ const CharactersPage = () => {
         <GsapFadeScrub fadeIn className="fadeInTextWrapper">
           {characterContent}
         </GsapFadeScrub>
+        {!chosenCharacter && <ExpansionCharactersSection />}
         <EmojiSection />
         <CarouselSection
           className={charStyles.carousel}
@@ -175,6 +264,7 @@ const AllCharacters = () => {
   let { name } = useParams();
   let chosenCharacter = name ? getSpecificPersonByURL(name) : false;
   const pausedRef = useRef(false);
+  const charactersContainerRef = useRef<HTMLDivElement | null>(null);
 
   const redirectToSpecificCharacter = (character: { urlName: string; ignoreInRandom: boolean }) => {
     if (chosenCharacter !== character && !character.ignoreInRandom) {
@@ -183,7 +273,9 @@ const AllCharacters = () => {
   };
 
   const clearSpotlight = useCallback(() => {
-    const active = document.querySelector(`.${charStyles.characterWrapper}.${charStyles.spotlit}`);
+    const active = charactersContainerRef.current?.querySelector(
+      `.${charStyles.characterWrapper}.${charStyles.spotlit}`
+    );
     if (active) active.classList.remove(charStyles.spotlit);
   }, []);
 
@@ -191,7 +283,10 @@ const AllCharacters = () => {
     const interval = setInterval(() => {
       if (pausedRef.current) return;
       clearSpotlight();
-      const all = document.querySelectorAll(`.${charStyles.characterWrapper}:not(.${charStyles.notDone})`);
+      const all = charactersContainerRef.current?.querySelectorAll(
+        `.${charStyles.characterWrapper}:not(.${charStyles.notDone})`
+      );
+      if (!all) return;
       if (all.length === 0) return;
       const randomIndex = Math.floor(Math.random() * all.length);
       all[randomIndex].classList.add(charStyles.spotlit);
@@ -209,7 +304,7 @@ const AllCharacters = () => {
   }, []);
 
   const allCharacters = getAllCharacters();
-  const expansionCharacters = allCharacters.map((elem, index) => {
+  const existingCharacters = allCharacters.map((elem, index) => {
     const name = elem.name;
     const race = elem.race;
     let job = elem.job;
@@ -219,44 +314,59 @@ const AllCharacters = () => {
 
     let ignoreInRandom = elem.ignoreInRandom ? charStyles.notDone : "";
     return (
-      <div
-        className={`${charStyles.characterWrapper} ${ignoreInRandom}`}
+      <CharacterGridCard
         key={index}
+        className={ignoreInRandom}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-      >
-        <div
-          className={charStyles.characterInnerWrapper}
-          onClick={() => {
-            redirectToSpecificCharacter(elem);
-          }}
-        >
-          <img
-            loading="lazy"
-            className="boxes"
-            src={elem.image.url.replace("big", "small")}
-            style={{ objectPosition: elem.image.objectPosition || "center" }}
-            alt={elem.name}
-          />
-          <div className={`${charStyles.caption} noselect`}>
-            <p className={charStyles.name}>{name}</p>
-            <p className={`${charStyles.details} is-hidden-mobile`}>
-              <span>{elem.age}</span>
-              <span>{race}</span>
-              <span>{job}</span>
-            </p>
-          </div>
-        </div>
-      </div>
+        onClick={() => {
+          redirectToSpecificCharacter(elem);
+        }}
+        name={name}
+        details={[String(elem.age), race, job]}
+        imageSrc={elem.image.url.replace("big", "small")}
+        imageObjectPosition={elem.image.objectPosition}
+        imageAlt={elem.name}
+      />
     );
   });
 
   return (
-    <>
-      <div className={charStyles.allcharactersWrapper}>
-        <div className={charStyles.charactersContainer}>{expansionCharacters}</div>
+    <section id="original-cast" className={charStyles.allcharactersWrapper}>
+      <div className={charStyles.sectionIntro}>
+        <p className={charStyles.sectionEyebrow}>THE ORIGINAL CAST</p>
       </div>
-    </>
+      <div ref={charactersContainerRef} className={charStyles.charactersContainer}>
+        {existingCharacters}
+      </div>
+    </section>
+  );
+};
+
+const ExpansionCharactersSection = () => {
+  const upcomingCharacters = expansionPlaceholders.map((character) => {
+    return (
+      <CharacterGridCard
+        key={character.id}
+        className={charStyles.staticCard}
+        name={character.name}
+        details={[character.race, character.job]}
+        imageSrc={character.imageSrc || expansionPlaceholderImage}
+        imageAlt={`${character.name} placeholder art`}
+        overlayText={character.imageSrc ? undefined : "?"}
+      />
+    );
+  });
+
+  return (
+    <section id="second-season-cast" className={charStyles.allcharactersWrapper}>
+      <div className={charStyles.sectionIntro}>
+        <p className={charStyles.sectionEyebrow}>THE SECOND SEASON CAST</p>
+      </div>
+      <div className={`${charStyles.charactersContainer} ${charStyles.compactCharactersContainer}`}>
+        {upcomingCharacters}
+      </div>
+    </section>
   );
 };
 

@@ -28,28 +28,54 @@ interface CarouselSectionProps {
   continuousAutoplay?: boolean;
   autoplaySpeed?: number;
   showNavigation?: boolean;
+  mediaAspectRatio?: string;
+  imageFit?: "contain" | "cover";
+  autoplayEnabled?: boolean;
 }
 
 //return a single slide
-const getPictureSlide = (index: number, directory: string, filename: string, href?: string) => {
+const getPictureSlide = (
+  index: number,
+  directory: string,
+  filename: string,
+  href?: string,
+  mediaAspectRatio?: string,
+  imageFit: "contain" | "cover" = "contain"
+) => {
+  const frameStyle = mediaAspectRatio ? { aspectRatio: mediaAspectRatio } : undefined;
+  const imageStyle = mediaAspectRatio
+    ? { objectFit: imageFit, width: "100%", height: "100%" }
+    : undefined;
+  const containerClassName = [
+    "noselect",
+    styles.carouselImageContainer,
+    mediaAspectRatio ? styles.fixedAspectContainer : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const frameClassName = [
+    styles.carouselMediaFrame,
+    mediaAspectRatio ? styles.fixedAspectFrame : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const imageClassName = [
+    "noselect",
+    styles.carouselImage,
+    href ? "has-link" : "",
+    mediaAspectRatio ? styles.fixedAspectImage : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
   const imageContent = (
-    <div className={styles.carouselMediaFrame}>
+    <div className={frameClassName} style={frameStyle}>
       <img
         loading="lazy"
         alt={`Carousel ${filename} ${index}`}
-        className={`noselect ${styles.carouselImage} ${href ? "has-link" : ""}`}
+        className={imageClassName}
+        style={imageStyle}
         src={`${directory}/${filename}.webp`}
       />
-      {href && (
-        <DefaultButton
-          variant="primary"
-          color="white"
-          compact
-          className={styles.buttonForLink}
-          text="Watch video"
-          icon="watch"
-        />
-      )}
     </div>
   );
 
@@ -57,16 +83,24 @@ const getPictureSlide = (index: number, directory: string, filename: string, hre
     <SwiperSlide key={`carouselImage${index}`}>
       {href ? (
         <a
-          aria-label={`Photoshoot ${index}`}
+          aria-label={`Open testimonial video ${index + 1} in a new tab`}
           rel="noreferrer"
           target="_blank"
-          className={`noselect ${styles.carouselImageContainer}`}
+          className={containerClassName}
           href={href}
         >
           {imageContent}
+          <DefaultButton
+            variant="primary"
+            color="white"
+            compact
+            className={styles.buttonForLink}
+            text="Watch video"
+            icon="watch"
+          />
         </a>
       ) : (
-        <div className={`noselect ${styles.carouselImageContainer}`}>
+        <div className={containerClassName}>
           {imageContent}
         </div>
       )}
@@ -87,6 +121,9 @@ export const CarouselSection = (props: CarouselSectionProps) => {
   const specificFiles = props.specificFiles;
   const isContinuousAutoplay = props.continuousAutoplay ?? false;
   const showNavigation = props.showNavigation ?? true;
+  const mediaAspectRatio = props.mediaAspectRatio;
+  const imageFit = props.imageFit ?? "contain";
+  const autoplayEnabled = props.autoplayEnabled ?? true;
 
   const swiperProps = {
     modules: [Navigation, Pagination, A11y, Autoplay],
@@ -95,11 +132,13 @@ export const CarouselSection = (props: CarouselSectionProps) => {
     spaceBetween: 50,
     slidesPerView: cardsPerView,
     speed: isContinuousAutoplay ? props.autoplaySpeed ?? 4500 : 600,
-    autoplay: {
-      delay: isContinuousAutoplay ? 0 : props.delay ?? 2000,
-      pauseOnMouseEnter: false,
-      disableOnInteraction: false,
-    },
+    autoplay: autoplayEnabled
+      ? {
+          delay: isContinuousAutoplay ? 0 : props.delay ?? 2000,
+          pauseOnMouseEnter: false,
+          disableOnInteraction: false,
+        }
+      : false,
   };
 
   //get all photos
@@ -107,7 +146,16 @@ export const CarouselSection = (props: CarouselSectionProps) => {
   if (!specificFiles) {
     const totalPictures = props.totalPictures ?? 0;
     for (let x = 1; x <= totalPictures; x++) {
-      allPictures.push(getPictureSlide(x, directory, `${filename}${x}`, href));
+      allPictures.push(
+        getPictureSlide(
+          x,
+          directory,
+          `${filename}${x}`,
+          href,
+          mediaAspectRatio,
+          imageFit
+        )
+      );
     }
   } else {
     for (let x = 0; x < specificFiles.length; x++) {
@@ -116,7 +164,9 @@ export const CarouselSection = (props: CarouselSectionProps) => {
           x,
           directory,
           specificFiles[x].filename,
-          specificFiles[x].href
+          specificFiles[x].href,
+          mediaAspectRatio,
+          imageFit
         )
       );
     }

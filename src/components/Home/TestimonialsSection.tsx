@@ -4,39 +4,39 @@ import landingPageStyles from "../../css/landingPage.module.css";
 
 const testimonials = [
   {
-    filename: "testimonial1",
+    filename: "playthrough1",
     href: "https://www.youtube.com/watch?v=Cpvz4dzRz2c",
   },
   {
-    filename: "testimonial2",
+    filename: "playthrough2",
     href: "https://www.youtube.com/watch?v=ANDtl5Tgnmk",
   },
   {
-    filename: "testimonial3",
+    filename: "playthrough3",
     href: "https://www.youtube.com/watch?v=Bh8wjBpwSYI",
   },
   {
-    filename: "testimonial4",
+    filename: "playthrough4",
     href: "https://www.youtube.com/watch?v=p-oXROylaAc",
   },
   {
-    filename: "testimonial5",
+    filename: "playthrough5",
     href: "https://www.youtube.com/watch?v=E6zQV_ni1pE",
   },
   {
-    filename: "testimonial6",
+    filename: "playthrough6",
     href: "https://www.youtube.com/watch?v=AKcLhaALw8Q",
   },
   {
-    filename: "testimonial7",
+    filename: "playthrough7",
     href: "https://www.youtube.com/watch?v=BKUpx-Z8mrs",
   },
   {
-    filename: "testimonial8",
+    filename: "playthrough8",
     href: "https://www.youtube.com/watch?v=u_iFb02L0QY",
   },
   {
-    filename: "testimonial9",
+    filename: "playthrough9",
     href: "https://www.youtube.com/watch?v=HOGt-U67PKc",
   },
 ];
@@ -55,7 +55,7 @@ export default function TestimonialsSection() {
       <CarouselSection
         className={landingPageStyles.mainpageCarousel}
         directory="/images/testimonials"
-        filename="testimonial"
+        filename="playthrough"
         loop
         autoplayEnabled={false}
         mediaAspectRatio="16 / 9"

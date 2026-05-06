@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import styles from "../css/pages/buyPage.module.css";
+import styles from "../css/pages/backorderPage.module.css";
 import DefaultButton from "./utils/DefaultButton";
 import EmailForm from "./utils/EmailForm";
 import PolaroidGallery, { type PolaroidGalleryItem } from "./utils/PolaroidGallery";
@@ -29,7 +29,7 @@ const POLAROID_ITEMS: PolaroidGalleryItem[] = [
   },
 ];
 
-const BuyPage = () => {
+const BackorderPage = () => {
   useEffect(() => {
     document.title = "Love, Career & Magic is sold out!";
   }, []);
@@ -115,4 +115,4 @@ const BuyPage = () => {
   );
 };
 
-export default BuyPage;
+export default BackorderPage;

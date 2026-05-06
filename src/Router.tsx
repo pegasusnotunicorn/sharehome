@@ -23,7 +23,6 @@ const ErrorPage = lazy(() => import("./components/ErrorPage"));
 const ArtbookDownloadPage = lazy(() => import("./components/ArtbookDownloadPage"));
 const ThankYouPage = lazy(() => import("./components/ThankYouPage"));
 const SignupPage = lazy(() => import("./components/SignupPage"));
-const BuyPage = lazy(() => import("./components/BuyPage"));
 
 const Router = () => {
   return (
@@ -37,7 +36,7 @@ const Router = () => {
 
 const AppRoutes = () => {
   const location = useLocation();
-  const isExternalRedirect = ["/rulebook"].includes(location.pathname);
+  const isExternalRedirect = ["/rulebook", "/buy"].includes(location.pathname);
 
   const [videoModalVisible, setVideoModalVisible] = useState(false);
 
@@ -72,7 +71,10 @@ const AppRoutes = () => {
             path="/rulebook"
             element={<ExternalRedirect url="/rulebook.pdf" />}
           />
-          <Route path="/buy" element={<BuyPage />} />
+          <Route
+            path="/buy"
+            element={<ExternalRedirect url="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy" />}
+          />
           <Route path="/terms" element={<TermsPage />} />
           {/* Fallback for undefined routes */}
           <Route path="*" element={<ErrorPage />} />

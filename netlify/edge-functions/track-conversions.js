@@ -32,7 +32,22 @@ export default async function trackConversions(request, context) {
 
     // Retrieve UTM Data and client_id from Netlify Edge Session
     const encodedUtmData = await context.cookies.get("utm_data");
-    const clientId = await context.cookies.get("client_id");
+    const fallbackClientId = await context.cookies.get("client_id");
+
+    // Pull the real GA4 client_id + session_id from the gtag-set cookies so
+    // the server-side be_purchase event stitches onto the user's existing
+    // session instead of spawning a new orphan one.
+    const gaCookie = await context.cookies.get("_ga");
+    const gaClientId = gaCookie ? gaCookie.split(".").slice(-2).join(".") : null;
+    const gaPropertyKey = GA_MEASUREMENT_ID
+      ? `_ga_${GA_MEASUREMENT_ID.replace(/^G-/, "")}`
+      : null;
+    const gaSessionCookie = gaPropertyKey
+      ? await context.cookies.get(gaPropertyKey)
+      : null;
+    const gaSessionId = gaSessionCookie ? gaSessionCookie.split(".")[2] : null;
+
+    const clientId = gaClientId ?? fallbackClientId;
 
     let utmData = null;
 
@@ -82,7 +97,13 @@ export default async function trackConversions(request, context) {
     if (IS_DEV) console.log("✅ Stripe Data Retrieved:", stripeData);
 
     // Send UTM + Revenue Data to GA4 and Facebook
-    await sendToGA4(clientId, utmData, stripeData.amount_total / 100, request);
+    await sendToGA4(
+      clientId,
+      gaSessionId,
+      utmData,
+      stripeData.amount_total / 100,
+      request
+    );
     await sendToFacebook(clientId, utmData, stripeData, request, context);
 
     return context.rewrite(new URL("/index.html", request.url));
@@ -113,7 +134,7 @@ async function getStripeCheckoutDetails(sessionId) {
 }
 
 // Send Data to GA4
-async function sendToGA4(clientId, utmData, revenue, request) {
+async function sendToGA4(clientId, sessionId, utmData, revenue, request) {
   const url = new URL(request.url);
   const queryParams = url.searchParams;
   const utm_source = queryParams.get("utm_source") ?? utmData.utm_source;
@@ -122,21 +143,25 @@ async function sendToGA4(clientId, utmData, revenue, request) {
   const utm_term = queryParams.get("utm_term") ?? utmData.utm_term;
   const utm_content = queryParams.get("utm_content") ?? utmData.utm_content;
 
+  const params = {
+    currency: "USD",
+    value: revenue,
+    price: revenue,
+    source: utm_source,
+    campaign: utm_campaign,
+    medium: utm_medium,
+    term: utm_term,
+    content: utm_content,
+    engagement_time_msec: 1,
+  };
+  if (sessionId) params.session_id = sessionId;
+
   const ga4Data = {
     client_id: clientId ?? crypto.randomUUID(),
     events: [
       {
         name: "be_purchase",
-        params: {
-          currency: "USD",
-          value: revenue,
-          price: revenue,
-          source: utm_source,
-          campaign: utm_campaign,
-          medium: utm_medium,
-          term: utm_term,
-          content: utm_content,
-        },
+        params,
       },
     ],
   };

@@ -1,0 +1,49 @@
+.errorPage {
+  min-height: calc(100svh - var(--footer-height));
+}
+
+.pageIntro {
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 0 2rem;
+}
+
+.pageIntroTitle {
+  font-size: clamp(2.8rem, 8vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  margin-top: 0;
+  margin-bottom: 0.35rem;
+}
+
+.pageIntroLead {
+  max-width: 34rem;
+  margin: 0;
+  font-family: "Rowdies-Light";
+  font-size: 1.05rem;
+}
+
+.homeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  color: #323232;
+  font-family: "Rowdies-Regular";
+  font-size: 0.9rem;
+  text-decoration: none;
+  padding-bottom: 0.1rem;
+  border-bottom: 2px solid rgba(50, 50, 50, 0.15);
+}
+
+@media only screen and (max-width: 900px) {
+  .errorPage {
+    min-height: calc(100svh - var(--footer-height-mobile));
+  }
+  .pageIntro {
+    padding: 0.5rem 0 1.5rem;
+  }
+  .pageIntroLead {
+    font-size: 0.95rem;
+  }
+}

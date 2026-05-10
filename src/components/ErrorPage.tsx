@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { NavLink } from "react-router";
 import { Splash } from "./utils/Splash";
+import errorStyles from "../css/pages/errorPage.module.css";
 
 const ErrorPage = () => {
   useEffect(() => {
@@ -8,14 +9,18 @@ const ErrorPage = () => {
   }, []);
 
   return (
-    <div className="content max-width">
+    <div className={`content max-width ${errorStyles.errorPage}`}>
       <div className="subcontentWrapper margin-top min-width">
-        <div className="characterContent">
-          <h2 className="subtitle">Something went wrong!</h2>
-          <p>Sorry but we could not find the page you were looking for.</p>
-          <p>
-            <NavLink to="/">Click here to go back to the home page.</NavLink>
+        <div className={`characterContent ${errorStyles.pageIntro}`}>
+          <h2 className={`subtitle ${errorStyles.pageIntroTitle}`}>
+            Page not found
+          </h2>
+          <p className={errorStyles.pageIntroLead}>
+            Sorry but we could not find the page you were looking for 🧭
           </p>
+          <NavLink to="/" className={errorStyles.homeLink}>
+            Click here to go back to the home page
+          </NavLink>
         </div>
       </div>
 

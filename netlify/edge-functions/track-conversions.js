@@ -87,6 +87,20 @@ export default async function trackConversions(request, context) {
       return context.rewrite(new URL("/index.html", request.url));
     }
 
+    // Idempotency: /thankyou can be hit multiple times via refresh,
+    // back/forward, or React strict mode. Without this guard, GA4 and
+    // Facebook receive duplicate be_purchase events that inflate revenue
+    // counts (one $34.99 sale appeared as 4 events totaling $139.96).
+    const alreadyFired = await context.cookies.get("purchase_fired");
+    if (alreadyFired === checkoutSessionId) {
+      console.log(
+        "⏭️ Conversions already fired for session",
+        checkoutSessionId,
+        "— skipping."
+      );
+      return context.rewrite(new URL("/index.html", request.url));
+    }
+
     // Fetch Stripe Checkout Details
     const stripeData = await getStripeCheckoutDetails(checkoutSessionId);
     if (!stripeData.id) {
@@ -101,10 +115,21 @@ export default async function trackConversions(request, context) {
       clientId,
       gaSessionId,
       utmData,
-      stripeData.amount_total / 100,
+      stripeData,
+      checkoutSessionId,
       request
     );
     await sendToFacebook(clientId, utmData, stripeData, request, context);
+
+    context.cookies.set({
+      name: "purchase_fired",
+      value: checkoutSessionId,
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30,
+      sameSite: "Lax",
+      secure: true,
+      httpOnly: true,
+    });
 
     return context.rewrite(new URL("/index.html", request.url));
   } catch (error) {
@@ -119,7 +144,7 @@ async function getStripeCheckoutDetails(sessionId) {
     if (IS_DEV) console.log("🔍 Fetching Stripe session:", sessionId);
 
     const response = await fetch(
-      `https://api.stripe.com/v1/checkout/sessions/${sessionId}`,
+      `https://api.stripe.com/v1/checkout/sessions/${sessionId}?expand[]=line_items`,
       {
         headers: { Authorization: `Bearer ${STRIPE_SECRET_KEY}` },
       }
@@ -134,7 +159,14 @@ async function getStripeCheckoutDetails(sessionId) {
 }
 
 // Send Data to GA4
-async function sendToGA4(clientId, sessionId, utmData, revenue, request) {
+async function sendToGA4(
+  clientId,
+  sessionId,
+  utmData,
+  stripeData,
+  transactionId,
+  request
+) {
   const url = new URL(request.url);
   const queryParams = url.searchParams;
   const utm_source = queryParams.get("utm_source") ?? utmData.utm_source;
@@ -143,10 +175,22 @@ async function sendToGA4(clientId, sessionId, utmData, revenue, request) {
   const utm_term = queryParams.get("utm_term") ?? utmData.utm_term;
   const utm_content = queryParams.get("utm_content") ?? utmData.utm_content;
 
+  const revenue = stripeData.amount_total / 100;
+
+  const items = (stripeData.line_items?.data ?? []).map((li) => ({
+    item_id: li.price?.id ?? li.price?.product ?? "lcm_game",
+    item_name: li.description ?? "Love Career Magic",
+    quantity: li.quantity ?? 1,
+    price:
+      ((li.price?.unit_amount ?? li.amount_total / (li.quantity || 1)) || 0) /
+      100,
+  }));
+
   const params = {
     currency: "USD",
     value: revenue,
-    price: revenue,
+    transaction_id: transactionId,
+    items,
     source: utm_source,
     campaign: utm_campaign,
     medium: utm_medium,
@@ -160,7 +204,7 @@ async function sendToGA4(clientId, sessionId, utmData, revenue, request) {
     client_id: clientId ?? crypto.randomUUID(),
     events: [
       {
-        name: "be_purchase",
+        name: "purchase",
         params,
       },
     ],

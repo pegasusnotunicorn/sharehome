@@ -764,21 +764,42 @@ async function notifySubscriberAdded({
   groupKind,
   groupLabel,
   sessionId,
+  alreadyExisted,
 }) {
   if (!VERBOSE_LOGGING) return;
 
   const subscriberId = subscriber?.id;
-  const status = subscriber?.status || "active";
   const subscriberLink = subscriberId
-    ? `[\`${subscriberId}\`](https://dashboard.mailerlite.com/subscribers/${subscriberId})`
+    ? `https://dashboard.mailerlite.com/subscribers/${subscriberId}`
+    : null;
+
+  // Already-on-list: terse one-liner. Skips the full embed because nothing
+  // new happened — they just paid/abandoned again with the same email.
+  if (alreadyExisted) {
+    await postToDiscord({
+      embeds: [
+        {
+          title: `📧 ${email} already on the ${groupKind || "subscriber"} list`,
+          color: 0x99aab5,
+          description: subscriberLink
+            ? `[View subscriber](${subscriberLink})`
+            : undefined,
+          timestamp: new Date().toISOString(),
+        },
+      ],
+    });
+    return;
+  }
+
+  const status = subscriber?.status || "active";
+  const subscriberLinkMd = subscriberId
+    ? `[\`${subscriberId}\`](${subscriberLink})`
     : "—";
 
   const links = [];
   if (sessionId) links.push(`[Stripe session](${stripeSessionUrl(sessionId)})`);
-  if (subscriberId)
-    links.push(
-      `[MailerLite subscriber](https://dashboard.mailerlite.com/subscribers/${subscriberId})`
-    );
+  if (subscriberLink)
+    links.push(`[MailerLite subscriber](${subscriberLink})`);
   links.push(
     `[MailerLite group](https://dashboard.mailerlite.com/subscribers?rules=%5B%5B%7B%22operator%22%3A%22in_group%22%2C%22args%22%3A%5B%22${groupId}%22%5D%7D%5D%5D)`
   );
@@ -796,7 +817,7 @@ async function notifySubscriberAdded({
           },
           { name: "Group", value: groupLabel, inline: true },
           { name: "Status", value: status, inline: true },
-          { name: "Subscriber", value: subscriberLink, inline: false },
+          { name: "Subscriber", value: subscriberLinkMd, inline: false },
           { name: "Quick links", value: links.join(" • "), inline: false },
         ],
         timestamp: new Date().toISOString(),
@@ -873,7 +894,14 @@ async function addEmailToMailerLite(email, fields, group_id, alertContext = {}) 
     }
 
     const data = await response.json();
-    console.log("✅ Subscriber added to MailerLite!");
+    // MailerLite returns 201 for a brand-new subscriber and 200 when the
+    // email was already on file (the call upserts + re-adds to group).
+    const alreadyExisted = response.status === 200;
+    console.log(
+      alreadyExisted
+        ? "ℹ️  Subscriber already existed on MailerLite, re-added to group"
+        : "✅ Subscriber added to MailerLite!"
+    );
     await notifySubscriberAdded({
       subscriber: data?.data || data,
       email,
@@ -882,6 +910,7 @@ async function addEmailToMailerLite(email, fields, group_id, alertContext = {}) 
       groupKind,
       groupLabel,
       sessionId: restCtx.sessionId,
+      alreadyExisted,
     });
     return data;
   } catch (error) {

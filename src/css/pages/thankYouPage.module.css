@@ -1,0 +1,154 @@
+.thankYouPage {
+  min-height: calc(100svh - var(--footer-height));
+}
+
+.pageIntro {
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0 2rem;
+}
+
+.pageIntroTitle {
+  font-size: clamp(2.8rem, 8vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.pageIntroLead {
+  max-width: 28rem;
+  font-family: "Rowdies-Light";
+  font-size: 0.9rem;
+  line-height: 1.2;
+  margin-bottom: 0;
+}
+
+.shipmentCard {
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  width: calc(100% - 8rem);
+  max-width: 1040px;
+  margin: 0 auto 2rem;
+  padding: 2rem;
+  gap: 2rem;
+  border: 2px solid #323232;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.shipmentVerticalWrapper {
+  text-align: left;
+  padding: 0;
+  flex: 1;
+}
+
+.shipmentVerticalWrapper:first-child {
+  padding-right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  overflow: hidden;
+  flex: 1;
+  border-radius: 6px;
+}
+
+.shipmentVerticalWrapper:last-child {
+  padding-left: 0;
+  padding-bottom: 0;
+}
+
+.shipmentVerticalWrapper:last-child p:last-child {
+  margin-bottom: 0;
+}
+
+.shipmentVerticalWrapper h2 {
+  margin-top: 0;
+  white-space: pre-line;
+}
+
+.notice {
+  margin: 1rem 0;
+  padding: 0.85rem 1rem;
+  border-left: 4px solid #5f5aa2;
+  border-radius: 4px;
+  background: rgba(95, 90, 162, 0.08);
+  font-family: "Rowdies-Regular";
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #323232;
+}
+
+.notice strong {
+  font-family: "Rowdies-Regular";
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  color: #5f5aa2;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.shipmentVerticalWrapper img {
+  border-radius: 5px;
+}
+
+.louImage {
+  width: 100%;
+  height: 100%;
+  display: block;
+  margin: 0 auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center 35%;
+}
+
+.homeLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #323232;
+  font-family: "Rowdies-Regular";
+  font-size: 0.9rem;
+  text-decoration: none;
+  padding-bottom: 0.1rem;
+  border-bottom: 2px solid rgba(50, 50, 50, 0.15);
+}
+
+@media only screen and (max-width: 900px) {
+  .thankYouPage {
+    min-height: calc(100svh - var(--footer-height-mobile));
+  }
+  .pageIntro {
+    padding: 0.5rem 0 1.5rem;
+  }
+  .pageIntroLead {
+    font-size: 0.95rem;
+  }
+  .shipmentCard {
+    flex-direction: column;
+    width: calc(100% - 4rem);
+    margin: 0 1rem 1rem;
+    padding: 1rem;
+    gap: 1rem;
+    align-items: stretch;
+  }
+  .shipmentVerticalWrapper {
+    padding: 0 !important;
+  }
+  .shipmentVerticalWrapper:first-child {
+    width: 100%;
+  }
+  .louImage {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    aspect-ratio: 16 / 9;
+    object-position: center 30%;
+  }
+  .shipmentVerticalWrapper h2 {
+    font-size: clamp(1.8rem, 5.5vw, 2.2rem);
+  }
+}

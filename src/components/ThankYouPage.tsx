@@ -1,8 +1,7 @@
 import { useEffect } from "react";
-import { useLocation } from "react-router"; // To access URL params
-import { NavLink } from "react-router";
-import EmailForm from "./utils/EmailForm";
+import { useLocation, NavLink } from "react-router";
 import CustomHelmet from "./utils/CustomHelmet";
+import styles from "../css/pages/thankYouPage.module.css";
 
 declare global {
   interface Window {
@@ -11,20 +10,16 @@ declare global {
 }
 
 const ThankYouPage = () => {
-  //custom meta tags for this page
   const title = "Thank you for your order!";
 
-  // Get checkout_session_id from the URL
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const checkoutSessionId = params.get("checkout_session_id");
 
-  // Change the page title and trigger Google Ads conversion tracking
   useEffect(() => {
     document.title = title;
 
-    if (checkoutSessionId) {
-      // Google Ads conversion tracking with the session ID as the transaction_id
+    if (checkoutSessionId && import.meta.env.PROD) {
       window.gtag?.("event", "conversion", {
         send_to: "AW-16828802079/rZXLCJXiqJcaEJ_IzNg-",
         transaction_id: checkoutSessionId,
@@ -33,7 +28,7 @@ const ThankYouPage = () => {
   }, [title, checkoutSessionId]);
 
   return (
-    <div className="content max-width">
+    <div className={`content ${styles.thankYouPage}`}>
       <CustomHelmet
         title={title}
         splashImage="https://lovecareermagic.com/images/loucheck.webp"
@@ -41,30 +36,56 @@ const ThankYouPage = () => {
       />
 
       <div className="subcontentWrapper margin-top min-width">
-        <div className="characterContent">
-          <h2 className="subtitle">Thank you for your order!</h2>
+        <div className={`characterContent ${styles.pageIntro}`}>
+          <h2 className={`subtitle ${styles.pageIntroTitle}`}>
+            Thank you for your order!
+          </h2>
+          <p className={styles.pageIntroLead}>
+            Your game is on its way 📦
+          </p>
+          <NavLink to="/" className={styles.homeLink}>
+            Click here to go back home
+          </NavLink>
+        </div>
+      </div>
+
+      <div className={styles.shipmentCard}>
+        <div className={styles.shipmentVerticalWrapper}>
           <img
-            loading="lazy"
-            className="couch"
-            style={{ width: "100%", marginBottom: "1em" }}
             src="/images/loucheck.webp"
             alt="Lou the cat is checking your order"
+            className={styles.louImage}
+            loading="lazy"
           />
+        </div>
+        <div className={styles.shipmentVerticalWrapper}>
+          <h2>
+            Lou the cat is on the case 🐈
+            <br />
+            Head of Fulfillment.
+          </h2>
           <p>
-            I have received your order and will ship your game to you within 3-5
-            business days (after an extensive QA process by our Head of
-            Fulfillment, Lou the cat).
+            I have received your order and will ship your game to you within
+            3-5 business days, after an extensive QA process by our Head of
+            Fulfillment,{" "}
+            <a
+              aria-label="Lou the cat on Instagram"
+              target="_blank"
+              rel="noreferrer"
+              href="https://www.instagram.com/nekonolou"
+            >
+              Lou the cat
+            </a>
+            .
+          </p>
+          <p className={styles.notice}>
+            <strong>Please note</strong>
+            I am just one person hand-packing and shipping out each game
+            manually. I truly appreciate your patience and understanding.
+            Thank you for supporting indie game devs! 😊
           </p>
           <p>
-            PLEASE NOTE: I am just one person running this shop, so I appreciate
-            your patience and understanding.
-          </p>
-          <p>
-            I pack and ship out every game manually, which means there is no
-            automated system where you will receive a tracking number or
-            shipping details. Generally it takes about 1-2 weeks for US orders
-            and 2-4 weeks for international orders from the day you order it. If
-            it has passed that time, please{" "}
+            Orders typically arrive within 1-2 weeks. If it's been longer,{" "}
             <a
               aria-label="Contact us"
               target="_blank"
@@ -73,21 +94,11 @@ const ThankYouPage = () => {
             >
               let me know
             </a>{" "}
-            and I will try my best to sort out the issue. Sending me an email is
-            the best and fastest way to get in touch with me.
-          </p>
-
-          <EmailForm hideTitle={false} isActiveAndDesktop />
-        </div>
-      </div>
-
-      <div className="subcontentWrapper">
-        <div className="couchContainer">
-          <p style={{ marginTop: "1em" }}>
-            <NavLink to="/">Click here to go back home.</NavLink>
+            and I'll sort it out. Email is the fastest way to reach me.
           </p>
         </div>
       </div>
+
     </div>
   );
 };

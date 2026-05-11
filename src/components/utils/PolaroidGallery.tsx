@@ -5,8 +5,23 @@ export interface PolaroidGalleryItem {
   src: string;
   alt: string;
   caption?: ReactNode;
+  date?: string;
   hideOnMobile?: boolean;
 }
+
+const dateFormatter = new Intl.DateTimeFormat(undefined, {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+  timeZone: "UTC",
+});
+
+const formatDate = (iso?: string) => {
+  if (!iso) return undefined;
+  const parsed = new Date(`${iso}T00:00:00Z`);
+  if (Number.isNaN(parsed.getTime())) return iso;
+  return dateFormatter.format(parsed);
+};
 
 interface PolaroidGalleryProps {
   items: PolaroidGalleryItem[];
@@ -61,8 +76,15 @@ const PolaroidGallery = ({
               alt={item.alt}
               className={styles.polaroidPhoto}
             />
-            {item.caption && (
-              <p className={styles.polaroidCaption}>{item.caption}</p>
+            {(item.caption || item.date) && (
+              <div className={styles.polaroidCaptionWrapper}>
+                {item.caption && (
+                  <p className={styles.polaroidCaption}>{item.caption}</p>
+                )}
+                {item.date && (
+                  <p className={styles.polaroidDate}>{formatDate(item.date)}</p>
+                )}
+              </div>
             )}
           </button>
         ))}
@@ -92,8 +114,15 @@ const PolaroidGallery = ({
               alt={activeItem.alt}
               className={styles.lightboxPhoto}
             />
-            {activeItem.caption && (
-              <p className={styles.lightboxCaption}>{activeItem.caption}</p>
+            {(activeItem.caption || activeItem.date) && (
+              <div className={styles.lightboxCaptionWrapper}>
+                {activeItem.caption && (
+                  <p className={styles.lightboxCaption}>{activeItem.caption}</p>
+                )}
+                {activeItem.date && (
+                  <p className={styles.lightboxDate}>{formatDate(activeItem.date)}</p>
+                )}
+              </div>
             )}
           </div>
         </div>

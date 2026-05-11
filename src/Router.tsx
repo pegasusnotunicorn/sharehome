@@ -73,7 +73,15 @@ const AppRoutes = () => {
           />
           <Route
             path="/buy"
-            element={<ExternalRedirect url="https://buy.stripe.com/bIYg0Q1e08Z86Fa8wy" />}
+            element={
+              <ExternalRedirect
+                url={
+                  import.meta.env.DEV
+                    ? import.meta.env.REACT_APP_STRIPE_TEST_URL
+                    : import.meta.env.REACT_APP_STRIPE_PROD_URL
+                }
+              />
+            }
           />
           <Route path="/terms" element={<TermsPage />} />
           {/* Fallback for undefined routes */}

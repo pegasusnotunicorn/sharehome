@@ -14,6 +14,9 @@ import stripeModule from "stripe";
 const { parcelForGameCount } = await import(
   "../netlify/functions/lib/shippo.js"
 );
+const { shippingAddressFromSession } = await import(
+  "../netlify/functions/lib/stripe-shipping.js"
+);
 
 const ALERT_WEBHOOK_URL = process.env.ALERT_WEBHOOK_URL;
 if (!ALERT_WEBHOOK_URL) {
@@ -109,18 +112,12 @@ function quickLinks({ sessionId, trackingUrl, labelUrl }) {
 }
 
 // ---- Real session + real parcel, mocked label ----
-const shipping = session.shipping_details || session.shipping;
-const to = {
-  name: shipping.name,
-  street1: shipping.address.line1,
-  ...(shipping.address.line2 && { street2: shipping.address.line2 }),
-  city: shipping.address.city,
-  state: shipping.address.state,
-  zip: shipping.address.postal_code,
-  country: shipping.address.country,
-  ...(session.customer_details?.phone && { phone: session.customer_details.phone }),
-  email: session.customer_details?.email,
-};
+const address = shippingAddressFromSession(session);
+if (!address) {
+  console.error("Session has no shipping address — can't preview.");
+  process.exit(1);
+}
+const { to } = address;
 
 const gameCount = (session.line_items?.data || []).reduce(
   (sum, i) => sum + (i.quantity || 0),

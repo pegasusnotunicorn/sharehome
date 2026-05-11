@@ -14,6 +14,9 @@ process.env.NETLIFY_DEV = "true";
 const { createLabel, parcelForGameCount } = await import(
   "../netlify/functions/lib/shippo.js"
 );
+const { shippingAddressFromSession } = await import(
+  "../netlify/functions/lib/stripe-shipping.js"
+);
 
 function buildFakeSession({ withTrackingMetadata = false } = {}) {
   return {
@@ -37,26 +40,6 @@ function buildFakeSession({ withTrackingMetadata = false } = {}) {
     metadata: withTrackingMetadata
       ? { shippo_transaction_id: "already_purchased_xyz" }
       : {},
-  };
-}
-
-// Re-implementation of purchaseShippoLabel's pure shipping-address mapping,
-// kept minimal so we can exercise the same logic without booting Netlify.
-function shippingAddressFromSession(session) {
-  const shipping = session.shipping_details;
-  if (!shipping?.address?.line1) return null;
-  return {
-    name: shipping.name,
-    street1: shipping.address.line1,
-    ...(shipping.address.line2 && { street2: shipping.address.line2 }),
-    city: shipping.address.city,
-    state: shipping.address.state,
-    zip: shipping.address.postal_code,
-    country: shipping.address.country,
-    ...(session.customer_details?.phone && {
-      phone: session.customer_details.phone,
-    }),
-    email: session.customer_details?.email,
   };
 }
 
@@ -87,7 +70,7 @@ async function run() {
   // 3. Real label purchase for each supported game count
   for (const qty of [1, 2, 12]) {
     const session = buildFakeSession();
-    const to = shippingAddressFromSession(session);
+    const { to } = shippingAddressFromSession(session);
     const config = await parcelForGameCount(qty);
     console.log(
       `\n📦 Simulating ${qty}-game order for ${session.id} (cap $${config.maxLabelUsd})...`

@@ -2,6 +2,7 @@ import stripeModule from "stripe";
 import fetch from "node-fetch";
 import { getStore } from "@netlify/blobs";
 import { createLabel, parcelForGameCount } from "./lib/shippo.js";
+import { shippingAddressFromSession } from "./lib/stripe-shipping.js";
 
 const IS_DEV = process.env.NETLIFY_DEV === "true";
 
@@ -29,7 +30,13 @@ function maybeForceFailure(stage) {
   }
 }
 
-const stripe = stripeModule(STRIPE_SECRET_KEY);
+// Pin the API version explicitly so an `npm update` of `stripe` can't
+// silently shift the version on our outbound calls (retrieve/update). This
+// is independent of the Webhook Endpoint API version, which is set in the
+// Stripe Dashboard and controls the shape of incoming event payloads.
+const stripe = stripeModule(STRIPE_SECRET_KEY, {
+  apiVersion: "2025-02-24.acacia",
+});
 
 const MAILER_LITE_KEY = process.env.MAILER_LITE_KEY;
 const MAILERLITE_PURCHASE_GROUP_ID = process.env.MAILERLITE_PURCHASE_GROUP_ID;
@@ -193,23 +200,17 @@ async function purchaseShippoLabel(eventSession, eventId) {
       return;
     }
 
-    // Stripe renamed `shipping` → `shipping_details` in newer API versions.
-    // Cover both since webhook events may arrive on older API versions.
-    const shipping = session.shipping_details || session.shipping;
-    if (!shipping?.address?.line1) {
+    const address = shippingAddressFromSession(session);
+    if (!address) {
       console.log("📦 No shipping address on session, skipping Shippo");
       return;
     }
+    const { shipping, to } = address;
 
-    if (shipping.address.country !== "US") {
-      await alert(
-        `Non-US order received (country=${shipping.address.country}). Skipping Shippo — handle manually.`,
-        { source: "shippo", sessionId: session.id }
-      );
-      return;
-    }
-
-    // Race-window lock against concurrent webhook deliveries of the same session.
+    // Race-window lock against concurrent webhook deliveries of the same
+    // session. Claim BEFORE the non-US alert so a Stripe replay (e.g. a
+    // dashboard "Resend") doesn't re-fire the same alert — the claim is kept
+    // (not released) on non-US so replays short-circuit here.
     const claim = await claimSessionForLabel(session.id, eventId);
     if (!claim.claimed) {
       let claimedBy = claim.by;
@@ -218,6 +219,17 @@ async function purchaseShippoLabel(eventSession, eventId) {
       } catch {}
       console.log(
         `📦 Another delivery already claimed this session (by ${claimedBy}); skipping`
+      );
+      return;
+    }
+
+    if (shipping.address.country !== "US") {
+      // Intentionally NOT releasing the claim — non-US orders are handled
+      // manually and we don't want a replay to re-alert. The claim becomes
+      // the dedupe key.
+      await alert(
+        `Non-US order received (country=${shipping.address.country}). Skipping Shippo — handle manually.`,
+        { source: "shippo", sessionId: session.id }
       );
       return;
     }
@@ -267,20 +279,6 @@ async function purchaseShippoLabel(eventSession, eventId) {
       );
       return;
     }
-
-    const to = {
-      name: shipping.name,
-      street1: shipping.address.line1,
-      ...(shipping.address.line2 && { street2: shipping.address.line2 }),
-      city: shipping.address.city,
-      state: shipping.address.state,
-      zip: shipping.address.postal_code,
-      country: shipping.address.country,
-      ...(session.customer_details?.phone && {
-        phone: session.customer_details.phone,
-      }),
-      email: session.customer_details?.email,
-    };
 
     console.log(
       `📦 Buying Shippo label for ${to.name} (${session.id}, ${gameCount} game(s))`

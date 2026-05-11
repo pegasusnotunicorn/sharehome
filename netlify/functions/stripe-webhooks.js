@@ -116,6 +116,7 @@ async function claimSessionForLabel(sessionId, eventId) {
       sessionId,
       JSON.stringify({ eventId, at: new Date().toISOString() })
     );
+    await maybeAlertBlobBloat(store);
     return { claimed: true };
   } catch (err) {
     console.warn(
@@ -123,6 +124,31 @@ async function claimSessionForLabel(sessionId, eventId) {
       err.message
     );
     return { claimed: true };
+  }
+}
+
+// Successful purchases leave permanent claim entries by design (they back the
+// metadata idempotency check). The store grows monotonically — at sharehome
+// volume it's irrelevant, but if growth ever accelerates we want a heads-up
+// rather than discovering a bloated store mid-incident. Sample ~2% of claim
+// attempts; list and alert once per week if we cross the threshold.
+const BLOB_BLOAT_THRESHOLD = 2000;
+const BLOB_BLOAT_DEDUPE_KEY = "_size_alert_sent";
+const BLOB_BLOAT_DEDUPE_MS = 7 * 24 * 60 * 60 * 1000;
+async function maybeAlertBlobBloat(store) {
+  if (Math.random() > 0.02) return;
+  try {
+    const flag = await store.get(BLOB_BLOAT_DEDUPE_KEY);
+    if (flag && Date.now() - Number(flag) < BLOB_BLOAT_DEDUPE_MS) return;
+    const { blobs = [] } = await store.list();
+    if (blobs.length <= BLOB_BLOAT_THRESHOLD) return;
+    await store.set(BLOB_BLOAT_DEDUPE_KEY, String(Date.now()));
+    await alert(
+      `\`shippo-claimed-sessions\` Blob store has ${blobs.length} entries (threshold ${BLOB_BLOAT_THRESHOLD}). Successful purchases leave permanent claims by design — if growth is faster than expected, consider a periodic cleanup of entries older than ~60 days. Suppressed for 7 days.`,
+      { source: "shippo" }
+    );
+  } catch (err) {
+    console.warn("⚠️  Blob bloat check failed:", err.message);
   }
 }
 
@@ -202,6 +228,18 @@ async function purchaseShippoLabel(eventSession, eventId) {
       await alert(
         "Can't determine game count — `STRIPE_LCM_PRODUCT_ID` env var is missing. **No label was bought.** Set the env var in Netlify and retry the event from the Stripe dashboard.",
         { source: "shippo", sessionId: session.id }
+      );
+      return;
+    }
+    if (gameCount === 0) {
+      await releaseSessionClaim(session.id);
+      await alert(
+        "No LCM games found in this order, but the session has a shipping address. **No label was bought.** Verify the line items match `STRIPE_LCM_PRODUCT_ID`, or if this is a non-game SKU, handle fulfillment manually.",
+        {
+          source: "shippo",
+          sessionId: session.id,
+          customer: session.customer_details?.email || "—",
+        }
       );
       return;
     }

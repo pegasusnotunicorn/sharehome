@@ -126,6 +126,20 @@ async function claimSessionForLabel(sessionId, eventId) {
   }
 }
 
+// Releases the claim so a Stripe dashboard replay can re-process the session.
+// Called from every alert-and-skip path (env-var missing, cap rejection,
+// transient Shippo error, etc.) — anything an operator might fix and retry.
+// NOT called after a label is successfully bought; metadata becomes the
+// primary idempotency mechanism from that point on.
+async function releaseSessionClaim(sessionId) {
+  try {
+    const store = getStore("shippo-claimed-sessions");
+    await store.delete(sessionId);
+  } catch (err) {
+    console.warn("⚠️  Couldn't release Blob claim:", err.message);
+  }
+}
+
 async function purchaseShippoLabel(eventSession, eventId) {
   // Re-fetch the live session — webhook event payloads are frozen snapshots,
   // so retries/replays would otherwise see stale metadata and double-buy.
@@ -172,14 +186,19 @@ async function purchaseShippoLabel(eventSession, eventId) {
     // Race-window lock against concurrent webhook deliveries of the same session.
     const claim = await claimSessionForLabel(session.id, eventId);
     if (!claim.claimed) {
+      let claimedBy = claim.by;
+      try {
+        claimedBy = JSON.parse(claim.by).eventId || claim.by;
+      } catch {}
       console.log(
-        `📦 Another delivery already claimed this session (${claim.by}); skipping`
+        `📦 Another delivery already claimed this session (by ${claimedBy}); skipping`
       );
       return;
     }
 
     const gameCount = countGames(session);
     if (gameCount === null) {
+      await releaseSessionClaim(session.id);
       await alert(
         "Can't determine game count — `STRIPE_LCM_PRODUCT_ID` env var is missing. **No label was bought.** Set the env var in Netlify and retry the event from the Stripe dashboard.",
         { source: "shippo", sessionId: session.id }
@@ -187,6 +206,7 @@ async function purchaseShippoLabel(eventSession, eventId) {
       return;
     }
     if (gameCount >= 3 && gameCount <= 11) {
+      await releaseSessionClaim(session.id);
       await alert(
         `Order is for **${gameCount} games**, which doesn't match any of our parcel templates (we only stock boxes for 1, 2, and 12). Auto-buying a 12x label would waste a much larger carton than needed. **No label was bought** — decide on packaging manually (e.g. combine smaller boxes, or buy the 12x label by hand), then patch the Stripe session metadata so a webhook retry won't double-buy.`,
         {
@@ -202,6 +222,7 @@ async function purchaseShippoLabel(eventSession, eventId) {
     }
     const parcelConfig = await parcelForGameCount(gameCount);
     if (!parcelConfig) {
+      await releaseSessionClaim(session.id);
       await alert(
         `Cannot pick parcel for session ${session.id} — gameCount=${gameCount}. Handle manually.`,
         { source: "shippo", sessionId: session.id }
@@ -272,6 +293,11 @@ async function purchaseShippoLabel(eventSession, eventId) {
   } catch (err) {
     // Never throw — Stripe would retry the webhook forever.
     console.error("❌ Shippo label purchase failed:", err.message);
+
+    // Release the claim so the operator can fix the underlying issue
+    // (raise cap, fix address, etc.) and replay the event from the Stripe
+    // dashboard. Without this, a replay would silently skip on the blob lock.
+    await releaseSessionClaim(session.id);
 
     const isCapRejection = /exceeds cap/i.test(err.message);
     const description = isCapRejection
@@ -374,9 +400,14 @@ async function alert(message, context = {}) {
     });
   }
   for (const [key, value] of Object.entries(rest)) {
+    // Discord caps field values at 1024 chars; Shippo error bodies can be
+    // huge JSON dumps. Truncate with headroom for the ``` wrappers.
+    const str = String(value);
+    const truncated =
+      str.length > 1000 ? str.slice(0, 1000) + "… [truncated]" : str;
     fields.push({
       name: FIELD_LABELS[key] || key,
-      value: "```" + String(value) + "```",
+      value: "```" + truncated + "```",
       inline: false,
     });
   }

@@ -1,7 +1,7 @@
 import stripeModule from "stripe";
 import fetch from "node-fetch";
 import { getStore } from "@netlify/blobs";
-import { createLabel, parcelForGameCount } from "./lib/shippo.js";
+import { createLabel, createOrder, parcelForGameCount } from "./lib/shippo.js";
 import { shippingAddressFromSession } from "./lib/stripe-shipping.js";
 
 const IS_DEV = process.env.NETLIFY_DEV === "true";
@@ -42,6 +42,10 @@ const MAILER_LITE_KEY = process.env.MAILER_LITE_KEY;
 const MAILERLITE_PURCHASE_GROUP_ID = process.env.MAILERLITE_PURCHASE_GROUP_ID;
 const MAILERLITE_ABANDONED_GROUP_ID = process.env.MAILERLITE_ABANDONED_GROUP_ID;
 
+const STRIPE_PAYMENT_LINK_URL = IS_DEV
+  ? process.env.REACT_APP_STRIPE_TEST_URL
+  : process.env.REACT_APP_STRIPE_PROD_URL;
+
 export default async function stripeWebhooks(request) {
   if (request.method !== "POST") {
     return new Response("Method Not Allowed", { status: 405 });
@@ -75,7 +79,7 @@ export default async function stripeWebhooks(request) {
       if (customerEmail) {
         await addEmailToMailerLite(
           customerEmail,
-          customerName,
+          { name: customerName },
           MAILERLITE_PURCHASE_GROUP_ID,
           { sessionId: session.id, groupKind: "purchase" }
         );
@@ -85,21 +89,49 @@ export default async function stripeWebhooks(request) {
       break;
     }
     case "checkout.session.expired": {
-      const abandoned = event.data.object;
+      const eventSession = event.data.object;
       const abandonedEmail =
-        abandoned.customer_details?.email ?? abandoned.customer_email;
-      const abandonedName = abandoned.customer_details?.name;
+        eventSession.customer_details?.email ?? eventSession.customer_email;
 
       if (!abandonedEmail) {
         if (IS_DEV) console.log("No email found for abandoned checkout");
         break;
       }
 
+      // Re-fetch with line_items expanded — event payload doesn't include them,
+      // and we want cart details for the MailerLite custom fields. Falling back
+      // to the event snapshot is fine: cart_items/cart_total just stay empty.
+      let session = eventSession;
+      try {
+        session = await stripe.checkout.sessions.retrieve(eventSession.id, {
+          expand: ["line_items.data.price.product"],
+        });
+      } catch (err) {
+        console.warn(
+          `⚠️  Couldn't re-fetch expired session ${eventSession.id} for cart details:`,
+          err.message
+        );
+      }
+
+      // Prefilled-email URL is the recovery story for Payment Link sessions —
+      // Stripe doesn't generate `after_expiration.recovery.url` for these.
+      const recoveryUrl = STRIPE_PAYMENT_LINK_URL
+        ? `${STRIPE_PAYMENT_LINK_URL}?prefilled_email=${encodeURIComponent(abandonedEmail)}`
+        : null;
+
       await addEmailToMailerLite(
         abandonedEmail,
-        abandonedName,
+        {
+          name: session.customer_details?.name,
+          cart_total:
+            session.amount_total != null
+              ? formatMoney(session.amount_total, session.currency)
+              : null,
+          cart_items: formatCartItemsForField(session),
+          recovery_url: recoveryUrl,
+        },
         MAILERLITE_ABANDONED_GROUP_ID,
-        { sessionId: abandoned.id, groupKind: "abandoned" }
+        { sessionId: session.id, groupKind: "abandoned" }
       );
       break;
     }
@@ -157,6 +189,38 @@ async function maybeAlertBlobBloat(store) {
   } catch (err) {
     console.warn("⚠️  Blob bloat check failed:", err.message);
   }
+}
+
+// Returns the next per-day order number, e.g. "LCM-20260511-001". Uses
+// Netlify Blobs with optimistic concurrency (etag CAS) to survive concurrent
+// webhook deliveries. Best-effort: if Blobs is unreachable or we lose all
+// CAS attempts, callers should fall back to a unique-by-construction id so
+// they don't block label purchase.
+const ORDER_COUNTER_STORE = "shippo-order-counters";
+const ORDER_COUNTER_MAX_RETRIES = 5;
+async function nextDailyOrderNumber() {
+  const store = getStore(ORDER_COUNTER_STORE);
+  const day = new Date().toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD
+  // Scope key by Stripe mode so test runs never bump the live sequence.
+  const mode = IS_DEV ? "test" : "live";
+  const key = `${mode}-${day}`;
+  const numberPrefix = IS_DEV ? "LCM-TEST-" : "LCM-";
+  for (let attempt = 0; attempt < ORDER_COUNTER_MAX_RETRIES; attempt++) {
+    const current = await store.getWithMetadata(key, { type: "text" });
+    const value = current?.data ? Number(current.data) : 0;
+    const next = value + 1;
+    const writeOpts = current?.etag
+      ? { onlyIfMatch: current.etag }
+      : { onlyIfNew: true };
+    const { modified } = await store.set(key, String(next), writeOpts);
+    if (modified) {
+      return `${numberPrefix}${day}-${String(next).padStart(3, "0")}`;
+    }
+    // Another delivery beat us to it; loop and re-read.
+  }
+  throw new Error(
+    `Couldn't acquire order counter for ${key} after ${ORDER_COUNTER_MAX_RETRIES} attempts`
+  );
 }
 
 // Releases the claim so a Stripe dashboard replay can re-process the session.
@@ -280,6 +344,64 @@ async function purchaseShippoLabel(eventSession, eventId) {
       return;
     }
 
+    // Best-effort: create a Shippo Order so the transaction shows up linked
+    // under the dashboard's Orders view (line items, totals, customer info).
+    // Cosmetic — if this fails we still buy the label.
+    let shippoOrderId;
+    let shippoOrderNumber;
+    try {
+      try {
+        shippoOrderNumber = await nextDailyOrderNumber();
+      } catch (err) {
+        // Counter unreachable / contended. Fall back to the session id so the
+        // order still gets a unique number — we just lose the human-friendly
+        // sequential format for this one order.
+        console.warn("⚠️  Daily order counter failed, using session id:", err.message);
+        shippoOrderNumber = session.id.replace(/^cs_(test|live)_/, "");
+      }
+      const order = await createOrder({
+        to,
+        orderNumber: shippoOrderNumber,
+        notes: `Stripe: ${stripeSessionUrl(session.id)}`,
+        placedAt: new Date(
+          (session.created || Date.now() / 1000) * 1000
+        ).toISOString(),
+        totalPrice: (session.amount_total || 0) / 100,
+        subtotalPrice:
+          session.amount_subtotal != null
+            ? session.amount_subtotal / 100
+            : undefined,
+        totalTax: session.total_details?.amount_tax
+          ? session.total_details.amount_tax / 100
+          : undefined,
+        shippingCost: session.total_details?.amount_shipping
+          ? session.total_details.amount_shipping / 100
+          : undefined,
+        currency: (session.currency || "usd").toUpperCase(),
+        weightOz: gameCount * 20,
+        lineItems: shippoLineItemsFromSession(session),
+      });
+      shippoOrderId = order.object_id;
+      console.log(`📦 Created Shippo order ${shippoOrderNumber} (${shippoOrderId})`);
+    } catch (err) {
+      console.warn(
+        "⚠️  Shippo order creation failed (proceeding without):",
+        err.message
+      );
+      // Label is still being purchased — surface the failure so the dashboard
+      // gap (missing Order, "Unknown" on the shipment row) gets noticed.
+      await alert(
+        "Shippo Order creation failed — the label will still be bought, but the dashboard's Orders view won't have this order and the shipment row will show \"Unknown\". Fix the underlying issue (often a field that exceeded its char limit).",
+        {
+          source: "shippo",
+          sessionId: session.id,
+          titleSuffix: "order",
+          orderNumber: shippoOrderNumber,
+          error: err.message,
+        }
+      );
+    }
+
     console.log(
       `📦 Buying Shippo label for ${to.name} (${session.id}, ${gameCount} game(s))`
     );
@@ -288,6 +410,9 @@ async function purchaseShippoLabel(eventSession, eventId) {
       parcel: parcelConfig.parcel,
       maxLabelUsd: parcelConfig.maxLabelUsd,
       metadata: `stripe_session=${session.id}`,
+      shipmentMetadata: shippoOrderNumber,
+      order: shippoOrderId,
+      reference1: shippoOrderNumber,
     });
     console.log(
       `✅ Label ${label.transactionId} — ${label.rate.provider} ${label.rate.service} $${label.rate.amount} — tracking ${label.trackingNumber}`
@@ -298,6 +423,7 @@ async function purchaseShippoLabel(eventSession, eventId) {
       gameCount,
       parcel: parcelConfig.parcel,
       label,
+      orderNumber: shippoOrderNumber,
     });
 
     // Persist tracking back to the Stripe session for idempotency + dashboard visibility.
@@ -309,6 +435,7 @@ async function purchaseShippoLabel(eventSession, eventId) {
           shippo_transaction_id: label.transactionId,
           shippo_tracking_number: label.trackingNumber,
           shippo_label_url: label.labelUrl,
+          ...(shippoOrderId && { shippo_order_id: shippoOrderId }),
         },
       });
     } catch (err) {
@@ -398,7 +525,7 @@ function quickLinks({ sessionId, trackingUrl, labelUrl }) {
   if (sessionId) links.push(`[Stripe session](${stripeSessionUrl(sessionId)})`);
   if (trackingUrl) links.push(`[Track package](${trackingUrl})`);
   if (labelUrl) links.push(`[Label PDF](${labelUrl})`);
-  links.push("[Shippo dashboard](https://apps.goshippo.com/orders)");
+  links.push("[Shippo dashboard](https://apps.goshippo.com/shipments)");
   return links.join(" • ");
 }
 
@@ -412,6 +539,7 @@ const FIELD_LABELS = {
   nextSteps: "Next steps",
   trackingNumber: "Tracking number",
   shippoTransactionId: "Shippo transaction",
+  orderNumber: "Order #",
   email: "Email",
   group: "MailerLite group",
   response: "Response",
@@ -471,6 +599,50 @@ function formatMoney(amountCents, currency) {
   return `$${(amountCents / 100).toFixed(2)} ${cur}`;
 }
 
+// Maps Stripe line items to Shippo Order line_items shape. Per-item weight
+// is omitted — we set order-level weight from gameCount instead, which is
+// close enough for the dashboard's cosmetic display.
+function shippoLineItemsFromSession(session) {
+  const items = session.line_items?.data || [];
+  const currency = (session.currency || "usd").toUpperCase();
+  return items.map((item) => {
+    const name =
+      item.description ||
+      item.price?.product?.name ||
+      item.price?.nickname ||
+      "item";
+    const productId =
+      typeof item.price?.product === "string"
+        ? item.price.product
+        : item.price?.product?.id;
+    return {
+      title: name,
+      quantity: item.quantity || 1,
+      total_price: ((item.amount_total || 0) / 100).toFixed(2),
+      currency,
+      ...(productId && { sku: productId }),
+    };
+  });
+}
+
+// Comma-joined single-line variant for MailerLite custom fields.
+// e.g. "1× Love, Career & Magic" or "1× LCM, 1× Bizz pin".
+function formatCartItemsForField(session) {
+  const items = session.line_items?.data || [];
+  if (!items.length) return null;
+  return items
+    .map((item) => {
+      const name =
+        item.description ||
+        item.price?.product?.name ||
+        item.price?.nickname ||
+        "item";
+      const qty = item.quantity || 1;
+      return `${qty}× ${name}`;
+    })
+    .join(", ");
+}
+
 function formatLineItems(session) {
   const items = session.line_items?.data || [];
   if (!items.length) return "—";
@@ -516,7 +688,7 @@ function formatOrderSummary(session) {
 }
 
 // Successes / informational. Only sent when VERBOSE_LOGGING=true.
-async function notifyLabelPurchased({ session, to, gameCount, parcel, label }) {
+async function notifyLabelPurchased({ session, to, gameCount, parcel, label, orderNumber }) {
   if (!VERBOSE_LOGGING) return;
 
   const customerLines = [
@@ -535,7 +707,9 @@ async function notifyLabelPurchased({ session, to, gameCount, parcel, label }) {
   await postToDiscord({
     embeds: [
       {
-        title: "📦 Shipping label purchased",
+        title: orderNumber
+          ? `📦 Shipping label purchased — ${orderNumber}`
+          : "📦 Shipping label purchased",
         url: label.labelUrl,
         color: 0x57f287, // Discord green
         fields: [
@@ -631,7 +805,7 @@ async function notifySubscriberAdded({
   });
 }
 
-async function addEmailToMailerLite(email, name, group_id, alertContext = {}) {
+async function addEmailToMailerLite(email, fields, group_id, alertContext = {}) {
   const { groupKind = "subscriber", ...restCtx } = alertContext;
   const groupLabel =
     groupKind === "purchase"
@@ -654,19 +828,23 @@ async function addEmailToMailerLite(email, name, group_id, alertContext = {}) {
     return;
   }
 
+  const cleanFields = Object.fromEntries(
+    Object.entries(fields || {}).filter(([, v]) => v != null && v !== "")
+  );
+
   const url = "https://connect.mailerlite.com/api/subscribers";
   const payload = {
     email,
     groups: [group_id],
     status: "active",
-    // add name to fields obj if it's defined
-    ...(name && { fields: { name } }),
+    ...(Object.keys(cleanFields).length && { fields: cleanFields }),
   };
 
   try {
     maybeForceFailure("mailerlite");
     console.log(
-      `📧 Trying to add subscriber to MailerLite: ${email} ${name} for group ${group_id}`
+      `📧 Trying to add subscriber to MailerLite: ${email} for group ${group_id}`,
+      cleanFields
     );
     const response = await fetch(url, {
       method: "POST",
@@ -699,7 +877,7 @@ async function addEmailToMailerLite(email, name, group_id, alertContext = {}) {
     await notifySubscriberAdded({
       subscriber: data?.data || data,
       email,
-      name,
+      name: cleanFields.name,
       groupId: group_id,
       groupKind,
       groupLabel,

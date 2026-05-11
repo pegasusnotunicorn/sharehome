@@ -127,6 +127,48 @@ function pickCheapest(rates) {
   );
 }
 
+// Create a Shippo Order so the transaction shows up under the dashboard's
+// "Orders" view with line items, totals, and customer info. Cosmetic — the
+// label still works without it. Returns the full order object; callers
+// typically only need `.object_id` to pass as `order` on createLabel().
+export async function createOrder({
+  to,
+  from = DEFAULT_FROM_ADDRESS,
+  lineItems,
+  orderNumber,
+  placedAt,
+  totalPrice,
+  subtotalPrice,
+  totalTax,
+  shippingCost,
+  currency = "USD",
+  weightOz,
+  notes,
+}) {
+  const body = {
+    to_address: to,
+    from_address: from,
+    placed_at: placedAt,
+    order_status: "PAID",
+    currency,
+    ...(orderNumber && { order_number: orderNumber }),
+    ...(notes && { notes: String(notes).slice(0, 200) }),
+    ...(totalPrice != null && { total_price: totalPrice.toFixed(2) }),
+    ...(subtotalPrice != null && { subtotal_price: subtotalPrice.toFixed(2) }),
+    ...(totalTax != null && { total_tax: totalTax.toFixed(2) }),
+    ...(shippingCost != null && {
+      shipping_cost: shippingCost.toFixed(2),
+      shipping_cost_currency: currency,
+    }),
+    ...(weightOz != null && {
+      weight: weightOz.toString(),
+      weight_unit: "oz",
+    }),
+    ...(lineItems?.length && { line_items: lineItems }),
+  };
+  return shippoFetch("/orders/", body);
+}
+
 /**
  * Create a shipment, buy a label, and return the tracking info.
  *
@@ -136,7 +178,11 @@ function pickCheapest(rates) {
  * @param {Object} opts.parcel - parcel dims + weight (use parcelForGameCount)
  * @param {string} [opts.preferredServiceToken] - e.g. "usps_priority"; falls back to cheapest
  * @param {string} [opts.metadata] - free-form string Shippo stores on the transaction
+ * @param {string} [opts.shipmentMetadata] - free-form string on the shipment (max 100 chars). Visible from Shippo's Shipments view.
  * @param {number} opts.maxLabelUsd - hard ceiling; refuse to buy above this.
+ * @param {string} [opts.order] - Shippo Order object_id to link the transaction to.
+ * @param {string} [opts.reference1] - prints on the USPS label (max 30 chars).
+ * @param {string} [opts.reference2] - second label reference (max 30 chars).
  */
 export async function createLabel({
   to,
@@ -144,7 +190,11 @@ export async function createLabel({
   parcel,
   preferredServiceToken,
   metadata,
+  shipmentMetadata,
   maxLabelUsd,
+  order,
+  reference1,
+  reference2,
 }) {
   if (!parcel) throw new Error("createLabel: parcel is required");
   if (typeof maxLabelUsd !== "number") {
@@ -153,11 +203,18 @@ export async function createLabel({
   // Strip our bookkeeping fields before sending to Shippo.
   const { templateName: _t, templateId: _id, ...shippoParcel } = parcel;
 
+  // USPS caps reference fields at 30 chars; truncate defensively.
+  const extra = {};
+  if (reference1) extra.reference_1 = String(reference1).slice(0, 30);
+  if (reference2) extra.reference_2 = String(reference2).slice(0, 30);
+
   const shipment = await shippoFetch("/shipments/", {
     address_from: from,
     address_to: to,
     parcels: [shippoParcel],
     async: false,
+    ...(Object.keys(extra).length && { extra }),
+    ...(shipmentMetadata && { metadata: String(shipmentMetadata).slice(0, 100) }),
   });
 
   if (!shipment.rates?.length) {
@@ -183,9 +240,13 @@ export async function createLabel({
 
   const txn = await shippoFetch("/transactions/", {
     rate: rate.object_id,
-    label_file_type: "PDF",
+    // 4x6 = the standard thermal/peel-and-stick shipping label size. "PDF"
+    // (no size suffix) is 8.5x11 letter with the label centered on a full
+    // page — wasteful to print and not what we get from the dashboard.
+    label_file_type: "PDF_4x6",
     async: false,
     ...(metadata && { metadata }),
+    ...(order && { order }),
   });
 
   if (txn.status !== "SUCCESS") {

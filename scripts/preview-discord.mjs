@@ -107,7 +107,7 @@ function quickLinks({ sessionId, trackingUrl, labelUrl }) {
   if (sessionId) links.push(`[Stripe session](${stripeSessionUrl(sessionId)})`);
   if (trackingUrl) links.push(`[Track package](${trackingUrl})`);
   if (labelUrl) links.push(`[Label PDF](${labelUrl})`);
-  links.push("[Shippo dashboard](https://apps.goshippo.com/orders)");
+  links.push("[Shippo dashboard](https://apps.goshippo.com/shipments)");
   return links.join(" • ");
 }
 

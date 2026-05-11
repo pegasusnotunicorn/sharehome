@@ -1,7 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useLocation, NavLink } from "react-router";
 import CustomHelmet from "./utils/CustomHelmet";
+import PolaroidGallery from "./utils/PolaroidGallery";
+import { CONTACT_POLAROIDS } from "./utils/contactPolaroids";
 import styles from "../css/pages/thankYouPage.module.css";
+
+const RANDOM_POLAROID_COUNT = 4;
+
+const pickRandomPolaroids = (count: number) => {
+  const indices = CONTACT_POLAROIDS.map((_, i) => i);
+  for (let i = indices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  return indices
+    .slice(0, count)
+    .sort((a, b) => a - b)
+    .map((i) => ({ ...CONTACT_POLAROIDS[i], hideOnMobile: false }));
+};
 
 declare global {
   interface Window {
@@ -15,6 +31,8 @@ const ThankYouPage = () => {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const checkoutSessionId = params.get("checkout_session_id");
+
+  const polaroids = useMemo(() => pickRandomPolaroids(RANDOM_POLAROID_COUNT), []);
 
   useEffect(() => {
     document.title = title;
@@ -99,6 +117,7 @@ const ThankYouPage = () => {
         </div>
       </div>
 
+      <PolaroidGallery items={polaroids} />
     </div>
   );
 };

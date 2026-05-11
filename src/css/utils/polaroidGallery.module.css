@@ -4,11 +4,17 @@
   margin: 0 auto 1.5rem;
   position: relative;
   overflow: visible;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
   gap: 1rem;
-  align-items: start;
   padding: 1.25rem 0 1rem;
+}
+
+.polaroidGrid > .polaroidCard {
+  flex: 0 1 calc((100% - 5rem) / 6);
+  min-width: 180px;
 }
 
 .withConnector::before {
@@ -90,6 +96,13 @@
   display: block;
 }
 
+.polaroidCaptionWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
 .polaroidCaption {
   margin: 0;
   font-size: 0.75rem;
@@ -97,6 +110,33 @@
   font-family: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
   letter-spacing: 0.02em;
   line-height: 1.4;
+  text-align: center;
+}
+
+.polaroidDate {
+  margin: 0;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9a9282;
+  font-family: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  text-align: center;
+}
+
+.lightboxCaptionWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.lightboxDate {
+  margin: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9a9282;
+  font-family: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
   text-align: center;
 }
 
@@ -175,8 +215,12 @@
 @media only screen and (max-width: 900px) {
   .polaroidGrid {
     width: calc(100% - 2rem);
-    grid-template-columns: repeat(2, minmax(0, 1fr));
     padding-top: 0.75rem;
+  }
+
+  .polaroidGrid > .polaroidCard {
+    flex: 0 1 calc((100% - 1rem) / 2);
+    min-width: 0;
   }
 
   .hideOnMobile {

@@ -80,17 +80,21 @@ async function parcelFromTemplate(name, qty) {
   };
 }
 
-// Pick a parcel + cap by total game quantity. 3..12 → 12x box.
-// Returns { parcel, maxLabelUsd }. Throws if the template can't be loaded.
+// Pick a parcel + cap by total game quantity. Only 1, 2, and 12 map to a
+// template — we don't stock boxes for 3-11, so those return null and the
+// caller must alert for manual packaging. Returns { parcel, maxLabelUsd }
+// or null. Throws only if the template lookup itself fails.
 export async function parcelForGameCount(qty) {
-  if (qty <= 0 || qty > 12) return null;
   if (qty === 1) {
     return { parcel: await parcelFromTemplate(TEMPLATE_NAME_1X, qty), maxLabelUsd: MAX_USD_1X };
   }
   if (qty === 2) {
     return { parcel: await parcelFromTemplate(TEMPLATE_NAME_2X, qty), maxLabelUsd: MAX_USD_2X };
   }
-  return { parcel: await parcelFromTemplate(TEMPLATE_NAME_12X, qty), maxLabelUsd: MAX_USD_12X };
+  if (qty === 12) {
+    return { parcel: await parcelFromTemplate(TEMPLATE_NAME_12X, qty), maxLabelUsd: MAX_USD_12X };
+  }
+  return null;
 }
 
 

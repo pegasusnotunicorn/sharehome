@@ -1,17 +1,23 @@
 import stripeModule from "stripe";
 import fetch from "node-fetch";
+import { getStore } from "@netlify/blobs";
 import { createLabel, parcelForGameCount } from "./lib/shippo.js";
+
+const IS_DEV = process.env.NETLIFY_DEV === "true";
 
 const ALERT_WEBHOOK_URL = process.env.ALERT_WEBHOOK_URL;
 const VERBOSE_LOGGING = process.env.VERBOSE_LOGGING === "true";
-const STRIPE_LCM_PRODUCT_ID = process.env.NETLIFY_DEV === "true"
+const STRIPE_LCM_PRODUCT_ID = IS_DEV
   ? process.env.STRIPE_LCM_PRODUCT_ID_TEST
   : process.env.STRIPE_LCM_PRODUCT_ID_LIVE;
 
-const IS_DEV = process.env.NETLIFY_DEV === "true";
 const STRIPE_SECRET_KEY = IS_DEV
   ? process.env.STRIPE_SECRET_KEY_DEV
   : process.env.STRIPE_SECRET_KEY;
+
+const STRIPE_WEBHOOK_SECRET = IS_DEV
+  ? process.env.STRIPE_WEBHOOK_SECRET_DEV
+  : process.env.STRIPE_WEBHOOK_SECRET;
 
 // Dev-only failure injection. Set DEBUG_FORCE_ERROR=<stage> in .env and
 // restart `netlify dev`, then trigger a checkout.session.completed event.
@@ -22,9 +28,6 @@ function maybeForceFailure(stage) {
     throw new Error(`Simulated ${stage} failure (DEBUG_FORCE_ERROR=${stage})`);
   }
 }
-const STRIPE_WEBHOOK_SECRET = IS_DEV
-  ? process.env.STRIPE_WEBHOOK_SECRET_DEV
-  : process.env.STRIPE_WEBHOOK_SECRET;
 
 const stripe = stripeModule(STRIPE_SECRET_KEY);
 
@@ -54,41 +57,45 @@ export default async function stripeWebhooks(request) {
   }
 
   switch (event.type) {
-    case "checkout.session.completed":
+    case "checkout.session.completed": {
       const session = event.data.object;
-      const customerEmail = session.customer_details.email;
-      const name = session.customer_details.name;
 
       // Buy shipping label first; never block MailerLite or 200-response on failure.
-      await purchaseShippoLabel(session);
+      await purchaseShippoLabel(session, event.id);
 
-      await addEmailToMailerLite(
-        customerEmail,
-        name,
-        MAILERLITE_PURCHASE_GROUP_ID,
-        { sessionId: session.id, groupKind: "purchase" }
-      );
+      const customerEmail = session.customer_details?.email;
+      const customerName = session.customer_details?.name;
+      if (customerEmail) {
+        await addEmailToMailerLite(
+          customerEmail,
+          customerName,
+          MAILERLITE_PURCHASE_GROUP_ID,
+          { sessionId: session.id, groupKind: "purchase" }
+        );
+      } else if (IS_DEV) {
+        console.log("No customer email on completed session; skipping MailerLite");
+      }
       break;
-    case "checkout.session.expired":
+    }
+    case "checkout.session.expired": {
+      const abandoned = event.data.object;
       const abandonedEmail =
-        event.data.object.customer_details?.email ??
-        event.data.object.customer_email;
-      const abandonedName = event.data.object.customer_details?.name;
+        abandoned.customer_details?.email ?? abandoned.customer_email;
+      const abandonedName = abandoned.customer_details?.name;
 
-      // if (IS_DEV) console.log(event.data.object);
       if (!abandonedEmail) {
         if (IS_DEV) console.log("No email found for abandoned checkout");
         break;
       }
 
-      // email found for abandoned checkout, add to MailerLite abandoned group
       await addEmailToMailerLite(
         abandonedEmail,
         abandonedName,
         MAILERLITE_ABANDONED_GROUP_ID,
-        { sessionId: event.data.object.id, groupKind: "abandoned" }
+        { sessionId: abandoned.id, groupKind: "abandoned" }
       );
       break;
+    }
     default:
       if (IS_DEV) console.log(`Unhandled event type: ${event.type}`);
   }
@@ -96,7 +103,30 @@ export default async function stripeWebhooks(request) {
   return new Response("Webhook received", { status: 200 });
 }
 
-async function purchaseShippoLabel(eventSession) {
+// Narrows the concurrent-delivery race window for a session. Two webhook
+// deliveries within the createLabel() window would both pass the metadata
+// idempotency check and both buy a label; the blob claim catches that.
+// Fail-open: if Blobs is unreachable, we degrade to metadata-only idempotency.
+async function claimSessionForLabel(sessionId, eventId) {
+  try {
+    const store = getStore("shippo-claimed-sessions");
+    const existing = await store.get(sessionId);
+    if (existing) return { claimed: false, by: existing };
+    await store.set(
+      sessionId,
+      JSON.stringify({ eventId, at: new Date().toISOString() })
+    );
+    return { claimed: true };
+  } catch (err) {
+    console.warn(
+      "⚠️  Blob claim unavailable, falling back to metadata-only idempotency:",
+      err.message
+    );
+    return { claimed: true };
+  }
+}
+
+async function purchaseShippoLabel(eventSession, eventId) {
   // Re-fetch the live session — webhook event payloads are frozen snapshots,
   // so retries/replays would otherwise see stale metadata and double-buy.
   // Expanding line items here also avoids a second API call in countGames.
@@ -139,7 +169,23 @@ async function purchaseShippoLabel(eventSession) {
       return;
     }
 
+    // Race-window lock against concurrent webhook deliveries of the same session.
+    const claim = await claimSessionForLabel(session.id, eventId);
+    if (!claim.claimed) {
+      console.log(
+        `📦 Another delivery already claimed this session (${claim.by}); skipping`
+      );
+      return;
+    }
+
     const gameCount = countGames(session);
+    if (gameCount === null) {
+      await alert(
+        "Can't determine game count — `STRIPE_LCM_PRODUCT_ID` env var is missing. **No label was bought.** Set the env var in Netlify and retry the event from the Stripe dashboard.",
+        { source: "shippo", sessionId: session.id }
+      );
+      return;
+    }
     if (gameCount >= 3 && gameCount <= 11) {
       await alert(
         `Order is for **${gameCount} games**, which doesn't match any of our parcel templates (we only stock boxes for 1, 2, and 12). Auto-buying a 12x label would waste a much larger carton than needed. **No label was bought** — decide on packaging manually (e.g. combine smaller boxes, or buy the 12x label by hand), then patch the Stripe session metadata so a webhook retry won't double-buy.`,
@@ -246,10 +292,12 @@ async function purchaseShippoLabel(eventSession) {
   }
 }
 
+// Returns the number of LCM games in the session, or null if we can't
+// determine it (env missing). Callers must treat null as "alert + don't buy".
 function countGames(session) {
   if (!STRIPE_LCM_PRODUCT_ID) {
-    console.warn("⚠️  STRIPE_LCM_PRODUCT_ID not set; assuming 1 game");
-    return 1;
+    console.error("❌ STRIPE_LCM_PRODUCT_ID not set; cannot count games");
+    return null;
   }
   const items = session.line_items?.data || [];
   let qty = 0;
@@ -294,6 +342,18 @@ function quickLinks({ sessionId, trackingUrl, labelUrl }) {
 
 // Errors / skips that need attention. Always sent.
 // `context.source` ("shippo" | "stripe" | "mailerlite") picks the title + footer.
+const FIELD_LABELS = {
+  customer: "Customer",
+  shipTo: "Ship to",
+  gameCount: "Game count",
+  error: "Error",
+  nextSteps: "Next steps",
+  trackingNumber: "Tracking number",
+  shippoTransactionId: "Shippo transaction",
+  email: "Email",
+  group: "MailerLite group",
+  response: "Response",
+};
 async function alert(message, context = {}) {
   console.error(`🚨 ALERT: ${message}`, context);
   const { sessionId, source = "webhook", titleSuffix, ...rest } = context;
@@ -315,7 +375,7 @@ async function alert(message, context = {}) {
   }
   for (const [key, value] of Object.entries(rest)) {
     fields.push({
-      name: key,
+      name: FIELD_LABELS[key] || key,
       value: "```" + String(value) + "```",
       inline: false,
     });
@@ -505,8 +565,25 @@ async function notifySubscriberAdded({
 }
 
 async function addEmailToMailerLite(email, name, group_id, alertContext = {}) {
+  const { groupKind = "subscriber", ...restCtx } = alertContext;
+  const groupLabel =
+    groupKind === "purchase"
+      ? "purchase (post-checkout) email group"
+      : groupKind === "abandoned"
+        ? "abandoned-checkout email group"
+        : `email group ${group_id}`;
+
   if (!MAILER_LITE_KEY) {
-    console.error("❌ MailerLite API key is missing.");
+    await alert(
+      `MailerLite API key is missing — customer was NOT enrolled in the ${groupLabel}. Set MAILER_LITE_KEY in Netlify env.`,
+      {
+        source: "mailerlite",
+        titleSuffix: groupKind,
+        ...restCtx,
+        email,
+        group: group_id,
+      }
+    );
     return;
   }
 
@@ -518,14 +595,6 @@ async function addEmailToMailerLite(email, name, group_id, alertContext = {}) {
     // add name to fields obj if it's defined
     ...(name && { fields: { name } }),
   };
-
-  const { groupKind = "subscriber", ...restCtx } = alertContext;
-  const groupLabel =
-    groupKind === "purchase"
-      ? "purchase (post-checkout) email group"
-      : groupKind === "abandoned"
-        ? "abandoned-checkout email group"
-        : `email group ${group_id}`;
 
   try {
     maybeForceFailure("mailerlite");

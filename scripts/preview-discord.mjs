@@ -22,13 +22,27 @@ if (!ALERT_WEBHOOK_URL) {
 }
 
 const stripe = stripeModule(process.env.STRIPE_SECRET_KEY_DEV);
-const DEFAULT_SESSION_ID =
-  "cs_test_a1MWaYPuoY5QfzcDl5Zu3tu5OWdloaoCMOyJdOn0bNS0EWZSb2cvfzhIIC";
-const sessionId = process.argv[2] || DEFAULT_SESSION_ID;
+const sessionId = process.argv[2];
+if (!sessionId) {
+  console.error(
+    "Usage: node scripts/preview-discord.mjs <cs_test_...>\n" +
+      "Grab a fresh test session id from the Stripe dashboard (test mode)."
+  );
+  process.exit(1);
+}
 
-const session = await stripe.checkout.sessions.retrieve(sessionId, {
-  expand: ["line_items.data.price.product"],
-});
+let session;
+try {
+  session = await stripe.checkout.sessions.retrieve(sessionId, {
+    expand: ["line_items.data.price.product"],
+  });
+} catch (err) {
+  console.error(
+    `Couldn't retrieve session ${sessionId}: ${err.message}\n` +
+      "Test sessions expire after ~30 days — pass a fresh cs_test_* id."
+  );
+  process.exit(1);
+}
 
 async function post(payload) {
   const res = await fetch(ALERT_WEBHOOK_URL, {

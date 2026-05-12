@@ -6,14 +6,15 @@ interface ExternalRedirectProps {
 
 const ExternalRedirect = ({ url }: ExternalRedirectProps) => {
   useEffect(() => {
-    // Get current URL parameters
     const currentUrl = new URL(window.location.href);
     const currentParams = currentUrl.searchParams;
 
-    // Create the target URL with UTM parameters
     const targetUrl = new URL(url);
 
-    // Preserve UTM parameters and other tracking parameters
+    currentParams.forEach((value, key) => {
+      targetUrl.searchParams.set(key, value);
+    });
+
     const trackingParams = [
       "utm_source",
       "utm_medium",
@@ -23,17 +24,8 @@ const ExternalRedirect = ({ url }: ExternalRedirectProps) => {
       "gclid",
       "fbclid",
     ];
+    const hasUTMParams = trackingParams.some((param) => currentParams.has(param));
 
-    // First, try to get UTM params from current URL
-    let hasUTMParams = false;
-    trackingParams.forEach((param) => {
-      if (currentParams.has(param)) {
-        targetUrl.searchParams.set(param, currentParams.get(param)!);
-        hasUTMParams = true;
-      }
-    });
-
-    // If no UTM params in URL, check sessionStorage
     if (!hasUTMParams) {
       const storedUTM = sessionStorage.getItem("utm_params");
       if (storedUTM) {

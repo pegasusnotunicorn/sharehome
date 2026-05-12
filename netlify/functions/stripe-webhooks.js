@@ -362,7 +362,7 @@ async function purchaseShippoLabel(eventSession, eventId) {
       const order = await createOrder({
         to,
         orderNumber: shippoOrderNumber,
-        notes: `Stripe: ${stripeSessionUrl(session.id)}`,
+        notes: `Stripe: ${session.id}`,
         placedAt: new Date(
           (session.created || Date.now() / 1000) * 1000
         ).toISOString(),

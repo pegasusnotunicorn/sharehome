@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from "react";
-import { useLocation, NavLink } from "react-router";
+import { useMemo } from "react";
+import { NavLink } from "react-router";
 import CustomHelmet from "./utils/CustomHelmet";
 import PolaroidGallery from "./utils/PolaroidGallery";
 import { CONTACT_POLAROIDS } from "./utils/contactPolaroids";
@@ -19,31 +19,10 @@ const pickRandomPolaroids = (count: number) => {
     .map((i) => ({ ...CONTACT_POLAROIDS[i], hideOnMobile: false }));
 };
 
-declare global {
-  interface Window {
-    gtag?: (...args: any[]) => void;
-  }
-}
-
 const ThankYouPage = () => {
   const title = "Thank you for your order!";
 
-  const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const checkoutSessionId = params.get("checkout_session_id");
-
   const polaroids = useMemo(() => pickRandomPolaroids(RANDOM_POLAROID_COUNT), []);
-
-  useEffect(() => {
-    document.title = title;
-
-    if (checkoutSessionId && import.meta.env.PROD) {
-      window.gtag?.("event", "conversion", {
-        send_to: "AW-16828802079/rZXLCJXiqJcaEJ_IzNg-",
-        transaction_id: checkoutSessionId,
-      });
-    }
-  }, [title, checkoutSessionId]);
 
   return (
     <div className={`content ${styles.thankYouPage}`}>

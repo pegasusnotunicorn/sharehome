@@ -1,5 +1,10 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import { useParams, useNavigate } from "react-router";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, A11y, Keyboard } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import {
   getAllCharacters,
   getSpecificPersonByURL,
@@ -25,6 +30,7 @@ interface CharacterGridCardProps {
   imageAlt: string;
   imageObjectPosition?: string;
   overlayText?: string;
+  sketchCount?: number;
   onClick?: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
@@ -48,14 +54,22 @@ const expansionPlaceholderImage = `data:image/svg+xml;utf8,${encodeURIComponent(
   </svg>
 `)}`;
 
-const expansionPlaceholders = [
-  { id: 1, name: "Petra Anguis", race: "Gorgon", job: "Sculptor", imageSrc: "/images/members/expansion-petra.webp" },
-  { id: 2, name: "Trinity Melange", race: "Chimera", job: "Bartender", imageSrc: "/images/members/expansion-trinity.webp" },
-  { id: 3, name: "Bellerophon \"Belly\" Skybound", race: "Pegasus", job: "Entertainer / Performer" },
-  { id: 4, name: "Vex \"PAN-IQ!\" Hoofprint", race: "Satyr", job: "Rock Star" },
-  { id: 5, name: "Sierra Colt", race: "Centaur", job: "Personal Trainer" },
-  { id: 6, name: "Aquila Leonis", race: "Griffin", job: "Investigative Journalist" },
-  { id: 7, name: "Asty Monolithos", race: "Minotaur", job: "Architect" },
+interface ExpansionCharacter {
+  id: number;
+  name: string;
+  race: string;
+  job: string;
+  sketches?: string[];
+}
+
+const expansionPlaceholders: ExpansionCharacter[] = [
+  { id: 1, name: "Petra Anguis", race: "Gorgon", job: "Sculptor", sketches: ["/images/members/expansion-petra-1.webp"] },
+  { id: 2, name: "Trinity Melange", race: "Chimera", job: "Bartender", sketches: ["/images/members/expansion-trinity-1.webp", "/images/members/expansion-trinity-2.webp"] },
+  { id: 3, name: "Asty Monolithos", race: "Minotaur", job: "Architect", sketches: ["/images/members/expansion-asty-1.webp"] },
+  { id: 4, name: "Sierra Colt", race: "Centaur", job: "Personal Trainer", sketches: ["/images/members/expansion-sierra-1.webp"] },
+  { id: 5, name: "Bellerophon \"Belly\" Skybound", race: "Pegasus", job: "Entertainer / Performer", sketches: ["/images/members/expansion-belly-1.webp"] },
+  { id: 6, name: "Vex \"PAN-IQ!\" Hoofprint", race: "Satyr", job: "Rock Star" },
+  { id: 7, name: "Aquila Leonis", race: "Griffin", job: "Investigative Journalist" },
   { id: 8, name: "Vespera Skryre", race: "Harpy", job: "Paparazzo" },
   { id: 9, name: "Xylia Aenigmata", race: "Sphinx", job: "Curator" },
   { id: 10, name: "Phido", race: "Cerberus", job: "Body Guard" },
@@ -68,6 +82,7 @@ const CharacterGridCard = ({
   imageAlt,
   imageObjectPosition,
   overlayText,
+  sketchCount,
   onClick,
   onMouseEnter,
   onMouseLeave,
@@ -92,6 +107,16 @@ const CharacterGridCard = ({
         />
         {overlayText && (
           <div className={charStyles.cardOverlayText}>{overlayText}</div>
+        )}
+        {sketchCount && sketchCount > 1 && (
+          <div
+            className={charStyles.sketchCountBadge}
+            aria-label={`${sketchCount} sketches available`}
+            title={`${sketchCount} sketches`}
+          >
+            <img src="/images/icons/stack.svg" alt="" />
+            <span>{sketchCount}</span>
+          </div>
         )}
         <div className={`${charStyles.caption} noselect`}>
           <p className={charStyles.name}>{name}</p>
@@ -344,16 +369,45 @@ const AllCharacters = () => {
 };
 
 const ExpansionCharactersSection = () => {
+  const [activeCharacterId, setActiveCharacterId] = useState<number | null>(null);
+
+  const activeCharacter = activeCharacterId
+    ? expansionPlaceholders.find((c) => c.id === activeCharacterId) ?? null
+    : null;
+  const activeSketches = activeCharacter?.sketches ?? [];
+
+  const closeViewer = useCallback(() => setActiveCharacterId(null), []);
+
+  useEffect(() => {
+    if (!activeCharacter) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeViewer();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [activeCharacter, closeViewer]);
+
+  const openViewer = (character: ExpansionCharacter) => {
+    if (!character.sketches || character.sketches.length === 0) return;
+    setActiveCharacterId(character.id);
+  };
+
   const upcomingCharacters = expansionPlaceholders.map((character) => {
+    const sketches = character.sketches ?? [];
+    const hasSketches = sketches.length > 0;
+    const latestSketch = hasSketches ? sketches[sketches.length - 1] : undefined;
+    const cardClass = hasSketches ? "" : charStyles.staticCard;
     return (
       <CharacterGridCard
         key={character.id}
-        className={charStyles.staticCard}
+        className={cardClass}
         name={character.name}
         details={[character.race, character.job]}
-        imageSrc={character.imageSrc || expansionPlaceholderImage}
-        imageAlt={`${character.name} placeholder art`}
-        overlayText={character.imageSrc ? undefined : "?"}
+        imageSrc={latestSketch || expansionPlaceholderImage}
+        imageAlt={hasSketches ? `${character.name} sketch` : `${character.name} placeholder art`}
+        overlayText={hasSketches ? undefined : "?"}
+        onClick={hasSketches ? () => openViewer(character) : undefined}
+        sketchCount={sketches.length}
       />
     );
   });
@@ -366,6 +420,58 @@ const ExpansionCharactersSection = () => {
       <div className={`${charStyles.charactersContainer} ${charStyles.compactCharactersContainer}`}>
         {upcomingCharacters}
       </div>
+
+      {activeCharacter && activeSketches.length > 0 && (
+        <div
+          className={charStyles.sketchViewer}
+          onClick={closeViewer}
+          role="presentation"
+        >
+          <div
+            className={charStyles.sketchViewerCard}
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${activeCharacter.name} sketches`}
+          >
+            <button
+              type="button"
+              className={charStyles.sketchViewerClose}
+              onClick={closeViewer}
+              aria-label="Close sketch viewer"
+            >
+              <img src="/images/icons/cross.svg" alt="" />
+            </button>
+            <Swiper
+              modules={[Navigation, Pagination, A11y, Keyboard]}
+              navigation={activeSketches.length > 1}
+              pagination={activeSketches.length > 1 ? { clickable: true } : false}
+              keyboard={{ enabled: true }}
+              spaceBetween={0}
+              slidesPerView={1}
+              className={charStyles.sketchViewerSwiper}
+            >
+              {activeSketches.map((src, i) => (
+                <SwiperSlide key={src}>
+                  <div className={charStyles.sketchViewerSlide}>
+                    <img
+                      src={src}
+                      alt={`${activeCharacter.name} sketch ${i + 1} of ${activeSketches.length}`}
+                      className={charStyles.sketchViewerImage}
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <div className={charStyles.sketchViewerMeta}>
+              <p className={charStyles.sketchViewerName}>{activeCharacter.name}</p>
+              <p className={charStyles.sketchViewerCount}>
+                {activeCharacter.race} — {activeCharacter.job}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

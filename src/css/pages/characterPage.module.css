@@ -273,6 +273,176 @@
   pointer-events: none;
 }
 
+.sketchCountBadge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(50, 50, 50, 0.78);
+  color: #fff;
+  font-family: "Rowdies-Regular";
+  font-size: 0.7rem;
+  line-height: 1;
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+
+.sketchCountBadge img {
+  width: 14px;
+  height: 14px;
+  filter: invert(1);
+}
+
+@media only screen and (max-width: 900px) {
+  .sketchCountBadge {
+    font-size: 0.6rem;
+    padding: 0.15rem 0.35rem;
+  }
+  .sketchCountBadge img {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+.sketchViewer {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(22, 20, 18, 0.6);
+  backdrop-filter: blur(6px);
+}
+
+.sketchViewerCard {
+  position: relative;
+  width: min(900px, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  padding: 1rem 1rem 1.25rem;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 28px 60px -36px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sketchViewerClose {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid rgba(50, 50, 50, 0.12);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 8px 18px -14px rgba(0, 0, 0, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.sketchViewerClose img {
+  width: 1rem;
+  height: 1rem;
+}
+
+.sketchViewerClose:hover {
+  background-color: #f5f5f5;
+  transform: scale(1.03);
+}
+
+.sketchViewerSwiper {
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.sketchViewerSlide {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sketchViewerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.sketchViewerSwiper :global(.swiper-button-prev),
+.sketchViewerSwiper :global(.swiper-button-next) {
+  color: #323232;
+  background: rgba(255, 255, 255, 0.9);
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  box-shadow: 0 6px 14px -10px rgba(0, 0, 0, 0.4);
+}
+
+.sketchViewerSwiper :global(.swiper-button-prev::after),
+.sketchViewerSwiper :global(.swiper-button-next::after) {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.sketchViewerSwiper :global(.swiper-pagination-bullet-active) {
+  background: #323232;
+}
+
+.sketchViewerMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.sketchViewerName {
+  margin: 0;
+  font-family: "Rowdies-Regular";
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.05;
+  color: #323232;
+  text-align: center;
+}
+
+.sketchViewerCount {
+  margin: 0;
+  font-family: "Rowdies-Light";
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  color: rgba(50, 50, 50, 0.7);
+  text-align: center;
+}
+
+@media only screen and (max-width: 900px) {
+  .sketchViewerCard {
+    padding: 0.75rem 0.75rem 1rem;
+  }
+  .sketchViewerSwiper :global(.swiper-button-prev),
+  .sketchViewerSwiper :global(.swiper-button-next) {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  .sketchViewerSwiper :global(.swiper-button-prev::after),
+  .sketchViewerSwiper :global(.swiper-button-next::after) {
+    font-size: 0.8rem;
+  }
+}
+
 .staticCard {
   cursor: default;
 }

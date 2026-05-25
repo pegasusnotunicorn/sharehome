@@ -45,7 +45,17 @@ export default async function trackConversions(request, context) {
     const gaSessionCookie = gaPropertyKey
       ? await context.cookies.get(gaPropertyKey)
       : null;
-    const gaSessionId = gaSessionCookie ? gaSessionCookie.split(".")[2] : null;
+    // _ga_<id> cookie formats:
+    //   GS1: "GS1.1.<session_id>.<session_num>..."
+    //   GS2: "GS2.1.s<session_id>!<n>.<session_num>..."  (newer format)
+    let gaSessionId = null;
+    let gaSessionNumber = null;
+    if (gaSessionCookie) {
+      const parts = gaSessionCookie.split(".");
+      const rawSeg = parts[2] ?? "";
+      gaSessionId = rawSeg.replace(/^s/, "").split("!")[0] || null;
+      gaSessionNumber = parts[3] ? parseInt(parts[3], 10) : null;
+    }
 
     const clientId = gaClientId ?? fallbackClientId;
 
@@ -114,6 +124,7 @@ export default async function trackConversions(request, context) {
     await sendToGA4(
       clientId,
       gaSessionId,
+      gaSessionNumber,
       utmData,
       stripeData,
       checkoutSessionId,
@@ -162,6 +173,7 @@ async function getStripeCheckoutDetails(sessionId) {
 async function sendToGA4(
   clientId,
   sessionId,
+  sessionNumber,
   utmData,
   stripeData,
   transactionId,
@@ -199,6 +211,7 @@ async function sendToGA4(
     engagement_time_msec: 1,
   };
   if (sessionId) params.session_id = sessionId;
+  if (sessionNumber) params.ga_session_number = sessionNumber;
 
   const ga4Data = {
     client_id: clientId ?? crypto.randomUUID(),

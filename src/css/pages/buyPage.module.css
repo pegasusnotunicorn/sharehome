@@ -239,7 +239,7 @@
 
 .checkoutFormWrapper {
   display: grid;
-  padding: 1.25rem 1.25rem 0;
+  padding: 1.25rem;
   border: 2px solid #323232;
   border-radius: 8px;
   background: #fff;

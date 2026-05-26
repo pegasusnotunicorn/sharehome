@@ -124,12 +124,6 @@ const CheckoutForm = () => {
         style={{ visibility: allReady ? "visible" : "hidden" }}
       >
         <ContactDetailsElement onReady={onReady} />
-        <div className={styles.countryField}>
-          <label className={styles.countryLabel}>Country or region</label>
-          <select className={styles.countrySelect}>
-            <option>United States</option>
-          </select>
-        </div>
         <ShippingAddressElement onReady={onReady} />
         <PaymentElement onReady={onReady} />
         <div className={`${styles.errorSlide} ${errorMessage ? styles.errorSlideVisible : ""}`}>

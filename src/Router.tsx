@@ -23,6 +23,7 @@ const ErrorPage = lazy(() => import("./components/ErrorPage"));
 const ArtbookDownloadPage = lazy(() => import("./components/ArtbookDownloadPage"));
 const ThankYouPage = lazy(() => import("./components/ThankYouPage"));
 const SignupPage = lazy(() => import("./components/SignupPage"));
+const CheckoutPage = lazy(() => import("./components/CheckoutPage"));
 
 const Router = () => {
   return (
@@ -36,11 +37,10 @@ const Router = () => {
 
 const AppRoutes = () => {
   const location = useLocation();
-  const isExternalRedirect = ["/rulebook", "/buy"].includes(location.pathname);
+  const isExternalRedirect = ["/rulebook", "/buy", "/blog"].includes(location.pathname);
 
   const [videoModalVisible, setVideoModalVisible] = useState(false);
 
-  // Preserve UTM parameters across all page navigation
   useUTMPreservation();
 
   return (
@@ -67,10 +67,8 @@ const AppRoutes = () => {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/thankyou" element={<ThankYouPage />} />
-          <Route
-            path="/rulebook"
-            element={<ExternalRedirect url="/rulebook.pdf" />}
-          />
+          <Route path="/rulebook" element={<ExternalRedirect url="/rulebook.pdf" />} />
+          <Route path="/blog" element={<ExternalRedirect url="https://pegasusgames.medium.com" />} />
           <Route
             path="/buy"
             element={
@@ -83,8 +81,9 @@ const AppRoutes = () => {
               />
             }
           />
+          <Route path="/cart" element={<Navigate to="/checkout" replace />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/terms" element={<TermsPage />} />
-          {/* Fallback for undefined routes */}
           <Route path="*" element={<ErrorPage />} />
         </Routes>
         {!isExternalRedirect && <Footer />}

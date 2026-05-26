@@ -221,12 +221,10 @@ const CartSummary = ({
   cart,
   onUpdateItem,
   updatingSlug,
-  onOpenInternational,
 }: {
   cart: CartState;
   onUpdateItem: (slug: ItemSlug, qty: number) => Promise<void>;
   updatingSlug: ItemSlug | null;
-  onOpenInternational: () => void;
 }) => {
   const checkoutState = useCheckoutElements();
   const checkout = checkoutState.type === "success" ? checkoutState.checkout : null;
@@ -377,14 +375,14 @@ const CartSummary = ({
         </div>
       )}
       <div className={styles.cartRow}>
-        <span>Shipping</span>
-        <button className={styles.cartFreeBtn} onClick={onOpenInternational}>
-          Free for US
+        <span className={styles.cartTaxLabel}>
+          Shipping
           <span className={styles.taxInfoIcon}>
             ⓘ
-            <span className={styles.taxInfoBubble}>International shipping available.</span>
+            <span className={styles.taxInfoBubble}>Ships within the US only.</span>
           </span>
-        </button>
+        </span>
+        <span className={styles.cartFree}>Free</span>
       </div>
       <div className={styles.cartRow}>
         <span className={styles.cartTaxLabel}>
@@ -518,7 +516,6 @@ const CheckoutPage = () => {
   const [bizzPinQty, setBizzPinQty] = useState(0);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [initError, setInitError] = useState<string | null>(null);
-  const [internationalModalOpen, setInternationalModalOpen] = useState(false);
   const [updatingSlug, setUpdatingSlug] = useState<ItemSlug | null>(null);
 
   useEffect(() => {
@@ -606,7 +603,6 @@ const CheckoutPage = () => {
                   cart={cart}
                   onUpdateItem={handleUpdateItem}
                   updatingSlug={updatingSlug}
-                  onOpenInternational={() => setInternationalModalOpen(true)}
                 />
                 <CartUpsell
                   cart={cart}
@@ -643,9 +639,6 @@ const CheckoutPage = () => {
         Payments secured by{" "}
         <a href="https://stripe.com" target="_blank" rel="noreferrer">Stripe</a>
       </p>
-      {internationalModalOpen && (
-        <InternationalModal onClose={() => setInternationalModalOpen(false)} />
-      )}
     </div>
   );
 };

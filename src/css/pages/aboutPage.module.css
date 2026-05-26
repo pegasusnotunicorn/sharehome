@@ -1,26 +1,9 @@
 /* #region--------------------------------------VIDEO */
 
-.pageIntro {
-  align-items: center;
+.pageIntroOverride {
   gap: 0.5rem;
   margin-top: 0.5rem;
-  padding: 1rem 0 0;
-}
-
-.pageIntroTitle {
-  font-size: clamp(2.8rem, 8vw, 5.5rem);
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  margin-top: 0;
-  margin-bottom: 0.35rem;
-}
-
-.pageIntroLead {
-  max-width: 34rem;
-  font-family: "Rowdies-Light";
-  font-size: 0.9rem;
-  line-height: 1.2;
-  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .rulebookLink {

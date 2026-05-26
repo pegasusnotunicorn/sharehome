@@ -1,4 +1,5 @@
 import DefaultButton from "../utils/DefaultButton";
+import BuyButton from "../utils/BuyButton";
 import landingPageStyles from "../../css/landingPage.module.css";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import { GsapFadeScrub } from "../utils/useGsap";
@@ -97,14 +98,13 @@ export default function HeroImageSection({
             />
           </GsapFadeScrub>
           <div className={landingPageStyles.heroBottomButtons}>
-            <DefaultButton
+            <BuyButton
               animated
               icon="forward"
               variant="primary"
               color="red"
               size={isDesktop ? "large" : "default"}
               compact={!isDesktop}
-              navlink="/buy"
               text="Buy now"
             />
             {!isDesktop && (

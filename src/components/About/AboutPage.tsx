@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Roleplay from "./components/Roleplay";
 import useWindowDimensions from "../utils/useWindowDimensions";
+import PageIntro from "../utils/PageIntro";
 import aboutStyles from "../../css/pages/aboutPage.module.css";
 import type { CardMainStyle } from "../../types/card";
 
@@ -18,26 +19,25 @@ const AboutPage = () => {
 
   return (
     <div className="content max-width">
-      <div className="subcontentWrapper margin-top">
-        <div className={`characterContent ${aboutStyles.pageIntro}`}>
-          <h2 className={`subtitle ${aboutStyles.pageIntroTitle}`}>
-            How to play
-          </h2>
-          <a
-            href="/rulebook.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={aboutStyles.rulebookLink}
-          >
-            <img
-              loading="lazy"
-              src="/images/icons/rulebook.svg"
-              alt=""
-            />
-            Click here for the rulebook PDF
-          </a>
-        </div>
-      </div>
+      <PageIntro
+        minWidth={false}
+        title="How to play"
+        className={aboutStyles.pageIntroOverride}
+      >
+        <a
+          href="/rulebook.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={aboutStyles.rulebookLink}
+        >
+          <img
+            loading="lazy"
+            src="/images/icons/rulebook.svg"
+            alt=""
+          />
+          Click here for the rulebook PDF
+        </a>
+      </PageIntro>
       <div className={aboutStyles.videoWrapper}>
         <div className={aboutStyles.videoEmbed}>
           <iframe

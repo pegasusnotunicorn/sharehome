@@ -5,6 +5,8 @@ import ShootingStar from "./ShootingStar";
 import EmailForm from "../utils/EmailForm";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import DefaultButton from "../utils/DefaultButton";
+import BuyButton from "../utils/BuyButton";
+import { BUY_DESTINATION } from "../utils/BuyButton";
 import styles from "../../css/navbar.module.css";
 import shootingStarStyles from "../../css/utils/shootingStar.module.css";
 import "../../css/utils/hamburger.css";
@@ -20,7 +22,7 @@ interface NavbarMainProps {
 export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
   const location = useLocation();
   const isLandingPage = location.pathname === "/";
-  const isBuyPage = location.pathname === "/buy";
+  const isBuyPage = location.pathname === BUY_DESTINATION;
 
   const [visible, setVisibility] = useState(false);
   const isVisibleClass = visible ? "is-active" : "";
@@ -108,14 +110,13 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
           </div>
           <div className={styles.topBarActions}>
             {!isBuyPage && (!isLandingPage || isDesktop) && !isLandingPageAtTop && (
-              <DefaultButton
+              <BuyButton
                 animated
                 compact
                 icon="forward"
                 variant="primary"
                 color="red"
                 className={`${mailButtonVisibleClass} ${styles.buyButton}`}
-                navlink="/buy"
                 text="Buy now!"
               />
             )}

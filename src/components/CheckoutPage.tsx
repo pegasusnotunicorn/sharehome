@@ -382,7 +382,7 @@ const CartSummary = ({
             <span className={styles.taxInfoBubble}>Ships within the US only.</span>
           </span>
         </span>
-        <span className={styles.cartFree}>Free</span>
+        <span className={styles.cartFree}>Free domestic US shipping</span>
       </div>
       <div className={styles.cartRow}>
         <span className={styles.cartTaxLabel}>

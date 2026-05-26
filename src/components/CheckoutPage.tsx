@@ -386,7 +386,7 @@ const CartSummary = ({
             aria-label="International shipping info"
           >
             ⓘ
-            <span className={styles.taxInfoBubble}>Shipping internationally?</span>
+            <span className={styles.taxInfoBubble}>Click here for international shipping</span>
           </button>
         </span>
       </div>

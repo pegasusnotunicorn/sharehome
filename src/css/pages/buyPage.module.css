@@ -579,8 +579,6 @@
 
 
 .cartFree {
-  font-family: "Roboto Light";
-  font-size: 0.85rem;
   color: #555;
 }
 
@@ -644,7 +642,6 @@
 
 .cartTaxPending {
   color: #aaa;
-  font-size: 0.78rem;
 }
 
 .taxInfoIcon {

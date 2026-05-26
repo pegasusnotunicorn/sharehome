@@ -221,10 +221,12 @@ const CartSummary = ({
   cart,
   onUpdateItem,
   updatingSlug,
+  onOpenInternational,
 }: {
   cart: CartState;
   onUpdateItem: (slug: ItemSlug, qty: number) => Promise<void>;
   updatingSlug: ItemSlug | null;
+  onOpenInternational: () => void;
 }) => {
   const checkoutState = useCheckoutElements();
   const checkout = checkoutState.type === "success" ? checkoutState.checkout : null;
@@ -384,6 +386,9 @@ const CartSummary = ({
         </span>
         <span className={styles.cartFree}>Free domestic US shipping</span>
       </div>
+      <button className={styles.internationalLink} onClick={onOpenInternational}>
+        Shipping internationally?
+      </button>
       <div className={styles.cartRow}>
         <span className={styles.cartTaxLabel}>
           Tax
@@ -516,6 +521,7 @@ const CheckoutPage = () => {
   const [bizzPinQty, setBizzPinQty] = useState(0);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [initError, setInitError] = useState<string | null>(null);
+  const [internationalModalOpen, setInternationalModalOpen] = useState(false);
   const [updatingSlug, setUpdatingSlug] = useState<ItemSlug | null>(null);
 
   useEffect(() => {
@@ -603,6 +609,7 @@ const CheckoutPage = () => {
                   cart={cart}
                   onUpdateItem={handleUpdateItem}
                   updatingSlug={updatingSlug}
+                  onOpenInternational={() => setInternationalModalOpen(true)}
                 />
                 <CartUpsell
                   cart={cart}
@@ -639,6 +646,9 @@ const CheckoutPage = () => {
         Payments secured by{" "}
         <a href="https://stripe.com" target="_blank" rel="noreferrer">Stripe</a>
       </p>
+      {internationalModalOpen && (
+        <InternationalModal onClose={() => setInternationalModalOpen(false)} />
+      )}
     </div>
   );
 };

@@ -123,9 +123,18 @@ const CheckoutForm = () => {
         className={styles.checkoutForm}
         style={{ visibility: allReady ? "visible" : "hidden" }}
       >
-        <ContactDetailsElement onReady={onReady} />
-        <ShippingAddressElement onReady={onReady} />
-        <PaymentElement onReady={onReady} />
+        <div className={styles.formSection}>
+          <p className={styles.formSectionLabel}>Contact</p>
+          <ContactDetailsElement onReady={onReady} />
+        </div>
+        <div className={styles.formSection}>
+          <p className={styles.formSectionLabel}>Shipping</p>
+          <ShippingAddressElement onReady={onReady} />
+        </div>
+        <div className={styles.formSection}>
+          <p className={styles.formSectionLabel}>Payment</p>
+          <PaymentElement onReady={onReady} />
+        </div>
         <div className={`${styles.errorSlide} ${errorMessage ? styles.errorSlideVisible : ""}`}>
           <div className={styles.errorSlideInner}>
             <p className={styles.checkoutError}>{lastError.current}</p>

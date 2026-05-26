@@ -379,12 +379,15 @@ const CartSummary = ({
       <div className={styles.cartRow}>
         <span>Shipping</span>
         <span className={styles.cartFreeRow}>
-          Free domestic US shipping
+          Free US shipping
           <button
             className={styles.shippingInfoBtn}
             onClick={onOpenInternational}
             aria-label="International shipping info"
-          >ⓘ</button>
+          >
+            ⓘ
+            <span className={styles.taxInfoBubble}>Shipping internationally?</span>
+          </button>
         </span>
       </div>
       <div className={styles.cartRow}>

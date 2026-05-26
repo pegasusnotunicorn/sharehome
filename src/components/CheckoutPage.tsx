@@ -365,7 +365,7 @@ const CartSummary = ({
       )}
 
       <div className={styles.cartRow}>
-        <span>Subtotal</span>
+        <span className={styles.cartRowLabel}>Subtotal</span>
         {checkout
           ? <span>{checkout.total.subtotal.amount}</span>
           : <span className={styles.cartAmountSkeleton} />}
@@ -377,7 +377,7 @@ const CartSummary = ({
         </div>
       )}
       <div className={styles.cartRow}>
-        <span>Shipping</span>
+        <span className={styles.cartRowLabel}>Shipping</span>
         <span className={styles.cartFreeRow}>
           Free US shipping
           <button
@@ -391,7 +391,7 @@ const CartSummary = ({
         </span>
       </div>
       <div className={styles.cartRow}>
-        <span className={styles.cartTaxLabel}>
+        <span className={`${styles.cartTaxLabel} ${styles.cartRowLabel}`}>
           Tax
           <span className={styles.taxInfoIcon}>
             ⓘ

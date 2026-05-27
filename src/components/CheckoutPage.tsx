@@ -28,7 +28,6 @@ interface CartState {
   lcmQty: number;
   urgPinQty: number;
   bizzPinQty: number;
-  total: number;
 }
 
 type ItemSlug = "lcm" | "urg_pin" | "bizz_pin";
@@ -96,7 +95,7 @@ const TOTAL_ELEMENTS = 3;
 
 // ── Checkout form ─────────────────────────────────────────────────────────────
 
-const CheckoutForm = ({ onEmailCapture }: { onEmailCapture: (email: string) => void }) => {
+const CheckoutForm = () => {
   const checkoutState = useCheckoutElements();
   const [readyCount, setReadyCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -149,11 +148,7 @@ const CheckoutForm = ({ onEmailCapture }: { onEmailCapture: (email: string) => v
       >
         <div className={styles.formSection}>
           <p className={styles.formSectionLabel}>Contact</p>
-          <ContactDetailsElement
-            onReady={onReady}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            onChange={(e: any) => { if (e?.value?.email) onEmailCapture(e.value.email); }}
-          />
+          <ContactDetailsElement onReady={onReady} />
         </div>
         <div className={styles.formSection}>
           <p className={styles.formSectionLabel}>Shipping</p>
@@ -563,7 +558,6 @@ const CheckoutPage = () => {
   const [urgPinQty, setUrgPinQty] = useState(0);
   const [bizzPinQty, setBizzPinQty] = useState(0);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const capturedEmail = useRef("");
   const [initError, setInitError] = useState<string | null>(null);
   const [internationalModalOpen, setInternationalModalOpen] = useState(false);
   const [updatingSlug, setUpdatingSlug] = useState<ItemSlug | null>(null);
@@ -586,8 +580,7 @@ const CheckoutPage = () => {
       .catch(() => setInitError("Something went wrong. Please refresh to try again."));
   }, []);
 
-  const total = LCM_PRICE * lcmQty + PIN_PRICE * urgPinQty + PIN_PRICE * bizzPinQty;
-  const cart: CartState = { lcmQty, urgPinQty, bizzPinQty, total };
+  const cart: CartState = { lcmQty, urgPinQty, bizzPinQty };
 
   const handleUpdateItem = async (slug: ItemSlug, newQty: number) => {
     const newLcmQty = slug === "lcm" ? newQty : lcmQty;
@@ -667,7 +660,7 @@ const CheckoutPage = () => {
                   updatingSlug={updatingSlug}
                 />
               </div>
-              <CheckoutForm onEmailCapture={(email) => { capturedEmail.current = email; }} />
+              <CheckoutForm />
             </div>
           </CheckoutElementsProvider>
         ) : (

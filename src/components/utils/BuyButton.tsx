@@ -1,6 +1,6 @@
 import DefaultButton from "./DefaultButton";
 
-const BUY_DESTINATION = import.meta.env.VITE_USE_EMBEDDED_CHECKOUT === "true" ? "/cart" : "/buy";
+const BUY_DESTINATION = "/buy";
 
 type OmitNavlink<T> = Omit<T, "navlink" | "href">;
 

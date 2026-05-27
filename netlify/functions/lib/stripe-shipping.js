@@ -9,7 +9,12 @@
 // for region checks. `to` is the Shippo recipient shape. Stripe renamed
 // `shipping` → `shipping_details` in newer API versions; both are accepted.
 export function shippingAddressFromSession(session) {
-  const shipping = session.shipping_details || session.shipping;
+  // Field moved across Stripe API versions:
+  // 2020: session.shipping → 2022: session.shipping_details → 2025: session.collected_information.shipping_details
+  const shipping =
+    session.shipping_details ||
+    session.collected_information?.shipping_details ||
+    session.shipping;
   if (!shipping?.address?.line1) return null;
   return {
     shipping,

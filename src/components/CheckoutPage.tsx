@@ -52,6 +52,22 @@ const UPSELL_PINS = [
   { slug: "bizz_pin" as const, name: "Bizz pin", desc: "Enamel pin of Bizz Hagglefeet.", img: "/images/members/bizz-pin.webp" },
 ];
 
+function getStoredUtms(): Record<string, string> {
+  try {
+    const raw = sessionStorage.getItem("utm_params");
+    if (!raw) return {};
+    const data = JSON.parse(raw) as Record<string, string>;
+    const out: Record<string, string> = {};
+    if (data.utm_source) out.utmSource = data.utm_source;
+    if (data.utm_medium) out.utmMedium = data.utm_medium;
+    if (data.utm_campaign) out.utmCampaign = data.utm_campaign;
+    if (data.utm_content) out.utmContent = data.utm_content;
+    return out;
+  } catch {
+    return {};
+  }
+}
+
 const stripePromise = loadStripe(
   import.meta.env.DEV
     ? import.meta.env.VITE_STRIPE_PUBLIC_KEY_TEST
@@ -539,7 +555,7 @@ const CheckoutPage = () => {
     fetch("/.netlify/functions/create-checkout-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: { lcm: 1 }, returnUrl: `${window.location.origin}/thankyou`, ...(prefillEmail && { email: prefillEmail }) }),
+      body: JSON.stringify({ items: { lcm: 1 }, returnUrl: `${window.location.origin}/thankyou`, ...getStoredUtms(), ...(prefillEmail && { email: prefillEmail }) }),
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed");
@@ -569,7 +585,7 @@ const CheckoutPage = () => {
       const res = await fetch("/.netlify/functions/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou` }),
+        body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou`, ...getStoredUtms() }),
       });
       if (!res.ok) throw new Error("Failed to update");
       const { clientSecret: newSecret } = await res.json();

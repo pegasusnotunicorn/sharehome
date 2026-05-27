@@ -51,7 +51,7 @@ export default async function createCheckoutSession(req) {
     return new Response("Invalid JSON", { status: 400 });
   }
 
-  const { items, email, returnUrl } = body;
+  const { items, email, returnUrl, utmSource, utmMedium, utmCampaign, utmContent } = body;
 
   const trustedOrigins = [PROD_URL, "http://localhost:3000", "http://localhost:8888"];
   const baseUrl = (returnUrl && trustedOrigins.some((o) => returnUrl.startsWith(o)))
@@ -98,6 +98,12 @@ export default async function createCheckoutSession(req) {
       line_items: lineItems,
       allow_promotion_codes: true,
       automatic_tax: { enabled: true },
+      metadata: {
+        ...(utmSource && { utm_source: String(utmSource).slice(0, 500) }),
+        ...(utmMedium && { utm_medium: String(utmMedium).slice(0, 500) }),
+        ...(utmCampaign && { utm_campaign: String(utmCampaign).slice(0, 500) }),
+        ...(utmContent && { utm_content: String(utmContent).slice(0, 500) }),
+      },
       shipping_address_collection: { allowed_countries: ["US"] },
       shipping_options: [{ shipping_rate: NORTH_AMERICAN_SHIPPING_ID }],
       ...(email && { customer_email: email }),

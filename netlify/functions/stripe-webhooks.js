@@ -587,6 +587,29 @@ async function alert(message, context = {}) {
   });
 }
 
+const SOURCE_EMOJI = {
+  instagram: "📸",
+  youtube: "🎬",
+  email: "📧",
+  newsletter: "📧",
+  google: "🔍",
+  facebook: "👥",
+  fb: "👥",
+  twitter: "🐦",
+  x: "🐦",
+};
+
+function formatAttribution(session) {
+  const flow = session.payment_link ? "Payment Link" : "Custom Checkout";
+  const src = (session.metadata?.utm_source || "").toLowerCase();
+  const medium = session.metadata?.utm_medium || "";
+  const campaign = session.metadata?.utm_campaign || "";
+  const emoji = SOURCE_EMOJI[src] || "🔗";
+  const parts = [src, medium, campaign].filter(Boolean);
+  const source = parts.length ? `${emoji} ${parts.join(" / ")}` : "—";
+  return { flow, source };
+}
+
 function formatMoney(amountCents, currency) {
   if (amountCents == null) return "—";
   const cur = (currency || "usd").toUpperCase();
@@ -685,6 +708,8 @@ function formatOrderSummary(session) {
 async function notifyLabelPurchased({ session, to, gameCount, parcel, label, orderNumber }) {
   if (!VERBOSE_LOGGING) return;
 
+  const { flow, source } = formatAttribution(session);
+
   const customerLines = [
     `**${to.name || "—"}**`,
     session.customer_details?.email || null,
@@ -734,6 +759,8 @@ async function notifyLabelPurchased({ session, to, gameCount, parcel, label, ord
             value: `[${label.trackingNumber}](${label.trackingUrl})`,
             inline: true,
           },
+          { name: "Flow", value: flow, inline: true },
+          { name: "Source", value: source, inline: true },
           {
             name: "Quick links",
             value: quickLinks({

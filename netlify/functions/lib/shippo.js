@@ -127,6 +127,35 @@ function pickCheapest(rates) {
   );
 }
 
+// APO / FPO / DPO military destinations use USPS pseudo-state codes.
+// USPS treats them as international and requires a customs declaration.
+const MILITARY_STATES = new Set(["AE", "AP", "AA"]);
+function isMilitaryAddress(to) {
+  return (!to.country || to.country === "US") && MILITARY_STATES.has(to.state);
+}
+
+async function createCustomsDeclaration({ description, quantity, valueUsd, originCountry, weightOz }) {
+  const qty = Math.max(quantity, 1);
+  const perUnitValue = (valueUsd / qty).toFixed(2);
+  const perUnitWeightOz = (weightOz / qty).toFixed(2);
+  return shippoFetch("/customs/declarations/", {
+    certify: true,
+    certify_signer: DEFAULT_FROM_ADDRESS.name,
+    contents_type: "MERCHANDISE",
+    non_delivery_option: "RETURN",
+    items: [{
+      description: String(description).slice(0, 255),
+      quantity: qty,
+      net_weight: perUnitWeightOz,
+      mass_unit: "oz",
+      value_amount: perUnitValue,
+      value_currency: "USD",
+      origin_country: originCountry,
+      tariff_number: "9504.90",
+    }],
+  });
+}
+
 // Create a Shippo Order so the transaction shows up under the dashboard's
 // "Orders" view with line items, totals, and customer info. Cosmetic — the
 // label still works without it. Returns the full order object; callers
@@ -183,6 +212,9 @@ export async function createOrder({
  * @param {string} [opts.order] - Shippo Order object_id to link the transaction to.
  * @param {string} [opts.reference1] - prints on the USPS label (max 30 chars).
  * @param {string} [opts.reference2] - second label reference (max 30 chars).
+ * @param {Object} [opts.customs] - customs declaration data for military/international shipments.
+ *   Automatically applied when `to.state` is AE/AP/AA (military).
+ *   Shape: { description, quantity, valueUsd, originCountry, weightOz }
  */
 export async function createLabel({
   to,
@@ -195,6 +227,7 @@ export async function createLabel({
   order,
   reference1,
   reference2,
+  customs,
 }) {
   if (!parcel) throw new Error("createLabel: parcel is required");
   if (typeof maxLabelUsd !== "number") {
@@ -208,6 +241,13 @@ export async function createLabel({
   if (reference1) extra.reference_1 = String(reference1).slice(0, 30);
   if (reference2) extra.reference_2 = String(reference2).slice(0, 30);
 
+  let customsDeclarationId;
+  if (customs && isMilitaryAddress(to)) {
+    const decl = await createCustomsDeclaration(customs);
+    customsDeclarationId = decl.object_id;
+    console.log(`📦 Created customs declaration ${customsDeclarationId} for military address (${to.state})`);
+  }
+
   const shipment = await shippoFetch("/shipments/", {
     address_from: from,
     address_to: to,
@@ -215,6 +255,7 @@ export async function createLabel({
     async: false,
     ...(Object.keys(extra).length && { extra }),
     ...(shipmentMetadata && { metadata: String(shipmentMetadata).slice(0, 100) }),
+    ...(customsDeclarationId && { customs_declaration: customsDeclarationId }),
   });
 
   if (!shipment.rates?.length) {

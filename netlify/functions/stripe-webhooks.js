@@ -11,6 +11,12 @@ const VERBOSE_LOGGING = process.env.VERBOSE_LOGGING === "true";
 const STRIPE_LCM_PRODUCT_ID = IS_DEV
   ? process.env.STRIPE_LCM_PRODUCT_ID_TEST
   : process.env.STRIPE_LCM_PRODUCT_ID_LIVE;
+const STRIPE_URG_PIN_PRODUCT_ID = IS_DEV
+  ? process.env.STRIPE_URG_PIN_PRODUCT_ID_TEST
+  : process.env.STRIPE_URG_PIN_PRODUCT_ID_LIVE;
+const STRIPE_BIZZ_PIN_PRODUCT_ID = IS_DEV
+  ? process.env.STRIPE_BIZZ_PIN_PRODUCT_ID_TEST
+  : process.env.STRIPE_BIZZ_PIN_PRODUCT_ID_LIVE;
 
 const STRIPE_SECRET_KEY = IS_DEV
   ? process.env.STRIPE_SECRET_KEY_DEV
@@ -396,6 +402,14 @@ async function purchaseShippoLabel(eventSession, eventId) {
       );
     }
 
+    const urgPinCount = countProduct(session, STRIPE_URG_PIN_PRODUCT_ID);
+    const bizzPinCount = countProduct(session, STRIPE_BIZZ_PIN_PRODUCT_ID);
+    const pickListParts = [];
+    if (gameCount) pickListParts.push(`${gameCount}x LCM`);
+    if (urgPinCount) pickListParts.push(`${urgPinCount}x URG`);
+    if (bizzPinCount) pickListParts.push(`${bizzPinCount}x BIZZ`);
+    const pickList = pickListParts.join(" ").slice(0, 30) || null;
+
     console.log(
       `📦 Buying Shippo label for ${to.name} (${session.id}, ${gameCount} game(s))`
     );
@@ -407,6 +421,17 @@ async function purchaseShippoLabel(eventSession, eventId) {
       shipmentMetadata: shippoOrderNumber,
       order: shippoOrderId,
       reference1: shippoOrderNumber,
+      ...(pickList && { reference2: pickList }),
+      customs: {
+        description: [
+          gameCount ? "Love Career Magic Board Game" : null,
+          (urgPinCount || bizzPinCount) ? "Enamel Pins" : null,
+        ].filter(Boolean).join(", ") || "Merchandise",
+        quantity: gameCount + urgPinCount + bizzPinCount,
+        valueUsd: (session.amount_subtotal ?? session.amount_total) / 100,
+        originCountry: "CN",
+        weightOz: gameCount * 20 + (urgPinCount + bizzPinCount),
+      },
     });
     console.log(
       `✅ Label ${label.transactionId} — ${label.rate.provider} ${label.rate.service} $${label.rate.amount} — tracking ${label.trackingNumber}`
@@ -475,6 +500,20 @@ async function purchaseShippoLabel(eventSession, eventId) {
   }
 }
 
+function countProduct(session, productId) {
+  if (!productId) return 0;
+  const items = session.line_items?.data || [];
+  let qty = 0;
+  for (const item of items) {
+    const pid =
+      typeof item.price?.product === "string"
+        ? item.price.product
+        : item.price?.product?.id;
+    if (pid === productId) qty += item.quantity || 0;
+  }
+  return qty;
+}
+
 // Returns the number of LCM games in the session, or null if we can't
 // determine it (env missing). Callers must treat null as "alert + don't buy".
 function countGames(session) {
@@ -482,16 +521,7 @@ function countGames(session) {
     console.error("❌ STRIPE_LCM_PRODUCT_ID not set; cannot count games");
     return null;
   }
-  const items = session.line_items?.data || [];
-  let qty = 0;
-  for (const item of items) {
-    const productId =
-      typeof item.price?.product === "string"
-        ? item.price.product
-        : item.price?.product?.id;
-    if (productId === STRIPE_LCM_PRODUCT_ID) qty += item.quantity || 0;
-  }
-  return qty;
+  return countProduct(session, STRIPE_LCM_PRODUCT_ID);
 }
 
 async function postToDiscord(payload) {

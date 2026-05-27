@@ -95,7 +95,7 @@ const TOTAL_ELEMENTS = 3;
 
 // ── Checkout form ─────────────────────────────────────────────────────────────
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ sessionId }: { sessionId: string | null }) => {
   const checkoutState = useCheckoutElements();
   const [readyCount, setReadyCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -103,9 +103,30 @@ const CheckoutForm = () => {
   const lastError = useRef("");
   if (errorMessage) lastError.current = errorMessage;
   const [termsAgreed, setTermsAgreed] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastCapturedEmailRef = useRef("");
+
+  useEffect(() => () => { if (debounceRef.current) clearTimeout(debounceRef.current); }, []);
 
   const onReady = () => setReadyCount((n) => n + 1);
   const allReady = readyCount >= TOTAL_ELEMENTS;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleContactChange = (e: any) => {
+    const email = e.value?.email ?? "";
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      if (!email || email === lastCapturedEmailRef.current) return;
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+      if (!sessionId) return;
+      lastCapturedEmailRef.current = email;
+      fetch("/.netlify/functions/save-checkout-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessionId, email }),
+      }).catch(() => {});
+    }, 800);
+  };
 
   useEffect(() => {
     if (allReady) trackEvent("checkout_form_ready");
@@ -148,7 +169,7 @@ const CheckoutForm = () => {
       >
         <div className={styles.formSection}>
           <p className={styles.formSectionLabel}>Contact</p>
-          <ContactDetailsElement onReady={onReady} />
+          <ContactDetailsElement onReady={onReady} onChange={handleContactChange} />
         </div>
         <div className={styles.formSection}>
           <p className={styles.formSectionLabel}>Shipping</p>
@@ -558,6 +579,7 @@ const CheckoutPage = () => {
   const [urgPinQty, setUrgPinQty] = useState(0);
   const [bizzPinQty, setBizzPinQty] = useState(0);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [initError, setInitError] = useState<string | null>(null);
   const [internationalModalOpen, setInternationalModalOpen] = useState(false);
   const [updatingSlug, setUpdatingSlug] = useState<ItemSlug | null>(null);
@@ -573,8 +595,9 @@ const CheckoutPage = () => {
         if (!res.ok) throw new Error("Failed");
         return res.json();
       })
-      .then(({ clientSecret: secret }) => {
+      .then(({ clientSecret: secret, sessionId: sid }) => {
         setClientSecret(secret);
+        setSessionId(sid);
         trackEvent("checkout_started");
       })
       .catch(() => setInitError("Something went wrong. Please refresh to try again."));
@@ -602,7 +625,7 @@ const CheckoutPage = () => {
         body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou`, ...getStoredUtms() }),
       });
       if (!res.ok) throw new Error("Failed to update");
-      const { clientSecret: newSecret } = await res.json();
+      const { clientSecret: newSecret, sessionId: newSid } = await res.json();
       const prevQty = slug === "lcm" ? lcmQty : slug === "urg_pin" ? urgPinQty : bizzPinQty;
       const trigger = newQty === 0 ? "remove_item" : prevQty === 0 ? "add_item" : "change_qty";
       trackEvent("checkout_cart_reset", { trigger, item_slug: slug, new_qty: newQty });
@@ -610,6 +633,7 @@ const CheckoutPage = () => {
       setUrgPinQty(newUrgQty);
       setBizzPinQty(newBizzQty);
       setClientSecret(newSecret);
+      setSessionId(newSid);
     } catch {
       // silently fail — user can retry
     } finally {
@@ -660,7 +684,7 @@ const CheckoutPage = () => {
                   updatingSlug={updatingSlug}
                 />
               </div>
-              <CheckoutForm />
+              <CheckoutForm sessionId={sessionId} />
             </div>
           </CheckoutElementsProvider>
         ) : (

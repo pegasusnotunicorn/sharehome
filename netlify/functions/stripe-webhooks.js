@@ -49,6 +49,9 @@ const MAILERLITE_PURCHASE_GROUP_ID = process.env.MAILERLITE_PURCHASE_GROUP_ID;
 const MAILERLITE_ABANDONED_GROUP_ID = process.env.MAILERLITE_ABANDONED_GROUP_ID;
 
 const SITE_URL = IS_DEV ? "http://localhost:8888" : "https://lovecareermagic.com";
+const STRIPE_PAYMENT_LINK_URL = IS_DEV
+  ? process.env.REACT_APP_STRIPE_TEST_URL
+  : process.env.REACT_APP_STRIPE_PROD_URL;
 
 export default async function stripeWebhooks(request) {
   if (request.method !== "POST") {
@@ -95,7 +98,9 @@ export default async function stripeWebhooks(request) {
     case "checkout.session.expired": {
       const eventSession = event.data.object;
       const abandonedEmail =
-        eventSession.customer_details?.email ?? eventSession.customer_email;
+        eventSession.customer_details?.email ??
+        eventSession.customer_email ??
+        eventSession.metadata?.contact_email;
 
       if (!abandonedEmail) {
         if (IS_DEV) console.log("No email found for abandoned checkout");
@@ -117,7 +122,10 @@ export default async function stripeWebhooks(request) {
         );
       }
 
-      const recoveryUrl = `${SITE_URL}/checkout?prefilled_email=${encodeURIComponent(abandonedEmail)}`;
+      const isPaymentLink = !!eventSession.payment_link;
+      const recoveryUrl = isPaymentLink && STRIPE_PAYMENT_LINK_URL
+        ? `${STRIPE_PAYMENT_LINK_URL}?prefilled_email=${encodeURIComponent(abandonedEmail)}`
+        : `${SITE_URL}/checkout?prefilled_email=${encodeURIComponent(abandonedEmail)}`;
 
       await addEmailToMailerLite(
         abandonedEmail,

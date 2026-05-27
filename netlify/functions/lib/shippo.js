@@ -127,11 +127,12 @@ function pickCheapest(rates) {
   );
 }
 
-// APO / FPO / DPO military destinations use USPS pseudo-state codes.
-// USPS treats them as international and requires a customs declaration.
-const MILITARY_STATES = new Set(["AE", "AP", "AA"]);
-function isMilitaryAddress(to) {
-  return (!to.country || to.country === "US") && MILITARY_STATES.has(to.state);
+// USPS treats these US state/territory codes as international destinations
+// and requires a customs declaration even though the country is "US".
+// AE/AP/AA = APO/FPO/DPO military mail; PR = Puerto Rico.
+const CUSTOMS_REQUIRED_STATES = new Set(["AE", "AP", "AA", "PR"]);
+function requiresCustomsDeclaration(to) {
+  return (!to.country || to.country === "US") && CUSTOMS_REQUIRED_STATES.has(to.state);
 }
 
 async function createCustomsDeclaration({ description, quantity, valueUsd, originCountry, weightOz }) {
@@ -242,10 +243,10 @@ export async function createLabel({
   if (reference2) extra.reference_2 = String(reference2).slice(0, 30);
 
   let customsDeclarationId;
-  if (customs && isMilitaryAddress(to)) {
+  if (customs && requiresCustomsDeclaration(to)) {
     const decl = await createCustomsDeclaration(customs);
     customsDeclarationId = decl.object_id;
-    console.log(`📦 Created customs declaration ${customsDeclarationId} for military address (${to.state})`);
+    console.log(`📦 Created customs declaration ${customsDeclarationId} for ${to.state} address`);
   }
 
   const shipment = await shippoFetch("/shipments/", {

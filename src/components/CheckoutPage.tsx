@@ -96,7 +96,7 @@ const TOTAL_ELEMENTS = 3;
 
 // ── Checkout form ─────────────────────────────────────────────────────────────
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ onEmailCapture }: { onEmailCapture: (email: string) => void }) => {
   const checkoutState = useCheckoutElements();
   const [readyCount, setReadyCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -149,7 +149,11 @@ const CheckoutForm = () => {
       >
         <div className={styles.formSection}>
           <p className={styles.formSectionLabel}>Contact</p>
-          <ContactDetailsElement onReady={onReady} />
+          <ContactDetailsElement
+            onReady={onReady}
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            onChange={(e: any) => { if (e?.value?.email) onEmailCapture(e.value.email); }}
+          />
         </div>
         <div className={styles.formSection}>
           <p className={styles.formSectionLabel}>Shipping</p>
@@ -559,6 +563,7 @@ const CheckoutPage = () => {
   const [urgPinQty, setUrgPinQty] = useState(0);
   const [bizzPinQty, setBizzPinQty] = useState(0);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const capturedEmail = useRef("");
   const [initError, setInitError] = useState<string | null>(null);
   const [internationalModalOpen, setInternationalModalOpen] = useState(false);
   const [updatingSlug, setUpdatingSlug] = useState<ItemSlug | null>(null);
@@ -601,7 +606,7 @@ const CheckoutPage = () => {
       const res = await fetch("/.netlify/functions/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou`, ...getStoredUtms() }),
+        body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou`, ...getStoredUtms(), ...(capturedEmail.current && { email: capturedEmail.current }) }),
       });
       if (!res.ok) throw new Error("Failed to update");
       const { clientSecret: newSecret } = await res.json();
@@ -662,7 +667,7 @@ const CheckoutPage = () => {
                   updatingSlug={updatingSlug}
                 />
               </div>
-              <CheckoutForm />
+              <CheckoutForm onEmailCapture={(email) => { capturedEmail.current = email; }} />
             </div>
           </CheckoutElementsProvider>
         ) : (

@@ -16,6 +16,7 @@ import CustomHelmet from "./utils/CustomHelmet";
 import PageIntro from "./utils/PageIntro";
 import Modal from "./utils/Modal";
 import Stepper from "./utils/Stepper";
+import MagnifierButton from "./utils/MagnifierButton";
 import styles from "../css/pages/buyPage.module.css";
 
 const LCM_PRICE = 34.99;
@@ -58,21 +59,15 @@ const stripePromise = loadStripe(
 );
 
 const appearance = {
+  inputs: "condensed",
+  labels: "auto",
   variables: {
     colorPrimary: "#5f5aa2",
     colorText: "#323232",
     borderRadius: "8px",
   },
-  rules: {
-    ".Label": {
-      fontFamily: "'Rowdies', sans-serif",
-      fontWeight: "400",
-      letterSpacing: "0px",
-    },
-  },
 };
 
-const fonts = [{ cssSrc: "https://fonts.googleapis.com/css2?family=Rowdies&display=swap" }];
 
 const TOTAL_ELEMENTS = 3;
 
@@ -190,13 +185,9 @@ const CartUpsell = ({
       <p className={styles.cartUpsellLabel}>Add to your order</p>
       {upsells.map((pin) => (
         <div key={pin.slug} className={styles.cartUpsellItem}>
-          <button
-            className={styles.cartUpsellImageBtn}
-            onClick={() => setPreviewPin({ src: pin.img, alt: pin.name })}
-            aria-label={`Preview ${pin.name}`}
-          >
+          <MagnifierButton size="sm" onClick={() => setPreviewPin({ src: pin.img, alt: pin.name })} ariaLabel={`Preview ${pin.name}`}>
             <img src={pin.img} alt={pin.name} className={styles.cartUpsellImage} />
-          </button>
+          </MagnifierButton>
           <div className={styles.cartUpsellInfo}>
             <p className={styles.cartUpsellName}>{pin.name}</p>
             <p className={styles.cartUpsellDesc}>{pin.desc}</p>
@@ -242,6 +233,7 @@ const CartSummary = ({
 
   const [editItem, setEditItem] = useState<{ slug: ItemSlug; qty: number } | null>(null);
   const [boxCarouselOpen, setBoxCarouselOpen] = useState(false);
+  const [previewPin, setPreviewPin] = useState<{ src: string; alt: string } | null>(null);
 
   const [promoOpen, setPromoOpen] = useState(false);
   const [promoCode, setPromoCode] = useState("");
@@ -309,11 +301,13 @@ const CartSummary = ({
         {activeItems.map((item) => (
           <div key={item.slug} className={styles.cartItem}>
             {item.slug === "lcm" ? (
-              <button className={styles.cartItemImageBtn} onClick={() => setBoxCarouselOpen(true)} aria-label="Preview game box">
+              <MagnifierButton size="sm" onClick={() => setBoxCarouselOpen(true)} ariaLabel="Preview game box">
                 <img src={item.img} alt={item.name} className={styles.cartItemImage} />
-              </button>
+              </MagnifierButton>
             ) : (
-              <img src={item.img} alt={item.name} className={styles.cartItemImage} />
+              <MagnifierButton size="sm" onClick={() => setPreviewPin({ src: item.img, alt: item.name })} ariaLabel={`Preview ${item.name}`}>
+                <img src={item.img} alt={item.name} className={styles.cartItemImage} />
+              </MagnifierButton>
             )}
             <div className={styles.cartItemInfo}>
               <p className={styles.cartItemName}>{item.name}</p>
@@ -365,7 +359,7 @@ const CartSummary = ({
               + Add promotion code
             </button>
           )}
-          <div className={`${styles.errorSlide} ${promoError ? styles.errorSlideVisible : ""}`}>
+          <div className={`${styles.errorSlide} ${styles.errorSlideCompact} ${promoError ? styles.errorSlideVisible : ""}`}>
             <div className={styles.errorSlideInner}>
               <p className={styles.promoError}>{lastPromoError.current}</p>
             </div>
@@ -424,6 +418,12 @@ const CartSummary = ({
           ? <span>{checkout.total.total.amount}</span>
           : <span className={`${styles.cartAmountSkeleton} ${styles.cartTotalSkeleton}`} />}
       </div>
+
+      {previewPin && (
+        <Modal onClose={() => setPreviewPin(null)} ariaLabel={previewPin.alt}>
+          <img src={previewPin.src} alt={previewPin.alt} className={styles.pinPreviewImage} />
+        </Modal>
+      )}
 
       {boxCarouselOpen && (
         <Modal onClose={() => setBoxCarouselOpen(false)} ariaLabel="Game contents preview" panelClassName={styles.carouselPanel}>
@@ -539,7 +539,7 @@ const CheckoutPage = () => {
     fetch("/.netlify/functions/create-checkout-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: { lcm: 1 }, ...(prefillEmail && { email: prefillEmail }) }),
+      body: JSON.stringify({ items: { lcm: 1 }, returnUrl: `${window.location.origin}/thankyou`, ...(prefillEmail && { email: prefillEmail }) }),
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed");
@@ -569,7 +569,7 @@ const CheckoutPage = () => {
       const res = await fetch("/.netlify/functions/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou` }),
       });
       if (!res.ok) throw new Error("Failed to update");
       const { clientSecret: newSecret } = await res.json();
@@ -611,7 +611,7 @@ const CheckoutPage = () => {
           <CheckoutElementsProvider
             key={clientSecret}
             stripe={stripePromise}
-            options={{ clientSecret, elementsOptions: { appearance, fonts } }}
+            options={{ clientSecret, elementsOptions: { appearance } }}
           >
             <div className={styles.checkoutLayout}>
               <div className={styles.checkoutLeft}>

@@ -848,6 +848,7 @@
   gap: 0.5rem;
 }
 
+
 .formSectionLabel {
   font-family: "Rowdies-Regular";
   font-size: 0.7rem;
@@ -861,12 +862,22 @@
   display: grid;
   grid-template-rows: 0fr;
   opacity: 0;
-  transition: grid-template-rows 0.22s ease, opacity 0.18s ease;
+  margin-top: -1.5rem;
+  transition: grid-template-rows 0.22s ease, opacity 0.18s ease, margin-top 0.22s ease;
 }
 
 .errorSlideVisible {
   grid-template-rows: 1fr;
   opacity: 1;
+  margin-top: 0;
+}
+
+.errorSlideCompact {
+  margin-top: -0.35rem;
+}
+
+.errorSlideCompact.errorSlideVisible {
+  margin-top: 0;
 }
 
 .errorSlideInner {

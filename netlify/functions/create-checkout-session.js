@@ -6,7 +6,7 @@ const STRIPE_SECRET_KEY = IS_DEV
   ? process.env.STRIPE_SECRET_KEY_DEV
   : process.env.STRIPE_SECRET_KEY;
 
-const SITE_URL = IS_DEV ? "http://localhost:8888" : "https://lovecareermagic.com";
+const PROD_URL = "https://lovecareermagic.com";
 
 const NORTH_AMERICAN_SHIPPING_ID = IS_DEV
   ? process.env.STRIPE_NORTH_AMERICAN_SHIPPING_ID_TEST
@@ -51,7 +51,12 @@ export default async function createCheckoutSession(req) {
     return new Response("Invalid JSON", { status: 400 });
   }
 
-  const { items, email } = body;
+  const { items, email, returnUrl } = body;
+
+  const trustedOrigins = [PROD_URL, "http://localhost:3000", "http://localhost:8888"];
+  const baseUrl = (returnUrl && trustedOrigins.some((o) => returnUrl.startsWith(o)))
+    ? returnUrl
+    : `${PROD_URL}/thankyou`;
 
   if (!items || typeof items !== "object" || Array.isArray(items)) {
     console.error("Invalid items payload:", typeof items);
@@ -88,7 +93,7 @@ export default async function createCheckoutSession(req) {
   try {
     const session = await stripe.checkout.sessions.create({
       ui_mode: "custom",
-      return_url: `${SITE_URL}/thankyou`,
+      return_url: baseUrl,
       mode: "payment",
       line_items: lineItems,
       allow_promotion_codes: true,
@@ -98,7 +103,7 @@ export default async function createCheckoutSession(req) {
       ...(email && { customer_email: email }),
     });
 
-    return new Response(JSON.stringify({ clientSecret: session.client_secret }), {
+    return new Response(JSON.stringify({ clientSecret: session.client_secret, sessionId: session.id }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

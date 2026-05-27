@@ -1,17 +1,18 @@
 import CustomHelmet from "./utils/CustomHelmet";
+import PageIntro from "./utils/PageIntro";
 import { NavLink } from "react-router";
 
 const TermsPage = () => {
-  const title = "Terms & privacy policy";
-
   return (
     <div className="content max-width">
       <CustomHelmet
-        title={title}
+        title="Terms & privacy policy"
         description="Terms & privacy policy for Love, Career & Magic."
       />
 
-      <div className="subcontentWrapper margin-top min-width">
+      <PageIntro title="Terms & privacy policy" />
+
+      <div className="subcontentWrapper min-width">
         <div className="termsWrapper">
           <h2 className="subtitle">Terms and conditions</h2>
           <p>

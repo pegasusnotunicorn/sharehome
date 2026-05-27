@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { NavLink } from "react-router";
 import CustomHelmet from "./utils/CustomHelmet";
+import PageIntro from "./utils/PageIntro";
 import PolaroidGallery from "./utils/PolaroidGallery";
 import { CONTACT_POLAROIDS } from "./utils/contactPolaroids";
 import styles from "../css/pages/thankYouPage.module.css";
@@ -32,19 +33,11 @@ const ThankYouPage = () => {
         description="We have received your order and will ship your game to you within 3-5 business days."
       />
 
-      <div className="subcontentWrapper margin-top min-width">
-        <div className={`characterContent ${styles.pageIntro}`}>
-          <h2 className={`subtitle ${styles.pageIntroTitle}`}>
-            Thank you for your order!
-          </h2>
-          <p className={styles.pageIntroLead}>
-            Your game is on its way 📦
-          </p>
-          <NavLink to="/" className={styles.homeLink}>
-            Click here to go back home
-          </NavLink>
-        </div>
-      </div>
+      <PageIntro title="Thank you for your order!" lead="Your game is on its way 📦">
+        <NavLink to="/" className={styles.homeLink}>
+          Click here to go back home
+        </NavLink>
+      </PageIntro>
 
       <div className={styles.shipmentCard}>
         <div className={styles.shipmentVerticalWrapper}>

@@ -9,6 +9,8 @@ import {
 import "../../css/utils/spotlight.css";
 import { GsapFadeScrub } from "./useGsap";
 import DefaultButton from "../utils/DefaultButton";
+import Modal from "./Modal";
+import charStyles from "../../css/pages/characterPage.module.css";
 
 interface CharacterSpotlightProps {
   name?: string;
@@ -88,6 +90,8 @@ export const CharacterSpotlight = (props: CharacterSpotlightProps) => {
     );
   });
 
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+
   //hide details button on mobile
   const [showDetails, setShowDetails] = useState(true);
   const { width } = useWindowDimensions();
@@ -104,25 +108,6 @@ export const CharacterSpotlight = (props: CharacterSpotlightProps) => {
   const backgroundPosition = character.image.objectPosition
     ? `${character.image.objectPosition} center`
     : "center center";
-  const LinkTo = (props: { sectionTitle?: string; children?: ReactNode }) => {
-    if (props.sectionTitle)
-      return (
-        <NavLink to={`/characters/${character.urlName}`}>
-          {props.children}
-        </NavLink>
-      );
-    else
-      return (
-        <a
-          aria-label="Character image"
-          target="_blank"
-          rel="noreferrer"
-          href={character.image.url}
-        >
-          {props.children}
-        </a>
-      );
-  };
   return (
     <div className={`characterSpotlightWrapper ${invertClass}`}>
       <GsapFadeScrub fadeIn className="fadeInTextWrapper">
@@ -132,25 +117,37 @@ export const CharacterSpotlight = (props: CharacterSpotlightProps) => {
             <IndexTotal index={props.index} total={props.total} />
           )}
           <div className="spotlightLeftWrapper">
-            <LinkTo {...props}>
-              <div className="imageCircleMask noselect">
-                <img
-                  loading="lazy"
-                  className="characterImage"
-                  src={character.image.url.replace("big", "small")}
-                  style={{ objectPosition: backgroundPosition }}
-                  alt={character.name}
-                />
-                <div className="magnifierWrapper">
+            {props.sectionTitle ? (
+              <NavLink to={`/characters/${character.urlName}`}>
+                <div className="imageCircleMask noselect">
                   <img
                     loading="lazy"
-                    className="imageCircleIcons"
-                    src="/images/icons/magnifier.svg"
-                    alt="Look closer"
+                    className="characterImage"
+                    src={character.image.url.replace("big", "small")}
+                    style={{ objectPosition: backgroundPosition }}
+                    alt={character.name}
                   />
+                  <div className="magnifierWrapper">
+                    <img loading="lazy" className="imageCircleIcons" src="/images/icons/magnifier.svg" alt="Look closer" />
+                  </div>
                 </div>
-              </div>
-            </LinkTo>
+              </NavLink>
+            ) : (
+              <button className="imageClickableBtn" onClick={() => setImageModalOpen(true)} aria-label="View full image">
+                <div className="imageCircleMask noselect">
+                  <img
+                    loading="lazy"
+                    className="characterImage"
+                    src={character.image.url.replace("big", "small")}
+                    style={{ objectPosition: backgroundPosition }}
+                    alt={character.name}
+                  />
+                  <div className="magnifierWrapper">
+                    <img loading="lazy" className="imageCircleIcons" src="/images/icons/magnifier.svg" alt="Look closer" />
+                  </div>
+                </div>
+              </button>
+            )}
             <div className="leftDetailsWrapper">
               <h1>{name}</h1>
               <h3>— {title} —</h3>
@@ -191,6 +188,30 @@ export const CharacterSpotlight = (props: CharacterSpotlightProps) => {
           </div>
         </div>
       </GsapFadeScrub>
+
+      {imageModalOpen && (
+        <Modal
+          onClose={() => setImageModalOpen(false)}
+          panelClassName={charStyles.sketchViewerCard}
+          ariaLabel={character.name}
+        >
+          <div className={charStyles.sketchViewerSwiper}>
+            <div className={charStyles.sketchViewerSlide}>
+              <img
+                src={character.image.url}
+                alt={character.name}
+                className={charStyles.sketchViewerImage}
+              />
+            </div>
+          </div>
+          <div className={charStyles.sketchViewerMeta}>
+            <p className={charStyles.sketchViewerName}>{character.name}</p>
+            <p className={charStyles.sketchViewerCount}>
+              {character.race} — {character.job}{character.job2 ? ` / ${character.job2}` : ""}
+            </p>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

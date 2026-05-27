@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap";
 import DefaultButton from "../utils/DefaultButton";
+import BuyButton from "../utils/BuyButton";
 import { YoutubeModal } from "./YoutubeModal";
 import CarouselSection from "../utils/CarouselSection";
 import ParallaxSection from "./ParallaxSection";
@@ -221,13 +222,12 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
             <span className="fantasyEmphasis">Love, Career & Magic</span>?
           </h1>
           <div className={`${landingPageStyles.finalButtonsWrapper}`}>
-            <DefaultButton
+            <BuyButton
               animated
               icon="forward"
               variant="primary"
               color="red"
               size="large"
-              navlink="/buy"
               text="Buy now"
             />
           </div>

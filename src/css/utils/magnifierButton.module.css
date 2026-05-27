@@ -1,0 +1,49 @@
+.wrapper {
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: zoom-in;
+  border-radius: 6px;
+  flex-shrink: 0;
+  display: flex;
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  bottom: 0.3rem;
+  right: 0.3rem;
+  padding: 0.25rem;
+  border: 1.5px solid #323232;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  pointer-events: none;
+}
+
+.wrapper:hover .badge {
+  transform: scale(1.08);
+  box-shadow: 0 4px 10px rgba(50, 50, 50, 0.2);
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+.badgeSm {
+  padding: 0.15rem;
+  bottom: 0.2rem;
+  right: 0.2rem;
+  border-radius: 4px;
+}
+
+.iconSm {
+  width: 10px;
+  height: 10px;
+}

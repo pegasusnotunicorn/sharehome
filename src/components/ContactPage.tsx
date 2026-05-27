@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import styles from "../css/pages/contactPage.module.css";
 import { NavLink } from "react-router";
+import { BUY_DESTINATION } from "./utils/BuyButton";
+import PageIntro from "./utils/PageIntro";
 import PolaroidGallery from "./utils/PolaroidGallery";
 import { CONTACT_POLAROIDS } from "./utils/contactPolaroids";
 import useWindowDimensions from "./utils/useWindowDimensions";
@@ -17,42 +19,36 @@ const ContactPage = () => {
   return (
     <div className={`content ${styles.contactPage}`}>
       <SocialIconDefs className={styles.socialIconDefs} />
-      <div className="subcontentWrapper margin-top min-width">
-        <div className={`characterContent ${styles.pageIntro}`}>
-          <h2 className={`subtitle ${styles.pageIntroTitle}`}>Contact us</h2>
-          <p className={styles.pageIntroLead}>
-            Follow along on my game dev journey 🎮
-          </p>
-          <div className={styles.socialIconsWrapper}>
-            {SOCIAL_LINKS.map(
-              ({
-                href,
-                label,
-                iconId,
-                external = true,
-                brandColor,
-                hoverBackground,
-                hoverIconColor = "#fff",
-              }) => (
-              <a
-                key={label}
-                href={href}
-                target={external ? "_blank" : undefined}
-                rel={external ? "noreferrer" : undefined}
-                aria-label={label}
-                style={{
-                  ["--social-brand-color" as string]: brandColor,
-                  ["--social-brand-background" as string]: hoverBackground ?? brandColor,
-                  ["--social-brand-icon-color" as string]: hoverIconColor,
-                }}
-              >
-                <SocialIcon className={styles.socialIcon} iconId={iconId} />
-              </a>
-              ),
-            )}
-          </div>
+      <PageIntro title="Contact us" lead="Follow along on my game dev journey 🎮">
+        <div className={styles.socialIconsWrapper}>
+          {SOCIAL_LINKS.map(
+            ({
+              href,
+              label,
+              iconId,
+              external = true,
+              brandColor,
+              hoverBackground,
+              hoverIconColor = "#fff",
+            }) => (
+            <a
+              key={label}
+              href={href}
+              target={external ? "_blank" : undefined}
+              rel={external ? "noreferrer" : undefined}
+              aria-label={label}
+              style={{
+                ["--social-brand-color" as string]: brandColor,
+                ["--social-brand-background" as string]: hoverBackground ?? brandColor,
+                ["--social-brand-icon-color" as string]: hoverIconColor,
+              }}
+            >
+              <SocialIcon className={styles.socialIcon} iconId={iconId} />
+            </a>
+            ),
+          )}
         </div>
-      </div>
+      </PageIntro>
 
       <div className={styles.aboutMeWrapper}>
         <div className={styles.aboutMeVerticalWrapper}>
@@ -99,7 +95,7 @@ const ContactPage = () => {
               </p>
               <p>
                 Thanks for visiting my humble page and please consider{" "}
-                <NavLink to="/buy">buying the game!</NavLink>
+                <NavLink to={BUY_DESTINATION}>buying the game!</NavLink>
               </p>
             </>
           )}

@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@netlify/blobs": "^10.7.4",
+    "@stripe/react-stripe-js": "^6.4.0",
+    "@stripe/stripe-js": "^9.6.0",
     "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "gsap": "^3.9.1",
@@ -48,6 +50,7 @@
     "critical": "^7.2.1",
     "eslint": "^8.24.0",
     "eslint-plugin-react": "^7.32.0",
+    "playwright-core": "^1.60.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2",
     "vite": "^5.4.0"

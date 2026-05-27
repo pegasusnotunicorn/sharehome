@@ -15,6 +15,7 @@ import { EmojiSection } from "../utils/EmojiSection";
 import CustomHelmet from "../utils/CustomHelmet";
 import CarouselSection from "../utils/CarouselSection";
 import DefaultButton from "../utils/DefaultButton";
+import Modal from "../utils/Modal";
 import charStyles from "../../css/pages/characterPage.module.css";
 import "../../css/utils/spotlight.css";
 import type { CharacterWithNav } from "../../types/character";
@@ -422,26 +423,11 @@ const ExpansionCharactersSection = () => {
       </div>
 
       {activeCharacter && activeSketches.length > 0 && (
-        <div
-          className={charStyles.sketchViewer}
-          onClick={closeViewer}
-          role="presentation"
+        <Modal
+          onClose={closeViewer}
+          panelClassName={charStyles.sketchViewerCard}
+          ariaLabel={`${activeCharacter.name} sketches`}
         >
-          <div
-            className={charStyles.sketchViewerCard}
-            onClick={(event) => event.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label={`${activeCharacter.name} sketches`}
-          >
-            <button
-              type="button"
-              className={charStyles.sketchViewerClose}
-              onClick={closeViewer}
-              aria-label="Close sketch viewer"
-            >
-              <img src="/images/icons/cross.svg" alt="" />
-            </button>
             <Swiper
               modules={[Navigation, Pagination, A11y, Keyboard]}
               navigation={activeSketches.length > 1}
@@ -469,8 +455,7 @@ const ExpansionCharactersSection = () => {
                 {activeCharacter.race} — {activeCharacter.job}
               </p>
             </div>
-          </div>
-        </div>
+        </Modal>
       )}
     </section>
   );

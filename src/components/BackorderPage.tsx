@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import styles from "../css/pages/backorderPage.module.css";
+import PageIntro from "./utils/PageIntro";
 import DefaultButton from "./utils/DefaultButton";
 import EmailForm from "./utils/EmailForm";
 import PolaroidGallery, { type PolaroidGalleryItem } from "./utils/PolaroidGallery";
@@ -36,18 +37,19 @@ const BackorderPage = () => {
 
   return (
     <div className={`content max-width ${styles.buyPage}`}>
-      <div className="subcontentWrapper margin-top">
-        <div className={`characterContent ${styles.pageIntro}`}>
-          <h2 className={`subtitle ${styles.pageIntroTitle}`}>Sold out</h2>
-          <p className={styles.pageIntroLead}>
+      <PageIntro
+        minWidth={false}
+        title="Sold out"
+        lead={
+          <>
             Love, Career & Magic has been out of stock since
             <br />
             <span className={styles.pageIntroDate}>
               <strong>December 19, 2025</strong> 💔
             </span>
-          </p>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       <div className={styles.ctaGrid}>
         <a

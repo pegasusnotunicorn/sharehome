@@ -35,16 +35,14 @@ function maybeForceFailure(stage) {
 // is independent of the Webhook Endpoint API version, which is set in the
 // Stripe Dashboard and controls the shape of incoming event payloads.
 const stripe = stripeModule(STRIPE_SECRET_KEY, {
-  apiVersion: "2025-02-24.acacia",
+  apiVersion: "2025-03-31.basil",
 });
 
 const MAILER_LITE_KEY = process.env.MAILER_LITE_KEY;
 const MAILERLITE_PURCHASE_GROUP_ID = process.env.MAILERLITE_PURCHASE_GROUP_ID;
 const MAILERLITE_ABANDONED_GROUP_ID = process.env.MAILERLITE_ABANDONED_GROUP_ID;
 
-const STRIPE_PAYMENT_LINK_URL = IS_DEV
-  ? process.env.REACT_APP_STRIPE_TEST_URL
-  : process.env.REACT_APP_STRIPE_PROD_URL;
+const SITE_URL = IS_DEV ? "http://localhost:8888" : "https://lovecareermagic.com";
 
 export default async function stripeWebhooks(request) {
   if (request.method !== "POST") {
@@ -113,11 +111,7 @@ export default async function stripeWebhooks(request) {
         );
       }
 
-      // Prefilled-email URL is the recovery story for Payment Link sessions —
-      // Stripe doesn't generate `after_expiration.recovery.url` for these.
-      const recoveryUrl = STRIPE_PAYMENT_LINK_URL
-        ? `${STRIPE_PAYMENT_LINK_URL}?prefilled_email=${encodeURIComponent(abandonedEmail)}`
-        : null;
+      const recoveryUrl = `${SITE_URL}/checkout?prefilled_email=${encodeURIComponent(abandonedEmail)}`;
 
       await addEmailToMailerLite(
         abandonedEmail,
@@ -593,6 +587,29 @@ async function alert(message, context = {}) {
   });
 }
 
+const SOURCE_EMOJI = {
+  instagram: "📸",
+  youtube: "🎬",
+  email: "📧",
+  newsletter: "📧",
+  google: "🔍",
+  facebook: "👥",
+  fb: "👥",
+  twitter: "🐦",
+  x: "🐦",
+};
+
+function formatAttribution(session) {
+  const flow = session.payment_link ? "Payment Link" : "Custom Checkout";
+  const src = (session.metadata?.utm_source || "").toLowerCase();
+  const medium = session.metadata?.utm_medium || "";
+  const campaign = session.metadata?.utm_campaign || "";
+  const emoji = SOURCE_EMOJI[src] || "🔗";
+  const parts = [src, medium, campaign].filter(Boolean);
+  const source = parts.length ? `${emoji} ${parts.join(" / ")}` : "—";
+  return { flow, source };
+}
+
 function formatMoney(amountCents, currency) {
   if (amountCents == null) return "—";
   const cur = (currency || "usd").toUpperCase();
@@ -691,6 +708,8 @@ function formatOrderSummary(session) {
 async function notifyLabelPurchased({ session, to, gameCount, parcel, label, orderNumber }) {
   if (!VERBOSE_LOGGING) return;
 
+  const { flow, source } = formatAttribution(session);
+
   const customerLines = [
     `**${to.name || "—"}**`,
     session.customer_details?.email || null,
@@ -740,6 +759,8 @@ async function notifyLabelPurchased({ session, to, gameCount, parcel, label, ord
             value: `[${label.trackingNumber}](${label.trackingUrl})`,
             inline: true,
           },
+          { name: "Flow", value: flow, inline: true },
+          { name: "Source", value: source, inline: true },
           {
             name: "Quick links",
             value: quickLinks({

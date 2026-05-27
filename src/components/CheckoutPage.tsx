@@ -563,6 +563,7 @@ const CheckoutPage = () => {
   const [urgPinQty, setUrgPinQty] = useState(0);
   const [bizzPinQty, setBizzPinQty] = useState(0);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [prefillEmail, setPrefillEmail] = useState("");
   const capturedEmail = useRef("");
   const [initError, setInitError] = useState<string | null>(null);
   const [internationalModalOpen, setInternationalModalOpen] = useState(false);
@@ -606,13 +607,14 @@ const CheckoutPage = () => {
       const res = await fetch("/.netlify/functions/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou`, ...getStoredUtms(), ...(capturedEmail.current && { email: capturedEmail.current }) }),
+        body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou`, ...getStoredUtms() }),
       });
       if (!res.ok) throw new Error("Failed to update");
       const { clientSecret: newSecret } = await res.json();
       const prevQty = slug === "lcm" ? lcmQty : slug === "urg_pin" ? urgPinQty : bizzPinQty;
       const trigger = newQty === 0 ? "remove_item" : prevQty === 0 ? "add_item" : "change_qty";
       trackEvent("checkout_cart_reset", { trigger, item_slug: slug, new_qty: newQty });
+      if (capturedEmail.current) setPrefillEmail(capturedEmail.current);
       setLcmQty(newLcmQty);
       setUrgPinQty(newUrgQty);
       setBizzPinQty(newBizzQty);
@@ -651,7 +653,7 @@ const CheckoutPage = () => {
           <CheckoutElementsProvider
             key={clientSecret}
             stripe={stripePromise}
-            options={{ clientSecret, elementsOptions: { appearance } }}
+            options={{ clientSecret, elementsOptions: { appearance, ...(prefillEmail && { defaultValues: { billingDetails: { email: prefillEmail } } }) } }}
           >
             <div className={styles.checkoutLayout}>
               <div className={styles.checkoutLeft}>

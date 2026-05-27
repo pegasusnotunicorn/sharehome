@@ -139,11 +139,9 @@ async function createCustomsDeclaration({ description, quantity, valueUsd, origi
   const qty = Math.max(quantity, 1);
   const perUnitValue = (valueUsd / qty).toFixed(2);
   const perUnitWeightOz = (weightOz / qty).toFixed(2);
-  // NOEEI 30.36 = exemption for shipments to US military post offices (APO/FPO/DPO).
-  // NOEEI 30.37(a) = exemption for goods valued under $2,500 to US territories (PR, etc.).
-  const eel_pfc = CUSTOMS_REQUIRED_STATES.has(destinationState) && destinationState !== "PR"
-    ? "NOEEI 30.36"
-    : "NOEEI 30.37(a)";
+  // NOEEI_30_36 = exemption for shipments to US military post offices (APO/FPO/DPO).
+  // NOEEI_30_37_a = exemption for goods valued under $2,500 to US territories (PR, etc.).
+  const eel_pfc = destinationState !== "PR" ? "NOEEI_30_36" : "NOEEI_30_37_a";
   return shippoFetch("/customs/declarations/", {
     certify: true,
     certify_signer: DEFAULT_FROM_ADDRESS.name,

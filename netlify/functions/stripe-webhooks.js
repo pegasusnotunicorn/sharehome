@@ -550,7 +550,7 @@ async function postToDiscord(payload) {
 
 function stripeSessionUrl(sessionId) {
   const isTest = sessionId.startsWith("cs_test_");
-  return `https://dashboard.stripe.com${isTest ? "/test" : ""}/checkout/sessions/${sessionId}`;
+  return `https://dashboard.stripe.com${isTest ? "/test" : ""}/payments?q=${sessionId}`;
 }
 
 // "Quick links" field — clickable shortcuts to every place you'd want to

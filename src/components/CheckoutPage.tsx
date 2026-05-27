@@ -52,6 +52,13 @@ const UPSELL_PINS = [
   { slug: "bizz_pin" as const, name: "Bizz pin", desc: "Enamel pin of Bizz Hagglefeet.", img: "/images/members/bizz-pin.webp" },
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const w = window as any;
+function trackEvent(name: string, params?: Record<string, string | number>) {
+  w.gtag?.("event", name, params);
+  w.clarity?.("event", name);
+}
+
 function getStoredUtms(): Record<string, string> {
   try {
     const raw = sessionStorage.getItem("utm_params");
@@ -101,6 +108,10 @@ const CheckoutForm = () => {
   const onReady = () => setReadyCount((n) => n + 1);
   const allReady = readyCount >= TOTAL_ELEMENTS;
 
+  useEffect(() => {
+    if (allReady) trackEvent("checkout_form_ready");
+  }, [allReady]);
+
   if (checkoutState.type === "error") {
     return <p className={styles.checkoutError}>{checkoutState.error.message}</p>;
   }
@@ -112,8 +123,10 @@ const CheckoutForm = () => {
     if (!checkout) return;
     setLoading(true);
     setErrorMessage(null);
+    trackEvent("checkout_submitted");
     const result = await checkout.confirm();
     if (result.type === "error") {
+      trackEvent("checkout_error", { error_message: result.error.message });
       setErrorMessage(result.error.message);
       setLoading(false);
     }
@@ -561,7 +574,10 @@ const CheckoutPage = () => {
         if (!res.ok) throw new Error("Failed");
         return res.json();
       })
-      .then(({ clientSecret: secret }) => setClientSecret(secret))
+      .then(({ clientSecret: secret }) => {
+        setClientSecret(secret);
+        trackEvent("checkout_started");
+      })
       .catch(() => setInitError("Something went wrong. Please refresh to try again."));
   }, []);
 
@@ -589,6 +605,9 @@ const CheckoutPage = () => {
       });
       if (!res.ok) throw new Error("Failed to update");
       const { clientSecret: newSecret } = await res.json();
+      const prevQty = slug === "lcm" ? lcmQty : slug === "urg_pin" ? urgPinQty : bizzPinQty;
+      const trigger = newQty === 0 ? "remove_item" : prevQty === 0 ? "add_item" : "change_qty";
+      trackEvent("checkout_cart_reset", { trigger, item_slug: slug, new_qty: newQty });
       setLcmQty(newLcmQty);
       setUrgPinQty(newUrgQty);
       setBizzPinQty(newBizzQty);

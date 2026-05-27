@@ -554,7 +554,7 @@ function stripeSessionUrl(sessionId) {
   const base = accountId
     ? `https://dashboard.stripe.com/${accountId}${isTest ? "/test" : ""}`
     : `https://dashboard.stripe.com${isTest ? "/test" : ""}`;
-  return `${base}/checkout/sessions/${sessionId}`;
+  return `${base}/workbench/inspector/${sessionId}`;
 }
 
 // "Quick links" field — clickable shortcuts to every place you'd want to

@@ -2,173 +2,11 @@
   min-height: calc(100svh - var(--footer-height));
 }
 
-/* ── Item selection ────────────────────────────────────────────── */
-
-.shopSection {
-  width: calc(100% - 8rem);
-  max-width: 900px;
-  margin: 0 auto 3rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.productCard {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  border: 2px solid #323232;
-  border-radius: 8px;
-  background: #fff;
-  text-align: left;
-}
-
-.productCardFeatured {
-  border-color: #5f5aa2;
-}
-
-.productCardAddOn {
-  padding: 1rem;
-  border: 1px solid #ddd;
-}
-
-.productImage {
-  object-fit: cover;
-  border-radius: 6px;
-  flex-shrink: 0;
-}
-
-.productImageLarge {
-  width: 120px;
-  height: 120px;
-  object-fit: contain;
-}
-
-.productImageSmall {
-  width: 64px;
-  height: 64px;
-}
-
-
 .pinPreviewImage {
   width: 100%;
   height: auto;
   border-radius: 8px;
   display: block;
-}
-
-.productInfo {
-  flex: 1;
-}
-
-.productName {
-  font-family: "Rowdies-Regular";
-  font-size: 1.1rem;
-  color: #323232;
-  margin: 0 0 0.2rem;
-  letter-spacing: 0;
-}
-
-.productNameLarge {
-  font-size: 1.4rem;
-}
-
-.productDescription {
-  font-family: "Roboto Light";
-  font-size: 0.85rem;
-  color: #555;
-  margin: 0;
-  opacity: 1;
-}
-
-.productActions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-shrink: 0;
-}
-
-.productPrice {
-  font-family: "Rowdies-Regular";
-  font-size: 1.1rem;
-  color: #323232;
-  flex-shrink: 0;
-}
-
-.addOnLabel {
-  margin: 0.5rem 0 -0.25rem;
-  font-family: "Rowdies-Regular";
-  font-size: 0.7rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.45);
-}
-
-.addButton {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0 1rem;
-  height: 38px;
-  box-sizing: border-box;
-  border-radius: 6px;
-  border: 2px solid #323232;
-  background: #fff;
-  font-family: "Rowdies-Regular";
-  font-size: 0.85rem;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.addButton:hover {
-  background: #323232;
-  color: #fff;
-}
-
-.maxQtyNote {
-  margin: -0.25rem 0 0;
-  font-family: "Roboto Light";
-  font-size: 0.82rem;
-  color: #777;
-  text-align: center;
-}
-
-.maxQtyNote a {
-  color: #5f5aa2;
-}
-
-/* ── Order summary + CTA ───────────────────────────────────────── */
-
-.summarySection {
-  width: calc(100% - 8rem);
-  max-width: 900px;
-  margin: 0 auto 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.divider {
-  border: none;
-  border-top: 1px solid #e0e0e0;
-  margin: 0;
-}
-
-.totalRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: "Rowdies-Regular";
-  font-size: 1.15rem;
-  color: #323232;
-}
-
-.totalAmount {
-  font-size: 1.3rem;
 }
 
 .checkoutButton {
@@ -192,22 +30,6 @@
 .checkoutButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-.internationalLink {
-  font-family: "Roboto Light";
-  font-size: 0.82rem;
-  color: #777;
-  text-align: center;
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-decoration: underline;
-  padding: 0;
-}
-
-.internationalLink:hover {
-  color: #555;
 }
 
 /* ── Checkout skeleton loader ──────────────────────────────────── */
@@ -332,16 +154,6 @@
   gap: 0.85rem;
 }
 
-.cartItemImageBtn {
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: zoom-in;
-  flex-shrink: 0;
-  display: flex;
-  border-radius: 6px;
-}
-
 .cartItemImage {
   width: 56px;
   height: 56px;
@@ -366,13 +178,6 @@
   margin: 0;
   letter-spacing: 0;
   line-height: 1.3;
-}
-
-.cartItemQty {
-  font-family: "Roboto Light";
-  font-size: 0.8rem;
-  color: #888;
-  margin: 0.15rem 0 0;
 }
 
 .cartQtyBtn {
@@ -575,13 +380,6 @@
   cursor: not-allowed;
 }
 
-/* ── Mobile hero image ─────────────────────────────────────────── */
-
-
-.cartFree {
-  color: #555;
-}
-
 .cartFreeRow {
   display: inline-flex;
   align-items: center;
@@ -604,29 +402,6 @@
 }
 
 .shippingInfoBtn:hover .taxInfoBubble {
-  opacity: 1;
-}
-
-.cartFreeBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  background: none;
-  border: none;
-  padding: 0;
-  font-family: "Rowdies-Regular";
-  font-size: 0.8rem;
-  color: #5f5aa2;
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-.cartFreeBtn:hover {
-  color: #454176;
-}
-
-.cartFreeBtn:hover .taxInfoBubble {
   opacity: 1;
 }
 
@@ -750,20 +525,6 @@
   background: #fafafa;
 }
 
-.cartUpsellImageBtn {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: zoom-in;
-  flex-shrink: 0;
-  border-radius: 6px;
-  display: flex;
-}
-
-.cartUpsellImageBtn:hover .cartUpsellImage {
-  opacity: 0.85;
-}
-
 .cartUpsellImage {
   width: 48px;
   height: 48px;
@@ -847,7 +608,6 @@
   flex-direction: column;
   gap: 0.5rem;
 }
-
 
 .formSectionLabel {
   font-family: "Rowdies-Regular";
@@ -934,27 +694,6 @@
 
 .stripeAttr a:hover {
   color: #635bff;
-}
-
-.backButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: "Roboto Light";
-  font-size: 0.85rem;
-  color: #777;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  text-decoration: underline;
-  align-self: start;
-  justify-self: center;
-  grid-column: 1;
-}
-
-.backButton:hover {
-  color: #323232;
 }
 
 /* ── International modal content ───────────────────────────────── */
@@ -1062,8 +801,6 @@
     min-height: calc(100svh - var(--footer-height-mobile));
   }
 
-  .shopSection,
-  .summarySection,
   .checkoutSection {
     width: calc(100% - 2rem);
     margin-left: 1rem;
@@ -1078,11 +815,6 @@
   .checkoutLeft {
     position: static;
     order: 1;
-  }
-
-  .backButton {
-    order: 3;
-    justify-self: center;
   }
 
   .cartSummary {
@@ -1100,47 +832,5 @@
 
   .stripeAttr {
     width: calc(100% - 2rem);
-  }
-
-.productCard {
-    gap: 0.75rem;
-    padding: 0.85rem;
-  }
-
-  .productCardAddOn {
-    padding: 0.75rem;
-  }
-
-  .productActions {
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.35rem;
-  }
-
-  .productImageLarge {
-    width: 80px;
-    height: 80px;
-  }
-
-  .productImageSmall {
-    width: 56px;
-    height: 56px;
-  }
-
-  .productName {
-    font-size: 1rem;
-  }
-
-  .productNameLarge {
-    font-size: 1.1rem;
-  }
-
-  .productPrice {
-    font-size: 1rem;
-  }
-
-  .addButton {
-    padding: 0 0.75rem;
-    font-size: 0.8rem;
   }
 }

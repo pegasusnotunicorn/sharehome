@@ -81,8 +81,8 @@ const stripePromise = loadStripe(
 );
 
 const appearance = {
-  inputs: "condensed",
-  labels: "auto",
+  inputs: "condensed" as const,
+  labels: "auto" as const,
   variables: {
     colorPrimary: "#5f5aa2",
     colorText: "#323232",

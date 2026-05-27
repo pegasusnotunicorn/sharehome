@@ -49,6 +49,9 @@ const MAILERLITE_PURCHASE_GROUP_ID = process.env.MAILERLITE_PURCHASE_GROUP_ID;
 const MAILERLITE_ABANDONED_GROUP_ID = process.env.MAILERLITE_ABANDONED_GROUP_ID;
 
 const SITE_URL = IS_DEV ? "http://localhost:8888" : "https://lovecareermagic.com";
+const STRIPE_PAYMENT_LINK_URL = IS_DEV
+  ? process.env.REACT_APP_STRIPE_TEST_URL
+  : process.env.REACT_APP_STRIPE_PROD_URL;
 
 export default async function stripeWebhooks(request) {
   if (request.method !== "POST") {
@@ -95,7 +98,9 @@ export default async function stripeWebhooks(request) {
     case "checkout.session.expired": {
       const eventSession = event.data.object;
       const abandonedEmail =
-        eventSession.customer_details?.email ?? eventSession.customer_email;
+        eventSession.customer_details?.email ??
+        eventSession.customer_email ??
+        eventSession.metadata?.contact_email;
 
       if (!abandonedEmail) {
         if (IS_DEV) console.log("No email found for abandoned checkout");
@@ -117,7 +122,13 @@ export default async function stripeWebhooks(request) {
         );
       }
 
-      const recoveryUrl = `${SITE_URL}/checkout?prefilled_email=${encodeURIComponent(abandonedEmail)}`;
+      const isPaymentLink = !!eventSession.payment_link;
+      if (isPaymentLink && !STRIPE_PAYMENT_LINK_URL) {
+        console.warn("stripe-webhooks: STRIPE_PAYMENT_LINK_URL is not set; falling back to /checkout recovery URL for Payment Link session");
+      }
+      const recoveryUrl = isPaymentLink && STRIPE_PAYMENT_LINK_URL
+        ? `${STRIPE_PAYMENT_LINK_URL}?prefilled_email=${encodeURIComponent(abandonedEmail)}`
+        : `${SITE_URL}/checkout?prefilled_email=${encodeURIComponent(abandonedEmail)}`;
 
       await addEmailToMailerLite(
         abandonedEmail,
@@ -537,9 +548,16 @@ async function postToDiscord(payload) {
   }
 }
 
+function mailerLiteGroupUrl(groupId) {
+  const rules = JSON.stringify([[{ operator: "in_any", condition: "groups", args: ["groups", [groupId]] }]]);
+  return `https://dashboard.mailerlite.com/subscribers?rules=${Buffer.from(rules).toString("base64")}&group=${groupId}`;
+}
+
 function stripeSessionUrl(sessionId) {
+  const accountId = process.env.STRIPE_ACCOUNT_ID;
+  if (!accountId) return "https://dashboard.stripe.com";
   const isTest = sessionId.startsWith("cs_test_");
-  return `https://dashboard.stripe.com${isTest ? "/test" : ""}/checkout/sessions/${sessionId}`;
+  return `https://dashboard.stripe.com/${accountId}${isTest ? "/test" : ""}/workbench/inspector/${sessionId}`;
 }
 
 // "Quick links" field — clickable shortcuts to every place you'd want to
@@ -851,9 +869,7 @@ async function notifySubscriberAdded({
   if (sessionId) links.push(`[Stripe session](${stripeSessionUrl(sessionId)})`);
   if (subscriberLink)
     links.push(`[MailerLite subscriber](${subscriberLink})`);
-  links.push(
-    `[MailerLite group](https://dashboard.mailerlite.com/subscribers?rules=%5B%5B%7B%22operator%22%3A%22in_group%22%2C%22args%22%3A%5B%22${groupId}%22%5D%7D%5D%5D)`
-  );
+  links.push(`[MailerLite group](${mailerLiteGroupUrl(groupId)})`);
 
   await postToDiscord({
     embeds: [

@@ -135,15 +135,21 @@ function requiresCustomsDeclaration(to) {
   return (!to.country || to.country === "US") && CUSTOMS_REQUIRED_STATES.has(to.state);
 }
 
-async function createCustomsDeclaration({ description, quantity, valueUsd, originCountry, weightOz }) {
+async function createCustomsDeclaration({ description, quantity, valueUsd, originCountry, weightOz, destinationState }) {
   const qty = Math.max(quantity, 1);
   const perUnitValue = (valueUsd / qty).toFixed(2);
   const perUnitWeightOz = (weightOz / qty).toFixed(2);
+  // NOEEI 30.36 = exemption for shipments to US military post offices (APO/FPO/DPO).
+  // NOEEI 30.37(a) = exemption for goods valued under $2,500 to US territories (PR, etc.).
+  const eel_pfc = CUSTOMS_REQUIRED_STATES.has(destinationState) && destinationState !== "PR"
+    ? "NOEEI 30.36"
+    : "NOEEI 30.37(a)";
   return shippoFetch("/customs/declarations/", {
     certify: true,
     certify_signer: DEFAULT_FROM_ADDRESS.name,
     contents_type: "MERCHANDISE",
     non_delivery_option: "RETURN",
+    eel_pfc,
     items: [{
       description: String(description).slice(0, 255),
       quantity: qty,
@@ -244,7 +250,7 @@ export async function createLabel({
 
   let customsDeclarationId;
   if (customs && requiresCustomsDeclaration(to)) {
-    const decl = await createCustomsDeclaration(customs);
+    const decl = await createCustomsDeclaration({ ...customs, destinationState: to.state });
     customsDeclarationId = decl.object_id;
     console.log(`📦 Created customs declaration ${customsDeclarationId} for ${to.state} address`);
   }

@@ -123,6 +123,9 @@ export default async function stripeWebhooks(request) {
       }
 
       const isPaymentLink = !!eventSession.payment_link;
+      if (isPaymentLink && !STRIPE_PAYMENT_LINK_URL) {
+        console.warn("stripe-webhooks: STRIPE_PAYMENT_LINK_URL is not set; falling back to /checkout recovery URL for Payment Link session");
+      }
       const recoveryUrl = isPaymentLink && STRIPE_PAYMENT_LINK_URL
         ? `${STRIPE_PAYMENT_LINK_URL}?prefilled_email=${encodeURIComponent(abandonedEmail)}`
         : `${SITE_URL}/checkout?prefilled_email=${encodeURIComponent(abandonedEmail)}`;

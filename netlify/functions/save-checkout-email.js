@@ -39,9 +39,7 @@ export default async function saveCheckoutEmail(req) {
   const stripe = stripeModule(STRIPE_SECRET_KEY, { apiVersion: "2025-03-31.basil" });
 
   try {
-    const existing = await stripe.checkout.sessions.retrieve(sessionId, {
-      fields: ["metadata"],
-    });
+    const existing = await stripe.checkout.sessions.retrieve(sessionId);
     await stripe.checkout.sessions.update(sessionId, {
       metadata: { ...existing.metadata, contact_email: email.slice(0, 500) },
     });

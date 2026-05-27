@@ -280,34 +280,24 @@
   z-index: 2;
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.2rem 0.45rem;
+  gap: 0.3rem;
+  padding: 0.25rem 0.55rem;
   border-radius: 999px;
   background: rgba(50, 50, 50, 0.78);
   color: #fff;
   font-family: "Rowdies-Regular";
-  font-size: 0.7rem;
+  font-size: 0.82rem;
   line-height: 1;
   backdrop-filter: blur(4px);
   pointer-events: none;
 }
 
 .sketchCountBadge img {
-  width: 14px;
-  height: 14px;
+  width: 18px;
+  height: 18px;
   filter: invert(1);
 }
 
-@media only screen and (max-width: 900px) {
-  .sketchCountBadge {
-    font-size: 0.6rem;
-    padding: 0.15rem 0.35rem;
-  }
-  .sketchCountBadge img {
-    width: 12px;
-    height: 12px;
-  }
-}
 
 .sketchViewerCard {
   position: relative;

@@ -93,6 +93,24 @@ const appearance = {
 
 const TOTAL_ELEMENTS = 3;
 
+const CheckoutFormSkeleton = () => (
+  <div className={styles.skeletonForm}>
+    <div className={styles.skeletonFormSection}>
+      <p className={styles.formSectionLabel}>Contact</p>
+      <div className={`${styles.skeletonBlock} ${styles.skeletonField}`} />
+    </div>
+    <div className={styles.skeletonFormSection}>
+      <p className={styles.formSectionLabel}>Shipping</p>
+      <div className={`${styles.skeletonBlock} ${styles.skeletonField}`} />
+    </div>
+    <div className={styles.skeletonFormSection}>
+      <p className={styles.formSectionLabel}>Payment</p>
+      <div className={`${styles.skeletonBlock} ${styles.skeletonCard}`} />
+    </div>
+    <div className={`${styles.skeletonBlock} ${styles.skeletonButton}`} />
+  </div>
+);
+
 // ── Checkout form ─────────────────────────────────────────────────────────────
 
 const CheckoutForm = ({ sessionId }: { sessionId: string | null }) => {
@@ -154,17 +172,10 @@ const CheckoutForm = ({ sessionId }: { sessionId: string | null }) => {
 
   return (
     <div className={styles.checkoutFormWrapper}>
-      {!allReady && (
-        <div className={styles.skeletonForm}>
-          <div className={`${styles.skeletonBlock} ${styles.skeletonField}`} />
-          <div className={`${styles.skeletonBlock} ${styles.skeletonField}`} />
-          <div className={`${styles.skeletonBlock} ${styles.skeletonCard}`} />
-          <div className={`${styles.skeletonBlock} ${styles.skeletonButton}`} />
-        </div>
-      )}
+      {!allReady && <CheckoutFormSkeleton />}
       <form
         onSubmit={handleSubmit}
-        className={styles.checkoutForm}
+        className={`${styles.checkoutForm} ${!allReady ? styles.checkoutFormHiding : ""}`.trim()}
         style={{ visibility: allReady ? "visible" : "hidden" }}
       >
         <div className={styles.formSection}>
@@ -691,20 +702,20 @@ const CheckoutPage = () => {
           <div className={styles.checkoutLayout}>
             <div className={styles.checkoutLeft}>
               <div className={styles.cartSummary}>
-                <div className={`${styles.skeletonBlock}`} style={{ height: "14px", width: "70px", borderRadius: "4px" }} />
+                <p className={styles.cartSummaryEyebrow}>Your order</p>
                 <div className={`${styles.skeletonBlock} ${styles.skeletonField}`} />
                 <div className={`${styles.skeletonBlock} ${styles.skeletonField}`} style={{ height: "32px" }} />
                 <div className={`${styles.skeletonBlock} ${styles.skeletonField}`} style={{ height: "32px" }} />
                 <div className={`${styles.skeletonBlock} ${styles.skeletonField}`} style={{ height: "32px" }} />
+              </div>
+              <div className={styles.upsellCard}>
+                <p className={styles.cartUpsellLabel}>Add to your order</p>
+                <div className={`${styles.skeletonBlock} ${styles.skeletonUpsellItem}`} />
+                <div className={`${styles.skeletonBlock} ${styles.skeletonUpsellItem}`} />
               </div>
             </div>
             <div className={styles.checkoutFormWrapper}>
-              <div className={styles.skeletonForm}>
-                <div className={`${styles.skeletonBlock} ${styles.skeletonField}`} />
-                <div className={`${styles.skeletonBlock} ${styles.skeletonField}`} />
-                <div className={`${styles.skeletonBlock} ${styles.skeletonCard}`} />
-                <div className={`${styles.skeletonBlock} ${styles.skeletonButton}`} />
-              </div>
+              <CheckoutFormSkeleton />
             </div>
           </div>
         )}

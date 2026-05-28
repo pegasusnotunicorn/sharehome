@@ -65,6 +65,17 @@
   border: 2px solid #323232;
   border-radius: 8px;
   background: #fff;
+  position: relative;
+}
+
+.checkoutFormHiding {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 .skeletonForm {
@@ -97,6 +108,18 @@
   background-size: 600px 100%;
   animation: shimmer 1.4s infinite linear;
 }
+
+.skeletonUpsellItem {
+  height: 64px;
+  border-radius: 8px;
+}
+
+.skeletonFormSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 
 /* ── Checkout two-column layout ────────────────────────────────── */
 
@@ -827,7 +850,7 @@
 
   .checkoutFormWrapper {
     order: 2;
-    padding: 1.25rem 1.25rem 0;
+    padding: 1.25rem 1.25rem 1.5rem;
   }
 
   .stripeAttr {

@@ -8,8 +8,12 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
+    strictPort: true,
     proxy: {
-      "/.netlify/functions": "http://localhost:8888",
+      "/.netlify/functions": {
+        target: "http://localhost:8888",
+        changeOrigin: true,
+      },
     },
   },
   build: { outDir: "dist" },

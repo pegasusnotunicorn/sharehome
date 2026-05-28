@@ -192,7 +192,7 @@ const CheckoutForm = ({ sessionId, onOpenInternational }: { sessionId: string | 
               type="button"
             >
               ⓘ
-              <span className={styles.taxInfoBubble}>Click here for international shipping</span>
+              <span className={styles.taxInfoBubble}>Shipping internationally?</span>
             </button>
           </p>
           <ShippingAddressElement onReady={onReady} />
@@ -460,7 +460,7 @@ const CartSummary = ({
             aria-label="International shipping info"
           >
             ⓘ
-            <span className={styles.taxInfoBubble}>Click here for international shipping</span>
+            <span className={styles.taxInfoBubble}>Shipping internationally?</span>
           </button>
         </span>
         <span className={styles.cartFreeRow}>
@@ -471,7 +471,7 @@ const CartSummary = ({
             aria-label="International shipping info"
           >
             ⓘ
-            <span className={styles.taxInfoBubble}>Click here for international shipping</span>
+            <span className={styles.taxInfoBubble}>Shipping internationally?</span>
           </button>
         </span>
       </div>

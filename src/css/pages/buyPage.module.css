@@ -481,7 +481,7 @@
 .taxInfoBubble {
   position: absolute;
   bottom: calc(100% + 6px);
-  left: 0;
+  right: 0;
   background: #323232;
   color: #fff;
   font-family: "Roboto Light";
@@ -500,9 +500,19 @@
   content: "";
   position: absolute;
   top: 100%;
-  left: 3px;
+  right: 3px;
   border: 4px solid transparent;
   border-top-color: #323232;
+}
+
+.taxInfoIcon .taxInfoBubble {
+  right: auto;
+  left: 0;
+}
+
+.taxInfoIcon .taxInfoBubble::after {
+  right: auto;
+  left: 3px;
 }
 
 .taxInfoIcon:hover .taxInfoBubble {

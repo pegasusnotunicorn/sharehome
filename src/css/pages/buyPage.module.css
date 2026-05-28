@@ -437,10 +437,30 @@
   font-weight: 500;
 }
 
+.cartShippingLabel,
 .cartTaxLabel {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
+}
+
+.shippingLabelBtn {
+  position: relative;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.72rem;
+  color: #bbb;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.shippingLabelBtn:hover {
+  color: #888;
+}
+
+.shippingLabelBtn:hover .taxInfoBubble {
+  opacity: 1;
 }
 
 .cartTaxPending {
@@ -848,12 +868,14 @@
     display: none;
   }
 
-  .taxInfoIcon .taxInfoBubble {
+  .taxInfoIcon .taxInfoBubble,
+  .shippingLabelBtn .taxInfoBubble {
     right: auto;
     left: 0;
   }
 
-  .taxInfoIcon .taxInfoBubble::after {
+  .taxInfoIcon .taxInfoBubble::after,
+  .shippingLabelBtn .taxInfoBubble::after {
     right: auto;
     left: 3px;
   }

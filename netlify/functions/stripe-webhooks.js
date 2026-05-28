@@ -84,12 +84,12 @@ export default async function stripeWebhooks(request) {
       const customerEmail = session.customer_details?.email;
       const customerName = session.customer_details?.name;
       if (customerEmail) {
-        const checkoutSource = session.payment_link ? "payment_link" : "custom_checkout";
+        const { flow } = formatAttribution(session);
         await addEmailToMailerLite(
           customerEmail,
-          { name: customerName, checkout_source: checkoutSource },
+          { name: customerName, checkout_source: session.payment_link ? "payment_link" : "custom_checkout" },
           MAILERLITE_PURCHASE_GROUP_ID,
-          { sessionId: session.id, groupKind: "purchase", flow: session.payment_link ? "Payment Link" : "Custom Checkout" }
+          { sessionId: session.id, groupKind: "purchase", flow }
         );
       } else if (IS_DEV) {
         console.log("No customer email on completed session; skipping MailerLite");
@@ -144,7 +144,7 @@ export default async function stripeWebhooks(request) {
           checkout_source: isPaymentLink ? "payment_link" : "custom_checkout",
         },
         MAILERLITE_ABANDONED_GROUP_ID,
-        { sessionId: session.id, groupKind: "abandoned", flow: isPaymentLink ? "Payment Link" : "Custom Checkout" }
+        { sessionId: session.id, groupKind: "abandoned", flow: formatAttribution(session).flow }
       );
       break;
     }

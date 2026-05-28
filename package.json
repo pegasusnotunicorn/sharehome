@@ -19,10 +19,10 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
-    "react-router": "^7.1.5",
+    "react-router": "^7.15.1",
     "sitemap": "^8.0.0",
     "stripe": "^17.7.0",
-    "swiper": "^11.2.4",
+    "swiper": "^12.2.0",
     "webfontloader": "^1.6.28"
   },
   "scripts": {

@@ -205,7 +205,8 @@ const CheckoutForm = ({ sessionId }: { sessionId: string | null }) => {
           <span>
             I agree to the{" "}
             <a href="/terms" target="_blank" rel="noreferrer" className={styles.termsLink}>
-              terms of service and privacy policy
+              <span className={styles.termsLong}>terms of service and privacy policy</span>
+              <span className={styles.termsShort}>terms &amp; privacy policy</span>
             </a>
           </span>
         </label>

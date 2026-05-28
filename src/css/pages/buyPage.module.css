@@ -699,6 +699,14 @@
   color: #5f5aa2;
 }
 
+.termsShort {
+  display: none;
+}
+
+.termsLong {
+  display: inline;
+}
+
 .stripeAttr {
   width: calc(100% - 8rem);
   max-width: 980px;
@@ -820,6 +828,14 @@
 /* ── Mobile ────────────────────────────────────────────────────── */
 
 @media only screen and (max-width: 900px) {
+  .termsShort {
+    display: inline;
+  }
+
+  .termsLong {
+    display: none;
+  }
+
   .buyPage {
     min-height: calc(100svh - var(--footer-height-mobile));
   }

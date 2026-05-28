@@ -770,6 +770,18 @@
   border-color: #111;
 }
 
+/* ── International shipping modal ─────────────────────────────── */
+
+.internationalPanel {
+  position: relative;
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.25rem;
+  max-width: 480px;
+  width: 100%;
+  text-align: left;
+}
+
 /* ── Box image carousel modal ──────────────────────────────────── */
 
 .carouselPanel {
@@ -834,6 +846,16 @@
 
   .termsLong {
     display: none;
+  }
+
+  .taxInfoBubble {
+    right: auto;
+    left: 0;
+  }
+
+  .taxInfoBubble::after {
+    right: auto;
+    left: 3px;
   }
 
   .buyPage {

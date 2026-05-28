@@ -552,7 +552,7 @@ const CartSummary = ({
 // ── International modal ───────────────────────────────────────────────────────
 
 const InternationalModal = ({ onClose }: { onClose: () => void }) => (
-  <Modal onClose={onClose}>
+  <Modal onClose={onClose} panelClassName={styles.internationalPanel}>
     <h2 className={styles.modalTitle}>International shipping</h2>
     <p className={styles.modalBody}>
       I recently started working with a distributor who can ship

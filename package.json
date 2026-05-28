@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@netlify/blobs": "^10.7.4",
-    "@netlify/vite-plugin": "^2.12.6",
     "@stripe/react-stripe-js": "^6.4.0",
     "@stripe/stripe-js": "^9.6.0",
     "crypto": "^1.0.1",

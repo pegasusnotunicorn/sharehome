@@ -113,7 +113,7 @@ const CheckoutFormSkeleton = () => (
 
 // ── Checkout form ─────────────────────────────────────────────────────────────
 
-const CheckoutForm = ({ sessionId }: { sessionId: string | null }) => {
+const CheckoutForm = ({ sessionId, onOpenInternational }: { sessionId: string | null; onOpenInternational: () => void }) => {
   const checkoutState = useCheckoutElements();
   const [readyCount, setReadyCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -183,7 +183,18 @@ const CheckoutForm = ({ sessionId }: { sessionId: string | null }) => {
           <ContactDetailsElement onReady={onReady} onChange={handleContactChange} />
         </div>
         <div className={styles.formSection}>
-          <p className={styles.formSectionLabel}>Shipping</p>
+          <p className={styles.formSectionLabel}>
+            Shipping
+            <button
+              className={styles.shippingLabelBtn}
+              onClick={onOpenInternational}
+              aria-label="International shipping info"
+              type="button"
+            >
+              ⓘ
+              <span className={styles.taxInfoBubble}>Click here for international shipping</span>
+            </button>
+          </p>
           <ShippingAddressElement onReady={onReady} />
         </div>
         <div className={styles.formSection}>
@@ -706,7 +717,7 @@ const CheckoutPage = () => {
                   updatingSlug={updatingSlug}
                 />
               </div>
-              <CheckoutForm sessionId={sessionId} />
+              <CheckoutForm sessionId={sessionId} onOpenInternational={() => setInternationalModalOpen(true)} />
             </div>
           </CheckoutElementsProvider>
         ) : (

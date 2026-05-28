@@ -452,17 +452,7 @@ const CartSummary = ({
         </div>
       )}
       <div className={styles.cartRow}>
-        <span className={`${styles.cartShippingLabel} ${styles.cartRowLabel}`}>
-          Shipping
-          <button
-            className={styles.shippingLabelBtn}
-            onClick={onOpenInternational}
-            aria-label="International shipping info"
-          >
-            ⓘ
-            <span className={styles.taxInfoBubble}>Shipping internationally?</span>
-          </button>
-        </span>
+        <span className={styles.cartRowLabel}>Shipping</span>
         <span className={styles.cartFreeRow}>
           Free US shipping
           <button

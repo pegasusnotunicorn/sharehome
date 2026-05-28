@@ -22,7 +22,7 @@ interface NavbarMainProps {
 export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
   const location = useLocation();
   const isLandingPage = location.pathname === "/";
-  const isBuyPage = location.pathname === BUY_DESTINATION;
+  const hideBuyButtons = [BUY_DESTINATION, "/checkout", "/thankyou"].includes(location.pathname);
 
   const [visible, setVisibility] = useState(false);
   const isVisibleClass = visible ? "is-active" : "";
@@ -109,7 +109,7 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
             )}
           </div>
           <div className={styles.topBarActions}>
-            {!isBuyPage && (!isLandingPage || isDesktop) && !isLandingPageAtTop && (
+            {!hideBuyButtons && (!isLandingPage || isDesktop) && !isLandingPageAtTop && (
               <BuyButton
                 animated
                 compact
@@ -120,7 +120,7 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
                 text="Buy now!"
               />
             )}
-            {(!isBuyPage || isDesktop) && ((!isLandingPage || isDesktop) && (!isLandingPage || !isAtTop)) && (
+            {!hideBuyButtons && ((!isLandingPage || isDesktop) && (!isLandingPage || !isAtTop)) && (
               <DefaultButton
                 compact
                 icon="star"

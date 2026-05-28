@@ -848,12 +848,12 @@
     display: none;
   }
 
-  .taxInfoBubble {
+  .taxInfoIcon .taxInfoBubble {
     right: auto;
     left: 0;
   }
 
-  .taxInfoBubble::after {
+  .taxInfoIcon .taxInfoBubble::after {
     right: auto;
     left: 3px;
   }

@@ -84,11 +84,12 @@ export default async function stripeWebhooks(request) {
       const customerEmail = session.customer_details?.email;
       const customerName = session.customer_details?.name;
       if (customerEmail) {
+        const { flow } = formatAttribution(session);
         await addEmailToMailerLite(
           customerEmail,
-          { name: customerName },
+          { name: customerName, checkout_source: session.payment_link ? "payment_link" : "custom_checkout" },
           MAILERLITE_PURCHASE_GROUP_ID,
-          { sessionId: session.id, groupKind: "purchase" }
+          { sessionId: session.id, groupKind: "purchase", flow }
         );
       } else if (IS_DEV) {
         console.log("No customer email on completed session; skipping MailerLite");
@@ -140,9 +141,10 @@ export default async function stripeWebhooks(request) {
               : null,
           cart_items: formatCartItemsForField(session),
           recovery_url: recoveryUrl,
+          checkout_source: isPaymentLink ? "payment_link" : "custom_checkout",
         },
         MAILERLITE_ABANDONED_GROUP_ID,
-        { sessionId: session.id, groupKind: "abandoned" }
+        { sessionId: session.id, groupKind: "abandoned", flow: formatAttribution(session).flow }
       );
       break;
     }
@@ -834,6 +836,7 @@ async function notifySubscriberAdded({
   groupLabel,
   sessionId,
   alreadyExisted,
+  flow,
 }) {
   if (!VERBOSE_LOGGING) return;
 
@@ -850,9 +853,10 @@ async function notifySubscriberAdded({
         {
           title: `📧 ${email} already on the ${groupKind || "subscriber"} list`,
           color: 0x99aab5,
-          description: subscriberLink
-            ? `[View subscriber](${subscriberLink})`
-            : undefined,
+          description: [
+            subscriberLink ? `[View subscriber](${subscriberLink})` : null,
+            flow ? `Flow: ${flow}` : null,
+          ].filter(Boolean).join(" • ") || undefined,
           timestamp: new Date().toISOString(),
         },
       ],
@@ -884,6 +888,7 @@ async function notifySubscriberAdded({
           },
           { name: "Group", value: groupLabel, inline: true },
           { name: "Status", value: status, inline: true },
+          ...(flow ? [{ name: "Flow", value: flow, inline: true }] : []),
           { name: "Subscriber", value: subscriberLinkMd, inline: false },
           { name: "Quick links", value: links.join(" • "), inline: false },
         ],
@@ -894,7 +899,7 @@ async function notifySubscriberAdded({
 }
 
 async function addEmailToMailerLite(email, fields, group_id, alertContext = {}) {
-  const { groupKind = "subscriber", ...restCtx } = alertContext;
+  const { groupKind = "subscriber", flow, ...restCtx } = alertContext;
   const groupLabel =
     groupKind === "purchase"
       ? "purchase (post-checkout) email group"
@@ -978,6 +983,7 @@ async function addEmailToMailerLite(email, fields, group_id, alertContext = {}) 
       groupLabel,
       sessionId: restCtx.sessionId,
       alreadyExisted,
+      flow,
     });
     return data;
   } catch (error) {

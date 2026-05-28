@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 
 const IS_DEV = Deno.env.get("NETLIFY_DEV") === "true";
 const STRIPE_SECRET_KEY = IS_DEV

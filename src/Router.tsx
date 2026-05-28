@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, useEffect } from "react";
+import { lazy, Suspense, useState } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -42,12 +42,10 @@ const BuyGate = () => {
     return isCustom;
   })();
 
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).gtag?.("event", "checkout_flow_assigned", {
-      checkout_flow: useCustom ? "custom_checkout" : "payment_link",
-    });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (window as any).gtag?.("event", "checkout_flow_assigned", {
+    checkout_flow: useCustom ? "custom_checkout" : "payment_link",
+  });
 
   if (useCustom) return <Navigate to="/checkout" replace />;
   return <ExternalRedirect url={PAYMENT_LINK_URL} />;

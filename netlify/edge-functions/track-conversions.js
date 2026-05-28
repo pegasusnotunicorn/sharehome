@@ -186,6 +186,7 @@ async function sendToGA4(
   const utm_medium = queryParams.get("utm_medium") ?? utmData.utm_medium;
   const utm_term = queryParams.get("utm_term") ?? utmData.utm_term;
   const utm_content = queryParams.get("utm_content") ?? utmData.utm_content;
+  const checkout_flow = queryParams.get("checkout_flow") ?? "payment_link";
 
   const revenue = stripeData.amount_total / 100;
 
@@ -208,6 +209,7 @@ async function sendToGA4(
     medium: utm_medium,
     term: utm_term,
     content: utm_content,
+    checkout_flow,
     engagement_time_msec: 1,
   };
   if (sessionId) params.session_id = sessionId;

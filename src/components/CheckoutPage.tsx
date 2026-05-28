@@ -612,7 +612,7 @@ const CheckoutPage = () => {
     fetch("/.netlify/functions/create-checkout-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: { lcm: 1 }, returnUrl: `${window.location.origin}/thankyou`, ...getStoredUtms(), ...(prefillEmail && { email: prefillEmail }) }),
+      body: JSON.stringify({ items: { lcm: 1 }, returnUrl: `${window.location.origin}/thankyou?checkout_flow=custom_checkout`, ...getStoredUtms(), ...(prefillEmail && { email: prefillEmail }) }),
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed");

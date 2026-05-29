@@ -3,6 +3,10 @@
   padding: 1rem 0 2rem;
 }
 
+.introNoSub {
+  padding-bottom: 1rem;
+}
+
 .title {
   font-size: clamp(2.8rem, 8vw, 5.5rem);
   line-height: 0.95;
@@ -21,6 +25,10 @@
 @media only screen and (max-width: 900px) {
   .intro {
     padding: 0.5rem 0 1.5rem;
+  }
+
+  .introNoSub {
+    padding-bottom: 0.5rem;
   }
   .lead {
     font-size: 0.95rem;

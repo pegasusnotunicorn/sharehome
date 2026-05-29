@@ -18,7 +18,7 @@ const PageIntro = ({
 }: PageIntroProps) => {
   return (
     <div className={`subcontentWrapper margin-top${minWidth ? " min-width" : ""}`}>
-      <div className={`characterContent ${styles.intro}${className ? ` ${className}` : ""}`}>
+      <div className={`characterContent ${styles.intro}${!lead && !children ? ` ${styles.introNoSub}` : ""}${className ? ` ${className}` : ""}`}>
         <h2 className={`subtitle ${styles.title}`}>{title}</h2>
         {lead && <p className={styles.lead}>{lead}</p>}
         {children}

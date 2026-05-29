@@ -1,11 +1,5 @@
 /* #region--------------------------------------VIDEO */
 
-.pageIntroOverride {
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  padding-bottom: 0;
-}
-
 .rulebookLink {
   display: inline-flex;
   align-items: center;

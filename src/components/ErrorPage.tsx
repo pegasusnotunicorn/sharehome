@@ -12,7 +12,7 @@ const ErrorPage = () => {
   return (
     <div className={`content max-width ${errorStyles.errorPage}`}>
       <PageIntro
-        title="Page not found"
+        title="Not found!"
         lead="Sorry but we could not find the page you were looking for 🧭"
       >
         <NavLink to="/" className={errorStyles.homeLink}>

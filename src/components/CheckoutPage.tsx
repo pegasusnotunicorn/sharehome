@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import useWindowDimensions from "./utils/useWindowDimensions";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   CheckoutElementsProvider,
@@ -244,46 +245,152 @@ const CartUpsell = ({
   onUpdateItem: (slug: ItemSlug, qty: number) => Promise<void>;
   updatingSlug: ItemSlug | null;
 }) => {
+  const { isDesktop } = useWindowDimensions();
   const [previewPin, setPreviewPin] = useState<{ src: string; alt: string } | null>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [viewAllOpen, setViewAllOpen] = useState(false);
 
   const upsells = UPSELL_PINS.filter(
     (p) => (p.slug === "urg_pin" ? cart.urgPinQty : cart.bizzPinQty) === 0
   );
 
+  useEffect(() => {
+    if (upsells.length > 0 && currentIndex >= upsells.length) {
+      setCurrentIndex(upsells.length - 1);
+    }
+  }, [upsells.length, currentIndex]);
+
   if (upsells.length === 0) return null;
 
+  const safeIndex = Math.min(currentIndex, upsells.length - 1);
+  const currentItem = upsells[safeIndex];
+
   return (
-    <div className={styles.upsellCard}>
-      <p className={styles.cartUpsellLabel}>Add to your order</p>
-      {upsells.map((pin) => (
-        <div key={pin.slug} className={styles.cartUpsellItem}>
-          <MagnifierButton size="sm" onClick={() => setPreviewPin({ src: pin.img, alt: pin.name })} ariaLabel={`Preview ${pin.name}`}>
-            <img src={pin.img} alt={pin.name} className={styles.cartUpsellImage} />
-          </MagnifierButton>
-          <div className={styles.cartUpsellInfo}>
-            <p className={styles.cartUpsellName}>{pin.name}</p>
-            <p className={styles.cartUpsellDesc}>{pin.desc}</p>
-          </div>
-          <div className={styles.cartUpsellActions}>
-            <span className={styles.cartUpsellPrice}>$10.00</span>
-            <button
-              className={styles.cartUpsellBtn}
-              onClick={() => onUpdateItem(pin.slug, 1)}
-              disabled={updatingSlug !== null}
-            >
-              {updatingSlug === pin.slug
-                ? <span className={styles.spinner} aria-label="Loading" />
-                : "+ Add"}
-            </button>
-          </div>
-        </div>
-      ))}
+    <>
+      <div className={styles.upsellCard}>
+        {isDesktop ? (
+          <>
+            <p className={styles.cartUpsellLabel}>Add to your order</p>
+            {upsells.map((pin) => (
+              <div key={pin.slug} className={styles.cartUpsellItem}>
+                <MagnifierButton size="sm" onClick={() => setPreviewPin({ src: pin.img, alt: pin.name })} ariaLabel={`Preview ${pin.name}`}>
+                  <img src={pin.img} alt={pin.name} className={styles.cartUpsellImage} />
+                </MagnifierButton>
+                <div className={styles.cartUpsellInfo}>
+                  <p className={styles.cartUpsellName}>{pin.name}</p>
+                  <p className={styles.cartUpsellDesc}>{pin.desc}</p>
+                </div>
+                <div className={styles.cartUpsellActions}>
+                  <span className={styles.cartUpsellPrice}>$10.00</span>
+                  <button
+                    className={styles.cartUpsellBtn}
+                    onClick={() => onUpdateItem(pin.slug, 1)}
+                    disabled={updatingSlug !== null}
+                  >
+                    {updatingSlug === pin.slug
+                      ? <span className={styles.spinner} aria-label="Loading" />
+                      : "+ Add"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </>
+        ) : (
+          <>
+            <div className={styles.upsellCarouselHeader}>
+              <p className={styles.cartUpsellLabel}>Add to your order</p>
+              <div className={styles.upsellNavButtons}>
+                <button
+                  className={styles.upsellNavBtn}
+                  onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
+                  disabled={safeIndex === 0}
+                  aria-label="Previous add-on"
+                >
+                  ←
+                </button>
+                <button
+                  className={styles.upsellNavBtn}
+                  onClick={() => setCurrentIndex((i) => Math.min(upsells.length - 1, i + 1))}
+                  disabled={safeIndex === upsells.length - 1}
+                  aria-label="Next add-on"
+                >
+                  →
+                </button>
+              </div>
+            </div>
+            <div key={currentItem.slug} className={styles.cartUpsellItem}>
+              <MagnifierButton size="sm" onClick={() => setPreviewPin({ src: currentItem.img, alt: currentItem.name })} ariaLabel={`Preview ${currentItem.name}`}>
+                <img src={currentItem.img} alt={currentItem.name} className={styles.cartUpsellImage} />
+              </MagnifierButton>
+              <div className={styles.cartUpsellInfo}>
+                <p className={styles.cartUpsellName}>{currentItem.name}</p>
+                <p className={styles.cartUpsellDesc}>{currentItem.desc}</p>
+              </div>
+              <div className={styles.cartUpsellActions}>
+                <span className={styles.cartUpsellPrice}>$10.00</span>
+                <button
+                  className={styles.cartUpsellBtn}
+                  onClick={() => onUpdateItem(currentItem.slug, 1)}
+                  disabled={updatingSlug !== null}
+                >
+                  {updatingSlug === currentItem.slug
+                    ? <span className={styles.spinner} aria-label="Loading" />
+                    : "+ Add"}
+                </button>
+              </div>
+            </div>
+            {upsells.length > 1 && (
+              <div className={styles.upsellViewAllRow}>
+                <button className={styles.upsellViewAllBtn} onClick={() => setViewAllOpen(true)}>
+                  ↗ View all
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
       {previewPin && (
         <Modal onClose={() => setPreviewPin(null)} ariaLabel={previewPin.alt}>
           <img src={previewPin.src} alt={previewPin.alt} className={styles.pinPreviewImage} />
         </Modal>
       )}
-    </div>
+
+      {viewAllOpen && (
+        <Modal onClose={() => setViewAllOpen(false)} ariaLabel="All add-ons" panelClassName={styles.internationalPanel}>
+          <p className={styles.cartUpsellLabel} style={{ marginBottom: "0.85rem" }}>Add to your order</p>
+          <div className={styles.upsellModalItems}>
+            {upsells.map((pin) => (
+              <div key={pin.slug} className={styles.cartUpsellItem}>
+                <MagnifierButton
+                  size="sm"
+                  onClick={() => { setViewAllOpen(false); setPreviewPin({ src: pin.img, alt: pin.name }); }}
+                  ariaLabel={`Preview ${pin.name}`}
+                >
+                  <img src={pin.img} alt={pin.name} className={styles.cartUpsellImage} />
+                </MagnifierButton>
+                <div className={styles.cartUpsellInfo}>
+                  <p className={styles.cartUpsellName}>{pin.name}</p>
+                  <p className={styles.cartUpsellDesc}>{pin.desc}</p>
+                </div>
+                <div className={styles.cartUpsellActions}>
+                  <span className={styles.cartUpsellPrice}>$10.00</span>
+                  <button
+                    className={styles.cartUpsellBtn}
+                    onClick={() => { setViewAllOpen(false); onUpdateItem(pin.slug, 1); }}
+                    disabled={updatingSlug !== null}
+                  >
+                    {updatingSlug === pin.slug
+                      ? <span className={styles.spinner} aria-label="Loading" />
+                      : "+ Add"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Modal>
+      )}
+    </>
   );
 };
 

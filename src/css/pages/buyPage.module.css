@@ -649,6 +649,71 @@
   border-top-color: #fff;
 }
 
+/* ── Upsell carousel (mobile) ──────────────────────────────────── */
+
+.upsellCarouselHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.upsellNavButtons {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.upsellNavBtn {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1.5px solid #d0d0d0;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.upsellNavBtn:hover:not(:disabled) {
+  background: #323232;
+  color: #fff;
+  border-color: #323232;
+}
+
+.upsellNavBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.upsellViewAllRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.upsellViewAllBtn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: "Roboto Light";
+  font-size: 0.82rem;
+  color: #888;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.upsellViewAllBtn:hover {
+  color: #323232;
+}
+
+.upsellModalItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
 /* ── Elements checkout form ────────────────────────────────────── */
 
 .checkoutForm {

@@ -187,15 +187,13 @@
 }
 
 .cartItemImage {
-  width: 56px;
-  height: 56px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   border-radius: 6px;
   border: 1px solid #eee;
   background: #fafafa;
   flex-shrink: 0;
-  padding: 4px;
-  box-sizing: border-box;
 }
 
 .cartItemInfo {
@@ -1004,6 +1002,11 @@
 
   .cartSummary {
     padding: 1rem;
+  }
+
+  .cartItemImage {
+    width: 75px;
+    height: 75px;
   }
 
 

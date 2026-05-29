@@ -423,7 +423,8 @@
   background: none;
   border: none;
   padding: 0;
-  font-size: 0.72rem;
+  display: inline-flex;
+  align-items: center;
   color: #bbb;
   cursor: pointer;
   line-height: 1;
@@ -459,7 +460,8 @@
   background: none;
   border: none;
   padding: 0;
-  font-size: 0.72rem;
+  display: inline-flex;
+  align-items: center;
   color: #bbb;
   cursor: pointer;
   line-height: 1;
@@ -483,7 +485,6 @@
   display: inline-flex;
   align-items: center;
   font-style: normal;
-  font-size: 0.72rem;
   color: #bbb;
   cursor: default;
   line-height: 1;

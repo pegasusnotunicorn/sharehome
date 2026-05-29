@@ -52,6 +52,15 @@ const UPSELL_PINS = [
   { slug: "bizz_pin" as const, name: "Bizz pin", desc: "Enamel pin of Bizz Hagglefeet.", img: "/images/members/bizz-pin.webp" },
 ];
 
+const InfoIcon = () => (
+  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+    <path d="M12 8l.01 0" />
+    <path d="M11 12l1 0l0 4l1 0" />
+  </svg>
+);
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const w = window as any;
 function trackEvent(name: string, params?: Record<string, string | number>) {
@@ -201,7 +210,7 @@ const CheckoutForm = ({ sessionId, onOpenInternational }: { sessionId: string | 
               aria-label="International shipping info"
               type="button"
             >
-              ⓘ
+              <InfoIcon />
               <span className={styles.taxInfoBubble}>Shipping internationally?</span>
             </button>
           </p>
@@ -535,7 +544,7 @@ const CartSummary = ({
                 onClick={onOpenInternational}
                 aria-label="International shipping info"
               >
-                ⓘ
+                <InfoIcon />
                 <span className={styles.taxInfoBubble}>Shipping internationally?</span>
               </button>
             </span>
@@ -544,7 +553,7 @@ const CartSummary = ({
             <span className={`${styles.cartTaxLabel} ${styles.cartRowLabel}`}>
               Tax
               <span className={styles.taxInfoIcon}>
-                ⓘ
+                <InfoIcon />
                 <span className={styles.taxInfoBubble}>
                   Tax is determined by shipping information.
                 </span>

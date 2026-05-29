@@ -81,13 +81,22 @@ const stripePromise = loadStripe(
     : import.meta.env.VITE_STRIPE_PUBLIC_KEY_LIVE
 );
 
-const appearance = {
+const appearanceBase = {
   inputs: "condensed" as const,
   labels: "auto" as const,
   variables: {
     colorPrimary: "#5f5aa2",
     colorText: "#323232",
     borderRadius: "8px",
+  },
+};
+
+const appearanceMobile = {
+  ...appearanceBase,
+  variables: {
+    ...appearanceBase.variables,
+    spacingUnit: "4px",
+    fontSizeBase: "14px",
   },
 };
 
@@ -263,7 +272,30 @@ const CartUpsell = ({
   if (upsells.length === 0) return null;
 
   const safeIndex = Math.min(currentIndex, upsells.length - 1);
-  const currentItem = upsells[safeIndex];
+
+  const upsellItem = (pin: typeof UPSELL_PINS[number]) => (
+    <div className={styles.cartUpsellItem}>
+      <MagnifierButton size="sm" onClick={() => setPreviewPin({ src: pin.img, alt: pin.name })} ariaLabel={`Preview ${pin.name}`}>
+        <img src={pin.img} alt={pin.name} className={styles.cartUpsellImage} />
+      </MagnifierButton>
+      <div className={styles.cartUpsellInfo}>
+        <p className={styles.cartUpsellName}>{pin.name}</p>
+        <p className={styles.cartUpsellDesc}>{pin.desc}</p>
+      </div>
+      <div className={styles.cartUpsellActions}>
+        <span className={styles.cartUpsellPrice}>$10.00</span>
+        <button
+          className={styles.cartUpsellBtn}
+          onClick={() => onUpdateItem(pin.slug, 1)}
+          disabled={updatingSlug !== null}
+        >
+          {updatingSlug === pin.slug
+            ? <span className={styles.spinner} aria-label="Loading" />
+            : "+ Add"}
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -272,27 +304,7 @@ const CartUpsell = ({
           <>
             <p className={styles.cartUpsellLabel}>Add to your order</p>
             {upsells.map((pin) => (
-              <div key={pin.slug} className={styles.cartUpsellItem}>
-                <MagnifierButton size="sm" onClick={() => setPreviewPin({ src: pin.img, alt: pin.name })} ariaLabel={`Preview ${pin.name}`}>
-                  <img src={pin.img} alt={pin.name} className={styles.cartUpsellImage} />
-                </MagnifierButton>
-                <div className={styles.cartUpsellInfo}>
-                  <p className={styles.cartUpsellName}>{pin.name}</p>
-                  <p className={styles.cartUpsellDesc}>{pin.desc}</p>
-                </div>
-                <div className={styles.cartUpsellActions}>
-                  <span className={styles.cartUpsellPrice}>$10.00</span>
-                  <button
-                    className={styles.cartUpsellBtn}
-                    onClick={() => onUpdateItem(pin.slug, 1)}
-                    disabled={updatingSlug !== null}
-                  >
-                    {updatingSlug === pin.slug
-                      ? <span className={styles.spinner} aria-label="Loading" />
-                      : "+ Add"}
-                  </button>
-                </div>
-              </div>
+              <div key={pin.slug}>{upsellItem(pin)}</div>
             ))}
           </>
         ) : (
@@ -300,52 +312,37 @@ const CartUpsell = ({
             <div className={styles.upsellCarouselHeader}>
               <p className={styles.cartUpsellLabel}>Add to your order</p>
               <div className={styles.upsellNavButtons}>
+                {upsells.length > 1 && (
+                  <button className={styles.upsellViewAllBtn} onClick={() => setViewAllOpen(true)}>
+                    ↗ View all
+                  </button>
+                )}
                 <button
                   className={styles.upsellNavBtn}
                   onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
                   disabled={safeIndex === 0}
                   aria-label="Previous add-on"
-                >
-                  ←
-                </button>
+                >←</button>
                 <button
                   className={styles.upsellNavBtn}
                   onClick={() => setCurrentIndex((i) => Math.min(upsells.length - 1, i + 1))}
                   disabled={safeIndex === upsells.length - 1}
                   aria-label="Next add-on"
-                >
-                  →
-                </button>
+                >→</button>
               </div>
             </div>
-            <div key={currentItem.slug} className={styles.cartUpsellItem}>
-              <MagnifierButton size="sm" onClick={() => setPreviewPin({ src: currentItem.img, alt: currentItem.name })} ariaLabel={`Preview ${currentItem.name}`}>
-                <img src={currentItem.img} alt={currentItem.name} className={styles.cartUpsellImage} />
-              </MagnifierButton>
-              <div className={styles.cartUpsellInfo}>
-                <p className={styles.cartUpsellName}>{currentItem.name}</p>
-                <p className={styles.cartUpsellDesc}>{currentItem.desc}</p>
-              </div>
-              <div className={styles.cartUpsellActions}>
-                <span className={styles.cartUpsellPrice}>$10.00</span>
-                <button
-                  className={styles.cartUpsellBtn}
-                  onClick={() => onUpdateItem(currentItem.slug, 1)}
-                  disabled={updatingSlug !== null}
-                >
-                  {updatingSlug === currentItem.slug
-                    ? <span className={styles.spinner} aria-label="Loading" />
-                    : "+ Add"}
-                </button>
+            <div className={styles.upsellCarouselViewport}>
+              <div
+                className={styles.upsellCarouselTrack}
+                style={{ transform: `translateX(-${safeIndex * 100}%)` }}
+              >
+                {upsells.map((pin) => (
+                  <div key={pin.slug} className={styles.upsellCarouselSlide}>
+                    {upsellItem(pin)}
+                  </div>
+                ))}
               </div>
             </div>
-            {upsells.length > 1 && (
-              <div className={styles.upsellViewAllRow}>
-                <button className={styles.upsellViewAllBtn} onClick={() => setViewAllOpen(true)}>
-                  ↗ View all
-                </button>
-              </div>
-            )}
           </>
         )}
       </div>
@@ -414,6 +411,7 @@ const CartSummary = ({
   const [boxCarouselOpen, setBoxCarouselOpen] = useState(false);
   const [previewPin, setPreviewPin] = useState<{ src: string; alt: string } | null>(null);
 
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const [promoOpen, setPromoOpen] = useState(false);
   const [promoCode, setPromoCode] = useState("");
   const [promoLoading, setPromoLoading] = useState(false);
@@ -505,97 +503,111 @@ const CartSummary = ({
 
       <hr className={styles.cartDivider} />
 
-      {appliedCode ? (
-        <div className={styles.promoApplied}>
-          <span className={styles.promoAppliedCode}>{appliedCode} applied</span>
-          <button className={styles.promoRemoveBtn} onClick={handleRemovePromo}>Remove</button>
-        </div>
-      ) : (
-        <div className={styles.promoSection}>
-          {promoOpen ? (
-            <div className={styles.promoInputRow}>
-              <input
-                className={styles.promoInput}
-                type="text"
-                placeholder="Promo code"
-                value={promoCode}
-                onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
-                autoFocus
-              />
-              <button
-                className={styles.promoApplyBtn}
-                onClick={handleApplyPromo}
-                disabled={promoLoading || !promoCode.trim()}
-              >
-                {promoLoading
-                  ? <span className={`${styles.spinner} ${styles.spinnerLight}`} aria-label="Loading" />
-                  : "Apply"}
-              </button>
+      <div className={styles.promoDetailsRow}>
+        <div className={styles.promoDetailsContent}>
+          {appliedCode ? (
+            <div className={styles.promoApplied}>
+              <span className={styles.promoAppliedCode}>{appliedCode} applied</span>
+              <button className={styles.promoRemoveBtn} onClick={handleRemovePromo}>Remove</button>
             </div>
           ) : (
-            <button className={styles.promoToggleBtn} onClick={() => setPromoOpen(true)}>
-              + Add promotion code
-            </button>
-          )}
-          <div className={`${styles.errorSlide} ${styles.errorSlideCompact} ${promoError ? styles.errorSlideVisible : ""}`}>
-            <div className={styles.errorSlideInner}>
-              <p className={styles.promoError}>{lastPromoError.current}</p>
+            <div className={styles.promoSection}>
+              {promoOpen ? (
+                <div className={styles.promoInputRow}>
+                  <input
+                    className={styles.promoInput}
+                    type="text"
+                    placeholder="Promo code"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                    onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
+                    autoFocus
+                  />
+                  <button
+                    className={styles.promoApplyBtn}
+                    onClick={handleApplyPromo}
+                    disabled={promoLoading || !promoCode.trim()}
+                  >
+                    {promoLoading
+                      ? <span className={`${styles.spinner} ${styles.spinnerLight}`} aria-label="Loading" />
+                      : "Apply"}
+                  </button>
+                </div>
+              ) : (
+                <button className={styles.promoToggleBtn} onClick={() => setPromoOpen(true)}>
+                  + Add promotion code
+                </button>
+              )}
+              <div className={`${styles.errorSlide} ${styles.errorSlideCompact} ${promoError ? styles.errorSlideVisible : ""}`}>
+                <div className={styles.errorSlideInner}>
+                  <p className={styles.promoError}>{lastPromoError.current}</p>
+                </div>
+              </div>
             </div>
+          )}
+        </div>
+        <button
+          className={styles.cartDetailsToggle}
+          onClick={() => setDetailsOpen((o) => !o)}
+        >
+          {detailsOpen ? "Hide ▴" : "See details ▾"}
+        </button>
+      </div>
+
+      <div className={`${styles.cartDetailsCollapse} ${detailsOpen ? styles.cartDetailsOpen : ""}`}>
+        <div className={styles.cartDetailsInner}>
+          <div className={styles.cartRow}>
+            <span className={styles.cartRowLabel}>Subtotal</span>
+            {checkout
+              ? <span>{checkout.total.subtotal.amount}</span>
+              : <span className={styles.cartAmountSkeleton} />}
+          </div>
+          {checkout && checkout.total.discount.minorUnitsAmount > 0 && (
+            <div className={styles.cartRow}>
+              <span>Discount</span>
+              <span className={styles.cartDiscount}>-{checkout.total.discount.amount}</span>
+            </div>
+          )}
+          <div className={styles.cartRow}>
+            <span className={styles.cartRowLabel}>Shipping</span>
+            <span className={styles.cartFreeRow}>
+              Free US shipping
+              <button
+                className={styles.shippingInfoBtn}
+                onClick={onOpenInternational}
+                aria-label="International shipping info"
+              >
+                ⓘ
+                <span className={styles.taxInfoBubble}>Shipping internationally?</span>
+              </button>
+            </span>
+          </div>
+          <div className={styles.cartRow}>
+            <span className={`${styles.cartTaxLabel} ${styles.cartRowLabel}`}>
+              Tax
+              <span className={styles.taxInfoIcon}>
+                ⓘ
+                <span className={styles.taxInfoBubble}>
+                  Tax is determined by shipping information.
+                </span>
+              </span>
+            </span>
+            {!checkout ? (
+              <span className={styles.cartAmountSkeleton} />
+            ) : checkout.shippingAddress !== null ? (
+              <span>{checkout.total.taxExclusive.amount}</span>
+            ) : (
+              <span className={styles.cartTaxPending}>Enter address to calculate</span>
+            )}
+          </div>
+          <hr className={styles.cartTotalDivider} />
+          <div className={`${styles.cartRow} ${styles.cartTotalRow}`}>
+            <span>Total</span>
+            {checkout
+              ? <span>{checkout.total.total.amount}</span>
+              : <span className={`${styles.cartAmountSkeleton} ${styles.cartTotalSkeleton}`} />}
           </div>
         </div>
-      )}
-
-      <div className={styles.cartRow}>
-        <span className={styles.cartRowLabel}>Subtotal</span>
-        {checkout
-          ? <span>{checkout.total.subtotal.amount}</span>
-          : <span className={styles.cartAmountSkeleton} />}
-      </div>
-      {checkout && checkout.total.discount.minorUnitsAmount > 0 && (
-        <div className={styles.cartRow}>
-          <span>Discount</span>
-          <span className={styles.cartDiscount}>-{checkout.total.discount.amount}</span>
-        </div>
-      )}
-      <div className={styles.cartRow}>
-        <span className={styles.cartRowLabel}>Shipping</span>
-        <span className={styles.cartFreeRow}>
-          Free US shipping
-          <button
-            className={styles.shippingInfoBtn}
-            onClick={onOpenInternational}
-            aria-label="International shipping info"
-          >
-            ⓘ
-            <span className={styles.taxInfoBubble}>Shipping internationally?</span>
-          </button>
-        </span>
-      </div>
-      <div className={styles.cartRow}>
-        <span className={`${styles.cartTaxLabel} ${styles.cartRowLabel}`}>
-          Tax
-          <span className={styles.taxInfoIcon}>
-            ⓘ
-            <span className={styles.taxInfoBubble}>
-              Tax is determined by shipping information.
-            </span>
-          </span>
-        </span>
-        {!checkout ? (
-          <span className={styles.cartAmountSkeleton} />
-        ) : checkout.shippingAddress !== null ? (
-          <span>{checkout.total.taxExclusive.amount}</span>
-        ) : (
-          <span className={styles.cartTaxPending}>Enter address to calculate</span>
-        )}
-      </div>
-      <hr className={styles.cartTotalDivider} />
-      <div className={`${styles.cartRow} ${styles.cartTotalRow}`}>
-        <span>Total</span>
-        {checkout
-          ? <span>{checkout.total.total.amount}</span>
-          : <span className={`${styles.cartAmountSkeleton} ${styles.cartTotalSkeleton}`} />}
       </div>
 
       {previewPin && (
@@ -705,6 +717,8 @@ const InternationalModal = ({ onClose }: { onClose: () => void }) => (
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 const CheckoutPage = () => {
+  const { isDesktop } = useWindowDimensions();
+  const appearance = isDesktop ? appearanceBase : appearanceMobile;
   const [lcmQty, setLcmQty] = useState(1);
   const [urgPinQty, setUrgPinQty] = useState(0);
   const [bizzPinQty, setBizzPinQty] = useState(0);

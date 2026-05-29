@@ -22,7 +22,6 @@ const AboutPage = () => {
       <PageIntro
         minWidth={false}
         title="How to play"
-        className={aboutStyles.pageIntroOverride}
       >
         <a
           href="/rulebook.pdf"

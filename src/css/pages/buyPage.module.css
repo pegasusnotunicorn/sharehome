@@ -161,7 +161,7 @@
   font-size: 0.7rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.45);
+  color: rgba(50, 50, 50, 0.65);
   margin: 0;
 }
 
@@ -262,7 +262,7 @@
   border: none;
   padding: 0;
   font-family: "Roboto Light";
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: #777;
   cursor: pointer;
   text-align: left;
@@ -567,7 +567,7 @@
   font-size: 0.7rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.45);
+  color: rgba(50, 50, 50, 0.65);
   margin: 0;
 }
 
@@ -659,7 +659,8 @@
 
 .upsellNavButtons {
   display: flex;
-  gap: 0.4rem;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .upsellNavBtn {
@@ -688,18 +689,14 @@
   cursor: not-allowed;
 }
 
-.upsellViewAllRow {
-  display: flex;
-  justify-content: flex-end;
-}
-
 .upsellViewAllBtn {
   background: none;
   border: none;
   padding: 0;
+  margin-right: 0.4rem;
   font-family: "Roboto Light";
   font-size: 0.82rem;
-  color: #888;
+  color: #777;
   cursor: pointer;
   text-decoration: underline;
 }
@@ -708,7 +705,64 @@
   color: #323232;
 }
 
+.upsellCarouselViewport {
+  overflow: hidden;
+}
+
+.upsellCarouselTrack {
+  display: flex;
+  transition: transform 0.28s ease;
+}
+
+.upsellCarouselSlide {
+  flex: 0 0 100%;
+  width: 100%;
+}
+
 .upsellModalItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Cart details collapse ─────────────────────────────────────── */
+
+.promoDetailsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.promoDetailsContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.cartDetailsToggle {
+  display: none;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: "Roboto Light";
+  font-size: 0.82rem;
+  color: #777;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1.6;
+  text-decoration: underline;
+}
+
+.cartDetailsToggle:hover {
+  color: #323232;
+}
+
+.cartDetailsCollapse {
+  display: contents;
+}
+
+.cartDetailsInner {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -735,11 +789,11 @@
   font-size: 0.7rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.45);
+  color: rgba(50, 50, 50, 0.65);
   margin: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 0.35rem;
 }
 
@@ -974,8 +1028,51 @@
     padding: 1rem;
   }
 
+  .cartSummaryEyebrow {
+    display: none;
+  }
+
+  .cartUpsellLabel {
+    text-align: left;
+  }
+
   .upsellCard {
     padding: 1rem;
+  }
+
+  .shippingLabelBtn .taxInfoBubble {
+    right: auto;
+    left: 0;
+  }
+
+  .shippingLabelBtn .taxInfoBubble::after {
+    right: auto;
+    left: 3px;
+  }
+
+  .cartDetailsToggle {
+    display: block;
+  }
+
+  .cartDetailsCollapse {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    margin-top: -0.75rem;
+    transition: grid-template-rows 0.28s ease, opacity 0.22s ease, margin-top 0.28s ease;
+  }
+
+  .cartDetailsOpen {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    margin-top: 0;
+  }
+
+  .cartDetailsInner {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
   }
 
   .checkoutFormWrapper {

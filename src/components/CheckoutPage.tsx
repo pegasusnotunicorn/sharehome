@@ -257,7 +257,6 @@ const CartUpsell = ({
   const { isDesktop } = useWindowDimensions();
   const [previewPin, setPreviewPin] = useState<{ src: string; alt: string } | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [viewAllOpen, setViewAllOpen] = useState(false);
 
   const upsells = UPSELL_PINS.filter(
     (p) => (p.slug === "urg_pin" ? cart.urgPinQty : cart.bizzPinQty) === 0
@@ -312,12 +311,7 @@ const CartUpsell = ({
             <div className={styles.upsellCarouselHeader}>
               <p className={styles.cartUpsellLabel}>Add to your order</p>
               <div className={styles.upsellNavButtons}>
-                {upsells.length > 1 && (
-                  <button className={styles.upsellViewAllBtn} onClick={() => setViewAllOpen(true)}>
-                    ↗ View all
-                  </button>
-                )}
-                <button
+<button
                   className={styles.upsellNavBtn}
                   onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
                   disabled={safeIndex === 0}
@@ -353,40 +347,6 @@ const CartUpsell = ({
         </Modal>
       )}
 
-      {viewAllOpen && (
-        <Modal onClose={() => setViewAllOpen(false)} ariaLabel="All add-ons" panelClassName={styles.internationalPanel}>
-          <p className={styles.cartUpsellLabel} style={{ marginBottom: "0.85rem" }}>Add to your order</p>
-          <div className={styles.upsellModalItems}>
-            {upsells.map((pin) => (
-              <div key={pin.slug} className={styles.cartUpsellItem}>
-                <MagnifierButton
-                  size="sm"
-                  onClick={() => { setViewAllOpen(false); setPreviewPin({ src: pin.img, alt: pin.name }); }}
-                  ariaLabel={`Preview ${pin.name}`}
-                >
-                  <img src={pin.img} alt={pin.name} className={styles.cartUpsellImage} />
-                </MagnifierButton>
-                <div className={styles.cartUpsellInfo}>
-                  <p className={styles.cartUpsellName}>{pin.name}</p>
-                  <p className={styles.cartUpsellDesc}>{pin.desc}</p>
-                </div>
-                <div className={styles.cartUpsellActions}>
-                  <span className={styles.cartUpsellPrice}>$10.00</span>
-                  <button
-                    className={styles.cartUpsellBtn}
-                    onClick={() => { setViewAllOpen(false); onUpdateItem(pin.slug, 1); }}
-                    disabled={updatingSlug !== null}
-                  >
-                    {updatingSlug === pin.slug
-                      ? <span className={styles.spinner} aria-label="Loading" />
-                      : "+ Add"}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Modal>
-      )}
     </>
   );
 };
@@ -473,7 +433,15 @@ const CartSummary = ({
 
   return (
     <div className={styles.cartSummary}>
-      <p className={styles.cartSummaryEyebrow}>Your order</p>
+      <div className={styles.cartSummaryHeader}>
+        <p className={styles.cartSummaryEyebrow}>Your order</p>
+        <button
+          className={styles.cartDetailsToggle}
+          onClick={() => setDetailsOpen((o) => !o)}
+        >
+          {detailsOpen ? "Hide ▴" : "See details ▾"}
+        </button>
+      </div>
       <div className={styles.cartItems}>
         {activeItems.map((item) => (
           <div key={item.slug} className={styles.cartItem}>
@@ -503,56 +471,46 @@ const CartSummary = ({
 
       <hr className={styles.cartDivider} />
 
-      <div className={styles.promoDetailsRow}>
-        <div className={styles.promoDetailsContent}>
-          {appliedCode ? (
-            <div className={styles.promoApplied}>
-              <span className={styles.promoAppliedCode}>{appliedCode} applied</span>
-              <button className={styles.promoRemoveBtn} onClick={handleRemovePromo}>Remove</button>
+      {appliedCode ? (
+        <div className={styles.promoApplied}>
+          <span className={styles.promoAppliedCode}>{appliedCode} applied</span>
+          <button className={styles.promoRemoveBtn} onClick={handleRemovePromo}>Remove</button>
+        </div>
+      ) : (
+        <div className={styles.promoSection}>
+          {promoOpen ? (
+            <div className={styles.promoInputRow}>
+              <input
+                className={styles.promoInput}
+                type="text"
+                placeholder="Promo code"
+                value={promoCode}
+                onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
+                autoFocus
+              />
+              <button
+                className={styles.promoApplyBtn}
+                onClick={handleApplyPromo}
+                disabled={promoLoading || !promoCode.trim()}
+              >
+                {promoLoading
+                  ? <span className={`${styles.spinner} ${styles.spinnerLight}`} aria-label="Loading" />
+                  : "Apply"}
+              </button>
             </div>
           ) : (
-            <div className={styles.promoSection}>
-              {promoOpen ? (
-                <div className={styles.promoInputRow}>
-                  <input
-                    className={styles.promoInput}
-                    type="text"
-                    placeholder="Promo code"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                    onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
-                    autoFocus
-                  />
-                  <button
-                    className={styles.promoApplyBtn}
-                    onClick={handleApplyPromo}
-                    disabled={promoLoading || !promoCode.trim()}
-                  >
-                    {promoLoading
-                      ? <span className={`${styles.spinner} ${styles.spinnerLight}`} aria-label="Loading" />
-                      : "Apply"}
-                  </button>
-                </div>
-              ) : (
-                <button className={styles.promoToggleBtn} onClick={() => setPromoOpen(true)}>
-                  + Add promotion code
-                </button>
-              )}
-              <div className={`${styles.errorSlide} ${styles.errorSlideCompact} ${promoError ? styles.errorSlideVisible : ""}`}>
-                <div className={styles.errorSlideInner}>
-                  <p className={styles.promoError}>{lastPromoError.current}</p>
-                </div>
-              </div>
-            </div>
+            <button className={styles.promoToggleBtn} onClick={() => setPromoOpen(true)}>
+              + Add promotion code
+            </button>
           )}
+          <div className={`${styles.errorSlide} ${styles.errorSlideCompact} ${promoError ? styles.errorSlideVisible : ""}`}>
+            <div className={styles.errorSlideInner}>
+              <p className={styles.promoError}>{lastPromoError.current}</p>
+            </div>
+          </div>
         </div>
-        <button
-          className={styles.cartDetailsToggle}
-          onClick={() => setDetailsOpen((o) => !o)}
-        >
-          {detailsOpen ? "Hide ▴" : "See details ▾"}
-        </button>
-      </div>
+      )}
 
       <div className={`${styles.cartDetailsCollapse} ${detailsOpen ? styles.cartDetailsOpen : ""}`}>
         <div className={styles.cartDetailsInner}>

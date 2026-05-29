@@ -608,13 +608,18 @@ const CartSummary = ({
       {editItem && (
         <Modal onClose={() => setEditItem(null)} ariaLabel="Edit quantity">
           <h3 className={styles.modalTitle}>{CART_ITEMS_META[editItem.slug].name}</h3>
-          <p className={styles.qtyModalDesc}>
-            {editItem.slug === "lcm" && editItem.qty >= LCM_MAX_QTY ? (
-              <>Need more than 12? <a href="mailto:1min@unicornwithwings.com" className={styles.modalLink}>Send me an email</a>.</>
-            ) : (
-              CART_ITEMS_META[editItem.slug].desc
-            )}
-          </p>
+          {(() => {
+            const desc = editItem.slug === "lcm" && editItem.qty >= LCM_MAX_QTY
+              ? <span>Need more than 12? <a href="mailto:1min@unicornwithwings.com" className={styles.modalLink}>Send me an email</a>.</span>
+              : CART_ITEMS_META[editItem.slug].desc;
+            return (
+              <div className={`${styles.qtyDescSlide} ${desc ? styles.qtyDescSlideVisible : ""}`}>
+                <div className={styles.errorSlideInner}>
+                  <p className={styles.qtyModalDesc}>{desc}</p>
+                </div>
+              </div>
+            );
+          })()}
           <Stepper
             value={editItem.qty}
             onChange={(qty) => setEditItem({ ...editItem, qty })}

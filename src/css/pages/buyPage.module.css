@@ -363,13 +363,24 @@
 
 /* ── Qty edit modal ────────────────────────────────────────────── */
 
+.qtyDescSlide {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.22s ease, opacity 0.18s ease;
+}
+
+.qtyDescSlideVisible {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
 .qtyModalDesc {
   font-family: "Roboto Light";
   font-size: 0.85rem;
   color: #777;
-  margin: -0.5rem 0 1.25rem;
+  margin: 0 0 1.25rem;
   line-height: 1.4;
-  min-height: 2.4em;
 }
 
 .qtyModalDesc a {

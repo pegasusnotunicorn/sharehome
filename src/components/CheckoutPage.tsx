@@ -69,19 +69,31 @@ function trackEvent(name: string, params?: Record<string, string | number>) {
 }
 
 function getStoredUtms(): Record<string, string> {
+  const out: Record<string, string> = {};
+
+  // Read URL params first — handles the iOS tab-reload race condition where
+  // sessionStorage is empty but useUTMPreservation already wrote UTMs to the
+  // URL via replaceState in the previous session (child effects like ours run
+  // before the parent AppRoutes useUTMPreservation effect on first render).
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get("utm_source")) out.utmSource = urlParams.get("utm_source")!;
+  if (urlParams.get("utm_medium")) out.utmMedium = urlParams.get("utm_medium")!;
+  if (urlParams.get("utm_campaign")) out.utmCampaign = urlParams.get("utm_campaign")!;
+  if (urlParams.get("utm_content")) out.utmContent = urlParams.get("utm_content")!;
+
+  // sessionStorage overrides URL — more authoritative when present.
   try {
     const raw = sessionStorage.getItem("utm_params");
-    if (!raw) return {};
-    const data = JSON.parse(raw) as Record<string, string>;
-    const out: Record<string, string> = {};
-    if (data.utm_source) out.utmSource = data.utm_source;
-    if (data.utm_medium) out.utmMedium = data.utm_medium;
-    if (data.utm_campaign) out.utmCampaign = data.utm_campaign;
-    if (data.utm_content) out.utmContent = data.utm_content;
-    return out;
-  } catch {
-    return {};
-  }
+    if (raw) {
+      const data = JSON.parse(raw) as Record<string, string>;
+      if (data.utm_source) out.utmSource = data.utm_source;
+      if (data.utm_medium) out.utmMedium = data.utm_medium;
+      if (data.utm_campaign) out.utmCampaign = data.utm_campaign;
+      if (data.utm_content) out.utmContent = data.utm_content;
+    }
+  } catch {}
+
+  return out;
 }
 
 const stripePromise = loadStripe(
@@ -738,7 +750,7 @@ const CheckoutPage = () => {
       const res = await fetch("/.netlify/functions/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou`, ...getStoredUtms() }),
+        body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou?checkout_flow=custom_checkout`, ...getStoredUtms() }),
       });
       if (!res.ok) throw new Error("Failed to update");
       const { clientSecret: newSecret, sessionId: newSid } = await res.json();

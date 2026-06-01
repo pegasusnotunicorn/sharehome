@@ -26,15 +26,20 @@ const trackUtm = async (request, context) => {
   const fbClientId = await context.cookies.get("_fbp");
   const fbClickId = await context.cookies.get("_fbc");
 
-  const UTM_PARAMS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "fbclid"];
-  const hasUTMsInUrl = UTM_PARAMS.some((p) => searchParams.get(p));
+  // utm_source/medium/etc. are the real attribution signals; fbclid is a
+  // click-tracking param only. Separating them prevents a fbclid-only URL
+  // (e.g. a Meta retargeting redirect with no utm_source) from triggering a
+  // full cookie overwrite that clobbers an existing utm_source=instagram.
+  const SOURCE_UTM_PARAMS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
+  const hasSourceUTMs = SOURCE_UTM_PARAMS.some((p) => searchParams.get(p));
+  const hasFbclid = !!searchParams.get("fbclid");
+  const hasUTMsInUrl = hasSourceUTMs || hasFbclid;
   const existingUtmData = await context.cookies.get("utm_data");
 
-  // Only overwrite the cookie when UTMs are present in the URL, or when no
-  // cookie exists yet. Without this guard every page load would clobber good
-  // attribution with "direct / unknown" (e.g. user navigates to /about after
-  // landing on /?utm_source=instagram).
-  if (hasUTMsInUrl || !existingUtmData) {
+  // Overwrite when source UTMs are in the URL (fresh attribution), or when no
+  // cookie exists yet. A fbclid-only URL preserves any existing utm_source
+  // while still updating the fbclid field.
+  if (hasSourceUTMs || !existingUtmData) {
     const utmData = {
       client_id: clientId,
       utm_source: searchParams.get("utm_source") || "direct",
@@ -55,6 +60,23 @@ const trackUtm = async (request, context) => {
     });
 
     console.log("📦 Stored UTM Data:", utmData);
+  } else if (hasFbclid && existingUtmData) {
+    // fbclid arrived without source UTMs — patch just the fbclid field so
+    // click-tracking stays fresh without clobbering the existing attribution.
+    try {
+      const existing = JSON.parse(atob(existingUtmData));
+      existing.fbclid = searchParams.get("fbclid");
+      existing.fb_client_id = fbClientId || existing.fb_client_id || "none";
+      await context.cookies.set("utm_data", btoa(JSON.stringify(existing)), {
+        secure: true,
+        httpOnly: true,
+        sameSite: "Lax",
+        maxAge: 86400,
+      });
+      if (IS_DEV) console.log("🔄 Updated fbclid in existing UTM cookie");
+    } catch {
+      // corrupt cookie — leave as-is
+    }
   } else if (IS_DEV) {
     console.log("🔄 Preserved existing UTM cookie (no UTMs in URL)");
   }

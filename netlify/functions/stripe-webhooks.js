@@ -669,7 +669,9 @@ function parseUserAgent(ua) {
 
 const SOURCE_EMOJI = {
   instagram: "📸",
+  ig: "📸",
   youtube: "🎬",
+  yt: "🎬",
   email: "📧",
   newsletter: "📧",
   google: "🔍",
@@ -677,6 +679,7 @@ const SOURCE_EMOJI = {
   fb: "👥",
   twitter: "🐦",
   x: "🐦",
+  tiktok: "🎵",
 };
 
 function formatAttribution(session) {

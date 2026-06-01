@@ -637,6 +637,36 @@ async function alert(message, context = {}) {
   });
 }
 
+const GA4_PROPERTY_ID = "274391575";
+
+function parseUserAgent(ua) {
+  if (!ua) return null;
+  const isTablet = /iPad|tablet/i.test(ua) && !/Mobile/i.test(ua);
+  const isMobile = !isTablet && /iPhone|iPad|iPod|Android|Mobile|IEMobile/i.test(ua);
+  const deviceEmoji = isMobile ? "📱" : isTablet ? "📟" : "🖥️";
+  const deviceLabel = isMobile ? "Mobile" : isTablet ? "Tablet" : "Desktop";
+
+  let browser = "Unknown";
+  if (/Edg\//i.test(ua)) browser = "Edge";
+  else if (/OPR\/|Opera/i.test(ua)) browser = "Opera";
+  else if (/CriOS\//i.test(ua)) browser = "Chrome (iOS)";
+  else if (/FxiOS\//i.test(ua)) browser = "Firefox (iOS)";
+  else if (/SamsungBrowser/i.test(ua)) browser = "Samsung";
+  else if (/Chrome\/[0-9]/.test(ua) && !/Chromium/i.test(ua)) browser = "Chrome";
+  else if (/Firefox\/[0-9]/.test(ua)) browser = "Firefox";
+  else if (/Safari\/[0-9]/.test(ua)) browser = "Safari";
+
+  let os = "Unknown";
+  if (/iPhone/i.test(ua)) os = "iOS";
+  else if (/iPad/i.test(ua)) os = "iPadOS";
+  else if (/Android/i.test(ua)) os = "Android";
+  else if (/Windows NT/i.test(ua)) os = "Windows";
+  else if (/Mac OS X/i.test(ua)) os = "macOS";
+  else if (/Linux/i.test(ua)) os = "Linux";
+
+  return `${deviceEmoji} ${deviceLabel} · ${os} · ${browser}`;
+}
+
 const SOURCE_EMOJI = {
   instagram: "📸",
   youtube: "🎬",
@@ -759,6 +789,12 @@ async function notifyLabelPurchased({ session, to, gameCount, parcel, label, ord
   if (!VERBOSE_LOGGING) return;
 
   const { flow, source } = formatAttribution(session);
+  const device = parseUserAgent(session.metadata?.user_agent);
+  const gaClientId = session.metadata?.ga_client_id;
+  const ga4UserUrl = `https://analytics.google.com/analytics/web/#/p${GA4_PROPERTY_ID}/reports/user-explorer`;
+  const ga4Value = gaClientId
+    ? `[\`${gaClientId}\`](${ga4UserUrl})`
+    : "—";
 
   const customerLines = [
     `**${to.name || "—"}**`,
@@ -811,6 +847,8 @@ async function notifyLabelPurchased({ session, to, gameCount, parcel, label, ord
           },
           { name: "Flow", value: flow, inline: true },
           { name: "Source", value: source, inline: true },
+          { name: "Device", value: device ?? "—", inline: true },
+          { name: "GA4 Client", value: ga4Value, inline: false },
           {
             name: "Quick links",
             value: quickLinks({

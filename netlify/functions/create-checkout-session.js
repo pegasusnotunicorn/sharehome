@@ -53,6 +53,12 @@ export default async function createCheckoutSession(req) {
 
   const { items, email, returnUrl, utmSource, utmMedium, utmCampaign, utmContent } = body;
 
+  // Read from request headers — more reliable than trusting client-supplied values.
+  const userAgent = req.headers.get("user-agent") || null;
+  const cookieHeader = req.headers.get("cookie") || "";
+  const gaMatch = cookieHeader.match(/(?:^|;\s*)_ga=([^;]+)/);
+  const gaClientId = gaMatch ? gaMatch[1].split(".").slice(-2).join(".") : null;
+
   const trustedOrigins = [PROD_URL, "http://localhost:3000", "http://localhost:8888"];
   const baseUrl = (returnUrl && trustedOrigins.some((o) => returnUrl.startsWith(o)))
     ? returnUrl
@@ -103,6 +109,8 @@ export default async function createCheckoutSession(req) {
         ...(utmMedium && { utm_medium: String(utmMedium).slice(0, 500) }),
         ...(utmCampaign && { utm_campaign: String(utmCampaign).slice(0, 500) }),
         ...(utmContent && { utm_content: String(utmContent).slice(0, 500) }),
+        ...(userAgent && { user_agent: String(userAgent).slice(0, 500) }),
+        ...(gaClientId && { ga_client_id: String(gaClientId).slice(0, 100) }),
       },
       shipping_address_collection: { allowed_countries: ["US"] },
       shipping_options: [{ shipping_rate: NORTH_AMERICAN_SHIPPING_ID }],

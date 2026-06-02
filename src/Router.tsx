@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -42,13 +42,51 @@ const BuyGate = () => {
     return isCustom;
   })();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).gtag?.("event", "checkout_flow_assigned", {
-    checkout_flow: useCustom ? "custom_checkout" : "payment_link",
-  });
+  useEffect(() => {
+    const flow = useCustom ? "custom_checkout" : "payment_link";
+
+    if (useCustom) {
+      // Client-side nav already happened via <Navigate>; just fire and forget.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).gtag?.("event", "checkout_flow_assigned", { checkout_flow: flow });
+      return;
+    }
+
+    // Payment link: build the target URL (same logic as ExternalRedirect) then
+    // fire the GA4 event and use event_callback so the hit ships before we
+    // navigate away. 2 s timeout ensures we redirect even if gtag is blocked.
+    const buildUrl = () => {
+      const currentParams = new URL(window.location.href).searchParams;
+      const target = new URL(PAYMENT_LINK_URL);
+      currentParams.forEach((v, k) => target.searchParams.set(k, v));
+      const trackingKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "fbclid"];
+      if (!trackingKeys.some((p) => currentParams.has(p))) {
+        try {
+          const stored = JSON.parse(sessionStorage.getItem("utm_params") || "{}") as Record<string, string>;
+          Object.entries(stored).forEach(([k, v]) => target.searchParams.set(k, v));
+        } catch { /* ignore corrupt storage */ }
+      }
+      return target.toString();
+    };
+
+    const redirect = () => window.location.replace(buildUrl());
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const gtag = (window as any).gtag;
+    if (gtag) {
+      gtag("event", "checkout_flow_assigned", {
+        checkout_flow: flow,
+        event_callback: redirect,
+        event_timeout: 2000,
+      });
+    } else {
+      redirect();
+    }
+  // useCustom is stable for the lifetime of this component mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (useCustom) return <Navigate to="/checkout" replace />;
-  return <ExternalRedirect url={PAYMENT_LINK_URL} />;
+  return null; // payment link redirect handled in useEffect above
 };
 
 const Router = () => {

@@ -131,6 +131,16 @@ export default async function stripeWebhooks(request) {
         ? `${STRIPE_PAYMENT_LINK_URL}?prefilled_email=${encodeURIComponent(abandonedEmail)}`
         : `${SITE_URL}/checkout?prefilled_email=${encodeURIComponent(abandonedEmail)}`;
 
+      const subscriberGroups = await fetchSubscriberGroupIds(abandonedEmail);
+      if (subscriberGroups?.has(String(MAILERLITE_PURCHASE_GROUP_ID))) {
+        console.log(`📧 ${abandonedEmail} is already in the purchase group — skipping abandoned cart enrollment`);
+        break;
+      }
+      if (subscriberGroups?.has(String(MAILERLITE_ABANDONED_GROUP_ID))) {
+        console.log(`📧 ${abandonedEmail} is already in the abandoned group — skipping to avoid restarting automation`);
+        break;
+      }
+
       await addEmailToMailerLite(
         abandonedEmail,
         {
@@ -937,6 +947,27 @@ async function notifySubscriberAdded({
       },
     ],
   });
+}
+
+// Returns the set of group IDs the subscriber belongs to, or null if they
+// don't exist. Returns empty set on lookup failure (fail-open: we proceed
+// rather than silently skip an abandoned cart on transient errors).
+async function fetchSubscriberGroupIds(email) {
+  if (!MAILER_LITE_KEY) return new Set();
+  try {
+    const response = await fetch(
+      `https://connect.mailerlite.com/api/subscribers/${encodeURIComponent(email)}`,
+      { headers: { Authorization: `Bearer ${MAILER_LITE_KEY}` } }
+    );
+    if (response.status === 404) return null;
+    if (!response.ok) return new Set();
+    const data = await response.json();
+    const groups = data?.data?.groups ?? [];
+    return new Set(groups.map((g) => String(g.id)));
+  } catch (err) {
+    console.warn("⚠️  MailerLite subscriber lookup failed (proceeding):", err.message);
+    return new Set();
+  }
 }
 
 async function addEmailToMailerLite(email, fields, group_id, alertContext = {}) {

@@ -100,6 +100,7 @@ export default async function createCheckoutSession(req) {
     const session = await stripe.checkout.sessions.create({
       ui_mode: "custom",
       return_url: baseUrl,
+      expires_at: Math.floor(Date.now() / 1000) + 2 * 60 * 60, // 2 hours
       mode: "payment",
       line_items: lineItems,
       allow_promotion_codes: true,

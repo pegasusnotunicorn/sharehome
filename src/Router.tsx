@@ -72,16 +72,16 @@ const BuyGate = () => {
     };
 
     const redirect = () => window.location.replace(buildUrl());
+
+    // 300ms timer guarantees redirect even if gtag.js hasn't loaded yet
+    const fallbackTimer = setTimeout(redirect, 300);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const gtag = (window as any).gtag;
     if (gtag) {
       gtag("event", "checkout_flow_assigned", {
         checkout_flow: flow,
-        event_callback: redirect,
-        event_timeout: 2000,
+        event_callback: () => { clearTimeout(fallbackTimer); redirect(); },
       });
-    } else {
-      redirect();
     }
   // useCustom and navigate are stable for the lifetime of this component mount
   // eslint-disable-next-line react-hooks/exhaustive-deps

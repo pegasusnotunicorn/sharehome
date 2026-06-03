@@ -21,12 +21,17 @@
   path = "/thankyou"
 
 [[edge_functions]]
+  function = "buy"
+  path = "/buy"
+
+[[edge_functions]]
   function = "track-utm"
   path = "/*"
   excludedPath=[
     "/.netlify/*",
     "/netlify/",
     "/thankyou",
+    "/buy",
     "/sitemap.xml",
     # "/buy_test",
     "/rulebook",

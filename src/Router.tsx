@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
   useLocation,
+  useNavigate,
 } from "react-router";
 import MetaTags from "./components/MetaTags";
 import Navbar from "./components/Navbar/Navbar";
@@ -31,6 +32,7 @@ const PAYMENT_LINK_URL = import.meta.env.DEV
 
 const BuyGate = () => {
   const rollout = (import.meta.env.VITE_CHECKOUT_ROLLOUT as string) ?? "";
+  const navigate = useNavigate();
 
   const useCustom = (() => {
     if (rollout === "100") return true;
@@ -46,15 +48,15 @@ const BuyGate = () => {
     const flow = useCustom ? "custom_checkout" : "payment_link";
 
     if (useCustom) {
-      // Client-side nav already happened via <Navigate>; just fire and forget.
+      // SPA nav keeps page alive so fire-and-forget is fine — hit ships before unload.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).gtag?.("event", "checkout_flow_assigned", { checkout_flow: flow });
+      navigate("/checkout", { replace: true });
       return;
     }
 
-    // Payment link: build the target URL (same logic as ExternalRedirect) then
-    // fire the GA4 event and use event_callback so the hit ships before we
-    // navigate away. 2 s timeout ensures we redirect even if gtag is blocked.
+    // Payment link: build target URL then fire GA4 event with event_callback so
+    // the hit ships before we leave the SPA. 2 s timeout guards against gtag blocks.
     const buildUrl = () => {
       const currentParams = new URL(window.location.href).searchParams;
       const target = new URL(PAYMENT_LINK_URL);
@@ -81,12 +83,11 @@ const BuyGate = () => {
     } else {
       redirect();
     }
-  // useCustom is stable for the lifetime of this component mount
+  // useCustom and navigate are stable for the lifetime of this component mount
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (useCustom) return <Navigate to="/checkout" replace />;
-  return null; // payment link redirect handled in useEffect above
+  return null; // all navigation handled in useEffect above
 };
 
 const Router = () => {

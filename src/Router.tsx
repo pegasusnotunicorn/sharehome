@@ -73,8 +73,9 @@ const BuyGate = () => {
 
     const redirect = () => window.location.replace(buildUrl());
 
-    // 300ms timer guarantees redirect even if gtag.js hasn't loaded yet
-    const fallbackTimer = setTimeout(redirect, 300);
+    // 2s timer guarantees redirect even if gtag.js hasn't loaded yet; gtag.js typically
+    // loads in ~500-1000ms so event_callback should fire before this in most cases
+    const fallbackTimer = setTimeout(redirect, 2000);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const gtag = (window as any).gtag;
     if (gtag) {
@@ -87,7 +88,12 @@ const BuyGate = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return null; // all navigation handled in useEffect above
+  // custom_checkout navigates instantly via SPA; payment_link waits up to 2s for gtag.js
+  return useCustom ? null : (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", fontFamily: "sans-serif", color: "#888" }}>
+      Redirecting to checkout…
+    </div>
+  );
 };
 
 const Router = () => {

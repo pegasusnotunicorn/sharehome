@@ -120,6 +120,8 @@ export default async function trackConversions(request, context) {
 
     if (IS_DEV) console.log("✅ Stripe Data Retrieved:", stripeData);
 
+    const checkoutFlow = await context.cookies.get("checkout_flow");
+
     // Send UTM + Revenue Data to GA4 and Facebook
     await sendToGA4(
       clientId,
@@ -128,7 +130,8 @@ export default async function trackConversions(request, context) {
       utmData,
       stripeData,
       checkoutSessionId,
-      request
+      request,
+      checkoutFlow
     );
     await sendToFacebook(clientId, utmData, stripeData, request, context);
 
@@ -177,7 +180,8 @@ async function sendToGA4(
   utmData,
   stripeData,
   transactionId,
-  request
+  request,
+  checkoutFlow
 ) {
   const url = new URL(request.url);
   const queryParams = url.searchParams;
@@ -186,7 +190,7 @@ async function sendToGA4(
   const utm_medium = queryParams.get("utm_medium") ?? utmData.utm_medium;
   const utm_term = queryParams.get("utm_term") ?? utmData.utm_term;
   const utm_content = queryParams.get("utm_content") ?? utmData.utm_content;
-  const checkout_flow = queryParams.get("checkout_flow") ?? "payment_link";
+  const checkout_flow = checkoutFlow ?? queryParams.get("checkout_flow") ?? "unknown";
 
   const revenue = stripeData.amount_total / 100;
 

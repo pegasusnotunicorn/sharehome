@@ -90,7 +90,7 @@ export default async function trackConversions(request, context) {
 
     // Extract Stripe Session ID
     const url = new URL(request.url);
-    const checkoutSessionId = url.searchParams.get("checkout_session_id");
+    const checkoutSessionId = url.searchParams.get("checkout_session_id") ?? url.searchParams.get("session_id");
 
     if (!checkoutSessionId) {
       console.log("⚠️ No Stripe session ID found, skipping tracking.");

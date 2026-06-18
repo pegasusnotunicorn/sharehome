@@ -1,0 +1,241 @@
+.rafflePage {
+  padding-bottom: 5rem;
+}
+
+/* #region --- PRIZE BANNER --- */
+
+.prizeBanner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 2px dashed rgba(95, 90, 162, 0.35);
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  background: rgba(95, 90, 162, 0.05);
+  margin-bottom: 1.5rem;
+}
+
+.prizeTrophy {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.prizeLabel {
+  font-family: "Rowdies-Regular";
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #5f5aa2;
+  margin: 0 0 0.15rem;
+}
+
+.prizeText {
+  font-family: "Rowdies-Regular";
+  font-size: 1rem;
+  color: #323232;
+  margin: 0;
+}
+
+/* #endregion */
+
+/* #region --- STEPS --- */
+
+.stepsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.stepCard {
+  border: 2px solid #323232;
+  border-radius: 10px;
+  padding: 1.5rem 1.75rem;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(50, 50, 73, 0.07);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stepCardDone {
+  border-color: #7daf9c;
+  box-shadow: 0 4px 20px rgba(125, 175, 156, 0.18);
+}
+
+.stepCardHighlighted {
+  border-color: #5f5aa2;
+  box-shadow: 0 4px 20px rgba(95, 90, 162, 0.14);
+}
+
+.stepHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.stepBadge {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #323232;
+  color: #fff;
+  font-family: "Rowdies-Regular";
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color 0.25s ease;
+}
+
+.stepBadgeDone {
+  background: #7daf9c;
+}
+
+.stepTitle {
+  font-family: "Rowdies-Regular";
+  font-size: 1.05rem;
+  color: #323232;
+  margin: 0;
+}
+
+.stepDesc {
+  font-family: "Rowdies-Light";
+  font-size: 0.88rem;
+  color: rgba(50, 50, 50, 0.7);
+  margin: 0 0 1.25rem;
+  line-height: 1.65;
+}
+
+/* #endregion */
+
+/* #region --- EMAIL FORM --- */
+
+.emailFormRow {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.emailInput {
+  flex: 1;
+  border: none;
+  border-bottom: 2px solid rgba(50, 50, 50, 0.2);
+  padding: 0.45rem 0;
+  font-family: "Rowdies-Light";
+  font-size: 0.9rem;
+  color: #323232;
+  background: transparent;
+  outline: none;
+  transition: border-color 0.2s ease;
+  min-width: 0;
+}
+
+.emailInput:focus {
+  border-bottom-color: #5f5aa2;
+}
+
+.emailInput::placeholder {
+  color: rgba(50, 50, 50, 0.38);
+}
+
+.emailInput:disabled {
+  opacity: 0.5;
+}
+
+.errorMsg {
+  font-family: "Rowdies-Light";
+  font-size: 0.82rem;
+  color: #c0392b;
+  margin: 0.65rem 0 0;
+}
+
+/* #endregion */
+
+/* #region --- SUCCESS STATE --- */
+
+.successMsg {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  background: rgba(125, 175, 156, 0.1);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+}
+
+.successIcon {
+  color: #7daf9c;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.successMsg strong {
+  font-family: "Rowdies-Regular";
+  font-size: 0.95rem;
+  color: #323232;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.successMsg p {
+  font-family: "Rowdies-Light";
+  font-size: 0.85rem;
+  color: rgba(50, 50, 50, 0.72);
+  margin: 0;
+}
+
+/* #endregion */
+
+/* #region --- KICKSTARTER --- */
+
+.kickstarterBtn {
+  display: block;
+  text-decoration: none;
+}
+
+.kickstarterBtnInner {
+  width: 100%;
+  justify-content: center;
+}
+
+.staffNote {
+  font-family: "Rowdies-Light";
+  font-size: 0.8rem;
+  color: rgba(50, 50, 50, 0.5);
+  margin: 0.85rem 0 0;
+  text-align: center;
+  line-height: 1.55;
+}
+
+/* #endregion */
+
+/* #region --- FOOTER --- */
+
+.footerNote {
+  font-family: "Rowdies-Light";
+  font-size: 0.75rem;
+  color: rgba(50, 50, 50, 0.4);
+  text-align: center;
+  margin: 2rem 0 0;
+  line-height: 1.65;
+}
+
+/* #endregion */
+
+@media only screen and (max-width: 600px) {
+  .emailFormRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+  }
+
+  .stepCard {
+    padding: 1.25rem 1.25rem;
+  }
+
+  .prizeBanner {
+    padding: 0.85rem 1.1rem;
+  }
+}

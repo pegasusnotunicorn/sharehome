@@ -25,6 +25,7 @@ const ArtbookDownloadPage = lazy(() => import("./components/ArtbookDownloadPage"
 const ThankYouPage = lazy(() => import("./components/ThankYouPage"));
 const SignupPage = lazy(() => import("./components/SignupPage"));
 const CheckoutPage = lazy(() => import("./components/CheckoutPage"));
+const RafflePage = lazy(() => import("./components/RafflePage"));
 
 const PAYMENT_LINK_URL = import.meta.env.DEV
   ? import.meta.env.REACT_APP_STRIPE_TEST_URL
@@ -137,6 +138,7 @@ const AppRoutes = () => {
           <Route path="/characters/:name" element={<CharactersPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/raffle" element={<RafflePage />} />
           <Route path="/thankyou" element={<ThankYouPage />} />
           <Route path="/rulebook" element={<ExternalRedirect url="/rulebook.pdf" />} />
           <Route path="/blog" element={<ExternalRedirect url="https://pegasusgames.medium.com" />} />

@@ -8,7 +8,7 @@ interface DefaultButtonProps {
   emoji?: string;
   iconPosition?: "left" | "right";
   variant?: "primary" | "secondary" | "ghost";
-  color?: "dark" | "red" | "green" | "purple" | "yellow" | "white";
+  color?: "dark" | "red" | "green" | "purple" | "yellow" | "white" | "kickstarter";
   size?: "default" | "large";
   border?: "dark" | "light" | "none";
   animated?: boolean;
@@ -31,6 +31,7 @@ const colorMap: Record<string, string> = {
   purple: styles.colorPurple,
   yellow: styles.colorYellow,
   white: styles.colorWhite,
+  kickstarter: styles.colorKickstarter,
 };
 
 const variantMap: Record<string, string> = {

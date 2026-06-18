@@ -182,6 +182,13 @@ a.colorYellow.primary {
   --btn-color-glow: rgba(255, 255, 255, 0.2);
 }
 
+.colorKickstarter {
+  --btn-color: #05ce78;
+  --btn-color-light: #2bd88e;
+  --btn-color-dark: #03b86b;
+  --btn-color-glow: rgba(5, 206, 120, 0.3);
+}
+
 .colorWhite.primary,
 a.colorWhite.primary {
   color: #323232;

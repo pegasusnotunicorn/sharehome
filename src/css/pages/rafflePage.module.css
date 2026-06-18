@@ -2,39 +2,78 @@
   padding-bottom: 5rem;
 }
 
-/* #region --- PRIZE BANNER --- */
+/* #region --- PRIZE SECTION --- */
 
-.prizeBanner {
+.prizeSection {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  border: 2px dashed rgba(95, 90, 162, 0.35);
-  border-radius: 10px;
-  padding: 1rem 1.5rem;
-  background: rgba(95, 90, 162, 0.05);
+  gap: 1.5rem;
   margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: rgba(95, 90, 162, 0.04);
+  border-radius: 10px;
+  border: 1.5px solid rgba(95, 90, 162, 0.15);
 }
 
-.prizeTrophy {
-  font-size: 2rem;
-  line-height: 1;
+.prizeImage {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
   flex-shrink: 0;
 }
 
-.prizeLabel {
-  font-family: "Rowdies-Regular";
-  font-size: 0.65rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #5f5aa2;
-  margin: 0 0 0.15rem;
+.prizeInfo {
+  flex: 1;
+  text-align: left;
 }
 
-.prizeText {
+.prizeEyebrow {
+  font-family: "Rowdies-Bold";
+  font-size: 0.95rem;
+  letter-spacing: 2px;
+  color: #5f5aa2;
+  text-transform: uppercase;
+  margin: 0 0 0.4rem;
+  background: rgba(95, 90, 162, 0.1);
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+}
+
+.prizeTitle {
   font-family: "Rowdies-Regular";
   font-size: 1rem;
   color: #323232;
+  margin: 0.35rem 0 0.2rem;
+}
+
+.prizeSubtitle {
+  font-family: "Rowdies-Light";
+  font-size: 0.82rem;
+  color: rgba(50, 50, 50, 0.55);
   margin: 0;
+}
+
+.prizeRetail {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.prizeRetailLabel {
+  font-family: "Rowdies-Regular";
+  font-size: 0.55rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.45);
+  margin: 0 0 0.1rem;
+}
+
+.prizeRetailPrice {
+  font-family: "Rowdies-Bold";
+  font-size: 1.4rem;
+  color: #323232;
+  margin: 0;
+  line-height: 1;
 }
 
 /* #endregion */
@@ -54,6 +93,7 @@
   background: #fff;
   box-shadow: 0 4px 20px rgba(50, 50, 73, 0.07);
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  text-align: left;
 }
 
 .stepCardDone {
@@ -105,6 +145,10 @@
   color: rgba(50, 50, 50, 0.7);
   margin: 0 0 1.25rem;
   line-height: 1.65;
+}
+
+.stepDesc:last-child {
+  margin-bottom: 0;
 }
 
 /* #endregion */
@@ -211,20 +255,30 @@
 
 /* #endregion */
 
-/* #region --- FOOTER --- */
+/* #region --- FINAL NOTICE --- */
 
-.footerNote {
+.finalNotice {
   font-family: "Rowdies-Light";
-  font-size: 0.75rem;
-  color: rgba(50, 50, 50, 0.4);
+  font-size: 0.8rem;
+  color: rgba(50, 50, 50, 0.45);
   text-align: center;
-  margin: 2rem 0 0;
-  line-height: 1.65;
+  margin: 0;
+  padding-top: 1.25rem;
+  line-height: 1.6;
 }
 
 /* #endregion */
 
 @media only screen and (max-width: 600px) {
+  .prizeImage {
+    width: 80px;
+    height: 80px;
+  }
+
+  .prizeRetailPrice {
+    font-size: 1.5rem;
+  }
+
   .emailFormRow {
     flex-direction: column;
     align-items: stretch;
@@ -235,7 +289,7 @@
     padding: 1.25rem 1.25rem;
   }
 
-  .prizeBanner {
-    padding: 0.85rem 1.1rem;
+  .prizeSection {
+    gap: 0.85rem;
   }
 }

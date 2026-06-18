@@ -1,7 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, A11y, Keyboard } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import PageIntro from "./utils/PageIntro";
+import Modal from "./utils/Modal";
+import MagnifierButton from "./utils/MagnifierButton";
 import DefaultButton from "./utils/DefaultButton";
 import styles from "../css/pages/rafflePage.module.css";
+import buyStyles from "../css/pages/buyPage.module.css";
+
+const BOX_IMAGES = [
+  { src: "/images/box_transparent.webp", alt: "Love, Career & Magic box" },
+  { src: "/images/cards-fan.webp", alt: "Character cards fan" },
+  { src: "/images/cards-floating.webp", alt: "Character cards" },
+  { src: "/images/cards-mockup.webp", alt: "Character cards mockup" },
+  { src: "/images/rulebook-mockup.webp", alt: "Rulebook mockup" },
+];
 
 const CheckCircleIcon = () => (
   <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -23,10 +39,11 @@ const KICKSTARTER_URL =
   "https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season";
 
 const RafflePage = () => {
-  const emailRef = useRef<HTMLInputElement>(null);
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [kickstarterClicked, setKickstarterClicked] = useState(false);
+  const [boxCarouselOpen, setBoxCarouselOpen] = useState(false);
 
   useEffect(() => {
     document.title = "Enter the raffle!";
@@ -63,19 +80,33 @@ const RafflePage = () => {
   return (
     <div className={`content max-width ${styles.rafflePage}`}>
       <PageIntro
-        title="Enter the raffle! 🎟️"
-        lead="Complete two quick steps below to win a free copy of Love, Career & Magic."
+        title="Raffle giveaway"
+        lead="Win a free copy of Love, Career & Magic! 🎟️"
       />
 
       <div className="subcontentWrapper min-width">
-        <div className={styles.prizeBanner}>
-          <span className={styles.prizeTrophy}>🏆</span>
-          <div>
-            <p className={styles.prizeLabel}>Prize</p>
-            <p className={styles.prizeText}>1 free copy of Love, Career & Magic</p>
+
+        {/* Prize section */}
+        <div className={styles.prizeSection}>
+          <MagnifierButton onClick={() => setBoxCarouselOpen(true)} ariaLabel="Preview game box">
+            <img
+              src="/images/box_transparent.webp"
+              alt="Love, Career & Magic"
+              className={styles.prizeImage}
+            />
+          </MagnifierButton>
+          <div className={styles.prizeInfo}>
+            <p className={styles.prizeEyebrow}>🏆 Grand prize</p>
+            <p className={styles.prizeTitle}>Love, Career &amp; Magic</p>
+            <p className={styles.prizeSubtitle}>1 free copy</p>
+          </div>
+          <div className={styles.prizeRetail}>
+            <p className={styles.prizeRetailLabel}>Original retail price</p>
+            <p className={styles.prizeRetailPrice}>$34.99</p>
           </div>
         </div>
 
+        {/* Steps */}
         <div className={styles.stepsWrapper}>
 
           {/* Step 1 */}
@@ -90,11 +121,10 @@ const RafflePage = () => {
             {!done ? (
               <>
                 <p className={styles.stepDesc}>
-                  Join our mailing list to enter and receive your raffle ticket number by email.
+                  Respond to the confirmation email with your raffle ticket number and shipping address.
                 </p>
                 <form onSubmit={handleSubmit} className={styles.emailFormRow} noValidate>
                   <input
-                    ref={emailRef}
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -106,7 +136,7 @@ const RafflePage = () => {
                   />
                   <DefaultButton
                     button="submit"
-                    text={status === "loading" ? "Entering…" : "Enter!"}
+                    text={status === "loading" ? "Submitting…" : "Submit"}
                     variant="primary"
                     color="dark"
                     compact
@@ -121,47 +151,93 @@ const RafflePage = () => {
               <div className={styles.successMsg}>
                 <span className={styles.successIcon}><MailIcon /></span>
                 <div>
-                  <strong>You're entered!</strong>
-                  <p>Check your email for your raffle ticket number 🎟️</p>
+                  <strong>Done!</strong>
+                  <p>Check your inbox and reply with your raffle ticket number and shipping address.</p>
                 </div>
               </div>
             )}
           </div>
 
           {/* Step 2 */}
-          <div className={`${styles.stepCard} ${done ? styles.stepCardHighlighted : ""}`}>
+          <div className={`${styles.stepCard} ${kickstarterClicked ? styles.stepCardDone : ""}`}>
             <div className={styles.stepHeader}>
-              <span className={styles.stepBadge}>2</span>
-              <h3 className={styles.stepTitle}>Follow us on Kickstarter</h3>
+              <span className={`${styles.stepBadge} ${kickstarterClicked ? styles.stepBadgeDone : ""}`}>
+                {kickstarterClicked ? <CheckCircleIcon /> : "2"}
+              </span>
+              <h3 className={styles.stepTitle}>Follow the expansion on Kickstarter</h3>
+            </div>
+            {kickstarterClicked ? (
+              <div className={styles.successMsg}>
+                <span className={styles.successIcon}><MailIcon /></span>
+                <div>
+                  <strong>Following!</strong>
+                  <p>Now show your Kickstarter screen to a staff member.</p>
+                </div>
+              </div>
+            ) : (
+              <>
+                <p className={styles.stepDesc}>We're making a Season 2. Follow along and be the first to know!</p>
+                <a
+                  href={KICKSTARTER_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.kickstarterBtn}
+                  onClick={() => setKickstarterClicked(true)}
+                >
+                  <DefaultButton
+                    text="Follow on Kickstarter →"
+                    variant="primary"
+                    color="kickstarter"
+                    className={styles.kickstarterBtnInner}
+                  />
+                </a>
+              </>
+            )}
+          </div>
+
+          {/* Step 3 */}
+          <div className={styles.stepCard}>
+            <div className={styles.stepHeader}>
+              <span className={styles.stepBadge}>3</span>
+              <h3 className={styles.stepTitle}>Show a staff member your screen</h3>
             </div>
             <p className={styles.stepDesc}>
-              Follow our Season 2 campaign — it's free! Then show a staff member your screen to confirm.
-            </p>
-            <a
-              href={KICKSTARTER_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.kickstarterBtn}
-            >
-              <DefaultButton
-                text="Follow on Kickstarter →"
-                variant="primary"
-                color="purple"
-                size="large"
-                className={styles.kickstarterBtnInner}
-              />
-            </a>
-            <p className={styles.staffNote}>
-              Show your follow confirmation screen to any staff member at the booth!
+              Show your follow screen to any staff member at the booth to get your ticket!
             </p>
           </div>
 
         </div>
 
-        <p className={styles.footerNote}>
-          One winner announced at the end of the convention and notified by email. No purchase necessary.
+        <p className={styles.finalNotice}>
+          One winner will be announced at the end of the convention and will be notified by email.
         </p>
       </div>
+
+      {boxCarouselOpen && (
+        <Modal
+          onClose={() => setBoxCarouselOpen(false)}
+          ariaLabel="Game contents preview"
+          panelClassName={buyStyles.carouselPanel}
+        >
+          <Swiper
+            modules={[Navigation, Pagination, A11y, Keyboard]}
+            navigation
+            pagination={{ clickable: true }}
+            keyboard={{ enabled: true }}
+            spaceBetween={0}
+            slidesPerView={1}
+            className={buyStyles.carouselSwiper}
+          >
+            {BOX_IMAGES.map((img, i) => (
+              <SwiperSlide key={i}>
+                <div className={buyStyles.carouselSlide}>
+                  <img src={img.src} alt={img.alt} className={buyStyles.carouselImage} />
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </Modal>
+      )}
     </div>
   );
 };

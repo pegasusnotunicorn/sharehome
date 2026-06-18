@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
 
-const BLOCKED_PATHS = ["/cart", "/checkout"];
+const BLOCKED_PATHS = ["/cart", "/checkout", "/raffle"];
 const isModalOpen = () => document.querySelector(".modal-overlay") !== null;
 
 interface PinPopupOptions {

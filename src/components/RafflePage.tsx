@@ -12,7 +12,7 @@ import styles from "../css/pages/rafflePage.module.css";
 import buyStyles from "../css/pages/buyPage.module.css";
 
 const BOX_IMAGES = [
-  { src: "/images/box_transparent.webp", alt: "Love, Career & Magic box" },
+  { src: "/images/box_trimmed.webp", alt: "Love, Career & Magic box" },
   { src: "/images/cards-fan.webp", alt: "Character cards fan" },
   { src: "/images/cards-floating.webp", alt: "Character cards" },
   { src: "/images/cards-mockup.webp", alt: "Character cards mockup" },
@@ -79,31 +79,21 @@ const RafflePage = () => {
 
   return (
     <div className={`content max-width ${styles.rafflePage}`}>
-      <PageIntro
-        title="Raffle giveaway"
-        lead="Win a free copy of Love, Career & Magic! 🎟️"
-      />
+      <PageIntro title="Raffle" />
 
       <div className="subcontentWrapper min-width">
 
         {/* Prize section */}
         <div className={styles.prizeSection}>
+          <p className={styles.prizeEyebrow}>🏆 Grand prize</p>
           <MagnifierButton onClick={() => setBoxCarouselOpen(true)} ariaLabel="Preview game box">
             <img
-              src="/images/box_transparent.webp"
+              src="/images/box_trimmed.webp"
               alt="Love, Career & Magic"
               className={styles.prizeImage}
             />
           </MagnifierButton>
-          <div className={styles.prizeInfo}>
-            <p className={styles.prizeEyebrow}>🏆 Grand prize</p>
-            <p className={styles.prizeTitle}>Love, Career &amp; Magic</p>
-            <p className={styles.prizeSubtitle}>1 free copy</p>
-          </div>
-          <div className={styles.prizeRetail}>
-            <p className={styles.prizeRetailLabel}>Original retail price</p>
-            <p className={styles.prizeRetailPrice}>$34.99</p>
-          </div>
+          <p className={styles.prizeSubtitle}>Love, Career &amp; Magic &nbsp;·&nbsp; 1 free copy &nbsp;·&nbsp; retail $34.99</p>
         </div>
 
         {/* Steps */}

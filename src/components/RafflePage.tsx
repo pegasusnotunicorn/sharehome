@@ -79,7 +79,7 @@ const RafflePage = () => {
 
   return (
     <div className={`content max-width ${styles.rafflePage}`}>
-      <PageIntro title="Free game" lead="You must complete all 3 steps to be entered in the raffle 🎟️" />
+      <PageIntro title="Free game" lead="You must complete all 3 steps to be entered in the raffle 🎟️" className={styles.pageIntro} />
 
       <div className="subcontentWrapper min-width">
 
@@ -93,7 +93,7 @@ const RafflePage = () => {
               className={styles.prizeImage}
             />
           </MagnifierButton>
-          <p className={styles.prizeSubtitle}>Love, Career &amp; Magic &nbsp;·&nbsp; 1 free copy &nbsp;·&nbsp; retail $34.99</p>
+          <p className={styles.prizeSubtitle}>1 free copy of Love, Career &amp; Magic. Retails for $34.99.</p>
         </div>
 
         {/* Steps */}

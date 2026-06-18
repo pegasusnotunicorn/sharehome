@@ -79,7 +79,7 @@ const RafflePage = () => {
 
   return (
     <div className={`content max-width ${styles.rafflePage}`}>
-      <PageIntro title="Raffle" />
+      <PageIntro title="Free game" lead="You must complete all 3 steps to be entered in the raffle 🎟️" />
 
       <div className="subcontentWrapper min-width">
 

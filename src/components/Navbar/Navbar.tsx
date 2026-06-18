@@ -22,7 +22,7 @@ interface NavbarMainProps {
 export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
   const location = useLocation();
   const isLandingPage = location.pathname === "/";
-  const hideBuyButtons = [BUY_DESTINATION, "/checkout", "/thankyou"].includes(location.pathname);
+  const hideBuyButtons = [BUY_DESTINATION, "/checkout", "/thankyou", "/raffle"].includes(location.pathname);
 
   const [visible, setVisibility] = useState(false);
   const isVisibleClass = visible ? "is-active" : "";

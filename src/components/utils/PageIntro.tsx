@@ -7,6 +7,7 @@ interface PageIntroProps {
   children?: ReactNode;
   minWidth?: boolean;
   className?: string;
+  wrapperClassName?: string;
 }
 
 const PageIntro = ({
@@ -15,9 +16,10 @@ const PageIntro = ({
   children,
   minWidth = true,
   className,
+  wrapperClassName,
 }: PageIntroProps) => {
   return (
-    <div className={`subcontentWrapper margin-top${minWidth ? " min-width" : ""}`}>
+    <div className={`subcontentWrapper margin-top${minWidth ? " min-width" : ""}${wrapperClassName ? ` ${wrapperClassName}` : ""}`}>
       <div className={`characterContent ${styles.intro}${!lead && !children ? ` ${styles.introNoSub}` : ""}${className ? ` ${className}` : ""}`}>
         <h2 className={`subtitle ${styles.title}`}>{title}</h2>
         {lead && <p className={styles.lead}>{lead}</p>}

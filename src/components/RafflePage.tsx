@@ -79,9 +79,9 @@ const RafflePage = () => {
 
   return (
     <div className={`content max-width ${styles.rafflePage}`}>
-      <PageIntro title="Free game" lead="You must complete all 3 steps to be entered in the raffle 🎟️" className={styles.pageIntro} />
+      <PageIntro title="Free game" lead="You must complete all 3 steps to be entered in the raffle 🎟️" className={styles.pageIntro} wrapperClassName={styles.pageIntroWrapper} />
 
-      <div className="subcontentWrapper min-width">
+      <div className={`subcontentWrapper min-width ${styles.raffleContent}`}>
 
         {/* Prize section */}
         <div className={styles.prizeSection}>
@@ -129,7 +129,6 @@ const RafflePage = () => {
                     text={status === "loading" ? "Submitting…" : "Submit"}
                     variant="primary"
                     color="dark"
-                    compact
                     icon="forward"
                   />
                 </form>

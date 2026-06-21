@@ -77,15 +77,15 @@ export default async function stripeWebhooks(request) {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object;
-
-      // Buy shipping label first; never block MailerLite or 200-response on failure.
-      await purchaseShippoLabel(session, event.id);
-
       const customerEmail = session.customer_details?.email;
       const customerName = session.customer_details?.name;
+
+      // Enroll in MailerLite first so the result can be included in the
+      // shipping-label Discord notification (one combined alert per purchase).
+      let mailerStatus = null;
       if (customerEmail) {
         const { flow } = formatAttribution(session);
-        await addEmailToMailerLite(
+        mailerStatus = await addEmailToMailerLite(
           customerEmail,
           { name: customerName, checkout_source: session.payment_link ? "payment_link" : "custom_checkout" },
           MAILERLITE_PURCHASE_GROUP_ID,
@@ -94,6 +94,8 @@ export default async function stripeWebhooks(request) {
       } else if (IS_DEV) {
         console.log("No customer email on completed session; skipping MailerLite");
       }
+
+      await purchaseShippoLabel(session, event.id, mailerStatus);
       break;
     }
     case "checkout.session.expired": {
@@ -260,7 +262,7 @@ async function releaseSessionClaim(sessionId) {
   }
 }
 
-async function purchaseShippoLabel(eventSession, eventId) {
+async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
   // Re-fetch the live session — webhook event payloads are frozen snapshots,
   // so retries/replays would otherwise see stale metadata and double-buy.
   // Expanding line items here also avoids a second API call in countGames.
@@ -466,6 +468,7 @@ async function purchaseShippoLabel(eventSession, eventId) {
       parcel: parcelConfig.parcel,
       label,
       orderNumber: shippoOrderNumber,
+      mailerStatus,
     });
 
     // Persist tracking back to the Stripe session for idempotency + dashboard visibility.
@@ -797,11 +800,19 @@ function formatOrderSummary(session) {
   return lines.join("\n");
 }
 
-// Successes / informational. Only sent when VERBOSE_LOGGING=true.
-async function notifyLabelPurchased({ session, to, gameCount, parcel, label, orderNumber }) {
-  if (!VERBOSE_LOGGING) return;
+async function notifyLabelPurchased({ session, to, gameCount, parcel, label, orderNumber, mailerStatus }) {
+  // For payment links, UTMs live in the redirect URL (not session.metadata).
+  // track-conversions.js writes them back to Stripe metadata right when the
+  // user hits /thankyou. By the time we reach here (after Shippo API calls,
+  // ~2-4 s), a re-fetch picks up those UTMs for correct source attribution.
+  let sessionForAttribution = session;
+  if (session.payment_link && !session.metadata?.utm_source) {
+    try {
+      sessionForAttribution = await stripe.checkout.sessions.retrieve(session.id);
+    } catch { /* fall back to original session */ }
+  }
 
-  const { flow, source } = formatAttribution(session);
+  const { flow, source } = formatAttribution(sessionForAttribution);
   const device = parseUserAgent(session.metadata?.user_agent);
   const gaClientId = session.metadata?.ga_client_id;
   const ga4UserUrl = `https://analytics.google.com/analytics/web/#/p${GA4_PROPERTY_ID}/reports/user-explorer`;
@@ -861,6 +872,15 @@ async function notifyLabelPurchased({ session, to, gameCount, parcel, label, ord
           { name: "Flow", value: flow, inline: true },
           { name: "Source", value: source, inline: true },
           { name: "Device", value: device ?? "—", inline: true },
+          {
+            name: "MailerLite",
+            value: mailerStatus === null
+              ? "—"
+              : mailerStatus.alreadyExisted
+                ? "ℹ️ Already subscribed"
+                : "✅ Added to purchase list",
+            inline: true,
+          },
           { name: "GA4 Client", value: ga4Value, inline: false },
           {
             name: "Quick links",
@@ -990,7 +1010,7 @@ async function addEmailToMailerLite(email, fields, group_id, alertContext = {}) 
         group: group_id,
       }
     );
-    return;
+    return null;
   }
 
   const cleanFields = Object.fromEntries(
@@ -1041,23 +1061,13 @@ async function addEmailToMailerLite(email, fields, group_id, alertContext = {}) 
     // MailerLite returns 201 for a brand-new subscriber and 200 when the
     // email was already on file (the call upserts + re-adds to group).
     const alreadyExisted = response.status === 200;
+    const subscriberId = data?.data?.id || data?.id || null;
     console.log(
       alreadyExisted
         ? "ℹ️  Subscriber already existed on MailerLite, re-added to group"
         : "✅ Subscriber added to MailerLite!"
     );
-    await notifySubscriberAdded({
-      subscriber: data?.data || data,
-      email,
-      name: cleanFields.name,
-      groupId: group_id,
-      groupKind,
-      groupLabel,
-      sessionId: restCtx.sessionId,
-      alreadyExisted,
-      flow,
-    });
-    return data;
+    return { alreadyExisted, subscriberId };
   } catch (error) {
     console.error("❌ Error adding subscriber:", error.message);
     await alert(

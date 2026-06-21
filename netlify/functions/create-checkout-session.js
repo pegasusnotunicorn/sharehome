@@ -51,13 +51,30 @@ export default async function createCheckoutSession(req) {
     return new Response("Invalid JSON", { status: 400 });
   }
 
-  const { items, email, returnUrl, utmSource, utmMedium, utmCampaign, utmContent } = body;
+  const { items, email, returnUrl, utmSource: clientUtmSource, utmMedium: clientUtmMedium, utmCampaign: clientUtmCampaign, utmContent: clientUtmContent } = body;
 
   // Read from request headers — more reliable than trusting client-supplied values.
   const userAgent = req.headers.get("user-agent") || null;
   const cookieHeader = req.headers.get("cookie") || "";
   const gaMatch = cookieHeader.match(/(?:^|;\s*)_ga=([^;]+)/);
   const gaClientId = gaMatch ? gaMatch[1].split(".").slice(-2).join(".") : null;
+
+  // Server-side UTM fallback: read utm_data cookie if client didn't supply UTMs
+  // (sessionStorage can be empty for in-app browsers, returning visitors, etc.)
+  let cookieUtms = {};
+  if (!clientUtmSource) {
+    const utmMatch = cookieHeader.match(/(?:^|;\s*)utm_data=([^;]+)/);
+    if (utmMatch) {
+      try {
+        cookieUtms = JSON.parse(atob(decodeURIComponent(utmMatch[1])));
+      } catch { /* ignore corrupt cookie */ }
+    }
+  }
+
+  const utmSource = clientUtmSource || cookieUtms.utm_source || null;
+  const utmMedium = clientUtmMedium || cookieUtms.utm_medium || null;
+  const utmCampaign = clientUtmCampaign || cookieUtms.utm_campaign || null;
+  const utmContent = clientUtmContent || cookieUtms.utm_content || null;
 
   const trustedOrigins = [PROD_URL, "http://localhost:3000", "http://localhost:8888"];
   const baseUrl = (returnUrl && trustedOrigins.some((o) => returnUrl.startsWith(o)))

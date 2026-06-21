@@ -18,6 +18,20 @@ const FACEBOOK_PIXEL_ID = Deno.env.get("FACEBOOK_PIXEL_ID");
 const FACEBOOK_ACCESS_TOKEN = Deno.env.get("FACEBOOK_ACCESS_TOKEN");
 const FACEBOOK_API_VERSION = Deno.env.get("FACEBOOK_API_VERSION");
 
+// DISCORD
+const ALERT_WEBHOOK_URL = Deno.env.get("ALERT_WEBHOOK_URL");
+const STRIPE_ACCOUNT_ID = Deno.env.get("STRIPE_ACCOUNT_ID");
+
+const SOURCE_EMOJI = {
+  instagram: "📸", ig: "📸",
+  youtube: "🎬", yt: "🎬",
+  email: "📧", newsletter: "📧",
+  google: "🔍",
+  facebook: "👥", fb: "👥",
+  twitter: "🐦", x: "🐦",
+  tiktok: "🎵", tt: "🎵",
+};
+
 const hashString = (value) =>
   value
     ? crypto
@@ -122,7 +136,7 @@ export default async function trackConversions(request, context) {
 
     const checkoutFlow = await context.cookies.get("checkout_flow");
 
-    // Send UTM + Revenue Data to GA4 and Facebook
+    // Send UTM + Revenue Data to GA4, Facebook, and Discord
     await sendToGA4(
       clientId,
       gaSessionId,
@@ -134,6 +148,7 @@ export default async function trackConversions(request, context) {
       checkoutFlow
     );
     await sendToFacebook(clientId, utmData, stripeData, request, context);
+    await postSaleToDiscord(stripeData, checkoutFlow, utmData, checkoutSessionId, request);
 
     context.cookies.set({
       name: "purchase_fired",
@@ -327,6 +342,65 @@ async function sendToFacebook(clientId, utmData, stripeData, request, context) {
     }
   } catch (error) {
     console.error("❌ Error Sending to Facebook:", error);
+  }
+}
+
+async function postSaleToDiscord(stripeData, checkoutFlow, utmData, transactionId, request) {
+  if (!ALERT_WEBHOOK_URL) return;
+
+  const url = new URL(request.url);
+  const qp = url.searchParams;
+
+  // Priority order:
+  // 1. URL params — Stripe passes them through from the payment link URL
+  // 2. Stripe session metadata — set by create-checkout-session for custom checkout
+  // 3. utm_data cookie — fallback for both (1-day TTL, may be expired)
+  const src = (qp.get("utm_source") ?? stripeData.metadata?.utm_source ?? utmData?.utm_source ?? "").toLowerCase();
+  const medium = qp.get("utm_medium") ?? stripeData.metadata?.utm_medium ?? utmData?.utm_medium ?? "";
+  const campaign = qp.get("utm_campaign") ?? stripeData.metadata?.utm_campaign ?? utmData?.utm_campaign ?? "";
+  const content = qp.get("utm_content") ?? stripeData.metadata?.utm_content ?? utmData?.utm_content ?? "";
+
+  const skip = new Set(["none", "unknown", "direct", ""]);
+  const emoji = SOURCE_EMOJI[src] || "🔗";
+  const parts = [src, medium, campaign, content].filter((p) => !skip.has(p));
+  const sourceStr = parts.length ? `${emoji} ${parts.join(" / ")}` : "— (direct / unknown)";
+
+  const isPaymentLink = !!stripeData.payment_link;
+  const flow = checkoutFlow ?? (isPaymentLink ? "payment_link" : "custom_checkout");
+  const flowLabel = flow === "payment_link" ? "Payment Link" : flow === "custom_checkout" ? "Custom Checkout" : flow;
+
+  const revenue = ((stripeData.amount_total ?? 0) / 100).toFixed(2);
+  const currency = (stripeData.currency || "usd").toUpperCase();
+  const customerName = stripeData.customer_details?.name || "—";
+  const customerEmail = stripeData.customer_details?.email || null;
+  const customerValue = customerEmail ? `${customerName}\n${customerEmail}` : customerName;
+
+  const isTest = transactionId?.startsWith("cs_test_");
+  const sessionUrl = STRIPE_ACCOUNT_ID
+    ? `https://dashboard.stripe.com/${STRIPE_ACCOUNT_ID}${isTest ? "/test" : ""}/workbench/inspector/${transactionId}`
+    : "https://dashboard.stripe.com";
+
+  try {
+    await fetch(ALERT_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        embeds: [{
+          title: `💳 Sale confirmed — $${revenue} ${currency}`,
+          color: 0x57f287,
+          fields: [
+            { name: "Customer", value: customerValue, inline: true },
+            { name: "Flow", value: flowLabel, inline: true },
+            { name: "Source", value: sourceStr, inline: true },
+            { name: "Quick links", value: `[Stripe session](${sessionUrl})`, inline: false },
+          ],
+          timestamp: new Date().toISOString(),
+        }],
+      }),
+    });
+    console.log("✅ Discord sale notification sent");
+  } catch (err) {
+    console.error("⚠️ Discord sale notification failed:", err.message);
   }
 }
 

@@ -18,6 +18,20 @@ const FACEBOOK_PIXEL_ID = Deno.env.get("FACEBOOK_PIXEL_ID");
 const FACEBOOK_ACCESS_TOKEN = Deno.env.get("FACEBOOK_ACCESS_TOKEN");
 const FACEBOOK_API_VERSION = Deno.env.get("FACEBOOK_API_VERSION");
 
+// DISCORD
+const ALERT_WEBHOOK_URL = Deno.env.get("ALERT_WEBHOOK_URL");
+const STRIPE_ACCOUNT_ID = Deno.env.get("STRIPE_ACCOUNT_ID");
+const GA4_PROPERTY_ID = "274391575";
+const SOURCE_EMOJI = {
+  instagram: "📸", ig: "📸",
+  youtube: "🎬", yt: "🎬",
+  email: "📧", newsletter: "📧",
+  google: "🔍",
+  facebook: "👥", fb: "👥",
+  twitter: "🐦", x: "🐦",
+  tiktok: "🎵", tt: "🎵",
+  unicornwithwings: "🦄",
+};
 
 const hashString = (value) =>
   value
@@ -155,6 +169,7 @@ export default async function trackConversions(request, context) {
     const checkoutFlow = await context.cookies.get("checkout_flow");
 
     // Send UTM + Revenue Data to GA4, Facebook, and Discord
+    await postSaleToDiscord(request, stripeData, clientId, utmData, checkoutSessionId);
     await sendToGA4(
       clientId,
       gaSessionId,
@@ -181,6 +196,107 @@ export default async function trackConversions(request, context) {
   } catch (error) {
     console.error("❌ Error in track-conversions:", error);
     return context.rewrite(new URL("/index.html", request.url));
+  }
+}
+
+function parseUserAgent(ua) {
+  if (!ua) return null;
+  const isTablet = /iPad|tablet/i.test(ua) && !/Mobile/i.test(ua);
+  const isMobile = !isTablet && /iPhone|iPad|iPod|Android|Mobile|IEMobile/i.test(ua);
+  const deviceEmoji = isMobile ? "📱" : isTablet ? "📟" : "🖥️";
+  const deviceLabel = isMobile ? "Mobile" : isTablet ? "Tablet" : "Desktop";
+  let browser = "Unknown";
+  if (/Edg\//i.test(ua)) browser = "Edge";
+  else if (/OPR\/|Opera/i.test(ua)) browser = "Opera";
+  else if (/CriOS\//i.test(ua)) browser = "Chrome (iOS)";
+  else if (/FxiOS\//i.test(ua)) browser = "Firefox (iOS)";
+  else if (/SamsungBrowser/i.test(ua)) browser = "Samsung";
+  else if (/Chrome\/[0-9]/.test(ua) && !/Chromium/i.test(ua)) browser = "Chrome";
+  else if (/Firefox\/[0-9]/.test(ua)) browser = "Firefox";
+  else if (/Safari\/[0-9]/.test(ua)) browser = "Safari";
+  let os = "Unknown";
+  if (/iPhone/i.test(ua)) os = "iOS";
+  else if (/iPad/i.test(ua)) os = "iPadOS";
+  else if (/Android/i.test(ua)) os = "Android";
+  else if (/Windows NT/i.test(ua)) os = "Windows";
+  else if (/Mac OS X/i.test(ua)) os = "macOS";
+  else if (/Linux/i.test(ua)) os = "Linux";
+  return `${deviceEmoji} ${deviceLabel} · ${os} · ${browser}`;
+}
+
+function stripeSessionUrl(sessionId) {
+  if (!STRIPE_ACCOUNT_ID) return "https://dashboard.stripe.com";
+  const isTest = sessionId.startsWith("cs_test_");
+  return `https://dashboard.stripe.com/${STRIPE_ACCOUNT_ID}${isTest ? "/test" : ""}/workbench/inspector/${sessionId}`;
+}
+
+async function postSaleToDiscord(request, stripeData, clientId, utmData, checkoutSessionId) {
+  if (!ALERT_WEBHOOK_URL) return;
+
+  const url = new URL(request.url);
+  const qp = url.searchParams;
+  const isPaymentLink = !!stripeData.payment_link;
+
+  // Payment links: UTMs are in redirect URL params.
+  // Custom checkout: UTMs were stored in the utm_data cookie on first visit.
+  const rawSrc = isPaymentLink
+    ? qp.get("utm_source")
+    : (utmData?.utm_source !== "direct" ? utmData?.utm_source : null);
+  const rawMedium = isPaymentLink
+    ? qp.get("utm_medium")
+    : (utmData?.utm_medium !== "none" ? utmData?.utm_medium : null);
+  const rawCampaign = isPaymentLink
+    ? qp.get("utm_campaign")
+    : (utmData?.utm_campaign !== "none" ? utmData?.utm_campaign : null);
+
+  const emoji = SOURCE_EMOJI[(rawSrc || "").toLowerCase()] || "🔗";
+  const parts = [rawSrc, rawMedium, rawCampaign].filter(Boolean);
+  const source = parts.length ? `${emoji} ${parts.join(" / ")}` : "—";
+
+  const flow = isPaymentLink ? "Payment Link" : "Custom Checkout";
+  const device = parseUserAgent(request.headers.get("user-agent"));
+  const customerName = stripeData.customer_details?.name || "—";
+  const customerEmail = stripeData.customer_details?.email || "—";
+  const currency = (stripeData.currency || "usd").toUpperCase();
+  const revenue = ((stripeData.amount_total ?? 0) / 100).toFixed(2);
+
+  const lineItems = stripeData.line_items?.data ?? [];
+  const orderLines = lineItems.map((li) => {
+    const name = li.description || "item";
+    const qty = li.quantity || 1;
+    const price = ((li.amount_total ?? 0) / 100).toFixed(2);
+    return `• ${qty}× **${name}** — $${price} ${currency}`;
+  });
+  orderLines.push(`**Total: $${revenue} ${currency}**`);
+
+  const ga4Url = `https://analytics.google.com/analytics/web/#/p${GA4_PROPERTY_ID}/reports/user-explorer`;
+  const ga4Value = clientId ? `[\`${clientId}\`](${ga4Url})` : "—";
+  const sessionLink = stripeSessionUrl(checkoutSessionId);
+
+  try {
+    await fetch(ALERT_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        embeds: [{
+          title: `💳 Sale — $${revenue} ${currency}`,
+          url: sessionLink,
+          color: 0x5865f2,
+          fields: [
+            { name: "Customer", value: `**${customerName}**\n${customerEmail}`, inline: true },
+            { name: "Order", value: orderLines.join("\n"), inline: false },
+            { name: "Source", value: source, inline: true },
+            { name: "Flow", value: flow, inline: true },
+            { name: "Device", value: device ?? "—", inline: true },
+            { name: "GA4 Client", value: ga4Value, inline: false },
+            { name: "Quick links", value: `[Stripe session](${sessionLink})`, inline: false },
+          ],
+          timestamp: new Date().toISOString(),
+        }],
+      }),
+    });
+  } catch (err) {
+    console.error("⚠️ Failed to post sale to Discord:", err.message);
   }
 }
 

@@ -693,6 +693,8 @@ const SOURCE_EMOJI = {
   twitter: "🐦",
   x: "🐦",
   tiktok: "🎵",
+  tt: "🎵",
+  unicornwithwings: "🦄",
 };
 
 function formatAttribution(session) {
@@ -801,30 +803,6 @@ function formatOrderSummary(session) {
 }
 
 async function notifyLabelPurchased({ session, to, gameCount, parcel, label, orderNumber, mailerStatus }) {
-  // For payment links, UTMs travel in the redirect URL. track-conversions.js
-  // writes them to session.metadata when the user loads /thankyou, which races
-  // this webhook. Poll for up to 3s so we capture the source even when Shippo
-  // completes unusually fast.
-  let sessionForAttribution = session;
-  if (session.payment_link && !session.metadata?.utm_source) {
-    for (let attempt = 0; attempt < 3; attempt++) {
-      await new Promise((r) => setTimeout(r, 1000));
-      try {
-        const fresh = await stripe.checkout.sessions.retrieve(session.id);
-        sessionForAttribution = fresh;
-        if (fresh.metadata?.utm_source) break;
-      } catch { /* keep existing */ }
-    }
-  }
-
-  const { flow, source } = formatAttribution(sessionForAttribution);
-  const device = parseUserAgent(session.metadata?.user_agent);
-  const gaClientId = session.metadata?.ga_client_id;
-  const ga4UserUrl = `https://analytics.google.com/analytics/web/#/p${GA4_PROPERTY_ID}/reports/user-explorer`;
-  const ga4Value = gaClientId
-    ? `[\`${gaClientId}\`](${ga4UserUrl})`
-    : "—";
-
   const customerLines = [
     `**${to.name || "—"}**`,
     session.customer_details?.email || null,
@@ -874,9 +852,6 @@ async function notifyLabelPurchased({ session, to, gameCount, parcel, label, ord
             value: `[${label.trackingNumber}](${label.trackingUrl})`,
             inline: true,
           },
-          { name: "Flow", value: flow, inline: true },
-          { name: "Source", value: source, inline: true },
-          { name: "Device", value: device ?? "—", inline: true },
           {
             name: "MailerLite",
             value: mailerStatus === null
@@ -886,7 +861,6 @@ async function notifyLabelPurchased({ session, to, gameCount, parcel, label, ord
                 : "✅ Added to purchase list",
             inline: true,
           },
-          { name: "GA4 Client", value: ga4Value, inline: false },
           {
             name: "Quick links",
             value: quickLinks({

@@ -801,15 +801,20 @@ function formatOrderSummary(session) {
 }
 
 async function notifyLabelPurchased({ session, to, gameCount, parcel, label, orderNumber, mailerStatus }) {
-  // For payment links, UTMs live in the redirect URL (not session.metadata).
-  // track-conversions.js writes them back to Stripe metadata right when the
-  // user hits /thankyou. By the time we reach here (after Shippo API calls,
-  // ~2-4 s), a re-fetch picks up those UTMs for correct source attribution.
+  // For payment links, UTMs travel in the redirect URL. track-conversions.js
+  // writes them to session.metadata when the user loads /thankyou, which races
+  // this webhook. Poll for up to 3s so we capture the source even when Shippo
+  // completes unusually fast.
   let sessionForAttribution = session;
   if (session.payment_link && !session.metadata?.utm_source) {
-    try {
-      sessionForAttribution = await stripe.checkout.sessions.retrieve(session.id);
-    } catch { /* fall back to original session */ }
+    for (let attempt = 0; attempt < 3; attempt++) {
+      await new Promise((r) => setTimeout(r, 1000));
+      try {
+        const fresh = await stripe.checkout.sessions.retrieve(session.id);
+        sessionForAttribution = fresh;
+        if (fresh.metadata?.utm_source) break;
+      } catch { /* keep existing */ }
+    }
   }
 
   const { flow, source } = formatAttribution(sessionForAttribution);

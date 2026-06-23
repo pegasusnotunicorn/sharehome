@@ -133,6 +133,11 @@ export default async function trackConversions(request, context) {
       return context.rewrite(new URL("/index.html", request.url));
     }
 
+    if (stripeData.payment_status !== "paid" && stripeData.payment_status !== "no_payment_required") {
+      console.log(`⚠️ Session ${checkoutSessionId} not paid (status: ${stripeData.payment_status}), skipping tracking.`);
+      return context.rewrite(new URL("/index.html", request.url));
+    }
+
     if (IS_DEV) console.log("✅ Stripe Data Retrieved:", stripeData);
 
     // For payment links, UTMs travel in the redirect URL but Stripe doesn't

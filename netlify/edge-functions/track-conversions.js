@@ -237,17 +237,15 @@ async function postSaleToDiscord(request, stripeData, clientId, utmData, checkou
   const qp = url.searchParams;
   const isPaymentLink = !!stripeData.payment_link;
 
-  // Payment links: UTMs are in redirect URL params.
-  // Custom checkout: UTMs were stored in the utm_data cookie on first visit.
-  const rawSrc = isPaymentLink
-    ? qp.get("utm_source")
-    : (utmData?.utm_source !== "direct" ? utmData?.utm_source : null);
-  const rawMedium = isPaymentLink
-    ? qp.get("utm_medium")
-    : (utmData?.utm_medium !== "none" ? utmData?.utm_medium : null);
-  const rawCampaign = isPaymentLink
-    ? qp.get("utm_campaign")
-    : (utmData?.utm_campaign !== "none" ? utmData?.utm_campaign : null);
+  // URL params take priority (explicit tracking on the payment link click).
+  // Fall back to the utm_data cookie, which was set when the user first
+  // arrived on the site (e.g. from TikTok bio → lovecareermagic.com → buy).
+  const cookieSrc = utmData?.utm_source !== "direct" ? utmData?.utm_source : null;
+  const cookieMedium = utmData?.utm_medium !== "none" ? utmData?.utm_medium : null;
+  const cookieCampaign = utmData?.utm_campaign !== "none" ? utmData?.utm_campaign : null;
+  const rawSrc = qp.get("utm_source") || cookieSrc;
+  const rawMedium = qp.get("utm_medium") || cookieMedium;
+  const rawCampaign = qp.get("utm_campaign") || cookieCampaign;
 
   const emoji = SOURCE_EMOJI[(rawSrc || "").toLowerCase()] || "🔗";
   const parts = [rawSrc, rawMedium, rawCampaign].filter(Boolean);

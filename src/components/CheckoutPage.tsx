@@ -717,7 +717,7 @@ const CheckoutPage = () => {
     fetch("/.netlify/functions/create-checkout-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: { lcm: 1 }, returnUrl: `${window.location.origin}/thankyou?checkout_flow=custom_checkout`, ...getStoredUtms(), ...(prefillEmail && { email: prefillEmail }) }),
+      body: JSON.stringify({ items: { lcm: 1 }, returnUrl: `${window.location.origin}/thankyou?checkout_flow=custom_checkout&checkout_session_id={CHECKOUT_SESSION_ID}`, ...getStoredUtms(), ...(prefillEmail && { email: prefillEmail }) }),
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed");
@@ -750,7 +750,7 @@ const CheckoutPage = () => {
       const res = await fetch("/.netlify/functions/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou?checkout_flow=custom_checkout`, ...getStoredUtms() }),
+        body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou?checkout_session_id={CHECKOUT_SESSION_ID}&checkout_flow=custom_checkout`, ...getStoredUtms() }),
       });
       if (!res.ok) throw new Error("Failed to update");
       const { clientSecret: newSecret, sessionId: newSid } = await res.json();

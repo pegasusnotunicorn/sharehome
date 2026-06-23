@@ -833,11 +833,6 @@ async function notifyLabelPurchased({ session, to, gameCount, parcel, label, ord
             inline: true,
           },
           {
-            name: "Order",
-            value: formatOrderSummary(session),
-            inline: false,
-          },
-          {
             name: "Carrier",
             value: `${label.rate.provider} ${label.rate.service}`,
             inline: true,
@@ -864,7 +859,6 @@ async function notifyLabelPurchased({ session, to, gameCount, parcel, label, ord
           {
             name: "Quick links",
             value: quickLinks({
-              sessionId: session.id,
               trackingUrl: label.trackingUrl,
               labelUrl: label.labelUrl,
             }),

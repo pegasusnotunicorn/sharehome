@@ -245,15 +245,16 @@ async function postSaleToDiscord(request, stripeData, clientId, utmData, checkou
   // URL params take priority (explicit tracking on the payment link click).
   // Fall back to the utm_data cookie, which was set when the user first
   // arrived on the site (e.g. from TikTok bio → lovecareermagic.com → buy).
-  const cookieSrc = utmData?.utm_source !== "direct" ? utmData?.utm_source : null;
-  const cookieMedium = utmData?.utm_medium !== "none" ? utmData?.utm_medium : null;
-  const cookieCampaign = utmData?.utm_campaign !== "none" ? utmData?.utm_campaign : null;
+  const isBlankUtm = (v) => !v || v === "none" || v === "unknown";
+  const cookieSrc = !isBlankUtm(utmData?.utm_source) && utmData?.utm_source !== "direct" ? utmData?.utm_source : null;
+  const cookieMedium = !isBlankUtm(utmData?.utm_medium) ? utmData?.utm_medium : null;
+  const cookieCampaign = !isBlankUtm(utmData?.utm_campaign) ? utmData?.utm_campaign : null;
   const rawSrc = qp.get("utm_source") || cookieSrc;
   const rawMedium = qp.get("utm_medium") || cookieMedium;
   const rawCampaign = qp.get("utm_campaign") || cookieCampaign;
 
   const emoji = SOURCE_EMOJI[(rawSrc || "").toLowerCase()] || "🔗";
-  const parts = [rawSrc, rawMedium, rawCampaign].filter(Boolean);
+  const parts = [rawSrc, rawMedium, rawCampaign].filter(v => !isBlankUtm(v));
   const source = parts.length ? `${emoji} ${parts.join(" / ")}` : "—";
 
   const flow = isPaymentLink ? "Payment Link" : "Custom Checkout";

@@ -43,10 +43,10 @@ const trackUtm = async (request, context) => {
     const utmData = {
       client_id: clientId,
       utm_source: searchParams.get("utm_source") || "direct",
-      utm_medium: searchParams.get("utm_medium") || "unknown",
-      utm_campaign: searchParams.get("utm_campaign") || "unknown",
-      utm_term: searchParams.get("utm_term") || "unknown",
-      utm_content: searchParams.get("utm_content") || "unknown",
+      utm_medium: searchParams.get("utm_medium") || "none",
+      utm_campaign: searchParams.get("utm_campaign") || "none",
+      utm_term: searchParams.get("utm_term") || "none",
+      utm_content: searchParams.get("utm_content") || "none",
       referrer: request.headers.get("referer") || "none",
       fbclid: searchParams.get("fbclid") || fbClickId || "none",
       fb_client_id: fbClientId || "none",
@@ -56,7 +56,7 @@ const trackUtm = async (request, context) => {
       secure: true,
       httpOnly: true,
       sameSite: "Lax",
-      maxAge: 86400, // 1-day expiration
+      maxAge: 86400 * 30, // 30-day expiration
     });
 
     console.log("📦 Stored UTM Data:", utmData);
@@ -71,7 +71,7 @@ const trackUtm = async (request, context) => {
         secure: true,
         httpOnly: true,
         sameSite: "Lax",
-        maxAge: 86400,
+        maxAge: 86400 * 30,
       });
       if (IS_DEV) console.log("🔄 Updated fbclid in existing UTM cookie");
     } catch {

@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { getStore } from "@netlify/blobs";
 
 const IS_DEV = Deno.env.get("NETLIFY_DEV") === "true";
 const STRIPE_SECRET_KEY = IS_DEV
@@ -32,6 +33,20 @@ const SOURCE_EMOJI = {
   tiktok: "🎵", tt: "🎵",
   unicornwithwings: "🦄",
 };
+
+// Atomic server-side dedup: onlyIfNew is a CAS write — succeeds exactly once
+// even if concurrent requests race through the cookie check simultaneously.
+// Fail-open: if Blobs is unreachable, we fall through to the cookie guard.
+async function claimConversionSession(sessionId) {
+  try {
+    const store = getStore("conversion-fired-sessions");
+    const { modified } = await store.set(sessionId, new Date().toISOString(), { onlyIfNew: true });
+    return modified; // true = we own it; false = another request already claimed it
+  } catch (err) {
+    console.warn("⚠️ Blob claim unavailable, relying on cookie-only dedup:", err.message);
+    return true; // fail-open
+  }
+}
 
 const hashString = (value) =>
   value
@@ -135,6 +150,14 @@ export default async function trackConversions(request, context) {
 
     if (stripeData.payment_status !== "paid" && stripeData.payment_status !== "no_payment_required") {
       console.log(`⚠️ Session ${checkoutSessionId} not paid (status: ${stripeData.payment_status}), skipping tracking.`);
+      return context.rewrite(new URL("/index.html", request.url));
+    }
+
+    // Server-side atomic claim — catches concurrent requests that all arrive
+    // before the purchase_fired cookie is set in any response.
+    const claimed = await claimConversionSession(checkoutSessionId);
+    if (!claimed) {
+      console.log(`⏭️ Conversion already claimed for session ${checkoutSessionId} — skipping (concurrent duplicate).`);
       return context.rewrite(new URL("/index.html", request.url));
     }
 

@@ -34,6 +34,37 @@ const SOURCE_EMOJI = {
   unicornwithwings: "🦄",
 };
 
+const CONVERSION_BLOB_BLOAT_THRESHOLD = 5000;
+const CONVERSION_BLOB_BLOAT_DEDUPE_KEY = "_size_alert_sent";
+const CONVERSION_BLOB_BLOAT_DEDUPE_MS = 7 * 24 * 60 * 60 * 1000;
+
+async function maybeAlertConversionBlobBloat(store) {
+  if (Math.random() > 0.02) return;
+  try {
+    const flag = await store.get(CONVERSION_BLOB_BLOAT_DEDUPE_KEY);
+    if (flag && Date.now() - Number(flag) < CONVERSION_BLOB_BLOAT_DEDUPE_MS) return;
+    const { blobs = [] } = await store.list();
+    if (blobs.length <= CONVERSION_BLOB_BLOAT_THRESHOLD) return;
+    await store.set(CONVERSION_BLOB_BLOAT_DEDUPE_KEY, String(Date.now()));
+    if (ALERT_WEBHOOK_URL) {
+      await fetch(ALERT_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          embeds: [{
+            title: "🚨 Blob store growing large",
+            description: `\`conversion-fired-sessions\` has ${blobs.length} entries (threshold ${CONVERSION_BLOB_BLOAT_THRESHOLD}). Consider pruning entries older than ~60 days. Suppressed for 7 days.`,
+            color: 0xed4245,
+            timestamp: new Date().toISOString(),
+          }],
+        }),
+      });
+    }
+  } catch (err) {
+    console.warn("⚠️ Blob bloat check failed:", err.message);
+  }
+}
+
 // Atomic server-side dedup: onlyIfNew is a CAS write — succeeds exactly once
 // even if concurrent requests race through the cookie check simultaneously.
 // Fail-open: if Blobs is unreachable, we fall through to the cookie guard.
@@ -41,6 +72,7 @@ async function claimConversionSession(sessionId) {
   try {
     const store = getStore("conversion-fired-sessions");
     const { modified } = await store.set(sessionId, new Date().toISOString(), { onlyIfNew: true });
+    if (modified) await maybeAlertConversionBlobBloat(store);
     return modified; // true = we own it; false = another request already claimed it
   } catch (err) {
     console.warn("⚠️ Blob claim unavailable, relying on cookie-only dedup:", err.message);

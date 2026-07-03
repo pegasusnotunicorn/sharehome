@@ -697,14 +697,52 @@ const SOURCE_EMOJI = {
   unicornwithwings: "🦄",
 };
 
+// Mirrors the table in track-conversions.js (edge functions and regular
+// functions don't share modules in this repo — same idiom as SOURCE_EMOJI).
+const REFERRER_SOURCES = [
+  [/(^|\.)instagram\.com$/, "ig", "social"],
+  [/(^|\.)tiktok\.com$/, "tt", "social"],
+  [/(^|\.)youtube\.com$|(^|\.)youtu\.be$/, "yt", "social"],
+  [/(^|\.)twitter\.com$|(^|\.)t\.co$|(^|\.)x\.com$/, "twitter", "social"],
+  [/(^|\.)facebook\.com$|(^|\.)fb\.com$/, "fb", "social"],
+  [/(^|\.)google\.[a-z.]+$/, "google", "organic"],
+  [/(^|\.)bing\.com$/, "bing", "organic"],
+  [/(^|\.)duckduckgo\.com$/, "duckduckgo", "organic"],
+  [/(^|\.)unicornwithwings\.com$/, "unicornwithwings", "referral"],
+];
+
+function inferSourceFromReferrer(referrer) {
+  if (!referrer || referrer === "none") return null;
+  try {
+    const host = new URL(referrer).hostname;
+    for (const [re, source, medium] of REFERRER_SOURCES) {
+      if (re.test(host)) return { source, medium };
+    }
+    return null;
+  } catch { return null; }
+}
+
 function formatAttribution(session) {
   const flow = session.payment_link ? "Payment Link" : "Custom Checkout";
-  const src = (session.metadata?.utm_source || "").toLowerCase();
-  const medium = session.metadata?.utm_medium || "";
-  const campaign = session.metadata?.utm_campaign || "";
+  const meta = session.metadata || {};
+  const blank = (v) => !v || v === "none" || v === "unknown" || v === "direct";
+  let src = blank(meta.utm_source) ? null : meta.utm_source.toLowerCase();
+  let medium = blank(meta.utm_medium) ? null : meta.utm_medium;
+  let inferred = false;
+  if (!src) {
+    const ref = inferSourceFromReferrer(meta.referrer);
+    if (ref) {
+      src = ref.source;
+      medium = medium ?? ref.medium;
+      inferred = true;
+    }
+  }
+  const campaign = blank(meta.utm_campaign) ? null : meta.utm_campaign;
   const emoji = SOURCE_EMOJI[src] || "🔗";
   const parts = [src, medium, campaign].filter(Boolean);
-  const source = parts.length ? `${emoji} ${parts.join(" / ")}` : "—";
+  const source = parts.length
+    ? `${emoji} ${parts.join(" / ")}${inferred ? " (ref)" : ""}`
+    : "—";
   return { flow, source };
 }
 
@@ -854,6 +892,13 @@ async function notifyLabelPurchased({ session, to, gameCount, parcel, label, ord
               : mailerStatus.alreadyExisted
                 ? "ℹ️ Already subscribed"
                 : "✅ Added to purchase list",
+            inline: true,
+          },
+          // Webhook-driven, so this alert always fires — attribution of last
+          // resort when the browser never reaches /thankyou (no Sale alert).
+          {
+            name: "Source",
+            value: formatAttribution(session).source,
             inline: true,
           },
           {

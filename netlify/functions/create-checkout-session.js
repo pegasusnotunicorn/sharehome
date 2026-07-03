@@ -59,22 +59,24 @@ export default async function createCheckoutSession(req) {
   const gaMatch = cookieHeader.match(/(?:^|;\s*)_ga=([^;]+)/);
   const gaClientId = gaMatch ? gaMatch[1].split(".").slice(-2).join(".") : null;
 
-  // Server-side UTM fallback: read utm_data cookie if client didn't supply UTMs
-  // (sessionStorage can be empty for in-app browsers, returning visitors, etc.)
+  // Server-side UTM fallback: the utm_data cookie covers cases where the client
+  // didn't supply UTMs (sessionStorage empty for in-app browsers, returning
+  // visitors, etc.). Always parsed — the referrer is needed regardless, as the
+  // last-resort attribution signal for organic traffic (google search etc.).
   let cookieUtms = {};
-  if (!clientUtmSource) {
-    const utmMatch = cookieHeader.match(/(?:^|;\s*)utm_data=([^;]+)/);
-    if (utmMatch) {
-      try {
-        cookieUtms = JSON.parse(atob(decodeURIComponent(utmMatch[1])));
-      } catch { /* ignore corrupt cookie */ }
-    }
+  const utmMatch = cookieHeader.match(/(?:^|;\s*)utm_data=([^;]+)/);
+  if (utmMatch) {
+    try {
+      cookieUtms = JSON.parse(atob(decodeURIComponent(utmMatch[1])));
+    } catch { /* ignore corrupt cookie */ }
   }
 
   const utmSource = clientUtmSource || cookieUtms.utm_source || null;
   const utmMedium = clientUtmMedium || cookieUtms.utm_medium || null;
   const utmCampaign = clientUtmCampaign || cookieUtms.utm_campaign || null;
   const utmContent = clientUtmContent || cookieUtms.utm_content || null;
+  const referrer =
+    cookieUtms.referrer && cookieUtms.referrer !== "none" ? cookieUtms.referrer : null;
 
   const trustedOrigins = [PROD_URL, "http://localhost:3000", "http://localhost:8888"];
   const baseUrl = (returnUrl && trustedOrigins.some((o) => returnUrl.startsWith(o)))
@@ -127,6 +129,7 @@ export default async function createCheckoutSession(req) {
         ...(utmMedium && { utm_medium: String(utmMedium).slice(0, 500) }),
         ...(utmCampaign && { utm_campaign: String(utmCampaign).slice(0, 500) }),
         ...(utmContent && { utm_content: String(utmContent).slice(0, 500) }),
+        ...(referrer && { referrer: String(referrer).slice(0, 500) }),
         ...(userAgent && { user_agent: String(userAgent).slice(0, 500) }),
         ...(gaClientId && { ga_client_id: String(gaClientId).slice(0, 100) }),
       },

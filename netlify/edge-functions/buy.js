@@ -117,9 +117,14 @@ export default async function buyHandler(request, context) {
   // Fire GA4 event in background — doesn't block the redirect
   context.waitUntil(sendGA4Event(clientId, flow, gaSessionId, gaSessionNumber));
 
+  // Preserve the query string on the /checkout redirect — track-utm is excluded
+  // on /buy (this function owns the path), so a tagged link pointing directly at
+  // /buy?utm_source=... would otherwise lose its UTMs on the custom-checkout arm.
+  // track-utm picks them up on /checkout and writes the utm_data cookie.
+  const requestSearch = new URL(request.url).search;
   const redirectUrl =
     flow === "custom_checkout"
-      ? new URL("/checkout", request.url).toString()
+      ? new URL(`/checkout${requestSearch}`, request.url).toString()
       : buildPaymentLinkUrl(request, utmData);
 
   const headers = new Headers({

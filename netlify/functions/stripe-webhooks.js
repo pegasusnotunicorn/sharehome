@@ -3,6 +3,11 @@ import fetch from "node-fetch";
 import { getStore } from "@netlify/blobs";
 import { createLabel, createOrder, parcelForGameCount } from "./lib/shippo.js";
 import { shippingAddressFromSession } from "./lib/stripe-shipping.js";
+import {
+  isBlankAttribution,
+  inferSourceFromReferrer,
+  formatSourceLine,
+} from "../lib/attribution.js";
 
 const IS_DEV = process.env.NETLIFY_DEV === "true";
 
@@ -80,11 +85,16 @@ export default async function stripeWebhooks(request) {
       const customerEmail = session.customer_details?.email;
       const customerName = session.customer_details?.name;
 
+      // Copy server-side-captured PL attribution (written to Blobs by buy.js)
+      // into session metadata BEFORE anything reads it — this is what makes
+      // attribution survive a buyer who never returns to /thankyou.
+      await hydratePaymentLinkAttribution(session);
+
       // Enroll in MailerLite first so the result can be included in the
       // shipping-label Discord notification (one combined alert per purchase).
       let mailerStatus = null;
       if (customerEmail) {
-        const { flow } = formatAttribution(session);
+        const flow = session.payment_link ? "Payment Link" : "Custom Checkout";
         mailerStatus = await addEmailToMailerLite(
           customerEmail,
           { name: customerName, checkout_source: session.payment_link ? "payment_link" : "custom_checkout" },
@@ -133,6 +143,15 @@ export default async function stripeWebhooks(request) {
         ? `${STRIPE_PAYMENT_LINK_URL}?prefilled_email=${encodeURIComponent(abandonedEmail)}`
         : `${SITE_URL}/checkout?prefilled_email=${encodeURIComponent(abandonedEmail)}`;
 
+      // The attribution blob for this session is no longer needed — the
+      // session can never complete. Prevents unbounded orphan growth in the
+      // pl-attribution store (one blob per PL redirect, most never purchase).
+      if (eventSession.client_reference_id?.startsWith("attr_")) {
+        try {
+          await getStore("pl-attribution").delete(eventSession.client_reference_id);
+        } catch { /* best-effort cleanup */ }
+      }
+
       const subscriberGroups = await fetchSubscriberGroupIds(abandonedEmail);
       if (subscriberGroups?.has(String(MAILERLITE_PURCHASE_GROUP_ID))) {
         console.log(`📧 ${abandonedEmail} is already in the purchase group — skipping abandoned cart enrollment`);
@@ -156,7 +175,11 @@ export default async function stripeWebhooks(request) {
           checkout_source: isPaymentLink ? "payment_link" : "custom_checkout",
         },
         MAILERLITE_ABANDONED_GROUP_ID,
-        { sessionId: session.id, groupKind: "abandoned", flow: formatAttribution(session).flow }
+        {
+          sessionId: session.id,
+          groupKind: "abandoned",
+          flow: session.payment_link ? "Payment Link" : "Custom Checkout",
+        }
       );
       break;
     }
@@ -680,54 +703,43 @@ function parseUserAgent(ua) {
   return `${deviceEmoji} ${deviceLabel} · ${os} · ${browser}`;
 }
 
-const SOURCE_EMOJI = {
-  instagram: "📸",
-  ig: "📸",
-  youtube: "🎬",
-  yt: "🎬",
-  email: "📧",
-  newsletter: "📧",
-  google: "🔍",
-  facebook: "👥",
-  fb: "👥",
-  twitter: "🐦",
-  x: "🐦",
-  tiktok: "🎵",
-  tt: "🎵",
-  unicornwithwings: "🦄",
-};
-
-// Mirrors the table in track-conversions.js (edge functions and regular
-// functions don't share modules in this repo — same idiom as SOURCE_EMOJI).
-const REFERRER_SOURCES = [
-  [/(^|\.)instagram\.com$/, "ig", "social"],
-  [/(^|\.)tiktok\.com$/, "tt", "social"],
-  [/(^|\.)youtube\.com$|(^|\.)youtu\.be$/, "yt", "social"],
-  [/(^|\.)twitter\.com$|(^|\.)t\.co$|(^|\.)x\.com$/, "twitter", "social"],
-  [/(^|\.)facebook\.com$|(^|\.)fb\.com$/, "fb", "social"],
-  [/(^|\.)google\.[a-z.]+$/, "google", "organic"],
-  [/(^|\.)bing\.com$/, "bing", "organic"],
-  [/(^|\.)duckduckgo\.com$/, "duckduckgo", "organic"],
-  [/(^|\.)unicornwithwings\.com$/, "unicornwithwings", "referral"],
-];
-
-function inferSourceFromReferrer(referrer) {
-  if (!referrer || referrer === "none") return null;
+// Copies server-side-captured payment-link attribution (persisted to Blobs by
+// buy.js under a minted client_reference_id) into the session's Stripe
+// metadata, then deletes the blob. Metadata is the durable home: every
+// downstream consumer (this webhook's re-fetch, /thankyou's resolveAttribution
+// layer 3, dashboard inspection, event replays) reads it from there. Fail-open.
+async function hydratePaymentLinkAttribution(session) {
+  const crid = session.client_reference_id;
+  if (!crid || !crid.startsWith("attr_")) return;
+  if (session.metadata?.utm_source || session.metadata?.referrer) return;
   try {
-    const host = new URL(referrer).hostname;
-    for (const [re, source, medium] of REFERRER_SOURCES) {
-      if (re.test(host)) return { source, medium };
+    const store = getStore("pl-attribution");
+    const raw = await store.get(crid);
+    if (!raw) return;
+    const attr = JSON.parse(raw);
+    const fields = {};
+    for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "referrer"]) {
+      if (attr[k]) fields[k] = String(attr[k]).slice(0, 500);
     }
-    return null;
-  } catch { return null; }
+    if (Object.keys(fields).length) {
+      await stripe.checkout.sessions.update(session.id, {
+        metadata: { ...(session.metadata || {}), ...fields },
+      });
+      session.metadata = { ...(session.metadata || {}), ...fields };
+      console.log("📦 PL attribution hydrated from blob:", fields.utm_source || fields.referrer);
+    }
+    await store.delete(crid);
+  } catch (err) {
+    console.warn("⚠️ PL attribution hydration failed (continuing):", err.message);
+  }
 }
 
 function formatAttribution(session) {
   const flow = session.payment_link ? "Payment Link" : "Custom Checkout";
   const meta = session.metadata || {};
-  const blank = (v) => !v || v === "none" || v === "unknown" || v === "direct";
-  let src = blank(meta.utm_source) ? null : meta.utm_source.toLowerCase();
-  let medium = blank(meta.utm_medium) ? null : meta.utm_medium;
+  const clean = (v) => (isBlankAttribution(v) ? null : v);
+  let src = clean(meta.utm_source)?.toLowerCase() ?? null;
+  let medium = clean(meta.utm_medium);
   let inferred = false;
   if (!src) {
     const ref = inferSourceFromReferrer(meta.referrer);
@@ -737,13 +749,10 @@ function formatAttribution(session) {
       inferred = true;
     }
   }
-  const campaign = blank(meta.utm_campaign) ? null : meta.utm_campaign;
-  const emoji = SOURCE_EMOJI[src] || "🔗";
-  const parts = [src, medium, campaign].filter(Boolean);
-  const source = parts.length
-    ? `${emoji} ${parts.join(" / ")}${inferred ? " (ref)" : ""}`
-    : "—";
-  return { flow, source };
+  return {
+    flow,
+    source: formatSourceLine(src, medium, clean(meta.utm_campaign), inferred),
+  };
 }
 
 function formatMoney(amountCents, currency) {

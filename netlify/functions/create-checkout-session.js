@@ -71,10 +71,14 @@ export default async function createCheckoutSession(req) {
     } catch { /* ignore corrupt cookie */ }
   }
 
+  // Attribution fields travel as a tuple describing one click: when the client
+  // supplied its own utm_source, don't backfill medium/campaign/content from
+  // the cookie — that would weld the fresh source to an older visit's campaign.
+  const cookieFallback = clientUtmSource ? {} : cookieUtms;
   const utmSource = clientUtmSource || cookieUtms.utm_source || null;
-  const utmMedium = clientUtmMedium || cookieUtms.utm_medium || null;
-  const utmCampaign = clientUtmCampaign || cookieUtms.utm_campaign || null;
-  const utmContent = clientUtmContent || cookieUtms.utm_content || null;
+  const utmMedium = clientUtmMedium || cookieFallback.utm_medium || null;
+  const utmCampaign = clientUtmCampaign || cookieFallback.utm_campaign || null;
+  const utmContent = clientUtmContent || cookieFallback.utm_content || null;
   const referrer =
     cookieUtms.referrer && cookieUtms.referrer !== "none" ? cookieUtms.referrer : null;
 

@@ -1,4 +1,11 @@
+import { getStore } from "@netlify/blobs";
+
 const IS_DEV = Deno.env.get("NETLIFY_DEV") === "true";
+
+const TRACKING_KEYS = [
+  "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
+  "gclid", "fbclid", "client_reference_id",
+];
 
 const GA_MEASUREMENT_ID = IS_DEV
   ? Deno.env.get("GA4_MEASUREMENT_ID_DEV")
@@ -34,22 +41,50 @@ function buildPaymentLinkUrl(request, utmData) {
   const requestUrl = new URL(request.url);
   const target = new URL(PAYMENT_LINK_URL);
 
-  const trackingKeys = [
-    "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
-    "gclid", "fbclid", "client_reference_id",
-  ];
-  const hasTrackingInUrl = trackingKeys.some((k) => requestUrl.searchParams.has(k));
+  const hasTrackingInUrl = TRACKING_KEYS.some((k) => requestUrl.searchParams.has(k));
 
   if (hasTrackingInUrl) {
     requestUrl.searchParams.forEach((v, k) => target.searchParams.set(k, v));
   } else if (utmData) {
     const skip = new Set(["none", "unknown", "direct"]);
-    trackingKeys.forEach((k) => {
+    TRACKING_KEYS.forEach((k) => {
       if (utmData[k] && !skip.has(utmData[k])) target.searchParams.set(k, utmData[k]);
     });
   }
 
   return target.toString();
+}
+
+// Server-side payment-link attribution capture. The webhook is the only
+// pipeline stage guaranteed to run for a PL purchase (the buyer may never
+// return to /thankyou), but it can only read session metadata — which nothing
+// populates server-side for payment links. So: persist this click's
+// attribution to Blobs keyed by a minted client_reference_id; Stripe carries
+// the id onto the checkout session, and stripe-webhooks.js copies the blob
+// into session metadata when the purchase completes. Fail-open: on any Blobs
+// error the redirect proceeds without the id (browser-side capture still runs).
+async function attachPaymentLinkAttribution(target, request, utmData) {
+  if (target.searchParams.has("client_reference_id")) return;
+
+  const attribution = {};
+  for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"]) {
+    const v = target.searchParams.get(k); // URL-vs-cookie already resolved by buildPaymentLinkUrl
+    if (v) attribution[k] = v;
+  }
+  const referrer =
+    (utmData?.referrer && utmData.referrer !== "none" ? utmData.referrer : null) ||
+    request.headers.get("referer") ||
+    null;
+  if (referrer) attribution.referrer = referrer.slice(0, 500);
+  if (!Object.keys(attribution).length) return;
+
+  try {
+    const attrId = `attr_${crypto.randomUUID()}`;
+    await getStore("pl-attribution").set(attrId, JSON.stringify(attribution));
+    target.searchParams.set("client_reference_id", attrId);
+  } catch (err) {
+    console.warn("⚠️ PL attribution blob write failed (continuing):", err.message);
+  }
 }
 
 async function sendGA4Event(clientId, flow, gaSessionId, gaSessionNumber) {
@@ -117,15 +152,25 @@ export default async function buyHandler(request, context) {
   // Fire GA4 event in background — doesn't block the redirect
   context.waitUntil(sendGA4Event(clientId, flow, gaSessionId, gaSessionNumber));
 
-  // Preserve the query string on the /checkout redirect — track-utm is excluded
-  // on /buy (this function owns the path), so a tagged link pointing directly at
-  // /buy?utm_source=... would otherwise lose its UTMs on the custom-checkout arm.
-  // track-utm picks them up on /checkout and writes the utm_data cookie.
-  const requestSearch = new URL(request.url).search;
-  const redirectUrl =
-    flow === "custom_checkout"
-      ? new URL(`/checkout${requestSearch}`, request.url).toString()
-      : buildPaymentLinkUrl(request, utmData);
+  let redirectUrl;
+  if (flow === "custom_checkout") {
+    // Forward tracking params (only — no junk) on the /checkout redirect:
+    // track-utm is excluded on /buy (this function owns the path), so a tagged
+    // link pointing directly at /buy?utm_source=... would otherwise lose its
+    // UTMs on the custom-checkout arm. track-utm picks them up on /checkout
+    // and writes the utm_data cookie.
+    const requestUrl = new URL(request.url);
+    const checkoutUrl = new URL("/checkout", request.url);
+    for (const k of TRACKING_KEYS) {
+      const v = requestUrl.searchParams.get(k);
+      if (v) checkoutUrl.searchParams.set(k, v);
+    }
+    redirectUrl = checkoutUrl.toString();
+  } else {
+    const target = new URL(buildPaymentLinkUrl(request, utmData));
+    await attachPaymentLinkAttribution(target, request, utmData);
+    redirectUrl = target.toString();
+  }
 
   const headers = new Headers({
     Location: redirectUrl,

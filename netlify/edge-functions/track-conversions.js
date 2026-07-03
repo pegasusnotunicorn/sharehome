@@ -1,5 +1,10 @@
 import crypto from "node:crypto";
 import { getStore } from "@netlify/blobs";
+import {
+  isBlankAttribution,
+  inferSourceFromReferrer,
+  formatSourceLine,
+} from "../lib/attribution.js";
 
 const IS_DEV = Deno.env.get("NETLIFY_DEV") === "true";
 const STRIPE_SECRET_KEY = IS_DEV
@@ -23,81 +28,54 @@ const FACEBOOK_API_VERSION = Deno.env.get("FACEBOOK_API_VERSION");
 const ALERT_WEBHOOK_URL = Deno.env.get("ALERT_WEBHOOK_URL");
 const STRIPE_ACCOUNT_ID = Deno.env.get("STRIPE_ACCOUNT_ID");
 const GA4_PROPERTY_ID = "274391575";
-const SOURCE_EMOJI = {
-  instagram: "📸", ig: "📸",
-  youtube: "🎬", yt: "🎬",
-  email: "📧", newsletter: "📧",
-  google: "🔍",
-  facebook: "👥", fb: "👥",
-  twitter: "🐦", x: "🐦",
-  tiktok: "🎵", tt: "🎵",
-  unicornwithwings: "🦄",
-};
-
-const isBlankUtm = (v) => !v || v === "none" || v === "unknown";
-
-// Last-resort attribution: classify the stored HTTP referrer the way GA4 does
-// client-side. Covers organic traffic that carries no UTM params — 3 of the 8
-// paid sessions 6/26–7/2 were google/organic and showed "—" without this.
-const REFERRER_SOURCES = [
-  [/(^|\.)instagram\.com$/, "ig", "social"],
-  [/(^|\.)tiktok\.com$/, "tt", "social"],
-  [/(^|\.)youtube\.com$|(^|\.)youtu\.be$/, "yt", "social"],
-  [/(^|\.)twitter\.com$|(^|\.)t\.co$|(^|\.)x\.com$/, "twitter", "social"],
-  [/(^|\.)facebook\.com$|(^|\.)fb\.com$/, "fb", "social"],
-  [/(^|\.)google\.[a-z.]+$/, "google", "organic"],
-  [/(^|\.)bing\.com$/, "bing", "organic"],
-  [/(^|\.)duckduckgo\.com$/, "duckduckgo", "organic"],
-  [/(^|\.)unicornwithwings\.com$/, "unicornwithwings", "referral"],
-];
-
-function inferSourceFromReferrer(referrer) {
-  if (!referrer || referrer === "none") return null;
-  try {
-    const host = new URL(referrer).hostname;
-    for (const [re, source, medium] of REFERRER_SOURCES) {
-      if (re.test(host)) return { source, medium };
-    }
-    return null;
-  } catch { return null; }
-}
 
 // Single place attribution is resolved for Discord, GA4, Facebook, and the
 // payment-link metadata write. Priority: /thankyou URL params (Stripe payment-
 // link passthrough) → utm_data cookie (set at first site arrival) → Stripe
-// session metadata (written at custom-checkout creation; survives cookie loss)
-// → referrer classification. `inferred` marks referrer-derived sources so
-// alerts can distinguish explicit tags from educated guesses.
+// session metadata (written server-side at checkout creation; survives cookie
+// loss) → referrer classification. `inferred` marks referrer-derived sources
+// so consumers can distinguish explicit tags from educated guesses.
+//
+// Attribution travels as a tuple: source/medium/campaign/term/content describe
+// ONE click. Resolving fields independently across layers would weld a fresh
+// source to a stale campaign from an older visit, fabricating combinations
+// that never happened — so the whole tuple comes from the highest-priority
+// layer that has a real (non-sentinel) source.
 function resolveAttribution(qp, utmData, stripeData) {
   const meta = stripeData?.metadata || {};
-  const notBlank = (v) => (isBlankUtm(v) || v === "direct" ? null : v);
-  const pick = (key) => qp.get(key) || notBlank(utmData?.[key]) || notBlank(meta[key]) || null;
+  const clean = (v) => (isBlankAttribution(v) ? null : v);
 
-  const referrer =
-    (utmData?.referrer && utmData.referrer !== "none" ? utmData.referrer : null) ||
-    meta.referrer ||
-    null;
+  const referrer = clean(utmData?.referrer) || meta.referrer || null;
 
-  let source = pick("utm_source");
-  let medium = pick("utm_medium");
-  let inferred = false;
-  if (!source) {
-    const ref = inferSourceFromReferrer(referrer);
-    if (ref) {
-      source = ref.source;
-      medium = medium ?? ref.medium;
-      inferred = true;
+  const layers = [
+    (k) => qp.get(`utm_${k}`),
+    (k) => utmData?.[`utm_${k}`],
+    (k) => meta[`utm_${k}`],
+  ];
+  for (const layer of layers) {
+    const source = clean(layer("source"));
+    if (source) {
+      return {
+        source,
+        medium: clean(layer("medium")),
+        campaign: clean(layer("campaign")),
+        term: clean(layer("term")),
+        content: clean(layer("content")),
+        referrer,
+        inferred: false,
+      };
     }
   }
 
+  const ref = inferSourceFromReferrer(referrer);
   return {
-    source,
-    medium,
-    campaign: pick("utm_campaign"),
-    term: pick("utm_term"),
-    content: pick("utm_content"),
+    source: ref?.source ?? null,
+    medium: ref?.medium ?? null,
+    campaign: null,
+    term: null,
+    content: null,
     referrer,
-    inferred,
+    inferred: !!ref,
   };
 }
 
@@ -265,10 +243,12 @@ export default async function trackConversions(request, context) {
     const attribution = resolveAttribution(url.searchParams, utmData, stripeData);
     console.log("🧭 Resolved attribution:", JSON.stringify(attribution));
 
-    // For payment links, Stripe doesn't auto-populate session.metadata from URL
-    // params. Persist explicit UTMs + raw referrer now so the shipping-label
-    // Discord notification (fired from the Stripe webhook ~2-4 s later, after
-    // Shippo API calls) can read attribution from fresh session metadata.
+    // Fallback metadata write for payment links. The PRIMARY path is now
+    // server-side: buy.js persists the click's attribution to Blobs and
+    // stripe-webhooks.js hydrates it into session metadata on completion —
+    // in which case metadata.utm_source/referrer are already set and this
+    // block no-ops. It still matters when the buyer reached the payment link
+    // without going through /buy (shared/bookmarked PL URL) or Blobs failed.
     // Inferred sources are NOT written as utm_source — metadata stays fact-only;
     // consumers re-infer from the stored referrer.
     if (stripeData.payment_link && !stripeData.metadata?.utm_source) {
@@ -301,19 +281,23 @@ export default async function trackConversions(request, context) {
 
     const checkoutFlow = await context.cookies.get("checkout_flow");
 
-    // Send UTM + Revenue Data to GA4, Facebook, and Discord
-    await postSaleToDiscord(request, stripeData, clientId, attribution, checkoutSessionId);
-    await sendToGA4(
-      clientId,
-      gaSessionId,
-      gaSessionNumber,
-      attribution,
-      stripeData,
-      checkoutSessionId,
-      request,
-      checkoutFlow
-    );
-    await sendToFacebook(clientId, attribution, utmData, stripeData, request, context);
+    // Discord, GA4, and Facebook are independent — run them in parallel so the
+    // buyer waits for the slowest round-trip, not the sum of three. Each
+    // function catches its own errors, so Promise.all can't reject.
+    await Promise.all([
+      postSaleToDiscord(request, stripeData, clientId, attribution, checkoutSessionId),
+      sendToGA4(
+        clientId,
+        gaSessionId,
+        gaSessionNumber,
+        attribution,
+        stripeData,
+        checkoutSessionId,
+        request,
+        checkoutFlow
+      ),
+      sendToFacebook(clientId, attribution, utmData, stripeData, request, context),
+    ]);
 
     context.cookies.set({
       name: "purchase_fired",
@@ -368,11 +352,12 @@ async function postSaleToDiscord(request, stripeData, clientId, attribution, che
 
   const isPaymentLink = !!stripeData.payment_link;
 
-  const emoji = SOURCE_EMOJI[(attribution.source || "").toLowerCase()] || "🔗";
-  const parts = [attribution.source, attribution.medium, attribution.campaign].filter(Boolean);
-  const source = parts.length
-    ? `${emoji} ${parts.join(" / ")}${attribution.inferred ? " (ref)" : ""}`
-    : "—";
+  const source = formatSourceLine(
+    attribution.source,
+    attribution.medium,
+    attribution.campaign,
+    attribution.inferred
+  );
 
   const flow = isPaymentLink ? "Payment Link" : "Custom Checkout";
   const device = parseUserAgent(request.headers.get("user-agent"));
@@ -485,6 +470,8 @@ async function sendToGA4(
     checkout_flow,
     engagement_time_msec: 1,
   };
+  // Distinguish referrer-inferred attribution from explicit tags in reports.
+  if (attribution.inferred) params.source_inferred = "true";
   if (sessionId) params.session_id = sessionId;
   if (sessionNumber) params.ga_session_number = sessionNumber;
 
@@ -539,8 +526,12 @@ async function sendToFacebook(clientId, attribution, utmData, stripeData, reques
   const queryParams = url.searchParams;
   const utm_source = attribution.source ?? "direct";
   const utm_campaign = attribution.campaign ?? "none";
-  const client_reference_id =
+  // "attr_" ids are minted by buy.js for server-side PL attribution capture —
+  // they are storage keys, not Facebook click IDs; don't let them reach fbc.
+  const rawCrid =
     queryParams.get("client_reference_id") ?? utmData.client_reference_id;
+  const client_reference_id =
+    rawCrid && !String(rawCrid).startsWith("attr_") ? rawCrid : undefined;
 
   const fbData = {
     event_name: "Purchase",
@@ -565,7 +556,7 @@ async function sendToFacebook(clientId, attribution, utmData, stripeData, reques
       value: revenue,
       currency: "USD",
       attribution_value: utm_source, // UTM source as attribution value
-      attribution_model: "last_click", // Example attribution model
+      attribution_model: attribution.inferred ? "referrer_inferred" : "last_click",
       campaign_id: utm_campaign,
       visit_time: Math.floor(Date.now() / 1000),
     },

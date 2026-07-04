@@ -27,70 +27,33 @@ const SignupPage = lazy(() => import("./components/SignupPage"));
 const CheckoutPage = lazy(() => import("./components/CheckoutPage"));
 const RafflePage = lazy(() => import("./components/RafflePage"));
 
-const PAYMENT_LINK_URL = import.meta.env.DEV
-  ? import.meta.env.REACT_APP_STRIPE_TEST_URL
-  : import.meta.env.REACT_APP_STRIPE_PROD_URL;
+// /buy is handled server-side by netlify/edge-functions/buy.js: flow assignment
+// (checkout_flow cookie), the GA4 checkout_flow_assigned event, UTM forwarding,
+// and payment-link attribution capture. This route only mounts on SPA
+// navigations (Buy buttons are NavLinks), which never send a request to /buy —
+// so force a full-page load of the same URL and let the edge function take over.
+const BUY_EDGE_ATTEMPT_KEY = "buy_edge_attempt_at";
 
 const BuyGate = () => {
-  const rollout = (import.meta.env.VITE_CHECKOUT_ROLLOUT as string) ?? "";
   const navigate = useNavigate();
 
-  const useCustom = (() => {
-    if (rollout === "100") return true;
-    if (!rollout || rollout === "off") return false;
-    const stored = sessionStorage.getItem("checkout_flow");
-    if (stored === "custom" || stored === "payment_link") return stored === "custom";
-    const isCustom = Math.random() < 0.5;
-    sessionStorage.setItem("checkout_flow", isCustom ? "custom" : "payment_link");
-    return isCustom;
-  })();
-
   useEffect(() => {
-    const flow = useCustom ? "custom_checkout" : "payment_link";
-
-    if (useCustom) {
-      // SPA nav keeps page alive so fire-and-forget is fine — hit ships before unload.
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).gtag?.("event", "checkout_flow_assigned", { checkout_flow: flow });
+    // If the edge function fell through (misconfigured env, plain `vite` dev
+    // server), the full-page load lands right back here — a second mount within
+    // 10s means reloading would loop, so degrade to the custom checkout, which
+    // works without the edge function.
+    const lastAttempt = Number(sessionStorage.getItem(BUY_EDGE_ATTEMPT_KEY) || 0);
+    if (Date.now() - lastAttempt < 10_000) {
       navigate("/checkout", { replace: true });
       return;
     }
-
-    // Payment link: build target URL then fire GA4 event with event_callback so
-    // the hit ships before we leave the SPA. 2 s timeout guards against gtag blocks.
-    const buildUrl = () => {
-      const currentParams = new URL(window.location.href).searchParams;
-      const target = new URL(PAYMENT_LINK_URL);
-      currentParams.forEach((v, k) => target.searchParams.set(k, v));
-      const trackingKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "gclid", "fbclid"];
-      if (!trackingKeys.some((p) => currentParams.has(p))) {
-        try {
-          const stored = JSON.parse(sessionStorage.getItem("utm_params") || "{}") as Record<string, string>;
-          Object.entries(stored).forEach(([k, v]) => target.searchParams.set(k, v));
-        } catch { /* ignore corrupt storage */ }
-      }
-      return target.toString();
-    };
-
-    const redirect = () => window.location.replace(buildUrl());
-
-    // 2s timer guarantees redirect even if gtag.js hasn't loaded yet; gtag.js typically
-    // loads in ~500-1000ms so event_callback should fire before this in most cases
-    const fallbackTimer = setTimeout(redirect, 2000);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const gtag = (window as any).gtag;
-    if (gtag) {
-      gtag("event", "checkout_flow_assigned", {
-        checkout_flow: flow,
-        event_callback: () => { clearTimeout(fallbackTimer); redirect(); },
-      });
-    }
-  // useCustom and navigate are stable for the lifetime of this component mount
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    sessionStorage.setItem(BUY_EDGE_ATTEMPT_KEY, String(Date.now()));
+    window.location.replace(window.location.pathname + window.location.search);
+    // Empty deps: this must run exactly once per mount — a re-run would trip
+    // the 10s guard and hijack the in-flight redirect to /checkout.
   }, []);
 
-  // custom_checkout navigates instantly via SPA; payment_link waits up to 2s for gtag.js
-  return useCustom ? null : (
+  return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh", fontFamily: "sans-serif", color: "#888" }}>
       Redirecting to checkout…
     </div>

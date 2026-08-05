@@ -29,7 +29,7 @@ const CharacterPinPopup = ({ closePopup, dismissPopup }: CharacterPinPopupProps)
           <div className="modal-content">
             <img
               className="expansion-image"
-              src="/images/kitchen_chaos.jpeg"
+              src="/images/box_art.webp"
               alt="Expansion update"
             />
             <h2>An expansion is coming!</h2>

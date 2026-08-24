@@ -79,6 +79,8 @@ function resolveAttribution(qp, utmData, stripeData) {
   };
 }
 
+const MAX_CONVERSION_AGE_MS = 24 * 60 * 60 * 1000;
+
 const CONVERSION_BLOB_BLOAT_THRESHOLD = 5000;
 const CONVERSION_BLOB_BLOAT_DEDUPE_KEY = "_size_alert_sent";
 const CONVERSION_BLOB_BLOAT_DEDUPE_MS = 7 * 24 * 60 * 60 * 1000;
@@ -227,6 +229,20 @@ export default async function trackConversions(request, context) {
 
     if (stripeData.payment_status !== "paid" && stripeData.payment_status !== "no_payment_required") {
       console.log(`⚠️ Session ${checkoutSessionId} not paid (status: ${stripeData.payment_status}), skipping tracking.`);
+      return context.rewrite(new URL("/index.html", request.url));
+    }
+
+    // Age gate: a buyer re-opening their old /thankyou URL (history autocomplete,
+    // restored tab) replays a paid session through this pipeline. The blob claim
+    // below only covers sessions that fired after it shipped (2026-06-25), so
+    // every older sale is one revisit away from a ghost Discord/GA4/FB purchase.
+    // Nothing ever links buyers back to /thankyou, so legitimate visits happen
+    // within minutes of checkout — anything older than a day is a replay.
+    const sessionAgeMs = Date.now() - stripeData.created * 1000;
+    if (sessionAgeMs > MAX_CONVERSION_AGE_MS) {
+      console.log(
+        `⏭️ Session ${checkoutSessionId} is ${Math.round(sessionAgeMs / 36e5)}h old — stale /thankyou revisit, skipping tracking.`
+      );
       return context.rewrite(new URL("/index.html", request.url));
     }
 

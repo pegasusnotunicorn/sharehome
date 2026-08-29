@@ -58,6 +58,42 @@ const STRIPE_PAYMENT_LINK_URL = IS_DEV
   ? process.env.REACT_APP_STRIPE_TEST_URL
   : process.env.REACT_APP_STRIPE_PROD_URL;
 
+// How long someone stays locked out of the abandoned-cart sequence after
+// being enrolled. Long enough that nobody gets the same three emails twice
+// over one purchase decision, short enough that a shopper who drifted off
+// months ago and came back is worth another nudge.
+const REENROLL_AFTER_DAYS = 90;
+const REENROLL_AFTER_MS = REENROLL_AFTER_DAYS * 24 * 60 * 60 * 1000;
+
+// Stripe's native recovery (after_expiration.recovery, which would give us a
+// recovery URL plus `recovered_from` on the completed session) is rejected
+// for `ui_mode: custom` sessions, so we can't measure recovery that way.
+// Tagging our own link is the substitute: these params ride through
+// track-utm → create-checkout-session metadata → GA4, which makes revenue
+// recovered by the sequence show up as its own source in reporting.
+const RECOVERY_UTMS = {
+  utm_source: "mailerlite",
+  utm_medium: "email",
+  utm_campaign: "abandoned_cart",
+};
+
+function buildRecoveryUrl(base, email) {
+  const url = new URL(base);
+  url.searchParams.set("prefilled_email", email);
+  for (const [key, value] of Object.entries(RECOVERY_UTMS)) {
+    url.searchParams.set(key, value);
+  }
+  return url.toString();
+}
+
+// MailerLite date fields come back as "YYYY-MM-DD". Returns null for a
+// missing or unparseable value so callers treat it as "no record".
+function parseAbandonDate(value) {
+  if (!value) return null;
+  const ms = Date.parse(value);
+  return Number.isNaN(ms) ? null : ms;
+}
+
 export default async function stripeWebhooks(request) {
   if (request.method !== "POST") {
     return new Response("Method Not Allowed", { status: 405 });
@@ -139,9 +175,12 @@ export default async function stripeWebhooks(request) {
       if (isPaymentLink && !STRIPE_PAYMENT_LINK_URL) {
         console.warn("stripe-webhooks: STRIPE_PAYMENT_LINK_URL is not set; falling back to /checkout recovery URL for Payment Link session");
       }
-      const recoveryUrl = isPaymentLink && STRIPE_PAYMENT_LINK_URL
-        ? `${STRIPE_PAYMENT_LINK_URL}?prefilled_email=${encodeURIComponent(abandonedEmail)}`
-        : `${SITE_URL}/checkout?prefilled_email=${encodeURIComponent(abandonedEmail)}`;
+      const recoveryUrl = buildRecoveryUrl(
+        isPaymentLink && STRIPE_PAYMENT_LINK_URL
+          ? STRIPE_PAYMENT_LINK_URL
+          : `${SITE_URL}/checkout`,
+        abandonedEmail
+      );
 
       // The attribution blob for this session is no longer needed — the
       // session can never complete. Prevents unbounded orphan growth in the
@@ -152,14 +191,43 @@ export default async function stripeWebhooks(request) {
         } catch { /* best-effort cleanup */ }
       }
 
-      const subscriberGroups = await fetchSubscriberGroupIds(abandonedEmail);
-      if (subscriberGroups?.has(String(MAILERLITE_PURCHASE_GROUP_ID))) {
-        console.log(`📧 ${abandonedEmail} is already in the purchase group — skipping abandoned cart enrollment`);
+      const subscriber = await fetchSubscriber(abandonedEmail);
+
+      // Fail closed. A lookup we couldn't complete tells us nothing about
+      // whether this person already bought or is mid-sequence, and the cost
+      // is asymmetric: a missed abandoner costs nothing, while mailing "come
+      // back and finish" to someone who just paid costs goodwill.
+      if (subscriber.status === "error") {
+        console.warn(`⚠️  MailerLite lookup failed for ${abandonedEmail} — skipping enrollment rather than risking a duplicate or post-purchase send`);
         break;
       }
-      if (subscriberGroups?.has(String(MAILERLITE_ABANDONED_GROUP_ID))) {
-        console.log(`📧 ${abandonedEmail} is already in the abandoned group — skipping to avoid restarting automation`);
-        break;
+
+      if (subscriber.status === "found") {
+        if (subscriber.groups.has(String(MAILERLITE_PURCHASE_GROUP_ID))) {
+          console.log(`📧 ${abandonedEmail} is already in the purchase group — skipping abandoned cart enrollment`);
+          break;
+        }
+
+        if (subscriber.groups.has(String(MAILERLITE_ABANDONED_GROUP_ID))) {
+          const lastAbandon = parseAbandonDate(subscriber.fields?.last_abandoned_at);
+          if (lastAbandon && Date.now() - lastAbandon < REENROLL_AFTER_MS) {
+            console.log(`📧 ${abandonedEmail} abandoned within the last ${REENROLL_AFTER_DAYS} days — skipping to avoid restarting the automation mid-flow`);
+            break;
+          }
+
+          // MailerLite's trigger is "subscriber joins group", which doesn't
+          // re-fire for someone already in it. Removing first is what makes
+          // the re-add count as a join and restart the sequence.
+          const removed = await removeSubscriberFromGroup(
+            subscriber.id,
+            MAILERLITE_ABANDONED_GROUP_ID
+          );
+          if (!removed) {
+            console.warn(`⚠️  Couldn't remove ${abandonedEmail} from the abandoned group — skipping rather than re-adding to a group they're already in (which would enroll them silently and never send)`);
+            break;
+          }
+          console.log(`📧 ${abandonedEmail} last abandoned ${lastAbandon ? "over " + REENROLL_AFTER_DAYS + " days ago" : "before we tracked dates"} — re-enrolling`);
+        }
       }
 
       await addEmailToMailerLite(
@@ -173,6 +241,7 @@ export default async function stripeWebhooks(request) {
           cart_items: formatCartItemsForField(session),
           recovery_url: recoveryUrl,
           checkout_source: isPaymentLink ? "payment_link" : "custom_checkout",
+          last_abandoned_at: new Date().toISOString().slice(0, 10),
         },
         MAILERLITE_ABANDONED_GROUP_ID,
         {
@@ -996,24 +1065,60 @@ async function notifySubscriberAdded({
   });
 }
 
-// Returns the set of group IDs the subscriber belongs to, or null if they
-// don't exist. Returns empty set on lookup failure (fail-open: we proceed
-// rather than silently skip an abandoned cart on transient errors).
-async function fetchSubscriberGroupIds(email) {
-  if (!MAILER_LITE_KEY) return new Set();
+// Looks up a subscriber so the caller can decide whether to enroll them.
+// Returns one of:
+//   { status: "found", id, groups: Set<string>, fields }
+//   { status: "absent" }  — no such subscriber, safe to enroll
+//   { status: "error" }   — we don't know; caller should fail closed
+// One retry absorbs the usual transient blip before we give up.
+async function fetchSubscriber(email) {
+  if (!MAILER_LITE_KEY) return { status: "error" };
+
+  const url = `https://connect.mailerlite.com/api/subscribers/${encodeURIComponent(email)}`;
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${MAILER_LITE_KEY}` },
+      });
+      if (response.status === 404) return { status: "absent" };
+      if (!response.ok) {
+        console.warn(`⚠️  MailerLite subscriber lookup returned HTTP ${response.status} (attempt ${attempt + 1})`);
+        continue;
+      }
+      const data = await response.json();
+      const subscriber = data?.data ?? {};
+      return {
+        status: "found",
+        id: subscriber.id,
+        groups: new Set((subscriber.groups ?? []).map((g) => String(g.id))),
+        fields: subscriber.fields ?? {},
+      };
+    } catch (err) {
+      console.warn(`⚠️  MailerLite subscriber lookup threw (attempt ${attempt + 1}):`, err.message);
+    }
+  }
+
+  return { status: "error" };
+}
+
+// Unassigns a subscriber from a group. Used only to make a re-add register as
+// a fresh join so the automation fires again. Returns true on success.
+async function removeSubscriberFromGroup(subscriberId, groupId) {
+  if (!MAILER_LITE_KEY || !subscriberId) return false;
   try {
     const response = await fetch(
-      `https://connect.mailerlite.com/api/subscribers/${encodeURIComponent(email)}`,
-      { headers: { Authorization: `Bearer ${MAILER_LITE_KEY}` } }
+      `https://connect.mailerlite.com/api/subscribers/${subscriberId}/groups/${groupId}`,
+      { method: "DELETE", headers: { Authorization: `Bearer ${MAILER_LITE_KEY}` } }
     );
-    if (response.status === 404) return null;
-    if (!response.ok) return new Set();
-    const data = await response.json();
-    const groups = data?.data?.groups ?? [];
-    return new Set(groups.map((g) => String(g.id)));
+    if (!response.ok) {
+      console.warn(`⚠️  MailerLite group removal returned HTTP ${response.status}`);
+      return false;
+    }
+    return true;
   } catch (err) {
-    console.warn("⚠️  MailerLite subscriber lookup failed (proceeding):", err.message);
-    return new Set();
+    console.warn("⚠️  MailerLite group removal threw:", err.message);
+    return false;
   }
 }
 

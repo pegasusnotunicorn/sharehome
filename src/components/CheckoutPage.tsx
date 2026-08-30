@@ -63,8 +63,13 @@ const InfoIcon = () => (
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const w = window as any;
+// GA4 events reach the property through GTM, so they have to be pushed in the
+// shape GTM triggers on: an object with an `event` key. The previous
+// gtag()-style call pushed an arguments object (keys "0", "1", "2") that no
+// Custom Event trigger could match, and gtag.js — which would have drained
+// those — is never loaded, so every one of these events was silently dropped.
 function trackEvent(name: string, params?: Record<string, string | number>) {
-  w.gtag?.("event", name, params);
+  w.dataLayer?.push({ event: name, ...params });
   w.clarity?.("event", name);
 }
 
@@ -144,7 +149,7 @@ const CheckoutFormSkeleton = () => (
 
 // ── Checkout form ─────────────────────────────────────────────────────────────
 
-const CheckoutForm = ({ sessionId, onOpenInternational }: { sessionId: string | null; onOpenInternational: () => void }) => {
+const CheckoutForm = ({ sessionId, onEmailCaptured, onOpenInternational }: { sessionId: string | null; onEmailCaptured: (email: string) => void; onOpenInternational: () => void }) => {
   const checkoutState = useCheckoutElements();
   const [readyCount, setReadyCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -167,8 +172,12 @@ const CheckoutForm = ({ sessionId, onOpenInternational }: { sessionId: string | 
     debounceRef.current = setTimeout(() => {
       if (!email || email === lastCapturedEmailRef.current) return;
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
-      if (!sessionId) return;
       lastCapturedEmailRef.current = email;
+      // Hand the address up before the session check — changing the cart
+      // mints a replacement session, and the parent needs the email to carry
+      // it over so the customer doesn't have to retype it.
+      onEmailCaptured(email);
+      if (!sessionId) return;
       fetch("/.netlify/functions/save-checkout-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -711,9 +720,16 @@ const CheckoutPage = () => {
   const [initError, setInitError] = useState<string | null>(null);
   const [internationalModalOpen, setInternationalModalOpen] = useState(false);
   const [updatingSlug, setUpdatingSlug] = useState<ItemSlug | null>(null);
+  // Survives the remount that a cart change forces, so the replacement
+  // session can be created with the email already filled in. A ref, not
+  // state — nothing renders from it and it shouldn't trigger a re-render.
+  const capturedEmailRef = useRef("");
 
   useEffect(() => {
     const prefillEmail = new URLSearchParams(window.location.search).get("prefilled_email");
+    // Someone arriving from a recovery email already gave us their address —
+    // keep it if they change the cart before touching the contact field.
+    if (prefillEmail) capturedEmailRef.current = prefillEmail;
     fetch("/.netlify/functions/create-checkout-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -750,7 +766,7 @@ const CheckoutPage = () => {
       const res = await fetch("/.netlify/functions/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou?checkout_session_id={CHECKOUT_SESSION_ID}&checkout_flow=custom_checkout`, ...getStoredUtms() }),
+        body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou?checkout_session_id={CHECKOUT_SESSION_ID}&checkout_flow=custom_checkout`, ...getStoredUtms(), ...(capturedEmailRef.current && { email: capturedEmailRef.current }) }),
       });
       if (!res.ok) throw new Error("Failed to update");
       const { clientSecret: newSecret, sessionId: newSid } = await res.json();
@@ -812,7 +828,11 @@ const CheckoutPage = () => {
                   updatingSlug={updatingSlug}
                 />
               </div>
-              <CheckoutForm sessionId={sessionId} onOpenInternational={() => setInternationalModalOpen(true)} />
+              <CheckoutForm
+                sessionId={sessionId}
+                onEmailCaptured={(email) => { capturedEmailRef.current = email; }}
+                onOpenInternational={() => setInternationalModalOpen(true)}
+              />
             </div>
           </CheckoutElementsProvider>
         ) : (

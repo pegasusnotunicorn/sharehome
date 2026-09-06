@@ -259,42 +259,6 @@ export default async function trackConversions(request, context) {
     const attribution = resolveAttribution(url.searchParams, utmData, stripeData);
     console.log("🧭 Resolved attribution:", JSON.stringify(attribution));
 
-    // Fallback metadata write for payment links. The PRIMARY path is now
-    // server-side: buy.js persists the click's attribution to Blobs and
-    // stripe-webhooks.js hydrates it into session metadata on completion —
-    // in which case metadata.utm_source/referrer are already set and this
-    // block no-ops. It still matters when the buyer reached the payment link
-    // without going through /buy (shared/bookmarked PL URL) or Blobs failed.
-    // Inferred sources are NOT written as utm_source — metadata stays fact-only;
-    // consumers re-infer from the stored referrer.
-    if (stripeData.payment_link && !stripeData.metadata?.utm_source) {
-      const utmFields = {};
-      if (attribution.source && !attribution.inferred) {
-        utmFields["metadata[utm_source]"] = attribution.source;
-        if (attribution.medium) utmFields["metadata[utm_medium]"] = attribution.medium;
-        if (attribution.campaign) utmFields["metadata[utm_campaign]"] = attribution.campaign;
-        if (attribution.content) utmFields["metadata[utm_content]"] = attribution.content;
-      }
-      if (attribution.referrer && !stripeData.metadata?.referrer) {
-        utmFields["metadata[referrer]"] = attribution.referrer.slice(0, 500);
-      }
-      if (Object.keys(utmFields).length) {
-        try {
-          await fetch(`https://api.stripe.com/v1/checkout/sessions/${checkoutSessionId}`, {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${STRIPE_SECRET_KEY}`,
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams(utmFields).toString(),
-          });
-          console.log("✅ Payment link attribution written to Stripe session metadata");
-        } catch (err) {
-          console.error("⚠️ Failed to write UTMs to Stripe metadata:", err.message);
-        }
-      }
-    }
-
     const checkoutFlow = await context.cookies.get("checkout_flow");
 
     // Discord, GA4, and Facebook are independent — run them in parallel so the

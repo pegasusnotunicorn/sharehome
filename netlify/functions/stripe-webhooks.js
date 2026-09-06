@@ -54,9 +54,6 @@ const MAILERLITE_PURCHASE_GROUP_ID = process.env.MAILERLITE_PURCHASE_GROUP_ID;
 const MAILERLITE_ABANDONED_GROUP_ID = process.env.MAILERLITE_ABANDONED_GROUP_ID;
 
 const SITE_URL = IS_DEV ? "http://localhost:8888" : "https://lovecareermagic.com";
-const STRIPE_PAYMENT_LINK_URL = IS_DEV
-  ? process.env.REACT_APP_STRIPE_TEST_URL
-  : process.env.REACT_APP_STRIPE_PROD_URL;
 
 // How long someone stays locked out of the abandoned-cart sequence after
 // being enrolled. Long enough that nobody gets the same three emails twice
@@ -121,11 +118,6 @@ export default async function stripeWebhooks(request) {
       const customerEmail = session.customer_details?.email;
       const customerName = session.customer_details?.name;
 
-      // Copy server-side-captured PL attribution (written to Blobs by buy.js)
-      // into session metadata BEFORE anything reads it — this is what makes
-      // attribution survive a buyer who never returns to /thankyou.
-      await hydratePaymentLinkAttribution(session);
-
       // Enroll in MailerLite first so the result can be included in the
       // shipping-label Discord notification (one combined alert per purchase).
       let mailerStatus = null;
@@ -172,24 +164,7 @@ export default async function stripeWebhooks(request) {
       }
 
       const isPaymentLink = !!eventSession.payment_link;
-      if (isPaymentLink && !STRIPE_PAYMENT_LINK_URL) {
-        console.warn("stripe-webhooks: STRIPE_PAYMENT_LINK_URL is not set; falling back to /checkout recovery URL for Payment Link session");
-      }
-      const recoveryUrl = buildRecoveryUrl(
-        isPaymentLink && STRIPE_PAYMENT_LINK_URL
-          ? STRIPE_PAYMENT_LINK_URL
-          : `${SITE_URL}/checkout`,
-        abandonedEmail
-      );
-
-      // The attribution blob for this session is no longer needed — the
-      // session can never complete. Prevents unbounded orphan growth in the
-      // pl-attribution store (one blob per PL redirect, most never purchase).
-      if (eventSession.client_reference_id?.startsWith("attr_")) {
-        try {
-          await getStore("pl-attribution").delete(eventSession.client_reference_id);
-        } catch { /* best-effort cleanup */ }
-      }
+      const recoveryUrl = buildRecoveryUrl(`${SITE_URL}/checkout`, abandonedEmail);
 
       const subscriber = await fetchSubscriber(abandonedEmail);
 
@@ -770,37 +745,6 @@ function parseUserAgent(ua) {
   else if (/Linux/i.test(ua)) os = "Linux";
 
   return `${deviceEmoji} ${deviceLabel} · ${os} · ${browser}`;
-}
-
-// Copies server-side-captured payment-link attribution (persisted to Blobs by
-// buy.js under a minted client_reference_id) into the session's Stripe
-// metadata, then deletes the blob. Metadata is the durable home: every
-// downstream consumer (this webhook's re-fetch, /thankyou's resolveAttribution
-// layer 3, dashboard inspection, event replays) reads it from there. Fail-open.
-async function hydratePaymentLinkAttribution(session) {
-  const crid = session.client_reference_id;
-  if (!crid || !crid.startsWith("attr_")) return;
-  if (session.metadata?.utm_source || session.metadata?.referrer) return;
-  try {
-    const store = getStore("pl-attribution");
-    const raw = await store.get(crid);
-    if (!raw) return;
-    const attr = JSON.parse(raw);
-    const fields = {};
-    for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "referrer"]) {
-      if (attr[k]) fields[k] = String(attr[k]).slice(0, 500);
-    }
-    if (Object.keys(fields).length) {
-      await stripe.checkout.sessions.update(session.id, {
-        metadata: { ...(session.metadata || {}), ...fields },
-      });
-      session.metadata = { ...(session.metadata || {}), ...fields };
-      console.log("📦 PL attribution hydrated from blob:", fields.utm_source || fields.referrer);
-    }
-    await store.delete(crid);
-  } catch (err) {
-    console.warn("⚠️ PL attribution hydration failed (continuing):", err.message);
-  }
 }
 
 function formatAttribution(session) {

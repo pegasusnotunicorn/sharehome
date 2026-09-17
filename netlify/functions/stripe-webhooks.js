@@ -3,6 +3,7 @@ import fetch from "node-fetch";
 import { getStore } from "@netlify/blobs";
 import { createLabel, createOrder, parcelForGameCount } from "./lib/shippo.js";
 import { shippingAddressFromSession } from "./lib/stripe-shipping.js";
+import { isEuropeCountry } from "../lib/regions.js";
 import {
   isBlankAttribution,
   inferSourceFromReferrer,
@@ -379,10 +380,17 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
       return;
     }
 
+    // Only US orders ever get a Shippo label. Everything below this block is
+    // US-only.
     if (shipping.address.country !== "US") {
       // Intentionally NOT releasing the claim — non-US orders are handled
       // manually and we don't want a replay to re-alert. The claim becomes
       // the dedupe key.
+      if (isEuropeCountry(shipping.address.country)) {
+        await tagEuropeOrder(session);
+        await notifyEuropeOrder({ session, to, mailerStatus });
+        return;
+      }
       await alert(
         `Non-US order received (country=${shipping.address.country}). Skipping Shippo — handle manually.`,
         { source: "shippo", sessionId: session.id }
@@ -929,6 +937,87 @@ async function notifyLabelPurchased({ session, to, gameCount, parcel, label, ord
               trackingUrl: label.trackingUrl,
               labelUrl: label.labelUrl,
             }),
+            inline: false,
+          },
+        ],
+        timestamp: new Date().toISOString(),
+      },
+    ],
+  });
+}
+
+// Stamps Europe first-wave orders so the batch can be pulled from Stripe
+// later (search metadata["shipping_region"]:"europe"). Best-effort — the
+// Discord notice still goes out if this fails.
+async function tagEuropeOrder(session) {
+  try {
+    await stripe.checkout.sessions.update(session.id, {
+      metadata: { ...(session.metadata || {}), shipping_region: "europe" },
+    });
+  } catch (err) {
+    console.error("⚠️  Failed to tag Europe order in Stripe:", err.message);
+  }
+}
+
+// Europe orders skip Shippo entirely — they ship in a batch through the
+// Europe logistics partner. Not an error, so it's a normal order notice
+// rather than a red alert. It's the only Discord message for a Europe order
+// (track-conversions skips its Sale post for them), so it carries the sale.
+async function notifyEuropeOrder({ session, to, mailerStatus }) {
+  const customerLines = [
+    `**${to.name || "—"}**`,
+    session.customer_details?.email || null,
+    to.phone || null,
+  ].filter(Boolean);
+
+  const shipToLines = [
+    to.street1,
+    to.street2,
+    [to.zip, to.city, to.state].filter(Boolean).join(", "),
+    to.country,
+  ].filter(Boolean);
+
+  // The page picks the shipping rate, so a Europe address that paid nothing
+  // for shipping means the rate wasn't switched (or was forced).
+  const shippingPaid = session.total_details?.amount_shipping || 0;
+
+  await postToDiscord({
+    embeds: [
+      {
+        title: `🇪🇺 Europe sale — ${formatMoney(session.amount_total, session.currency)} · ${to.country}`,
+        url: stripeSessionUrl(session.id),
+        description:
+          "First-wave Europe order. **No Shippo label was bought** — add it to the batch for the logistics partner." +
+          (shippingPaid === 0
+            ? "\n\n⚠️ **No shipping was charged** — this Europe order went through at the free US rate."
+            : ""),
+        color: 0x3b5bdb, // blue
+        fields: [
+          { name: "Customer", value: customerLines.join("\n"), inline: true },
+          { name: "Ship to", value: shipToLines.join("\n"), inline: true },
+          {
+            name: "MailerLite",
+            value: mailerStatus === null
+              ? "—"
+              : mailerStatus.alreadyExisted
+                ? "ℹ️ Already subscribed"
+                : "✅ Added to purchase list",
+            inline: true,
+          },
+          { name: "Order", value: formatOrderSummary(session), inline: false },
+          {
+            name: "Source",
+            value: formatAttribution(session).source,
+            inline: true,
+          },
+          {
+            name: "Device",
+            value: parseUserAgent(session.metadata?.user_agent) ?? "—",
+            inline: true,
+          },
+          {
+            name: "Quick links",
+            value: `[Stripe session](${stripeSessionUrl(session.id)})`,
             inline: false,
           },
         ],

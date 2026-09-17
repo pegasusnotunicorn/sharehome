@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { NavLink } from "react-router";
 import CustomHelmet from "./utils/CustomHelmet";
 import PageIntro from "./utils/PageIntro";
@@ -7,6 +7,37 @@ import { CONTACT_POLAROIDS } from "./utils/contactPolaroids";
 import styles from "../css/pages/thankYouPage.module.css";
 
 const RANDOM_POLAROID_COUNT = 4;
+
+type ShippingRegion = "loading" | "us" | "europe";
+
+// Which shipping copy to show, looked up from the order's shipping address.
+// Anything that isn't a confirmed Europe order falls back to the US copy.
+const useShippingRegion = (): ShippingRegion => {
+  const sessionId = useMemo(
+    () => new URLSearchParams(window.location.search).get("checkout_session_id"),
+    []
+  );
+  const [region, setRegion] = useState<ShippingRegion>(sessionId ? "loading" : "us");
+
+  useEffect(() => {
+    if (!sessionId) return;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    fetch(`/.netlify/functions/order-region?checkout_session_id=${encodeURIComponent(sessionId)}`, {
+      signal: controller.signal,
+    })
+      .then((res) => res.json())
+      .then(({ region: r }) => setRegion(r === "europe" ? "europe" : "us"))
+      .catch(() => setRegion("us"))
+      .finally(() => clearTimeout(timeout));
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
+  }, [sessionId]);
+
+  return region;
+};
 
 const pickRandomPolaroids = (count: number) => {
   const indices = CONTACT_POLAROIDS.map((_, i) => i);
@@ -24,6 +55,11 @@ const ThankYouPage = () => {
   const title = "Thank you for your order!";
 
   const polaroids = useMemo(() => pickRandomPolaroids(RANDOM_POLAROID_COUNT), []);
+  const region = useShippingRegion();
+  const isEurope = region === "europe";
+  // Hold the region-specific copy back until the lookup settles, so a Europe
+  // buyer never sees the US delivery times flash first.
+  const regionReady = region !== "loading";
 
   return (
     <div className={`content ${styles.thankYouPage}`}>
@@ -54,38 +90,63 @@ const ThankYouPage = () => {
             <br />
             Head of Fulfillment.
           </h2>
-          <p>
-            I have received your order and will ship your game to you within
-            3-5 business days, after an extensive QA process by our Head of
-            Fulfillment,{" "}
-            <a
-              aria-label="Lou the cat on Instagram"
-              target="_blank"
-              rel="noreferrer"
-              href="https://www.instagram.com/nekonolou"
-            >
-              Lou the cat
-            </a>
-            .
-          </p>
-          <p className={styles.notice}>
-            <strong>Please note</strong>
-            I am just one person hand-packing and shipping out each game
-            manually. I truly appreciate your patience and understanding.
-            Thank you for supporting indie game devs! 😊
-          </p>
-          <p>
-            Orders typically arrive within 1-2 weeks. If it's been longer,{" "}
-            <a
-              aria-label="Contact us"
-              target="_blank"
-              rel="noreferrer"
-              href="/contact"
-            >
-              let me know
-            </a>{" "}
-            and I'll sort it out. Email is the fastest way to reach me.
-          </p>
+          {regionReady && (
+            <>
+              {isEurope ? (
+                <p>
+                  I have received your order! You're part of the first wave of
+                  European orders, which will ship out in the coming month through
+                  a Europe-based logistics company.
+                </p>
+              ) : (
+                <p>
+                  I have received your order and will ship your game to you within
+                  3-5 business days, after an extensive QA process by our Head of
+                  Fulfillment,{" "}
+                  <a
+                    aria-label="Lou the cat on Instagram"
+                    target="_blank"
+                    rel="noreferrer"
+                    href="https://www.instagram.com/nekonolou"
+                  >
+                    Lou the cat
+                  </a>
+                  .
+                </p>
+              )}
+              {isEurope ? (
+                <p className={styles.notice}>
+                  <strong>Please note</strong>
+                  European shipments may take up to a month or two to arrive.
+                  It's the only way to keep costs down and make sure you don't pay
+                  any VAT. This is my first time trying something like this, so I
+                  truly appreciate your patience and understanding. Thank you for
+                  supporting indie game devs! 😊
+                </p>
+              ) : (
+                <p className={styles.notice}>
+                  <strong>Please note</strong>
+                  I am just one person hand-packing and shipping out each game
+                  manually. I truly appreciate your patience and understanding.
+                  Thank you for supporting indie game devs! 😊
+                </p>
+              )}
+              <p>
+                {isEurope
+                  ? "If you have any questions about your order, "
+                  : "Orders typically arrive within 1-2 weeks. If it's been longer, "}
+                <a
+                  aria-label="Contact us"
+                  target="_blank"
+                  rel="noreferrer"
+                  href="/contact"
+                >
+                  let me know
+                </a>
+                {isEurope ? "." : " and I'll sort it out."} Email is the fastest way to reach me.
+              </p>
+            </>
+          )}
         </div>
       </div>
 

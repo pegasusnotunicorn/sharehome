@@ -354,7 +354,7 @@ const allCharacters: Character[] = [
     type: "member",
   },
   {
-    name: "Gingernuts Gooeyhug",
+    name: "Gingernuts Goodyhug",
     urlName: "gingernuts",
     age: 25,
     job: "Part-timer",

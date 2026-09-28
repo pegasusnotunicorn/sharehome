@@ -33,6 +33,13 @@ interface CartState {
 
 type ItemSlug = "lcm" | "urg_pin" | "bizz_pin";
 
+// Shipping rate IDs attached to the current session, handed back by
+// create-checkout-session. `europe` is null where Europe isn't enabled.
+interface ShippingRates {
+  us: string;
+  europe: string | null;
+}
+
 const CART_ITEMS_META: Record<ItemSlug, { name: string; desc: string; img: string; price: number; min: number; max: number }> = {
   lcm: { name: "Love, Career & Magic", desc: "", img: "/images/box_transparent.webp", price: LCM_PRICE, min: 1, max: LCM_MAX_QTY },
   urg_pin: { name: "Urg pin", desc: "An enamel pin of Urg, the Hacker.", img: "/images/members/urg-pin.webp", price: PIN_PRICE, min: 0, max: PIN_MAX_QTY },
@@ -129,6 +136,10 @@ const appearanceMobile = {
 
 const TOTAL_ELEMENTS = 3;
 
+// Shown when a Stripe call throws instead of returning an error result —
+// those messages are written for developers, not buyers.
+const GENERIC_CHECKOUT_ERROR = "Something went wrong. Please try again.";
+
 const CheckoutFormSkeleton = () => (
   <div className={styles.skeletonForm}>
     <div className={styles.skeletonFormSection}>
@@ -149,10 +160,13 @@ const CheckoutFormSkeleton = () => (
 
 // ── Checkout form ─────────────────────────────────────────────────────────────
 
-const CheckoutForm = ({ sessionId, onEmailCaptured, onOpenInternational }: { sessionId: string | null; onEmailCaptured: (email: string) => void; onOpenInternational: () => void }) => {
+const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInternational }: { sessionId: string | null; shippingRates: ShippingRates | null; onEmailCaptured: (email: string) => void; onOpenInternational: () => void }) => {
   const checkoutState = useCheckoutElements();
   const [readyCount, setReadyCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [shippingSyncing, setShippingSyncing] = useState(false);
+  const requestedRateRef = useRef<string | null>(null);
+  const pendingRateUpdates = useRef(0);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const lastError = useRef("");
   if (errorMessage) lastError.current = errorMessage;
@@ -190,11 +204,63 @@ const CheckoutForm = ({ sessionId, onEmailCaptured, onOpenInternational }: { ses
     if (allReady) trackEvent("checkout_form_ready");
   }, [allReady]);
 
+  // Second trigger for the rate switch: the country on the session itself.
+  // The address element can arrive with a country already filled in (e.g.
+  // from the buyer's location) without firing onChange, which would leave a
+  // European address on the free US rate.
+  const sessionCountry =
+    checkoutState.type === "success" ? checkoutState.checkout.shippingAddress?.address.country : undefined;
+  const syncShippingRateRef = useRef<(country: string | undefined) => void>(() => {});
+  useEffect(() => {
+    syncShippingRateRef.current(sessionCountry);
+  }, [sessionCountry]);
+
   if (checkoutState.type === "error") {
     return <p className={styles.checkoutError}>{checkoutState.error.message}</p>;
   }
 
   const checkout = checkoutState.type !== "loading" ? checkoutState.checkout : null;
+
+  // Both rates ride on the session; the country dropdown picks between them.
+  // US gets the free rate, any other country the address element allows
+  // (the server limits it to Europe) gets the Europe rate.
+  const syncShippingRate = async (country: string | undefined) => {
+    if (!checkout || !shippingRates?.europe || !country) return;
+    const target = country === "US" ? shippingRates.us : shippingRates.europe;
+    // Compare against the last rate we asked for, not the session snapshot —
+    // a quick US → DE → US flip would otherwise see the stale US rate and
+    // skip the switch back.
+    const current = requestedRateRef.current ?? checkout.shipping?.shippingOption.id;
+    if (current === target) return;
+    requestedRateRef.current = target;
+    pendingRateUpdates.current += 1;
+    setShippingSyncing(true);
+    try {
+      const result = await checkout.updateShippingOption(target);
+      if (result.type === "error") {
+        requestedRateRef.current = null;
+        setErrorMessage(result.error.message);
+      } else {
+        setErrorMessage(null);
+        if (target === shippingRates.europe) {
+          trackEvent("checkout_europe_shipping_selected", { country });
+        }
+      }
+    } catch (err) {
+      // Forget the request so picking the country again retries it.
+      requestedRateRef.current = null;
+      trackEvent("checkout_error", { error_message: `shipping_rate: ${err instanceof Error ? err.message : String(err)}` });
+      setErrorMessage(GENERIC_CHECKOUT_ERROR);
+    } finally {
+      // Always release the Pay button, or a failed update would lock it.
+      pendingRateUpdates.current -= 1;
+      if (pendingRateUpdates.current === 0) setShippingSyncing(false);
+    }
+  };
+  syncShippingRateRef.current = syncShippingRate;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleShippingChange = (e: any) => syncShippingRate(e.value?.address?.country);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -202,10 +268,21 @@ const CheckoutForm = ({ sessionId, onEmailCaptured, onOpenInternational }: { ses
     setLoading(true);
     setErrorMessage(null);
     trackEvent("checkout_submitted");
-    const result = await checkout.confirm();
-    if (result.type === "error") {
-      trackEvent("checkout_error", { error_message: result.error.message });
-      setErrorMessage(result.error.message);
+    try {
+      const result = await checkout.confirm();
+      if (result.type === "error") {
+        trackEvent("checkout_error", { error_message: result.error.message });
+        setErrorMessage(result.error.message);
+        setLoading(false);
+      }
+      // On success Stripe redirects to /thankyou, so the button stays in
+      // its processing state until the page unloads.
+    } catch (err) {
+      // confirm() can throw (integration errors, network failures) rather
+      // than return an error result — without this the button stays on
+      // "Processing..." with nothing on screen.
+      trackEvent("checkout_error", { error_message: err instanceof Error ? err.message : String(err) });
+      setErrorMessage(GENERIC_CHECKOUT_ERROR);
       setLoading(false);
     }
   };
@@ -225,17 +302,17 @@ const CheckoutForm = ({ sessionId, onEmailCaptured, onOpenInternational }: { ses
         <div className={styles.formSection}>
           <p className={styles.formSectionLabel}>
             Shipping
-            <button
-              className={styles.shippingLabelBtn}
-              onClick={onOpenInternational}
-              aria-label="International shipping info"
-              type="button"
-            >
-              <InfoIcon />
-              <span className={styles.taxInfoBubble}>Shipping internationally?</span>
-            </button>
+            {shippingRates?.europe && (
+              <button
+                className={styles.shippingLabelBtn}
+                onClick={onOpenInternational}
+                type="button"
+              >
+                Shipping to Europe?
+              </button>
+            )}
           </p>
-          <ShippingAddressElement onReady={onReady} />
+          <ShippingAddressElement onReady={onReady} onChange={handleShippingChange} />
         </div>
         <div className={styles.formSection}>
           <p className={styles.formSectionLabel}>Payment</p>
@@ -263,7 +340,7 @@ const CheckoutForm = ({ sessionId, onEmailCaptured, onOpenInternational }: { ses
         </label>
         <button
           type="submit"
-          disabled={loading || !checkout?.canConfirm || !termsAgreed}
+          disabled={loading || shippingSyncing || !checkout?.canConfirm || !termsAgreed}
           className={styles.checkoutButton}
         >
           {loading ? "Processing..." : "Pay now"}
@@ -387,15 +464,19 @@ const CartSummary = ({
   cart,
   onUpdateItem,
   updatingSlug,
-  onOpenInternational,
+  shippingRates,
 }: {
   cart: CartState;
   onUpdateItem: (slug: ItemSlug, qty: number) => Promise<void>;
   updatingSlug: ItemSlug | null;
-  onOpenInternational: () => void;
+  shippingRates: ShippingRates | null;
 }) => {
   const checkoutState = useCheckoutElements();
   const checkout = checkoutState.type === "success" ? checkoutState.checkout : null;
+  const europeShipping =
+    shippingRates?.europe && checkout?.shipping?.shippingOption.id === shippingRates.europe
+      ? checkout.shipping.shippingOption
+      : null;
 
   const [editItem, setEditItem] = useState<{ slug: ItemSlug; qty: number } | null>(null);
   const [boxCarouselOpen, setBoxCarouselOpen] = useState(false);
@@ -558,17 +639,7 @@ const CartSummary = ({
           )}
           <div className={styles.cartRow}>
             <span className={styles.cartRowLabel}>Shipping</span>
-            <span className={styles.cartFreeRow}>
-              Free US shipping
-              <button
-                className={styles.shippingInfoBtn}
-                onClick={onOpenInternational}
-                aria-label="International shipping info"
-              >
-                <InfoIcon />
-                <span className={styles.taxInfoBubble}>Shipping internationally?</span>
-              </button>
-            </span>
+            <span>{europeShipping ? `${europeShipping.amount} to Europe` : "Free US shipping"}</span>
           </div>
           <div className={styles.cartRow}>
             <span className={`${styles.cartTaxLabel} ${styles.cartRowLabel}`}>
@@ -676,30 +747,19 @@ const CartSummary = ({
 
 const InternationalModal = ({ onClose }: { onClose: () => void }) => (
   <Modal onClose={onClose} panelClassName={styles.internationalPanel}>
-    <h2 className={styles.modalTitle}>International shipping</h2>
+    <h2 className={styles.modalTitle}>Shipping to Europe 🇪🇺</h2>
     <p className={styles.modalBody}>
-      I recently started working with a distributor who can ship
-      internationally to retailers. If you have a local hobby store you
-      frequent, you could ask them to{" "}
-      <a
-        href="https://qmdirect.com/products/pegasuslcm001"
-        target="_blank"
-        rel="noreferrer"
-        className={styles.modalLink}
-      >
-        order via this link
-      </a>
-      .
+      I'm currently in talks with a Europe-based logistics company so I can
+      offer cheaper shipping to everyone in Europe.
     </p>
     <p className={styles.modalBody}>
-      <a
-        href="https://pegasusgames.medium.com/an-update-on-international-shipments-to-outside-the-usa-4e53a216ceb8"
-        target="_blank"
-        rel="noreferrer"
-        className={styles.modalLink}
-      >
-        Read more about international shipping here.
-      </a>
+      By placing an order now, you'll be part of the first wave of orders,
+      shipping out in the coming month. Shipping to Europe is $5.
+    </p>
+    <p className={styles.modalNotice}>
+      <strong>Please note:</strong> it may take up to a month or two for
+      European shipments to arrive. This is my first time trying something
+      like this, so please understand.
     </p>
     <button className={styles.modalClose} onClick={onClose}>
       Got it
@@ -717,6 +777,7 @@ const CheckoutPage = () => {
   const [bizzPinQty, setBizzPinQty] = useState(0);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [shippingRates, setShippingRates] = useState<ShippingRates | null>(null);
   const [initError, setInitError] = useState<string | null>(null);
   const [internationalModalOpen, setInternationalModalOpen] = useState(false);
   const [updatingSlug, setUpdatingSlug] = useState<ItemSlug | null>(null);
@@ -739,9 +800,10 @@ const CheckoutPage = () => {
         if (!res.ok) throw new Error("Failed");
         return res.json();
       })
-      .then(({ clientSecret: secret, sessionId: sid }) => {
+      .then(({ clientSecret: secret, sessionId: sid, shippingRates: rates }) => {
         setClientSecret(secret);
         setSessionId(sid);
+        setShippingRates(rates ?? null);
         trackEvent("checkout_started");
       })
       .catch(() => setInitError("Something went wrong. Please refresh to try again."));
@@ -769,7 +831,7 @@ const CheckoutPage = () => {
         body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou?checkout_session_id={CHECKOUT_SESSION_ID}&checkout_flow=custom_checkout`, ...getStoredUtms(), ...(capturedEmailRef.current && { email: capturedEmailRef.current }) }),
       });
       if (!res.ok) throw new Error("Failed to update");
-      const { clientSecret: newSecret, sessionId: newSid } = await res.json();
+      const { clientSecret: newSecret, sessionId: newSid, shippingRates: newRates } = await res.json();
       const prevQty = slug === "lcm" ? lcmQty : slug === "urg_pin" ? urgPinQty : bizzPinQty;
       const trigger = newQty === 0 ? "remove_item" : prevQty === 0 ? "add_item" : "change_qty";
       trackEvent("checkout_cart_reset", { trigger, item_slug: slug, new_qty: newQty });
@@ -778,6 +840,7 @@ const CheckoutPage = () => {
       setBizzPinQty(newBizzQty);
       setClientSecret(newSecret);
       setSessionId(newSid);
+      setShippingRates(newRates ?? null);
     } catch {
       // silently fail — user can retry
     } finally {
@@ -820,7 +883,7 @@ const CheckoutPage = () => {
                   cart={cart}
                   onUpdateItem={handleUpdateItem}
                   updatingSlug={updatingSlug}
-                  onOpenInternational={() => setInternationalModalOpen(true)}
+                  shippingRates={shippingRates}
                 />
                 <CartUpsell
                   cart={cart}
@@ -830,6 +893,7 @@ const CheckoutPage = () => {
               </div>
               <CheckoutForm
                 sessionId={sessionId}
+                shippingRates={shippingRates}
                 onEmailCaptured={(email) => { capturedEmailRef.current = email; }}
                 onOpenInternational={() => setInternationalModalOpen(true)}
               />

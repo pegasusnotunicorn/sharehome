@@ -5,6 +5,7 @@ import {
   inferSourceFromReferrer,
   formatSourceLine,
 } from "../lib/attribution.js";
+import { shippingRegionFor } from "../lib/regions.js";
 
 const IS_DEV = Deno.env.get("NETLIFY_DEV") === "true";
 const STRIPE_SECRET_KEY = IS_DEV
@@ -264,8 +265,14 @@ export default async function trackConversions(request, context) {
     // Discord, GA4, and Facebook are independent — run them in parallel so the
     // buyer waits for the slowest round-trip, not the sum of three. Each
     // function catches its own errors, so Promise.all can't reject.
+    // Europe orders skip the Sale post: with no Shippo label, the webhook's
+    // Europe order notice is their one Discord message. US orders keep both
+    // (this one for the sale, the webhook's for the label).
+    const isEuropeOrder = shippingRegionFor(shippingCountryOf(stripeData)) === "europe";
     await Promise.all([
-      postSaleToDiscord(request, stripeData, clientId, attribution, checkoutSessionId),
+      isEuropeOrder
+        ? Promise.resolve()
+        : postSaleToDiscord(request, stripeData, clientId, attribution, checkoutSessionId),
       sendToGA4(
         clientId,
         gaSessionId,
@@ -386,6 +393,18 @@ async function postSaleToDiscord(request, stripeData, clientId, attribution, che
   }
 }
 
+// Shipping country from the Stripe session itself (never the /thankyou URL,
+// which the buyer can edit). The field moved across API versions, so all
+// three homes are checked.
+function shippingCountryOf(stripeData) {
+  return (
+    stripeData.collected_information?.shipping_details?.address?.country ??
+    stripeData.shipping_details?.address?.country ??
+    stripeData.shipping?.address?.country ??
+    null
+  );
+}
+
 // Fetch Stripe Checkout Session
 async function getStripeCheckoutDetails(sessionId) {
   try {
@@ -452,6 +471,13 @@ async function sendToGA4(
   };
   // Distinguish referrer-inferred attribution from explicit tags in reports.
   if (attribution.inferred) params.source_inferred = "true";
+  // Region rides on the same purchase event rather than a separate
+  // conversion, so revenue reports stay whole and can be split by region.
+  const shippingCountry = shippingCountryOf(stripeData);
+  if (shippingCountry) {
+    params.shipping_country = shippingCountry;
+    params.shipping_region = shippingRegionFor(shippingCountry);
+  }
   if (sessionId) params.session_id = sessionId;
   if (sessionNumber) params.ga_session_number = sessionNumber;
 

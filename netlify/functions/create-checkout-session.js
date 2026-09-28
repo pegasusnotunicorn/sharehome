@@ -1,4 +1,5 @@
 import stripeModule from "stripe";
+import { EUROPE_COUNTRIES } from "../lib/regions.js";
 
 const IS_DEV = process.env.NETLIFY_DEV === "true";
 
@@ -11,6 +12,10 @@ const PROD_URL = "https://lovecareermagic.com";
 const NORTH_AMERICAN_SHIPPING_ID = IS_DEV
   ? process.env.STRIPE_NORTH_AMERICAN_SHIPPING_ID_TEST
   : process.env.STRIPE_NORTH_AMERICAN_SHIPPING_ID_LIVE;
+
+const EUROPE_SHIPPING_ID = IS_DEV
+  ? process.env.STRIPE_EUROPE_SHIPPING_ID_TEST
+  : process.env.STRIPE_EUROPE_SHIPPING_ID_LIVE;
 
 const PRICE_IDS = {
   lcm: IS_DEV
@@ -137,12 +142,25 @@ export default async function createCheckoutSession(req) {
         ...(userAgent && { user_agent: String(userAgent).slice(0, 500) }),
         ...(gaClientId && { ga_client_id: String(gaClientId).slice(0, 100) }),
       },
-      shipping_address_collection: { allowed_countries: ["US"] },
-      shipping_options: [{ shipping_rate: NORTH_AMERICAN_SHIPPING_ID }],
+      // Europe opens only once its rate exists in this environment, so a
+      // deploy without the env var keeps checkout US-only. The first option
+      // is the session default; the client switches to the Europe rate when
+      // the buyer picks a European country.
+      shipping_address_collection: {
+        allowed_countries: EUROPE_SHIPPING_ID ? ["US", ...EUROPE_COUNTRIES] : ["US"],
+      },
+      shipping_options: [
+        { shipping_rate: NORTH_AMERICAN_SHIPPING_ID },
+        ...(EUROPE_SHIPPING_ID ? [{ shipping_rate: EUROPE_SHIPPING_ID }] : []),
+      ],
       ...(email && { customer_email: email }),
     });
 
-    return new Response(JSON.stringify({ clientSecret: session.client_secret, sessionId: session.id }), {
+    return new Response(JSON.stringify({
+      clientSecret: session.client_secret,
+      sessionId: session.id,
+      shippingRates: { us: NORTH_AMERICAN_SHIPPING_ID, europe: EUROPE_SHIPPING_ID || null },
+    }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

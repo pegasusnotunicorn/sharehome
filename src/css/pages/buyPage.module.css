@@ -421,33 +421,6 @@
   cursor: not-allowed;
 }
 
-.cartFreeRow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.shippingInfoBtn {
-  position: relative;
-  background: none;
-  border: none;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  color: #bbb;
-  cursor: pointer;
-  line-height: 1;
-  user-select: none;
-}
-
-.shippingInfoBtn:hover {
-  color: #888;
-}
-
-.shippingInfoBtn:hover .taxInfoBubble {
-  opacity: 1;
-}
-
 .cartDiscount {
   color: #3d8a4a;
 }
@@ -464,25 +437,26 @@
   gap: 0.25rem;
 }
 
+/* Text link flush right in the uppercase "Shipping" label, so it has to
+ undo the label's font, case and letter-spacing. */
 .shippingLabelBtn {
-  position: relative;
+  margin-left: auto;
   background: none;
   border: none;
   padding: 0;
-  display: inline-flex;
-  align-items: center;
-  color: #bbb;
+  font-family: "Roboto Light";
+  font-size: 0.82rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: #5f5aa2;
+  text-decoration: underline;
+  text-underline-offset: 2px;
   cursor: pointer;
-  line-height: 1;
-  user-select: none;
+  white-space: nowrap;
 }
 
 .shippingLabelBtn:hover {
-  color: #888;
-}
-
-.shippingLabelBtn:hover .taxInfoBubble {
-  opacity: 1;
+  color: #45408a;
 }
 
 .cartTaxPending {
@@ -915,6 +889,23 @@
 
 /* ── International shipping modal ─────────────────────────────── */
 
+.modalNotice {
+  font-family: "Roboto Light";
+  font-size: 0.9rem;
+  color: #323232;
+  line-height: 1.6;
+  margin: 0 0 1.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(95, 90, 162, 0.08);
+  border-left: 3px solid #5f5aa2;
+  border-radius: 6px;
+}
+
+.modalNotice strong {
+  font-family: "Roboto Regular";
+  font-weight: normal;
+}
+
 .internationalPanel {
   position: relative;
   background: #fff;
@@ -1023,16 +1014,6 @@
 
   .upsellCard {
     padding: 1rem;
-  }
-
-  .shippingLabelBtn .taxInfoBubble {
-    right: auto;
-    left: 0;
-  }
-
-  .shippingLabelBtn .taxInfoBubble::after {
-    right: auto;
-    left: 3px;
   }
 
   .cartDetailsToggle {

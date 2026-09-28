@@ -52,7 +52,9 @@ async function sendGA4Event(clientId, gaSessionId, gaSessionNumber) {
 }
 
 export default async function buyHandler(request, context) {
-  if (request.method !== "GET") return;
+  // POST is the Buy button's beacon (BuyButton.tsx): the button navigates to
+  // /checkout itself, so only the event is needed here.
+  if (request.method !== "GET" && request.method !== "POST") return;
 
   // GA4 session identifiers — same extraction as track-conversions.js
   const gaCookie = await context.cookies.get("_ga");
@@ -70,6 +72,10 @@ export default async function buyHandler(request, context) {
 
   // Fire GA4 event in background — doesn't block the redirect
   context.waitUntil(sendGA4Event(clientId, gaSessionId, gaSessionNumber));
+
+  if (request.method === "POST") {
+    return new Response(null, { status: 204, headers: { "Cache-Control": "no-store" } });
+  }
 
   // Forward tracking params (only — no junk) on the /checkout redirect:
   // track-utm is excluded on /buy (this function owns the path), so a tagged

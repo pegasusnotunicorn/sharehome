@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "../css/pages/contactPage.module.css";
 import { NavLink } from "react-router";
-import { BUY_DESTINATION } from "./utils/BuyButton";
+import { BUY_DESTINATION, recordBuyClick } from "./utils/BuyButton";
 import PageIntro from "./utils/PageIntro";
 import PolaroidGallery from "./utils/PolaroidGallery";
 import { CONTACT_POLAROIDS } from "./utils/contactPolaroids";
@@ -95,7 +95,7 @@ const ContactPage = () => {
               </p>
               <p>
                 Thanks for visiting my humble page and please consider{" "}
-                <NavLink to={BUY_DESTINATION}>buying the game!</NavLink>
+                <NavLink to={BUY_DESTINATION} onClick={recordBuyClick}>buying the game!</NavLink>
               </p>
             </>
           )}

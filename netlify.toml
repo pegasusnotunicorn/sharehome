@@ -25,6 +25,14 @@
   path = "/buy"
 
 [[edge_functions]]
+  function = "campaign-links"
+  path = "/smosh"
+
+[[edge_functions]]
+  function = "campaign-links"
+  path = "/smosh/*"
+
+[[edge_functions]]
   function = "track-utm"
   path = "/*"
   excludedPath=[
@@ -32,6 +40,8 @@
     "/netlify/",
     "/thankyou",
     "/buy",
+    "/smosh",
+    "/smosh/*",
     "/sitemap.xml",
     # "/buy_test",
     "/rulebook",

@@ -776,9 +776,9 @@ const InternationalModal = ({ onClose, onOpenWaitlist }: { onClose: () => void; 
   <Modal onClose={onClose} panelClassName={styles.internationalPanel}>
     <h2 className={styles.modalTitle}>Shipping to Europe 🇪🇺</h2>
     <p className={styles.modalBody}>
-      Love, Career &amp; Magic now ships to Europe. I'm working with a
-      Europe-based logistics company so I can offer cheaper shipping, and
-      shipping to Europe is $5.{" "}
+      Love, Career &amp; Magic is finally available in Europe!! I'm working
+      with a Europe-based logistics company so I can get the game to you
+      without the shipping costing a fortune.{" "}
       <a
         href="https://pegasusgames.medium.com/love-career-magic-is-now-available-in-europe-6f69a8c529f0"
         target="_blank"
@@ -796,9 +796,10 @@ const InternationalModal = ({ onClose, onOpenWaitlist }: { onClose: () => void; 
     <p className={styles.modalBody}>
       Don't see your country in the list?{" "}
       <button className={styles.modalLinkBtn} onClick={onOpenWaitlist} type="button">
-        Let me know
+        Tell me where you are
       </button>{" "}
-      and I'll let you know when we ship there.
+      and I'll reach out as soon as I can ship there. Thank you for
+      supporting indie game devs :)
     </p>
     <button className={styles.modalClose} onClick={onClose}>
       Got it

@@ -184,7 +184,7 @@ const CheckoutFormSkeleton = () => (
 
 // ── Checkout form ─────────────────────────────────────────────────────────────
 
-const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInternational, onOpenWaitlist }: { sessionId: string | null; shippingRates: ShippingRates | null; onEmailCaptured: (email: string) => void; onOpenInternational: () => void; onOpenWaitlist: () => void }) => {
+const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInternational, onOpenMissingCountry }: { sessionId: string | null; shippingRates: ShippingRates | null; onEmailCaptured: (email: string) => void; onOpenInternational: () => void; onOpenMissingCountry: () => void }) => {
   const checkoutState = useCheckoutElements();
   const [readyCount, setReadyCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -337,7 +337,7 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
             )}
           </p>
           <ShippingAddressElement onReady={onReady} onChange={handleShippingChange} />
-          <button className={styles.waitlistLink} onClick={onOpenWaitlist} type="button">
+          <button className={styles.missingCountryLink} onClick={onOpenMissingCountry} type="button">
             Don't see your country?
           </button>
         </div>
@@ -793,14 +793,6 @@ const InternationalModal = ({ onClose }: { onClose: () => void }) => (
       European shipments to arrive. This is my first time trying something
       like this, so please understand.
     </p>
-    <p className={styles.modalBody}>
-      Don't see your country in the list?{" "}
-      <a href="/contact" target="_blank" rel="noreferrer" className={styles.modalLink}>
-        Send me an email
-      </a>{" "}
-      and I'll reach out as soon as I can ship there. Thank you for
-      supporting indie game devs :)
-    </p>
     <button className={styles.modalClose} onClick={onClose}>
       Got it
     </button>
@@ -809,7 +801,7 @@ const InternationalModal = ({ onClose }: { onClose: () => void }) => (
 
 // ── Shipping waitlist ─────────────────────────────────────────────────────────
 
-const ShippingWaitlistForm = ({ country, placement }: { country: string | null; placement: "notice" | "modal" }) => {
+const ShippingWaitlistForm = ({ country }: { country: string }) => {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const [error, setError] = useState<string | null>(null);
@@ -828,7 +820,7 @@ const ShippingWaitlistForm = ({ country, placement }: { country: string | null; 
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || GENERIC_CHECKOUT_ERROR);
       setStatus("done");
-      trackEvent("shipping_waitlist_signup", { placement, ...(country && { country }) });
+      trackEvent("shipping_waitlist_signup", { country });
     } catch (err) {
       setStatus("idle");
       setError(err instanceof Error ? err.message : GENERIC_CHECKOUT_ERROR);
@@ -876,19 +868,24 @@ const ShippingWaitlistNotice = ({ country }: { country: string }) => {
       <p className={styles.waitlistNoticeBody}>
         Leave your email and I'll let you know when we do.
       </p>
-      <ShippingWaitlistForm country={country} placement="notice" />
+      <ShippingWaitlistForm country={country} />
     </div>
   );
 };
 
-const ShippingWaitlistModal = ({ country, europeEnabled, onClose }: { country: string | null; europeEnabled: boolean; onClose: () => void }) => (
+const MissingCountryModal = ({ europeEnabled, onClose }: { europeEnabled: boolean; onClose: () => void }) => (
   <Modal onClose={onClose} panelClassName={styles.internationalPanel}>
     <h2 className={styles.modalTitle}>Don't see your country?</h2>
     <p className={styles.modalBody}>
-      Right now I can only ship to the US{europeEnabled ? " and Europe" : ""}.
-      Leave your email and I'll let you know when we ship to your country.
+      Right now I can only ship to the US{europeEnabled ? " and Europe" : ""}.{" "}
+      <a href="/contact" target="_blank" rel="noreferrer" className={styles.modalLink}>
+        Contact me
+      </a>{" "}
+      and I'll see if I can get your country added.
     </p>
-    <ShippingWaitlistForm country={country} placement="modal" />
+    <button className={styles.modalClose} onClick={onClose}>
+      Got it
+    </button>
   </Modal>
 );
 
@@ -906,7 +903,7 @@ const CheckoutPage = () => {
   const [initError, setInitError] = useState<string | null>(null);
   const [internationalModalOpen, setInternationalModalOpen] = useState(false);
   const [visitor, setVisitor] = useState<VisitorShipping | null>(null);
-  const [waitlistModalOpen, setWaitlistModalOpen] = useState(false);
+  const [missingCountryModalOpen, setMissingCountryModalOpen] = useState(false);
   const [updatingSlug, setUpdatingSlug] = useState<ItemSlug | null>(null);
   // Survives the remount that a cart change forces, so the replacement
   // session can be created with the email already filled in. A ref, not
@@ -1027,7 +1024,7 @@ const CheckoutPage = () => {
                 shippingRates={shippingRates}
                 onEmailCaptured={(email) => { capturedEmailRef.current = email; }}
                 onOpenInternational={() => setInternationalModalOpen(true)}
-                onOpenWaitlist={() => setWaitlistModalOpen(true)}
+                onOpenMissingCountry={() => setMissingCountryModalOpen(true)}
               />
             </div>
           </CheckoutElementsProvider>
@@ -1060,11 +1057,10 @@ const CheckoutPage = () => {
       {internationalModalOpen && (
         <InternationalModal onClose={() => setInternationalModalOpen(false)} />
       )}
-      {waitlistModalOpen && (
-        <ShippingWaitlistModal
-          country={visitor?.country ?? null}
+      {missingCountryModalOpen && (
+        <MissingCountryModal
           europeEnabled={!!shippingRates?.europe}
-          onClose={() => setWaitlistModalOpen(false)}
+          onClose={() => setMissingCountryModalOpen(false)}
         />
       )}
     </div>

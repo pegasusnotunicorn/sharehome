@@ -1052,7 +1052,7 @@
 
 /* ── Shipping waitlist ─────────────────────────────────────────── */
 
-.waitlistLink {
+.missingCountryLink {
   align-self: flex-start;
   background: none;
   border: none;
@@ -1065,7 +1065,7 @@
   cursor: pointer;
 }
 
-.waitlistLink:hover {
+.missingCountryLink:hover {
   color: #45408a;
 }
 

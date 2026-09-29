@@ -772,21 +772,33 @@ const CartSummary = ({
 
 // ── International modal ───────────────────────────────────────────────────────
 
-const InternationalModal = ({ onClose }: { onClose: () => void }) => (
+const InternationalModal = ({ onClose, onOpenWaitlist }: { onClose: () => void; onOpenWaitlist: () => void }) => (
   <Modal onClose={onClose} panelClassName={styles.internationalPanel}>
     <h2 className={styles.modalTitle}>Shipping to Europe 🇪🇺</h2>
     <p className={styles.modalBody}>
-      I'm currently in talks with a Europe-based logistics company so I can
-      offer cheaper shipping to everyone in Europe.
-    </p>
-    <p className={styles.modalBody}>
-      By placing an order now, you'll be part of the first wave of orders,
-      shipping out in the coming month. Shipping to Europe is $5.
+      Love, Career &amp; Magic now ships to Europe. I'm working with a
+      Europe-based logistics company so I can offer cheaper shipping, and
+      shipping to Europe is $5.{" "}
+      <a
+        href="https://pegasusgames.medium.com/love-career-magic-is-now-available-in-europe-6f69a8c529f0"
+        target="_blank"
+        rel="noreferrer"
+        className={styles.modalLink}
+      >
+        Read more about shipping to Europe here.
+      </a>
     </p>
     <p className={styles.modalNotice}>
       <strong>Please note:</strong> it may take up to a month or two for
       European shipments to arrive. This is my first time trying something
       like this, so please understand.
+    </p>
+    <p className={styles.modalBody}>
+      Don't see your country in the list?{" "}
+      <button className={styles.modalLinkBtn} onClick={onOpenWaitlist} type="button">
+        Let me know
+      </button>{" "}
+      and I'll let you know when we ship there.
     </p>
     <button className={styles.modalClose} onClick={onClose}>
       Got it
@@ -1045,7 +1057,13 @@ const CheckoutPage = () => {
         <a href="https://stripe.com" target="_blank" rel="noreferrer">Stripe</a>
       </p>
       {internationalModalOpen && (
-        <InternationalModal onClose={() => setInternationalModalOpen(false)} />
+        <InternationalModal
+          onClose={() => setInternationalModalOpen(false)}
+          onOpenWaitlist={() => {
+            setInternationalModalOpen(false);
+            setWaitlistModalOpen(true);
+          }}
+        />
       )}
       {waitlistModalOpen && (
         <ShippingWaitlistModal

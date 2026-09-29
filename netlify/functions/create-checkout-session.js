@@ -1,5 +1,5 @@
 import stripeModule from "stripe";
-import { EUROPE_COUNTRIES } from "../lib/regions.js";
+import { EUROPE_COUNTRIES, shippingRegionFor } from "../lib/regions.js";
 
 const IS_DEV = process.env.NETLIFY_DEV === "true";
 
@@ -32,7 +32,7 @@ const PRICE_IDS = {
 const LCM_MAX_QTY = 12;
 const PIN_MAX_QTY = 99;
 
-export default async function createCheckoutSession(req) {
+export default async function createCheckoutSession(req, context) {
   if (req.method !== "POST") {
     return new Response("Method Not Allowed", { status: 405 });
   }
@@ -160,6 +160,7 @@ export default async function createCheckoutSession(req) {
       clientSecret: session.client_secret,
       sessionId: session.id,
       shippingRates: { us: NORTH_AMERICAN_SHIPPING_ID, europe: EUROPE_SHIPPING_ID || null },
+      visitor: visitorShipping(context?.geo?.country?.code),
     }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
@@ -171,4 +172,15 @@ export default async function createCheckoutSession(req) {
       headers: { "Content-Type": "application/json" },
     });
   }
+}
+
+// Where the visitor appears to be (Netlify geolocation) and whether checkout
+// can ship there, so the page can offer the shipping waitlist up front to
+// someone who would otherwise fill the form and find their country missing.
+// Only a hint — a VPN or a gift to a US address still checks out normally.
+function visitorShipping(country) {
+  if (!country) return { country: null, canShip: null };
+  const region = shippingRegionFor(country);
+  const canShip = region === "us" || (region === "europe" && !!EUROPE_SHIPPING_ID);
+  return { country, canShip };
 }

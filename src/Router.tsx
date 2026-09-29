@@ -29,9 +29,10 @@ const RafflePage = lazy(() => import("./components/RafflePage"));
 
 // /buy is handled server-side by netlify/edge-functions/buy.js: the GA4
 // checkout_flow_assigned event and UTM forwarding onto the /checkout redirect.
-// This route only mounts on SPA navigations (Buy buttons are NavLinks), which
-// never send a request to /buy — so force a full-page load of the same URL and
-// let the edge function take over.
+// Buy buttons skip it (they go to /checkout and beacon /buy for the event), so
+// this route only mounts if an in-app link to /buy is added — those never send
+// a request to /buy, so force a full-page load and let the edge function take
+// over.
 const BUY_EDGE_ATTEMPT_KEY = "buy_edge_attempt_at";
 
 const BuyGate = () => {

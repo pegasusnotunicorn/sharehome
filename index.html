@@ -176,6 +176,11 @@
         height: 100%;
         width: 100%;
         position: absolute;
+        /* Pinned so the static hero's top margin (which collapses through
+           <body>) can't carry the texture down and back up as it's hidden —
+           that jump was the page's largest layout shift. */
+        top: 0;
+        left: 0;
         z-index: -1;
         opacity: 0.1;
         background-color: rgba(244, 236, 194);

@@ -40,6 +40,30 @@ interface ShippingRates {
   europe: string | null;
 }
 
+// Where create-checkout-session geolocated the visitor, and whether checkout
+// ships there. Both null when the location is unknown.
+interface VisitorShipping {
+  country: string | null;
+  canShip: boolean | null;
+}
+
+const countryNames = (() => {
+  try {
+    return new Intl.DisplayNames(["en"], { type: "region" });
+  } catch {
+    return null;
+  }
+})();
+
+function countryName(code: string | null): string | null {
+  if (!code) return null;
+  try {
+    return countryNames?.of(code) ?? null;
+  } catch {
+    return null;
+  }
+}
+
 const CART_ITEMS_META: Record<ItemSlug, { name: string; desc: string; img: string; price: number; min: number; max: number }> = {
   lcm: { name: "Love, Career & Magic", desc: "", img: "/images/box_transparent.webp", price: LCM_PRICE, min: 1, max: LCM_MAX_QTY },
   urg_pin: { name: "Urg pin", desc: "An enamel pin of Urg, the Hacker.", img: "/images/members/urg-pin.webp", price: PIN_PRICE, min: 0, max: PIN_MAX_QTY },
@@ -160,7 +184,7 @@ const CheckoutFormSkeleton = () => (
 
 // ── Checkout form ─────────────────────────────────────────────────────────────
 
-const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInternational }: { sessionId: string | null; shippingRates: ShippingRates | null; onEmailCaptured: (email: string) => void; onOpenInternational: () => void }) => {
+const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInternational, onOpenWaitlist }: { sessionId: string | null; shippingRates: ShippingRates | null; onEmailCaptured: (email: string) => void; onOpenInternational: () => void; onOpenWaitlist: () => void }) => {
   const checkoutState = useCheckoutElements();
   const [readyCount, setReadyCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -313,6 +337,9 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
             )}
           </p>
           <ShippingAddressElement onReady={onReady} onChange={handleShippingChange} />
+          <button className={styles.waitlistLink} onClick={onOpenWaitlist} type="button">
+            Don't see your country?
+          </button>
         </div>
         <div className={styles.formSection}>
           <p className={styles.formSectionLabel}>Payment</p>
@@ -749,21 +776,119 @@ const InternationalModal = ({ onClose }: { onClose: () => void }) => (
   <Modal onClose={onClose} panelClassName={styles.internationalPanel}>
     <h2 className={styles.modalTitle}>Shipping to Europe 🇪🇺</h2>
     <p className={styles.modalBody}>
-      I'm currently in talks with a Europe-based logistics company so I can
-      offer cheaper shipping to everyone in Europe.
-    </p>
-    <p className={styles.modalBody}>
-      By placing an order now, you'll be part of the first wave of orders,
-      shipping out in the coming month. Shipping to Europe is $5.
+      Love, Career &amp; Magic is finally available in Europe! I'm working
+      with a Europe-based logistics company so I can get the game to you
+      without the shipping costing a fortune.{" "}
+      <a
+        href="https://pegasusgames.medium.com/love-career-magic-is-now-available-in-europe-6f69a8c529f0"
+        target="_blank"
+        rel="noreferrer"
+        className={styles.modalLink}
+      >
+        Read more about shipping to Europe here.
+      </a>
     </p>
     <p className={styles.modalNotice}>
       <strong>Please note:</strong> it may take up to a month or two for
       European shipments to arrive. This is my first time trying something
       like this, so please understand.
     </p>
+    <p className={styles.modalBody}>
+      Don't see your country in the list?{" "}
+      <a href="/contact" target="_blank" rel="noreferrer" className={styles.modalLink}>
+        Send me an email
+      </a>{" "}
+      and I'll reach out as soon as I can ship there. Thank you for
+      supporting indie game devs :)
+    </p>
     <button className={styles.modalClose} onClick={onClose}>
       Got it
     </button>
+  </Modal>
+);
+
+// ── Shipping waitlist ─────────────────────────────────────────────────────────
+
+const ShippingWaitlistForm = ({ country, placement }: { country: string | null; placement: "notice" | "modal" }) => {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setStatus("sending");
+    setError(null);
+    try {
+      const res = await fetch("/.netlify/functions/shipping-waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || GENERIC_CHECKOUT_ERROR);
+      setStatus("done");
+      trackEvent("shipping_waitlist_signup", { placement, ...(country && { country }) });
+    } catch (err) {
+      setStatus("idle");
+      setError(err instanceof Error ? err.message : GENERIC_CHECKOUT_ERROR);
+    }
+  };
+
+  if (status === "done") {
+    return <p className={styles.waitlistDone}>Thanks! You're on the list.</p>;
+  }
+
+  return (
+    <form className={styles.waitlistForm} onSubmit={handleSubmit}>
+      <div className={styles.promoInputRow}>
+        <input
+          type="email"
+          required
+          className={styles.promoInput}
+          placeholder="Email address"
+          aria-label="Email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <button type="submit" className={styles.promoApplyBtn} disabled={status === "sending" || !email.trim()}>
+          {status === "sending" ? "..." : "Notify me"}
+        </button>
+      </div>
+      {error && <p className={styles.promoError}>{error}</p>}
+    </form>
+  );
+};
+
+// Shown up front to visitors geolocated outside the shipping area, so they
+// don't fill out the whole form before finding their country missing.
+const ShippingWaitlistNotice = ({ country }: { country: string }) => {
+  const name = countryName(country);
+  useEffect(() => {
+    trackEvent("shipping_waitlist_shown", { country });
+  }, [country]);
+
+  return (
+    <div className={styles.waitlistNotice}>
+      <p className={styles.waitlistNoticeTitle}>
+        {name ? `We don't ship to ${name} yet` : "We don't ship to your country yet"}
+      </p>
+      <p className={styles.waitlistNoticeBody}>
+        Leave your email and I'll let you know when we do.
+      </p>
+      <ShippingWaitlistForm country={country} placement="notice" />
+    </div>
+  );
+};
+
+const ShippingWaitlistModal = ({ country, europeEnabled, onClose }: { country: string | null; europeEnabled: boolean; onClose: () => void }) => (
+  <Modal onClose={onClose} panelClassName={styles.internationalPanel}>
+    <h2 className={styles.modalTitle}>Don't see your country?</h2>
+    <p className={styles.modalBody}>
+      Right now I can only ship to the US{europeEnabled ? " and Europe" : ""}.
+      Leave your email and I'll let you know when we ship to your country.
+    </p>
+    <ShippingWaitlistForm country={country} placement="modal" />
   </Modal>
 );
 
@@ -780,6 +905,8 @@ const CheckoutPage = () => {
   const [shippingRates, setShippingRates] = useState<ShippingRates | null>(null);
   const [initError, setInitError] = useState<string | null>(null);
   const [internationalModalOpen, setInternationalModalOpen] = useState(false);
+  const [visitor, setVisitor] = useState<VisitorShipping | null>(null);
+  const [waitlistModalOpen, setWaitlistModalOpen] = useState(false);
   const [updatingSlug, setUpdatingSlug] = useState<ItemSlug | null>(null);
   // Survives the remount that a cart change forces, so the replacement
   // session can be created with the email already filled in. A ref, not
@@ -800,10 +927,11 @@ const CheckoutPage = () => {
         if (!res.ok) throw new Error("Failed");
         return res.json();
       })
-      .then(({ clientSecret: secret, sessionId: sid, shippingRates: rates }) => {
+      .then(({ clientSecret: secret, sessionId: sid, shippingRates: rates, visitor: visitorInfo }) => {
         setClientSecret(secret);
         setSessionId(sid);
         setShippingRates(rates ?? null);
+        setVisitor(visitorInfo ?? null);
         trackEvent("checkout_started");
       })
       .catch(() => setInitError("Something went wrong. Please refresh to try again."));
@@ -870,6 +998,9 @@ const CheckoutPage = () => {
         description="Complete your purchase of Love, Career & Magic."
       />
       <PageIntro title="Checkout" />
+      {visitor?.canShip === false && visitor.country && (
+        <ShippingWaitlistNotice country={visitor.country} />
+      )}
       <div className={styles.checkoutSection}>
         {clientSecret ? (
           <CheckoutElementsProvider
@@ -896,6 +1027,7 @@ const CheckoutPage = () => {
                 shippingRates={shippingRates}
                 onEmailCaptured={(email) => { capturedEmailRef.current = email; }}
                 onOpenInternational={() => setInternationalModalOpen(true)}
+                onOpenWaitlist={() => setWaitlistModalOpen(true)}
               />
             </div>
           </CheckoutElementsProvider>
@@ -927,6 +1059,13 @@ const CheckoutPage = () => {
       </p>
       {internationalModalOpen && (
         <InternationalModal onClose={() => setInternationalModalOpen(false)} />
+      )}
+      {waitlistModalOpen && (
+        <ShippingWaitlistModal
+          country={visitor?.country ?? null}
+          europeEnabled={!!shippingRates?.europe}
+          onClose={() => setWaitlistModalOpen(false)}
+        />
       )}
     </div>
   );

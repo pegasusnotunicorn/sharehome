@@ -3,14 +3,14 @@
 // Shippo) and conversion tracking (region on the purchase event), so they
 // can't drift apart.
 
-// Every European destination Stripe accepts in allowed_countries, EU or not.
-// Russia and Belarus are left out.
+// Exactly the destinations the logistics partner quoted from its Hungarian
+// warehouse (rate sheet of 23 Sep 2026), minus Cyprus and Malta — those ship
+// by air express and cost several times the rest. GB covers both Great
+// Britain and Northern Ireland.
 export const EUROPE_COUNTRIES = [
-  "AD", "AL", "AT", "AX", "BA", "BE", "BG", "CH", "CY", "CZ", "DE", "DK",
-  "EE", "ES", "FI", "FO", "FR", "GB", "GG", "GI", "GR", "HR", "HU", "IE",
-  "IM", "IS", "IT", "JE", "LI", "LT", "LU", "LV", "MC", "MD", "ME", "MK",
-  "MT", "NL", "NO", "PL", "PT", "RO", "RS", "SE", "SI", "SJ", "SK", "SM",
-  "UA", "VA", "XK",
+  "AT", "BE", "BG", "CZ", "DE", "DK", "EE", "ES", "FI", "FR", "GB", "GR",
+  "HR", "IE", "IT", "LT", "LU", "LV", "NL", "PL", "PT", "RO", "SE", "SI",
+  "SK",
 ];
 
 const EUROPE_SET = new Set(EUROPE_COUNTRIES);

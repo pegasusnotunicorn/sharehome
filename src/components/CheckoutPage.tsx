@@ -776,7 +776,7 @@ const InternationalModal = ({ onClose }: { onClose: () => void }) => (
   <Modal onClose={onClose} panelClassName={styles.internationalPanel}>
     <h2 className={styles.modalTitle}>Shipping to Europe 🇪🇺</h2>
     <p className={styles.modalBody}>
-      Love, Career &amp; Magic is finally available in Europe!! I'm working
+      Love, Career &amp; Magic is finally available in Europe! I'm working
       with a Europe-based logistics company so I can get the game to you
       without the shipping costing a fortune.{" "}
       <a

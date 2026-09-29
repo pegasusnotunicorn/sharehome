@@ -772,7 +772,7 @@ const CartSummary = ({
 
 // ── International modal ───────────────────────────────────────────────────────
 
-const InternationalModal = ({ onClose, onOpenWaitlist }: { onClose: () => void; onOpenWaitlist: () => void }) => (
+const InternationalModal = ({ onClose }: { onClose: () => void }) => (
   <Modal onClose={onClose} panelClassName={styles.internationalPanel}>
     <h2 className={styles.modalTitle}>Shipping to Europe 🇪🇺</h2>
     <p className={styles.modalBody}>
@@ -795,9 +795,9 @@ const InternationalModal = ({ onClose, onOpenWaitlist }: { onClose: () => void; 
     </p>
     <p className={styles.modalBody}>
       Don't see your country in the list?{" "}
-      <button className={styles.modalLinkBtn} onClick={onOpenWaitlist} type="button">
-        Tell me where you are
-      </button>{" "}
+      <a href="/contact" target="_blank" rel="noreferrer" className={styles.modalLink}>
+        Send me an email
+      </a>{" "}
       and I'll reach out as soon as I can ship there. Thank you for
       supporting indie game devs :)
     </p>
@@ -1058,13 +1058,7 @@ const CheckoutPage = () => {
         <a href="https://stripe.com" target="_blank" rel="noreferrer">Stripe</a>
       </p>
       {internationalModalOpen && (
-        <InternationalModal
-          onClose={() => setInternationalModalOpen(false)}
-          onOpenWaitlist={() => {
-            setInternationalModalOpen(false);
-            setWaitlistModalOpen(true);
-          }}
-        />
+        <InternationalModal onClose={() => setInternationalModalOpen(false)} />
       )}
       {waitlistModalOpen && (
         <ShippingWaitlistModal

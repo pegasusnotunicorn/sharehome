@@ -215,7 +215,7 @@ export async function createOrder({
  * @param {string} [opts.shipmentMetadata] - free-form string on the shipment (max 100 chars). Visible from Shippo's Shipments view.
  * @param {number} opts.maxLabelUsd - hard ceiling; refuse to buy above this.
  * @param {string} [opts.order] - Shippo Order object_id to link the transaction to.
- * @param {string} [opts.reference1] - prints on the USPS label (max 30 chars).
+ * @param {string} [opts.reference1] - prints on the label (max 30 chars).
  * @param {string} [opts.reference2] - second label reference (max 30 chars).
  * @param {Object} [opts.customs] - customs declaration data for military/international shipments.
  *   Automatically applied when `to.state` is AE/AP/AA (military).
@@ -256,7 +256,14 @@ export async function createLabel({
   const shipment = await shippoFetch("/shipments/", {
     address_from: from,
     address_to: to,
-    parcels: [shippoParcel],
+    // References go on the parcel too: UPS (incl. Ground Saver) only prints
+    // package-level references on domestic labels, and Shippo prefers the
+    // parcel's copy over the shipment's when both are set.
+    parcels: [
+      Object.keys(extra).length
+        ? { ...shippoParcel, extra: { ...shippoParcel.extra, ...extra } }
+        : shippoParcel,
+    ],
     async: false,
     ...(Object.keys(extra).length && { extra }),
     ...(shipmentMetadata && { metadata: String(shipmentMetadata).slice(0, 100) }),

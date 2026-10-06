@@ -2,6 +2,7 @@ import stripeModule from "stripe";
 import fetch from "node-fetch";
 import { getStore } from "@netlify/blobs";
 import { createLabel, createOrder, parcelForGameCount } from "./lib/shippo.js";
+import { STAMPED_LABEL_STORE, stampGroundSaverNote } from "./lib/label-note.js";
 import { shippingAddressFromSession } from "./lib/stripe-shipping.js";
 import { isEuropeCountry } from "../lib/regions.js";
 import {
@@ -536,12 +537,22 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
     console.log(
       `✅ Label ${label.transactionId} — ${label.rate.provider} ${label.rate.service} $${label.rate.amount} — tracking ${label.trackingNumber}`
     );
+    const printUrl =
+      label.rate.token === "ups_ground_saver"
+        ? await stampLabelNote({
+            label,
+            orderNumber: shippoOrderNumber,
+            items: pickListParts,
+            sessionId: session.id,
+          })
+        : label.labelUrl;
     await notifyLabelPurchased({
       session,
       to,
       gameCount,
       parcel: parcelConfig.parcel,
       label,
+      printUrl,
       orderNumber: shippoOrderNumber,
       mailerStatus,
     });
@@ -870,7 +881,30 @@ function formatOrderSummary(session) {
   return lines.join("\n");
 }
 
-async function notifyLabelPurchased({ session, to, gameCount, parcel, label, orderNumber, mailerStatus }) {
+// UPS Ground Saver labels don't print reference fields, so stamp the order
+// number and pick list onto the PDF ourselves and serve that copy. Returns the
+// URL to print from — the stamped copy, or Shippo's original if stamping fails.
+async function stampLabelNote({ label, orderNumber, items, sessionId }) {
+  try {
+    const res = await fetch(label.labelUrl);
+    if (!res.ok) throw new Error(`Label download ${res.status}`);
+    const stamped = await stampGroundSaverNote(new Uint8Array(await res.arrayBuffer()), {
+      heading: orderNumber,
+      lines: items,
+    });
+    await getStore(STAMPED_LABEL_STORE).set(label.transactionId, new Blob([stamped]));
+    return `${SITE_URL}/.netlify/functions/label?id=${label.transactionId}`;
+  } catch (err) {
+    console.error("⚠️  Couldn't stamp the order note on the label:", err.message);
+    await alert(
+      "Couldn't stamp the order note onto this UPS Ground Saver label. The label itself is fine — the Discord link points at Shippo's original, which has no pick list on it.",
+      { source: "shippo", sessionId, orderNumber, error: err.message }
+    );
+    return label.labelUrl;
+  }
+}
+
+async function notifyLabelPurchased({ session, to, gameCount, parcel, label, printUrl, orderNumber, mailerStatus }) {
   const customerLines = [
     `**${to.name || "—"}**`,
     session.customer_details?.email || null,
@@ -890,7 +924,7 @@ async function notifyLabelPurchased({ session, to, gameCount, parcel, label, ord
         title: orderNumber
           ? `📦 Shipping label purchased — ${orderNumber}`
           : "📦 Shipping label purchased",
-        url: label.labelUrl,
+        url: printUrl,
         color: 0x57f287, // Discord green
         fields: [
           { name: "Customer", value: customerLines.join("\n"), inline: true },
@@ -935,7 +969,7 @@ async function notifyLabelPurchased({ session, to, gameCount, parcel, label, ord
             name: "Quick links",
             value: quickLinks({
               trackingUrl: label.trackingUrl,
-              labelUrl: label.labelUrl,
+              labelUrl: printUrl,
             }),
             inline: false,
           },

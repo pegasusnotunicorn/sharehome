@@ -274,7 +274,8 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
             </p>
           </div>
           <p>
-            <a href="/terms">Terms and conditions</a>
+            <a href="/terms">Terms and conditions</a> ·{" "}
+            <a href="/privacy">Privacy policy</a>
           </p>
         </div>
       </div>

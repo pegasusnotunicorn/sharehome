@@ -19,6 +19,7 @@ const LandingPage = lazy(() => import("./components/Home/LandingPage"));
 const AboutPage = lazy(() => import("./components/About/AboutPage"));
 const CharactersPage = lazy(() => import("./components/Characters/CharactersPage"));
 const TermsPage = lazy(() => import("./components/TermsPage"));
+const PrivacyPage = lazy(() => import("./components/PrivacyPage"));
 const ContactPage = lazy(() => import("./components/ContactPage"));
 const ErrorPage = lazy(() => import("./components/ErrorPage"));
 const ArtbookDownloadPage = lazy(() => import("./components/ArtbookDownloadPage"));
@@ -110,6 +111,7 @@ const AppRoutes = () => {
           <Route path="/cart" element={<Navigate to="/checkout" replace />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
         {!isExternalRedirect && <Footer />}

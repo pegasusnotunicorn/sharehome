@@ -7,7 +7,7 @@ const TermsPage = () => {
     <div className="content max-width">
       <CustomHelmet
         title="Terms & privacy policy"
-        description="Terms & privacy policy for Love, Career & Magic."
+        description="Terms, return policy and privacy summary for Love, Career & Magic."
       />
 
       <PageIntro title="Terms & privacy policy" />
@@ -22,7 +22,8 @@ const TermsPage = () => {
           </p>
           <ul>
             <li>
-              Your information is only used to process and ship your order.
+              Your information is used as described in the{" "}
+              <NavLink to="/privacy">privacy policy</NavLink>.
             </li>
             <li>
               All sales are final unless your order arrives damaged or something
@@ -60,44 +61,15 @@ const TermsPage = () => {
         <div className="termsWrapper">
           <h2 className="subtitle">Privacy policy</h2>
           <p>
-            Big game studios can throw millions at advertising—I can’t. I just
-            want my game to be played by the people who will{" "}
-            <strong>actually</strong> love it.
+            I only collect what I need to ship your order, send the updates you
+            signed up for, and find more people who'll love the game. I never
+            sell your personal information. Payments go through Stripe, and you
+            can unsubscribe from emails at any time.
           </p>
           <p>
-            To do that, I use cookies and data to help figure out where to find
-            those players. I don't store or sell any of your personal data. I
-            just use it to connect with the right audience.
-          </p>
-          <ul>
-            <li>
-              I only collect the bare minimum information needed to process and
-              ship your order.
-            </li>
-            <li>
-              I also add your email address to my mailing list, so I can send
-              you updates about the game. You can unsubscribe at any time.
-            </li>
-            <li>
-              I don’t sell, share, or store your data beyond what’s necessary
-              for order fulfillment.
-            </li>
-            <li>
-              I use cookies and analytics to figure out who might enjoy the
-              game, so I can show my ads to the right people.
-            </li>
-            <li>
-              Payments are securely processed through Stripe, which has its own
-              privacy policies.
-            </li>
-            <li>
-              If you have any concerns, <a href="/contact">reach out</a>. I’m
-              happy to help.
-            </li>
-          </ul>
-          <p>
-            Thanks for supporting an independent creator! Every purchase helps
-            keep this dream alive.
+            The full details, including cookies, the services I use and how to
+            delete your data, are in the{" "}
+            <NavLink to="/privacy">privacy policy</NavLink>.
           </p>
         </div>
       </div>

@@ -140,9 +140,11 @@ const PrivacyPage = () => {
           <p>
             <strong>What we keep:</strong> the ID of the comment or message, the
             username, our reply and the date, stored in our private dashboard so
-            we don't reply twice. We delete these records within 90 days. We do
-            not download or keep copies of your profile, followers or other
-            posts.
+            we don't reply twice. We delete these records within 90 days. On
+            YouTube we keep even less: only the comment's ID and link, our
+            reply and the date (never your name or what you wrote), and we
+            delete those records within 30 days. We do not download or keep
+            copies of your profile, followers or other posts.
           </p>
           <p>
             <strong>What we never do with platform data:</strong> sell it, share
@@ -252,7 +254,7 @@ const PrivacyPage = () => {
           <ul>
             <li>Order records: as long as tax and accounting rules require, usually up to 7 years.</li>
             <li>Email list: until you unsubscribe or ask us to delete it.</li>
-            <li>Social media reply records: up to 90 days.</li>
+            <li>Social media reply records: up to 90 days (YouTube: up to 30 days).</li>
             <li>Our own cookies: 30 days. Analytics and ad partners keep data according to their own settings and policies.</li>
             <li>Emails with us: as long as needed to help you, then deleted when no longer needed.</li>
           </ul>

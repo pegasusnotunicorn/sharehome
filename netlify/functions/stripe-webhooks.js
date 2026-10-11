@@ -57,6 +57,10 @@ const MAILERLITE_ABANDONED_GROUP_ID = process.env.MAILERLITE_ABANDONED_GROUP_ID;
 
 const SITE_URL = IS_DEV ? "http://localhost:8888" : "https://lovecareermagic.com";
 
+// Paused: the routine "label purchased" Discord message. Problems with a
+// label still alert. Flip to true to bring the message back.
+const NOTIFY_LABEL_PURCHASED = false;
+
 // How long someone stays locked out of the abandoned-cart sequence after
 // being enrolled. Long enough that nobody gets the same three emails twice
 // over one purchase decision, short enough that a shopper who drifted off
@@ -546,16 +550,19 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
             sessionId: session.id,
           })
         : label.labelUrl;
-    await notifyLabelPurchased({
-      session,
-      to,
-      gameCount,
-      parcel: parcelConfig.parcel,
-      label,
-      printUrl,
-      orderNumber: shippoOrderNumber,
-      mailerStatus,
-    });
+    console.log(`🖨️  Print label ${shippoOrderNumber}: ${printUrl}`);
+    if (NOTIFY_LABEL_PURCHASED) {
+      await notifyLabelPurchased({
+        session,
+        to,
+        gameCount,
+        parcel: parcelConfig.parcel,
+        label,
+        printUrl,
+        orderNumber: shippoOrderNumber,
+        mailerStatus,
+      });
+    }
 
     // Persist tracking back to the Stripe session for idempotency + dashboard visibility.
     try {

@@ -189,6 +189,12 @@
   position: relative;
 }
 
+/* the character page: their card turning in place of the illustration */
+.spotlightCardTurn {
+  width: 440px;
+  max-width: 100%;
+}
+
 .spotlightLeftWrapper .characterImage {
   width: 350px;
   height: 350px;
@@ -243,6 +249,11 @@
 
   .spotlightLeftWrapper {
     width: calc(100% - 2rem);
+  }
+
+  .spotlightCardTurn {
+    width: 100%;
+    margin-top: 2.25rem;   /* clear of the 1 / 25 badge */
   }
 
   .imageCircleMask {

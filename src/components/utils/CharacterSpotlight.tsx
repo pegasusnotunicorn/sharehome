@@ -10,6 +10,7 @@ import "../../css/utils/spotlight.css";
 import { GsapFadeScrub } from "./useGsap";
 import DefaultButton from "../utils/DefaultButton";
 import Modal from "./Modal";
+import CardTurn from "./CardTurn";
 import charStyles from "../../css/pages/characterPage.module.css";
 
 interface CharacterSpotlightProps {
@@ -19,6 +20,7 @@ interface CharacterSpotlightProps {
   index?: number;
   total?: number;
   allCharsButton?: boolean;
+  mockup?: boolean;   // the character page: their card turning (Blender mockup) in place of the illustration
   children?: ReactNode;
 }
 
@@ -132,6 +134,13 @@ export const CharacterSpotlight = (props: CharacterSpotlightProps) => {
                   </div>
                 </div>
               </NavLink>
+            ) : props.mockup ? (
+              <div className="spotlightCardTurn">
+                <CardTurn
+                  src={`/images/mockups/${character.urlName}.webp`}
+                  alt={`${character.name}'s card from Love, Career & Magic, front and back`}
+                />
+              </div>
             ) : (
               <button className="imageClickableBtn" onClick={() => setImageModalOpen(true)} aria-label="View full image">
                 <div className="imageCircleMask noselect">

@@ -16,7 +16,6 @@ import CustomHelmet from "../utils/CustomHelmet";
 import CarouselSection from "../utils/CarouselSection";
 import DefaultButton from "../utils/DefaultButton";
 import Modal from "../utils/Modal";
-import CardTurn from "../utils/CardTurn";
 import charStyles from "../../css/pages/characterPage.module.css";
 import "../../css/utils/spotlight.css";
 import type { CharacterWithNav } from "../../types/character";
@@ -268,14 +267,8 @@ const IndividualCharacter = ({ character }: IndividualCharacterProps) => {
         name={character.name}
         index={character.index}
         total={character.total}
+        mockup
       />
-      <section className={charStyles.cardTurnSection} aria-label={`${character.name}'s card`}>
-        <p className={charStyles.sectionEyebrow}>The card</p>
-        <CardTurn
-          src={`/images/mockups/${character.urlName}.webp`}
-          alt={`${character.name}'s card from Love, Career & Magic, front and back`}
-        />
-      </section>
       <div className={charStyles.characterButtonsWrapper}>
         {prevButton}
         <DefaultButton

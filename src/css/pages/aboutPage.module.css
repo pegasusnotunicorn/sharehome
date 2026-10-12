@@ -99,7 +99,7 @@
   border: 2px solid #323232;
   border-bottom: 2px solid #323232;
   background: #fff;
-  color: #999;
+  color: #6e6563;
   border-radius: 8px 8px 0 0;
   transform: translateY(10px);
   transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
@@ -294,7 +294,7 @@
   font-family: "Rowdies-Light";
   font-size: 0.8rem;
   line-height: 1.6;
-  color: #777;
+  color: #6e6563;
   margin: 0;
 }
 

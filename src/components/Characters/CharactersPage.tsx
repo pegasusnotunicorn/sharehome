@@ -220,14 +220,16 @@ const CharactersPage = () => {
         </GsapFadeScrub>
         {!chosenCharacter && <ExpansionCharactersSection />}
         <EmojiSection />
-        <CarouselSection
-          className={charStyles.carousel}
-          random
-          loop
-          totalPictures={15}
-          directory="/images/photoshoot/characters"
-          filename="character"
-        />
+        {!chosenCharacter && (
+          <CarouselSection
+            className={charStyles.carousel}
+            random
+            loop
+            totalPictures={15}
+            directory="/images/photoshoot/characters"
+            filename="character"
+          />
+        )}
       </div>
     );
   }

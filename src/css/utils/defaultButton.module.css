@@ -167,6 +167,15 @@ a.btn.primary {
   --btn-color-glow: rgba(241, 219, 75, 0.3);
 }
 
+.colorRed.primary {
+  /* solid Pegasus red: white text needs 4.5:1, which the lighter red gradient missed (5.0:1 here) */
+  background: #d81e18;
+}
+
+.colorRed.primary::before {
+  display: none;
+}
+
 .colorYellow.primary,
 a.colorYellow.primary {
   color: #323232;

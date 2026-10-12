@@ -448,6 +448,16 @@
   }
   .caption {
     border-radius: 0.5rem;
+    /* taller and darker, so a white name stays readable on the palest art */
+    padding-top: 2.5rem;
+    background-image: linear-gradient(
+      rgba(35, 25, 22, 0),
+      rgba(35, 25, 22, 0.75) 45%,
+      rgba(35, 25, 22, 0.92)
+    );
+  }
+  .caption > .name {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
   }
 }
 

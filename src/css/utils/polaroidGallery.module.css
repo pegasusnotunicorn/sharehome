@@ -107,7 +107,7 @@
   margin: 0;
   font-size: 0.75rem;
   color: #666;
-  font-family: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  font-family: "Rowdies-Light", "Roboto", system-ui, sans-serif;
   letter-spacing: 0.02em;
   line-height: 1.4;
   text-align: center;
@@ -119,7 +119,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #9a9282;
-  font-family: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  font-family: "Rowdies-Light", "Roboto", system-ui, sans-serif;
   text-align: center;
 }
 
@@ -136,7 +136,7 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #9a9282;
-  font-family: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  font-family: "Rowdies-Light", "Roboto", system-ui, sans-serif;
   text-align: center;
 }
 
@@ -207,7 +207,7 @@
   margin: 0;
   font-size: 1.1rem;
   color: #666;
-  font-family: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  font-family: "Rowdies-Light", "Roboto", system-ui, sans-serif;
   line-height: 1.45;
   text-align: center;
 }

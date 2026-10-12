@@ -270,7 +270,7 @@
   padding: 0;
   font-family: "Roboto Light";
   font-size: 0.82rem;
-  color: #777;
+  color: #6e6563;
   cursor: pointer;
   text-align: left;
   text-decoration: underline;
@@ -329,7 +329,7 @@
 .promoError {
   font-family: "Roboto Light";
   font-size: 0.8rem;
-  color: #dd7373;
+  color: #b54848;
   margin: 0;
 }
 
@@ -352,7 +352,7 @@
   padding: 0;
   font-family: "Roboto Light";
   font-size: 0.78rem;
-  color: #999;
+  color: #6e6563;
   cursor: pointer;
   text-decoration: underline;
 }
@@ -378,7 +378,7 @@
 .qtyModalDesc {
   font-family: "Roboto Light";
   font-size: 0.85rem;
-  color: #777;
+  color: #6e6563;
   margin: 0 0 1.25rem;
   line-height: 1.4;
 }
@@ -707,7 +707,7 @@
   padding: 0;
   font-family: "Roboto Light";
   font-size: 0.82rem;
-  color: #777;
+  color: #6e6563;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
@@ -785,7 +785,7 @@
 }
 
 .checkoutError {
-  color: #dd7373;
+  color: #b54848;
   font-family: "Roboto Light";
   font-size: 0.875rem;
   margin: 0;

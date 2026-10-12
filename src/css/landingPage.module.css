@@ -1066,21 +1066,21 @@
 }
 
 .mechanicsLabelLaughing {
-  color: #dd7373;
-  background-color: rgba(221, 115, 115, 0.12);
+  color: #b54848;
+  background-color: rgba(221, 115, 115, 0.1);
   border-color: rgba(221, 115, 115, 0.25);
 }
 
 .mechanicsLabelStorytelling {
-  color: #649a85;
-  background-color: rgba(125, 175, 156, 0.14);
+  color: #3f7a64;
+  background-color: rgba(125, 175, 156, 0.1);
   border-color: rgba(125, 175, 156, 0.28);
 }
 
 .mechanicsLabelPartyGames {
-  color: #9d7a00;
-  background-color: rgba(241, 219, 75, 0.18);
-  border-color: rgba(241, 219, 75, 0.35);
+  color: #231916;
+  background-color: #f1db4b;
+  border-color: #e5cc2a;
 }
 
 .mechanicsLabelImprov {

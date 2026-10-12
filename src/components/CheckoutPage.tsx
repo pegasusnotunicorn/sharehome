@@ -981,7 +981,7 @@ const CheckoutPage = () => {
           description="Complete your purchase of Love, Career & Magic."
         />
         <PageIntro title="Checkout" />
-        <p style={{ textAlign: "center", fontFamily: "Roboto Light", color: "#dd7373", marginTop: "2rem" }}>
+        <p style={{ textAlign: "center", fontFamily: "Roboto Light", color: "#b54848", marginTop: "2rem" }}>
           {initError}
         </p>
       </div>

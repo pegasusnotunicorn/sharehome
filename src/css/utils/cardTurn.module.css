@@ -1,0 +1,64 @@
+/* A mockup card turning: the sprite shows one view at a time as a background (CardTurn.tsx) */
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 464 / 308;
+  margin: 0 auto;
+  background-repeat: no-repeat;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  border-radius: 8px;
+}
+
+.stage:active {
+  cursor: grabbing;
+}
+
+.stage:focus-visible {
+  outline: 3px solid #5f5aa2;
+  outline-offset: 4px;
+}
+
+.loading {
+  position: absolute;
+  inset: 18% 30%;
+  border-radius: 12px;
+  background: rgba(50, 50, 50, 0.06);
+}
+
+.hint {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(50, 50, 50, 0.2);
+  font-family: "Roboto Light", sans-serif;
+  font-size: 14px;
+  color: #323232;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.hint img {
+  width: 14px;
+  height: 14px;
+}
+
+.ready .hint {
+  opacity: 1;
+}
+
+.ready.touched .hint {
+  opacity: 0;
+}

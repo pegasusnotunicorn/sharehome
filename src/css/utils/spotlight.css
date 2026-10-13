@@ -191,7 +191,7 @@
 
 /* the character page: their card turning in place of the illustration */
 .spotlightCardTurn {
-  width: 440px;
+  width: 500px;   /* the card fills about 61% of each frame */
   max-width: 100%;
 }
 

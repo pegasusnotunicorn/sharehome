@@ -25,6 +25,7 @@ interface MountOptions {
   art: BoxArt;
   video: BoxVideo;
   onMoved?: (moved: boolean) => void; // turned away from its rest pose, and back
+  onRest?: (atRest: boolean) => void; // shut and in its rest pose (not mid-spin, not turned, not open)
   onOpen?: (open: boolean) => void;
   onFail: () => void;
 }
@@ -36,7 +37,7 @@ const REST: [number, number] = [-0.42, 0.61];
 const DIST = 3.085, AIM_Y = -0.105, FLOOR = -0.61;
 const OPEN_MS = 950;
 
-export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, onOpen, onFail }: MountOptions): Promise<BoxViewerApi | null> {
+export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, onRest, onOpen, onFail }: MountOptions): Promise<BoxViewerApi | null> {
   let T: Three, r: THREE.WebGLRenderer;
   try {
     T = await loadThree();
@@ -218,8 +219,11 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     Object.assign(player.style, { left: `${(x0 + x1 - w) / 2}px`, top: `${(y0 + y1 - h) / 2}px`, width: `${w}px`, height: `${h}px` });
   };
 
+  let atRest: boolean | null = null;
   const draw = () => {
     if (dead || !W || !H || !ctx) return;
+    const r0 = !openTo && !opened && q.angleTo(rest) < 0.02;
+    if (r0 !== atRest) onRest?.((atRest = r0));
     camAt();
     r.setSize(W, H, false);
     r.render(sc, cam);

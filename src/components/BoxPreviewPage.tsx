@@ -52,12 +52,6 @@ const BoxPreviewPage = () => {
               text="Buy now"
             />
           </div>
-          <img
-            className={styles.scroll}
-            src="/images/just_keep_scrolling.webp"
-            alt="or just keep scrolling"
-            draggable={false}
-          />
         </div>
 
         <div className={styles.stageWrap}>
@@ -67,6 +61,7 @@ const BoxPreviewPage = () => {
             label="The Love, Career & Magic game box"
             still="/images/box/still.webp"
             onOpen={setOpen}
+            behind={<img className={styles.bizz} src="/images/box/bizz.webp" alt="" draggable={false} />}
             fallback={
               <a
                 className={styles.fallback}

@@ -30,8 +30,7 @@
 }
 
 .head,
-.ctas,
-.scroll {
+.ctas {
   position: relative;
   transition: opacity 0.4s, max-height 0.5s, margin 0.5s;
 }
@@ -65,6 +64,54 @@
   flex: 1;
   min-height: 0;
   width: min(100%, 1100px);
+}
+
+/* Bizz, peeking over the back of the box (placed in its rest frame, his cut-off edge behind it). He
+   pops up while the box sits at rest, ducks when it's turned or opened, and now and then wiggles. */
+.bizz {
+  position: absolute;
+  left: 27%;
+  bottom: 64%;
+  width: 24%;
+  transform-origin: 50% 100%;
+  translate: 0 45%;
+  opacity: 0;
+  transition: translate 0.25s ease-in, opacity 0.2s 0.05s;
+}
+
+[data-shown] > .bizz {
+  translate: 0 0;
+  opacity: 1;
+  transition: translate 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s, opacity 0.2s 0.15s;
+  animation: bizzWiggle 5s 1.2s infinite;
+}
+
+@keyframes bizzWiggle {
+  0%,
+  86%,
+  100% {
+    rotate: 0deg;
+    scale: 1;
+  }
+  89% {
+    rotate: -3deg;
+    scale: 1.02;
+  }
+  92% {
+    rotate: 3deg;
+  }
+  95% {
+    rotate: -1.5deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bizz,
+  [data-shown] > .bizz {
+    translate: 0 0;
+    transition: opacity 0.3s;
+    animation: none;
+  }
 }
 
 /* "Click the box to learn more", its arrow pointing up at the box */
@@ -102,17 +149,7 @@
   margin-top: 0.5rem;
 }
 
-.scroll {
-  width: 130px;
-  max-height: 80px;
-  margin-top: 0.6rem;
-  opacity: 0.85;
-}
 
-/* while the trailer plays, the box has the floor */
-.open .scroll {
-  opacity: 0;
-}
 
 /* wide screens: the 3D box has the whole hero; the words sit over its left part, the box (closed)
    keeps to the rest. Open, the words make way and the trailer plays across the screen. */
@@ -161,10 +198,6 @@
     margin-top: 1.6rem;
   }
 
-  .scroll {
-    margin-top: 1.4rem;
-    margin-left: 1rem;
-  }
 
   .stageWrap {
     --frame-left: 0.4;
@@ -187,9 +220,6 @@
     display: none;
   }
 
-  .scroll {
-    display: none;
-  }
 
   .head {
     max-height: 14rem; /* so it can fold away when the box opens */
@@ -209,8 +239,3 @@
   }
 }
 
-@media only screen and (max-height: 700px) and (min-width: 901px) {
-  .scroll {
-    display: none;
-  }
-}

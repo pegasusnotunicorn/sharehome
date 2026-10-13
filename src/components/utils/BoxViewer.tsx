@@ -13,16 +13,20 @@ interface BoxViewerProps {
   label: string;
   still?: string;
   fallback?: ReactNode;
+  // something behind the box, placed in the frame of the box at rest (like the still), shown only
+  // while the box sits there, shut; it ducks behind the box whenever it's turned or opened
+  behind?: ReactNode;
   onOpen?: (open: boolean) => void;
 }
 
-const BoxViewer = ({ art, video, label, still, fallback, onOpen }: BoxViewerProps) => {
+const BoxViewer = ({ art, video, label, still, fallback, behind, onOpen }: BoxViewerProps) => {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const api = useRef<BoxViewerApi | null>(null);
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
   const [moved, setMoved] = useState(false);
   const [open, setOpen] = useState(false);
+  const [atRest, setAtRest] = useState(false);
   const onOpenRef = useRef(onOpen);
   onOpenRef.current = onOpen;
 
@@ -36,6 +40,7 @@ const BoxViewer = ({ art, video, label, still, fallback, onOpen }: BoxViewerProp
           art,
           video,
           onMoved: (m) => !gone && setMoved(m),
+          onRest: (r) => !gone && setAtRest(r),
           onOpen: (o) => {
             if (gone) return;
             setOpen(o);
@@ -73,6 +78,11 @@ const BoxViewer = ({ art, video, label, still, fallback, onOpen }: BoxViewerProp
       aria-roledescription="3D box"
       aria-label={`${label}. Drag, or use the arrow keys, to turn it. Click it, or press Enter, to open it and watch the trailer.`}
     >
+      {behind && (
+        <span className={styles.behind} data-shown={(ready && atRest) || undefined} aria-hidden="true">
+          {behind}
+        </span>
+      )}
       {still && <img className={styles.still} src={still} alt="" aria-hidden="true" />}
       <span className={`${styles.tools} ${ready ? styles.toolsShown : ""}`.trim()}>
         <button className={styles.pill} type="button" aria-pressed={open} onClick={() => api.current?.open(!open)}>

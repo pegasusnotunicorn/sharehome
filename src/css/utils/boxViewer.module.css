@@ -34,6 +34,7 @@
 
 .stage > canvas {
   position: absolute;
+  z-index: 1;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -47,7 +48,8 @@
   container-type: size;
 }
 
-.still {
+.still,
+.behind {
   position: absolute;
   top: 50%;
   left: calc((var(--frame-left, 0) + (1 - var(--frame-left, 0)) / 2) * 100cqw);
@@ -58,6 +60,15 @@
   transition: opacity 0.4s;
 }
 
+.still {
+  z-index: 1;
+}
+
+/* behind the canvas, so the box covers it; its contents are placed in % of the box's rest frame */
+.behind {
+  z-index: 0;
+}
+
 .stage:global(.ready) .still {
   opacity: 0;
 }
@@ -65,6 +76,7 @@
 /* the trailer, on the tray's floor (placed by boxViewer3d.ts) */
 .stage iframe[data-box-video] {
   position: absolute;
+  z-index: 2;
   border: 0;
   border-radius: 4px;
   background: #1c1a2b;
@@ -80,10 +92,10 @@
 /* "Open box", and "Reset" beside it once it's been turned (it slides in, "Open box" glides over) */
 .tools {
   position: absolute;
+  z-index: 3;
   left: calc((var(--box-left) + (1 - var(--box-left)) / 2) * 100%);
   bottom: 10px;
   translate: -50% 0;
-  z-index: 1;
   display: flex;
   align-items: center;
   opacity: 0;

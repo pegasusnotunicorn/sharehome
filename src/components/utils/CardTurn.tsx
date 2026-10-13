@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "../../css/utils/cardTurn.module.css";
 
-// One card turning around (front, edge, back), from a mockup sprite: 24 views, 8 across and 3 down,
-// view 0 a three-quarter view of the front. Made in Blender (LCM repo: marketing/video/tools/blender).
+// One card turning around (front, edge, back), from a mockup sprite: 48 views of 600x450, 8 across and 6 down,
+// view 0 a three-quarter view of the front, view 24 the back. Made in Blender (LCM repo: marketing/video/tools/blender).
 // It turns slowly by itself until someone drags it; it stays still for visitors who asked for less motion.
-const FRAMES = 24;
+const FRAMES = 48;
 const COLS = 8;
 const ROWS = FRAMES / COLS;
-const PX_PER_FRAME = 12;
-const SPIN_MS = 120;
+const PX_PER_FRAME = 6;
+const SPIN_MS = 60;
 
 interface CardTurnProps {
   src: string;
@@ -96,17 +96,20 @@ const CardTurn = ({ src, alt }: CardTurnProps) => {
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
       onKeyDown={onKeyDown}
-      style={
-        ready
-          ? {
-              backgroundImage: `url("${src}")`,
-              backgroundSize: `${COLS * 100}% ${ROWS * 100}%`,
-              backgroundPosition: `${(col / (COLS - 1)) * 100}% ${(row / (ROWS - 1)) * 100}%`,
-            }
-          : undefined
-      }
     >
-      {!ready && <span className={styles.loading} aria-hidden="true" />}
+      {ready ? (
+        <span
+          className={styles.sprite}
+          aria-hidden="true"
+          style={{
+            backgroundImage: `url("${src}")`,
+            backgroundSize: `${COLS * 100}% ${ROWS * 100}%`,
+            backgroundPosition: `${(col / (COLS - 1)) * 100}% ${(row / (ROWS - 1)) * 100}%`,
+          }}
+        />
+      ) : (
+        <span className={styles.loading} aria-hidden="true" />
+      )}
       <span className={`${styles.hint} noselect`} aria-hidden="true">
         <img src="/images/icons/drag.svg" alt="" />
         Drag to turn

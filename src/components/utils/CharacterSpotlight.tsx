@@ -137,7 +137,7 @@ export const CharacterSpotlight = (props: CharacterSpotlightProps) => {
             ) : props.mockup ? (
               <div className="spotlightCardTurn">
                 <CardTurn
-                  src={`/images/mockups/${character.urlName}.webp`}
+                  src={`/images/mockups/${character.urlName}.webp?v=2`}
                   alt={`${character.name}'s card from Love, Career & Magic, front and back`}
                 />
               </div>

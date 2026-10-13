@@ -36,7 +36,8 @@ const BoxPreviewPage = () => {
             {/* Bizz says it: on wide screens he's to the right of the words, on phones below them */}
             <ShoutBubble
               side={isDesktop ? "right" : "bottom"}
-              aim={isDesktop ? 0.2 : 0.35}
+              aim={isDesktop ? 0.2 : 0.2}
+              reach={isDesktop ? 4.5 : 3}
               className={styles.bubble}
             >
               <h1 className={styles.title}>

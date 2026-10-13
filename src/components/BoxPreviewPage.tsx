@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Helmet } from "react-helmet";
 import BoxViewer from "./utils/BoxViewer";
 import BuyButton from "./utils/BuyButton";
+import ShoutBubble from "./utils/ShoutBubble";
+import useWindowDimensions from "./utils/useWindowDimensions";
 import type { BoxArt } from "./utils/box3d";
 import styles from "../css/pages/boxHero.module.css";
 
@@ -20,6 +22,7 @@ const VIDEO = { landscape: "EoQ2VTipXPA", portrait: "fNq9hS6DsTU" };
 
 const BoxPreviewPage = () => {
   const [open, setOpen] = useState(false);
+  const { isDesktop } = useWindowDimensions();
 
   return (
     <div className="content">
@@ -30,10 +33,18 @@ const BoxPreviewPage = () => {
         <div className={styles.bg} aria-hidden="true" />
         <div className={styles.copy}>
           <header className={styles.head}>
-            <h1 className={styles.title}>
-              A party game where{" "}
-              <span className="fantasyEmphasis">fantasy</span> meets reality TV!
-            </h1>
+            {/* Bizz says it: on wide screens he's to the right of the words, on phones below them */}
+            <ShoutBubble
+              side={isDesktop ? "right" : "bottom"}
+              aim={isDesktop ? 0.2 : 0.5}
+              className={styles.bubble}
+            >
+              <h1 className={styles.title}>
+                A party game where{" "}
+                <span className="fantasyEmphasis">fantasy</span> meets reality
+                TV!
+              </h1>
+            </ShoutBubble>
             <p className={styles.facts}>
               <span>12 minutes</span>
               <span aria-hidden="true">·</span>
@@ -61,7 +72,14 @@ const BoxPreviewPage = () => {
             label="The Love, Career & Magic game box"
             still="/images/box/still.webp"
             onOpen={setOpen}
-            behind={<img className={styles.bizz} src="/images/box/bizz.webp" alt="" draggable={false} />}
+            behind={
+              <img
+                className={styles.bizz}
+                src="/images/box/bizz.webp"
+                alt=""
+                draggable={false}
+              />
+            }
             fallback={
               <a
                 className={styles.fallback}

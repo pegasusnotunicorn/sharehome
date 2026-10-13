@@ -4,8 +4,8 @@ import type { BoxArt } from "./box3d";
 import type { BoxVideo, BoxViewerApi } from "./boxViewer3d";
 import styles from "../../css/utils/boxViewer.module.css";
 
-// The game box in 3D (boxViewer3d.ts): turn it, open it to play the trailer inside. It fills its
-// parent. Until the 3D box is in, `still` shows it at rest (a render of the same view); if the browser
+// The game box in 3D (boxViewer3d.ts): turn it, click it to open it and play the trailer inside
+// (a click off it closes it). It fills its parent. Until the 3D box is in, `still` shows it at rest (a render of the same view); if the browser
 // can't show 3D, `fallback` is shown instead.
 interface BoxViewerProps {
   art: BoxArt;
@@ -24,7 +24,6 @@ const BoxViewer = ({ art, video, label, still, fallback, behind, onOpen }: BoxVi
   const api = useRef<BoxViewerApi | null>(null);
   const [failed, setFailed] = useState(false);
   const [ready, setReady] = useState(false);
-  const [moved, setMoved] = useState(false);
   const [open, setOpen] = useState(false);
   const [atRest, setAtRest] = useState(false);
   const onOpenRef = useRef(onOpen);
@@ -39,7 +38,6 @@ const BoxViewer = ({ art, video, label, still, fallback, behind, onOpen }: BoxVi
         mountBoxViewer(stage, {
           art,
           video,
-          onMoved: (m) => !gone && setMoved(m),
           onRest: (r) => !gone && setAtRest(r),
           onOpen: (o) => {
             if (gone) return;
@@ -84,29 +82,6 @@ const BoxViewer = ({ art, video, label, still, fallback, behind, onOpen }: BoxVi
         </span>
       )}
       {still && <img className={styles.still} src={still} alt="" aria-hidden="true" />}
-      <span className={`${styles.tools} ${ready ? styles.toolsShown : ""}`.trim()}>
-        <button className={styles.pill} type="button" aria-pressed={open} onClick={() => api.current?.open(!open)}>
-          {open ? (
-            "Close box"
-          ) : (
-            <>
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d="M5 3.5v9l7.5-4.5z" fill="currentColor" />
-              </svg>
-              Open box
-            </>
-          )}
-        </button>
-        <button
-          className={`${styles.pill} ${styles.reset} ${moved && !open ? styles.resetShown : ""}`.trim()}
-          type="button"
-          tabIndex={moved && !open ? 0 : -1}
-          aria-hidden={!moved || open}
-          onClick={() => api.current?.reset()}
-        >
-          Reset
-        </button>
-      </span>
     </div>
   );
 };

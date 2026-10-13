@@ -2,7 +2,8 @@
 // (cardViewer3d.ts), sharing their renderer. Closed, it can be turned any way (drag, with coasting, or
 // the arrow keys), and its lid lifts a little under the mouse. Open (a click or tap on it, or open()),
 // it turns to face you, the lid comes off and goes under it, and the trailer plays in the tray. Open,
-// it stays put.
+// it stays put; a click anywhere off it closes it. Left alone for a few seconds after being turned,
+// it goes back to its rest pose.
 //
 // It never leaves the frame: the camera stands back far enough for the box at any angle (and for
 // whatever the lid is doing), checked against the box's corners every frame.
@@ -36,6 +37,7 @@ const REST: [number, number] = [-0.42, 0.61];
 // floor's shadow is in frame too (the floor just below the box's reach)
 const DIST = 3.085, AIM_Y = -0.105, FLOOR = -0.61;
 const OPEN_MS = 950;
+const IDLE_MS = 3000; // left this long after being turned, it goes back
 
 export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, onRest, onOpen, onFail }: MountOptions): Promise<BoxViewerApi | null> {
   let T: Three, r: THREE.WebGLRenderer;
@@ -95,12 +97,13 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     textures.push(x);
     return x;
   };
-  let io: IntersectionObserver | null = null, ro: ResizeObserver | null = null, settle = 0;
+  let io: IntersectionObserver | null = null, ro: ResizeObserver | null = null, settle = 0, idle = 0;
   let player: HTMLIFrameElement | null = null, unlisten = () => {};
   const cleanup = () => {
     dead = true;
     [raf, pending, lraf, oraf].forEach(cancelAnimationFrame);
     clearTimeout(settle);
+    clearTimeout(idle);
     ro?.disconnect();
     io?.disconnect();
     sc.traverse((o) => {
@@ -223,7 +226,10 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
   const draw = () => {
     if (dead || !W || !H || !ctx) return;
     const r0 = !openTo && !opened && q.angleTo(rest) < 0.02;
-    if (r0 !== atRest) onRest?.((atRest = r0));
+    if (r0 !== atRest) {
+      atRest = r0;
+      onRest?.(r0);
+    }
     camAt();
     r.setSize(W, H, false);
     r.render(sc, cam);
@@ -253,7 +259,10 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
   let moved = false, intro = false;
   const report = () => {
     const m = q.angleTo(rest) > 0.02;
-    if (m !== moved) onMoved?.((moved = m));
+    if (m !== moved) {
+      moved = m;
+      onMoved?.(m);
+    }
   };
   const turn = (ax: number, ay: number) => {
     q.premultiply(tmp.setFromAxisAngle(Y, ax)).premultiply(tmp.setFromAxisAngle(X, ay)).normalize();
@@ -277,22 +286,31 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     };
     raf = requestAnimationFrame(step);
   };
+  // after a turn, once it's been left alone for a moment, it goes back to rest
+  const idleReset = () => {
+    clearTimeout(idle);
+    idle = window.setTimeout(() => !drag && !openTo && moved && reset(), IDLE_MS);
+  };
   const coast = () => {
     cancelAnimationFrame(raf);
-    if (calm()) return;
+    if (calm()) return idleReset();
     const step = () => {
       v[0] *= 0.94;
       v[1] *= 0.94;
       turn(v[0], v[1]);
       draw();
       if (Math.hypot(...v) > 0.0008) raf = requestAnimationFrame(step);
+      else idleReset();
     };
     raf = requestAnimationFrame(step);
   };
   const reset = () => {
     if (openTo) return;
     cancelAnimationFrame(raf);
-    if (moved) onMoved?.((moved = false)); // it's on its way back
+    if (moved) {
+      moved = false; // it's on its way back
+      onMoved?.(false);
+    }
     const q0 = q.clone(), t0 = performance.now(), ms = calm() ? 0 : 600;
     const step = (now: number) => {
       const t = ms ? Math.min(1, (now - t0) / ms) : 1;
@@ -341,7 +359,10 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     } else {
       qFrom.copy(rest);
       stopPlayer();
-      if (moved) onMoved?.((moved = false));
+      if (moved) {
+        moved = false;
+        onMoved?.(false);
+      }
     }
     const from = opened, l0 = lifted, t0 = performance.now(), ms = calm() ? 0 : OPEN_MS * Math.abs(to - from);
     const step = (now: number) => {
@@ -400,6 +421,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
   stage.onpointerdown = (e) => {
     if (e.button > 0 || (e.target as Element).closest("button, iframe") || still() || drag) return;
     cancelAnimationFrame(raf);
+    clearTimeout(idle);
     intro = false;
     stage.classList.add("used");
     stage.setPointerCapture(e.pointerId);
@@ -432,6 +454,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     stage.classList.remove("drag");
     if (wasTap && over(e.clientX, e.clientY)) return openBox(true);
     if (!stillAtEnd && Math.hypot(...v) > 0.004) coast(); // let go while moving: it coasts
+    else idleReset();
   };
   stage.onpointerup = up;
   stage.onpointercancel = up;
@@ -451,6 +474,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
       intro = false;
       turn(...m);
       schedule();
+      idleReset();
     } else if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       openBox(!openTo);

@@ -1,0 +1,28 @@
+/* A pencil-drawn shout bubble (ShoutBubble.tsx): the outline is an SVG behind the words */
+.bubble {
+  position: relative;
+  padding: 1.6rem 2rem;
+}
+
+.shape {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.shape path {
+  fill: #fff;
+  stroke: #2e2e2e;
+  stroke-width: 2.6;
+  stroke-linejoin: round;
+}
+
+.shape path.second {
+  fill: none;
+  stroke-width: 1;
+  opacity: 0.45;
+}
+
+.content {
+  position: relative;
+}

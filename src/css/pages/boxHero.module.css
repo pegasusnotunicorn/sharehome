@@ -48,6 +48,11 @@
   text-wrap: balance;
 }
 
+/* the title is Bizz's shout: room below (phones) or to the right (wide screens) for the spikes */
+.bubble {
+  margin: 0 0.25rem 50px;
+}
+
 .facts {
   display: flex;
   justify-content: center;
@@ -70,9 +75,10 @@
    pops up while the box sits at rest, ducks when it's turned or opened, and now and then wiggles. */
 .bizz {
   position: absolute;
-  left: 27%;
-  bottom: 64%;
-  width: 24%;
+  left: 40%;
+  bottom: 65%;
+  width: 22%;
+  transform: scaleX(-1); /* facing his words */
   transform-origin: 50% 100%;
   translate: 0 45%;
   opacity: 0;
@@ -117,6 +123,7 @@
 /* "Click the box to learn more", its arrow pointing up at the box */
 .hint {
   position: absolute;
+  z-index: 2; /* over the 3D view */
   right: 4%;
   bottom: 9%;
   width: clamp(150px, 19%, 230px);
@@ -171,7 +178,7 @@
     z-index: 2;
     justify-self: start;
     align-items: flex-start;
-    width: 40%;
+    width: 46%;
     box-sizing: border-box;
     padding-left: max(4vw, calc((100vw - 1600px) / 2));
     padding-right: 1rem;
@@ -185,7 +192,11 @@
   }
 
   .title {
-    font-size: clamp(2rem, 3vw, 3.2rem);
+    font-size: clamp(1.8rem, 2.6vw, 2.8rem);
+  }
+
+  .bubble {
+    margin: 0 60px 0.9rem 0;
   }
 
   .facts {
@@ -222,13 +233,13 @@
 
 
   .head {
-    max-height: 14rem; /* so it can fold away when the box opens */
+    max-height: 24rem; /* so it can fold away when the box opens */
   }
 
   .hint {
-    right: 3%;
-    bottom: 64px;
-    width: 150px;
+    right: 2%;
+    bottom: 8px;
+    width: clamp(140px, 30vw, 220px);
   }
 
   .open .head {

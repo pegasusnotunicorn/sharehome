@@ -14,7 +14,6 @@ export interface CardFaces {
 export interface CardViewerApi {
   zoom: (f: number) => void;
   reset: () => void;
-  turnOver: () => void;
   destroy: () => void;
 }
 
@@ -37,6 +36,7 @@ const renderer = (T: Three) => {
 };
 
 const REST: [number, number] = [-0.42, -0.12]; // turned 24° and tipped back 7°, so its edge shows
+const REST_Z = 1.4; // and zoomed in one step (the zoom-in button's step)
 const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 const calm = () => !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
@@ -125,7 +125,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, onFail }:
   const spin = new T.Group();
   sc.add(spin);
 
-  let z = 1, raf = 0, pending = 0, dead = false;
+  let z = REST_Z, raf = 0, pending = 0, dead = false;
   const tgt = AIM.clone(), q = new T.Quaternion(), v: [number, number] = [0, 0];
   const place = () => {
     cam.position.copy(CAM).divideScalar(z).add(tgt);
@@ -288,7 +288,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, onFail }:
     schedule();
   };
   const reset = () => {
-    // straight, and all the way out
+    // straight, and back to the resting zoom
     used();
     cancelAnimationFrame(raf);
     stage.classList.remove("zoomed");
@@ -297,7 +297,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, onFail }:
       const t = ms ? Math.min(1, (now - t0) / ms) : 1, k = ease(t);
       q.slerpQuaternions(q0, rest, k);
       spin.quaternion.copy(q);
-      z = z0 + (1 - z0) * k;
+      z = z0 + (REST_Z - z0) * k;
       tgt.lerpVectors(t0v, AIM, k);
       place();
       draw();
@@ -425,10 +425,6 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, onFail }:
       zoomAt(f);
     },
     reset,
-    turnOver: () => {
-      used();
-      spinBy(Math.PI, 700);
-    },
     destroy: cleanup,
   };
 }

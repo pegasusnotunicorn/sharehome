@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import type { CardFaces, CardViewerApi } from "./cardViewer3d";
 import styles from "../../css/utils/cardViewer.module.css";
 
-// A game card in 3D: drag to turn it any way, scroll or pinch to zoom, turn it over (cardViewer3d.ts).
+// A game card in 3D: drag to turn it any way, scroll or pinch to zoom (cardViewer3d.ts).
 // The 3D code loads only when the card is about to scroll into view. If the browser can't show it
 // (no WebGL), `fallback` is shown instead.
 interface CardViewerProps {
@@ -84,7 +84,7 @@ const CardViewer = ({ mm, faces, label, fallback }: CardViewerProps) => {
           <button
             className={`${styles.tool} ${styles.straighten}`}
             type="button"
-            title="Straighten it and zoom out (or double-click the card)"
+            title="Straighten it (or double-click the card)"
             aria-label="Straighten the card"
             onClick={() => api.current?.reset()}
           >
@@ -98,9 +98,6 @@ const CardViewer = ({ mm, faces, label, fallback }: CardViewerProps) => {
           <img src="/images/icons/drag.svg" alt="" />
           {touchOnly() ? "Drag to turn · pinch to zoom" : "Drag to turn · scroll or pinch to zoom"}
         </span>
-        <button className={styles.turnOver} type="button" onClick={() => api.current?.turnOver()}>
-          Turn over
-        </button>
       </div>
     </div>
   );

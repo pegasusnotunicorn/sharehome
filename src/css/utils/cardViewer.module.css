@@ -35,9 +35,9 @@
 /* until the art is in: the card's outline, lying where the card will be */
 .still {
   position: absolute;
-  left: 26%;
-  right: 26%;
-  top: 30%;
+  left: 22%;
+  right: 16%;
+  top: 22%;
   aspect-ratio: 120 / 69.44;
   border-radius: 10px;
   background: rgba(50, 50, 50, 0.07);
@@ -78,15 +78,13 @@
 }
 
 @media (hover: hover) {
-  .tool:hover,
-  .turnOver:hover {
+  .tool:hover {
     color: #323232;
     border-color: rgba(50, 50, 50, 0.45);
   }
 }
 
-.tool:focus-visible,
-.turnOver:focus-visible {
+.tool:focus-visible {
   opacity: 1;
   outline: 2px solid #5f5aa2;
   outline-offset: 2px;
@@ -134,29 +132,6 @@
 
 .stage:global(.ready.used) .hint {
   opacity: 0;
-}
-
-.turnOver {
-  position: absolute;
-  left: 50%;
-  bottom: 12px;
-  transform: translateX(-50%);
-  height: 34px;
-  padding: 0 16px;
-  border-radius: 999px;
-  border: 1px solid rgba(50, 50, 50, 0.2);
-  background: rgba(255, 255, 255, 0.88);
-  font-family: "Roboto Regular", sans-serif;
-  font-size: 14px;
-  color: #6b6b6b;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.3s, color 0.2s, border-color 0.2s;
-  z-index: 1;
-}
-
-.stage:global(.ready) .turnOver {
-  opacity: 1;
 }
 
 /* phones: a smaller hint so it fits beside the zoom buttons */

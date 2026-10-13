@@ -392,9 +392,7 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
                 />
                 <span className={styles.phoneLabel}>Phone number</span>
               </label>
-              <p className={phoneTouched && !phoneValid ? styles.phoneError : styles.phoneHint}>
-                {phoneTouched && !phoneValid ? "Please enter a valid phone number." : "Needed for delivery in Europe."}
-              </p>
+              {phoneTouched && !phoneValid && <p className={styles.phoneError}>Please enter a valid phone number.</p>}
             </div>
           )}
           <button className={styles.missingCountryLink} onClick={onOpenMissingCountry} type="button">

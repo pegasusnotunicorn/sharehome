@@ -184,6 +184,11 @@ span.is-bold {
   overflow: hidden;
 }
 
+/* a page that ends in a full-width coloured section runs straight into the footer */
+.content.flushBottom {
+  padding-bottom: 0;
+}
+
 .content.max-width {
   max-width: 900px;
 }

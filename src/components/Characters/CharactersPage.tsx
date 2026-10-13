@@ -177,7 +177,7 @@ const CharactersPage = () => {
     }
 
     return (
-      <div className="content">
+      <div className={`content ${chosenCharacter ? "flushBottom" : ""}`}>
         <CustomHelmet
           title={title}
           splashImage={splashImage}

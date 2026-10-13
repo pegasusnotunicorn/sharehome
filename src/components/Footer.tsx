@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { NavLink, useNavigate } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router";
 import { getAllCharacters } from "./Characters/Characters";
 import BuyButton from "./utils/BuyButton";
 import { SOCIAL_LINKS, SocialIcon } from "./utils/SocialIcons";
@@ -29,6 +29,13 @@ const pickCast = (count: number): FooterCard[] =>
 const Footer = () => {
   const { width } = useWindowDimensions();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  // a link to the page you're already on goes back to its top (the router does nothing otherwise)
+  const toTopIfHere = (to: string) => (e: React.MouseEvent) => {
+    if (to !== pathname) return;
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const stageRef = useRef<HTMLDivElement | null>(null);
   const [hover, setHover] = useState<{ name: string; x: number; y: number } | null>(null);
   const isMobile = width <= 900;
@@ -46,7 +53,11 @@ const Footer = () => {
           mountFooterCards(stage, {
             cards: cast,
             onHover: (c, x, y) => setHover(c ? { name: c.name, x, y } : null),
-            onPick: (c) => navigate(`/characters/${c.urlName}`),
+            onPick: (c) => {
+              const to = `/characters/${c.urlName}`;
+              if (to === window.location.pathname) window.scrollTo({ top: 0, behavior: "smooth" });
+              else navigate(to);
+            },
             onFail: () => {}, // the flat fan stays
           })
         )
@@ -99,7 +110,7 @@ const Footer = () => {
           <img className={styles.tagline} src="/images/title.webp" alt="A game where fantasy meets reality TV" loading="lazy" />
           <div className={styles.ctas}>
             <BuyButton animated icon="forward" variant="primary" color="red" text="Buy now!" />
-            <NavLink to="/characters" className={styles.castLink}>
+            <NavLink to="/characters" className={styles.castLink} onClick={toTopIfHere("/characters")}>
               Meet the cast <span aria-hidden="true">→</span>
             </NavLink>
           </div>
@@ -111,7 +122,7 @@ const Footer = () => {
           <h3 className={styles.colTitle}>Explore</h3>
           {EXPLORE.map((l) =>
             l.to ? (
-              <NavLink key={l.label} to={l.to} className={styles.link}>
+              <NavLink key={l.label} to={l.to} className={styles.link} onClick={toTopIfHere(l.to)}>
                 {l.label}
               </NavLink>
             ) : (
@@ -161,10 +172,10 @@ const Footer = () => {
       <div className={styles.bottom}>
         <span>© {new Date().getFullYear()} Pegasus Games</span>
         <span className={styles.legal}>
-          <NavLink to="/terms" className={styles.link}>
+          <NavLink to="/terms" className={styles.link} onClick={toTopIfHere("/terms")}>
             Terms
           </NavLink>
-          <NavLink to="/privacy" className={styles.link}>
+          <NavLink to="/privacy" className={styles.link} onClick={toTopIfHere("/privacy")}>
             Privacy
           </NavLink>
         </span>

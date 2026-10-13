@@ -143,7 +143,13 @@ const Footer = () => {
         <div className={styles.col}>
           <h3 className={styles.colTitle}>Made by</h3>
           <p className={styles.blurb}>
-            Pegasus Games, a tiny studio in New York. Illustrations by{" "}
+            <a href="https://unicornwithwings.com/" className={styles.inline} target="_blank" rel="noreferrer">
+              Pegasus Games
+            </a>
+            , a tiny studio in New York.
+          </p>
+          <p className={styles.blurb}>
+            Illustrations by{" "}
             <a href="https://www.instagram.com/carofranklyn/?hl=en" className={styles.inline} target="_blank" rel="noreferrer">
               Carolyn Frank
             </a>

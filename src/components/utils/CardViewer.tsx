@@ -1,31 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import type { CardEdge, CardFaces, CardViewerApi } from "./cardViewer3d";
-import type { BoxArt } from "./box3d";
 import styles from "../../css/utils/cardViewer.module.css";
 
-// A game card (or the game box) in 3D: drag to turn it any way, scroll or pinch to zoom (cardViewer3d.ts).
+// A game card in 3D: drag to turn it any way, scroll or pinch to zoom (cardViewer3d.ts).
 // The 3D code loads only when the card is about to scroll into view. If the browser can't show it
 // (no WebGL), `fallback` is shown instead.
 interface CardViewerProps {
-  mm: [number, number]; // the card's real size: width x height (the box's: length x width)
-  faces?: () => Promise<CardFaces>;
-  box?: BoxArt; // shows the game box instead of a card
+  mm: [number, number]; // the card's real size: width x height
+  faces: () => Promise<CardFaces>;
   edge?: CardEdge;
   label: string;
-  still?: string; // an image of the front, shown on the card's shape until the 3D card is in (for
-  // the box: a picture of the box at rest, exactly as the 3D view first draws it)
+  still?: string; // an image of the front, shown on the card's shape until the 3D card is in
   fallback?: ReactNode;
 }
 
-const CardViewer = ({ mm, faces, box, edge, label, still, fallback }: CardViewerProps) => {
-  const thing = box ? "box" : "card";
+const CardViewer = ({ mm, faces, edge, label, still, fallback }: CardViewerProps) => {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const api = useRef<CardViewerApi | null>(null);
   const [failed, setFailed] = useState(false);
-  const [moved, setMoved] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -34,14 +27,11 @@ const CardViewer = ({ mm, faces, box, edge, label, still, fallback }: CardViewer
     const start = () => {
       import("./cardViewer3d")
         .then(({ mountCardViewer }) =>
-          mountCardViewer(stage, { mm, faces, edge, box, onMoved: (m) => !gone && setMoved(m), onFail: () => !gone && setFailed(true) })
+          mountCardViewer(stage, { mm, faces, edge, onFail: () => !gone && setFailed(true) })
         )
         .then((a) => {
           if (gone) a?.destroy();
-          else {
-            api.current = a;
-            setReady(!!a);
-          }
+          else api.current = a;
         })
         .catch(() => !gone && setFailed(true));
     };
@@ -76,71 +66,40 @@ const CardViewer = ({ mm, faces, box, edge, label, still, fallback }: CardViewer
         className={styles.stage}
         tabIndex={0}
         role="group"
-        aria-roledescription={`3D ${thing}`}
-        aria-label={`${label}. Drag, or use the arrow keys, to turn it any way.${box ? "" : " Plus and minus zoom."}`}
+        aria-roledescription="3D card"
+        aria-label={`${label}. Drag, or use the arrow keys, to turn it any way. Plus and minus zoom.`}
       >
-        {box ? (
-          <>
-            {/* the box at rest, the same picture the 3D view starts on, so it swaps in unseen */}
-            {still && <img className={styles.stillBox} src={still} alt="" aria-hidden="true" />}
-            <span className={`${styles.boxTools} ${ready ? styles.boxToolsShown : ""}`.trim()}>
-              <button
-                className={styles.pill}
-                type="button"
-                aria-pressed={open}
-                onClick={() => {
-                  api.current?.open(!open);
-                  setOpen(!open);
-                }}
-              >
-                {open ? "Close box" : "Open box"}
-              </button>
-              <button
-                className={`${styles.pill} ${styles.reset} ${moved ? styles.resetShown : ""}`.trim()}
-                type="button"
-                tabIndex={moved ? 0 : -1}
-                aria-hidden={!moved}
-                onClick={() => api.current?.reset()}
-              >
-                Reset
-              </button>
-            </span>
-          </>
-        ) : (
-          <>
-            <span className={styles.still} aria-hidden="true">
-              <span className={styles.stillShadow} />
-              <span
-                className={styles.stillCard}
-                style={{ aspectRatio: `${mm[0]} / ${mm[1]}`, backgroundImage: still ? `url("${still}")` : undefined }}
-              />
-            </span>
-            <span className={styles.tools}>
-              <button className={styles.tool} type="button" title="Zoom in (+, scroll or pinch)" aria-label="Zoom in" onClick={() => api.current?.zoom(1.4)}>
-                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
-                  <path d="M8 3.5v9M3.5 8h9" />
-                </svg>
-              </button>
-              <button className={styles.tool} type="button" title="Zoom out (-)" aria-label="Zoom out" onClick={() => api.current?.zoom(0.714)}>
-                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
-                  <path d="M3.5 8h9" />
-                </svg>
-              </button>
-              <button
-                className={`${styles.tool} ${styles.straighten}`}
-                type="button"
-                title={`Straighten it (or double-click the ${thing})`}
-                aria-label={`Straighten the ${thing}`}
-                onClick={() => api.current?.reset()}
-              >
-                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9" />
-                  <path d="M2.5 2.5v3h3" />
-                </svg>
-              </button>
-            </span>
-          </>
-        )}
+        <span className={styles.still} aria-hidden="true">
+          <span className={styles.stillShadow} />
+          <span
+            className={styles.stillCard}
+            style={{ aspectRatio: `${mm[0]} / ${mm[1]}`, backgroundImage: still ? `url("${still}")` : undefined }}
+          />
+        </span>
+        <span className={styles.tools}>
+          <button className={styles.tool} type="button" title="Zoom in (+, scroll or pinch)" aria-label="Zoom in" onClick={() => api.current?.zoom(1.4)}>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+              <path d="M8 3.5v9M3.5 8h9" />
+            </svg>
+          </button>
+          <button className={styles.tool} type="button" title="Zoom out (-)" aria-label="Zoom out" onClick={() => api.current?.zoom(0.714)}>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+              <path d="M3.5 8h9" />
+            </svg>
+          </button>
+          <button
+            className={`${styles.tool} ${styles.straighten}`}
+            type="button"
+            title="Straighten it (or double-click the card)"
+            aria-label="Straighten the card"
+            onClick={() => api.current?.reset()}
+          >
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9" />
+              <path d="M2.5 2.5v3h3" />
+            </svg>
+          </button>
+        </span>
       </div>
     </div>
   );

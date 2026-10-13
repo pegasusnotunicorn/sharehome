@@ -71,16 +71,19 @@ function shell(T: Three, L: number, W: number, H: number, tex: Tex) {
   geo.setAttribute("normal", new T.Float32BufferAttribute(nor, 3));
   geo.setAttribute("uv", new T.Float32BufferAttribute(uv, 2));
   const mat = (map?: THREE.Texture) =>
-    new T.MeshStandardMaterial(map ? { map, roughness: 0.45, metalness: 0 } : { color: BOARD, roughness: 0.45, metalness: 0 });
+    new T.MeshStandardMaterial(
+      map ? { map, roughness: 0.45, metalness: 0 } : { color: BOARD, emissive: BOARD, emissiveIntensity: 0.25, roughness: 0.45, metalness: 0 } // the board glows a touch, so the open tray isn't a dark hole
+    );
   const m = new T.Mesh(geo, [mat(tex.top), mat(tex.near), mat(tex.far), mat(tex.right), mat(tex.left), mat()]);
   m.castShadow = true;
   return m;
 }
 
 // the box, lid up, its long side 1 and its near long side toward the camera.
-// `pose(hover, open)` places the lid: `hover` (0..1) lifts it a little, `open` (0..1) takes it off,
-// up and then back, floating behind the tray so you can see in. The pair is kept centred on the
-// origin, and `pose` returns the radius they need, so the viewer can stand back far enough.
+// `pose(hover, open)` places the lid. `hover` (0..1) lifts it a little. `open` (0..1) takes it off the
+// way you would to play: up off the tray, back past it, down and under it, so the box ends up sitting
+// in its lid with the tray open. The pair is kept centred on the origin; `pose` returns the radius
+// they reach.
 export function makeBox(T: Three, lid: Tex, base: Tex) {
   const k = 1 / MM.L;
   const L = 1, W = MM.W * k, H = MM.H * k, i = MM.inset * k, bh = MM.baseH * k;
@@ -91,24 +94,25 @@ export function makeBox(T: Three, lid: Tex, base: Tex) {
   tray.position.y = -H / 2 + bh / 2;
   body.add(lidShell, tray);
   grp.add(body);
-  const up = OPEN.up * H, back = OPEN.back * W;
+  const up = 1.15 * H, back = W + 0.03, under = -H - 0.002;
+  const phase = (t: number, a: number, b: number) => ease(Math.min(1, Math.max(0, (t - a) / (b - a))));
   const pose = (hover: number, open: number) => {
-    // up first, clear of the tray's walls, then back
-    const ly = hover * LIFT * H + up * ease(Math.min(1, open * 2)), lz = -back * ease(Math.max(0, open * 2 - 1));
+    const ly = hover * LIFT * H + up * phase(open, 0, 0.3) + (under - up) * phase(open, 0.55, 0.8);
+    const lz = -back * (phase(open, 0.3, 0.55) - phase(open, 0.8, 1));
     lidShell.position.set(0, ly, lz);
     // the pair's bounds, kept centred
-    const y0 = -H / 2, y1 = H / 2 + ly;
+    const y0 = Math.min(-H / 2, -H / 2 + ly), y1 = Math.max(-H / 2 + bh, H / 2 + ly);
     const z0 = Math.min(-W / 2 + lz, -(W - 2 * i) / 2), z1 = Math.max(W / 2 + lz, (W - 2 * i) / 2);
-    body.position.set(0, -(open > 0 ? (y0 + y1) / 2 : 0), -(z0 + z1) / 2);
+    body.position.set(0, open > 0 ? -(y0 + y1) / 2 : 0, -(z0 + z1) / 2);
     return Math.max(BOX_RADIUS, open > 0 ? Math.hypot(L / 2, (y1 - y0) / 2, (z1 - z0) / 2) : 0);
   };
-  return { box: grp, pose };
+  // the tray's floor, inside, where the video plays (in the tray's own frame)
+  const fx = (L - 2 * i) / 2, fz = (W - 2 * i) / 2, fy = bh / 2;
+  const floor = [[-fx, fy, -fz], [fx, fy, -fz], [fx, fy, fz], [-fx, fy, fz]].map(([x, y, z]) => new T.Vector3(x, y, z));
+  return { box: grp, parts: [lidShell, tray], tray, floor, pose };
 }
 
-// how far the open lid floats: up, of the box's height, then back, of its width
-const OPEN = { up: 1.2, back: 0.45 };
 const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 
-// the closed box's reach from its centre, however it's turned (hover lift included); the viewer's
-// camera is set to fit this
+// the closed box's reach from its centre, however it's turned (hover lift included)
 export const BOX_RADIUS = Math.hypot(0.5, MM.W / MM.L / 2, (MM.H / MM.L) * (0.5 + LIFT)) + 0.005;

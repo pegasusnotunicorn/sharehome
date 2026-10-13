@@ -11,6 +11,8 @@ import { GsapFadeScrub } from "./useGsap";
 import DefaultButton from "../utils/DefaultButton";
 import Modal from "./Modal";
 import CardTurn from "./CardTurn";
+import CardViewer from "./CardViewer";
+import { CHARACTER_CARD_MM, characterCardFaces } from "../Characters/characterCardFaces";
 import charStyles from "../../css/pages/characterPage.module.css";
 
 interface CharacterSpotlightProps {
@@ -20,7 +22,7 @@ interface CharacterSpotlightProps {
   index?: number;
   total?: number;
   allCharsButton?: boolean;
-  mockup?: boolean;   // the character page: their card turning (Blender mockup) in place of the illustration
+  mockup?: boolean;   // the character page: their card in 3D in place of the illustration
   children?: ReactNode;
 }
 
@@ -136,9 +138,17 @@ export const CharacterSpotlight = (props: CharacterSpotlightProps) => {
               </NavLink>
             ) : props.mockup ? (
               <div className="spotlightCardTurn">
-                <CardTurn
-                  src={`/images/mockups/${character.urlName}.webp?v=2`}
-                  alt={`${character.name}'s card from Love, Career & Magic, front and back`}
+                <CardViewer
+                  key={character.urlName}
+                  mm={CHARACTER_CARD_MM}
+                  faces={characterCardFaces(character)}
+                  label={`${character.name}'s card from Love, Career & Magic`}
+                  fallback={
+                    <CardTurn
+                      src={`/images/mockups/${character.urlName}.webp?v=2`}
+                      alt={`${character.name}'s card from Love, Career & Magic, front and back`}
+                    />
+                  }
                 />
               </div>
             ) : (

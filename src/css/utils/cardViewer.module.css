@@ -1,0 +1,170 @@
+/* A card in 3D (CardViewer.tsx): the canvas fills a 4:3 stage, the page background shows through */
+.viewer {
+  width: 100%;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.stage:global(.drag) {
+  cursor: grabbing;
+}
+
+.stage:focus-visible {
+  outline: 3px solid #5f5aa2;
+  outline-offset: 4px;
+}
+
+.stage > canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* until the art is in: the card's outline, lying where the card will be */
+.still {
+  position: absolute;
+  left: 26%;
+  right: 26%;
+  top: 30%;
+  aspect-ratio: 120 / 69.44;
+  border-radius: 10px;
+  background: rgba(50, 50, 50, 0.07);
+  transition: opacity 0.3s;
+}
+
+.stage:global(.ready) .still {
+  opacity: 0;
+}
+
+.tools {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 1;
+}
+
+.tool {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(50, 50, 50, 0.2);
+  background: rgba(255, 255, 255, 0.88);
+  color: #6b6b6b;
+  cursor: pointer;
+  transition: opacity 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.tool svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (hover: hover) {
+  .tool:hover,
+  .turnOver:hover {
+    color: #323232;
+    border-color: rgba(50, 50, 50, 0.45);
+  }
+}
+
+.tool:focus-visible,
+.turnOver:focus-visible {
+  opacity: 1;
+  outline: 2px solid #5f5aa2;
+  outline-offset: 2px;
+}
+
+/* only once there's something to straighten */
+.straighten {
+  opacity: 0;
+}
+
+.stage:global(.used) .straighten {
+  opacity: 1;
+}
+
+.hint {
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(50, 50, 50, 0.2);
+  font-family: "Roboto Light", sans-serif;
+  font-size: 13px;
+  color: #323232;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.hint img {
+  width: 14px;
+  height: 14px;
+}
+
+.stage:global(.ready) .hint {
+  opacity: 1;
+}
+
+.stage:global(.ready.used) .hint {
+  opacity: 0;
+}
+
+.turnOver {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  height: 34px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(50, 50, 50, 0.2);
+  background: rgba(255, 255, 255, 0.88);
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 14px;
+  color: #6b6b6b;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s, color 0.2s, border-color 0.2s;
+  z-index: 1;
+}
+
+.stage:global(.ready) .turnOver {
+  opacity: 1;
+}
+
+/* phones: a smaller hint so it fits beside the zoom buttons */
+@media only screen and (max-width: 480px) {
+  .hint {
+    font-size: 12px;
+    padding: 0 10px;
+    left: 10px;
+    transform: none;
+  }
+}

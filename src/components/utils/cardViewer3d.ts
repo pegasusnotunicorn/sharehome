@@ -1,4 +1,4 @@
-// A game card in 3D (three.js): drag to turn it any way, zoom toward the pointer, turn it over.
+// A game card, or the game box, in 3D (three.js): drag to turn it any way, zoom toward the pointer, turn it over.
 // Lit like the studio mockups: one soft light from above, its shadow pooled on an invisible floor.
 // three.js is loaded the first time a viewer appears. One WebGL renderer serves every viewer on the
 // page (browsers allow only a few contexts): each viewer renders through it and copies the picture
@@ -6,6 +6,8 @@
 import type * as THREE from "three";
 import { calm, ease, loadThree, makeCard, renderer, studio } from "./card3d";
 import type { Three } from "./card3d";
+import { makeBox } from "./box3d";
+import type { BoxArt, BoxPanels } from "./box3d";
 
 export type CardFace = string | HTMLCanvasElement;
 export type CardEdge = "paper" | "gold"; // cream card stock, or gold foil (the character cards)
@@ -21,16 +23,20 @@ export interface CardViewerApi {
 
 const REST: [number, number] = [-0.42, -0.12]; // turned 24° and tipped back 7°, so its edge shows
 const REST_Z = 1.4; // and zoomed in one step (the zoom-in button's step)
+// the box lies lid up, turned 24° and tipped 35° toward you, like the product shots
+const BOX_REST: [number, number] = [-0.42, 0.61];
+const BOX_REST_Z = 1.25; // a little further back than a card: it takes more room when tipped
 
 interface MountOptions {
-  mm: [number, number];
-  faces: () => Promise<CardFaces>;
+  mm?: [number, number];
+  faces?: () => Promise<CardFaces>;
   edge?: CardEdge;
+  box?: BoxArt; // the game box instead of a card
   onFail: () => void;
 }
 
 // Turns `stage` (a 4:3 box) into a card viewer. Resolves once the card is showing.
-export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "paper", onFail }: MountOptions): Promise<CardViewerApi | null> {
+export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "paper", box, onFail }: MountOptions): Promise<CardViewerApi | null> {
   let T: Three, r: THREE.WebGLRenderer;
   try {
     T = await loadThree();
@@ -63,13 +69,14 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   const floorMat = new T.ShadowMaterial({ opacity: 0.17 });
   const floor = new T.Mesh(new T.PlaneGeometry(6, 6), floorMat);
   floor.rotation.x = -Math.PI / 2;
-  floor.position.y = -0.6;
+  floor.position.y = box ? -0.4 : -0.6; // the tipped box sits nearer its floor, so its shadow stays in frame
   floor.receiveShadow = true;
   sc.add(floor);
   const spin = new T.Group();
   sc.add(spin);
 
-  let z = REST_Z, raf = 0, pending = 0, dead = false;
+  const restZ = box ? BOX_REST_Z : REST_Z;
+  let z = restZ, raf = 0, pending = 0, lraf = 0, dead = false;
   const tgt = AIM.clone(), q = new T.Quaternion(), v: [number, number] = [0, 0];
   const place = () => {
     cam.position.copy(CAM).divideScalar(z).add(tgt);
@@ -121,6 +128,8 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     dead = true;
     cancelAnimationFrame(raf);
     cancelAnimationFrame(pending);
+    cancelAnimationFrame(lraf);
+    clearTimeout(settle);
     ro.disconnect();
     io?.disconnect();
     sc.traverse((o) => {
@@ -131,15 +140,27 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     textures.forEach((x) => x.dispose());
     (key.shadow.map as THREE.WebGLRenderTarget | null)?.dispose();
     cv.remove();
-    stage.onpointerdown = stage.onpointermove = stage.onpointerup = stage.onpointercancel = null;
+    stage.onpointerdown = stage.onpointermove = stage.onpointerup = stage.onpointercancel = stage.onpointerleave = null;
     stage.ondblclick = stage.onkeydown = null;
     stage.removeEventListener("wheel", onWheel);
   };
   let io: IntersectionObserver | null = null;
-  let front: THREE.Texture, back: THREE.Texture, gold: THREE.Texture | null = null;
+  let settle = 0;
+  let object: THREE.Object3D, lift: ((t: number) => void) | null = null;
   try {
-    const f = await faces();
-    [front, back, gold] = await Promise.all([tex(f.front), tex(f.back), edge === "gold" ? studio(T, r) : null]);
+    if (box) {
+      const panels = async (p: BoxPanels) => {
+        const [top, near, far, left, right] = await Promise.all([p.top, p.near, p.far, p.left, p.right].map(tex));
+        return { top, near, far, left, right };
+      };
+      const [lid, base] = await Promise.all([panels(box.lid), panels(box.base)]);
+      ({ box: object, lift } = makeBox(T, lid, base));
+    } else {
+      if (!mm || !faces) throw new Error("A card needs its size and faces");
+      const f = await faces();
+      const [front, back, gold] = await Promise.all([tex(f.front), tex(f.back), edge === "gold" ? studio(T, r) : null]);
+      object = makeCard(T, mm, front, back, gold);
+    }
   } catch {
     cleanup();
     onFail();
@@ -149,8 +170,11 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     cleanup();
     return null;
   }
-  spin.add(makeCard(T, mm, front, back, gold));
-  const rest = new T.Quaternion().setFromEuler(new T.Euler(REST[1], REST[0], 0, "YXZ"));
+  spin.add(object);
+  // the box turns about its own up axis first, then tips (XYZ), so its yaw is a spin on the table
+  const rest = new T.Quaternion().setFromEuler(
+    box ? new T.Euler(BOX_REST[1], BOX_REST[0], 0, "XYZ") : new T.Euler(REST[1], REST[0], 0, "YXZ")
+  );
   q.copy(rest);
   spin.quaternion.copy(rest);
   draw();
@@ -165,18 +189,24 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     q.normalize();
     spin.quaternion.copy(q);
   };
-  // a turn about the upright axis (more than half a turn can't be a slerp)
+  // a turn about the upright axis (more than half a turn can't be a slerp); a tipped box turns about
+  // its own up axis instead, or it would wobble
+  const spinStep = (a: number) => {
+    if (!box) return turn(a, 0);
+    q.multiply(tmp.setFromAxisAngle(Y, a)).normalize();
+    spin.quaternion.copy(q);
+  };
   const spinBy = (rad: number, ms: number) => {
     cancelAnimationFrame(raf);
     if (calm()) {
-      turn(rad, 0);
+      spinStep(rad);
       return draw();
     }
     let done = 0;
     const t0 = performance.now();
     const step = (now: number) => {
       const t = Math.min(1, (now - t0) / ms), a = rad * ease(t);
-      turn(a - done, 0);
+      spinStep(a - done);
       done = a;
       draw();
       if (t < 1) raf = requestAnimationFrame(step);
@@ -241,7 +271,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
       const t = ms ? Math.min(1, (now - t0) / ms) : 1, k = ease(t);
       q.slerpQuaternions(q0, rest, k);
       spin.quaternion.copy(q);
-      z = z0 + (REST_Z - z0) * k;
+      z = z0 + (restZ - z0) * k;
       tgt.lerpVectors(t0v, AIM, k);
       place();
       draw();
@@ -249,6 +279,33 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     };
     raf = requestAnimationFrame(step);
   };
+
+  // the box's lid lifts while the pointer is over it, or for a moment after a tap, then settles back
+  let lifted = 0, liftTo = 0;
+  const liftLid = (to: number) => {
+    if (!lift || to === liftTo) return;
+    liftTo = to;
+    cancelAnimationFrame(lraf);
+    if (calm()) {
+      lift((lifted = to));
+      return draw();
+    }
+    const from = lifted, t0 = performance.now(), ms = 450;
+    const step = (now: number) => {
+      const t = Math.min(1, (now - t0) / ms);
+      lift((lifted = from + (to - from) * ease(t)));
+      draw();
+      if (t < 1) lraf = requestAnimationFrame(step);
+    };
+    lraf = requestAnimationFrame(step);
+  };
+  const over = (cx: number, cy: number) => {
+    const b = stage.getBoundingClientRect();
+    ndc.set(((cx - b.left) / b.width) * 2 - 1, -((cy - b.top) / b.height) * 2 + 1);
+    ray.setFromCamera(ndc, cam);
+    return ray.intersectObject(object, true).length > 0;
+  };
+  let tap: { x: number; y: number; t: number } | null = null;
 
   let drag: { x: number; y: number; t: number } | null = null;
   let pinch: { x: number; y: number; d: number } | null = null;
@@ -261,6 +318,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     if (e.button > 0 || (e.target as Element).closest("button")) return;
     cancelAnimationFrame(raf);
     used();
+    tap = pts.size ? null : { x: e.clientX, y: e.clientY, t: e.timeStamp };
     stage.setPointerCapture(e.pointerId);
     pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (pts.size === 2) {
@@ -276,6 +334,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     stage.classList.add("drag");
   };
   stage.onpointermove = (e) => {
+    if (lift && e.pointerType === "mouse" && !drag && !pinch) liftLid(over(e.clientX, e.clientY) ? 1 : 0);
     if (!pts.has(e.pointerId)) return;
     pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (pinch && pts.size >= 2) {
@@ -296,6 +355,13 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   };
   const up = (e: PointerEvent) => {
     pts.delete(e.pointerId);
+    // a tap on the box (a touch that didn't move) lifts the lid for a moment
+    if (lift && tap && e.pointerType !== "mouse" && e.type === "pointerup" && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) < 8 && e.timeStamp - tap.t < 400 && over(e.clientX, e.clientY)) {
+      liftLid(1);
+      clearTimeout(settle);
+      settle = window.setTimeout(() => liftLid(0), 1200);
+    }
+    tap = null;
     if (pinch) {
       // one finger left: it turns again, no coast
       if (pts.size < 2) {
@@ -314,6 +380,9 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   };
   stage.onpointerup = up;
   stage.onpointercancel = up;
+  stage.onpointerleave = (e) => {
+    if (e.pointerType === "mouse" && !drag) liftLid(0);
+  };
   stage.ondblclick = (e) => {
     if (!(e.target as Element).closest("button")) reset();
   };

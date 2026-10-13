@@ -1,21 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import type { CardEdge, CardFaces, CardViewerApi } from "./cardViewer3d";
+import type { BoxArt } from "./box3d";
 import styles from "../../css/utils/cardViewer.module.css";
 
-// A game card in 3D: drag to turn it any way, scroll or pinch to zoom (cardViewer3d.ts).
+// A game card (or the game box) in 3D: drag to turn it any way, scroll or pinch to zoom (cardViewer3d.ts).
 // The 3D code loads only when the card is about to scroll into view. If the browser can't show it
 // (no WebGL), `fallback` is shown instead.
 interface CardViewerProps {
-  mm: [number, number]; // the card's real size: width x height
-  faces: () => Promise<CardFaces>;
+  mm: [number, number]; // the card's real size: width x height (the box's: length x width)
+  faces?: () => Promise<CardFaces>;
+  box?: BoxArt; // shows the game box instead of a card
   edge?: CardEdge;
   label: string;
   still?: string; // an image of the front, shown on the card's shape until the 3D card is in
   fallback?: ReactNode;
 }
 
-const CardViewer = ({ mm, faces, edge, label, still, fallback }: CardViewerProps) => {
+const CardViewer = ({ mm, faces, box, edge, label, still, fallback }: CardViewerProps) => {
+  const thing = box ? "box" : "card";
   const stageRef = useRef<HTMLDivElement | null>(null);
   const api = useRef<CardViewerApi | null>(null);
   const [failed, setFailed] = useState(false);
@@ -27,7 +30,7 @@ const CardViewer = ({ mm, faces, edge, label, still, fallback }: CardViewerProps
     const start = () => {
       import("./cardViewer3d")
         .then(({ mountCardViewer }) =>
-          mountCardViewer(stage, { mm, faces, edge, onFail: () => !gone && setFailed(true) })
+          mountCardViewer(stage, { mm, faces, edge, box, onFail: () => !gone && setFailed(true) })
         )
         .then((a) => {
           if (gone) a?.destroy();
@@ -66,7 +69,7 @@ const CardViewer = ({ mm, faces, edge, label, still, fallback }: CardViewerProps
         className={styles.stage}
         tabIndex={0}
         role="group"
-        aria-roledescription="3D card"
+        aria-roledescription={`3D ${thing}`}
         aria-label={`${label}. Drag, or use the arrow keys, to turn it any way. Plus and minus zoom.`}
       >
         <span className={styles.still} aria-hidden="true">
@@ -90,8 +93,8 @@ const CardViewer = ({ mm, faces, edge, label, still, fallback }: CardViewerProps
           <button
             className={`${styles.tool} ${styles.straighten}`}
             type="button"
-            title="Straighten it (or double-click the card)"
-            aria-label="Straighten the card"
+            title={`Straighten it (or double-click the ${thing})`}
+            aria-label={`Straighten the ${thing}`}
             onClick={() => api.current?.reset()}
           >
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

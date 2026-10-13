@@ -27,6 +27,7 @@ const ThankYouPage = lazy(() => import("./components/ThankYouPage"));
 const SignupPage = lazy(() => import("./components/SignupPage"));
 const CheckoutPage = lazy(() => import("./components/CheckoutPage"));
 const RafflePage = lazy(() => import("./components/RafflePage"));
+const BoxPreviewPage = lazy(() => import("./components/BoxPreviewPage"));
 
 // /buy is handled server-side by netlify/edge-functions/buy.js: the GA4
 // checkout_flow_assigned event and UTM forwarding onto the /checkout redirect.
@@ -112,6 +113,7 @@ const AppRoutes = () => {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/box-preview" element={<BoxPreviewPage />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
         {!isExternalRedirect && <Footer />}

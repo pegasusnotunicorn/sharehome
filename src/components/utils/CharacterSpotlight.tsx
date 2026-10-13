@@ -143,6 +143,7 @@ export const CharacterSpotlight = (props: CharacterSpotlightProps) => {
                   mm={CHARACTER_CARD_MM}
                   faces={characterCardFaces(character)}
                   label={`${character.name}'s card from Love, Career & Magic`}
+                  still={character.image.url}
                   fallback={
                     <CardTurn
                       src={`/images/mockups/${character.urlName}.webp?v=2`}

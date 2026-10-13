@@ -32,21 +32,69 @@
   display: block;
 }
 
-/* until the art is in: the card's outline, lying where the card will be */
+/* Until the 3D card is in: the card's illustration, posed and sized like the 3D card at rest
+   (camera distance 2.005 stage heights, card 0.9 stage heights wide), shimmering gently. */
+.stage {
+  container-type: size;
+}
+
 .still {
   position: absolute;
-  left: 22%;
-  right: 16%;
-  top: 22%;
-  aspect-ratio: 120 / 69.44;
-  border-radius: 10px;
-  background: rgba(50, 50, 50, 0.07);
-  transition: opacity 0.3s;
+  inset: 0;
+  perspective: 200.5cqh;
+  perspective-origin: 50% 5%; /* the camera looks down a little */
+  pointer-events: none;
+  transition: opacity 0.4s;
 }
 
 .stage:global(.ready) .still {
   opacity: 0;
 }
+
+.stillCard {
+  position: absolute;
+  left: 52%;
+  top: 44%;
+  width: 89.9cqh;
+  aspect-ratio: 120 / 69.44;
+  translate: -50% -50%;
+  transform: rotateY(-24deg);
+  border-radius: 2.6cqh;
+  overflow: hidden;
+  background: #ede8db center / cover no-repeat;
+}
+
+.stillCard::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%) -150% 0 / 250% 100% no-repeat;
+  animation: stillShimmer 1.6s ease-in-out infinite;
+}
+
+.stillShadow {
+  position: absolute;
+  left: 56%;
+  top: 91%;
+  width: 80cqh;
+  height: 8cqh;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.14), transparent);
+}
+
+@keyframes stillShimmer {
+  to {
+    background-position: 150% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stillCard::after {
+    animation: none;
+  }
+}
+
 
 .tools {
   position: absolute;
@@ -99,47 +147,3 @@
   opacity: 1;
 }
 
-.hint {
-  position: absolute;
-  left: 50%;
-  top: 12px;
-  transform: translateX(-50%);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 28px;
-  padding: 0 12px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(50, 50, 50, 0.2);
-  font-family: "Roboto Light", sans-serif;
-  font-size: 13px;
-  color: #323232;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.hint img {
-  width: 14px;
-  height: 14px;
-}
-
-.stage:global(.ready) .hint {
-  opacity: 1;
-}
-
-.stage:global(.ready.used) .hint {
-  opacity: 0;
-}
-
-/* phones: a smaller hint so it fits beside the zoom buttons */
-@media only screen and (max-width: 480px) {
-  .hint {
-    font-size: 12px;
-    padding: 0 10px;
-    left: 10px;
-    transform: none;
-  }
-}

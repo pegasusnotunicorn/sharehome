@@ -10,12 +10,11 @@ interface CardViewerProps {
   mm: [number, number]; // the card's real size: width x height
   faces: () => Promise<CardFaces>;
   label: string;
+  still?: string; // an image of the front, shown on the card's shape until the 3D card is in
   fallback?: ReactNode;
 }
 
-const touchOnly = () => !!window.matchMedia?.("(hover: none)").matches;
-
-const CardViewer = ({ mm, faces, label, fallback }: CardViewerProps) => {
+const CardViewer = ({ mm, faces, label, still, fallback }: CardViewerProps) => {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const api = useRef<CardViewerApi | null>(null);
   const [failed, setFailed] = useState(false);
@@ -69,7 +68,13 @@ const CardViewer = ({ mm, faces, label, fallback }: CardViewerProps) => {
         aria-roledescription="3D card"
         aria-label={`${label}. Drag, or use the arrow keys, to turn it any way. Plus and minus zoom.`}
       >
-        <span className={styles.still} aria-hidden="true" />
+        <span className={styles.still} aria-hidden="true">
+          <span className={styles.stillShadow} />
+          <span
+            className={styles.stillCard}
+            style={{ aspectRatio: `${mm[0]} / ${mm[1]}`, backgroundImage: still ? `url("${still}")` : undefined }}
+          />
+        </span>
         <span className={styles.tools}>
           <button className={styles.tool} type="button" title="Zoom in (+, scroll or pinch)" aria-label="Zoom in" onClick={() => api.current?.zoom(1.4)}>
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
@@ -93,10 +98,6 @@ const CardViewer = ({ mm, faces, label, fallback }: CardViewerProps) => {
               <path d="M2.5 2.5v3h3" />
             </svg>
           </button>
-        </span>
-        <span className={`${styles.hint} noselect`} aria-hidden="true">
-          <img src="/images/icons/drag.svg" alt="" />
-          {touchOnly() ? "Drag to turn · pinch to zoom" : "Drag to turn · scroll or pinch to zoom"}
         </span>
       </div>
     </div>

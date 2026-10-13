@@ -26,8 +26,9 @@ export function shippingAddressFromSession(session) {
       state: shipping.address.state,
       zip: shipping.address.postal_code,
       country: shipping.address.country,
-      ...(session.customer_details?.phone && {
-        phone: session.customer_details.phone,
+      // Europe orders carry the phone the checkout page saved to metadata
+      ...((session.customer_details?.phone || session.metadata?.phone) && {
+        phone: session.customer_details?.phone || session.metadata.phone,
       }),
       email: session.customer_details?.email,
     },

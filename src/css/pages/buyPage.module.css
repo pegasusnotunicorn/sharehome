@@ -1115,3 +1115,51 @@
   color: #323232;
   margin: 0;
 }
+
+/* phone number, asked only for Europe deliveries (sits under the address element) */
+.phoneField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.phoneInput {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem;
+  font-family: inherit;
+  font-size: 16px;
+  color: #323232;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.03), 0 3px 6px rgba(0, 0, 0, 0.02);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.phoneInput::placeholder {
+  color: #757680;
+}
+
+.phoneInput:focus {
+  outline: none;
+  border-color: #5f5aa2;
+  box-shadow: 0 0 0 3px rgba(95, 90, 162, 0.25);
+}
+
+.phoneInputInvalid,
+.phoneInputInvalid:focus {
+  border-color: #df1b41;
+}
+
+.phoneHint,
+.phoneError {
+  margin: 0;
+  font-family: "Roboto Light";
+  font-size: 0.8rem;
+  color: #6d6e78;
+}
+
+.phoneError {
+  color: #df1b41;
+}

@@ -33,6 +33,22 @@ export const studio = (T: Three, r: THREE.WebGLRenderer) =>
     return env;
   }));
 
+// a soft shadow to sit under a card on the page, made once
+let shadowTex: THREE.Texture | null = null;
+export const cardShadow = (T: Three) => {
+  if (shadowTex) return shadowTex;
+  const c = document.createElement("canvas");
+  c.width = 256;
+  c.height = 256;
+  const ctx = c.getContext("2d")!;
+  ctx.filter = "blur(22px)";
+  ctx.fillStyle = "#000";
+  ctx.beginPath();
+  ctx.roundRect(48, 48, 160, 160, 12);
+  ctx.fill();
+  return (shadowTex = new T.CanvasTexture(c));
+};
+
 export const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 export const calm = () => !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 

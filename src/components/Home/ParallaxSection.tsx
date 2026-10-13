@@ -7,7 +7,11 @@ import { getAllFinishedPeople } from "../Characters/Characters";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import { randomDeg } from "../utils/useMath";
 import styles from "../../css/pages/home/cardparallax.module.css";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+import { characterArtFace } from "../Characters/characterCardFaces";
+import { getAllCharacters } from "../Characters/Characters";
+import { characterArtSmall } from "../utils/characterArt";
+import type { WallApi } from "../utils/parallaxWall3d";
 
 interface ParallaxCardsProps {
   sectionRef: React.RefObject<HTMLDivElement | null>;
@@ -97,6 +101,13 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
     };
   }, []);
 
+  // the cards as a 3D wall (parallaxWall3d.ts), following the scroll; the flat cards below if it can't
+  const navigate = useNavigate();
+  const stageRef = useRef<HTMLDivElement>(null);
+  const wall = useRef<WallApi | null>(null);
+  const scrolled = useRef(0);
+  const [flat, setFlat] = useState(false);
+
   //calculate how many rows / characters per row
   const numRows = 3;
   const characters = useMemo(() => getAllFinishedPeople(true), []);
@@ -138,9 +149,59 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
     );
   });
 
+  const wallCards = useMemo(() => {
+    const all = getAllCharacters();
+    return randomCharacters.map((c) => ({
+      front: () => characterArtFace(c, characterArtSmall(c.image.url), cardsPerRow > 3 ? 640 : 512),
+      atlasIndex: all.findIndex((a) => a.urlName === c.urlName),
+      urlName: c.urlName,
+    }));
+    // a new set only when the wall changes shape
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cardsPerRow, characters]);
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (held || flat || !stage) return;
+    let gone = false;
+    const fail = () => !gone && setFlat(true);
+    import("../utils/parallaxWall3d")
+      .then(({ mountWall }) =>
+        mountWall(stage, {
+          cards: wallCards,
+          cols: cardsPerRow,
+          cardWidth: (w) => Number.parseInt(getHomePageCardProps("member", w).mainStyle.width),
+          onPick: (c) => navigate(`/characters/${c.urlName}`),
+          onFail: fail,
+        })
+      )
+      .then((a) => {
+        if (gone) return a?.destroy();
+        wall.current = a;
+        a?.progress(scrolled.current);
+      })
+      .catch(fail);
+    const st = ScrollTrigger.create({
+      trigger: sectionRef.current,
+      start: "top top",
+      end: "bottom bottom",
+      onUpdate: (self) => {
+        scrolled.current = self.progress;
+        wall.current?.progress(self.progress);
+      },
+    });
+    scrolled.current = st.progress;
+    return () => {
+      gone = true;
+      st.kill();
+      wall.current?.destroy();
+      wall.current = null;
+    };
+  }, [held, flat, wallCards, cardsPerRow, navigate]);
+
   return (
     <div key={location.pathname} ref={sectionRef} className={styles.parallaxSection}>
-      {!held && parallaxRows}
+      {!held && (flat ? parallaxRows : <div ref={stageRef} className={styles.wallStage} />)}
     </div>
   );
 };

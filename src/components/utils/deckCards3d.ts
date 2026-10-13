@@ -7,7 +7,7 @@
 // One WebGL renderer serves the whole page (card3d.ts): this deck renders through it and copies the
 // picture onto its own 2D canvas.
 import type * as THREE from "three";
-import { calm, loadThree, makeCard, renderer, studio } from "./card3d";
+import { calm, cardShadow, loadThree, makeCard, renderer, studio } from "./card3d";
 import type { Three } from "./card3d";
 import type { CardEdge, CardFaces } from "./cardViewer3d";
 
@@ -44,22 +44,6 @@ const rand = (a: number, b: number) => a + Math.random() * (b - a);
 const clamp = (x: number) => Math.min(1, Math.max(0, x));
 const outCubic = (t: number) => 1 - (1 - t) ** 3;
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-
-// a soft shadow to sit under a card on the page, made once
-let shadowTex: THREE.Texture | null = null;
-const shadowTexture = (T: Three) => {
-  if (shadowTex) return shadowTex;
-  const c = document.createElement("canvas");
-  c.width = 256;
-  c.height = 256;
-  const ctx = c.getContext("2d")!;
-  ctx.filter = "blur(22px)";
-  ctx.fillStyle = "#000";
-  ctx.beginPath();
-  ctx.roundRect(48, 48, 160, 160, 12);
-  ctx.fill();
-  return (shadowTex = new T.CanvasTexture(c));
-};
 
 export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise<DeckApi | null> {
   const { cards, mm, edge = "paper", from, layout, onPick, onFail } = opts;
@@ -110,7 +94,7 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
   sc.add(deck);
   const aspect = mm[0] / mm[1];
   const side = from === "left" ? -1 : 1;
-  const shadowMap = shadowTexture(T);
+  const shadowMap = cardShadow(T);
 
   interface Live {
     card: DeckCard;

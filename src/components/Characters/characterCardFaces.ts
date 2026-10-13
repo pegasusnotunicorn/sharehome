@@ -1,5 +1,6 @@
 import type { Character } from "../../types/character";
 import type { CardFaces } from "../utils/cardViewer3d";
+import { getCoverFitObject, pdfDimensions } from "../utils/cardConstants";
 
 // A character card's two faces, drawn the way the printed card is laid out:
 // front, the illustration with their name and "— THE ORC —"; back, their bio and details.
@@ -147,3 +148,20 @@ export const characterCardFaces = (c: Character, art = c.image.url) => async ():
   await fontsReady();
   return { front: await drawFront(c, art), back: drawBack(c) };
 };
+
+// Just the illustration, cropped to the card the way the flat cards crop it (around the character's
+// focus point), `width` px wide
+export async function characterArtFace(c: Character, art: string, width: number) {
+  const cv = document.createElement("canvas");
+  cv.width = width;
+  cv.height = Math.round((width * CHARACTER_CARD_MM[1]) / CHARACTER_CARD_MM[0]);
+  const im = await loadImage(art);
+  const { width: iw, height: ih, x, y } = c.image;
+  const onCard = getCoverFitObject(iw, ih, cv.width, cv.height);
+  const onPdf = getCoverFitObject(iw, ih, pdfDimensions.width, pdfDimensions.height);
+  const k = onCard.width / onPdf.width;
+  const dx = x !== undefined ? Math.round(x * k) : onCard.x;
+  const dy = y !== undefined ? Math.round(y * k) : onCard.y;
+  cv.getContext("2d")!.drawImage(im, dx, dy, onCard.width, onCard.height);
+  return cv;
+}

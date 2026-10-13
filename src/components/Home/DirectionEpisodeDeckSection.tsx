@@ -8,7 +8,7 @@ import useWindowDimensions from "../utils/useWindowDimensions";
 import { getRandomDirectionsEpisodes } from "../Card/ExampleDirectionEpisode";
 import { randomDeg, randomNum } from "../utils/useMath";
 import Deck3D from "./utils/Deck3D";
-import { DIRECTION_EPISODE_MM, directionEpisodeFaces } from "../Card/directionEpisodeFaces";
+import { DIRECTION_MM, EPISODE_MM, randomDirectionFaces, randomEpisodeFaces } from "../Card/directionEpisodeFaces";
 import type { DeckCard, DeckPose } from "../utils/deckCards3d";
 import styles from "../../css/pages/home/directionEpisodeDeckSection.module.css";
 
@@ -59,17 +59,18 @@ const deckLayout = (mirror: number) => (w: number, h: number): DeckPose[] => {
 //three cards from the deck, dealt in 3D
 const Deck3DSection = ({ directionOrEpisode }: DeckSectionProps) => {
   const type = directionOrEpisode as "direction" | "episode";
+  // three of the printed cards
   const [cards] = useState<DeckCard[]>(() =>
-    getRandomDirectionsEpisodes(type, 3).map((c, i) => ({
-      faces: directionEpisodeFaces(type, c.description, i),
-      label: c.description,
+    (type === "direction" ? randomDirectionFaces(3) : randomEpisodeFaces(3)).map((faces) => ({
+      faces,
+      label: `${type === "direction" ? "Direction" : "Episode"} card`,
     }))
   );
   return (
     <Deck3D
       className={styles.directionEpisodeDecksContainer}
       cards={cards}
-      mm={DIRECTION_EPISODE_MM}
+      mm={type === "direction" ? DIRECTION_MM : EPISODE_MM}
       from={type === "direction" ? "right" : "left"}
       layout={deckLayout(type === "direction" ? 1 : -1)}
       fallback={<DeckSection directionOrEpisode={directionOrEpisode} />}

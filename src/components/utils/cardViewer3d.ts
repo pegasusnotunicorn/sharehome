@@ -7,6 +7,7 @@ import type * as THREE from "three";
 
 type Three = typeof THREE;
 export type CardFace = string | HTMLCanvasElement;
+export type CardEdge = "paper" | "gold"; // cream card stock, or gold foil (the character cards)
 export interface CardFaces {
   front: CardFace;
   back: CardFace;
@@ -35,13 +36,23 @@ const renderer = (T: Three) => {
   return (shared = r);
 };
 
+// what gold foil reflects: a soft studio room, made once (metal with nothing to reflect looks black)
+let goldEnv: Promise<THREE.Texture> | null = null;
+const studio = (T: Three, r: THREE.WebGLRenderer) =>
+  (goldEnv ||= import("three/examples/jsm/environments/RoomEnvironment.js").then(({ RoomEnvironment }) => {
+    const pm = new T.PMREMGenerator(r);
+    const env = pm.fromScene(new RoomEnvironment(), 0.04).texture;
+    pm.dispose();
+    return env;
+  }));
+
 const REST: [number, number] = [-0.42, -0.12]; // turned 24° and tipped back 7°, so its edge shows
 const REST_Z = 1.4; // and zoomed in one step (the zoom-in button's step)
 const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 const calm = () => !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
-// a rounded card with a cream paper edge; its long side is 1
-function makeCard(T: Three, mm: [number, number], front: THREE.Texture, back: THREE.Texture) {
+// a rounded card with a cream paper or gold foil edge; its long side is 1
+function makeCard(T: Three, mm: [number, number], front: THREE.Texture, back: THREE.Texture, gold: THREE.Texture | null) {
   const k = 1 / Math.max(mm[0], mm[1]);
   const w = mm[0] * k, h = mm[1] * k, r = 3.5 * k, t = 0.72 * k;
   const s = new T.Shape();
@@ -69,7 +80,9 @@ function makeCard(T: Three, mm: [number, number], front: THREE.Texture, back: TH
   bk.position.z = -t / 2;
   const edge = new T.Mesh(new T.ExtrudeGeometry(s, { depth: t, bevelEnabled: false, curveSegments: 10 }), [
     new T.MeshBasicMaterial({ visible: false }),
-    new T.MeshStandardMaterial({ color: 0xede8db, roughness: 0.8 }),
+    gold
+      ? new T.MeshStandardMaterial({ color: 0xe6bd5c, metalness: 1, roughness: 0.34, envMap: gold, envMapIntensity: 1.7 })
+      : new T.MeshStandardMaterial({ color: 0xede8db, roughness: 0.8 }),
   ]);
   edge.position.z = -t / 2;
   for (const m of [fr, bk, edge]) {
@@ -82,11 +95,12 @@ function makeCard(T: Three, mm: [number, number], front: THREE.Texture, back: TH
 interface MountOptions {
   mm: [number, number];
   faces: () => Promise<CardFaces>;
+  edge?: CardEdge;
   onFail: () => void;
 }
 
 // Turns `stage` (a 4:3 box) into a card viewer. Resolves once the card is showing.
-export async function mountCardViewer(stage: HTMLElement, { mm, faces, onFail }: MountOptions): Promise<CardViewerApi | null> {
+export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "paper", onFail }: MountOptions): Promise<CardViewerApi | null> {
   let T: Three, r: THREE.WebGLRenderer;
   try {
     T = await loadThree();
@@ -192,10 +206,10 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, onFail }:
     stage.removeEventListener("wheel", onWheel);
   };
   let io: IntersectionObserver | null = null;
-  let front: THREE.Texture, back: THREE.Texture;
+  let front: THREE.Texture, back: THREE.Texture, gold: THREE.Texture | null = null;
   try {
     const f = await faces();
-    [front, back] = await Promise.all([tex(f.front), tex(f.back)]);
+    [front, back, gold] = await Promise.all([tex(f.front), tex(f.back), edge === "gold" ? studio(T, r) : null]);
   } catch {
     cleanup();
     onFail();
@@ -205,7 +219,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, onFail }:
     cleanup();
     return null;
   }
-  spin.add(makeCard(T, mm, front, back));
+  spin.add(makeCard(T, mm, front, back, gold));
   const rest = new T.Quaternion().setFromEuler(new T.Euler(REST[1], REST[0], 0, "YXZ"));
   q.copy(rest);
   spin.quaternion.copy(rest);

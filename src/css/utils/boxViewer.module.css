@@ -60,6 +60,9 @@
 
 .still {
   z-index: 1;
+  /* swapped out in one frame, not faded: the 3D view's first frame is this same picture, so a fade
+     would only show the two at once as the box starts to spin */
+  transition: none;
   /* the 3D box starts in the middle of the stage and moves over to its part, so the picture is
      of it in the middle */
   left: 50cqw;
@@ -80,6 +83,7 @@
 
 .stage:global(.ready) .still {
   opacity: 0;
+  visibility: hidden;
 }
 
 /* the trailer, on the tray's floor (placed by boxViewer3d.ts) */

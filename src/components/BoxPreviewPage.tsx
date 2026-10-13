@@ -81,6 +81,13 @@ const BoxPreviewPage = () => {
               </a>
             }
           />
+          <img
+            className={styles.hint}
+            src="/images/box/click-hint.webp"
+            alt=""
+            aria-hidden="true"
+            draggable={false}
+          />
         </div>
       </section>
     </div>

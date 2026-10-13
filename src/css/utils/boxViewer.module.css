@@ -1,5 +1,8 @@
-/* The game box in 3D (BoxViewer.tsx): fills its parent; the page shows through */
+/* The game box in 3D (BoxViewer.tsx): fills its parent; the page shows through. Closed, the box keeps
+   to the right of --frame-left (a fraction of the width; the page can set it to leave room for words
+   on the left); open, it has the whole stage. */
 .stage {
+  --box-left: var(--frame-left, 0);
   position: relative;
   width: 100%;
   height: 100%;
@@ -20,6 +23,7 @@
 
 .stage[data-open] {
   cursor: default;
+  --box-left: 0;
 }
 
 .stage:focus-visible {
@@ -36,14 +40,20 @@
   display: block;
 }
 
-/* until the 3D box is in: the same view, rendered (it's a 4:3 picture, centred the way the 3D view
-   frames the box on any stage) */
+/* until the 3D box is in: the same view, rendered at rest for a 4:3 frame. It's sized as the 3D view
+   frames the box: the frame's full height, unless the frame is narrow, when the camera stands back
+   by the width (boxViewer3d.ts: DIST over its width rule's constant, 3.085 / 2.885 = 1.069). */
+.stage {
+  container-type: size;
+}
+
 .still {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  top: 50%;
+  left: calc((var(--frame-left, 0) + (1 - var(--frame-left, 0)) / 2) * 100cqw);
+  height: min(100cqh, 1.069 * (1 - var(--frame-left, 0)) * 100cqw);
+  aspect-ratio: 4 / 3;
+  translate: -50% -50%;
   pointer-events: none;
   transition: opacity 0.4s;
 }
@@ -70,7 +80,7 @@
 /* "Open box", and "Reset" beside it once it's been turned (it slides in, "Open box" glides over) */
 .tools {
   position: absolute;
-  left: 50%;
+  left: calc((var(--box-left) + (1 - var(--box-left)) / 2) * 100%);
   bottom: 10px;
   translate: -50% 0;
   z-index: 1;
@@ -78,7 +88,7 @@
   align-items: center;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.4s;
+  transition: opacity 0.4s, left 0.6s;
 }
 
 .toolsShown {

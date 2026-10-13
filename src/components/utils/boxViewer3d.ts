@@ -34,7 +34,7 @@ const REST: [number, number] = [-0.42, 0.61];
 // how far back the camera stands for the box at any angle on a 4:3 stage, and where it looks, so the
 // floor's shadow is in frame too (the floor just below the box's reach)
 const DIST = 3.085, AIM_Y = -0.105, FLOOR = -0.61;
-const OPEN_MS = 1800;
+const OPEN_MS = 950;
 
 export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, onOpen, onFail }: MountOptions): Promise<BoxViewerApi | null> {
   let T: Three, r: THREE.WebGLRenderer;
@@ -95,7 +95,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     return x;
   };
   let io: IntersectionObserver | null = null, ro: ResizeObserver | null = null, settle = 0;
-  let player: HTMLIFrameElement | null = null;
+  let player: HTMLIFrameElement | null = null, unlisten = () => {};
   const cleanup = () => {
     dead = true;
     [raf, pending, lraf, oraf].forEach(cancelAnimationFrame);
@@ -113,6 +113,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     player?.remove();
     stage.onpointerdown = stage.onpointermove = stage.onpointerup = stage.onpointercancel = stage.onpointerleave = null;
     stage.onkeydown = null;
+    unlisten();
   };
   let made: ReturnType<typeof makeBox>;
   try {
@@ -146,6 +147,11 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
   }
   const world = corners.map(() => new T.Vector3()), p3 = new T.Vector3();
   const aim = new T.Vector3();
+  // The box's own part of the stage: closed, it can be kept to the right of `--frame-left` (a
+  // fraction of the stage's width, set by the page so words can sit on the left); open, it has the
+  // whole stage. The lens shifts to centre it there (frame: its centre and half-width, in NDC).
+  let frameLeft = 0;
+  const frame = { c: 0, half: 1 };
   // the nearest the camera can stand, looking at `aim`, with every corner inside `m` of the frame
   const fitDist = (m: number) => {
     spin.updateMatrixWorld(true);
@@ -159,7 +165,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
       cam.updateMatrixWorld();
       const ok = world.every((w) => {
         p3.copy(w).project(cam);
-        return p3.z < 1 && Math.abs(p3.x) <= m && Math.abs(p3.y) <= m;
+        return p3.z < 1 && Math.abs(p3.x - frame.c) <= m * frame.half && Math.abs(p3.y) <= m;
       });
       if (ok) hi = d;
       else lo = d;
@@ -172,12 +178,17 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
   const qFrom = new T.Quaternion(), qFace = new T.Quaternion();
   const camAt = () => {
     if (!W || !H) return;
+    const s = pose(lifted, opened) / BOX_RADIUS, o = ease(opened);
+    const fl = frameLeft * (1 - o);
+    frame.half = 1 - fl;
+    frame.c = fl;
     cam.aspect = W / H;
     cam.updateProjectionMatrix();
-    const s = pose(lifted, opened) / BOX_RADIUS, o = ease(opened);
-    // closed: far enough back for any angle. DIST covers the height; a narrow stage can need more
+    cam.projectionMatrix.elements[8] = -frame.c; // the lens shift
+    cam.projectionMatrixInverse.copy(cam.projectionMatrix).invert();
+    // closed: far enough back for any angle. DIST covers the height; a narrow frame can need more
     // for the width (the box's reach, and its shadow's, which is a little wider)
-    const dWide = (BOX_RADIUS + 0.08) / 0.94 / (cam.aspect * Math.tan((cam.fov * Math.PI) / 360));
+    const dWide = (BOX_RADIUS + 0.08) / 0.94 / (cam.aspect * frame.half * Math.tan((cam.fov * Math.PI) / 360));
     const dAny = Math.max(DIST, dWide) * s;
     aim.set(0, AIM_Y * s * (1 - o), 0);
     // open: as close as fits, so the video is big
@@ -222,6 +233,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
   const size = () => {
     W = stage.clientWidth;
     H = stage.clientHeight;
+    frameLeft = Math.min(0.7, Math.max(0, parseFloat(getComputedStyle(stage).getPropertyValue("--frame-left")) || 0));
     const pr = r.getPixelRatio();
     cv.width = Math.max(1, Math.round(W * pr));
     cv.height = Math.max(1, Math.round(H * pr));
@@ -316,14 +328,12 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     v[0] = v[1] = 0;
     liftTo = 0;
     if (open) {
-      // the upright video, with the box on its side, when it would play much bigger that way (phones)
-      const tray = 211 / 122, wide = Math.min(W, H * tray) ** 2 / (16 / 9), tall = Math.min(H, W * tray) ** 2 * (9 / 16);
-      portrait = tall > 1.4 * wide;
+      // the upright video, with the box on its side, on a clearly tall stage (phones)
+      portrait = W / H < 0.8; // (the whole stage is the box's, open)
       // its top toward the camera; on its side when the stage is tall, for the upright video
       qFace.setFromUnitVectors(Y, DIR);
       if (portrait) qFace.multiply(tmp.setFromAxisAngle(Y, Math.PI / 2));
       qFrom.copy(q);
-      startPlayer();
     } else {
       qFrom.copy(rest);
       stopPlayer();
@@ -338,8 +348,8 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
       spin.quaternion.copy(q);
       draw();
       if (t < 1) oraf = requestAnimationFrame(step);
-      else if (open && player) player.classList.add("shown");
-      else if (!open) q.copy(rest);
+      else if (open) startPlayer(); // only once it's open, so the trailer starts as it appears
+      else q.copy(rest);
     };
     oraf = requestAnimationFrame(step);
   };
@@ -354,11 +364,24 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     player.dataset.boxVideo = "";
     stage.append(player);
     placePlayer();
+    const shown = player;
+    requestAnimationFrame(() => shown.classList.add("shown"));
   };
   const stopPlayer = () => {
     player?.remove();
     player = null;
   };
+
+  // open, a click or tap anywhere off the box (its buttons aside) closes it
+  const outside = (e: PointerEvent) => {
+    if (!openTo) return;
+    const el = e.target as Element;
+    if (el.closest?.("button") && stage.contains(el)) return;
+    if (stage.contains(el) && over(e.clientX, e.clientY)) return;
+    openBox(false);
+  };
+  document.addEventListener("pointerdown", outside, true);
+  unlisten = () => document.removeEventListener("pointerdown", outside, true);
 
   // pointer: drag to turn it, click or tap it to open it
   const ray = new T.Raycaster(), ndc = new T.Vector2();

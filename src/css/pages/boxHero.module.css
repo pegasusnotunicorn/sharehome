@@ -38,7 +38,6 @@
 
 .head {
   max-width: min(92vw, 820px);
-  max-height: 12rem;
 }
 
 .title {
@@ -47,6 +46,7 @@
   font-size: clamp(1.6rem, 3.4vw, 2.7rem);
   line-height: 1.15;
   color: #323232;
+  text-wrap: balance;
 }
 
 .facts {
@@ -65,6 +65,20 @@
   flex: 1;
   min-height: 0;
   width: min(100%, 1100px);
+}
+
+/* "Click the box to learn more", its arrow pointing up at the box */
+.hint {
+  position: absolute;
+  right: 4%;
+  bottom: 9%;
+  width: clamp(150px, 19%, 230px);
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.open .hint {
+  opacity: 0;
 }
 
 .fallback img {
@@ -100,23 +114,41 @@
   opacity: 0;
 }
 
+/* wide screens: the 3D box has the whole hero; the words sit over its left part, the box (closed)
+   keeps to the rest. Open, the words make way and the trailer plays across the screen. */
 @media only screen and (min-width: 901px) {
   .hero {
     display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr);
     align-items: center;
-    gap: 2vw;
-    padding: 5.5rem max(4vw, calc((100vw - 1400px) / 2)) 2rem;
+    padding: 5.5rem 0 1.5rem;
+  }
+
+  .copy,
+  .stageWrap {
+    grid-area: 1 / 1;
   }
 
   .copy {
+    z-index: 2;
+    justify-self: start;
     align-items: flex-start;
+    width: 40%;
+    box-sizing: border-box;
+    padding-left: max(4vw, calc((100vw - 1600px) / 2));
+    padding-right: 1rem;
     text-align: left;
+    transition: opacity 0.4s;
+  }
+
+  .open .copy {
+    opacity: 0;
+    pointer-events: none;
   }
 
   .title {
-    font-size: clamp(2.1rem, 3.6vw, 3.6rem);
+    font-size: clamp(2rem, 3vw, 3.2rem);
   }
 
   .facts {
@@ -135,6 +167,7 @@
   }
 
   .stageWrap {
+    --frame-left: 0.4;
     width: 100%;
     height: 100%;
   }
@@ -156,6 +189,16 @@
 
   .scroll {
     display: none;
+  }
+
+  .head {
+    max-height: 14rem; /* so it can fold away when the box opens */
+  }
+
+  .hint {
+    right: 3%;
+    bottom: 64px;
+    width: 150px;
   }
 
   .open .head {

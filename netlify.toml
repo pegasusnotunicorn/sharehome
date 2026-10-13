@@ -32,6 +32,11 @@
   function = "campaign-links"
   path = "/smosh/*"
 
+# Must stay above track-utm: it edits the index.html that track-utm serves
+[[edge_functions]]
+  function = "character-meta"
+  path = "/characters/*"
+
 [[edge_functions]]
   function = "track-utm"
   path = "/*"

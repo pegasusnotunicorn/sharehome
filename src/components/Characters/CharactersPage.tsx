@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import {
   getAllCharacters,
+  getCharacterShareMeta,
   getSpecificPersonByURL,
 } from "../Characters/Characters";
 import { CharacterSpotlight } from "../utils/CharacterSpotlight";
@@ -169,18 +170,10 @@ const CharactersPage = () => {
     let description = "All playable characters from the game.";
 
     if (chosenCharacter) {
-      title = `Love, Career & Magic — ${chosenCharacter.name}`;
-      splashImage = `https://lovecareermagic.com${chosenCharacter.image.url}`;
-
-      description = "Introducing ";
-      description += chosenCharacter.title
-        ? chosenCharacter.title
-        : `${chosenCharacter.name}, the ${chosenCharacter.race}`;
-      description += `. A ${chosenCharacter.age} year old ${chosenCharacter.job}`;
-      description += chosenCharacter.employer
-        ? ` at ${chosenCharacter.employer}`
-        : ``;
-      description += ` and member of SHAREHOME—A reality TV show about 6 mythical strangers living together in the same house.`;
+      const shareMeta = getCharacterShareMeta(chosenCharacter);
+      title = shareMeta.title;
+      splashImage = `https://lovecareermagic.com${shareMeta.image.url}`;
+      description = shareMeta.description;
     }
 
     return (

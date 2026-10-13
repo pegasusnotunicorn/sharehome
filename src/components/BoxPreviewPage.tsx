@@ -36,7 +36,7 @@ const BoxPreviewPage = () => {
             {/* Bizz says it: on wide screens he's to the right of the words, on phones below them */}
             <ShoutBubble
               side={isDesktop ? "right" : "bottom"}
-              aim={isDesktop ? 0.2 : 0.5}
+              aim={isDesktop ? 0.2 : 0.35}
               className={styles.bubble}
             >
               <h1 className={styles.title}>
@@ -45,13 +45,15 @@ const BoxPreviewPage = () => {
                 TV!
               </h1>
             </ShoutBubble>
-            <p className={styles.facts}>
-              <span>12 minutes</span>
-              <span aria-hidden="true">·</span>
-              <span>2–6 players</span>
-              <span aria-hidden="true">·</span>
-              <span>Ages 12+</span>
-            </p>
+            <ShoutBubble side="none" className={styles.factsBubble}>
+              <p className={styles.facts}>
+                <span>12 minutes</span>
+                <span aria-hidden="true">·</span>
+                <span>2–6 players</span>
+                <span aria-hidden="true">·</span>
+                <span>Ages 12+</span>
+              </p>
+            </ShoutBubble>
           </header>
           <div className={styles.ctas}>
             <BuyButton

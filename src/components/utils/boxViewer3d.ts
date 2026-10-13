@@ -31,8 +31,8 @@ interface MountOptions {
   onFail: () => void;
 }
 
-// at rest it lies lid up, turned 24° and tipped 35° toward you, like the product shots
-const REST: [number, number] = [-0.42, 0.61];
+// at rest it lies lid up, turned 24° to face right and tipped 35° toward you, like the product shots
+const REST: [number, number] = [0.42, 0.61];
 // how far back the camera stands for the box at any angle on a 4:3 stage, and where it looks, so the
 // floor's shadow is in frame too (the floor just below the box's reach)
 const DIST = 3.085, AIM_Y = -0.105, FLOOR = -0.61;

@@ -3,9 +3,10 @@ import type { ReactNode } from "react";
 import styles from "../../css/utils/shoutBubble.module.css";
 
 // A comic shout bubble, drawn in pencil: a box with a row of spikes along one side, the longest
-// pointing at whoever's shouting (`aim`, 0..1 along that side). It's drawn to fit its content.
+// pointing at whoever's shouting (`aim`, 0..1 along that side), or (side "none") just the box. It's
+// drawn to fit its content.
 interface ShoutBubbleProps {
-  side: "bottom" | "right";
+  side: "bottom" | "right" | "none";
   aim?: number;
   className?: string;
   children: ReactNode;
@@ -14,7 +15,8 @@ interface ShoutBubbleProps {
 // spike depths along the side, like the hand-drawn ones (the longest is placed at `aim`)
 const PATTERN = [0.62, 0.8, 0.55, 0.9, 0.68, 0.75, 0.58, 0.85, 0.66];
 
-function outline(side: "bottom" | "right", w: number, h: number, aim: number, depth: number) {
+function outline(side: "bottom" | "right" | "none", w: number, h: number, aim: number, depth: number) {
+  if (side === "none") return pencil([[0, 0], [w, 0], [w, h], [0, h]]);
   const along = side === "bottom" ? w : h;
   const n = Math.max(4, Math.round(along / 62));
   const a0 = along * 0.06, a1 = along * 0.94, step = (a1 - a0) / n;

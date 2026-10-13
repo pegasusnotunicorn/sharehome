@@ -5,12 +5,21 @@
   max-width: 560px;
   aspect-ratio: 600 / 450;
   margin: 0 auto;
-  background-repeat: no-repeat;
   cursor: grab;
   touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
   border-radius: 8px;
+}
+
+/* At some angles the shadow runs off the bottom of its frame and stops in a straight line,
+   so the bottom of each frame fades out. The card itself never goes below 83% of the frame. */
+.sprite {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  -webkit-mask-image: linear-gradient(to bottom, #000 83%, transparent);
+  mask-image: linear-gradient(to bottom, #000 83%, transparent);
 }
 
 .stage:active {

@@ -96,17 +96,20 @@ const CardTurn = ({ src, alt }: CardTurnProps) => {
       onPointerUp={onPointerUp}
       onPointerCancel={onPointerUp}
       onKeyDown={onKeyDown}
-      style={
-        ready
-          ? {
-              backgroundImage: `url("${src}")`,
-              backgroundSize: `${COLS * 100}% ${ROWS * 100}%`,
-              backgroundPosition: `${(col / (COLS - 1)) * 100}% ${(row / (ROWS - 1)) * 100}%`,
-            }
-          : undefined
-      }
     >
-      {!ready && <span className={styles.loading} aria-hidden="true" />}
+      {ready ? (
+        <span
+          className={styles.sprite}
+          aria-hidden="true"
+          style={{
+            backgroundImage: `url("${src}")`,
+            backgroundSize: `${COLS * 100}% ${ROWS * 100}%`,
+            backgroundPosition: `${(col / (COLS - 1)) * 100}% ${(row / (ROWS - 1)) * 100}%`,
+          }}
+        />
+      ) : (
+        <span className={styles.loading} aria-hidden="true" />
+      )}
       <span className={`${styles.hint} noselect`} aria-hidden="true">
         <img src="/images/icons/drag.svg" alt="" />
         Drag to turn

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import BoxViewer from "./utils/BoxViewer";
 import BuyButton from "./utils/BuyButton";
@@ -22,6 +22,12 @@ const VIDEO = { landscape: "EoQ2VTipXPA", portrait: "fNq9hS6DsTU" };
 
 const BoxPreviewPage = () => {
   const [open, setOpen] = useState(false);
+  // Bizz's words appear once he's popped up to say them (or, if the 3D box never gets going, after a while)
+  const [spoken, setSpoken] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setSpoken(true), 10000);
+    return () => clearTimeout(t);
+  }, []);
   const { isDesktop } = useWindowDimensions();
 
   return (
@@ -29,7 +35,7 @@ const BoxPreviewPage = () => {
       <Helmet>
         <meta name="robots" content="noindex" />
       </Helmet>
-      <section className={`${styles.hero} ${open ? styles.open : ""}`.trim()}>
+      <section className={`${styles.hero} ${open ? styles.open : ""} ${spoken ? styles.spoken : ""}`.trim()}>
         <div className={styles.bg} aria-hidden="true" />
         <div className={styles.copy}>
           <header className={styles.head}>
@@ -75,6 +81,9 @@ const BoxPreviewPage = () => {
             label="The Love, Career & Magic game box"
             still="/images/box/still.webp"
             onOpen={setOpen}
+            onPeek={(shown) => {
+              if (shown) setSpoken(true);
+            }}
             behind={
               <img
                 className={styles.bizz}

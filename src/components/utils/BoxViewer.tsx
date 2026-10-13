@@ -16,10 +16,11 @@ interface BoxViewerProps {
   // something behind the box, placed in the frame of the box at rest (like the still), shown only
   // while the box sits there, shut; it ducks behind the box whenever it's turned or opened
   behind?: ReactNode;
+  onPeek?: (shown: boolean) => void; // when what's behind pops up, or ducks
   onOpen?: (open: boolean) => void;
 }
 
-const BoxViewer = ({ art, video, label, still, fallback, behind, onOpen }: BoxViewerProps) => {
+const BoxViewer = ({ art, video, label, still, fallback, behind, onPeek, onOpen }: BoxViewerProps) => {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const api = useRef<BoxViewerApi | null>(null);
   const [failed, setFailed] = useState(false);
@@ -28,6 +29,12 @@ const BoxViewer = ({ art, video, label, still, fallback, behind, onOpen }: BoxVi
   const [atRest, setAtRest] = useState(false);
   const onOpenRef = useRef(onOpen);
   onOpenRef.current = onOpen;
+  const onPeekRef = useRef(onPeek);
+  onPeekRef.current = onPeek;
+  const peeking = ready && atRest;
+  useEffect(() => {
+    onPeekRef.current?.(peeking || failed); // no 3D: nothing to wait for
+  }, [peeking, failed]);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -77,7 +84,7 @@ const BoxViewer = ({ art, video, label, still, fallback, behind, onOpen }: BoxVi
       aria-label={`${label}. Drag, or use the arrow keys, to turn it. Click it, or press Enter, to open it and watch the trailer.`}
     >
       {behind && (
-        <span className={styles.behind} data-shown={(ready && atRest) || undefined} aria-hidden="true">
+        <span className={styles.behind} data-shown={peeking || undefined} aria-hidden="true">
           {behind}
         </span>
       )}

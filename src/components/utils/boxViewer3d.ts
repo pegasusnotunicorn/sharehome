@@ -223,10 +223,11 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     Object.assign(player.style, { left: `${(x0 + x1 - w) / 2}px`, top: `${(y0 + y1 - h) / 2}px`, width: `${w}px`, height: `${h}px` });
   };
 
-  let atRest: boolean | null = null;
+  // it isn't "at rest" until the opening spin is over (or skipped, or cut short by a grab)
+  let atRest: boolean | null = null, introPending = !calm();
   const draw = () => {
     if (dead || !W || !H || !ctx) return;
-    const r0 = !openTo && !opened && q.angleTo(rest) < 0.02;
+    const r0 = !introPending && !openTo && !opened && q.angleTo(rest) < 0.02;
     if (r0 !== atRest) {
       atRest = r0;
       onRest?.(r0);
@@ -283,7 +284,10 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
       done = a;
       draw();
       if (t < 1) raf = requestAnimationFrame(step);
-      else intro = false;
+      else {
+        intro = introPending = false;
+        draw();
+      }
     };
     raf = requestAnimationFrame(step);
   };
@@ -344,6 +348,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     const to = open ? 1 : 0;
     if (to === openTo) return;
     openTo = to;
+    introPending = false;
     onOpen?.(open);
     cancelAnimationFrame(raf);
     cancelAnimationFrame(lraf);
@@ -493,7 +498,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     if (e.button > 0 || (e.target as Element).closest("button, iframe") || still() || drag) return;
     cancelAnimationFrame(raf);
     clearTimeout(idle);
-    intro = false;
+    intro = introPending = false;
     stage.classList.add("used");
     warmPlayer();
     stage.setPointerCapture(e.pointerId);
@@ -544,7 +549,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     if (m && !still()) {
       e.preventDefault();
       cancelAnimationFrame(raf);
-      intro = false;
+      intro = introPending = false;
       turn(...m);
       schedule();
       idleReset();
@@ -559,13 +564,17 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     }
   };
 
-  // one slow turn to show it's 3D, the first time it's on screen, unless it's already been grabbed
+  // one quick turn to show it's 3D, the first time it's on screen, unless it's already been grabbed
   if (!calm()) {
     io = new IntersectionObserver(
       (entries) => {
         if (!entries.some((x) => x.isIntersecting)) return;
         io?.disconnect();
-        if (!stage.classList.contains("used") && !openTo) spinBy(Math.PI * 2, 2400);
+        if (!stage.classList.contains("used") && !openTo) spinBy(Math.PI * 2, 1100);
+        else {
+          introPending = false;
+          draw();
+        }
       },
       { threshold: 0.5 }
     );

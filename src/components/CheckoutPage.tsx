@@ -392,7 +392,7 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
                 />
                 <span className={styles.phoneLabel}>Phone number</span>
               </label>
-              {phoneTouched && !phoneValid && <p className={styles.phoneError}>Please enter a valid phone number.</p>}
+              {phoneTouched && !phoneValid && <p className={styles.phoneError}>Your phone number is incomplete.</p>}
             </div>
           )}
           <button className={styles.missingCountryLink} onClick={onOpenMissingCountry} type="button">

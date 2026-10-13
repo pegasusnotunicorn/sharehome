@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap";
 import DefaultButton from "../utils/DefaultButton";
-import BuyButton from "../utils/BuyButton";
 import { YoutubeModal } from "./YoutubeModal";
 import CarouselSection from "../utils/CarouselSection";
 import ParallaxSection from "./ParallaxSection";
@@ -216,22 +215,6 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
       <div
         className={`${landingPageStyles.mainpageContainer} ${landingPageStyles.carouselContainer}`}
       >
-        <div className={`${landingPageStyles.carouselTextContainer}`}>
-          <h1>
-            Ready for{" "}
-            <span className="fantasyEmphasis">Love, Career & Magic</span>?
-          </h1>
-          <div className={`${landingPageStyles.finalButtonsWrapper}`}>
-            <BuyButton
-              animated
-              icon="forward"
-              variant="primary"
-              color="red"
-              size="large"
-              text="Buy now"
-            />
-          </div>
-        </div>
         <CarouselSection
           className={landingPageStyles.mainpageCarousel}
           totalPictures={15}
@@ -243,41 +226,6 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
           autoplaySpeed={5500}
           showNavigation={false}
         />
-      </div>
-
-      <div
-        id={`${landingPageStyles.finalContainer}`}
-        className={`${landingPageStyles.mainpageContainer}`}
-      >
-        <div
-          className={`${landingPageStyles.titleWrapper} ${landingPageStyles.botOne}`}
-        >
-          <div
-            className={`${landingPageStyles.lcmMaskWrapper} floating noselect`}
-          >
-            <div className={`${landingPageStyles.lcmMask}`}></div>
-          </div>
-        </div>
-
-        <div className={landingPageStyles.termsWrapper}>
-          <div className={landingPageStyles.pegasusWrapper}>
-            <img src="/images/pegasus_logo.png" alt="Pegasus Games logo" />
-            <p>
-              Designed by{" "}
-              <a
-                href="https://unicornwithwings.com"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Pegasus Games
-              </a>
-            </p>
-          </div>
-          <p>
-            <a href="/terms">Terms and conditions</a> ·{" "}
-            <a href="/privacy">Privacy policy</a>
-          </p>
-        </div>
       </div>
     </div>
   );

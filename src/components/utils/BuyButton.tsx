@@ -1,4 +1,5 @@
 import DefaultButton from "./DefaultButton";
+import { trackEvent } from "./trackEvent";
 
 // Buy buttons navigate straight to /checkout inside the app. Going through
 // /buy instead costs two full page loads (the /buy request, then its redirect)
@@ -30,10 +31,18 @@ interface BuyButtonProps {
   compact?: boolean;
   id?: string;
   className?: string;
+  from?: string; // where on the site it is, sent with a buy_click event
 }
 
-const BuyButton = (props: BuyButtonProps) => (
-  <DefaultButton {...props} navlink={BUY_DESTINATION} onClick={recordBuyClick} />
+const BuyButton = ({ from, ...props }: BuyButtonProps) => (
+  <DefaultButton
+    {...props}
+    navlink={BUY_DESTINATION}
+    onClick={() => {
+      if (from) trackEvent("buy_click", { from });
+      recordBuyClick();
+    }}
+  />
 );
 
 export default BuyButton;

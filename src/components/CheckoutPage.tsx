@@ -18,6 +18,7 @@ import PageIntro from "./utils/PageIntro";
 import Modal from "./utils/Modal";
 import Stepper from "./utils/Stepper";
 import MagnifierButton from "./utils/MagnifierButton";
+import { trackEvent } from "./utils/trackEvent";
 import styles from "../css/pages/buyPage.module.css";
 
 const LCM_PRICE = 34.99;
@@ -92,17 +93,6 @@ const InfoIcon = () => (
   </svg>
 );
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const w = window as any;
-// GA4 events reach the property through GTM, so they have to be pushed in the
-// shape GTM triggers on: an object with an `event` key. The previous
-// gtag()-style call pushed an arguments object (keys "0", "1", "2") that no
-// Custom Event trigger could match, and gtag.js — which would have drained
-// those — is never loaded, so every one of these events was silently dropped.
-function trackEvent(name: string, params?: Record<string, string | number>) {
-  w.dataLayer?.push({ event: name, ...params });
-  w.clarity?.("event", name);
-}
 
 function getStoredUtms(): Record<string, string> {
   const out: Record<string, string> = {};

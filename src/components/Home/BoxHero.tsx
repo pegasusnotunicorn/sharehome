@@ -1,22 +1,27 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import BoxViewer from "../utils/BoxViewer";
 import BuyButton from "../utils/BuyButton";
 import DefaultButton from "../utils/DefaultButton";
 import ShoutBubble from "../utils/ShoutBubble";
 import useWindowDimensions from "../utils/useWindowDimensions";
+import { trackEvent } from "../utils/trackEvent";
 import type { BoxArt } from "../utils/box3d";
 import styles from "../../css/pages/home/boxHero.module.css";
 
 // The top of the home page: the game box in 3D, Bizz peeking over it to shout the title. Click the
 // box and it opens to play the trailer inside.
-const panels = (part: "lid" | "base") => ({
-  top: `/images/box/${part}.webp`,
-  near: `/images/box/${part}-near.webp`,
-  far: `/images/box/${part}-far.webp`,
-  left: `/images/box/${part}-left.webp`,
-  right: `/images/box/${part}-right.webp`,
+// phones get the art at two thirds the size: less than half the download, and still sharp at that size
+const panels = (dir: string, part: "lid" | "base") => ({
+  top: `${dir}/${part}.webp`,
+  near: `${dir}/${part}-near.webp`,
+  far: `${dir}/${part}-far.webp`,
+  left: `${dir}/${part}-left.webp`,
+  right: `${dir}/${part}-right.webp`,
 });
-const BOX: BoxArt = { lid: panels("lid"), base: panels("base") };
+const boxArt = (dir: string): BoxArt => ({ lid: panels(dir, "lid"), base: panels(dir, "base") });
+const BOX = boxArt("/images/box");
+const BOX_PHONE = boxArt("/images/box/phone");
+const isPhone = () => !!window.matchMedia?.("(max-width: 900px)").matches;
 // the trailers: wide on big screens, upright on phones
 const VIDEO = { landscape: "EoQ2VTipXPA", portrait: "fNq9hS6DsTU" };
 
@@ -28,13 +33,18 @@ const hideStaticHero = () => {
 
 interface BoxHeroProps {
   onOpen?: (open: boolean) => void;
+  onSettled?: () => void; // the 3D box is in, or won't be
 }
 
-export default function BoxHero({ onOpen }: BoxHeroProps) {
+export default function BoxHero({ onOpen, onSettled }: BoxHeroProps) {
   const [open, setOpen] = useState(false);
   // Bizz's words appear once he's popped up to say them
   const [spoken, setSpoken] = useState(false);
   const { isDesktop } = useWindowDimensions();
+  const [art] = useState(() => (isPhone() ? BOX_PHONE : BOX));
+  const openedAt = useRef(0);
+  // touch screens tap
+  const [verb] = useState(() => (window.matchMedia?.("(hover: none)").matches ? "Tap" : "Click"));
 
   return (
     <section className={`${styles.hero} ${open ? styles.open : ""} ${spoken ? styles.spoken : ""}`.trim()}>
@@ -42,7 +52,7 @@ export default function BoxHero({ onOpen }: BoxHeroProps) {
       <div className={styles.copy}>
         <header className={styles.head}>
           {/* Bizz says it: on wide screens he's to the right of the words, on phones below them */}
-          <ShoutBubble side={isDesktop ? "right" : "bottom"} aim={0.2} reach={isDesktop ? 4.5 : 3} className={styles.bubble}>
+          <ShoutBubble side={isDesktop ? "right" : "bottom"} aim={0.2} reach={isDesktop ? 4.5 : 5.5} depth={isDesktop ? 30 : 18} lean={isDesktop ? undefined : 0.3} className={styles.bubble}>
             <h1 className={styles.title}>
               A party game where <span className="fantasyEmphasis">fantasy</span> meets reality TV!
             </h1>
@@ -59,21 +69,29 @@ export default function BoxHero({ onOpen }: BoxHeroProps) {
         </header>
         {isDesktop && (
           <div className={styles.ctas}>
-            <BuyButton animated icon="forward" variant="primary" color="red" size="large" text="Buy now" />
+            <BuyButton from="home_hero" animated icon="forward" variant="primary" color="red" size="large" text="Buy now" />
           </div>
         )}
       </div>
 
       <div className={styles.stageWrap}>
         <BoxViewer
-          art={BOX}
+          art={art}
           video={VIDEO}
           label="The Love, Career & Magic game box"
           still="/images/box/still.webp"
           onOpen={(o) => {
             setOpen(o);
             onOpen?.(o);
+            if (o) {
+              openedAt.current = Date.now();
+              trackEvent("hero_trailer_open");
+            } else if (openedAt.current) {
+              trackEvent("hero_trailer_close", { seconds_open: Math.round((Date.now() - openedAt.current) / 1000) });
+              openedAt.current = 0;
+            }
           }}
+          onSettled={onSettled}
           onStill={hideStaticHero}
           onPeek={(shown) => {
             if (shown) setSpoken(true);
@@ -85,14 +103,20 @@ export default function BoxHero({ onOpen }: BoxHeroProps) {
             </a>
           }
         />
-        <img className={styles.hint} src="/images/box/click-hint.webp" alt="" aria-hidden="true" draggable={false} />
+        <span className={styles.hint} aria-hidden="true">
+          {/* drawn up and to the left, at the box */}
+          <svg className={styles.hintArrow} viewBox="0 0 640 235">
+            <path d="M425 228C430 140 330 62 216 15M262 3L216 14L246 50" />
+          </svg>
+          {verb} the box to learn more
+        </span>
       </div>
 
       {/* phones: along the bottom, where the site's own buttons sit on other pages (the navbar
           leaves them off at the top of the home page) */}
       {!isDesktop && (
         <div className={`${styles.ctas} ${styles.ctasBottom}`}>
-          <BuyButton animated compact icon="forward" variant="primary" color="red" text="Buy now!" />
+          <BuyButton from="home_hero" animated compact icon="forward" variant="primary" color="red" text="Buy now!" />
           <DefaultButton
             compact
             icon="star"

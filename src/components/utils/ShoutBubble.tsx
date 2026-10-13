@@ -9,6 +9,8 @@ interface ShoutBubbleProps {
   side: "bottom" | "right" | "none";
   aim?: number;
   reach?: number; // how much longer than the others the longest spike is
+  depth?: number; // how far the spikes stand out, in px
+  lean?: number; // how far the longest spike's tip leans along the side, in spikes (negative: toward its start)
   className?: string;
   children: ReactNode;
 }
@@ -16,7 +18,7 @@ interface ShoutBubbleProps {
 // spike depths along the side, like the hand-drawn ones (the longest is placed at `aim`)
 const PATTERN = [0.62, 0.8, 0.55, 0.9, 0.68, 0.75, 0.58, 0.85, 0.66];
 
-function outline(side: "bottom" | "right" | "none", w: number, h: number, aim: number, depth: number, reach: number) {
+function outline(side: "bottom" | "right" | "none", w: number, h: number, aim: number, depth: number, reach: number, lean?: number) {
   if (side === "none") return pencil([[0, 0], [w, 0], [w, h], [0, h]]);
   const along = side === "bottom" ? w : h;
   const n = Math.max(4, Math.round(along / 62));
@@ -29,8 +31,10 @@ function outline(side: "bottom" | "right" | "none", w: number, h: number, aim: n
     pts.push(side === "bottom" ? [v, h] : [w, v]);
     if (i < n) {
       const k = n - 1 - i, d = depth * (k === longest ? reach : PATTERN[k % PATTERN.length]);
-      // the tips lean a little; the longest leans toward the start of the side (up, on the right)
-      const m = v - step / 2 + (k === longest ? (side === "right" ? -0.35 * reach : -0.25 * reach) : (k % 2 ? 0.12 : -0.12)) * step;
+      // the tips lean a little; the longest leans toward the start of the side (up, on the right),
+      // unless told otherwise
+      const tilt = lean ?? (side === "right" ? -0.35 * reach : -0.25 * reach);
+      const m = v - step / 2 + (k === longest ? tilt : k % 2 ? 0.12 : -0.12) * step;
       pts.push(side === "bottom" ? [m, h + d] : [w + d, m]);
     }
   }
@@ -59,7 +63,7 @@ function pencil(pts: [number, number][]) {
   return "M" + out.join("L") + "Z";
 }
 
-const ShoutBubble = ({ side, aim = 0.5, reach = 1.5, className, children }: ShoutBubbleProps) => {
+const ShoutBubble = ({ side, aim = 0.5, reach = 1.5, depth = 30, lean, className, children }: ShoutBubbleProps) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const [size, setSize] = useState<[number, number] | null>(null);
   useEffect(() => {
@@ -69,8 +73,8 @@ const ShoutBubble = ({ side, aim = 0.5, reach = 1.5, className, children }: Shou
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
-  const depth = 30, pad = 6; // pad: room for the pencil line
-  const d = size ? outline(side, size[0], size[1], aim, depth, reach) : "";
+  const pad = 6; // room for the pencil line
+  const d = size ? outline(side, size[0], size[1], aim, depth, reach, lean) : "";
   const out = depth * Math.max(1.6, reach + 0.2); // how far the spikes stand out
   return (
     <div ref={ref} className={`${styles.bubble} ${className ?? ""}`.trim()}>

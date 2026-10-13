@@ -21,6 +21,7 @@ interface BoxViewerProps {
   onPeek?: (shown: boolean) => void; // when what's behind pops up, or ducks
   onOpen?: (open: boolean) => void;
   onStill?: () => void; // the still (or the fallback) is on screen
+  onSettled?: () => void; // the 3D box is in, or won't be: the page can load what it held back
 }
 
 // a visitor who'd rather not download much
@@ -29,7 +30,7 @@ const savingData = () => {
   return !!c?.saveData || /(^|-)2g$/.test(c?.effectiveType ?? "") || !!window.matchMedia?.("(prefers-reduced-data: reduce)").matches;
 };
 
-const BoxViewer = ({ art, video, label, still, fallback, behind, onPeek, onOpen, onStill }: BoxViewerProps) => {
+const BoxViewer = ({ art, video, label, still, fallback, behind, onPeek, onOpen, onStill, onSettled }: BoxViewerProps) => {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const api = useRef<BoxViewerApi | null>(null);
   const [failed, setFailed] = useState(savingData);
@@ -50,6 +51,11 @@ const BoxViewer = ({ art, video, label, still, fallback, behind, onPeek, onOpen,
   useEffect(() => {
     onPeekRef.current?.(peeking || failed || (late && !ready));
   }, [peeking, failed, late, ready]);
+  const onSettledRef = useRef(onSettled);
+  onSettledRef.current = onSettled;
+  useEffect(() => {
+    if (ready || failed) onSettledRef.current?.();
+  }, [ready, failed]);
 
   useEffect(() => {
     const stage = stageRef.current;

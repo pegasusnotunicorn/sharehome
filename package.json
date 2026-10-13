@@ -24,6 +24,7 @@
     "sitemap": "^8.0.0",
     "stripe": "^17.7.0",
     "swiper": "^12.2.0",
+    "three": "0.160.0",
     "webfontloader": "^1.6.28"
   },
   "scripts": {
@@ -48,6 +49,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/react-helmet": "^6.1.11",
+    "@types/three": "0.160.0",
     "critical": "^7.2.1",
     "eslint": "^8.24.0",
     "eslint-plugin-react": "^7.32.0",

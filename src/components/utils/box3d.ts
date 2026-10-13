@@ -77,16 +77,38 @@ function shell(T: Three, L: number, W: number, H: number, tex: Tex) {
   return m;
 }
 
-// the closed box, lid up, its long side 1 and its near long side toward the camera. `lift(t)` raises
-// the lid by t (0 shut, 1 lifted).
+// the box, lid up, its long side 1 and its near long side toward the camera.
+// `pose(hover, open)` places the lid: `hover` (0..1) lifts it a little, `open` (0..1) takes it off,
+// up and then back, floating behind the tray so you can see in. The pair is kept centred on the
+// origin, and `pose` returns the radius they need, so the viewer can stand back far enough.
 export function makeBox(T: Three, lid: Tex, base: Tex) {
   const k = 1 / MM.L;
-  const H = MM.H * k;
-  const grp = new T.Group();
-  const lidShell = shell(T, 1, MM.W * k, H, lid);
-  const tray = shell(T, (MM.L - 2 * MM.inset) * k, (MM.W - 2 * MM.inset) * k, MM.baseH * k, base);
+  const L = 1, W = MM.W * k, H = MM.H * k, i = MM.inset * k, bh = MM.baseH * k;
+  const grp = new T.Group(), body = new T.Group();
+  const lidShell = shell(T, L, W, H, lid);
+  const tray = shell(T, L - 2 * i, W - 2 * i, bh, base);
   tray.rotation.z = Math.PI; // upside down: its top is the box's bottom
-  tray.position.y = -H / 2 + (MM.baseH * k) / 2;
-  grp.add(lidShell, tray);
-  return { box: grp, lift: (t: number) => (lidShell.position.y = t * LIFT * H) };
+  tray.position.y = -H / 2 + bh / 2;
+  body.add(lidShell, tray);
+  grp.add(body);
+  const up = OPEN.up * H, back = OPEN.back * W;
+  const pose = (hover: number, open: number) => {
+    // up first, clear of the tray's walls, then back
+    const ly = hover * LIFT * H + up * ease(Math.min(1, open * 2)), lz = -back * ease(Math.max(0, open * 2 - 1));
+    lidShell.position.set(0, ly, lz);
+    // the pair's bounds, kept centred
+    const y0 = -H / 2, y1 = H / 2 + ly;
+    const z0 = Math.min(-W / 2 + lz, -(W - 2 * i) / 2), z1 = Math.max(W / 2 + lz, (W - 2 * i) / 2);
+    body.position.set(0, -(open > 0 ? (y0 + y1) / 2 : 0), -(z0 + z1) / 2);
+    return Math.max(BOX_RADIUS, open > 0 ? Math.hypot(L / 2, (y1 - y0) / 2, (z1 - z0) / 2) : 0);
+  };
+  return { box: grp, pose };
 }
+
+// how far the open lid floats: up, of the box's height, then back, of its width
+const OPEN = { up: 1.2, back: 0.45 };
+const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
+
+// the closed box's reach from its centre, however it's turned (hover lift included); the viewer's
+// camera is set to fit this
+export const BOX_RADIUS = Math.hypot(0.5, MM.W / MM.L / 2, (MM.H / MM.L) * (0.5 + LIFT)) + 0.005;

@@ -24,6 +24,8 @@ const CardViewer = ({ mm, faces, box, edge, label, still, fallback }: CardViewer
   const api = useRef<CardViewerApi | null>(null);
   const [failed, setFailed] = useState(false);
   const [moved, setMoved] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -36,7 +38,10 @@ const CardViewer = ({ mm, faces, box, edge, label, still, fallback }: CardViewer
         )
         .then((a) => {
           if (gone) a?.destroy();
-          else api.current = a;
+          else {
+            api.current = a;
+            setReady(!!a);
+          }
         })
         .catch(() => !gone && setFailed(true));
     };
@@ -78,15 +83,28 @@ const CardViewer = ({ mm, faces, box, edge, label, still, fallback }: CardViewer
           <>
             {/* the box at rest, the same picture the 3D view starts on, so it swaps in unseen */}
             {still && <img className={styles.stillBox} src={still} alt="" aria-hidden="true" />}
-            <button
-              className={`${styles.reset} ${moved ? styles.resetShown : ""}`.trim()}
-              type="button"
-              tabIndex={moved ? 0 : -1}
-              aria-hidden={!moved}
-              onClick={() => api.current?.reset()}
-            >
-              Reset
-            </button>
+            <span className={`${styles.boxTools} ${ready ? styles.boxToolsShown : ""}`.trim()}>
+              <button
+                className={styles.pill}
+                type="button"
+                aria-pressed={open}
+                onClick={() => {
+                  api.current?.open(!open);
+                  setOpen(!open);
+                }}
+              >
+                {open ? "Close box" : "Open box"}
+              </button>
+              <button
+                className={`${styles.pill} ${styles.reset} ${moved ? styles.resetShown : ""}`.trim()}
+                type="button"
+                tabIndex={moved ? 0 : -1}
+                aria-hidden={!moved}
+                onClick={() => api.current?.reset()}
+              >
+                Reset
+              </button>
+            </span>
           </>
         ) : (
           <>

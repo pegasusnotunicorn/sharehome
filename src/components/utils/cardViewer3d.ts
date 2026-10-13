@@ -6,7 +6,7 @@
 import type * as THREE from "three";
 import { calm, ease, loadThree, makeCard, renderer, studio } from "./card3d";
 import type { Three } from "./card3d";
-import { makeBox } from "./box3d";
+import { BOX_RADIUS, makeBox } from "./box3d";
 import type { BoxArt, BoxPanels } from "./box3d";
 
 export type CardFace = string | HTMLCanvasElement;
@@ -17,6 +17,7 @@ export interface CardFaces {
 }
 export interface CardViewerApi {
   zoom: (f: number) => void;
+  open: (open: boolean) => void; // the box: take the lid off, or put it back
   reset: () => void;
   destroy: () => void;
 }
@@ -25,7 +26,8 @@ const REST: [number, number] = [-0.42, -0.12]; // turned 24° and tipped back 7�
 const REST_Z = 1.4; // and zoomed in one step (the zoom-in button's step)
 // the box lies lid up, turned 24° and tipped 35° toward you, like the product shots. It doesn't zoom,
 // and the camera stands far enough back that it never leaves the frame however it's turned (lid
-// lifted included), its floor just below it and that floor's shadow in frame too.
+// lifted included), its floor just below it and that floor's shadow in frame too. With the lid off
+// it needs more room, and everything (camera, aim, floor) moves back by the same factor.
 const BOX_REST: [number, number] = [-0.42, 0.61];
 const BOX_CAM_DIST = 3.085;
 const BOX_AIM_Y = -0.105;
@@ -135,6 +137,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     cancelAnimationFrame(raf);
     cancelAnimationFrame(pending);
     cancelAnimationFrame(lraf);
+    cancelAnimationFrame(oraf);
     clearTimeout(settle);
     ro.disconnect();
     io?.disconnect();
@@ -152,7 +155,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   };
   let io: IntersectionObserver | null = null;
   let settle = 0;
-  let object: THREE.Object3D, lift: ((t: number) => void) | null = null;
+  let object: THREE.Object3D, pose: ((hover: number, open: number) => number) | null = null;
   try {
     if (box) {
       const panels = async (p: BoxPanels) => {
@@ -160,7 +163,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
         return { top, near, far, left, right };
       };
       const [lid, base] = await Promise.all([panels(box.lid), panels(box.base)]);
-      ({ box: object, lift } = makeBox(T, lid, base));
+      ({ box: object, pose } = makeBox(T, lid, base));
     } else {
       if (!mm || !faces) throw new Error("A card needs its size and faces");
       const f = await faces();
@@ -297,24 +300,55 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     raf = requestAnimationFrame(step);
   };
 
-  // the box's lid lifts while the pointer is over it, or for a moment after a tap, then settles back
-  let lifted = 0, liftTo = 0;
+  // the box's lid lifts while the pointer is over it, or for a moment after a tap, then settles back;
+  // "Open box" takes it off. The camera stands back as far as the lid's place needs.
+  let lifted = 0, liftTo = 0, opened = 0, openTo = 0, oraf = 0;
+  const camLen = CAM.length(), aim0 = AIM.clone();
+  const setPose = () => {
+    if (!pose) return;
+    const s = pose(lifted, opened) / BOX_RADIUS;
+    CAM.setLength(camLen * s);
+    AIM.copy(aim0).multiplyScalar(s);
+    tgt.copy(AIM);
+    floor.position.y = BOX_FLOOR * s;
+    place();
+  };
   const liftLid = (to: number) => {
-    if (!lift || to === liftTo) return;
+    if (!pose || to === liftTo || openTo) return;
     liftTo = to;
     cancelAnimationFrame(lraf);
     if (calm()) {
-      lift((lifted = to));
+      lifted = to;
+      setPose();
       return draw();
     }
     const from = lifted, t0 = performance.now(), ms = 450;
     const step = (now: number) => {
       const t = Math.min(1, (now - t0) / ms);
-      lift((lifted = from + (to - from) * ease(t)));
+      lifted = from + (to - from) * ease(t);
+      setPose();
       draw();
       if (t < 1) lraf = requestAnimationFrame(step);
     };
     lraf = requestAnimationFrame(step);
+  };
+  const openLid = (open: boolean) => {
+    const to = open ? 1 : 0;
+    if (!pose || to === openTo) return;
+    openTo = to;
+    liftTo = 0; // the hover lift folds into the opening
+    cancelAnimationFrame(lraf);
+    cancelAnimationFrame(oraf);
+    const from = opened, l0 = lifted, t0 = performance.now(), ms = calm() ? 0 : 1100 * Math.abs(to - from);
+    const step = (now: number) => {
+      const t = ms ? Math.min(1, (now - t0) / ms) : 1;
+      opened = from + (to - from) * t; // the lid's path is eased in makeBox
+      lifted = l0 * (1 - t);
+      setPose();
+      draw();
+      if (t < 1) oraf = requestAnimationFrame(step);
+    };
+    oraf = requestAnimationFrame(step);
   };
   const over = (cx: number, cy: number) => {
     const b = stage.getBoundingClientRect();
@@ -352,7 +386,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     stage.classList.add("drag");
   };
   stage.onpointermove = (e) => {
-    if (lift && e.pointerType === "mouse" && !drag && !pinch) liftLid(over(e.clientX, e.clientY) ? 1 : 0);
+    if (pose && e.pointerType === "mouse" && !drag && !pinch) liftLid(over(e.clientX, e.clientY) ? 1 : 0);
     if (!pts.has(e.pointerId)) return;
     pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (pinch && pts.size >= 2) {
@@ -374,7 +408,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   const up = (e: PointerEvent) => {
     pts.delete(e.pointerId);
     // a tap on the box (a touch that didn't move) lifts the lid for a moment
-    if (lift && tap && e.pointerType !== "mouse" && e.type === "pointerup" && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) < 8 && e.timeStamp - tap.t < 400 && over(e.clientX, e.clientY)) {
+    if (pose && !openTo && tap && e.pointerType !== "mouse" && e.type === "pointerup" && Math.hypot(e.clientX - tap.x, e.clientY - tap.y) < 8 && e.timeStamp - tap.t < 400 && over(e.clientX, e.clientY)) {
       liftLid(1);
       clearTimeout(settle);
       settle = window.setTimeout(() => liftLid(0), 1200);
@@ -455,6 +489,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
       used();
       zoomAt(f);
     },
+    open: openLid,
     reset,
     destroy: cleanup,
   };

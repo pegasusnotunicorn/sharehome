@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useState } from "react";
 import { NavLink } from "react-router";
 import { ScrollTrigger } from "gsap/ScrollTrigger.js";
 import gsap from "gsap";
@@ -8,6 +8,10 @@ import getHomePageCardProps from "./utils/getHomePageCardProps";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import { getAllFinishedPeople } from "../Characters/Characters";
 import { randomDeg, randomNumFromNeg, randomNum } from "../utils/useMath";
+import Deck3D from "./utils/Deck3D";
+import { CHARACTER_CARD_MM, characterCardFaces } from "../Characters/characterCardFaces";
+import { characterArtSmall } from "../utils/characterArt";
+import type { DeckCard, DeckPose } from "../utils/deckCards3d";
 import styles from "../../css/pages/home/charactersDeckSection.module.css";
 
 interface CharactersDeckRowProps {
@@ -23,8 +27,50 @@ interface DecksProps {
   tl?: gsap.core.Timeline | null;
 }
 
-//the deck section covering half the screen
+// where the three cards land: down the deck's side of the step on wide screens; on phones, two above
+// the words and one below
+const characterLayout = (w: number, h: number): DeckPose[] => {
+  const stacked = w > innerWidth * 0.9; // phones and small tablets: the deck spans the step, words in the middle
+  const cw = stacked ? Math.min(w * 0.6, h * 0.32, 360) : Math.min(w * 0.46, h * 0.5, 440);
+  if (stacked)
+    return [
+      { x: -w * 0.17, y: -h * 0.36, w: cw, tilt: 7 },
+      { x: w * 0.2, y: -h * 0.22, w: cw, tilt: -6 },
+      { x: w * 0.04, y: h * 0.35, w: cw, tilt: 3 },
+    ];
+  return [
+    { x: -w * 0.13, y: -h * 0.28, w: cw, tilt: 8 },
+    { x: w * 0.14, y: 0, w: cw, tilt: -6 },
+    { x: -w * 0.1, y: h * 0.28, w: cw, tilt: 3 },
+  ];
+};
+
+//three of the cast, dealt in 3D
 const CharactersDeckSection = () => {
+  const [cards] = useState<DeckCard[]>(() =>
+    getAllFinishedPeople(true)
+      .slice(0, 3)
+      .map((c) => ({
+        faces: characterCardFaces(c, characterArtSmall(c.image.url)),
+        label: `Meet ${c.name}`,
+        href: `/characters/${c.urlName}`,
+      }))
+  );
+  return (
+    <Deck3D
+      className={styles.characterDecksContainer}
+      cards={cards}
+      mm={CHARACTER_CARD_MM}
+      edge="gold"
+      from="left"
+      layout={characterLayout}
+      fallback={<FlatCharactersDeck />}
+    />
+  );
+};
+
+//the flat cards, if 3D can't be shown
+const FlatCharactersDeck = () => {
   gsap.registerPlugin(ScrollTrigger);
 
   //all people (randomized)

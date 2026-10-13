@@ -51,9 +51,9 @@ const wrap = (ctx: CanvasRenderingContext2D, text: string, max: number) => {
   return lines;
 };
 
-async function drawFront(c: Character) {
+async function drawFront(c: Character, art: string) {
   const cv = canvas(), ctx = cv.getContext("2d")!;
-  const im = await loadImage(c.image.url);
+  const im = await loadImage(art);
   const k = Math.max(W / im.naturalWidth, H / im.naturalHeight); // cover
   const dw = im.naturalWidth * k, dh = im.naturalHeight * k;
   ctx.drawImage(im, (W - dw) / 2, (H - dh) / 2, dw, dh);
@@ -142,7 +142,8 @@ function drawBack(c: Character) {
   return cv;
 }
 
-export const characterCardFaces = (c: Character) => async (): Promise<CardFaces> => {
+// `art`: a smaller copy of the illustration will do when the card shows small
+export const characterCardFaces = (c: Character, art = c.image.url) => async (): Promise<CardFaces> => {
   await fontsReady();
-  return { front: await drawFront(c), back: drawBack(c) };
+  return { front: await drawFront(c, art), back: drawBack(c) };
 };

@@ -336,3 +336,17 @@ span.hateMode {
 }
 
 /* #endregion */
+
+/* the trait tags in 3D (traitTiles3d.ts), over the picture; the flat tags stay, hidden, to lay them out */
+.imageAndArrowContainer > canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.imageAndArrowContainer:global(.ready) .characterArc {
+  visibility: hidden;
+}

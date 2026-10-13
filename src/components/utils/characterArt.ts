@@ -7,5 +7,11 @@ export const characterArtSrcSet = (url: string) => {
   return m ? `/images/members/1000/${m[1]} 1000w, ${url} 2000w` : undefined;
 };
 
+// the 1000px copy, where there is one
+export const characterArtSmall = (url: string) => {
+  const m = ART.exec(url);
+  return m ? `/images/members/1000/${m[1]}` : url;
+};
+
 // the width the art needs to fill these boxes (they're narrower than the art, so it's cropped to height)
 export const CHARACTER_ART_SIZES = "(max-width: 900px) 290px, 490px";

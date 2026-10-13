@@ -184,15 +184,39 @@
   }
 }
 
-/* "Click the box to learn more", its arrow pointing up at the box */
+/* "Click the box to learn more", in marker, its arrow pointing up at the box */
 .hint {
   position: absolute;
   z-index: 2; /* over the 3D view */
   right: 4%;
   bottom: 9%;
-  width: clamp(150px, 19%, 230px);
+  font-family: "GochiHand", "Rowdies-Regular", sans-serif;
+  font-size: clamp(1.25rem, 1.6vw, 1.6rem);
+  line-height: 1.1;
+  letter-spacing: 0;
+  white-space: nowrap;
+  color: #1e1e1e;
+  -webkit-text-stroke: 0.04em currentColor; /* the font's single weight, made marker-thick */
+  /* a soft paper-coloured edge, so it reads over the doodles behind */
+  text-shadow: 0 0 2px #faf8f0, 0 0 4px #faf8f0, 0 0 8px #faf8f0;
   pointer-events: none;
+  user-select: none;
   transition: opacity 0.3s;
+}
+
+.hintArrow {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.hintArrow path {
+  fill: none;
+  stroke: #1e1e1e;
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .open .hint {
@@ -347,9 +371,9 @@
   }
 
   .hint {
-    right: 2%;
+    right: 3%;
     bottom: 8px;
-    width: clamp(140px, 30vw, 220px);
+    font-size: clamp(1.25rem, 5.4vw, 1.5rem);
   }
 
   .open .head {

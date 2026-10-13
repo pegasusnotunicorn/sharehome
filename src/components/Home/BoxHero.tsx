@@ -43,6 +43,8 @@ export default function BoxHero({ onOpen, onSettled }: BoxHeroProps) {
   const { isDesktop } = useWindowDimensions();
   const [art] = useState(() => (isPhone() ? BOX_PHONE : BOX));
   const openedAt = useRef(0);
+  // touch screens tap
+  const [verb] = useState(() => (window.matchMedia?.("(hover: none)").matches ? "Tap" : "Click"));
 
   return (
     <section className={`${styles.hero} ${open ? styles.open : ""} ${spoken ? styles.spoken : ""}`.trim()}>
@@ -101,7 +103,13 @@ export default function BoxHero({ onOpen, onSettled }: BoxHeroProps) {
             </a>
           }
         />
-        <img className={styles.hint} src="/images/box/click-hint.webp" alt="" aria-hidden="true" draggable={false} />
+        <span className={styles.hint} aria-hidden="true">
+          {/* drawn up and to the left, at the box */}
+          <svg className={styles.hintArrow} viewBox="0 0 640 235">
+            <path d="M425 228C430 140 330 62 216 15M262 3L216 14L246 50" />
+          </svg>
+          {verb} the box to learn more
+        </span>
       </div>
 
       {/* phones: along the bottom, where the site's own buttons sit on other pages (the navbar

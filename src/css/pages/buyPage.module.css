@@ -1116,23 +1116,35 @@
   margin: 0;
 }
 
-/* phone number, asked only for Europe deliveries: styled to match Stripe's
-   condensed fields above it (same font, sizes, floating label and invalid
-   state; 14px text on phones like appearanceMobile, 16px otherwise) */
+/* phone number, asked only for Europe deliveries. Every value here is copied
+   from Stripe's own field with the checkout's appearance (appearanceBase, and
+   appearanceMobile at 14px), so it can't be told apart from the ones above. */
 .phoneField {
-  --stripe-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;
+  --stripe-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   --stripe-size: 16px;
+  --stripe-pad-top: 28px;
+  --stripe-label-top: 18px;
+  --stripe-label-lift: -10px;
+  --stripe-label-scale: 0.888889;
+  --stripe-text: #323232;
   --stripe-red: #df1b41;
+  --stripe-shadow: 0 1px 1px rgba(0, 0, 0, 0.03), 0 3px 6px rgba(0, 0, 0, 0.02);
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 8px;
   text-align: left;
   letter-spacing: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @media only screen and (max-width: 900px) {
   .phoneField {
     --stripe-size: 14px;
+    --stripe-pad-top: 26px;
+    --stripe-label-top: 17px;
+    --stripe-label-lift: -9px;
+    --stripe-label-scale: 0.875;
   }
 }
 
@@ -1142,20 +1154,21 @@
   background: #fff;
   border: 1px solid #e6e6e6;
   border-radius: 8px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.03), 0 3px 6px rgba(0, 0, 0, 0.02);
-  transition: border-color 0.15s, box-shadow 0.15s;
+  box-shadow: var(--stripe-shadow);
+  color: var(--stripe-text);
+  transition: background 0.15s, border 0.15s, box-shadow 0.15s, color 0.15s;
   cursor: text;
+}
+
+.phoneBoxInvalid {
+  border-color: var(--stripe-red);
+  box-shadow: var(--stripe-shadow), 0 0 0 1px var(--stripe-red);
+  color: var(--stripe-red);
 }
 
 .phoneBox:focus-within {
   border-color: #5f5aa2;
-  box-shadow: 0 0 0 3px rgba(95, 90, 162, 0.25);
-}
-
-.phoneBoxInvalid,
-.phoneBoxInvalid:focus-within {
-  border-color: var(--stripe-red);
-  box-shadow: 0 0 0 1px var(--stripe-red), 0 1px 1px rgba(0, 0, 0, 0.03), 0 3px 6px rgba(0, 0, 0, 0.02);
+  box-shadow: var(--stripe-shadow), 0 0 0 3px rgba(94, 89, 161, 0.25), 0 1px 1px rgba(0, 0, 0, 0.08);
 }
 
 .phoneInput {
@@ -1163,47 +1176,46 @@
   width: 100%;
   box-sizing: border-box;
   margin: 0;
-  padding: calc(var(--stripe-size) * 1.6) 0.9rem calc(var(--stripe-size) * 0.55);
+  padding: var(--stripe-pad-top) 12px 8px;
   border: none;
+  border-radius: 8px;
   background: transparent;
   outline: none;
   font-family: var(--stripe-font);
   font-size: var(--stripe-size);
   font-weight: 400;
+  line-height: 1.15;
   letter-spacing: normal;
-  color: #30313d;
-}
-
-.phoneBoxInvalid .phoneInput {
-  color: var(--stripe-red);
+  color: inherit;
 }
 
 .phoneLabel {
   position: absolute;
-  left: 0.9rem;
-  top: 50%;
-  transform: translateY(-50%);
+  left: 12px;
+  top: var(--stripe-label-top);
+  transform-origin: 0 0;
   font-family: var(--stripe-font);
   font-size: var(--stripe-size);
   font-weight: 400;
+  line-height: 1.15;
   letter-spacing: normal;
-  color: #30313d;
+  color: var(--stripe-text);
   pointer-events: none;
-  transition: top 0.15s, font-size 0.15s;
+  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .phoneBox:focus-within .phoneLabel,
 .phoneBoxFilled .phoneLabel {
-  top: calc(var(--stripe-size) * 1.05);
-  font-size: calc(var(--stripe-size) * 0.85);
-  color: #6d6e78;
+  transform: translateY(var(--stripe-label-lift)) scale(var(--stripe-label-scale));
+  opacity: 0.8;
 }
 
 .phoneError {
-  margin: 0.15rem 0 0;
+  margin: 0;
   font-family: var(--stripe-font);
   font-size: calc(var(--stripe-size) * 0.93);
   font-weight: 400;
+  line-height: 1.15;
   letter-spacing: normal;
   color: var(--stripe-red);
 }

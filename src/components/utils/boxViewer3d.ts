@@ -2,7 +2,7 @@
 // (cardViewer3d.ts), sharing their renderer. Closed, it can be turned any way (drag, with coasting, or
 // the arrow keys), and its lid lifts a little under the mouse. Open (a click or tap on it, or Enter),
 // it turns to face you, the lid comes off and goes under it, and the trailer plays in the tray. Open,
-// it stays put; a click anywhere off it closes it. Left alone for a moment after being turned,
+// it stays put; a click anywhere off it closes it. Left alone for a while after being turned,
 // it goes back to its rest pose.
 //
 // It never leaves the frame: the camera stands back far enough for the box at any angle (and for
@@ -34,7 +34,7 @@ const REST: [number, number] = [0.42, 0.61];
 // floor's shadow is in frame too (the floor just below the box's reach)
 const DIST = 3.085, AIM_Y = -0.105, FLOOR = -0.61;
 const OPEN_MS = 950;
-const IDLE_MS = 1500; // left this long after being turned, it goes back
+const IDLE_MS = 8000; // left this long after being turned, it goes back
 
 export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, onOpen, onFail }: MountOptions): Promise<BoxViewerApi | null> {
   let T: Three, r: THREE.WebGLRenderer;
@@ -324,7 +324,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     };
     raf = requestAnimationFrame(step);
   };
-  // after a turn, once it's been left alone for a moment, it goes back to rest
+  // after a turn, once it's been left alone for a while, it goes back to rest
   const idleReset = () => {
     clearTimeout(idle);
     idle = window.setTimeout(() => !drag && !openTo && moved && reset(), IDLE_MS);

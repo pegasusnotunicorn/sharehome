@@ -128,22 +128,36 @@ export async function mountFooterCards(stage: HTMLElement, { cards, onHover, onP
     };
   });
 
-  // spread the cards out, near and far: across the right of a wide band (the words are on the left),
-  // across the whole of a narrow one
+  // Spread the cards out, near and far: across the right of a wide band (the words are on the left), across the
+  // whole of a narrow one. They never pass through each other: a card turning about its (nearly) upright axis
+  // stays inside an upright cylinder, so each one goes only where its cylinder can't touch another's, either far
+  // enough apart side to side or clear above or below. A card with no room left is left out.
   let W = 0, H = 0, scale = 1;
+  const HOVER_GROW = 1.1;
   const layout = () => {
     const vh = 2 * cam.position.z * Math.tan((cam.fov * Math.PI) / 360), vw = vh * cam.aspect;
     const wide = cam.aspect > 1.8;
-    const [x0, x1] = wide ? [-0.08, 0.47] : [-0.42, 0.42];
-    scale = wide ? 1.15 : 1.4;
-    const n = live.length;
-    const order = live.map((_, i) => i).sort(() => Math.random() - 0.5);
-    order.forEach((slot, i) => {
-      const x = (x0 + ((x1 - x0) * (slot + rand(0.25, 0.75))) / n) * vw;
-      const z = rand(-1.4, 0.6);
-      const depth = (cam.position.z - z) / cam.position.z; // farther cards can sit higher or lower and still show
-      live[i].home.set(x, rand(-0.24, 0.24) * vh * depth, z);
-    });
+    const [x0, x1] = wide ? [-0.08, 0.47] : [-0.44, 0.44];
+    scale = 1.15;
+    // a card is 1 x 0.58 and tips up to about 0.5 rad off upright: its corners reach 0.58 out and 0.52 up
+    const radius = 0.58 * scale * HOVER_GROW + 0.02;
+    const half = 0.52 * scale * HOVER_GROW + 0.07; // plus its bob
+    const placed: THREE.Vector3[] = [];
+    for (const l of live) {
+      let spot: THREE.Vector3 | null = null;
+      for (let tries = 0; tries < 300 && !spot; tries++) {
+        const z = rand(-1.6, 0.5);
+        const depth = (cam.position.z - z) / cam.position.z; // farther away, more room shows
+        const p = new T.Vector3(rand(x0, x1) * vw * depth, rand(-0.26, 0.26) * vh * depth, z);
+        const clear = placed.every((o) => Math.hypot(p.x - o.x, p.z - o.z) >= 2 * radius || Math.abs(p.y - o.y) >= 2 * half);
+        if (clear) spot = p;
+      }
+      l.obj.visible = !!spot;
+      if (spot) {
+        placed.push(spot);
+        l.home.copy(spot);
+      }
+    }
   };
 
   // its own canvas; the shared renderer draws into it
@@ -180,7 +194,7 @@ export async function mountFooterCards(stage: HTMLElement, { cards, onHover, onP
   const pick = () => {
     if (ndc.x < -2) return null;
     ray.setFromCamera(ndc, cam);
-    const hit = ray.intersectObjects(live.map((l) => l.obj), true)[0];
+    const hit = ray.intersectObjects(live.filter((l) => l.obj.visible).map((l) => l.obj), true)[0];
     return hit ? live.find((l) => l.obj === hit.object.parent?.parent) ?? null : null;
   };
   const facing = new T.Quaternion().setFromEuler(new T.Euler(-0.08, -0.18, 0));
@@ -202,8 +216,8 @@ export async function mountFooterCards(stage: HTMLElement, { cards, onHover, onP
       l.focus += (want - l.focus) * (instant ? 1 : 1 - Math.exp(-dt * 7));
       tmp.copy(l.spin).slerp(facing, l.focus);
       l.obj.quaternion.copy(tmp);
-      l.obj.position.set(l.home.x, l.home.y + Math.sin(t * l.bob + l.phase) * 0.06, l.home.z + l.focus * 0.7);
-      l.obj.scale.setScalar(scale * (1 + l.focus * 0.12));
+      l.obj.position.set(l.home.x, l.home.y + Math.sin(t * l.bob + l.phase) * 0.06, l.home.z);
+      l.obj.scale.setScalar(scale * (1 + l.focus * (HOVER_GROW - 1)));
     }
   };
 

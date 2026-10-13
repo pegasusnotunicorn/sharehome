@@ -14,7 +14,6 @@ import { CharacterSpotlight } from "../utils/CharacterSpotlight";
 import { GsapFadeScrub } from "../utils/useGsap";
 import { EmojiSection } from "../utils/EmojiSection";
 import CustomHelmet from "../utils/CustomHelmet";
-import CarouselSection from "../utils/CarouselSection";
 import DefaultButton from "../utils/DefaultButton";
 import Modal from "../utils/Modal";
 import charStyles from "../../css/pages/characterPage.module.css";
@@ -177,7 +176,7 @@ const CharactersPage = () => {
     }
 
     return (
-      <div className={`content ${chosenCharacter ? "flushBottom" : ""}`}>
+      <div className="content flushBottom">
         <CustomHelmet
           title={title}
           splashImage={splashImage}
@@ -213,16 +212,6 @@ const CharactersPage = () => {
         </GsapFadeScrub>
         {!chosenCharacter && <ExpansionCharactersSection />}
         <EmojiSection />
-        {!chosenCharacter && (
-          <CarouselSection
-            className={charStyles.carousel}
-            random
-            loop
-            totalPictures={15}
-            directory="/images/photoshoot/characters"
-            filename="character"
-          />
-        )}
       </div>
     );
   }

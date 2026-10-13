@@ -141,6 +141,7 @@ export const CharacterSpotlight = (props: CharacterSpotlightProps) => {
                 <CardViewer
                   key={character.urlName}
                   mm={CHARACTER_CARD_MM}
+                  edge="gold"
                   faces={characterCardFaces(character)}
                   label={`${character.name}'s card from Love, Career & Magic`}
                   still={character.image.url}

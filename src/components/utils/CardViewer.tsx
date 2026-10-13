@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import type { CardFaces, CardViewerApi } from "./cardViewer3d";
+import type { CardEdge, CardFaces, CardViewerApi } from "./cardViewer3d";
 import styles from "../../css/utils/cardViewer.module.css";
 
 // A game card in 3D: drag to turn it any way, scroll or pinch to zoom (cardViewer3d.ts).
@@ -9,12 +9,13 @@ import styles from "../../css/utils/cardViewer.module.css";
 interface CardViewerProps {
   mm: [number, number]; // the card's real size: width x height
   faces: () => Promise<CardFaces>;
+  edge?: CardEdge;
   label: string;
   still?: string; // an image of the front, shown on the card's shape until the 3D card is in
   fallback?: ReactNode;
 }
 
-const CardViewer = ({ mm, faces, label, still, fallback }: CardViewerProps) => {
+const CardViewer = ({ mm, faces, edge, label, still, fallback }: CardViewerProps) => {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const api = useRef<CardViewerApi | null>(null);
   const [failed, setFailed] = useState(false);
@@ -26,7 +27,7 @@ const CardViewer = ({ mm, faces, label, still, fallback }: CardViewerProps) => {
     const start = () => {
       import("./cardViewer3d")
         .then(({ mountCardViewer }) =>
-          mountCardViewer(stage, { mm, faces, onFail: () => !gone && setFailed(true) })
+          mountCardViewer(stage, { mm, faces, edge, onFail: () => !gone && setFailed(true) })
         )
         .then((a) => {
           if (gone) a?.destroy();

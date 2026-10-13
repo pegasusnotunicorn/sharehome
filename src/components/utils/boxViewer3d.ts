@@ -78,7 +78,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
   const spin = new T.Group();
   sc.add(spin);
 
-  let raf = 0, pending = 0, lraf = 0, oraf = 0, dead = false;
+  let raf = 0, pending = 0, lraf = 0, oraf = 0, sraf = 0, dead = false;
   const q = new T.Quaternion(), v: [number, number] = [0, 0];
 
   const cv = document.createElement("canvas");
@@ -101,7 +101,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
   let player: HTMLIFrameElement | null = null, unlisten = () => {}, unlistenYt = () => {};
   const cleanup = () => {
     dead = true;
-    [raf, pending, lraf, oraf].forEach(cancelAnimationFrame);
+    [raf, pending, lraf, oraf, sraf].forEach(cancelAnimationFrame);
     clearTimeout(settle);
     clearTimeout(idle);
     ro?.disconnect();
@@ -155,7 +155,9 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
   // The box's own part of the stage: closed, it can be kept to the right of `--frame-left` (a
   // fraction of the stage's width, set by the page so words can sit on the left); open, it has the
   // whole stage. The lens shifts to centre it there (frame: its centre and half-width, in NDC).
-  let frameLeft = 0;
+  // It starts in the middle of the stage, and moves over to its part during the opening spin
+  // (`slid`, 0..1; straight there for reduced motion).
+  let frameLeft = 0, slid = calm() ? 1 : 0;
   const frame = { c: 0, half: 1 };
   // the nearest the camera can stand, looking at `aim`, with every corner inside `m` of the frame
   const fitDist = (m: number) => {
@@ -184,7 +186,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
   const camAt = () => {
     if (!W || !H) return;
     const s = pose(lifted, opened) / BOX_RADIUS, o = ease(opened);
-    const fl = frameLeft * (1 - o);
+    const fl = frameLeft * ease(slid) * (1 - o);
     frame.half = 1 - fl;
     frame.c = fl;
     cam.aspect = W / H;
@@ -227,7 +229,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
   let atRest: boolean | null = null, introPending = !calm();
   const draw = () => {
     if (dead || !W || !H || !ctx) return;
-    const r0 = !introPending && !openTo && !opened && q.angleTo(rest) < 0.02;
+    const r0 = !introPending && slid >= 1 && !openTo && !opened && q.angleTo(rest) < 0.02;
     if (r0 !== atRest) {
       atRest = r0;
       onRest?.(r0);
@@ -270,6 +272,17 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     q.premultiply(tmp.setFromAxisAngle(Y, ax)).premultiply(tmp.setFromAxisAngle(X, ay)).normalize();
     spin.quaternion.copy(q);
     if (!intro) report();
+  };
+  // over to its part of the stage (once; a grab or an opening doesn't stop it)
+  const slideIn = (ms: number) => {
+    if (slid >= 1 || sraf) return;
+    const from = slid, t0 = performance.now();
+    const step = (now: number) => {
+      slid = from + (1 - from) * Math.min(1, (now - t0) / ms);
+      draw();
+      sraf = slid < 1 ? requestAnimationFrame(step) : 0;
+    };
+    sraf = requestAnimationFrame(step);
   };
   // a turn about its own up axis, so the tipped box doesn't wobble (more than half a turn can't be a slerp)
   const spinBy = (rad: number, ms: number) => {
@@ -499,6 +512,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     cancelAnimationFrame(raf);
     clearTimeout(idle);
     intro = introPending = false;
+    slideIn(500);
     stage.classList.add("used");
     warmPlayer();
     stage.setPointerCapture(e.pointerId);
@@ -550,6 +564,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
       e.preventDefault();
       cancelAnimationFrame(raf);
       intro = introPending = false;
+      slideIn(500);
       turn(...m);
       schedule();
       idleReset();
@@ -570,8 +585,11 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
       (entries) => {
         if (!entries.some((x) => x.isIntersecting)) return;
         io?.disconnect();
-        if (!stage.classList.contains("used") && !openTo) spinBy(Math.PI * 2, 1100);
-        else {
+        if (!stage.classList.contains("used") && !openTo) {
+          spinBy(Math.PI * 2, 1100);
+          slideIn(1100);
+        } else {
+          slideIn(500);
           introPending = false;
           draw();
         }

@@ -73,14 +73,39 @@
   transition-delay: 0.55s;
 }
 
+/* then Buy now, and the "Click the box" hint along with the shout */
+.ctas,
+.hint {
+  opacity: 0;
+  translate: 0 10px;
+}
+
+.spoken .ctas,
+.spoken .hint {
+  opacity: 1;
+  translate: 0 0;
+  transition: opacity 0.3s 0.35s, translate 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s;
+}
+
+.spoken .ctas {
+  transition-delay: 0.75s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .head .bubble,
   .head .factsBubble {
     scale: 1;
   }
 
+  .ctas,
+  .hint {
+    translate: 0 0;
+  }
+
   .spoken .head .bubble,
-  .spoken .head .factsBubble {
+  .spoken .head .factsBubble,
+  .spoken .ctas,
+  .spoken .hint {
     transition: opacity 0.3s 0.3s;
   }
 }

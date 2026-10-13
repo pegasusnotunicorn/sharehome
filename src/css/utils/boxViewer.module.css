@@ -60,6 +60,17 @@
 
 .still {
   z-index: 1;
+  /* the 3D box starts in the middle of the stage and moves over to its part, so the picture is
+     of it in the middle */
+  left: 50cqw;
+  height: min(100cqh, 106.9cqw);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .still {
+    left: calc((var(--frame-left, 0) + (1 - var(--frame-left, 0)) / 2) * 100cqw);
+    height: min(100cqh, 1.069 * (1 - var(--frame-left, 0)) * 100cqw);
+  }
 }
 
 /* behind the canvas, so the box covers it; its contents are placed in % of the box's rest frame */

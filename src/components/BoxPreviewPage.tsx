@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Helmet } from "react-helmet";
 import BoxViewer from "./utils/BoxViewer";
 import BuyButton from "./utils/BuyButton";
@@ -22,12 +22,8 @@ const VIDEO = { landscape: "EoQ2VTipXPA", portrait: "fNq9hS6DsTU" };
 
 const BoxPreviewPage = () => {
   const [open, setOpen] = useState(false);
-  // Bizz's words appear once he's popped up to say them (or, if the 3D box never gets going, after a while)
+  // Bizz's words appear once he's popped up to say them
   const [spoken, setSpoken] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setSpoken(true), 10000);
-    return () => clearTimeout(t);
-  }, []);
   const { isDesktop } = useWindowDimensions();
 
   return (

@@ -32,9 +32,15 @@ const BoxViewer = ({ art, video, label, still, fallback, behind, onPeek, onOpen 
   const onPeekRef = useRef(onPeek);
   onPeekRef.current = onPeek;
   const peeking = ready && atRest;
+  // no 3D, or none after a long wait: nothing to wait for
+  const [late, setLate] = useState(false);
   useEffect(() => {
-    onPeekRef.current?.(peeking || failed); // no 3D: nothing to wait for
-  }, [peeking, failed]);
+    const t = setTimeout(() => setLate(true), 10000);
+    return () => clearTimeout(t);
+  }, []);
+  useEffect(() => {
+    onPeekRef.current?.(peeking || failed || (late && !ready));
+  }, [peeking, failed, late, ready]);
 
   useEffect(() => {
     const stage = stageRef.current;

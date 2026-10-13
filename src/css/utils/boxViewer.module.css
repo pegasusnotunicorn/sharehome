@@ -1,0 +1,105 @@
+/* The game box in 3D (BoxViewer.tsx): fills its parent; the page shows through. Closed, the box keeps
+   to the right of --frame-left (a fraction of the width; the page can set it to leave room for words
+   on the left); open, it has the whole stage. */
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  touch-action: pan-y; /* a vertical swipe still scrolls the page */
+  user-select: none;
+  -webkit-user-select: none;
+  outline: none;
+}
+
+.stage:global(.over) {
+  cursor: pointer;
+}
+
+.stage:global(.drag) {
+  cursor: grabbing;
+}
+
+.stage[data-open] {
+  cursor: default;
+}
+
+.stage:focus-visible {
+  outline: 3px solid #5f5aa2;
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+.stage > canvas {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* until the 3D box is in: the same view, rendered at rest for a 4:3 frame. It's sized as the 3D view
+   frames the box: the frame's full height, unless the frame is narrow, when the camera stands back
+   by the width (boxViewer3d.ts: DIST over its width rule's constant, 3.085 / 2.885 = 1.069). */
+.stage {
+  container-type: size;
+}
+
+.still,
+.behind {
+  position: absolute;
+  top: 50%;
+  left: calc((var(--frame-left, 0) + (1 - var(--frame-left, 0)) / 2) * 100cqw);
+  height: min(100cqh, 1.069 * (1 - var(--frame-left, 0)) * 100cqw);
+  aspect-ratio: 4 / 3;
+  translate: -50% -50%;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+
+.still {
+  z-index: 1;
+  /* swapped out in one frame, not faded: the 3D view's first frame is this same picture, so a fade
+     would only show the two at once as the box starts to spin */
+  transition: none;
+  /* the 3D box starts in the middle of the stage and moves over to its part, so the picture is
+     of it in the middle */
+  left: 50cqw;
+  height: min(100cqh, 106.9cqw);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .still {
+    left: calc((var(--frame-left, 0) + (1 - var(--frame-left, 0)) / 2) * 100cqw);
+    height: min(100cqh, 1.069 * (1 - var(--frame-left, 0)) * 100cqw);
+  }
+}
+
+/* behind the canvas, so the box covers it; its contents are placed in % of the box's rest frame */
+.behind {
+  z-index: 0;
+}
+
+.stage:global(.ready) .still {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* the trailer, on the tray's floor (placed by boxViewer3d.ts) */
+.stage iframe[data-box-video] {
+  position: absolute;
+  z-index: 2;
+  border: 0;
+  border-radius: 4px;
+  background: #1c1a2b;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  pointer-events: none; /* loaded ahead, out of sight: the box underneath still takes the clicks */
+  transition: opacity 0.25s;
+}
+
+.stage iframe[data-box-video]:global(.shown) {
+  opacity: 1;
+  pointer-events: auto;
+}

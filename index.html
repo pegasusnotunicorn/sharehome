@@ -1,6 +1,6 @@
 <html lang="en">
   <head>
-    <link rel="preload" as="image" href="/images/box_transparent.webp" />
+    <link rel="preload" as="image" href="/images/box/still.webp" fetchpriority="high" />
 
     <!-- Disable analytics/tracking on localhost so dev traffic doesn't pollute prod data -->
     <script>
@@ -122,8 +122,6 @@
       :root {
         --hero-static-banner-height: 38px;
         --hero-static-banner-height-mobile: 45px;
-        --hero-static-banner-navbar-spacing: 0px;
-        --hero-static-navbar-height: 82px;
       }
 
       body {
@@ -133,42 +131,39 @@
       body {
         margin: 0;
       }
+      /* Until the app is up: the box, as the home page's hero first shows it (a render of the 3D box,
+         in the middle of the hero's stage; BoxHero hides this once its own copy is showing). */
       #hero-static {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100svh;
         position: relative;
+        height: calc(100svh - var(--hero-static-banner-height));
         margin-top: var(--hero-static-banner-height);
-        box-sizing: border-box;
+        overflow: hidden;
       }
 
       .heroImageStatic {
         position: absolute;
-        top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
-        width: 100%;
-        max-width: 1000px;
-        max-height: calc(100svh - 10rem);
-        height: auto;
-        object-fit: contain;
-        display: block;
-      }
-
-      @media only screen and (min-width: 901px) {
-        .heroImageStatic {
-          width: min(88vw, 1000px, calc((100svh - 13rem) * 1.45));
-          max-height: calc(100svh - 13rem);
-        }
+        translate: -50% 0;
+        aspect-ratio: 4 / 3;
+        width: auto;
+        top: 5.5rem;
+        height: min(
+          calc(100svh - var(--hero-static-banner-height) - 7rem),
+          106.9vw
+        );
       }
 
       @media only screen and (max-width: 900px) {
         #hero-static {
-          padding-top: calc(
-            var(--hero-static-banner-height-mobile) +
-              var(--hero-static-navbar-height) - 1.5rem
-          );
+          margin-top: var(--hero-static-banner-height-mobile);
+          height: calc(100svh - var(--hero-static-banner-height-mobile));
+        }
+
+        .heroImageStatic {
+          top: auto;
+          bottom: 6.5rem;
+          /* the stage under the title's bubble (about 15rem tall on a phone) */
+          height: min(calc(100svh - var(--hero-static-banner-height-mobile) - 28.5rem), 106.9vw);
         }
       }
 
@@ -221,12 +216,11 @@
     </script>
     <div id="hero-static">
       <img
-        src="/images/box_transparent.webp"
-        alt="Box and components of the card game."
+        src="/images/box/still.webp"
+        alt="The Love, Career & Magic game box."
         class="heroImageStatic"
-        width="1000"
-        height="auto"
-        decoding="async"
+        width="1440"
+        height="1080"
         fetchpriority="high"
       />
     </div>

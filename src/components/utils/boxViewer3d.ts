@@ -1,6 +1,6 @@
 // The game box in 3D (three.js), for the top of the home page. Lit and shadowed like the 3D cards
 // (cardViewer3d.ts), sharing their renderer. Closed, it can be turned any way (drag, with coasting, or
-// the arrow keys), and its lid lifts a little under the mouse. Open (a click or tap on it, or open()),
+// the arrow keys), and its lid lifts a little under the mouse. Open (a click or tap on it, or Enter),
 // it turns to face you, the lid comes off and goes under it, and the trailer plays in the tray. Open,
 // it stays put; a click anywhere off it closes it. Left alone for a moment after being turned,
 // it goes back to its rest pose.
@@ -18,14 +18,11 @@ export interface BoxVideo {
   portrait: string;
 }
 export interface BoxViewerApi {
-  open: (open: boolean) => void;
-  reset: () => void;
   destroy: () => void;
 }
 interface MountOptions {
   art: BoxArt;
   video: BoxVideo;
-  onMoved?: (moved: boolean) => void; // turned away from its rest pose, and back
   onRest?: (atRest: boolean) => void; // shut and in its rest pose (not mid-spin, not turned, not open)
   onOpen?: (open: boolean) => void;
   onFail: () => void;
@@ -39,7 +36,7 @@ const DIST = 3.085, AIM_Y = -0.105, FLOOR = -0.61;
 const OPEN_MS = 950;
 const IDLE_MS = 1500; // left this long after being turned, it goes back
 
-export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, onRest, onOpen, onFail }: MountOptions): Promise<BoxViewerApi | null> {
+export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, onOpen, onFail }: MountOptions): Promise<BoxViewerApi | null> {
   let T: Three, r: THREE.WebGLRenderer;
   try {
     T = await loadThree();
@@ -97,6 +94,31 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     textures.push(x);
     return x;
   };
+  // the box's bottom (How to Play) is only seen if it's turned over, so it loads after the rest:
+  // board-coloured until then
+  const later = (url: string) => {
+    const board = document.createElement("canvas");
+    board.width = board.height = 1;
+    const g = board.getContext("2d");
+    if (g) {
+      g.fillStyle = "#efece5";
+      g.fillRect(0, 0, 1, 1);
+    }
+    const x = new T.Texture(board);
+    x.colorSpace = T.SRGBColorSpace;
+    x.needsUpdate = true;
+    textures.push(x);
+    const load = () =>
+      new T.ImageLoader().load(url, (img) => {
+        if (dead) return;
+        x.dispose(); // its storage on the GPU was made for the 1px board; let it be made again
+        x.image = img;
+        x.anisotropy = Math.min(8, r.capabilities.getMaxAnisotropy());
+        x.needsUpdate = true;
+        schedule();
+      });
+    return { x, load };
+  };
   let io: IntersectionObserver | null = null, ro: ResizeObserver | null = null, settle = 0, idle = 0;
   let player: HTMLIFrameElement | null = null, unlisten = () => {}, unlistenYt = () => {};
   const cleanup = () => {
@@ -120,14 +142,16 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     stage.onkeydown = null;
     unlisten();
   };
-  let made: ReturnType<typeof makeBox>;
+  let made: ReturnType<typeof makeBox>, loadLater = () => {};
   try {
-    const panels = async (p: BoxPanels) => {
-      const [top, near, far, left, right] = await Promise.all([p.top, p.near, p.far, p.left, p.right].map(tex));
-      return { top, near, far, left, right };
+    const bottom = later(art.base.top);
+    const panels = async (p: BoxPanels, top?: THREE.Texture) => {
+      const [t, near, far, left, right] = await Promise.all([top ? Promise.resolve(top) : tex(p.top), ...[p.near, p.far, p.left, p.right].map(tex)]);
+      return { top: t, near, far, left, right };
     };
-    const [lid, base] = await Promise.all([panels(art.lid), panels(art.base)]);
+    const [lid, base] = await Promise.all([panels(art.lid), panels(art.base, bottom.x)]);
     made = makeBox(T, lid, base);
+    loadLater = bottom.load;
   } catch {
     cleanup();
     onFail();
@@ -262,11 +286,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
   const X = new T.Vector3(1, 0, 0), Y = new T.Vector3(0, 1, 0), tmp = new T.Quaternion();
   let moved = false, intro = false;
   const report = () => {
-    const m = q.angleTo(rest) > 0.02;
-    if (m !== moved) {
-      moved = m;
-      onMoved?.(m);
-    }
+    moved = q.angleTo(rest) > 0.02;
   };
   const turn = (ax: number, ay: number) => {
     q.premultiply(tmp.setFromAxisAngle(Y, ax)).premultiply(tmp.setFromAxisAngle(X, ay)).normalize();
@@ -325,10 +345,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
   const reset = () => {
     if (openTo) return;
     cancelAnimationFrame(raf);
-    if (moved) {
-      moved = false; // it's on its way back
-      onMoved?.(false);
-    }
+    moved = false; // it's on its way back
     const q0 = q.clone(), t0 = performance.now(), ms = calm() ? 0 : 600;
     const step = (now: number) => {
       const t = ms ? Math.min(1, (now - t0) / ms) : 1;
@@ -381,10 +398,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     } else {
       qFrom.copy(rest);
       stopPlayer();
-      if (moved) {
-        moved = false;
-        onMoved?.(false);
-      }
+      moved = false;
     }
     const from = opened, l0 = lifted, t0 = performance.now(), ms = calm() ? 0 : OPEN_MS * Math.abs(to - from);
     const step = (now: number) => {
@@ -599,5 +613,6 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     io.observe(stage);
   }
 
-  return { open: openBox, reset, destroy: cleanup };
+  loadLater();
+  return { destroy: cleanup };
 }

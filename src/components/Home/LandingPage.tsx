@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap";
 import DefaultButton from "../utils/DefaultButton";
-import { YoutubeModal } from "./YoutubeModal";
 import CarouselSection from "../utils/CarouselSection";
 import ParallaxSection from "./ParallaxSection";
 import MechanicsSection from "./MechanicsSection";
@@ -12,35 +11,17 @@ import {
 } from "./DirectionEpisodeDeckSection";
 import TestimonialsSection from "./TestimonialsSection";
 import LikeHateSection from "./LikeHateSection";
-import ShootingStarSection from "./ShootingStarSection";
-import HeroImageSection from "./HeroImageSection";
+import BoxHero from "./BoxHero";
 import landingPageStyles from "../../css/landingPage.module.css";
 import colorStyles from "../../css/utils/colors.module.css";
 import DescriptionContainer from "./DescriptionContainer";
 
 interface LandingPageProps {
-  videoModalVisible: boolean;
-  setVideoModalVisible: (visible: boolean) => void;
+  setTrailerPlaying: (playing: boolean) => void; // the trailer's playing, in the hero's box
 }
 
-const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPageProps) => {
-  const [player, setPlayer] = useState<any>(null);
-
-  const playVideo = () => {
-    if (player) {
-      player.unMute();
-      player.playVideo();
-    }
-    setVideoModalVisible(true);
-  };
-
-  const stopVideo = () => {
-    if (player) {
-      player.unMute();
-      player.stopVideo();
-    }
-    setVideoModalVisible(false);
-  };
+const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
+  useEffect(() => () => setTrailerPlaying(false), [setTrailerPlaying]);
 
   useEffect(() => {
     document.title = "Love, Career & Magic - 12m game for 2-6 players";
@@ -50,18 +31,7 @@ const LandingPage = ({ videoModalVisible, setVideoModalVisible }: LandingPagePro
     <div className="content">
       <ParallaxSection />
 
-      <YoutubeModal
-        videoModalVisible={videoModalVisible}
-        setPlayer={setPlayer}
-        stopVideo={stopVideo}
-      />
-
-      <ShootingStarSection />
-
-      <HeroImageSection
-        videoModalVisible={videoModalVisible}
-        playVideo={playVideo}
-      />
+      <BoxHero onOpen={setTrailerPlaying} />
 
       <DescriptionContainer
         title={

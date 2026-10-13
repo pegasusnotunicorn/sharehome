@@ -1,9 +1,10 @@
-/* The top of the home page, with the 3D box (BoxPreviewPage.tsx): one screen tall. Wide screens: the
+/* The top of the home page, with the 3D box (BoxHero.tsx): one screen tall. Wide screens: the
    words on the left, the box filling the right. Phones and upright tablets: the title, then the box
    (most of the screen); opened, the box takes the screen for the video. */
 .hero {
   position: relative;
-  height: 100svh;
+  z-index: 2; /* over the home page's card parallax, which starts behind it */
+  height: calc(100svh - var(--banner-height, 38px)); /* the screen, below the banner */
   min-height: 560px;
   box-sizing: border-box;
   padding: 6.5rem 0 1.25rem;
@@ -17,7 +18,7 @@
 .bg {
   position: absolute;
   inset: 0;
-  background: url("../images/bg_seamless.webp") repeat;
+  background: url("../../images/bg_seamless.webp") repeat;
   opacity: 0.1;
   pointer-events: none;
 }
@@ -287,13 +288,30 @@
     padding-top: 7rem;
   }
 
-  /* the site's own Buy now / Expansion buttons sit fixed along the bottom here */
+  /* room along the bottom for Buy now / Expansion */
   .hero {
+    height: calc(100svh - var(--banner-height-mobile, 45px));
     padding-bottom: 6.5rem;
   }
 
-  .ctas {
-    display: none;
+  .ctasBottom {
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    margin: 0;
+    gap: 0.5rem;
+    max-height: none;
+  }
+
+  .ctasBottom > * {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .open .ctasBottom {
+    opacity: 0;
+    pointer-events: none;
   }
 
 

@@ -38,6 +38,7 @@ const Footer = () => {
   };
   const stageRef = useRef<HTMLDivElement | null>(null);
   const [hover, setHover] = useState<{ name: string; x: number; y: number } | null>(null);
+  const [near, setNear] = useState(false); // the flat cards' art downloads once the footer's close
   const isMobile = width <= 900;
   const cast = useMemo(() => pickCast(isMobile ? 5 : 9), [isMobile]);
 
@@ -67,6 +68,7 @@ const Footer = () => {
       (e) => {
         if (!e.some((x) => x.isIntersecting)) return;
         io.disconnect();
+        setNear(true);
         start();
       },
       { rootMargin: "400px" }
@@ -92,7 +94,7 @@ const Footer = () => {
                 className={styles.fanCard}
                 style={{
                   ["--i" as string]: i - 2,
-                  backgroundImage: `url("${SHEET.fronts}")`,
+                  backgroundImage: near ? `url("${SHEET.fronts}")` : undefined,
                   backgroundPosition: `${((c.index % SHEET.cols) / (SHEET.cols - 1)) * 100}% ${(Math.floor(c.index / SHEET.cols) / (SHEET.rows - 1)) * 100}%`,
                 }}
               />

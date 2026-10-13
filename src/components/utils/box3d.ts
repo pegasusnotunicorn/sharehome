@@ -20,7 +20,6 @@ export interface BoxArt {
 }
 
 const MM = { L: 216, W: 127, H: 38, inset: 2.5, baseH: 37 }; // the lid, 216 x 127 x 38 mm
-export const BOX_MM: [number, number] = [MM.L, MM.W];
 
 const BOARD = 0xefece5; // the plain grey board inside
 const LIFT = 0.15; // how far the lid lifts on hover or tap, of the box's height

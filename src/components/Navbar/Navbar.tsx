@@ -16,10 +16,10 @@ import { usePinPopup } from "../utils/usePinPopup";
 import { SOCIAL_LINKS, SocialIcon, SocialIconDefs } from "../utils/SocialIcons";
 
 interface NavbarMainProps {
-  videoModalVisible?: boolean;
+  trailerPlaying?: boolean; // the home page's trailer is playing: the pin popup waits
 }
 
-export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
+export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
   const location = useLocation();
   const isLandingPage = location.pathname === "/";
   const hideBuyButtons = ["/buy", BUY_DESTINATION, "/thankyou", "/raffle"].includes(location.pathname);
@@ -66,7 +66,7 @@ export const NavbarMain = ({ videoModalVisible }: NavbarMainProps) => {
   return (
     <>
       <SocialIconDefs className={styles.navSocialDefs} />
-      {!videoModalVisible && showPopup && (
+      {!trailerPlaying && showPopup && (
         <CharacterPinPopup closePopup={closePopup} dismissPopup={dismissPopup} />
       )}
 

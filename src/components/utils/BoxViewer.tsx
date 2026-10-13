@@ -5,8 +5,10 @@ import type { BoxVideo, BoxViewerApi } from "./boxViewer3d";
 import styles from "../../css/utils/boxViewer.module.css";
 
 // The game box in 3D (boxViewer3d.ts): turn it, click it to open it and play the trailer inside
-// (a click off it closes it). It fills its parent. Until the 3D box is in, `still` shows it at rest (a render of the same view); if the browser
-// can't show 3D, `fallback` is shown instead.
+// (a click off it closes it). It fills its parent. Until the 3D box is in, `still` shows it at rest
+// (a render of the same view). If the browser can't show 3D, or the visitor is saving data (Data
+// Saver, or a 2G connection), `fallback` is shown instead, and none of the 3D (three.js, the box's
+// art, the trailer's player) is downloaded.
 interface BoxViewerProps {
   art: BoxArt;
   video: BoxVideo;
@@ -18,12 +20,19 @@ interface BoxViewerProps {
   behind?: ReactNode;
   onPeek?: (shown: boolean) => void; // when what's behind pops up, or ducks
   onOpen?: (open: boolean) => void;
+  onStill?: () => void; // the still (or the fallback) is on screen
 }
 
-const BoxViewer = ({ art, video, label, still, fallback, behind, onPeek, onOpen }: BoxViewerProps) => {
+// a visitor who'd rather not download much
+const savingData = () => {
+  const c = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+  return !!c?.saveData || /(^|-)2g$/.test(c?.effectiveType ?? "") || !!window.matchMedia?.("(prefers-reduced-data: reduce)").matches;
+};
+
+const BoxViewer = ({ art, video, label, still, fallback, behind, onPeek, onOpen, onStill }: BoxViewerProps) => {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const api = useRef<BoxViewerApi | null>(null);
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState(savingData);
   const [ready, setReady] = useState(false);
   const [open, setOpen] = useState(false);
   const [atRest, setAtRest] = useState(false);
@@ -32,10 +41,10 @@ const BoxViewer = ({ art, video, label, still, fallback, behind, onPeek, onOpen 
   const onPeekRef = useRef(onPeek);
   onPeekRef.current = onPeek;
   const peeking = ready && atRest;
-  // no 3D, or none after a long wait: nothing to wait for
+  // no 3D, or none yet after a couple of seconds (a slow connection): the words don't wait for it
   const [late, setLate] = useState(false);
   useEffect(() => {
-    const t = setTimeout(() => setLate(true), 10000);
+    const t = setTimeout(() => setLate(true), 2500);
     return () => clearTimeout(t);
   }, []);
   useEffect(() => {
@@ -44,7 +53,7 @@ const BoxViewer = ({ art, video, label, still, fallback, behind, onPeek, onOpen 
 
   useEffect(() => {
     const stage = stageRef.current;
-    if (!stage) return;
+    if (!stage || failed) return;
     let gone = false;
     import("./boxViewer3d")
       .then(({ mountBoxViewer }) =>
@@ -94,7 +103,7 @@ const BoxViewer = ({ art, video, label, still, fallback, behind, onPeek, onOpen 
           {behind}
         </span>
       )}
-      {still && <img className={styles.still} src={still} alt="" aria-hidden="true" />}
+      {still && <img className={styles.still} src={still} alt="" aria-hidden="true" onLoad={onStill} />}
     </div>
   );
 };

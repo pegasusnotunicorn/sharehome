@@ -2,7 +2,7 @@
 // (cardViewer3d.ts), sharing their renderer. Closed, it can be turned any way (drag, with coasting, or
 // the arrow keys), and its lid lifts a little under the mouse. Open (a click or tap on it, or open()),
 // it turns to face you, the lid comes off and goes under it, and the trailer plays in the tray. Open,
-// it stays put; a click anywhere off it closes it. Left alone for a few seconds after being turned,
+// it stays put; a click anywhere off it closes it. Left alone for a moment after being turned,
 // it goes back to its rest pose.
 //
 // It never leaves the frame: the camera stands back far enough for the box at any angle (and for

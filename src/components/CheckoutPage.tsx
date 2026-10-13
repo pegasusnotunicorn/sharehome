@@ -379,22 +379,21 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
           <ShippingAddressElement onReady={onReady} onChange={handleShippingChange} />
           {needsPhone && (
             <div className={styles.phoneField}>
-              <input
-                type="tel"
-                autoComplete="tel"
-                inputMode="tel"
-                placeholder="Phone number"
-                aria-label="Phone number"
-                aria-invalid={phoneTouched && !phoneValid}
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                onBlur={() => setPhoneTouched(true)}
-                className={`${styles.phoneInput} ${phoneTouched && !phoneValid ? styles.phoneInputInvalid : ""}`.trim()}
-              />
+              <label className={`${styles.phoneBox} ${phone ? styles.phoneBoxFilled : ""} ${phoneTouched && !phoneValid ? styles.phoneBoxInvalid : ""}`.trim()}>
+                <input
+                  type="tel"
+                  autoComplete="tel"
+                  inputMode="tel"
+                  aria-invalid={phoneTouched && !phoneValid}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  onBlur={() => setPhoneTouched(true)}
+                  className={styles.phoneInput}
+                />
+                <span className={styles.phoneLabel}>Phone number</span>
+              </label>
               <p className={phoneTouched && !phoneValid ? styles.phoneError : styles.phoneHint}>
-                {phoneTouched && !phoneValid
-                  ? "Please enter a valid phone number."
-                  : "Required for delivery in Europe. The carrier only uses it to reach you about your parcel."}
+                {phoneTouched && !phoneValid ? "Please enter a valid phone number." : "Needed for delivery in Europe."}
               </p>
             </div>
           )}

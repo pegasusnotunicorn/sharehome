@@ -37,7 +37,7 @@ const REST: [number, number] = [0.42, 0.61];
 // floor's shadow is in frame too (the floor just below the box's reach)
 const DIST = 3.085, AIM_Y = -0.105, FLOOR = -0.61;
 const OPEN_MS = 950;
-const IDLE_MS = 3000; // left this long after being turned, it goes back
+const IDLE_MS = 1500; // left this long after being turned, it goes back
 
 export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, onRest, onOpen, onFail }: MountOptions): Promise<BoxViewerApi | null> {
   let T: Three, r: THREE.WebGLRenderer;

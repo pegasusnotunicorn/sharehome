@@ -164,6 +164,12 @@ const TOTAL_ELEMENTS = 3;
 // those messages are written for developers, not buyers.
 const GENERIC_CHECKOUT_ERROR = "Something went wrong. Please try again.";
 
+// Same rule as save-checkout-phone: digits and the usual separators, 6–15 digits.
+const isValidPhone = (s: string) => {
+  const digits = s.replace(/\D/g, "").length;
+  return /^\+?[\d\s().-]+$/.test(s.trim()) && digits >= 6 && digits <= 15;
+};
+
 const CheckoutFormSkeleton = () => (
   <div className={styles.skeletonForm}>
     <div className={styles.skeletonFormSection}>
@@ -195,6 +201,10 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
   const lastError = useRef("");
   if (errorMessage) lastError.current = errorMessage;
   const [termsAgreed, setTermsAgreed] = useState(false);
+  // Europe deliveries need a phone number for the carrier; US ones don't.
+  const [shippingCountry, setShippingCountry] = useState<string | undefined>(undefined);
+  const [phone, setPhone] = useState("");
+  const [phoneTouched, setPhoneTouched] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastCapturedEmailRef = useRef("");
 
@@ -237,6 +247,7 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
   const syncShippingRateRef = useRef<(country: string | undefined) => void>(() => {});
   useEffect(() => {
     syncShippingRateRef.current(sessionCountry);
+    if (sessionCountry) setShippingCountry(sessionCountry);
   }, [sessionCountry]);
 
   if (checkoutState.type === "error") {
@@ -284,15 +295,44 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
   syncShippingRateRef.current = syncShippingRate;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleShippingChange = (e: any) => syncShippingRate(e.value?.address?.country);
+  const handleShippingChange = (e: any) => {
+    const country = e.value?.address?.country;
+    if (country) setShippingCountry(country);
+    syncShippingRate(country);
+  };
+
+  // The address element only offers the US and (when it's open) Europe.
+  const needsPhone = !!shippingRates?.europe && !!shippingCountry && shippingCountry !== "US";
+  const phoneValid = isValidPhone(phone);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!checkout) return;
+    if (needsPhone && !phoneValid) {
+      setPhoneTouched(true);
+      return;
+    }
     setLoading(true);
     setErrorMessage(null);
     trackEvent("checkout_submitted");
     try {
+      // The phone goes on the order before payment, so a Europe order is never
+      // without one.
+      if (needsPhone) {
+        const saved = sessionId
+          ? await fetch("/.netlify/functions/save-checkout-phone", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ sessionId, phone: phone.trim() }),
+            }).then((r) => r.ok, () => false)
+          : false;
+        if (!saved) {
+          trackEvent("checkout_error", { error_message: "phone_save_failed" });
+          setErrorMessage("We couldn't save your phone number. Please try again.");
+          setLoading(false);
+          return;
+        }
+      }
       const result = await checkout.confirm();
       if (result.type === "error") {
         trackEvent("checkout_error", { error_message: result.error.message });
@@ -337,6 +377,24 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
             )}
           </p>
           <ShippingAddressElement onReady={onReady} onChange={handleShippingChange} />
+          {needsPhone && (
+            <div className={styles.phoneField}>
+              <label className={`${styles.phoneBox} ${phone ? styles.phoneBoxFilled : ""} ${phoneTouched && !phoneValid ? styles.phoneBoxInvalid : ""}`.trim()}>
+                <input
+                  type="tel"
+                  autoComplete="tel"
+                  inputMode="tel"
+                  aria-invalid={phoneTouched && !phoneValid}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  onBlur={() => setPhoneTouched(true)}
+                  className={styles.phoneInput}
+                />
+                <span className={styles.phoneLabel}>Phone number</span>
+              </label>
+              {phoneTouched && !phoneValid && <p className={styles.phoneError}>Please enter a valid phone number.</p>}
+            </div>
+          )}
           <button className={styles.missingCountryLink} onClick={onOpenMissingCountry} type="button">
             Don't see your country?
           </button>
@@ -367,7 +425,7 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
         </label>
         <button
           type="submit"
-          disabled={loading || shippingSyncing || !checkout?.canConfirm || !termsAgreed}
+          disabled={loading || shippingSyncing || !checkout?.canConfirm || !termsAgreed || (needsPhone && !phoneValid)}
           className={styles.checkoutButton}
         >
           {loading ? "Processing..." : "Pay now"}

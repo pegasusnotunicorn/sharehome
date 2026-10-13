@@ -71,3 +71,16 @@
     "/*.pdf",
     "/*.xml",
   ]
+
+# Browser caching. The build's own files carry a hash in their names, so a browser can keep them for
+# good. Images keep their names when they change, so they're fresh for a day, then shown from the cache
+# while the browser checks for a new version in the background (a changed one shows on the next visit).
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"

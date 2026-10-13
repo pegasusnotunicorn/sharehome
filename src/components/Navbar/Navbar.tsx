@@ -78,7 +78,7 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
           fadeIn
           className={`${styles.topBar} noselect`}
         >
-          <NavLink to="/" className={styles.logo} />
+          <NavLink to="/" className={styles.logo} aria-label="Love, Career & Magic home" />
           <div className={styles.navSocialBar}>
             {SOCIAL_LINKS.map(
               ({

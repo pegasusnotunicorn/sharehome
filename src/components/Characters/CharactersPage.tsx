@@ -19,6 +19,7 @@ import Modal from "../utils/Modal";
 import charStyles from "../../css/pages/characterPage.module.css";
 import "../../css/utils/spotlight.css";
 import type { CharacterWithNav } from "../../types/character";
+import { CHARACTER_ART_SIZES, characterArtSrcSet } from "../utils/characterArt";
 
 interface IndividualCharacterProps {
   character: CharacterWithNav;
@@ -103,6 +104,8 @@ const CharacterGridCard = ({
           loading="lazy"
           className="boxes"
           src={imageSrc}
+          srcSet={characterArtSrcSet(imageSrc)}
+          sizes={CHARACTER_ART_SIZES}
           style={{ objectPosition: imageObjectPosition || "center" }}
           alt={imageAlt}
         />

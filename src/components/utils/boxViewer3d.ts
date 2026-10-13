@@ -387,7 +387,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     liftTo = 0;
     if (open) {
       // the upright video, with the box on its side, on a clearly tall stage (phones)
-      portrait = W / H < 0.8; // (the whole stage is the box's, open)
+      portrait = tallOpen();
       // its top toward the camera; on its side when the stage is tall, for the upright video
       qFace.setFromUnitVectors(Y, DIR);
       if (portrait) qFace.multiply(tmp.setFromAxisAngle(Y, Math.PI / 2));
@@ -468,9 +468,12 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     drive();
     if (!tick) tick = window.setInterval(drive, 120);
   };
-  // the player, made (hidden) if it isn't already, for the stage's shape now
+  // Open, the box's stage is most of the screen (the page folds the rest away as it opens), so the
+  // screen's shape says which way it'll be; the stage's shape now, before that, can say otherwise
+  const tallOpen = () => innerWidth / innerHeight < 0.8;
+  // the player, made (hidden) if it isn't already, for the stage's shape when open
   const warmPlayer = () => {
-    const tall = W / H < 0.8;
+    const tall = tallOpen();
     if (player && playerPortrait === tall) return;
     player?.remove();
     playerPortrait = tall;

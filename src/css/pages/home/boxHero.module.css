@@ -19,6 +19,7 @@
   position: absolute;
   inset: 0;
   background: url("../../images/bg_seamless.webp") repeat;
+  background-size: 780px auto; /* the file is 60% size: a faint background, so it looks the same */
   opacity: 0.1;
   pointer-events: none;
 }
@@ -284,8 +285,27 @@
 }
 
 @media only screen and (max-width: 900px) {
+  /* the words kept small, so the box gets most of the screen */
   .hero {
-    padding-top: 7rem;
+    padding-top: 4.75rem; /* under the logo */
+  }
+
+  .title {
+    font-size: clamp(1.1rem, 5vw, 1.6rem);
+  }
+
+  .bubble {
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 40px;
+  }
+
+  .head .factsBubble {
+    padding: 0.4rem clamp(0.5rem, 2.5vw, 0.8rem);
+  }
+
+  .facts {
+    gap: clamp(0.25rem, 1.2vw, 0.4rem);
+    font-size: clamp(0.66rem, 2.9vw, 0.9rem);
   }
 
   /* room along the bottom for Buy now / Expansion */

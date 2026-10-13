@@ -17,8 +17,17 @@ interface ParallaxCardsProps {
   randomCharacters: any[];
 }
 
+interface ParallaxSectionProps {
+  // hold the cards (and their art) back until this is true, so the hero above loads first; scrolling
+  // brings them in anyway
+  hold?: boolean;
+}
+
+// the longest the cards wait for the hero
+const HOLD_MAX_MS = 15000;
+
 //the entire section of three rows moving with scroll
-const ParallaxSection = () => {
+const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
   const location = useLocation();
   gsap.registerPlugin(ScrollTrigger);
 
@@ -49,6 +58,21 @@ const ParallaxSection = () => {
   }, []);
 
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  const [held, setHeld] = useState(hold);
+  useEffect(() => {
+    if (!hold) setHeld(false);
+  }, [hold]);
+  useEffect(() => {
+    if (!held) return;
+    const go = () => setHeld(false);
+    const t = setTimeout(go, HOLD_MAX_MS);
+    window.addEventListener("scroll", go, { once: true, passive: true });
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("scroll", go);
+    };
+  }, [held]);
 
   useLayoutEffect(() => {
     if (!sectionRef.current) return;
@@ -116,7 +140,7 @@ const ParallaxSection = () => {
 
   return (
     <div key={location.pathname} ref={sectionRef} className={styles.parallaxSection}>
-      {parallaxRows}
+      {!held && parallaxRows}
     </div>
   );
 };

@@ -6,6 +6,7 @@ import {
 import { pdfDimensions, getCoverFitObject } from "../utils/cardConstants";
 import type { CardMainStyle } from "../../types/card";
 import styles from "../../css/utils/cards.module.css";
+import { CHARACTER_ART_SIZES, characterArtSrcSet } from "../utils/characterArt";
 
 interface CardFrontPersonProps {
   mainStyle: CardMainStyle;
@@ -87,6 +88,8 @@ export const CardFrontPerson = (props: CardFrontPersonProps) => {
         className={`${styles.memberCommCardImage} nopointerevent`}
         alt={"Image credit - " + cardPerson.image.credit}
         src={cardPerson.image.url}
+        srcSet={characterArtSrcSet(cardPerson.image.url)}
+        sizes={CHARACTER_ART_SIZES}
         style={{
           objectPosition: objectPositionX + " " + objectPositionY,
           transition: "all 0.5s",

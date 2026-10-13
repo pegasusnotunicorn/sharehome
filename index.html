@@ -1,5 +1,11 @@
+<!doctype html>
 <html lang="en">
   <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,minimum-scale=1"
+    />
     <link rel="preload" as="image" href="/images/box/still.webp" fetchpriority="high" />
 
     <!-- Disable analytics/tracking on localhost so dev traffic doesn't pollute prod data -->
@@ -66,11 +72,6 @@
     <link rel="manifest" href="/manifest.json" />
     <meta property="og:logo" content="/logo192.png" />
 
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width,initial-scale=1.0,minimum-scale=1"
-    />
     <meta name="theme-color" content="#FFFFFF" />
 
     <title>Love, Career & Magic - 12m game for 2-6 players</title>
@@ -95,7 +96,7 @@
     />
     <meta
       name="twitter:image"
-      content="https://lovecareermagic.com/images/og-image-1080x1080.webp"
+      content="https://lovecareermagic.com/images/og-image-1080x1080.jpg"
     />
 
     <!-- Facebook Meta Tags -->
@@ -112,11 +113,11 @@
 
     <meta
       property="og:image"
-      content="https://lovecareermagic.com/images/og-image-1200x630.webp"
+      content="https://lovecareermagic.com/images/og-image-1200x630.jpg"
     />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:type" content="image/jpeg" />
 
     <style>
       :root {
@@ -134,9 +135,13 @@
       /* Until the app is up: the box, as the home page's hero first shows it (a render of the 3D box,
          in the middle of the hero's stage; BoxHero hides this once its own copy is showing). */
       #hero-static {
-        position: relative;
+        /* out of the page's flow, so the app coming in above it can't push it down, and placed with
+           `top`, not a margin, which would carry <body> (and the page's background texture) down */
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: var(--hero-static-banner-height);
         height: calc(100svh - var(--hero-static-banner-height));
-        margin-top: var(--hero-static-banner-height);
         overflow: hidden;
       }
 
@@ -155,15 +160,17 @@
 
       @media only screen and (max-width: 900px) {
         #hero-static {
-          margin-top: var(--hero-static-banner-height-mobile);
+          top: var(--hero-static-banner-height-mobile);
           height: calc(100svh - var(--hero-static-banner-height-mobile));
         }
 
         .heroImageStatic {
+          /* the stage: the screen less the words above it (about 13rem on a phone) and the buttons
+             below it (6.5rem); the picture is centred in it */
+          --stage: calc(100svh - var(--hero-static-banner-height-mobile) - 19.7rem);
           top: auto;
-          bottom: 6.5rem;
-          /* the stage under the title's bubble (about 15rem tall on a phone) */
-          height: min(calc(100svh - var(--hero-static-banner-height-mobile) - 28.5rem), 106.9vw);
+          height: min(var(--stage), 106.9vw);
+          bottom: calc(6.5rem + (var(--stage) - min(var(--stage), 106.9vw)) / 2);
         }
       }
 

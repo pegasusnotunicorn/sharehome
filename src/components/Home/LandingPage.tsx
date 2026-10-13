@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap";
 import DefaultButton from "../utils/DefaultButton";
 import CarouselSection from "../utils/CarouselSection";
@@ -22,6 +22,8 @@ interface LandingPageProps {
 
 const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
   useEffect(() => () => setTrailerPlaying(false), [setTrailerPlaying]);
+  // the card parallax waits for the hero's 3D box, so they don't share a slow connection
+  const [heroSettled, setHeroSettled] = useState(false);
 
   useEffect(() => {
     document.title = "Love, Career & Magic - 12m game for 2-6 players";
@@ -29,9 +31,9 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
 
   return (
     <div className="content">
-      <ParallaxSection />
+      <ParallaxSection hold={!heroSettled} />
 
-      <BoxHero onOpen={setTrailerPlaying} />
+      <BoxHero onOpen={setTrailerPlaying} onSettled={() => setHeroSettled(true)} />
 
       <DescriptionContainer
         title={

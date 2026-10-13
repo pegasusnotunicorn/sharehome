@@ -80,9 +80,11 @@
   background: #1c1a2b;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
   opacity: 0;
-  transition: opacity 0.5s;
+  pointer-events: none; /* loaded ahead, out of sight: the box underneath still takes the clicks */
+  transition: opacity 0.25s;
 }
 
 .stage iframe[data-box-video]:global(.shown) {
   opacity: 1;
+  pointer-events: auto;
 }

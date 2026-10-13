@@ -83,6 +83,7 @@
   left: 24%;
   bottom: 63%;
   width: 22%;
+  transform: rotate(-12deg); /* leaning back a little */
   transform-origin: 50% 100%;
   translate: 0 45%;
   opacity: 0;

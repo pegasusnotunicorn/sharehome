@@ -98,7 +98,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     return x;
   };
   let io: IntersectionObserver | null = null, ro: ResizeObserver | null = null, settle = 0, idle = 0;
-  let player: HTMLIFrameElement | null = null, unlisten = () => {};
+  let player: HTMLIFrameElement | null = null, unlisten = () => {}, unlistenYt = () => {};
   const cleanup = () => {
     dead = true;
     [raf, pending, lraf, oraf].forEach(cancelAnimationFrame);
@@ -115,6 +115,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     (key.shadow.map as THREE.WebGLRenderTarget | null)?.dispose();
     cv.remove();
     player?.remove();
+    unlistenYt();
     stage.onpointerdown = stage.onpointermove = stage.onpointerup = stage.onpointercancel = stage.onpointerleave = null;
     stage.onkeydown = null;
     unlisten();
@@ -356,6 +357,9 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
       qFace.setFromUnitVectors(Y, DIR);
       if (portrait) qFace.multiply(tmp.setFromAxisAngle(Y, Math.PI / 2));
       qFrom.copy(q);
+      // the trailer gets going (muted, out of sight) while the box opens
+      warmPlayer();
+      startDriving("warm", OPEN_MS + 4000);
     } else {
       qFrom.copy(rest);
       stopPlayer();
@@ -378,23 +382,90 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     };
     oraf = requestAnimationFrame(step);
   };
-  const startPlayer = () => {
+  // The trailer, kept ready: the player loads (hidden) as soon as the box is pointed at or touched,
+  // starts playing muted as the box opens, so it's loaded and buffered by the time it's open, and
+  // then goes back to the start, unmuted, as it appears. It's driven through YouTube's embed API
+  // (postMessage), retried every so often until the player says it's done.
+  let ytState = -2, ytMuted = true, ytHeard = false, phase: "idle" | "warm" | "show" = "idle", seeked = false;
+  let tick = 0, tickUntil = 0, playerPortrait = false;
+  const yt = (func: string, args: unknown[] = []) =>
+    player?.contentWindow?.postMessage(JSON.stringify({ event: "command", func, args }), "*");
+  const onYt = (e: MessageEvent) => {
+    if (!player || e.source !== player.contentWindow) return;
+    try {
+      const d = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
+      ytHeard = true;
+      if (typeof d?.info?.playerState === "number") ytState = d.info.playerState;
+      if (typeof d?.info?.muted === "boolean") ytMuted = d.info.muted;
+    } catch {
+      // not the player's
+    }
+  };
+  window.addEventListener("message", onYt);
+  unlistenYt = () => {
+    stopDriving();
+    window.removeEventListener("message", onYt);
+  };
+  const drive = () => {
+    if (!player || phase === "idle" || performance.now() > tickUntil) return stopDriving();
+    if (!ytHeard) {
+      // ask the player to start reporting to us
+      player.contentWindow?.postMessage(JSON.stringify({ event: "listening", id: 1, channel: "widget" }), "*");
+      return;
+    }
+    const playing = ytState === 1 || ytState === 3;
+    if (phase === "warm") {
+      if (!ytMuted) yt("mute");
+      if (!playing) yt("playVideo");
+    } else {
+      if (!seeked) {
+        yt("seekTo", [0, true]);
+        seeked = true;
+      }
+      if (ytMuted) yt("unMute");
+      if (!playing) yt("playVideo");
+    }
+  };
+  const stopDriving = () => {
+    clearInterval(tick);
+    tick = 0;
+  };
+  const startDriving = (p: "warm" | "show", ms: number) => {
+    phase = p;
+    tickUntil = performance.now() + ms;
+    drive();
+    if (!tick) tick = window.setInterval(drive, 120);
+  };
+  // the player, made (hidden) if it isn't already, for the stage's shape now
+  const warmPlayer = () => {
+    const tall = W / H < 0.8;
+    if (player && playerPortrait === tall) return;
     player?.remove();
-    const id = portrait ? video.portrait : video.landscape;
+    playerPortrait = tall;
+    ytState = -2;
+    ytHeard = false;
+    const id = tall ? video.portrait : video.landscape;
     player = document.createElement("iframe");
-    player.src = `https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1&rel=0&modestbranding=1`;
+    player.src = `https://www.youtube.com/embed/${id}?enablejsapi=1&mute=1&playsinline=1&rel=0&modestbranding=1&origin=${encodeURIComponent(location.origin)}`;
     player.title = "Love, Career & Magic: how to play";
     player.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
     player.allowFullscreen = true;
     player.dataset.boxVideo = "";
     stage.append(player);
     placePlayer();
-    const shown = player;
-    requestAnimationFrame(() => shown.classList.add("shown"));
+  };
+  const startPlayer = () => {
+    warmPlayer();
+    seeked = false;
+    player?.classList.add("shown");
+    startDriving("show", 6000);
   };
   const stopPlayer = () => {
-    player?.remove();
-    player = null;
+    player?.classList.remove("shown");
+    phase = "idle";
+    stopDriving();
+    yt("pauseVideo");
+    yt("mute");
   };
 
   // open, a click or tap anywhere off the box (its buttons aside) closes it
@@ -424,6 +495,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
     clearTimeout(idle);
     intro = false;
     stage.classList.add("used");
+    warmPlayer();
     stage.setPointerCapture(e.pointerId);
     drag = tap = { x: e.clientX, y: e.clientY, t: e.timeStamp };
     v[0] = v[1] = 0;
@@ -433,6 +505,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onMoved, 
       if (e.pointerType === "mouse" && !still()) {
         const on = over(e.clientX, e.clientY);
         liftLid(on ? 1 : 0);
+        if (on) warmPlayer(); // they might click it: have the trailer ready
         stage.classList.toggle("over", on);
       }
       return;

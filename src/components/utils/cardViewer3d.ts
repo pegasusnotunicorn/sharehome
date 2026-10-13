@@ -23,20 +23,25 @@ export interface CardViewerApi {
 
 const REST: [number, number] = [-0.42, -0.12]; // turned 24° and tipped back 7°, so its edge shows
 const REST_Z = 1.4; // and zoomed in one step (the zoom-in button's step)
-// the box lies lid up, turned 24° and tipped 35° toward you, like the product shots
+// the box lies lid up, turned 24° and tipped 35° toward you, like the product shots. It doesn't zoom,
+// and the camera stands far enough back that it never leaves the frame however it's turned (lid
+// lifted included), its floor just below it and that floor's shadow in frame too.
 const BOX_REST: [number, number] = [-0.42, 0.61];
-const BOX_REST_Z = 1.25; // a little further back than a card: it takes more room when tipped
+const BOX_CAM_DIST = 3.085;
+const BOX_AIM_Y = -0.105;
+const BOX_FLOOR = -0.61;
 
 interface MountOptions {
   mm?: [number, number];
   faces?: () => Promise<CardFaces>;
   edge?: CardEdge;
   box?: BoxArt; // the game box instead of a card
+  onMoved?: (moved: boolean) => void; // when it's been turned away from its rest pose, and back
   onFail: () => void;
 }
 
 // Turns `stage` (a 4:3 box) into a card viewer. Resolves once the card is showing.
-export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "paper", box, onFail }: MountOptions): Promise<CardViewerApi | null> {
+export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "paper", box, onMoved, onFail }: MountOptions): Promise<CardViewerApi | null> {
   let T: Three, r: THREE.WebGLRenderer;
   try {
     T = await loadThree();
@@ -49,7 +54,8 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
 
   const sc = new T.Scene();
   const cam = new T.PerspectiveCamera(28, 4 / 3, 0.05, 20);
-  const AIM = new T.Vector3(0, -0.06, 0), CAM = new T.Vector3(0, 0.38, 3.1);
+  const AIM = new T.Vector3(0, box ? BOX_AIM_Y : -0.06, 0), CAM = new T.Vector3(0, 0.38, 3.1);
+  if (box) CAM.setLength(BOX_CAM_DIST);
   sc.add(new T.HemisphereLight(0xffffff, 0xd9d2cc, 1.25));
   const key = new T.DirectionalLight(0xffffff, 1.7);
   key.position.set(0.15, 4, 0.9);
@@ -69,13 +75,13 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   const floorMat = new T.ShadowMaterial({ opacity: 0.17 });
   const floor = new T.Mesh(new T.PlaneGeometry(6, 6), floorMat);
   floor.rotation.x = -Math.PI / 2;
-  floor.position.y = box ? -0.4 : -0.6; // the tipped box sits nearer its floor, so its shadow stays in frame
+  floor.position.y = box ? BOX_FLOOR : -0.6;
   floor.receiveShadow = true;
   sc.add(floor);
   const spin = new T.Group();
   sc.add(spin);
 
-  const restZ = box ? BOX_REST_Z : REST_Z;
+  const restZ = box ? 1 : REST_Z;
   let z = restZ, raf = 0, pending = 0, lraf = 0, dead = false;
   const tgt = AIM.clone(), q = new T.Quaternion(), v: [number, number] = [0, 0];
   const place = () => {
@@ -181,6 +187,11 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   stage.classList.add("ready");
 
   const X = new T.Vector3(1, 0, 0), Y = new T.Vector3(0, 1, 0), tmp = new T.Quaternion();
+  let moved = false, intro = false;
+  const report = () => {
+    const m = q.angleTo(rest) > 0.02;
+    if (m !== moved) onMoved?.((moved = m));
+  };
   const turn = (ax: number, ay: number) => {
     tmp.setFromAxisAngle(Y, ax);
     q.premultiply(tmp);
@@ -188,6 +199,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     q.premultiply(tmp);
     q.normalize();
     spin.quaternion.copy(q);
+    if (!intro) report();
   };
   // a turn about the upright axis (more than half a turn can't be a slerp); a tipped box turns about
   // its own up axis instead, or it would wobble
@@ -204,12 +216,14 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     }
     let done = 0;
     const t0 = performance.now();
+    intro = true;
     const step = (now: number) => {
       const t = Math.min(1, (now - t0) / ms), a = rad * ease(t);
       spinStep(a - done);
       done = a;
       draw();
       if (t < 1) raf = requestAnimationFrame(step);
+      else intro = false;
     };
     raf = requestAnimationFrame(step);
   };
@@ -244,6 +258,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     place();
   };
   const zoomAt = (f: number, cx?: number, cy?: number) => {
+    if (box) return; // the box keeps its distance, so it can't leave the frame
     const b = stage.getBoundingClientRect();
     cx ??= b.left + b.width / 2;
     cy ??= b.top + b.height / 2;
@@ -256,6 +271,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     schedule();
   };
   const panBy = (x0: number, y0: number, x1: number, y1: number) => {
+    if (box) return;
     const p0 = hit(x0, y0, new T.Vector3());
     tgt.add(p0.sub(hit(x1, y1, b3)));
     fit();
@@ -266,6 +282,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     used();
     cancelAnimationFrame(raf);
     stage.classList.remove("zoomed");
+    if (moved) onMoved?.((moved = false)); // it's on its way back
     const q0 = q.clone(), z0 = z, t0v = tgt.clone(), t0 = performance.now(), ms = calm() ? 0 : 600;
     const step = (now: number) => {
       const t = ms ? Math.min(1, (now - t0) / ms) : 1, k = ease(t);
@@ -317,6 +334,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   stage.onpointerdown = (e) => {
     if (e.button > 0 || (e.target as Element).closest("button")) return;
     cancelAnimationFrame(raf);
+    intro = false;
     used();
     tap = pts.size ? null : { x: e.clientX, y: e.clientY, t: e.timeStamp };
     stage.setPointerCapture(e.pointerId);
@@ -390,7 +408,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   // A trackpad pinch arrives as a wheel with ctrlKey, and always zooms.
   function onWheel(e: WheelEvent) {
     const inUse = stage.classList.contains("used") || z > 1.01 || document.activeElement === stage;
-    if (!e.ctrlKey && !inUse) return;
+    if (box || (!e.ctrlKey && !inUse)) return;
     e.preventDefault();
     used();
     zoomAt(Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0015)), e.clientX, e.clientY);

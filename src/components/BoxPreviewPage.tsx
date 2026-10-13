@@ -19,7 +19,7 @@ const BoxPreviewPage = () => (
       <meta name="robots" content="noindex" />
     </Helmet>
     <div style={{ maxWidth: 720, margin: "0 auto", padding: "7rem 1rem 3rem" }}>
-      <CardViewer mm={BOX_MM} box={BOX} label="The Love, Career & Magic game box" still={BOX.lid.top} />
+      <CardViewer mm={BOX_MM} box={BOX} label="The Love, Career & Magic game box" still="/images/box/still.webp" />
     </div>
   </div>
 );

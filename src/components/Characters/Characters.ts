@@ -823,3 +823,21 @@ export function getAllCharacters(random?: boolean): Character[] {
     return allCharacters;
   }
 }
+
+//title, description and image used for a character page's share (og/twitter) tags
+//shared by CharactersPage and the character-meta edge function
+export function getCharacterShareMeta(character: Character) {
+  let description = "Introducing ";
+  description += character.title
+    ? character.title
+    : `${character.name}, the ${character.race}`;
+  description += `. A ${character.age} year old ${character.job}`;
+  description += character.employer ? ` at ${character.employer}` : ``;
+  description += ` and member of SHAREHOME—A reality TV show about 6 mythical strangers living together in the same house.`;
+
+  return {
+    title: `Love, Career & Magic — ${character.name}`,
+    description,
+    image: character.image,
+  };
+}

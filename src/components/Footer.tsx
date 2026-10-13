@@ -1,89 +1,170 @@
-import { useMemo } from "react";
-import Card from "./Card/Card";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { NavLink, useNavigate } from "react-router";
+import { getAllCharacters } from "./Characters/Characters";
+import BuyButton from "./utils/BuyButton";
+import { SOCIAL_LINKS, SocialIcon } from "./utils/SocialIcons";
 import useWindowDimensions from "./utils/useWindowDimensions";
+import type { FooterCard, FooterCardsApi } from "./utils/footerCards3d";
 import styles from "../css/footer.module.css";
 
-function randomIntFromInterval(min: number, max: number): number {
-  // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
+const SHEET = { fronts: "/images/cards/character-fronts.webp", cols: 5, rows: 5 }; // footerCards3d.ts ATLAS
 
-//create an array of random cards given approximate ratio of direction/episode to person cards
-const RandomCardsForFooter = (totalPeopleCards: number, totalDirectionEpisodeCards: number, screenWidth: number) => {
-  return [...Array(totalPeopleCards + totalDirectionEpisodeCards)].map(
-    (curr, index, array) => {
-      let cardWidth = screenWidth <= 900 ? 180 : 300;
-      let cardHeight = cardWidth / 1.4;
+const EXPLORE: { label: string; to?: string; href?: string }[] = [
+  { label: "How to play", to: "/howtoplay" },
+  { label: "Characters", to: "/characters" },
+  { label: "Play online", href: "https://screentop.gg/@PegasusGames/lcm" },
+  { label: "Blog", href: "https://pegasusgames.medium.com/" },
+  { label: "Contact us", to: "/contact" },
+];
 
-      let broadType = "directionEpisode";
-      let specificType =
-        broadType === "person"
-          ? Math.random() > 0.5
-            ? "member"
-            : "commentator"
-          : Math.random() > 0.5
-          ? "episode"
-          : "direction";
-
-      //random stuff to simulate throwing cards from below the screen
-      let randomTransition = Math.round(Math.random() * 75) / 100;
-      let randomDegree = randomIntFromInterval(-180, 180);
-      let randomZ = Math.round(Math.random() * array.length);
-      let randomLeft = Math.round((index - 1) * (100 / array.length));
-
-      let props = {
-        id: broadType + index,
-        key: broadType + index,
-        type: specificType,
-        flipPercentage: 0.5, //chance of showing front of the card
-        mainStyle: {
-          //stuff needed for card size
-          width: `${cardWidth}px`,
-          height: `${cardHeight}px`,
-          fontSize: screenWidth <= 900 ? "5px" : "7.5px",
-          //stuff needed to simulate the random throwing
-          position: "absolute" as const,
-          transform: "rotate(0deg)",
-          zIndex: randomZ,
-          left: randomLeft + "vw",
-          bottom: "-100%",
-          transition:
-            "bottom " +
-            randomTransition +
-            "s, transform " +
-            randomTransition +
-            "s " +
-            randomTransition / 2 +
-            "s",
-          //other shit
-          cursor: "pointer",
-        },
-        //used for animation later in useEffect
-        randomBottom: 0 + "vh",
-        randomDegree: "rotate(" + randomDegree + "deg)",
-      };
-      const { key, ...rest } = props;
-
-      return <Card key={"card" + index} {...rest} />;
-    }
-  );
-};
+// a handful of the cast, a different handful each visit
+const pickCast = (count: number): FooterCard[] =>
+  getAllCharacters()
+    .map((c, index) => ({ index, name: c.name, urlName: c.urlName, done: !c.ignoreInRandom }))
+    .filter((c) => c.done)
+    .sort(() => Math.random() - 0.5)
+    .slice(0, count)
+    .map(({ index, name, urlName }) => ({ index, name, urlName }));
 
 const Footer = () => {
   const { width } = useWindowDimensions();
-
-  //used to make ratio of cards
+  const navigate = useNavigate();
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const [hover, setHover] = useState<{ name: string; x: number; y: number } | null>(null);
   const isMobile = width <= 900;
-  const totalPeopleCards = Math.ceil(width / 150) + (isMobile ? 3 : 0);
-  const totalDirectionEpisodeCards = Math.ceil(width / 400);
-  const totalCards = totalPeopleCards + totalDirectionEpisodeCards;
+  const cast = useMemo(() => pickCast(isMobile ? 5 : 9), [isMobile]);
 
-  const footerCards = useMemo(
-    () => RandomCardsForFooter(totalPeopleCards, totalDirectionEpisodeCards, width),
-    [totalCards, width <= 900]
+  // the 3D cards load when the footer is about to scroll into view
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    let api: FooterCardsApi | null = null, gone = false;
+    stage.classList.remove("ready");
+    const start = () =>
+      import("./utils/footerCards3d")
+        .then(({ mountFooterCards }) =>
+          mountFooterCards(stage, {
+            cards: cast,
+            onHover: (c, x, y) => setHover(c ? { name: c.name, x, y } : null),
+            onPick: (c) => navigate(`/characters/${c.urlName}`),
+            onFail: () => {}, // the flat fan stays
+          })
+        )
+        .then((a) => (gone ? a?.destroy() : (api = a)))
+        .catch(() => {});
+    const io = new IntersectionObserver(
+      (e) => {
+        if (!e.some((x) => x.isIntersecting)) return;
+        io.disconnect();
+        start();
+      },
+      { rootMargin: "400px" }
+    );
+    io.observe(stage);
+    return () => {
+      gone = true;
+      io.disconnect();
+      api?.destroy();
+      setHover(null);
+    };
+  }, [cast, navigate]);
+
+  return (
+    <footer className={styles.footer}>
+      <div className={styles.band}>
+        <div ref={stageRef} className={styles.stage}>
+          {/* until the 3D cards are in (or if they can't be): a fan of flat cards */}
+          <div className={styles.fan} aria-hidden="true">
+            {cast.slice(0, 5).map((c, i) => (
+              <span
+                key={c.urlName}
+                className={styles.fanCard}
+                style={{
+                  ["--i" as string]: i - 2,
+                  backgroundImage: `url("${SHEET.fronts}")`,
+                  backgroundPosition: `${((c.index % SHEET.cols) / (SHEET.cols - 1)) * 100}% ${(Math.floor(c.index / SHEET.cols) / (SHEET.rows - 1)) * 100}%`,
+                }}
+              />
+            ))}
+          </div>
+          {hover && (
+            <span className={styles.pill} style={{ left: hover.x, top: hover.y }} aria-hidden="true">
+              Meet {hover.name} <span>→</span>
+            </span>
+          )}
+        </div>
+        <div className={styles.headline}>
+          <p className={styles.kicker}>The cast is waiting</p>
+          <h2 className={styles.title}>Love, Career &amp; Magic</h2>
+          <img className={styles.tagline} src="/images/title.webp" alt="A game where fantasy meets reality TV" loading="lazy" />
+          <div className={styles.ctas}>
+            <BuyButton animated icon="forward" variant="primary" color="red" text="Buy now!" />
+            <NavLink to="/characters" className={styles.castLink}>
+              Meet the cast <span aria-hidden="true">→</span>
+            </NavLink>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.inner}>
+        <nav className={styles.col} aria-label="Explore">
+          <h3 className={styles.colTitle}>Explore</h3>
+          {EXPLORE.map((l) =>
+            l.to ? (
+              <NavLink key={l.label} to={l.to} className={styles.link}>
+                {l.label}
+              </NavLink>
+            ) : (
+              <a key={l.label} href={l.href} className={styles.link} target="_blank" rel="noopener noreferrer">
+                {l.label}
+              </a>
+            )
+          )}
+        </nav>
+        <div className={styles.col}>
+          <h3 className={styles.colTitle}>Follow along</h3>
+          <div className={styles.socials}>
+            {SOCIAL_LINKS.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target={s.external === false ? undefined : "_blank"}
+                rel={s.external === false ? undefined : "noreferrer"}
+                aria-label={s.label}
+                title={s.label}
+                className={styles.social}
+                style={{ ["--brand" as string]: s.brandColor }}
+              >
+                <SocialIcon iconId={s.iconId} className={styles.socialSvg} />
+              </a>
+            ))}
+          </div>
+        </div>
+        <div className={styles.col}>
+          <h3 className={styles.colTitle}>Made by</h3>
+          <p className={styles.blurb}>
+            Pegasus Games, a tiny studio in New York. Illustrations by{" "}
+            <a href="https://www.instagram.com/carofranklyn/?hl=en" className={styles.inline} target="_blank" rel="noreferrer">
+              Carolyn Frank
+            </a>
+            .
+          </p>
+        </div>
+      </div>
+
+      <div className={styles.bottom}>
+        <span>© {new Date().getFullYear()} Pegasus Games</span>
+        <span className={styles.legal}>
+          <NavLink to="/terms" className={styles.link}>
+            Terms
+          </NavLink>
+          <NavLink to="/privacy" className={styles.link}>
+            Privacy
+          </NavLink>
+        </span>
+      </div>
+    </footer>
   );
-
-  return <div className={styles.footer}>{footerCards}</div>;
 };
 
 export default Footer;

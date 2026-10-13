@@ -1,14 +1,355 @@
+/* The footer: a dark, stage-lit band with the cast's cards drifting in 3D (footerCards3d.ts),
+   then the links. */
 .footer {
-  display: block;
   position: relative;
   width: 100%;
-  height: var(--footer-height);
+  margin-top: 4rem;
+  color: #f4efe3;
+  text-align: left;
+  background:
+    radial-gradient(120% 70% at 70% 0%, rgba(95, 90, 162, 0.55), transparent 60%),
+    radial-gradient(80% 60% at 0% 100%, rgba(221, 115, 115, 0.18), transparent 60%),
+    #1c1a2b;
   overflow: hidden;
+}
+
+/* a soft fade from the page into the footer */
+.footer::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(241, 219, 75, 0.6), transparent);
+}
+
+/* ---------------------------------------------------------------- the band of cards */
+.band {
+  position: relative;
+  height: 440px;
+}
+
+/* where the 3D cards are: behind the words on wide screens, a band above them on phones */
+.stage {
+  position: absolute;
+  inset: 0;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+
+.stage > canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* the words sit on the left, over a shade so the cards behind them don't fight the text */
+.band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(28, 26, 43, 0.92) 0%, rgba(28, 26, 43, 0.7) 32%, transparent 58%);
   pointer-events: none;
 }
 
+.headline {
+  position: absolute;
+  left: max(5vw, calc((100vw - 1200px) / 2));
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: 470px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.stage,
+.headline {
+  z-index: 1;
+}
+
+.band::after {
+  z-index: 1;
+}
+
+.headline {
+  z-index: 2;
+}
+
+.headline a,
+.headline button {
+  pointer-events: auto;
+}
+
+.kicker {
+  margin: 0 0 0.5rem;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #f1db4b;
+}
+
+.title {
+  margin: 0;
+  font-family: "Rowdies-Bold", sans-serif;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  line-height: 1.02;
+  color: #fff;
+  text-shadow: 0 2px 24px rgba(95, 90, 162, 0.6);
+}
+
+.tagline {
+  display: block;
+  width: min(100%, 420px);
+  margin: 0.9rem 0 1.6rem;
+  filter: invert(1) brightness(0.93) sepia(0.15);
+}
+
+.ctas {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+}
+
+.castLink {
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 1rem;
+  color: #f4efe3;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(244, 239, 227, 0.35);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.castLink span {
+  display: inline-block;
+  transition: transform 0.2s;
+}
+
+.castLink:hover {
+  color: #f1db4b;
+  border-color: #f1db4b;
+}
+
+.castLink:hover span {
+  transform: translateX(4px);
+}
+
+/* "Meet Urg the Hacker →", following the pointer over a card */
+.pill {
+  position: absolute;
+  z-index: 3;
+  transform: translate(14px, -130%);
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #323232;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.pill span {
+  color: #dd7373;
+}
+
+/* until the 3D cards are in: a fan of flat cards */
+.fan {
+  position: absolute;
+  pointer-events: none;
+  right: 12%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transition: opacity 0.6s;
+}
+
+.stage:global(.ready) .fan {
+  opacity: 0;
+}
+
+.fanCard {
+  position: absolute;
+  width: 220px;
+  aspect-ratio: 120 / 69.44;
+  left: calc(var(--i) * 120px - 110px);
+  top: calc(-64px + var(--i) * var(--i) * 10px);
+  transform: rotate(calc(var(--i) * 9deg));
+  border-radius: 8px;
+  background-size: 500% 500%;
+  box-shadow:
+    0 0 0 2px rgba(230, 189, 92, 0.85),
+    0 14px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* ---------------------------------------------------------------- the links */
+.inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 5vw 2rem;
+  border-top: 1px solid rgba(244, 239, 227, 0.1);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+.colTitle {
+  margin: 0 0 0.4rem;
+  font-family: "Rowdies-Regular", sans-serif;
+  font-size: 1rem;
+  font-weight: normal;
+  color: #fff;
+}
+
+.link,
+.inline {
+  font-family: "Roboto Light", sans-serif;
+  font-size: 0.98rem;
+  color: rgba(244, 239, 227, 0.75);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.inline {
+  color: #f4efe3;
+  border-bottom: 1px solid rgba(244, 239, 227, 0.35);
+}
+
+.link:hover,
+.inline:hover {
+  color: #f1db4b;
+}
+
+.blurb {
+  margin: 0;
+  max-width: 300px;
+  font-family: "Roboto Light", sans-serif;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: rgba(244, 239, 227, 0.75);
+}
+
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 260px;
+}
+
+.social {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(244, 239, 227, 0.2);
+  color: #f4efe3;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.social:hover {
+  background: var(--brand);
+  border-color: var(--brand);
+  transform: translateY(-2px);
+}
+
+.socialSvg {
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.1rem 5vw 1.6rem;
+  border-top: 1px solid rgba(244, 239, 227, 0.1);
+  font-family: "Roboto Light", sans-serif;
+  font-size: 0.85rem;
+  color: rgba(244, 239, 227, 0.55);
+}
+
+.legal {
+  display: flex;
+  gap: 1.2rem;
+}
+
+.legal .link {
+  font-size: 0.85rem;
+}
+
+/* ---------------------------------------------------------------- phones and tablets */
 @media only screen and (max-width: 900px) {
-  .footer {
-    height: var(--footer-height-mobile);
+  .band {
+    height: auto;
+  }
+
+  /* the cards get their own band above the words */
+  .stage {
+    position: relative;
+    inset: auto;
+    height: 300px;
+  }
+
+  .band::after {
+    display: none;
+  }
+
+  .fan {
+    right: auto;
+    left: 50%;
+  }
+
+  .fanCard {
+    width: 150px;
+    left: calc(var(--i) * 70px - 75px);
+    top: calc(-44px + var(--i) * var(--i) * 6px);
+  }
+
+  .headline {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    max-width: none;
+    padding: 0 6vw 2rem;
+  }
+
+  .inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem 1.5rem;
+    padding: 2rem 6vw 1.5rem;
+  }
+
+  .inner .col:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .bottom {
+    padding: 1rem 6vw 1.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .castLink span,
+  .social {
+    transition: none;
   }
 }

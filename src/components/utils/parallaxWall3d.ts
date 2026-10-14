@@ -11,7 +11,7 @@
 // One WebGL renderer serves the whole page (card3d.ts): the wall renders through it and copies the
 // picture onto its own 2D canvas.
 import type * as THREE from "three";
-import { bleedCanvas, calm, ease, loadThree, makeCard, pointerReaches, renderer, studio } from "./card3d";
+import { bleedCanvas, calm, ease, loadTexture, loadThree, makeCard, paint, pointerReaches, renderer, studio, warm } from "./card3d";
 import type { Three } from "./card3d";
 import { ATLAS } from "./footerCards3d";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
@@ -62,7 +62,7 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
   try {
     [fronts, backs, gold] = await Promise.all([
       Promise.all(cards.map((c) => c.front().then((cv) => tex(new T.CanvasTexture(cv))))),
-      new T.TextureLoader().loadAsync(ATLAS.backs).then(tex),
+      loadTexture(T, ATLAS.backs).then(tex),
       studio(T, r),
     ]);
   } catch {
@@ -129,10 +129,7 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
   let W = 0, H = 0, CW = 0, CH = 0, cw = 1, gap = 0; // CW x CH: the canvas, which reaches past the stage
   const draw = () => {
     if (!W || !H || !ctx) return;
-    r.setSize(CW, CH, false);
-    r.render(sc, cam);
-    ctx.clearRect(0, 0, cv.width, cv.height);
-    ctx.drawImage(r.domElement, 0, 0, cv.width, cv.height);
+    paint(r, sc, cam, ctx, CW, CH);
   };
   // one unit is one px where the wall stands (z = 0)
   const size = () => {
@@ -163,7 +160,7 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
     return hit ? live.find((l) => hit.object.parent?.parent === l.obj) ?? null : null;
   };
 
-  let t = 0;
+  let t = 0, shownFade = "";
   const step = (dt: number, instant = false) => {
     t += dt;
     const still = calm();
@@ -175,7 +172,9 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
     const rise = ease(clamp(p / 0.45)); // lying back, to standing
     wall.rotation.set(lerp(0.6, 0.06, rise) + lean.y * 0.05, lean.x * 0.08, 0);
     wall.position.set(0, lerp(-H * 0.12, 0, rise), lerp(-260, 0, rise));
-    cv.style.opacity = String(1 - 0.35 * ease(clamp((p - 0.5) / 0.5)));
+    // (written only when it changes: each write restyles the page)
+    const fade = (1 - 0.35 * ease(clamp((p - 0.5) / 0.5))).toFixed(3);
+    if (fade !== shownFade) cv.style.opacity = shownFade = fade;
 
     const poses = wallPoses(p, t, { W, H, cw, cols, rows, gap }, live, still);
     live.forEach((l, i) => {
@@ -220,6 +219,11 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
     document.body.style.cursor = on ? "pointer" : "";
   };
   const onMove = (e: PointerEvent) => {
+    // a finger moving is scrolling the page: only a tap (its pointerup) picks a card
+    if (e.pointerType !== "mouse" && e.type !== "pointerup") {
+      hovered = null;
+      return;
+    }
     if (!onScreen) {
       hovered = null;
       return setCursor(false);
@@ -249,6 +253,7 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
   addEventListener("pointerup", onUp);
 
   const ro = new ResizeObserver(size);
+  await warm(r, sc, cam); // shaders and pictures ready before its first frame
   ro.observe(stage);
   size();
 

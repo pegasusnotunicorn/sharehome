@@ -8,7 +8,7 @@
 // It never leaves the frame: the camera stands back far enough for the box at any angle (and for
 // whatever the lid is doing), checked against the box's corners every frame.
 import type * as THREE from "three";
-import { calm, ease, loadThree, renderer } from "./card3d";
+import { calm, decoded, ease, loadTexture, loadThree, paint, renderer } from "./card3d";
 import type { Three } from "./card3d";
 import { BOX_RADIUS, makeBox } from "./box3d";
 import type { BoxArt, BoxPanels } from "./box3d";
@@ -88,7 +88,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
   // the art
   const textures: THREE.Texture[] = [];
   const tex = async (url: string) => {
-    const x = await new T.TextureLoader().loadAsync(url);
+    const x = await loadTexture(T, url);
     x.colorSpace = T.SRGBColorSpace;
     x.anisotropy = Math.min(8, r.capabilities.getMaxAnisotropy());
     textures.push(x);
@@ -109,7 +109,8 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     x.needsUpdate = true;
     textures.push(x);
     const load = () =>
-      new T.ImageLoader().load(url, (img) => {
+      new T.ImageLoader().load(url, async (img) => {
+        await decoded(img);
         if (dead) return;
         x.dispose(); // its storage on the GPU was made for the 1px board; let it be made again
         x.image = img;
@@ -259,10 +260,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
       onRest?.(r0);
     }
     camAt();
-    r.setSize(W, H, false);
-    r.render(sc, cam);
-    ctx.clearRect(0, 0, cv.width, cv.height);
-    ctx.drawImage(r.domElement, 0, 0, cv.width, cv.height);
+    paint(r, sc, cam, ctx, W, H);
     placePlayer();
   };
   const schedule = () => {

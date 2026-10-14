@@ -48,20 +48,6 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
   const location = useLocation();
   gsap.registerPlugin(ScrollTrigger);
 
-  // Set global defaults for ScrollTrigger
-  ScrollTrigger.defaults({
-    // @ts-ignore smoothTouch is a valid ScrollTrigger config option
-    smoothTouch: true,
-  });
-
-  ScrollTrigger.scrollerProxy(window, {
-    scrollTop(value?: number) {
-      return arguments.length
-        ? window.scrollTo({ top: value, behavior: "smooth" })
-        : window.pageYOffset;
-    },
-  });
-
   useEffect(() => {
     const scrollbarWidth =
       window.innerWidth - document.documentElement.clientWidth;

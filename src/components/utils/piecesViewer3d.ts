@@ -8,7 +8,7 @@
 // One WebGL renderer serves the whole page (card3d.ts): the viewer renders through it and copies the
 // picture onto its own 2D canvas.
 import type * as THREE from "three";
-import { calm, ease, loadThree, makeCard, renderer } from "./card3d";
+import { calm, ease, loadTexture, loadThree, makeCard, paint, renderer } from "./card3d";
 import type { Three } from "./card3d";
 
 export interface Piece {
@@ -166,10 +166,7 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
   let W = 0, H = 0, dead = false;
   const render = () => {
     if (dead || !W || !H || !ctx) return;
-    r.setSize(W, H, false);
-    r.render(sc, cam);
-    ctx.clearRect(0, 0, cv.width, cv.height);
-    ctx.drawImage(r.domElement, 0, 0, cv.width, cv.height);
+    paint(r, sc, cam, ctx, W, H);
   };
   // the pointer and the wheel can move it many times a frame: drawn once, on the next frame
   let pending = 0, batching = false;
@@ -419,9 +416,8 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
   stage.addEventListener("keydown", onKey);
 
   // the pieces' art
-  const loader = new T.TextureLoader();
   const load = (u: string) =>
-    loader.loadAsync(u).then((x) => {
+    loadTexture(T, u).then((x) => {
       x.colorSpace = T.SRGBColorSpace;
       x.anisotropy = Math.min(8, r.capabilities.getMaxAnisotropy());
       return x;

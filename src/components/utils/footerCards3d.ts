@@ -3,7 +3,7 @@
 // clicking it opens that character's page. It animates only while it's on screen, and holds still for
 // visitors who ask for less motion. The art comes from two sprite sheets (scripts/card-atlas.mjs).
 import type * as THREE from "three";
-import { calm, loadThree, makeCard, renderer, studio } from "./card3d";
+import { calm, loadTexture, loadThree, makeCard, paint, renderer, studio, warm } from "./card3d";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
 
 export const ATLAS = {
@@ -48,8 +48,7 @@ export async function mountFooterCards(stage: HTMLElement, { cards, onHover, onP
 
   let fronts: THREE.Texture, backs: THREE.Texture, gold: THREE.Texture;
   try {
-    const L = new T.TextureLoader();
-    [fronts, backs, gold] = await Promise.all([L.loadAsync(ATLAS.fronts), L.loadAsync(ATLAS.backs), studio(T, r)]);
+    [fronts, backs, gold] = await Promise.all([loadTexture(T, ATLAS.fronts), loadTexture(T, ATLAS.backs), studio(T, r)]);
   } catch {
     onFail();
     return null;
@@ -167,10 +166,7 @@ export async function mountFooterCards(stage: HTMLElement, { cards, onHover, onP
   stage.prepend(cv);
   const draw = () => {
     if (!W || !H || !ctx) return;
-    r.setSize(W, H, false);
-    r.render(sc, cam);
-    ctx.clearRect(0, 0, cv.width, cv.height);
-    ctx.drawImage(r.domElement, 0, 0, cv.width, cv.height);
+    paint(r, sc, cam, ctx, W, H);
   };
   const size = () => {
     W = stage.clientWidth;
@@ -290,6 +286,7 @@ export async function mountFooterCards(stage: HTMLElement, { cards, onHover, onP
   stage.addEventListener("pointerup", onUp);
 
   const ro = new ResizeObserver(size);
+  await warm(r, sc, cam); // shaders and pictures ready before its first frame
   ro.observe(stage);
   size();
   stage.classList.add("ready");

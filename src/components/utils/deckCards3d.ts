@@ -8,7 +8,7 @@
 // One WebGL renderer serves the whole page (card3d.ts): this deck renders through it and copies the
 // picture onto its own 2D canvas.
 import type * as THREE from "three";
-import { bleedCanvas, calm, cardShadow, loadThree, makeCard, renderer, studio } from "./card3d";
+import { bleedCanvas, calm, cardShadow, loadTexture, loadThree, makeCard, paint, renderer, studio, warm } from "./card3d";
 import type { Three } from "./card3d";
 import type { CardEdge, CardFaces } from "./cardViewer3d";
 import { clamp } from "./cardPose";
@@ -53,7 +53,7 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
 
   // every card's faces, and gold foil to reflect if the edges are gold
   const tex = async (f: string | HTMLCanvasElement) => {
-    const x = typeof f === "string" ? await new T.TextureLoader().loadAsync(f) : new T.CanvasTexture(f);
+    const x = typeof f === "string" ? await loadTexture(T, f) : new T.CanvasTexture(f);
     x.colorSpace = T.SRGBColorSpace;
     x.anisotropy = Math.min(8, r.capabilities.getMaxAnisotropy());
     return x;
@@ -132,10 +132,7 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
   let W = 0, H = 0, CW = 0, CH = 0; // the stage's size; the canvas's (it reaches past the stage)
   const draw = () => {
     if (!W || !H || !ctx) return;
-    r.setSize(CW, CH, false);
-    r.render(sc, cam);
-    ctx.clearRect(0, 0, cv.width, cv.height);
-    ctx.drawImage(r.domElement, 0, 0, cv.width, cv.height);
+    paint(r, sc, cam, ctx, CW, CH);
   };
   // Where the cards rest: where the layout puts them (on phones and small tablets the deck spans the
   // whole step), moved as little as it takes to keep clear of the step's words and drawings, wherever
@@ -262,6 +259,11 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
   // words' links still work), so the pointer is followed over the whole step
   let down: { x: number; y: number } | null = null;
   const onMove = (e: PointerEvent) => {
+    // a finger moving is scrolling the page: only a tap (its pointerup) picks a card
+    if (e.pointerType !== "mouse" && e.type !== "pointerup") {
+      hovered = null;
+      return;
+    }
     const b = cv.getBoundingClientRect();
     ndc.set(((e.clientX - b.left) / b.width) * 2 - 1, -((e.clientY - b.top) / b.height) * 2 + 1);
     if (e.pointerType === "mouse") {
@@ -293,6 +295,7 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
   area.addEventListener("pointerup", onUp);
 
   const ro = new ResizeObserver(size);
+  await warm(r, sc, cam); // shaders and pictures ready before its first frame
   ro.observe(stage);
   size();
   stage.classList.add("ready");

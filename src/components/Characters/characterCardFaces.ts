@@ -19,7 +19,8 @@ const canvas = () => {
 const loadImage = (src: string) =>
   new Promise<HTMLImageElement>((resolve, reject) => {
     const im = new Image();
-    im.onload = () => resolve(im);
+    // decoded before it's drawn, so drawing it doesn't decode it on the main thread
+    im.onload = () => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()).then(() => resolve(im));
     im.onerror = reject;
     im.src = src;
   });

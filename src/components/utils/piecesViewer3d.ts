@@ -2,9 +2,9 @@
 // its flat front and back art, lit like the studio mockups: soft light from above and its shadow on
 // an invisible floor. Drag turns it any way (it coasts when let go, then turns straight back to rest),
 // two fingers pinch to zoom and move together to pan, the wheel (or a trackpad pinch) zooms toward
-// the pointer, the arrow keys turn it, + and - zoom, and Home, 0 or a double-click zoom back out. A
-// new piece makes one slow turn to show it's 3D, unless it's already been grabbed. Visitors who ask
-// for less motion get no turn, coast or easing.
+// the pointer, + and - zoom, and Home, 0 or a double-click zoom back out. A new piece makes one slow
+// turn to show it's 3D, unless it's already been grabbed. Visitors who ask for less motion get no
+// turn, coast or easing.
 // One WebGL renderer serves the whole page (card3d.ts): the viewer renders through it and copies the
 // picture onto its own 2D canvas.
 import type * as THREE from "three";
@@ -397,15 +397,7 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
   const onWheelLater = later(onWheel);
   const onKey = (e: KeyboardEvent) => {
     if (e.target !== stage) return;
-    const a = Math.PI / 12;
-    const m = ({ ArrowRight: [a, 0], ArrowLeft: [-a, 0], ArrowUp: [0, -a], ArrowDown: [0, a] } as Record<string, [number, number]>)[e.key];
-    if (m) {
-      e.preventDefault();
-      used();
-      cancelAnimationFrame(raf);
-      turn(...m);
-      settle();
-    } else if (e.key === "+" || e.key === "=") {
+    if (e.key === "+" || e.key === "=") {
       e.preventDefault();
       used();
       zoomAt(1.25);

@@ -232,7 +232,7 @@ const WhatsInTheBox = () => {
           className={styles.stage} // piecesViewer3d.ts adds its own classes (ready, used...), so React leaves this alone
           tabIndex={0}
           role="img"
-          aria-label={`${at.name} in 3D. Drag, or use the arrow keys, to turn it any way; plus and minus zoom.`}
+          aria-label={`${at.name} in 3D. Drag to turn it any way; plus and minus zoom.`}
         >
           <i className={styles.still} style={sheets[d.thumbs] ? cell(d, at.i) : undefined} />
           <span className={styles.tools}>

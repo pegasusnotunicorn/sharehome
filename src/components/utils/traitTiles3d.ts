@@ -235,6 +235,9 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
           // each card glides from where it is now
           for (const t of tiles) t.from = { x: t.obj.position.x, y: -t.obj.position.y };
           size();
+          // they glide together, a beat apart: the one leading the way goes first, so none catches up
+          // with the one ahead of it
+          const down = tiles.length > 0 && tiles[0].pos.y > tiles[0].from.y;
           maps.forEach((map, i) => {
             const t = tiles[i], face = next(t);
             showing.delete(t.srcs[face]);
@@ -247,7 +250,7 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
               return;
             }
             t.turns += 1;
-            t.flip = { from: t.obj.rotation.x, at: now + i * STAGGER_S };
+            t.flip = { from: t.obj.rotation.x, at: now + (down ? maps.length - 1 - i : i) * STAGGER_S };
           });
           step(!onScreen);
           draw();

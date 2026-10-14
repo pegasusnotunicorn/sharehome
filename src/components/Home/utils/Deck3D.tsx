@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router";
-import type { DeckApi, DeckCard, DeckPose } from "../../utils/deckCards3d";
+import type { DeckApi, DeckCard } from "../../utils/deckCards3d";
+import type { DeckPose } from "../../utils/deckPoses";
 import type { CardEdge } from "../../utils/cardViewer3d";
 import styles from "../../../css/pages/home/deck3d.module.css";
 
@@ -14,7 +15,7 @@ interface Deck3DProps {
   mm: [number, number];
   edge?: CardEdge;
   from: "left" | "right";
-  layout: (w: number, h: number) => DeckPose[];
+  layout: (w: number, h: number, stacked: boolean) => DeckPose[];
   fallback: ReactNode;
 }
 

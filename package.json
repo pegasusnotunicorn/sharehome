@@ -31,7 +31,8 @@
     "prebuild": "npm run generate-sitemap",
     "start": "vite",
     "build": "vite build",
-    "generate-sitemap": "tsx sitemap-generator.mjs"
+    "generate-sitemap": "tsx sitemap-generator.mjs",
+    "check-cards": "tsx scripts/card-clipping.mjs"
   },
   "browserslist": {
     "production": [

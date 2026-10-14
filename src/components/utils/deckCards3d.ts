@@ -1,7 +1,8 @@
 // A small deck of real 3D cards for the home page's "How to play" steps (three.js). Scrolling the deck
-// into view deals the cards in: each one tumbles in from the side and lands, turning face up, where
-// the layout puts it. Once dealt they breathe a little and the deck leans toward the pointer; the card
-// under the pointer lifts and squares up to you, and clicking it follows its link. Scrolling back
+// into view deals the cards in, one at a time: each one tumbles in from the side and settles, face
+// up, where the layout puts it (deckPoses.ts works out where each card is, so that no two ever pass
+// through each other). Once dealt they sway a little and the deck leans toward the pointer; the card
+// under the pointer lifts (if nothing rests on it), and clicking it follows its link. Scrolling back
 // up takes them back out again. It renders only while it's on screen; visitors who ask for less
 // motion get the cards already dealt and holding still.
 // One WebGL renderer serves the whole page (card3d.ts): this deck renders through it and copies the
@@ -10,6 +11,11 @@ import type * as THREE from "three";
 import { calm, cardShadow, loadThree, makeCard, renderer, studio } from "./card3d";
 import type { Three } from "./card3d";
 import type { CardEdge, CardFaces } from "./cardViewer3d";
+import { clamp } from "./cardPose";
+import { deckPoses } from "./deckPoses";
+import type { DeckCardMotion, DeckPose } from "./deckPoses";
+
+export type { DeckPose };
 
 export interface DeckCard {
   faces: () => Promise<CardFaces>;
@@ -17,21 +23,12 @@ export interface DeckCard {
   href?: string;
 }
 
-// where a card lands: its centre in px from the stage's centre (y down, like the page), its width in
-// px and its tilt in degrees
-export interface DeckPose {
-  x: number;
-  y: number;
-  w: number;
-  tilt: number;
-}
-
 interface MountOptions {
   cards: DeckCard[];
   mm: [number, number];
   edge?: CardEdge;
   from: "left" | "right"; // the side they're dealt from
-  layout: (w: number, h: number) => DeckPose[];
+  layout: (w: number, h: number, stacked: boolean) => DeckPose[];
   onPick?: (card: DeckCard) => void;
   onFail: () => void;
 }
@@ -41,9 +38,6 @@ export interface DeckApi {
 }
 
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
-const clamp = (x: number) => Math.min(1, Math.max(0, x));
-const outCubic = (t: number) => 1 - (1 - t) ** 3;
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise<DeckApi | null> {
   const { cards, mm, edge = "paper", from, layout, onPick, onFail } = opts;
@@ -96,14 +90,10 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
   const side = from === "left" ? -1 : 1;
   const shadowMap = cardShadow(T);
 
-  interface Live {
+  interface Live extends DeckCardMotion {
     card: DeckCard;
     obj: THREE.Group; // the card, scaled to px
     shadow: THREE.Mesh;
-    pose: DeckPose;
-    // how it arrives: where it starts and how far it tumbles on the way
-    start: { dy: number; z: number; rx: number; ry: number; rz: number };
-    phase: number;
     lift: number; // 0: resting, 1: lifted toward you (hovered)
   }
   const live: Live[] = cards.map((card, i) => {
@@ -120,7 +110,7 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
       card,
       obj,
       shadow,
-      pose: { x: 0, y: 0, w: 1, tilt: 0 },
+      rest: { x: 0, y: 0, w: 1, tilt: 0 },
       start: {
         dy: rand(-0.25, 0.25),
         z: rand(150, 320),
@@ -158,8 +148,9 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
     cam.aspect = W / H;
     cam.position.set(0, 0, H / 2 / Math.tan((cam.fov * Math.PI) / 360));
     cam.updateProjectionMatrix();
-    const poses = layout(W, H);
-    live.forEach((l, i) => (l.pose = poses[i] ?? poses[poses.length - 1]));
+    // phones and small tablets: the deck spans the whole step
+    const poses = layout(W, H, W > innerWidth * 0.9);
+    live.forEach((l, i) => (l.rest = poses[i] ?? poses[poses.length - 1]));
     step(0, true);
     draw();
   };
@@ -185,7 +176,6 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
   };
 
   let t = 0;
-  const DEG = Math.PI / 180;
   const step = (dt: number, instant = false) => {
     t += dt;
     const still = calm();
@@ -194,32 +184,21 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
     lean.x += (lean.tx - lean.x) * k(4);
     lean.y += (lean.ty - lean.y) * k(4);
     deck.rotation.set(lean.y * 0.06, lean.x * 0.1, 0);
+    live.forEach((l) => (l.lift += ((l === hovered ? 1 : 0) - l.lift) * k(9)));
+    const fromX = side * (W / 2 + Math.max(...live.map((l) => l.rest.w)) * 0.9);
+    const poses = deckPoses(dealt, t, live, { aspect, fromX, H }, live.map((l) => l.lift), still);
     live.forEach((l, i) => {
-      const { pose: p, start: s } = l;
-      // each card a beat after the one before
-      const a = clamp((dealt - i * 0.1) / 0.62);
-      const e = outCubic(a);
-      l.lift += ((l === hovered ? 1 : 0) - l.lift) * k(9);
-      const breathe = still ? 0 : Math.sin(t * 1.1 + l.phase);
-      const fromX = side * (W / 2 + p.w * 0.9);
-      const x = lerp(fromX, p.x, e);
-      const y = lerp(p.y + s.dy * H, p.y, e) + breathe * 3;
-      const z = lerp(s.z, 0, e) + l.lift * 70;
-      const tilt = p.tilt * DEG * (1 - l.lift * 0.7);
-      l.obj.position.set(x, -y, z);
-      l.obj.rotation.set(
-        lerp(s.rx, 0, e) + breathe * 0.025 * (1 - l.lift),
-        lerp(s.ry, 0, e) + Math.cos(t * 0.9 + l.phase) * (still ? 0 : 0.03) * (1 - l.lift),
-        lerp(s.rz, 0, e) + tilt,
-      );
-      l.obj.scale.setScalar(p.w * (1 + l.lift * 0.05));
-      l.obj.visible = a > 0;
-      // its shadow on the page: further off and fainter the higher the card is
-      l.shadow.visible = a > 0;
-      l.shadow.position.set(x + 10 + z * 0.06, -y - 16 - z * 0.12, -40);
-      l.shadow.rotation.z = lerp(s.rz, 0, e) + tilt;
-      l.shadow.scale.setScalar(p.w * (1 + z * 0.0006));
-      (l.shadow.material as THREE.MeshBasicMaterial).opacity = 0.3 * e * (1 - z / 900);
+      const q = poses[i];
+      l.obj.position.set(q.x, q.y, q.z);
+      l.obj.rotation.set(q.rx, q.ry, q.rz);
+      l.obj.scale.setScalar(l.rest.w * q.scale);
+      l.obj.visible = q.shown;
+      // its shadow on the page, behind every card: further off and fainter the higher the card is
+      l.shadow.visible = q.shown;
+      l.shadow.position.set(q.x + 10 + q.z * 0.06, q.y - 16 - q.z * 0.12, -40);
+      l.shadow.rotation.z = q.rz;
+      l.shadow.scale.setScalar(l.rest.w * (1 + q.z * 0.0006));
+      (l.shadow.material as THREE.MeshBasicMaterial).opacity = 0.3 * clamp(1 - q.z / 600);
     });
   };
 

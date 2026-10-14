@@ -12,6 +12,7 @@ import { characterArtFace } from "../Characters/characterCardFaces";
 import { getAllCharacters } from "../Characters/Characters";
 import { characterArtSmall } from "../utils/characterArt";
 import type { WallApi } from "../utils/parallaxWall3d";
+import landingPageStyles from "../../css/landingPage.module.css";
 
 interface ParallaxCardsProps {
   sectionRef: React.RefObject<HTMLDivElement | null>;
@@ -26,6 +27,20 @@ interface ParallaxSectionProps {
   // brings them in anyway
   hold?: boolean;
 }
+
+// how far the words the wall parts to show ("A party game where…") reach from the screen's middle
+const wordsHalfWidth = (el: HTMLElement | null) => {
+  if (!el) return 0;
+  // the text itself (the boxes it's in span the page)
+  const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), range = document.createRange();
+  let half = 0;
+  for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+    if (!n.textContent?.trim()) continue;
+    range.selectNodeContents(n);
+    for (const r of range.getClientRects()) half = Math.max(half, innerWidth / 2 - r.left, r.right - innerWidth / 2);
+  }
+  return half;
+};
 
 // the longest the cards wait for the hero
 const HOLD_MAX_MS = 15000;
@@ -173,6 +188,7 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
           cards: wallCards,
           cols: cardsPerRow,
           cardWidth: (w) => Number.parseInt(getHomePageCardProps("member", w).mainStyle.width),
+          wordsHalfWidth: () => wordsHalfWidth(document.getElementById(landingPageStyles.descriptionContainer)),
           onPick: (c) => navigate(`/characters/${c.urlName}`),
           onFail: fail,
         })

@@ -12,8 +12,8 @@ import { calm, cardShadow, loadThree, makeCard, renderer, studio } from "./card3
 import type { Three } from "./card3d";
 import type { CardEdge, CardFaces } from "./cardViewer3d";
 import { clamp } from "./cardPose";
-import { deckPoses } from "./deckPoses";
-import type { DeckCardMotion, DeckPose } from "./deckPoses";
+import { deckPoses, keepClear } from "./deckPoses";
+import type { ClearBox, DeckCardMotion, DeckPose } from "./deckPoses";
 
 export type { DeckPose };
 
@@ -137,6 +137,42 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
     ctx.clearRect(0, 0, cv.width, cv.height);
     ctx.drawImage(r.domElement, 0, 0, cv.width, cv.height);
   };
+  // Where the cards rest: where the layout puts them (on phones and small tablets the deck spans the
+  // whole step), moved as little as it takes to keep clear of the step's words and drawings, wherever
+  // those are at this size
+  const area = stage.parentElement ?? stage;
+  const clearOf = (): ClearBox[] => {
+    const s = stage.getBoundingClientRect(), cx = s.left + s.width / 2, cy = s.top + s.height / 2;
+    const box = (b: DOMRect): ClearBox => ({ x0: b.left - cx, y0: b.top - cy, x1: b.right - cx, y1: b.bottom - cy });
+    const boxes: ClearBox[] = [];
+    const walk = document.createTreeWalker(area, NodeFilter.SHOW_TEXT), range = document.createRange();
+    for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+      if (!n.textContent?.trim() || stage.contains(n)) continue;
+      range.selectNodeContents(n);
+      const b = range.getBoundingClientRect();
+      if (b.width && b.height) boxes.push(box(b));
+    }
+    for (const im of area.querySelectorAll("img")) {
+      const b = im.getBoundingClientRect();
+      if (!stage.contains(im) && b.width && b.height) boxes.push(box(b));
+    }
+    return boxes;
+  };
+  const place = () => {
+    if (!W || !H) return;
+    const poses = keepClear(layout(W, H, W > innerWidth * 0.9), aspect, clearOf(), W, H);
+    live.forEach((l, i) => (l.rest = poses[i] ?? poses[poses.length - 1]));
+  };
+  // again once the drawings (which load lazily) and the fonts are in
+  const replace = () => {
+    place();
+    step(0, true);
+    draw();
+  };
+  const imgs = Array.from(area.querySelectorAll("img"));
+  imgs.forEach((im) => im.addEventListener("load", replace));
+  document.fonts?.ready.then(() => !dead && replace());
+
   // one unit is one px where the cards rest (z = 0)
   const size = () => {
     W = stage.clientWidth;
@@ -148,9 +184,7 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
     cam.aspect = W / H;
     cam.position.set(0, 0, H / 2 / Math.tan((cam.fov * Math.PI) / 360));
     cam.updateProjectionMatrix();
-    // phones and small tablets: the deck spans the whole step
-    const poses = layout(W, H, W > innerWidth * 0.9);
-    live.forEach((l, i) => (l.rest = poses[i] ?? poses[poses.length - 1]));
+    place();
     step(0, true);
     draw();
   };
@@ -226,7 +260,6 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
 
   // the cards are drawn over the step's words and doodles but let the pointer through to them (the
   // words' links still work), so the pointer is followed over the whole step
-  const area = stage.parentElement ?? stage;
   let down: { x: number; y: number } | null = null;
   const onMove = (e: PointerEvent) => {
     const b = stage.getBoundingClientRect();
@@ -271,6 +304,7 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
       io.disconnect();
       ro.disconnect();
       document.removeEventListener("visibilitychange", run);
+      imgs.forEach((im) => im.removeEventListener("load", replace));
       area.removeEventListener("pointermove", onMove);
       area.removeEventListener("pointerleave", onLeave);
       area.removeEventListener("pointerdown", onDown);

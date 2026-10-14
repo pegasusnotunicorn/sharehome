@@ -102,3 +102,61 @@ export function deckPoses(
     };
   });
 }
+
+// A box on the page that cards must keep clear of (the step's words and drawings), in px from the
+// stage's centre, y down
+export interface ClearBox {
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+}
+
+// how far to move outline P (by the shortest way) so it no longer overlaps Q, or null if they don't
+const pushOut = (P: number[][], Q: number[][]): [number, number] | null => {
+  let best: [number, number] | null = null, bestLen = Infinity;
+  for (const S of [P, Q])
+    for (let i = 0; i < S.length; i++) {
+      const [x1, y1] = S[i], [x2, y2] = S[(i + 1) % S.length];
+      const len = Math.hypot(y2 - y1, x2 - x1);
+      const nx = (y2 - y1) / len, ny = (x1 - x2) / len;
+      const pp = P.map(([x, y]) => x * nx + y * ny), qq = Q.map(([x, y]) => x * nx + y * ny);
+      const a = Math.max(...qq) - Math.min(...pp); // push P along +n by this much
+      const b = Math.max(...pp) - Math.min(...qq); // or along -n by this much
+      if (a <= 0 || b <= 0) return null; // a gap on this axis: they don't overlap
+      const [d, s] = a < b ? [a, 1] : [b, -1];
+      if (d < bestLen) [bestLen, best] = [d, [nx * d * s, ny * d * s]];
+    }
+  return best;
+};
+
+// Moves (and if it must, shrinks) each card the least it takes to keep `margin` px clear of every
+// box, staying on the stage (w x h) as much as it can.
+export function keepClear(rest: DeckPose[], aspect: number, boxes: ClearBox[], w: number, h: number, margin = 14): DeckPose[] {
+  const grown = boxes.map((b) => [
+    [b.x0 - margin, b.y0 - margin],
+    [b.x1 + margin, b.y0 - margin],
+    [b.x1 + margin, b.y1 + margin],
+    [b.x0 - margin, b.y1 + margin],
+  ]);
+  return rest.map((r0) => {
+    let r = { ...r0 };
+    for (let shrink = 0; shrink < 6; shrink++) {
+      for (let i = 0; i < 24; i++) {
+        let moved = false;
+        for (const B of grown) {
+          const d = pushOut(footprint(r, aspect, 1), B);
+          if (!d) continue;
+          r = { ...r, x: r.x + d[0], y: r.y + d[1] };
+          moved = true;
+        }
+        // back onto the stage (its middle, at least)
+        r = { ...r, x: Math.max(-w / 2, Math.min(w / 2, r.x)), y: Math.max(-h / 2, Math.min(h / 2, r.y)) };
+        if (!moved) break;
+      }
+      if (grown.every((B) => !pushOut(footprint(r, aspect, 1), B))) return r;
+      r = { ...r0, w: r0.w * 0.9 ** (shrink + 1) }; // no room: try it a little smaller
+    }
+    return r;
+  });
+}

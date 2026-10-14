@@ -3,7 +3,8 @@ import type { ReactNode } from "react";
 import type { CardEdge, CardFaces, CardViewerApi } from "./cardViewer3d";
 import styles from "../../css/utils/cardViewer.module.css";
 
-// A game card in 3D: drag to turn it any way, scroll or pinch to zoom (cardViewer3d.ts).
+// A game card in 3D: drag to turn it any way (it turns back to rest when let go), scroll or pinch to
+// zoom (cardViewer3d.ts).
 // The 3D code loads only when the card is about to scroll into view. If the browser can't show it
 // (no WebGL), `fallback` is shown instead.
 interface CardViewerProps {
@@ -67,7 +68,7 @@ const CardViewer = ({ mm, faces, edge, label, still, fallback }: CardViewerProps
         tabIndex={0}
         role="group"
         aria-roledescription="3D card"
-        aria-label={`${label}. Drag, or use the arrow keys, to turn it any way. Plus and minus zoom.`}
+        aria-label={`${label}. Drag to turn it any way. Plus and minus zoom.`}
       >
         <span className={styles.still} aria-hidden="true">
           <span className={styles.stillShadow} />
@@ -90,8 +91,8 @@ const CardViewer = ({ mm, faces, edge, label, still, fallback }: CardViewerProps
           <button
             className={`${styles.tool} ${styles.straighten}`}
             type="button"
-            title="Straighten it (or double-click the card)"
-            aria-label="Straighten the card"
+            title="Zoom back out (or double-click the card)"
+            aria-label="Zoom back out"
             onClick={() => api.current?.reset()}
           >
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

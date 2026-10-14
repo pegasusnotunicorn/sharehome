@@ -38,7 +38,7 @@ const Footer = () => {
   };
   const stageRef = useRef<HTMLDivElement | null>(null);
   const [hover, setHover] = useState<{ name: string; x: number; y: number } | null>(null);
-  const [near, setNear] = useState(false); // the flat cards' art downloads once the footer's close
+  const [flat, setFlat] = useState(false); // the 3D cards can't be shown: a fan of flat cards instead
   const isMobile = width <= 900;
   const cast = useMemo(() => pickCast(isMobile ? 5 : 9), [isMobile]);
 
@@ -47,6 +47,7 @@ const Footer = () => {
     const stage = stageRef.current;
     if (!stage) return;
     let api: FooterCardsApi | null = null, gone = false;
+    const fail = () => !gone && setFlat(true);
     stage.classList.remove("ready");
     const start = () =>
       import("./utils/footerCards3d")
@@ -59,16 +60,15 @@ const Footer = () => {
               if (to === window.location.pathname) window.scrollTo({ top: 0, behavior: "smooth" });
               else navigate(to);
             },
-            onFail: () => {}, // the flat fan stays
+            onFail: fail,
           })
         )
         .then((a) => (gone ? a?.destroy() : (api = a)))
-        .catch(() => {});
+        .catch(fail);
     const io = new IntersectionObserver(
       (e) => {
         if (!e.some((x) => x.isIntersecting)) return;
         io.disconnect();
-        setNear(true);
         start();
       },
       { rootMargin: "400px" }
@@ -86,20 +86,22 @@ const Footer = () => {
     <footer className={styles.footer}>
       <div className={styles.band}>
         <div ref={stageRef} className={styles.stage}>
-          {/* until the 3D cards are in (or if they can't be): a fan of flat cards */}
-          <div className={styles.fan} aria-hidden="true">
-            {cast.slice(0, 5).map((c, i) => (
-              <span
-                key={c.urlName}
-                className={styles.fanCard}
-                style={{
-                  ["--i" as string]: i - 2,
-                  backgroundImage: near ? `url("${SHEET.fronts}")` : undefined,
-                  backgroundPosition: `${((c.index % SHEET.cols) / (SHEET.cols - 1)) * 100}% ${(Math.floor(c.index / SHEET.cols) / (SHEET.rows - 1)) * 100}%`,
-                }}
-              />
-            ))}
-          </div>
+          {/* if the 3D cards can't be shown: a fan of flat cards */}
+          {flat && (
+            <div className={styles.fan} aria-hidden="true">
+              {cast.slice(0, 5).map((c, i) => (
+                <span
+                  key={c.urlName}
+                  className={styles.fanCard}
+                  style={{
+                    ["--i" as string]: i - 2,
+                    backgroundImage: `url("${SHEET.fronts}")`,
+                    backgroundPosition: `${((c.index % SHEET.cols) / (SHEET.cols - 1)) * 100}% ${(Math.floor(c.index / SHEET.cols) / (SHEET.rows - 1)) * 100}%`,
+                  }}
+                />
+              ))}
+            </div>
+          )}
           {hover && (
             <span className={styles.pill} style={{ left: hover.x, top: hover.y }} aria-hidden="true">
               Meet {hover.name} <span>→</span>

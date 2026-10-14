@@ -42,6 +42,13 @@
   width: 100%;
   height: 100%;
   display: block;
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+
+/* the 3D cards fade in once they're drawn */
+.stage:global(.ready) > canvas {
+  opacity: 1;
 }
 
 /* the words sit on the left, over a shade so the cards behind them don't fight the text */
@@ -157,7 +164,7 @@
   color: #dd7373;
 }
 
-/* until the 3D cards are in: a fan of flat cards */
+/* if the 3D cards can't be shown: a fan of flat cards */
 .fan {
   position: absolute;
   pointer-events: none;
@@ -165,11 +172,6 @@
   top: 50%;
   width: 0;
   height: 0;
-  transition: opacity 0.6s;
-}
-
-.stage:global(.ready) .fan {
-  opacity: 0;
 }
 
 .fanCard {

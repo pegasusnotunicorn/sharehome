@@ -1,7 +1,8 @@
-import { useState, useLayoutEffect, useRef } from "react";
+import { useState, useLayoutEffect, useRef, useEffect } from "react";
 import gsap from "gsap";
 import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap";
 import { getRandomTrait } from "../Card/ExampleTraits";
+import type { Trait, TraitTilesApi } from "../utils/traitTiles3d";
 import styles from "../../css/pages/home/likehateSection.module.css";
 
 interface LikeHateSectionProps {
@@ -23,12 +24,16 @@ interface CharacterCoord {
 }
 
 interface CharacterArcProps {
-  goodTrait: string;
-  badTrait: string;
-  chaoticTrait: string;
+  traits: Trait[];
   coords: CharacterCoord["coords"];
   showLeft: boolean;
 }
+
+// one good, one bad and one chaotic trait, in a random order
+const randomTraits = (): Trait[] =>
+  (["good", "bad", "chaotic"] as const)
+    .map((type) => ({ text: getRandomTrait(type), type }))
+    .sort(() => 0.5 - Math.random());
 
 const LikeHateSection = (props: LikeHateSectionProps) => {
   const { title, description } = props;
@@ -98,9 +103,7 @@ const LikeHateSection = (props: LikeHateSectionProps) => {
 
   const arrowsContainerRef = useRef<HTMLDivElement>(null);
   let [currentChar, setCurrentChar] = useState(0);
-  let [goodTrait, setGoodTrait] = useState(getRandomTrait("good"));
-  let [badTrait, setBadTrait] = useState(getRandomTrait("bad"));
-  let [chaoticTrait, setChaoticTrait] = useState(getRandomTrait("chaotic"));
+  let [traits, setTraits] = useState(randomTraits);
 
   //fade in and out character traits
   useLayoutEffect(() => {
@@ -115,9 +118,7 @@ const LikeHateSection = (props: LikeHateSectionProps) => {
             if (c + 1 >= characterCoords.length) return 0;
             else return c + 1;
           });
-          setGoodTrait(getRandomTrait("good"));
-          setBadTrait(getRandomTrait("bad"));
-          setChaoticTrait(getRandomTrait("chaotic"));
+          setTraits(randomTraits());
         },
       })
       .fromTo(
@@ -146,6 +147,48 @@ const LikeHateSection = (props: LikeHateSectionProps) => {
     };
   }, [characterCoords.length, setCurrentChar]);
 
+  // the trait tags as 3D tiles that flip over to each new set (traitTiles3d.ts); the flat tags stay,
+  // hidden, to lay them out, and show if the 3D can't
+  const picture = () => arrowsContainerRef.current?.parentElement ?? null;
+  const tiles = useRef<TraitTilesApi | null>(null);
+  const shown = useRef({ traits, currentChar });
+  shown.current = { traits, currentChar };
+  const tagsIn = (stage: HTMLElement) =>
+    Array.from(stage.querySelectorAll<HTMLElement>(`.${styles.characterArc}`));
+  useEffect(() => {
+    const stage = picture();
+    if (!stage) return;
+    let gone = false;
+    const start = () =>
+      import("../utils/traitTiles3d")
+        .then(({ mountTraitTiles }) => mountTraitTiles(stage, () => {}))
+        .then((a) => {
+          if (gone) return a?.destroy();
+          tiles.current = a;
+          a?.show(shown.current.traits, tagsIn(stage));
+        })
+        .catch(() => {});
+    const io = new IntersectionObserver(
+      (e) => {
+        if (!e.some((x) => x.isIntersecting)) return;
+        io.disconnect();
+        start();
+      },
+      { rootMargin: "100% 0px" }
+    );
+    io.observe(stage);
+    return () => {
+      gone = true;
+      io.disconnect();
+      tiles.current?.destroy();
+      tiles.current = null;
+    };
+  }, []);
+  useLayoutEffect(() => {
+    const stage = picture();
+    if (stage) tiles.current?.show(traits, tagsIn(stage));
+  }, [traits, currentChar]);
+
   //text to display depending on like/hate
   return (
     <div id={props.id} className={props.className}>
@@ -159,9 +202,7 @@ const LikeHateSection = (props: LikeHateSectionProps) => {
           />
           <div ref={arrowsContainerRef} className={styles.arrowsContainer}>
             <CharacterArc
-              goodTrait={goodTrait}
-              badTrait={badTrait}
-              chaoticTrait={chaoticTrait}
+              traits={traits}
               coords={characterCoords[currentChar].coords}
               showLeft={characterCoords[currentChar].showLeft}
             />
@@ -180,28 +221,7 @@ const LikeHateSection = (props: LikeHateSectionProps) => {
   );
 };
 
-const CharacterArc = ({
-  goodTrait,
-  badTrait,
-  chaoticTrait,
-  coords,
-  showLeft,
-}: CharacterArcProps) => {
-  let randomTraits = [
-    {
-      text: goodTrait,
-      type: "good",
-    },
-    {
-      text: badTrait,
-      type: "bad",
-    },
-    {
-      text: chaoticTrait,
-      type: "chaotic",
-    },
-  ].sort(() => 0.5 - Math.random());
-
+const CharacterArc = ({ traits: randomTraits, coords, showLeft }: CharacterArcProps) => {
   return (
     <div className={styles.characterArcContainer} style={coords.wrapper}>
       {showLeft && (

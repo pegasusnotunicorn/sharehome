@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useState } from "react";
 import { NavLink } from "react-router";
 import { ScrollTrigger } from "gsap/ScrollTrigger.js";
 import gsap from "gsap";
@@ -8,6 +8,11 @@ import getHomePageCardProps from "./utils/getHomePageCardProps";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import { getAllFinishedPeople } from "../Characters/Characters";
 import { randomDeg, randomNumFromNeg, randomNum } from "../utils/useMath";
+import Deck3D from "./utils/Deck3D";
+import { CHARACTER_CARD_MM, characterCardFaces } from "../Characters/characterCardFaces";
+import { characterArtSmall } from "../utils/characterArt";
+import type { DeckCard } from "../utils/deckCards3d";
+import { characterLayout } from "./utils/deckLayouts";
 import styles from "../../css/pages/home/charactersDeckSection.module.css";
 
 interface CharactersDeckRowProps {
@@ -23,8 +28,33 @@ interface DecksProps {
   tl?: gsap.core.Timeline | null;
 }
 
-//the deck section covering half the screen
+
+//three of the cast, dealt in 3D
 const CharactersDeckSection = () => {
+  const [cards] = useState<DeckCard[]>(() =>
+    getAllFinishedPeople(true)
+      .slice(0, 3)
+      .map((c) => ({
+        faces: characterCardFaces(c, characterArtSmall(c.image.url)),
+        label: `Meet ${c.name}`,
+        href: `/characters/${c.urlName}`,
+      }))
+  );
+  return (
+    <Deck3D
+      className={styles.characterDecksContainer}
+      cards={cards}
+      mm={CHARACTER_CARD_MM}
+      edge="gold"
+      from="left"
+      layout={characterLayout}
+      fallback={<FlatCharactersDeck />}
+    />
+  );
+};
+
+//the flat cards, if 3D can't be shown
+const FlatCharactersDeck = () => {
   gsap.registerPlugin(ScrollTrigger);
 
   //all people (randomized)

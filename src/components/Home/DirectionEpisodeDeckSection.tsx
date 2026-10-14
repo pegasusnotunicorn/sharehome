@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger.js";
 import gsap from "gsap";
 import Card from "../Card/Card";
@@ -7,6 +7,10 @@ import getHomePageCardProps from "./utils/getHomePageCardProps";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import { getRandomDirectionsEpisodes } from "../Card/ExampleDirectionEpisode";
 import { randomDeg, randomNum } from "../utils/useMath";
+import Deck3D from "./utils/Deck3D";
+import { DIRECTION_MM, EPISODE_MM, randomDirectionFaces, randomEpisodeFaces } from "../Card/directionEpisodeFaces";
+import type { DeckCard } from "../utils/deckCards3d";
+import { directionEpisodeLayout } from "./utils/deckLayouts";
 import styles from "../../css/pages/home/directionEpisodeDeckSection.module.css";
 
 interface DeckSectionProps {
@@ -28,13 +32,36 @@ interface AnimatedCardProps {
 }
 
 export const EpisodeDeckSection = () => {
-  return <DeckSection directionOrEpisode="episode" />;
+  return <Deck3DSection directionOrEpisode="episode" />;
 };
 export const DirectionDeckSection = () => {
-  return <DeckSection directionOrEpisode="direction" />;
+  return <Deck3DSection directionOrEpisode="direction" />;
 };
 
-//the deck section covering half the screen
+
+//three cards from the deck, dealt in 3D
+const Deck3DSection = ({ directionOrEpisode }: DeckSectionProps) => {
+  const type = directionOrEpisode as "direction" | "episode";
+  // three of the printed cards
+  const [cards] = useState<DeckCard[]>(() =>
+    (type === "direction" ? randomDirectionFaces(3) : randomEpisodeFaces(3)).map((faces) => ({
+      faces,
+      label: `${type === "direction" ? "Direction" : "Episode"} card`,
+    }))
+  );
+  return (
+    <Deck3D
+      className={styles.directionEpisodeDecksContainer}
+      cards={cards}
+      mm={type === "direction" ? DIRECTION_MM : EPISODE_MM}
+      from={type === "direction" ? "right" : "left"}
+      layout={directionEpisodeLayout(type === "direction" ? 1 : -1)}
+      fallback={<DeckSection directionOrEpisode={directionOrEpisode} />}
+    />
+  );
+};
+
+//the flat cards, if 3D can't be shown
 const DeckSection = ({ directionOrEpisode }: DeckSectionProps) => {
   gsap.registerPlugin(ScrollTrigger);
   const splitIntoSections = getRandomDirectionsEpisodes(directionOrEpisode as "direction" | "episode", 3);

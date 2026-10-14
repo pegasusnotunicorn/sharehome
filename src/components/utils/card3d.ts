@@ -33,6 +33,22 @@ export const studio = (T: Three, r: THREE.WebGLRenderer) =>
     return env;
   }));
 
+// a soft shadow to sit under a card on the page, made once
+let shadowTex: THREE.Texture | null = null;
+export const cardShadow = (T: Three) => {
+  if (shadowTex) return shadowTex;
+  const c = document.createElement("canvas");
+  c.width = 256;
+  c.height = 256;
+  const ctx = c.getContext("2d")!;
+  ctx.filter = "blur(22px)";
+  ctx.fillStyle = "#000";
+  ctx.beginPath();
+  ctx.roundRect(48, 48, 160, 160, 12);
+  ctx.fill();
+  return (shadowTex = new T.CanvasTexture(c));
+};
+
 export const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 export const calm = () => !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
@@ -75,4 +91,35 @@ export function makeCard(T: Three, mm: [number, number], front: THREE.Texture, b
     grp.add(m);
   }
   return grp;
+}
+
+// Whether the pointer at (x, y) is on `scene` with nothing in the way: everything above it at that
+// point is see-through (no background, picture, text or control), like the empty part of a block of
+// words that overlaps a 3D scene.
+const SOLID = new Set(["IMG", "SVG", "VIDEO", "IFRAME", "CANVAS", "A", "BUTTON", "INPUT", "SELECT", "TEXTAREA", "LABEL"]);
+const seeThrough = (el: Element) => {
+  if (SOLID.has(el.tagName.toUpperCase())) return false;
+  for (const n of el.childNodes) if (n.nodeType === Node.TEXT_NODE && n.textContent?.trim()) return false;
+  const s = getComputedStyle(el);
+  if (s.backgroundImage !== "none" || s.pointerEvents === "none") return s.pointerEvents === "none";
+  const bg = s.backgroundColor;
+  return bg === "transparent" || /rgba\(.*,\s*0\)$/.test(bg);
+};
+export const pointerReaches = (scene: Element, x: number, y: number) => {
+  for (const el of document.elementsFromPoint(x, y)) {
+    if (scene.contains(el)) return true;
+    if (!seeThrough(el)) return false;
+  }
+  return false;
+};
+
+// A scene's canvas reaches past its stage by (bx, by) px on each side, so cards that tumble, lift or
+// lean past the stage's edges aren't cut off (it draws over the neighbouring sections, and lets the
+// pointer through to them). Its middle stays on the stage's middle. Returns the canvas's size in px.
+export function bleedCanvas(cv: HTMLCanvasElement, W: number, H: number, bx: number, by: number, pixelRatio: number) {
+  const w = W + 2 * bx, h = H + 2 * by;
+  Object.assign(cv.style, { position: "absolute", left: `${-bx}px`, top: `${-by}px`, width: `${w}px`, height: `${h}px`, pointerEvents: "none" });
+  cv.width = Math.round(w * pixelRatio);
+  cv.height = Math.round(h * pixelRatio);
+  return { w, h };
 }

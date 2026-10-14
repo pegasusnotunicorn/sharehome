@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap";
+import { GsapFadeScrub } from "../utils/useGsap";
 import DefaultButton from "../utils/DefaultButton";
 import CarouselSection from "../utils/CarouselSection";
 import ParallaxSection from "./ParallaxSection";
@@ -15,6 +15,7 @@ import BoxHero from "./BoxHero";
 import landingPageStyles from "../../css/landingPage.module.css";
 import colorStyles from "../../css/utils/colors.module.css";
 import DescriptionContainer from "./DescriptionContainer";
+import StepText from "./utils/StepText";
 
 interface LandingPageProps {
   setTrailerPlaying: (playing: boolean) => void; // the trailer's playing, in the hero's box
@@ -72,22 +73,15 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
         <CharactersDeckSection />
         <div className={`${landingPageStyles.characterTextContainer}`}>
           <GsapFadeScrub fadeIn>
-            <GsapWiggle
-              className={`${landingPageStyles.characterContainerSVG}`}
-            >
-              <img
-                loading="lazy"
-                src="/images/icons/pointer.svg"
-                alt="point finger"
-              />
-            </GsapWiggle>
-            <p className={landingPageStyles.stepEyebrow}>Step 1.</p>
-            <h1>Choose from 25 unique characters!</h1>
-            <p>
-              Mythological creatures with modern day jobs just like us humans.
-              <br />
-              <a href="/characters">Click here</a> to see all characters.
-            </p>
+            <StepText doodles={[{ src: "/images/icons/pointer.svg", alt: "pointing finger", at: "aboveStart" }]}>
+              <p className={landingPageStyles.stepEyebrow}>Step 1.</p>
+              <h1>Choose from 25 unique characters!</h1>
+              <p>
+                Mythological creatures with modern day jobs just like us humans.
+                <br />
+                <a href="/characters">Click here</a> to see all characters.
+              </p>
+            </StepText>
           </GsapFadeScrub>
         </div>
       </div>
@@ -101,25 +95,14 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
           scrubStartCenter
           className={`${landingPageStyles.eventsLeftContainer}`}
         >
-          <GsapWiggle
-            id={`${landingPageStyles.eventsContainerSVGcake}`}
-            className={`${landingPageStyles.eventsContainerSVG}`}
+          <StepText
+            className={landingPageStyles.eventsTextContainer}
+            doodles={[
+              { src: "/images/icons/planet.svg", alt: "planet", at: "besideStart" },
+              { src: "/images/icons/lovekey.svg", alt: "heart and key", at: "aboveStart" },
+              { src: "/images/icons/cake.svg", alt: "cake", at: "belowStart" },
+            ]}
           >
-            <img loading="lazy" src="/images/icons/cake.svg" alt="cake" />
-          </GsapWiggle>
-          <GsapWiggle
-            id={`${landingPageStyles.eventsContainerSVGlovekey}`}
-            className={`${landingPageStyles.eventsContainerSVG}`}
-          >
-            <img loading="lazy" src="/images/icons/lovekey.svg" alt="cake" />
-          </GsapWiggle>
-          <GsapWiggle
-            id={`${landingPageStyles.eventsContainerSVGplanet}`}
-            className={`${landingPageStyles.eventsContainerSVG}`}
-          >
-            <img loading="lazy" src="/images/icons/planet.svg" alt="cake" />
-          </GsapWiggle>
-          <div className={`${landingPageStyles.eventsTextContainer}`}>
             <p className={landingPageStyles.stepEyebrow}>Step 2.</p>
             <h1>Follow chaotic stage directions</h1>
             <p>
@@ -129,7 +112,7 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
               Complete as many of their Direction Cards as you can to
               earn points!
             </p>
-          </div>
+          </StepText>
         </GsapFadeScrub>
         <DirectionDeckSection />
       </div>
@@ -161,26 +144,20 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
           scrubStartCenter
           className={`${landingPageStyles.goalsRightContainer}`}
         >
-          <GsapWiggle
-            id={`${landingPageStyles.goalsContainerSVGflag}`}
-            className={`${landingPageStyles.goalsContainerSVG}`}
+          <StepText
+            className={landingPageStyles.goalsTextContainer}
+            doodles={[
+              { src: "/images/icons/scroll.svg", alt: "scroll", at: "aboveEnd" },
+              { src: "/images/icons/flag.svg", alt: "flag", at: "belowEnd" },
+            ]}
           >
-            <img loading="lazy" src="/images/icons/flag.svg" alt="flag" />
-          </GsapWiggle>
-          <GsapWiggle
-            id={`${landingPageStyles.goalsContainerSVGscroll}`}
-            className={`${landingPageStyles.goalsContainerSVG}`}
-          >
-            <img loading="lazy" src="/images/icons/scroll.svg" alt="scroll" />
-          </GsapWiggle>
-          <div className={`${landingPageStyles.goalsTextContainer}`}>
             <p className={landingPageStyles.stepEyebrow}>Step 4.</p>
             <h1>Crazy locations never before seen on TV</h1>
             <p>
               Every episode of the reality TV show occurs in a random exotic
               location carefully hand-picked for maximum excitement!
             </p>
-          </div>
+          </StepText>
         </GsapFadeScrub>
       </div>
 

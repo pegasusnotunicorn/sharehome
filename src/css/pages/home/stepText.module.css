@@ -1,0 +1,76 @@
+/* A "How to play" step's words and their doodles (StepText.tsx) */
+.stepText {
+  position: relative;
+  width: fit-content; /* the doodles hug the words, not the column */
+  max-width: min(100%, 44rem); /* a reading width, so the doodles stay by the words */
+  --doodle: clamp(56px, 5.5vw, 96px);
+  --doodle-gap: clamp(0.75rem, 1.5vw, 1.5rem);
+}
+
+.doodle {
+  position: absolute;
+  width: var(--doodle);
+  pointer-events: none;
+}
+
+.doodle img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.aboveStart,
+.aboveEnd {
+  bottom: calc(100% + var(--doodle-gap));
+}
+.belowStart,
+.belowEnd {
+  top: calc(100% + var(--doodle-gap));
+}
+.aboveStart,
+.belowStart {
+  left: 0;
+}
+.aboveEnd,
+.belowEnd {
+  right: 0;
+}
+.besideStart,
+.besideEnd {
+  top: 50%;
+  margin-top: calc(var(--doodle) / -2);
+}
+.besideStart {
+  left: 0;
+}
+.besideEnd {
+  right: 0;
+}
+/* a doodle beside the words gets room of its own, so it never runs off the side of the screen */
+.roomStart {
+  padding-left: calc(var(--doodle) + var(--doodle-gap));
+}
+.roomEnd {
+  padding-right: calc(var(--doodle) + var(--doodle-gap));
+}
+
+/* phones: a row above the words, so they never cover them */
+@media only screen and (max-width: 900px) {
+  .stepText {
+    --doodle: 48px;
+  }
+  .doodles {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  .doodle {
+    position: static;
+    margin: 0;
+  }
+  .roomStart,
+  .roomEnd {
+    padding: 0;
+  }
+}

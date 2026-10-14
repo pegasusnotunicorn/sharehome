@@ -2,7 +2,8 @@
 // into view deals the cards in, one at a time: each one tumbles in from the side and settles, face
 // up, where the layout puts it (deckPoses.ts works out where each card is, so that no two ever pass
 // through each other). Once dealt they sway a little and the deck leans toward the pointer; the card
-// under the pointer lifts (if nothing rests on it), and clicking it follows its link. Scrolling back
+// under the pointer lifts (sliding out first if a card rests on it); clicking one turns it over (and
+// again, back), lifting it clear of the others while it turns. Scrolling back
 // up takes them back out again. It renders only while it's on screen; visitors who ask for less
 // motion get the cards already dealt and holding still.
 // One WebGL renderer serves the whole page (card3d.ts): this deck renders through it and copies the
@@ -29,7 +30,6 @@ interface MountOptions {
   edge?: CardEdge;
   from: "left" | "right"; // the side they're dealt from
   layout: (w: number, h: number, stacked: boolean) => DeckPose[];
-  onPick?: (card: DeckCard) => void;
   onFail: () => void;
 }
 
@@ -40,7 +40,7 @@ export interface DeckApi {
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 
 export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise<DeckApi | null> {
-  const { cards, mm, edge = "paper", from, layout, onPick, onFail } = opts;
+  const { cards, mm, edge = "paper", from, layout, onFail } = opts;
   let T: Three, r: THREE.WebGLRenderer;
   try {
     T = await loadThree();
@@ -95,6 +95,8 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
     obj: THREE.Group; // the card, scaled to px
     shadow: THREE.Mesh;
     lift: number; // 0: resting, 1: lifted toward you (hovered)
+    turned: number; // how far it's turned over (radians): a click turns it a half turn more
+    turnTo: number;
   }
   const live: Live[] = cards.map((card, i) => {
     const obj = new T.Group();
@@ -121,6 +123,8 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
       },
       phase: rand(0, Math.PI * 2),
       lift: 0,
+      turned: 0,
+      turnTo: 0,
     };
   });
 
@@ -215,13 +219,19 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
     lean.x += (lean.tx - lean.x) * k(4);
     lean.y += (lean.ty - lean.y) * k(4);
     deck.rotation.set(lean.y * 0.06, lean.x * 0.1, 0);
-    live.forEach((l) => (l.lift += ((l === hovered ? 1 : 0) - l.lift) * k(9)));
+    // a clicked card lifts (sliding out from under any on it), turns over, then settles back
+    live.forEach((l) => (l.lift += ((l === hovered || l.turnTo !== l.turned ? 1 : 0) - l.lift) * k(9)));
     const fromX = side * (W / 2 + Math.max(...live.map((l) => l.rest.w)) * 0.9);
-    const poses = deckPoses(dealt, t, live, { aspect, fromX, H }, live.map((l) => l.lift), still);
+    const poses = deckPoses(dealt, t, live, { aspect, fromX, H }, live.map((l) => l.lift), still, live.map((l) => l.turned));
     live.forEach((l, i) => {
       const q = poses[i];
+      if (l.turnTo !== l.turned && (l.lift > 0.95 || instant) && q.down) {
+        l.turned += (l.turnTo - l.turned) * k(7);
+        if (Math.abs(l.turnTo - l.turned) < 0.01) l.turned = l.turnTo;
+      }
       l.obj.position.set(q.x, q.y, q.z);
       l.obj.rotation.set(q.rx, q.ry, q.rz);
+      l.obj.rotateX(q.flip || 0);
       l.obj.scale.setScalar(l.rest.w * q.scale);
       l.obj.visible = q.shown;
       // its shadow on the page, behind every card: further off and fainter the higher the card is
@@ -271,7 +281,7 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
       lean.ty = -ndc.y;
     }
     hovered = e.pointerType === "mouse" || e.type === "pointerup" ? pick() : null;
-    area.style.cursor = hovered?.card.href ? "pointer" : "";
+    area.style.cursor = hovered ? "pointer" : "";
   };
   const onLeave = () => {
     ndc.set(-9, -9);
@@ -287,7 +297,9 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
     if ((e.target as Element).closest?.("a, button")) return;
     down = null;
     onMove(e);
-    if (hovered && onPick) onPick(hovered.card);
+    // a click (or a tap) turns it over, or back
+    if (hovered) hovered.turnTo += Math.PI;
+    if (e.pointerType !== "mouse") hovered = null; // (a finger doesn't hover: it settles back once it's turned)
   };
   area.addEventListener("pointermove", onMove);
   area.addEventListener("pointerleave", onLeave);

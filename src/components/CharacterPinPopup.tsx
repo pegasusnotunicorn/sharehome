@@ -157,6 +157,7 @@ const CharacterPinPopup = ({ closePopup, followed }: CharacterPinPopupProps) => 
         .modal-popup-sheet .close-btn {
           grid-area: no;
           justify-self: center;
+          padding-top: 0.5em;
           margin-top: 0.6em;
           margin-right: -1.75rem;
         }
@@ -231,7 +232,6 @@ const CharacterPinPopup = ({ closePopup, followed }: CharacterPinPopupProps) => 
           text-decoration: underline;
           font-size: 0.75em;
           padding: 0;
-          padding-top: 0.5em;
           margin: 0;
           margin-top: 1em;
           border: 0;

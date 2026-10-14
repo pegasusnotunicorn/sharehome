@@ -6,7 +6,7 @@ import getHomePageCardProps from "./utils/getHomePageCardProps";
 import { getAllFinishedPeople } from "../Characters/Characters";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import styles from "../../css/pages/home/cardparallax.module.css";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { characterArtFace } from "../Characters/characterCardFaces";
 import { getAllCharacters } from "../Characters/Characters";
 import { characterArtSmall } from "../utils/characterArt";
@@ -62,7 +62,6 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
 
   const sectionRef = useRef<HTMLDivElement>(null);
   // the cards as a 3D wall (parallaxWall3d.ts), following the scroll; the flat cards below if it can't
-  const navigate = useNavigate();
   const stageRef = useRef<HTMLDivElement>(null);
   const wall = useRef<WallApi | null>(null);
   const scrolled = useRef(0);
@@ -171,7 +170,6 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
           cols: cardsPerRow,
           cardWidth: (w) => Number.parseInt(getHomePageCardProps("member", w).mainStyle.width),
           wordsHalfWidth: () => wordsHalfWidth(document.getElementById(landingPageStyles.descriptionContainer)),
-          onPick: (c) => navigate(`/characters/${c.urlName}`),
           onFail: fail,
         })
       )
@@ -197,7 +195,7 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
       wall.current?.destroy();
       wall.current = null;
     };
-  }, [held, flat, wallCards, cardsPerRow, navigate]);
+  }, [held, flat, wallCards, cardsPerRow]);
 
   return (
     <div

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { useNavigate } from "react-router";
 import type { DeckApi, DeckCard } from "../../utils/deckCards3d";
 import type { DeckPose } from "../../utils/deckPoses";
 import type { CardEdge } from "../../utils/cardViewer3d";
@@ -21,7 +20,6 @@ interface Deck3DProps {
 
 const Deck3D = ({ className, cards, mm, edge, from, layout, fallback }: Deck3DProps) => {
   const stageRef = useRef<HTMLDivElement | null>(null);
-  const navigate = useNavigate();
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
@@ -38,7 +36,6 @@ const Deck3D = ({ className, cards, mm, edge, from, layout, fallback }: Deck3DPr
             edge,
             from,
             layout,
-            onPick: (c) => c.href && navigate(c.href),
             onFail: fail,
           })
         )

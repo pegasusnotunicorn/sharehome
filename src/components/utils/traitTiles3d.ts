@@ -1,6 +1,6 @@
 // The "character arcs" step's traits as 3D trait cards (three.js), the printed ones (a selection,
 // in images/cards/traits/): each new set flips the cards over, one after another, as they glide to
-// the next character. They sway a little and lean toward the pointer. Each card sits where its flat
+// the next character. They sway a little and lean toward the pointer, and a click turns one over. Each card sits where its flat
 // tag is laid out (the tags stay, hidden, so the page keeps its layout). One WebGL renderer serves
 // the whole page (card3d.ts).
 import type * as THREE from "three";
@@ -210,6 +210,38 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
   stage.addEventListener("pointermove", onMove);
   stage.addEventListener("pointerleave", onLeave);
 
+  // a click (or a tap) on a card turns it over, to the card on its other side (and back)
+  const ray = new T.Raycaster(), ndc = new T.Vector2();
+  const area = stage.parentElement ?? stage;
+  let down: { x: number; y: number } | null = null;
+  const tileAt = (x: number, y: number) => {
+    const b = cv.getBoundingClientRect();
+    ndc.set(((x - b.left) / b.width) * 2 - 1, -((y - b.top) / b.height) * 2 + 1);
+    ray.setFromCamera(ndc, cam);
+    const hit = ray.intersectObjects(tiles.filter((t) => t.obj.visible).map((t) => t.obj), true)[0];
+    return hit ? tiles.find((t) => hit.object.parent === t.obj || hit.object.parent?.parent === t.obj) : undefined;
+  };
+  const onDown = (e: PointerEvent) => (down = { x: e.clientX, y: e.clientY });
+  const onUp = (e: PointerEvent) => {
+    if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 8) return;
+    down = null;
+    if ((e.target as Element).closest?.("a, button")) return;
+    const t = tileAt(e.clientX, e.clientY);
+    if (!t) return;
+    t.turns += 1;
+    t.flip = { from: t.obj.rotation.x, at: now };
+    if (!onScreen) {
+      step(true);
+      draw();
+    }
+  };
+  const onHover = (e: PointerEvent) => {
+    if (e.pointerType === "mouse") area.style.cursor = tileAt(e.clientX, e.clientY) ? "pointer" : "";
+  };
+  area.addEventListener("pointerdown", onDown);
+  area.addEventListener("pointerup", onUp);
+  area.addEventListener("pointermove", onHover);
+
   const ro = new ResizeObserver(resize);
   await warm(r, sc, cam); // shaders and pictures ready before its first frame
   ro.observe(stage);
@@ -262,6 +294,10 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
       document.removeEventListener("visibilitychange", run);
       stage.removeEventListener("pointermove", onMove);
       stage.removeEventListener("pointerleave", onLeave);
+      area.removeEventListener("pointerdown", onDown);
+      area.removeEventListener("pointerup", onUp);
+      area.removeEventListener("pointermove", onHover);
+      area.style.cursor = "";
       sc.traverse((o) => {
         const m = o as THREE.Mesh;
         m.geometry?.dispose();

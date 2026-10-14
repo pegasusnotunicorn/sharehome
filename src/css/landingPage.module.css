@@ -492,19 +492,6 @@
   margin-bottom: 0;
 }
 
-.carouselTextContainer {
-  padding: 2rem;
-}
-
-@media only screen and (max-width: 900px) {
-  .carouselTextContainer {
-    padding: 1rem;
-    width: calc(100% - 2rem);
-  }
-  .mainpageCarouselTitle {
-    margin-top: 0;
-  }
-}
 
 /* #endregion */
 

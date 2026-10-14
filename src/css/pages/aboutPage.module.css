@@ -119,6 +119,25 @@
   }
 }
 
+/* a tab's name, shortened on phones */
+.tabLabel {
+  display: block;
+}
+
+.tabLabel.tabLabelShort {
+  display: none;
+}
+
+@media only screen and (max-width: 480px) {
+  .tabLabel.tabLabelLong {
+    display: none;
+  }
+
+  .tabLabel.tabLabelShort {
+    display: block;
+  }
+}
+
 .tab:not(.tabActive):hover {
   color: #323232;
   background-color: #fff;

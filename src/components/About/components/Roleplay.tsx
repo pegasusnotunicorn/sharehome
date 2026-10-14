@@ -1,4 +1,5 @@
 import { useState } from "react";
+import WhatsInTheBox from "./WhatsInTheBox";
 import Card from "../../Card/Card";
 import { getRandomTrait } from "../../Card/ExampleTraits";
 import DefaultButton from "../../utils/DefaultButton";
@@ -11,7 +12,7 @@ interface RoleplayProps {
 }
 
 interface SetupProps {
-  showRules: boolean;
+  showSetup: boolean;
   cardStyle: CardMainStyle;
   toggleSteps: () => void;
 }
@@ -21,50 +22,70 @@ interface RulesProps {
   toggleSteps: () => void;
 }
 
+type Tab = "setup" | "rules" | "box";
+
 const Roleplay = ({ cardStyle }: RoleplayProps) => {
-  const [showRules, setshowRules] = useState(false);
+  const [tab, setTab] = useState<Tab>("setup");
   const [tabKey, setTabKey] = useState(0);
+  const [boxOpened, setBoxOpened] = useState(false); // the pieces load the first time their tab opens, and stay
+  const showRules = tab === "rules";
   const toggleSteps = () => {
-    setshowRules(!showRules);
+    setTab(showRules ? "setup" : "rules");
   };
 
-  const switchTab = (rules: boolean) => {
-    if (rules === showRules) {
+  const switchTab = (next: Tab) => {
+    if (next === tab) {
       return;
     }
 
-    setshowRules(rules);
-    setTabKey(k => k + 1);
+    setTab(next);
+    if (next === "box") setBoxOpened(true);
+    else setTabKey(k => k + 1);
   };
 
   return (
     <>
       <div className={aboutStyles.tabsWrapper}>
         <button
-          className={`${aboutStyles.tab} ${!showRules ? aboutStyles.tabActive : ""}`}
-          onClick={() => switchTab(false)}
+          className={`${aboutStyles.tab} ${tab === "setup" ? aboutStyles.tabActive : ""}`}
+          onClick={() => switchTab("setup")}
         >
-          Game setup<span className={aboutStyles.tabSubtext}>less than 3 min</span>
+          <span className={aboutStyles.tabLabel}>Game setup</span>
+          <span className={aboutStyles.tabSubtext}>less than 3 min</span>
         </button>
         <button
           className={`${aboutStyles.tab} ${showRules ? aboutStyles.tabActive : ""}`}
-          onClick={() => switchTab(true)}
+          onClick={() => switchTab("rules")}
         >
-          Game rules<span className={aboutStyles.tabSubtext}>12 min per game</span>
+          <span className={aboutStyles.tabLabel}>Game rules</span>
+          <span className={aboutStyles.tabSubtext}>12 min per game</span>
+        </button>
+        <button
+          className={`${aboutStyles.tab} ${tab === "box" ? aboutStyles.tabActive : ""}`}
+          onClick={() => switchTab("box")}
+        >
+          <span className={`${aboutStyles.tabLabel} ${aboutStyles.tabLabelLong}`}>What&apos;s in the box</span>
+          <span className={`${aboutStyles.tabLabel} ${aboutStyles.tabLabelShort}`}>In the box</span>
+          <span className={aboutStyles.tabSubtext}>every piece, in 3D</span>
         </button>
       </div>
       <Setup
         key={`setup-${tabKey}`}
-        showRules={showRules}
+        showSetup={tab === "setup"}
         cardStyle={cardStyle}
         toggleSteps={toggleSteps}
       />
       <Rules key={`rules-${tabKey}`} showRules={showRules} toggleSteps={toggleSteps} />
+      {boxOpened && (
+        <div className={`${aboutStyles.allStepsContainer}${tab === "box" ? " is-active" : ""}`}>
+          <WhatsInTheBox />
+        </div>
+      )}
     </>
   );
 };
 
-const Setup = ({ showRules, cardStyle, toggleSteps }: SetupProps) => {
+const Setup = ({ showSetup, cardStyle, toggleSteps }: SetupProps) => {
   const cardProps = {
     type: "member",
     mainStyle: cardStyle,
@@ -83,7 +104,7 @@ const Setup = ({ showRules, cardStyle, toggleSteps }: SetupProps) => {
   );
 
   return (
-    <div className={`${aboutStyles.allStepsContainer}${!showRules ? " is-active" : ""}`}>
+    <div className={`${aboutStyles.allStepsContainer}${showSetup ? " is-active" : ""}`}>
       {/* STEP 1: Deal character cards & traits */}
       <div className={aboutStyles.stepWrapper}>
         <h2 className={aboutStyles.stepTitle}>

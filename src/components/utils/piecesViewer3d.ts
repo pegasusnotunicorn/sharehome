@@ -1,10 +1,10 @@
 // "What's in the box" on the How to play page: one game piece at a time in 3D (three.js), built from
 // its flat front and back art, lit like the studio mockups: soft light from above and its shadow on
-// an invisible floor. Drag turns it any way (it coasts when let go), two fingers pinch to zoom and
-// move together to pan, the wheel (or a trackpad pinch) zooms toward the pointer, the arrow keys turn
-// it, + and - zoom, and Home, 0 or a double-click straighten it. A new piece makes one slow turn to
-// show it's 3D, unless it's already been grabbed. Visitors who ask for less motion get no turn, coast
-// or easing.
+// an invisible floor. Drag turns it any way (it coasts when let go, then turns straight back to rest),
+// two fingers pinch to zoom and move together to pan, the wheel (or a trackpad pinch) zooms toward
+// the pointer, the arrow keys turn it, + and - zoom, and Home, 0 or a double-click zoom back out. A
+// new piece makes one slow turn to show it's 3D, unless it's already been grabbed. Visitors who ask
+// for less motion get no turn, coast or easing.
 // One WebGL renderer serves the whole page (card3d.ts): the viewer renders through it and copies the
 // picture onto its own 2D canvas.
 import type * as THREE from "three";
@@ -131,7 +131,9 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
 
   const sc = new T.Scene();
   const cam = new T.PerspectiveCamera(28, 4 / 3, 0.05, 20);
-  const AIM = new T.Vector3(0, -0.06, 0), CAM = new T.Vector3(0, 0.38, 3.1); // what it looks at, and from where (all the way out)
+  // what it looks at, and from where (all the way out): close enough that the piece and its shadow
+  // fill the stage
+  const AIM = new T.Vector3(0, -0.06, 0), CAM = new T.Vector3(0, 0.38, 3.1).multiplyScalar(0.8);
   sc.add(new T.HemisphereLight(0xffffff, 0xd9d2cc, 1.25));
   const key = new T.DirectionalLight(0xffffff, 1.7);
   key.position.set(0.15, 4, 0.9);
@@ -240,13 +242,27 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
     };
     raf = requestAnimationFrame(step);
   };
+  // left alone, it turns straight back to rest (the zoom stays)
+  const settle = () => {
+    cancelAnimationFrame(raf);
+    const q0 = q.clone(), t0 = performance.now(), ms = calm() ? 0 : 600;
+    const step = (now: number) => {
+      const t = ms ? Math.min(1, (now - t0) / ms) : 1;
+      q.slerpQuaternions(q0, rest, ease(t));
+      apply();
+      if (t < 1) raf = requestAnimationFrame(step);
+    };
+    if (ms) raf = requestAnimationFrame(step);
+    else step(t0);
+  };
   const coast = () => {
     cancelAnimationFrame(raf);
-    if (calm()) return;
+    if (calm()) return settle();
     const step = () => {
       v = [v[0] * 0.94, v[1] * 0.94];
       turn(v[0], v[1]);
       if (Math.hypot(...v) > 0.0008) raf = requestAnimationFrame(step);
+      else settle();
     };
     raf = requestAnimationFrame(step);
   };
@@ -365,7 +381,8 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
     const held = e.timeStamp - drag.t > 80;
     drag = null;
     stage.classList.remove("drag");
-    if (!held && Math.hypot(...v) > 0.004) coast(); // let go while moving: it coasts
+    if (!held && Math.hypot(...v) > 0.004) coast(); // let go while moving: it coasts, then settles
+    else settle();
   };
   const onMoveLater = later(onMove);
   const onDbl = (e: MouseEvent) => {
@@ -387,6 +404,7 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
       used();
       cancelAnimationFrame(raf);
       turn(...m);
+      settle();
     } else if (e.key === "+" || e.key === "=") {
       e.preventDefault();
       used();

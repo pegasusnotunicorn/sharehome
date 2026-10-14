@@ -50,20 +50,22 @@ const Roleplay = ({ cardStyle }: RoleplayProps) => {
           className={`${aboutStyles.tab} ${tab === "setup" ? aboutStyles.tabActive : ""}`}
           onClick={() => switchTab("setup")}
         >
-          Game setup<span className={aboutStyles.tabSubtext}>less than 3 min</span>
+          <span className={aboutStyles.tabLabel}>Game setup</span>
+          <span className={aboutStyles.tabSubtext}>less than 3 min</span>
         </button>
         <button
           className={`${aboutStyles.tab} ${showRules ? aboutStyles.tabActive : ""}`}
           onClick={() => switchTab("rules")}
         >
-          Game rules<span className={aboutStyles.tabSubtext}>12 min per game</span>
+          <span className={aboutStyles.tabLabel}>Game rules</span>
+          <span className={aboutStyles.tabSubtext}>12 min per game</span>
         </button>
         <button
           className={`${aboutStyles.tab} ${tab === "box" ? aboutStyles.tabActive : ""}`}
           onClick={() => switchTab("box")}
         >
-          <span className={aboutStyles.tabLabelLong}>What&apos;s in the box</span>
-          <span className={aboutStyles.tabLabelShort}>In the box</span>
+          <span className={`${aboutStyles.tabLabel} ${aboutStyles.tabLabelLong}`}>What&apos;s in the box</span>
+          <span className={`${aboutStyles.tabLabel} ${aboutStyles.tabLabelShort}`}>In the box</span>
           <span className={aboutStyles.tabSubtext}>every piece, in 3D</span>
         </button>
       </div>

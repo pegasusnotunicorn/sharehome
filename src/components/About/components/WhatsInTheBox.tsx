@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import useWindowDimensions from "../../utils/useWindowDimensions";
 import type { Piece, PiecesViewerApi } from "../../utils/piecesViewer3d";
 import styles from "../../../css/pages/whatsInTheBox.module.css";
 
@@ -155,11 +156,31 @@ const WhatsInTheBox = () => {
   }, [decks, deck, words.join(" ")]);
   const list = useMemo(() => groups.flatMap((g) => g.items), [groups]);
 
+  // a page of it at a time: four rows (five across, three on phones)
+  const { width } = useWindowDimensions();
+  const perPage = width <= 700 ? 12 : 20;
+  const [page, setPage] = useState(0);
+  const pages = Math.max(1, Math.ceil(list.length / perPage));
+  // the page the picked piece is on, as the list changes or Previous and Next step past a page
+  useEffect(() => {
+    const k = at ? list.findIndex((c) => c.key === at.key) : -1;
+    setPage(k >= 0 ? Math.floor(k / perPage) : 0);
+  }, [list, at, perPage]);
+  const shown = useMemo(() => {
+    const items = list.slice(page * perPage, (page + 1) * perPage), out: { deck: Deck; items: Item[] }[] = [];
+    for (const c of items) {
+      const g = groups.find((x) => x.items.includes(c))!;
+      if (out[out.length - 1]?.deck !== g.deck) out.push({ deck: g.deck, items: [] });
+      out[out.length - 1].items.push(c);
+    }
+    return out;
+  }, [list, groups, page, perPage]);
+
   // the thumbnail sheets of the decks on show (and the picked piece's), once each has arrived (a
   // blank cell until then)
   useEffect(() => {
     if (!decks) return;
-    const want = new Set(groups.map((g) => g.deck.thumbs));
+    const want = new Set(shown.map((g) => g.deck.thumbs));
     if (at) want.add(decks[at.deck].thumbs);
     for (const src of want) {
       if (sheets[src] !== undefined) continue;
@@ -168,7 +189,7 @@ const WhatsInTheBox = () => {
       im.onload = () => setSheets((s) => ({ ...s, [src]: true }));
       im.src = src;
     }
-  }, [decks, groups, at, sheets]);
+  }, [decks, shown, at, sheets]);
 
   // the picked piece, in 3D
   useEffect(() => {
@@ -221,7 +242,7 @@ const WhatsInTheBox = () => {
             <button type="button" title="Zoom out" aria-label="Zoom out" onClick={() => viewer.current?.zoom(0.714)}>
               <ZoomOut />
             </button>
-            <button type="button" className={styles.reset} title="Straighten it" aria-label="Straighten it" onClick={() => viewer.current?.reset()}>
+            <button type="button" className={styles.reset} title="Zoom back out" aria-label="Zoom back out" onClick={() => viewer.current?.reset()}>
               <Reset />
             </button>
           </span>
@@ -281,13 +302,13 @@ const WhatsInTheBox = () => {
         />
       </div>
 
-      {groups.length ? (
-        groups.map((g) => (
+      {shown.length ? (
+        shown.map((g) => (
           <section key={g.deck.name} aria-label={g.deck.name}>
             {words.length > 0 && (
               <h4 className={styles.groupTitle}>
                 {g.deck.name}
-                <span className={styles.n}>{g.items.length}</span>
+                <span className={styles.n}>{groups.find((x) => x.deck === g.deck)?.items.length}</span>
               </h4>
             )}
             <div className={`${styles.grid} ${g.deck.cols < 10 ? styles.gridWide : ""}`}>
@@ -317,8 +338,44 @@ const WhatsInTheBox = () => {
           </button>
         </div>
       )}
+
+      {pages > 1 && (
+        <nav className={styles.pager} aria-label="Pages">
+          <button type="button" className={styles.step} onClick={() => setPage((page - 1 + pages) % pages)} aria-label="Previous page" title="Previous page">
+            <Arrow back />
+          </button>
+          {pageNumbers(page, pages).map((n, i) =>
+            n < 0 ? (
+              <span key={`gap${i}`} className={styles.gap} aria-hidden="true">
+                …
+              </span>
+            ) : (
+              <button
+                key={n}
+                type="button"
+                className={styles.pageNumber}
+                aria-current={n === page ? "page" : undefined}
+                aria-label={`Page ${n + 1}`}
+                onClick={() => setPage(n)}
+              >
+                {n + 1}
+              </button>
+            )
+          )}
+          <button type="button" className={styles.step} onClick={() => setPage((page + 1) % pages)} aria-label="Next page" title="Next page">
+            <Arrow />
+          </button>
+        </nav>
+      )}
     </div>
   );
+};
+
+// the page numbers to offer: the first, the last and those either side of this one (-1: a gap)
+const pageNumbers = (page: number, pages: number) => {
+  if (pages <= 7) return Array.from({ length: pages }, (_, i) => i);
+  const keep = [...new Set([0, pages - 1, page - 1, page, page + 1].filter((n) => n >= 0 && n < pages))].sort((a, b) => a - b);
+  return keep.flatMap((n, i) => (i && n - keep[i - 1] > 1 ? [-1, n] : [n]));
 };
 
 export default WhatsInTheBox;

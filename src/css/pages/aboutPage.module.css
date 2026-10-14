@@ -120,17 +120,21 @@
 }
 
 /* a tab's name, shortened on phones */
-.tabLabelShort {
+.tabLabel {
+  display: block;
+}
+
+.tabLabel.tabLabelShort {
   display: none;
 }
 
 @media only screen and (max-width: 480px) {
-  .tabLabelLong {
+  .tabLabel.tabLabelLong {
     display: none;
   }
 
-  .tabLabelShort {
-    display: inline;
+  .tabLabel.tabLabelShort {
+    display: block;
   }
 }
 

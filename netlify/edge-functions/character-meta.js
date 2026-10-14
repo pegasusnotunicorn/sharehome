@@ -3,6 +3,8 @@
 // /characters/<name> this swaps those tags for the character's own title,
 // description and image before the page is sent.
 //
+// It also takes the trailing slash off these pages' addresses.
+//
 // Must be declared before track-utm in netlify.toml: context.next() runs
 // track-utm (which serves index.html) and we edit its response.
 import {
@@ -31,6 +33,13 @@ const setMeta = (html, key, value) =>
 
 export default async function characterMeta(request, context) {
   const url = new URL(request.url);
+  // /characters/ (and /characters/<name>/) is the same page without the slash. (Netlify's
+  // _redirects can't say this: it matches a path with or without its trailing slash, so the rule
+  // would send the page to itself.)
+  if (url.pathname.length > 1 && url.pathname.endsWith("/")) {
+    url.pathname = url.pathname.replace(/\/+$/, "");
+    return Response.redirect(url.toString(), 301);
+  }
   const slug = url.pathname.replace(/\/+$/, "").split("/")[2];
   const character = slug ? getSpecificPersonByURL(slug) : false;
 

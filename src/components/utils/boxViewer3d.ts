@@ -8,8 +8,8 @@
 // It never leaves the frame: the camera stands back far enough for the box at any angle (and for
 // whatever the lid is doing), checked against the box's corners every frame.
 import type * as THREE from "three";
-import { calm, ease, loadThree, renderer } from "./card3d";
-import type { Three } from "./card3d";
+import { calm, ease, heroBox, loadThree, renderer } from "./card3d";
+import type { BoxOnScreen, Three } from "./card3d";
 import { BOX_RADIUS, makeBox } from "./box3d";
 import type { BoxArt, BoxPanels } from "./box3d";
 
@@ -120,6 +120,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     return { x, load };
   };
   let io: IntersectionObserver | null = null, ro: ResizeObserver | null = null, settle = 0, idle = 0;
+  let onScreen: () => BoxOnScreen | null = () => null;
   let player: HTMLIFrameElement | null = null, unlisten = () => {}, unlistenYt = () => {};
   const cleanup = () => {
     dead = true;
@@ -135,6 +136,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     });
     textures.forEach((x) => x.dispose());
     (key.shadow.map as THREE.WebGLRenderTarget | null)?.dispose();
+    if (heroBox.at === onScreen) heroBox.at = null;
     cv.remove();
     player?.remove();
     unlistenYt();
@@ -175,6 +177,19 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     for (let c = 0; c < 8; c++) corners.push(new T.Vector3(c & 1 ? max.x : min.x, c & 2 ? max.y : min.y, c & 4 ? max.z : min.z));
   }
   const world = corners.map(() => new T.Vector3()), p3 = new T.Vector3();
+  // where it was last drawn, on screen
+  onScreen = () => {
+    if (!W || !H) return null;
+    const b = stage.getBoundingClientRect();
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity, k = 0;
+    for (const part of parts)
+      for (let c = 0; c < 8; c++, k++) {
+        p3.copy(corners[k]).applyMatrix4(part.matrixWorld).project(cam);
+        const x = ((p3.x + 1) / 2) * W, y = ((1 - p3.y) / 2) * H;
+        x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y);
+      }
+    return { x: b.left + (x0 + x1) / 2, y: b.top + (y0 + y1) / 2, top: b.top + y0, w: x1 - x0 };
+  };
   const aim = new T.Vector3();
   // The box's own part of the stage: closed, it can be kept to the right of `--frame-left` (a
   // fraction of the stage's width, set by the page so words can sit on the left); open, it has the
@@ -280,6 +295,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
   ro = new ResizeObserver(size);
   ro.observe(stage);
   size();
+  heroBox.at = onScreen;
   stage.classList.add("ready");
 
   // turning it

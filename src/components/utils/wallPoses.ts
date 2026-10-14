@@ -1,4 +1,4 @@
-import { clamp, depthReach, ease, lerp, turn } from "./cardPose";
+import { clamp, ease, lerp, turn } from "./cardPose";
 import type { CardPose } from "./cardPose";
 
 // Where every card of the home page's card wall is, at a point in the scroll (parallaxWall3d.ts
@@ -14,7 +14,7 @@ import type { CardPose } from "./cardPose";
 //   - Parting, each half of a row moves as one panel, swinging back about its outer card and sliding
 //     out, while the row's arc flattens (every moment of it still an arc). The two panels only move
 //     apart.
-//   - The card tumbling into the gap stays in front of the wall until it has stopped turning.
+//   - The card that fills the gap comes back into it from straight in front, having stopped turning.
 //   - A hovered card lifts straight out of the wall along its own facing, so it clears its
 //     neighbours as soon as it starts to move.
 
@@ -31,13 +31,21 @@ export interface WallCardMotion {
   row: number;
   col: number;
   missing: boolean; // the one that tumbles into the top row's gap
-  spin: [number, number, number]; // how far it tumbles on the way in
+  spin: [number, number, number]; // how it turns on its way in from the box (parallaxWall3d.ts): flips, wobble, tilt
 }
 
 export const WALL_GAP = 16;
 export const CARD_ASPECT = 120 / 69.44; // CHARACTER_CARD_MM
 const OPEN = 0.55; // how far each half swings back, radians
 const SWAY_Y = 2.5, SWAY_TILT = 0.02;
+const SETTLE_Z = 300; // how far in front of its place the missing card ends its flight
+
+// the missing card's way in, over the first half (each part 0 to 1): out of the box, over to just in
+// front of its place, then back into it
+export const missingFlight = (p: number) => {
+  const a = clamp(p / 0.5);
+  return { emerge: clamp((a - 0.03) / 0.22), fly: clamp((a - 0.25) / 0.6), settle: clamp((a - 0.85) / 0.15) };
+};
 
 
 // p: how far through the wall's section (0 to 1); t: seconds, for the idle sway (pass still to stop it)
@@ -90,20 +98,9 @@ export function wallPoses(p: number, t: number, size: WallSize, cards: WallCardM
     let y = -(c.row - (rows - 1) / 2) * (ch + WALL_GAP);
     let rx = 0, rz = 0, scale = 1;
 
-    // the missing card: down from above, tumbling; it stops turning while still in front of the
-    // wall, then settles back into its place
-    if (c.missing) {
-      const a = clamp(p / 0.5);
-      const turning = 1 - ease(clamp(a / 0.6));
-      y += lerp(3 * ch, 0, ease(a));
-      scale = ease(clamp(a / 0.5));
-      rx = c.spin[0] * turning;
-      ry += c.spin[1] * turning;
-      rz = c.spin[2] * turning;
-      const ahead = lerp(300, 0, ease(clamp((a - 0.55) / 0.45)));
-      const clear = depthReach((cw * scale) / 2, (ch * scale) / 2, rx, c.spin[1] * turning, rz) + 12 * turning;
-      z += Math.max(ahead, clear);
-    }
+    // the missing card: it comes out of the hero's box above, drawn over the page while it flies
+    // (parallaxWall3d.ts); here, it's on its way back into its place from straight in front of it
+    if (c.missing) z += lerp(SETTLE_Z, 0, ease(missingFlight(p).settle));
 
     // the wall sways as one, so the gaps between its cards stay the same
     if (!still) {

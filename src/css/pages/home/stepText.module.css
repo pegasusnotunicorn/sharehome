@@ -29,11 +29,11 @@
 }
 .aboveStart,
 .belowStart {
-  left: 0;
+  left: calc(var(--along, 0) * (100% - var(--doodle)));
 }
 .aboveEnd,
 .belowEnd {
-  right: 0;
+  right: calc(var(--along, 0) * (100% - var(--doodle)));
 }
 .besideStart,
 .besideEnd {

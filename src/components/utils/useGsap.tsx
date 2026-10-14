@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect, useMemo, type ReactNode } from "react";
+import { useRef, useLayoutEffect, useMemo, type CSSProperties, type ReactNode } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger.js";
 import gsap from "gsap";
 import { randomDeg } from "../utils/useMath";
@@ -112,6 +112,7 @@ interface GsapWiggleProps {
   id?: string;
   degree?: number;
   className?: string;
+  style?: CSSProperties;
   children?: ReactNode;
 }
 
@@ -153,6 +154,7 @@ export const GsapWiggle = (props: GsapWiggleProps) => {
       ref={target}
       id={props.id}
       className={props.className}
+      style={props.style}
     >
       {props.children}
     </div>

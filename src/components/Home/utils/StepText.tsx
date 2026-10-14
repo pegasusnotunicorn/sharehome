@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { GsapWiggle } from "../../utils/useGsap";
 import styles from "../../../css/pages/home/stepText.module.css";
 
@@ -10,6 +10,7 @@ export interface Doodle {
   src: string;
   alt: string;
   at: DoodleSpot;
+  along?: number; // above or below: how far along the words from that corner (0 at it, 1 at the other)
 }
 
 // A "How to play" step's words with their hand-drawn doodles. The doodles are placed by the words'
@@ -28,7 +29,11 @@ const StepText = ({ doodles, className, children }: { doodles: Doodle[]; classNa
   >
     <div className={styles.doodles}>
       {doodles.map((d) => (
-        <GsapWiggle key={d.src} className={`${styles.doodle} ${styles[d.at]}`}>
+        <GsapWiggle
+          key={d.src}
+          className={`${styles.doodle} ${styles[d.at]}`}
+          style={d.along ? ({ "--along": d.along } as CSSProperties) : undefined}
+        >
           <img loading="lazy" src={d.src} alt={d.alt} />
         </GsapWiggle>
       ))}

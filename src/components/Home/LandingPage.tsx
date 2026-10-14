@@ -100,7 +100,7 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
             doodles={[
               { src: "/images/icons/planet.svg", alt: "planet", at: "besideStart" },
               { src: "/images/icons/lovekey.svg", alt: "heart and key", at: "aboveEnd" },
-              { src: "/images/icons/cake.svg", alt: "cake", at: "belowStart" },
+              { src: "/images/icons/cake.svg", alt: "cake", at: "belowStart", along: 0.25 },
             ]}
           >
             <p className={landingPageStyles.stepEyebrow}>Step 2.</p>

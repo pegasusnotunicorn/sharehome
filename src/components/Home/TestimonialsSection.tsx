@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GsapFadeScrub } from "../utils/useGsap";
 import { trackEvent } from "../utils/trackEvent";
 import landingPageStyles from "../../css/landingPage.module.css";
@@ -30,12 +30,45 @@ export default function TestimonialsSection() {
   const screenRef = useRef<HTMLDivElement>(null);
   const shown = PLAYTHROUGHS[current];
 
+  // On narrow screens the games are a row that scrolls sideways: swipe it, drag it with the mouse,
+  // or page through it with the arrows (greyed out at either end)
+  const stripRef = useRef<HTMLUListElement>(null);
+  const [ends, setEnds] = useState({ start: true, end: false });
+  const measure = () => {
+    const el = stripRef.current;
+    if (!el) return;
+    setEnds({ start: el.scrollLeft <= 4, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 4 });
+  };
+  useEffect(() => {
+    measure();
+    addEventListener("resize", measure);
+    return () => removeEventListener("resize", measure);
+  }, []);
+  const page = (dir: 1 | -1) => {
+    const el = stripRef.current;
+    if (el) el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: "smooth" });
+  };
+  const drag = useRef<{ x: number; left: number; moved: boolean } | null>(null);
+  const onDown = (e: React.PointerEvent<HTMLUListElement>) => {
+    if (e.pointerType !== "mouse" || !stripRef.current) return;
+    drag.current = { x: e.clientX, left: stripRef.current.scrollLeft, moved: false };
+  };
+  const onDrag = (e: React.PointerEvent<HTMLUListElement>) => {
+    const d = drag.current, el = stripRef.current;
+    if (!d || !el) return;
+    const dx = e.clientX - d.x;
+    if (Math.abs(dx) > 5) d.moved = true;
+    if (d.moved) el.scrollLeft = d.left - dx;
+  };
+  const onUp = () => setTimeout(() => (drag.current = null)); // after the click it might end in
+
   const play = () => {
     setPlaying(true);
     trackEvent("playthrough_play", { game: shown.game });
   };
   // a game picked from the strip goes up on the big screen (playing, if one already was)
   const pick = (i: number) => {
+    if (drag.current?.moved) return; // that was a drag, not a click
     if (i === current) return play();
     setCurrent(i);
     if (playing) trackEvent("playthrough_play", { game: PLAYTHROUGHS[i].game });
@@ -78,27 +111,56 @@ export default function TestimonialsSection() {
         )}
       </div>
 
-      <ul className={styles.strip} aria-label="Pick a game">
-        {PLAYTHROUGHS.map((p, i) => (
-          <li key={p.id}>
-            <button
-              type="button"
-              className={`${styles.thumb} ${i === current ? styles.active : ""}`}
-              aria-pressed={i === current}
-              aria-label={`Game ${p.game}`}
-              onClick={() => pick(i)}
-            >
-              <img className={styles.crop} src={p.thumb} alt="" loading="lazy" />
-              <span className={styles.thumbNo} aria-hidden="true">
-                {p.game}
-              </span>
-              <span className={styles.thumbTime} aria-hidden="true">
-                {minutes(p.length)}
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className={styles.carousel}>
+        <button
+          type="button"
+          className={`${styles.arrow} ${styles.prev}`}
+          onClick={() => page(-1)}
+          disabled={ends.start}
+          aria-label="Earlier games"
+        >
+          <span aria-hidden="true">‹</span>
+        </button>
+        <ul
+          ref={stripRef}
+          className={styles.strip}
+          aria-label="Pick a game"
+          onScroll={measure}
+          onPointerDown={onDown}
+          onPointerMove={onDrag}
+          onPointerUp={onUp}
+          onPointerLeave={onUp}
+        >
+          {PLAYTHROUGHS.map((p, i) => (
+            <li key={p.id}>
+              <button
+                type="button"
+                className={`${styles.thumb} ${i === current ? styles.active : ""}`}
+                aria-pressed={i === current}
+                aria-label={`Game ${p.game}`}
+                onClick={() => pick(i)}
+              >
+                <img className={styles.crop} src={p.thumb} alt="" loading="lazy" />
+                <span className={styles.thumbNo} aria-hidden="true">
+                  {p.game}
+                </span>
+                <span className={styles.thumbTime} aria-hidden="true">
+                  {minutes(p.length)}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+        <button
+          type="button"
+          className={`${styles.arrow} ${styles.next}`}
+          onClick={() => page(1)}
+          disabled={ends.end}
+          aria-label="More games"
+        >
+          <span aria-hidden="true">›</span>
+        </button>
+      </div>
 
       <a className={styles.more} href={`https://www.youtube.com/watch?v=${shown.id}&t=${shown.start}s`} target="_blank" rel="noreferrer">
         Open on YouTube <span aria-hidden="true">↗</span>

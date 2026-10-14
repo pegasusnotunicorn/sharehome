@@ -99,7 +99,7 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
             className={landingPageStyles.eventsTextContainer}
             doodles={[
               { src: "/images/icons/planet.svg", alt: "planet", at: "besideStart" },
-              { src: "/images/icons/lovekey.svg", alt: "heart and key", at: "aboveStart" },
+              { src: "/images/icons/lovekey.svg", alt: "heart and key", at: "aboveEnd" },
               { src: "/images/icons/cake.svg", alt: "cake", at: "belowStart" },
             ]}
           >

@@ -60,7 +60,6 @@ for (const W of WIDTHS) {
       col: i % size.cols,
       missing: i === Math.floor(size.cols / 2),
       spin: [rnd() * 7 - 3.5, rnd() * 7 - 3.5, Math.PI / 2],
-      phase: rnd() * 6.28,
     }));
     for (let k = 0; k <= 1000; k++) {
       const p = k / 1000;

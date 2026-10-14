@@ -121,7 +121,6 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
       back,
       missing: row === 0 && col === mid,
       spin: [rand(-3.5, 3.5), rand(-3.5, 3.5), Math.PI / 2],
-      phase: rand(0, Math.PI * 2),
       lift: 0,
     };
   });

@@ -11,8 +11,8 @@ import type { CardPose } from "./cardPose";
 //   - Standing, a row's cards are on an arc, each one facing out from it, a gap apart along it. Faces
 //     on an arc only meet beyond their edges, so neighbours never touch. Sliding the row moves every
 //     card along the arc together.
-//   - Parting, each half of a row moves as one rigid panel, swinging back about its outer card and
-//     sliding out. Cards on one panel don't move against each other, and the two panels only move
+//   - Parting, each half of a row moves as one panel, swinging back about its outer card and sliding
+//     out, while the row's arc flattens (every moment of it still an arc). The two panels only move
 //     apart.
 //   - The card tumbling into the gap stays in front of the wall until it has stopped turning.
 //   - A hovered card lifts straight out of the wall along its own facing, so it clears its
@@ -32,7 +32,6 @@ export interface WallCardMotion {
   col: number;
   missing: boolean; // the one that tumbles into the top row's gap
   spin: [number, number, number]; // how far it tumbles on the way in
-  phase: number; // where its idle sway starts
 }
 
 export const WALL_GAP = 16;
@@ -49,22 +48,28 @@ export function wallPoses(p: number, t: number, size: WallSize, cards: WallCardM
   const R = Math.max(W * 1.4, (cols - 1) * pitch * 1.2); // the arc's radius
   const slide = clamp(p / 0.5);
 
-  // standing: on the arc (facing out from it, toward you), slid along it
+  // each row parts a beat after the one above
+  const opening = (row: number) => ease(clamp(((p - 0.5) / 0.35 - row * 0.08) / 0.84)); // parted by 85% of the way
+
+  // standing: on the arc (facing out from it, toward you), slid along it. As a row parts, its arc
+  // flattens out (each moment still an arc, a gap apart along it), so each half opens out flat
   const standing = (row: number, col: number) => {
     const dir = row % 2 !== 0 ? 1 : -1;
     const along = (col - (cols - 1) / 2) * pitch + dir * 0.25 * cw * slide;
-    const a = along / R;
-    return { x: R * Math.sin(a), z: R * (1 - Math.cos(a)), ry: -a };
+    const k = (1 - opening(row)) / R; // the arc's curvature
+    if (k < 1e-7) return { x: along, z: 0, ry: 0 };
+    const a = along * k;
+    return { x: Math.sin(a) / k, z: (1 - Math.cos(a)) / k, ry: -a };
   };
 
   // parting: each half of each row as one panel (left of the middle, and the rest; the middle card
-  // goes with alternate sides row by row), each row a beat after the one above
+  // goes with alternate sides row by row)
   const panel = (row: number, col: number) => {
     const dir = row % 2 !== 0 ? 1 : -1;
     const left = dir > 0 ? col < mid : col <= mid;
     const outer = left ? 0 : cols - 1; // its hinge
     const inner = left ? (dir > 0 ? mid - 1 : mid) : dir > 0 ? mid : mid + 1; // the card nearest the gap
-    const open = ease(clamp(((p - 0.5) / 0.35 - row * 0.08) / 0.84)); // parted by 85% of the way
+    const open = opening(row);
     const swing = (left ? 1 : -1) * OPEN; // inner end back, away from you
     const hinge = standing(row, outer);
     // how far it slides out so that, fully open, the inner card's inner edge is drawn `gap` from the
@@ -100,8 +105,9 @@ export function wallPoses(p: number, t: number, size: WallSize, cards: WallCardM
       z += Math.max(ahead, clear);
     }
 
+    // the wall sways as one, so the gaps between its cards stay the same
     if (!still) {
-      const sway = Math.sin(t * 1.05 + c.phase);
+      const sway = Math.sin(t * 1.05);
       y += sway * SWAY_Y;
       rx += sway * SWAY_TILT;
     }

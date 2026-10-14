@@ -95,7 +95,8 @@ export function deckPoses(
   const layer = deckLayer(cards, aspect);
   // hovered (once it's down): a card with nothing on it lifts straight up; a covered one slides out
   // from under first, then lifts
-  const landed = cards.map((_, i) => dealt >= setsOff(i, cards.length) + FLIGHT);
+  // (the deal eases toward its end without ever quite getting there, so "down" is all but down)
+  const landed = cards.map((_, i) => (dealt - setsOff(i, cards.length)) / FLIGHT >= 0.97);
   const under = cards.map((_, i) => covered(cards, i, aspect));
   const slides = cards.map((_, i) => (under[i] && lift[i] ? slideOut(cards, i, aspect) : ([0, 0] as [number, number])));
   const out = cards.map((_, i) => (landed[i] && under[i] ? ease(clamp(lift[i] / 0.5)) : 0));

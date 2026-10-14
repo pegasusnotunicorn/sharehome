@@ -1,4 +1,4 @@
-import { clamp, ease, lerp, turn } from "./cardPose";
+import { clamp, ease, turn } from "./cardPose";
 import type { CardPose } from "./cardPose";
 
 // Where every card of the home page's card wall is, at a point in the scroll (parallaxWall3d.ts
@@ -6,15 +6,14 @@ import type { CardPose } from "./cardPose";
 // three.js: positions in px with y up, rotations as three.js applies them (x, then y, then z).
 //
 // How the wall moves without its cards ever cutting through one another:
-//   - Every card is turned only about the upright (y) axis, except the one tumbling in, and rows are
-//     a gap apart, so one row can never reach into another.
+//   - Every card is turned only about the upright (y) axis, and rows are a gap apart, so one row
+//     can never reach into another.
 //   - Standing, a row's cards are on an arc, each one facing out from it, a gap apart along it. Faces
 //     on an arc only meet beyond their edges, so neighbours never touch. Sliding the row moves every
 //     card along the arc together.
 //   - Parting, each half of a row moves as one panel, swinging back about its outer card and sliding
 //     out, while the row's arc flattens (every moment of it still an arc). The two panels only move
 //     apart.
-//   - The card that fills the gap comes back into it from straight in front, having stopped turning.
 //   - A hovered card lifts straight out of the wall along its own facing, so it clears its
 //     neighbours as soon as it starts to move.
 
@@ -30,22 +29,12 @@ export interface WallSize {
 export interface WallCardMotion {
   row: number;
   col: number;
-  missing: boolean; // the one that tumbles into the top row's gap
-  spin: [number, number, number]; // how it turns on its way in from the box (parallaxWall3d.ts): flips, wobble, tilt
 }
 
 export const WALL_GAP = 16;
 export const CARD_ASPECT = 120 / 69.44; // CHARACTER_CARD_MM
 const OPEN = 0.55; // how far each half swings back, radians
 const SWAY_Y = 2.5, SWAY_TILT = 0.02;
-const SETTLE_Z = 300; // how far in front of its place the missing card ends its flight
-
-// the missing card's way in, over the first half (each part 0 to 1): out of the box, over to just in
-// front of its place, then back into it
-export const missingFlight = (p: number) => {
-  const a = clamp(p / 0.5);
-  return { emerge: clamp((a - 0.03) / 0.22), fly: clamp((a - 0.25) / 0.6), settle: clamp((a - 0.85) / 0.15) };
-};
 
 
 // p: how far through the wall's section (0 to 1); t: seconds, for the idle sway (pass still to stop it)
@@ -96,11 +85,8 @@ export function wallPoses(p: number, t: number, size: WallSize, cards: WallCardM
     const [dx, dz] = turn(s.x - pn.hinge.x, s.z - pn.hinge.z, pn.angle);
     let x = pn.hinge.x + dx + pn.shift, z = pn.hinge.z + dz, ry = s.ry + pn.angle;
     let y = -(c.row - (rows - 1) / 2) * (ch + WALL_GAP);
-    let rx = 0, rz = 0, scale = 1;
-
-    // the missing card: it comes out of the hero's box above, drawn over the page while it flies
-    // (parallaxWall3d.ts); here, it's on its way back into its place from straight in front of it
-    if (c.missing) z += lerp(SETTLE_Z, 0, ease(missingFlight(p).settle));
+    let rx = 0;
+    const rz = 0, scale = 1;
 
     // the wall sways as one, so the gaps between its cards stay the same
     if (!still) {
@@ -118,8 +104,3 @@ export function hoverPose(q: CardPose, lift: number, cw: number): CardPose {
   const [nx, nz] = turn(0, 1, q.ry);
   return { ...q, x: q.x + nx * out, z: q.z + nz * out, scale: q.scale * (1 + 0.04 * lift) };
 }
-
-// whether a card can lift yet: the missing card's neighbours wait until it has landed (it passes
-// just in front of them on its way in)
-export const canLift = (p: number, c: WallCardMotion, cols: number) =>
-  p >= 0.5 || c.row !== 0 || Math.abs(c.col - Math.floor(cols / 2)) !== 1;

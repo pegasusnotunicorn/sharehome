@@ -5,7 +5,7 @@
 // card passing through another.
 //
 //   npm run check-cards
-import { wallPoses, hoverPose, canLift, CARD_ASPECT } from "../src/components/utils/wallPoses.ts";
+import { wallPoses, hoverPose, CARD_ASPECT } from "../src/components/utils/wallPoses.ts";
 import { deckPoses } from "../src/components/utils/deckPoses.ts";
 import { characterLayout, directionEpisodeLayout } from "../src/components/Home/utils/deckLayouts.ts";
 
@@ -54,12 +54,10 @@ for (const W of WIDTHS) {
   const H = W <= 900 ? 844 : 900, cw = cardWidth(W);
   const size = { W, H, cw, cols: W >= 900 ? 5 : 3, rows: 3, gap: W <= 600 ? W / 2 + cw * 0.2 : W < 1000 ? 215 : 300 };
   const h = size.cw / CARD_ASPECT, bad = new Set();
-  for (let trial = 0; trial < 4; trial++) {
+  for (let trial = 0; trial < 1; trial++) {
     const cards = Array.from({ length: size.cols * size.rows }, (_, i) => ({
       row: Math.floor(i / size.cols),
       col: i % size.cols,
-      missing: i === Math.floor(size.cols / 2),
-      spin: [rnd() * 7 - 3.5, rnd() * 7 - 3.5, Math.PI / 2],
     }));
     for (let k = 0; k <= 1000; k++) {
       const p = k / 1000;
@@ -72,7 +70,6 @@ for (const W of WIDTHS) {
         if (trial || t || k % 10) continue;
         for (let i = 0; i < ps.length; i++)
           for (const lift of [0.3, 0.6, 1]) {
-            if (!canLift(p, cards[i], size.cols)) continue;
             const hs = slab(hoverPose(ps[i], lift, size.cw), size.cw, h);
             for (let j = 0; j < ps.length; j++) if (j !== i && ps[j].scale > 0.02 && clip(hs, ss[j])) bad.add(`p ${p.toFixed(2)}: hovered ${i} into ${j}`);
           }

@@ -24,10 +24,6 @@
   will-change: transform, opacity;
 }
 
-.parallaxWrapper.missingCard {
-  opacity: 0;
-}
-
 /* the cards as a 3D wall (parallaxWall3d.ts): a screen-high band that comes up from below the hero
    where the rows were, then stays on screen (sticky) while the wall parts */
 .wallSection {

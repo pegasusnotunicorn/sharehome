@@ -5,7 +5,6 @@ import Card from "../Card/Card";
 import getHomePageCardProps from "./utils/getHomePageCardProps";
 import { getAllFinishedPeople } from "../Characters/Characters";
 import useWindowDimensions from "../utils/useWindowDimensions";
-import { randomDeg } from "../utils/useMath";
 import styles from "../../css/pages/home/cardparallax.module.css";
 import { useLocation, useNavigate } from "react-router";
 import { characterArtFace } from "../Characters/characterCardFaces";
@@ -17,7 +16,6 @@ import landingPageStyles from "../../css/landingPage.module.css";
 interface ParallaxCardsProps {
   sectionRef: React.RefObject<HTMLDivElement | null>;
   evenRow: boolean;
-  isRowWithMissingCard: boolean;
   cardsPerRow: number;
   randomCharacters: any[];
 }
@@ -152,13 +150,11 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
   //build the rows
   const parallaxRows = splitRowCharacters.map((curr, index) => {
     const evenRow = index % 2 !== 0;
-    const isRowWithMissingCard = index === 0;
     return (
       <div key={`parallaxRow${index}`} className={styles.parallaxRow}>
         <ParallaxCards
           sectionRef={sectionRef}
           evenRow={evenRow}
-          isRowWithMissingCard={isRowWithMissingCard}
           cardsPerRow={cardsPerRow}
           randomCharacters={curr}
         />
@@ -232,7 +228,6 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
 const ParallaxCards = ({
   sectionRef,
   evenRow,
-  isRowWithMissingCard,
   cardsPerRow,
   randomCharacters,
 }: ParallaxCardsProps) => {
@@ -241,39 +236,13 @@ const ParallaxCards = ({
     [randomCharacters.length]
   );
 
-  //figure out the index of the one missing card
   const middleCard = Math.floor(cardsPerRow / 2);
-  const [missingCardIndex, setMissingCardIndex] = useState(middleCard);
-
-  //update middle card with width
   const { width } = useWindowDimensions();
-  useEffect(() => {
-    setMissingCardIndex(Math.floor(cardsPerRow / 2));
-  }, [width, cardsPerRow]);
 
   const translateEnd = "25%"; //move horizontally (direction depends on evenRow)
 
   useEffect(() => {
     if (!sectionRef.current || randomCharacters.length === 0) return;
-
-    const randomX = randomDeg(200);
-    const randomY = randomDeg(200);
-    const missingCardFirstState = {
-      x: 0,
-      y: "-300%",
-      opacity: 0,
-      scale: 0,
-      rotationX: randomX,
-      rotationY: randomY,
-      rotationZ: 90,
-      ease: "power1.out",
-    };
-
-    // set the first state of the missing card
-    requestAnimationFrame(() => {
-      if (!isRowWithMissingCard) return;
-      gsap.set(cardRefs[missingCardIndex], missingCardFirstState);
-    });
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -289,30 +258,15 @@ const ParallaxCards = ({
       const card = cardRefs[index];
       if (!card) return;
 
-      const firstAnimationFrom =
-        isRowWithMissingCard && index === missingCardIndex
-          ? missingCardFirstState
-          : {
-              x: 0,
-              ease: "power1.out",
-            };
+      const firstAnimationFrom = {
+        x: 0,
+        ease: "power1.out",
+      };
 
-      const firstAnimationTo =
-        isRowWithMissingCard && index === missingCardIndex
-          ? {
-              x: evenRow ? translateEnd : `-${translateEnd}`,
-              y: 0,
-              opacity: 1,
-              scale: 1,
-              rotationX: 0,
-              rotationY: 0,
-              rotationZ: 0,
-              ease: "power1.out",
-            }
-          : {
-              x: evenRow ? translateEnd : `-${translateEnd}`,
-              ease: "power1.out",
-            };
+      const firstAnimationTo = {
+        x: evenRow ? translateEnd : `-${translateEnd}`,
+        ease: "power1.out",
+      };
 
       //left of middle card go left, others go right
       let offscreenEnd = evenRow
@@ -349,8 +303,6 @@ const ParallaxCards = ({
     sectionRef,
     middleCard,
     randomCharacters,
-    isRowWithMissingCard,
-    missingCardIndex,
     evenRow,
     translateEnd,
   ]);
@@ -366,11 +318,7 @@ const ParallaxCards = ({
       <div
         key={`parallaxWrapperKey${index}`}
         ref={(el) => { cardRefs[index] = el; }}
-        className={`${styles.parallaxWrapper} ${
-          isRowWithMissingCard && index === missingCardIndex
-            ? styles.missingCard
-            : ""
-        }`}
+        className={styles.parallaxWrapper}
       >
         <Card {...cardProps} />
       </div>

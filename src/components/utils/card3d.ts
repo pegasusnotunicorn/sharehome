@@ -23,16 +23,6 @@ export const renderer = (T: Three) => {
   return (shared = r);
 };
 
-// where the hero's 3D box is on screen (boxViewer3d.ts sets this while it's up), for the card the
-// wall below it takes out of the box
-export interface BoxOnScreen {
-  x: number; // its middle, viewport px
-  y: number;
-  top: number; // its top edge
-  w: number; // its width
-}
-export const heroBox: { at: (() => BoxOnScreen | null) | null } = { at: null };
-
 // what gold foil reflects: a soft studio room, made once (metal with nothing to reflect looks black)
 let goldEnv: Promise<THREE.Texture> | null = null;
 export const studio = (T: Three, r: THREE.WebGLRenderer) =>

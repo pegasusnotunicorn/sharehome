@@ -62,6 +62,13 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
   }, []);
 
   const sectionRef = useRef<HTMLDivElement>(null);
+  // the cards as a 3D wall (parallaxWall3d.ts), following the scroll; the flat cards below if it can't
+  const navigate = useNavigate();
+  const stageRef = useRef<HTMLDivElement>(null);
+  const wall = useRef<WallApi | null>(null);
+  const scrolled = useRef(0);
+  const [flat, setFlat] = useState(false);
+
 
   const [held, setHeld] = useState(hold);
   useEffect(() => {
@@ -78,8 +85,10 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
     };
   }, [held]);
 
+  // the flat cards: pinned to the screen while they part, fading. (The 3D wall stays on screen by
+  // itself, sticky, and does its own fading.)
   useLayoutEffect(() => {
-    if (!sectionRef.current) return;
+    if (!sectionRef.current || !flat) return;
     const sectionRefElement = sectionRef.current;
 
     ScrollTrigger.create({
@@ -99,14 +108,7 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
     return () => {
       ScrollTrigger.getAll().forEach((st) => st.kill());
     };
-  }, []);
-
-  // the cards as a 3D wall (parallaxWall3d.ts), following the scroll; the flat cards below if it can't
-  const navigate = useNavigate();
-  const stageRef = useRef<HTMLDivElement>(null);
-  const wall = useRef<WallApi | null>(null);
-  const scrolled = useRef(0);
-  const [flat, setFlat] = useState(false);
+  }, [flat]);
 
   //calculate how many rows / characters per row
   const numRows = 3;
@@ -200,7 +202,11 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
   }, [held, flat, wallCards, cardsPerRow, navigate]);
 
   return (
-    <div key={location.pathname} ref={sectionRef} className={styles.parallaxSection}>
+    <div
+      key={location.pathname}
+      ref={sectionRef}
+      className={`${styles.parallaxSection} ${flat ? "" : styles.wallSection}`}
+    >
       {!held && (flat ? parallaxRows : <div ref={stageRef} className={styles.wallStage} />)}
     </div>
   );

@@ -2,8 +2,8 @@
 // page's scroll (ParallaxSection.tsx passes how far through the section you are, 0 to 1):
 //   - first half: the wall rises from lying back to standing up, a slight curve toward you, its rows
 //     sliding opposite ways; the one gap in the top row is filled by a card that tumbles down into it
-//   - second half: the wall splits down the middle, each card swinging away like a door, to show the
-//     words behind it
+//   - second half: the wall splits down the middle, each side swinging back like a pair of doors and
+//     fading a little, to show the words behind it
 // The pointer leans the wall toward it, and the card under it lifts and squares up; clicking it
 // opens that character's page. It renders only while it's on screen; visitors who ask for less
 // motion get it following the scroll without the small idle movements.
@@ -121,7 +121,7 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
     wall.add(obj);
     const shadow = new T.Mesh(
       new T.PlaneGeometry(1.6, 1.6 / aspect),
-      new T.MeshBasicMaterial({ map: shadowMap, transparent: true, opacity: 0.22, depthWrite: false })
+      new T.MeshBasicMaterial({ map: shadowMap, transparent: true, opacity: 0.16, depthWrite: false })
     );
     shadow.renderOrder = -1;
     wall.add(shadow);
@@ -193,6 +193,7 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
     const slide = clamp(p / 0.5); // the rows' drift
     wall.rotation.set(lerp(0.6, 0.06, rise) + lean.y * 0.05, lean.x * 0.08, 0);
     wall.position.set(0, lerp(-H * 0.12, 0, rise), lerp(-260, 0, rise));
+    cv.style.opacity = String(1 - 0.35 * ease(clamp((p - 0.5) / 0.5)));
 
     for (const l of live) {
       const dir = l.row % 2 !== 0 ? 1 : -1;
@@ -212,14 +213,17 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
       }
 
       // the split: left of the middle swings left, the rest right (the middle card alternating by row),
-      // the ones nearest the middle first
+      // the ones nearest the middle first. Each side closes up just clear of the words in the middle
+      // (on phones, where the words fill the width, they go off the sides).
       const toLeft = dir > 0 ? l.col < mid : l.col <= mid;
-      const out = toLeft ? (dir > 0 ? -0.75 : -1) : dir > 0 ? 1.25 : 0.5; // card widths, from the drift
+      const inner = toLeft ? (dir > 0 ? mid - 1 : mid) : dir > 0 ? mid : mid + 1; // the column nearest the gap
+      const gapHalf = W <= 600 ? W / 2 + cw * 0.15 : Math.min(Math.max(W * 0.2, 260), 360);
+      const packed = gapHalf + cw / 2 + Math.abs(l.col - inner) * (cw + GAP) * 0.85;
       const from = Math.abs(l.col - (cols - 1) / 2) / cols;
       const s = ease(clamp(((p - 0.5) / 0.5 - from * 0.35) / 0.65));
-      x += out * cw * s;
-      z += 140 * s;
-      ry += (toLeft ? -1 : 1) * 0.95 * s;
+      x = lerp(x, toLeft ? -packed : packed, s);
+      z += 50 * s;
+      ry += (toLeft ? -1 : 1) * 0.5 * s;
 
       // the curve: the wall's ends turn toward you
       ry += (-x / W) * 0.45;
@@ -233,10 +237,12 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
       l.obj.scale.setScalar(cw * scale * (1 + l.lift * 0.05));
       l.obj.visible = scale > 0.01;
       l.shadow.visible = l.obj.visible;
-      l.shadow.position.set(x + 8 + z * 0.05, -y - 12 - z * 0.1, -36);
+      // just behind its own card, however the card's turned (so it never lands on a card)
+      const depth = z - 40 - (cw / 2) * Math.abs(Math.sin(ry * settle));
+      l.shadow.position.set(x + 8 + z * 0.05, -y - 12 - z * 0.1, depth);
       l.shadow.rotation.set(0, 0, rz * settle);
       l.shadow.scale.setScalar(cw * scale);
-      (l.shadow.material as THREE.MeshBasicMaterial).opacity = 0.22 * scale * clamp(1 - z / 500);
+      (l.shadow.material as THREE.MeshBasicMaterial).opacity = 0.16 * scale * clamp(1 - z / 500);
     }
   };
 

@@ -28,9 +28,19 @@
   opacity: 0;
 }
 
-/* the cards as a 3D wall (parallaxWall3d.ts): a screen-high band where the rows were */
+/* the cards as a 3D wall (parallaxWall3d.ts): a screen-high band that comes up from below the hero
+   where the rows were, then stays on screen (sticky) while the wall parts */
+.wallSection {
+  justify-content: flex-start;
+  padding-top: 100svh;
+  box-sizing: border-box;
+  overflow-x: clip; /* not hidden: that would make the section the scroller, and sticky wouldn't stick */
+}
+
 .wallStage {
-  position: relative;
+  position: sticky;
+  top: 0;
+  flex-shrink: 0;
   width: 100%;
   height: 100svh;
   user-select: none;

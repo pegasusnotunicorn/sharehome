@@ -1,9 +1,10 @@
-// The "character arcs" step's trait tags as 3D tiles (three.js): each new set of traits flips the
-// tiles over, one after another, as they glide to the next character. They sway a little and lean
-// toward the pointer. Each tile sits where its flat tag is laid out (the tags stay, hidden, so the
-// page keeps its layout). One WebGL renderer serves the whole page (card3d.ts).
+// The "character arcs" step's traits as 3D trait cards (three.js), the printed ones (a selection,
+// in images/cards/traits/): each new set flips the cards over, one after another, as they glide to
+// the next character. They sway a little and lean toward the pointer. Each card sits where its flat
+// tag is laid out (the tags stay, hidden, so the page keeps its layout). One WebGL renderer serves
+// the whole page (card3d.ts).
 import type * as THREE from "three";
-import { calm, ease, loadThree, renderer } from "./card3d";
+import { calm, ease, loadThree, makeCard, renderer } from "./card3d";
 import type { Three } from "./card3d";
 
 export interface Trait {
@@ -12,12 +13,13 @@ export interface Trait {
 }
 
 export interface TraitTilesApi {
-  // show these traits on the tiles, which move to where these tags are laid out
+  // show traits of these kinds on the cards, which move to where these tags are laid out
   show: (traits: Trait[], tags: HTMLElement[]) => void;
   destroy: () => void;
 }
 
-const BORDER: Record<Trait["type"], string> = { good: "#94de8f", bad: "#a769d4", chaotic: "#9b9b9b" };
+export const TRAIT_MM: [number, number] = [88.9, 25.4];
+const PER_KIND = 10;
 const FLIP_S = 0.75;
 const STAGGER_S = 0.12;
 
@@ -37,76 +39,81 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
   try {
     T = await loadThree();
     r = renderer(T);
-    await document.fonts.load('40px "Rowdies-Regular"').catch(() => []);
   } catch {
     onFail();
     return null;
   }
   if (!stage.isConnected) return null;
 
+  // the card images, each loaded once; a card's other face shows its picture turned half way round
+  // (the card flips end over end, which turns that face upside down)
+  const loader = new T.TextureLoader();
+  const loaded = new Map<string, Promise<THREE.Texture>>();
+  const art = (src: string, upsideDown: boolean) => {
+    const key = `${src}|${upsideDown}`;
+    if (!loaded.has(key))
+      loaded.set(
+        key,
+        loader.loadAsync(src).then((x) => {
+          x.colorSpace = T.SRGBColorSpace;
+          x.anisotropy = Math.min(8, r.capabilities.getMaxAnisotropy());
+          if (upsideDown) {
+            x.center.set(0.5, 0.5);
+            x.rotation = Math.PI;
+          }
+          return x;
+        })
+      );
+    return loaded.get(key)!;
+  };
+  // a different card of this kind from the ones showing
+  const showing = new Set<string>();
+  const pick = (type: Trait["type"]) => {
+    let src = "";
+    do src = `/images/cards/traits/${type}-${1 + Math.floor(Math.random() * PER_KIND)}.webp`;
+    while (showing.has(src));
+    return src;
+  };
+
   const sc = new T.Scene();
   const cam = new T.PerspectiveCamera(30, 1, 10, 8000);
-  sc.add(new T.HemisphereLight(0xffffff, 0xd9d2cc, 2.1));
-  const key = new T.DirectionalLight(0xffffff, 0.9);
-  key.position.set(0.3, 1, 1);
+  sc.add(new T.HemisphereLight(0xffffff, 0xd9d2cc, 1.35));
+  const key = new T.DirectionalLight(0xffffff, 1.5);
+  key.position.set(0.25, 1.2, 1);
   sc.add(key);
+  const fill = new T.DirectionalLight(0xffffff, 0.75);
+  fill.position.set(-0.6, -0.2, 1);
+  sc.add(fill);
   const group = new T.Group();
   sc.add(group);
 
-  // a face: the tag's coloured border, white inside, the trait in capitals
-  const TW = 512;
-  const paint = (cv: HTMLCanvasElement, t: Trait, w: number, h: number, upsideDown: boolean) => {
-    const g = cv.getContext("2d")!, H = cv.height, k = TW / w;
-    g.setTransform(1, 0, 0, 1, 0, 0);
-    g.clearRect(0, 0, TW, H);
-    if (upsideDown) {
-      g.translate(TW, H);
-      g.rotate(Math.PI);
-    }
-    g.fillStyle = BORDER[t.type];
-    g.beginPath();
-    g.roundRect(0, 0, TW, H, 4 * k);
-    g.fill();
-    g.fillStyle = "#fff";
-    g.beginPath();
-    g.roundRect(5.6 * k, 5.6 * k, TW - 11.2 * k, H - 11.2 * k, 4 * k);
-    g.fill();
-    g.fillStyle = "#222";
-    g.textAlign = "center";
-    g.textBaseline = "middle";
-    g.font = `${Math.round(24 * k)}px "Rowdies-Regular"`;
-    if ("letterSpacing" in g) (g as unknown as { letterSpacing: string }).letterSpacing = `${k}px`;
-    const max = TW - 24 * k;
-    const tw = g.measureText(t.text).width;
-    if (tw > max) g.font = `${Math.floor((24 * k * max) / tw)}px "Rowdies-Regular"`;
-    g.fillText(t.text, TW / 2, H / 2 + 1.5 * k);
-  };
-
   interface Tile {
-    obj: THREE.Mesh;
-    faces: [HTMLCanvasElement, HTMLCanvasElement];
-    maps: [THREE.CanvasTexture, THREE.CanvasTexture];
+    obj: THREE.Group;
+    faces: [THREE.MeshStandardMaterial, THREE.MeshStandardMaterial]; // front, back
+    srcs: [string, string];
     turns: number; // half turns done (odd: the back's showing)
     flip: { from: number; at: number } | null; // a flip under way: from which angle, starting when
     pos: { x: number; y: number; w: number; h: number };
     from: { x: number; y: number };
     phase: number;
   }
-  const sideMat = new T.MeshStandardMaterial({ color: 0xf4f1ea, roughness: 0.7 });
+  const blank = new T.Texture();
   const tiles: Tile[] = [];
   const tile = () => {
-    const faces: [HTMLCanvasElement, HTMLCanvasElement] = [document.createElement("canvas"), document.createElement("canvas")];
-    const maps = faces.map((c) => {
-      const m = new T.CanvasTexture(c);
-      m.colorSpace = T.SRGBColorSpace;
-      m.anisotropy = Math.min(8, r.capabilities.getMaxAnisotropy());
-      return m;
-    }) as [THREE.CanvasTexture, THREE.CanvasTexture];
-    const face = (map: THREE.Texture) => new T.MeshStandardMaterial({ map, roughness: 0.55 });
-    // a box's faces: +x, -x, +y, -y, front, back
-    const obj = new T.Mesh(new T.BoxGeometry(1, 1, 1), [sideMat, sideMat, sideMat, sideMat, face(maps[0]), face(maps[1])]);
+    const obj = makeCard(T, TRAIT_MM, blank, blank, null);
+    const [fr, bk] = obj.children as THREE.Mesh[];
     group.add(obj);
-    const t: Tile = { obj, faces, maps, turns: 0, flip: null, pos: { x: 0, y: 0, w: 1, h: 1 }, from: { x: 0, y: 0 }, phase: Math.random() * 6 };
+    const t: Tile = {
+      obj,
+      faces: [fr.material as THREE.MeshStandardMaterial, bk.material as THREE.MeshStandardMaterial],
+      srcs: ["", ""],
+      turns: 0,
+      flip: null,
+      pos: { x: 0, y: 0, w: 1, h: 1 },
+      from: { x: 0, y: 0 },
+      phase: Math.random() * 6,
+    };
+    obj.visible = false;
     tiles.push(t);
     return t;
   };
@@ -173,7 +180,7 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
       // it lifts off the picture as it turns over
       t.obj.position.set(x, -y, Math.sin(e * Math.PI) * 40);
       t.obj.rotation.set(angle + sway * 0.04, sway * 0.06, 0);
-      t.obj.scale.set(t.pos.w, t.pos.h, 12);
+      t.obj.scale.setScalar(t.pos.w);
     }
   };
 
@@ -210,40 +217,42 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
   const ro = new ResizeObserver(resize);
   ro.observe(stage);
 
+  let shown = 0; // the latest set asked for (a slow image can't put an older set over a newer one)
   return {
     show: (traits, els) => {
-      tags = els;
+      const ask = ++shown;
       const first = !tiles.length;
-      while (tiles.length < traits.length) tile();
-      // each tile glides from where it is now
-      for (const t of tiles) t.from = { x: t.obj.position.x, y: -t.obj.position.y };
-      size();
-      traits.forEach((trait, i) => {
-        const t = tiles[i];
-        // paint the face that's turned away, then turn it to you
-        const next = first ? 0 : (t.turns + 1) % 2;
-        if (first) {
-          // both faces are the tag's shape from the start (a texture can't change size once it's in use)
-          for (const c of t.faces) {
-            c.width = TW;
-            c.height = Math.round((TW * t.pos.h) / t.pos.w);
-          }
-          paint(t.faces[1], trait, t.pos.w, t.pos.h, true);
-        }
-        paint(t.faces[next], trait, t.pos.w, t.pos.h, next === 1);
-        t.maps[next].needsUpdate = true;
-        if (first) {
-          t.maps[1].needsUpdate = true;
-          t.from = { x: t.pos.x, y: t.pos.y };
-          return;
-        }
-        const angle = t.obj.rotation.x;
-        t.turns += 1;
-        t.flip = { from: angle, at: now + i * STAGGER_S };
-      });
-      if (first) stage.classList.add("ready");
-      step(!onScreen);
-      draw();
+      const srcs = traits.map((t) => pick(t.type));
+      srcs.forEach((s) => showing.add(s));
+      const next = (t: Tile | undefined) => (!t || first ? 0 : (t.turns + 1) % 2);
+      Promise.all(srcs.map((src, i) => art(src, next(tiles[i]) === 1)))
+        .then((maps) => {
+          if (dead || ask !== shown) return;
+          tags = els;
+          // the hidden tags take the cards' shape (CSS) before they're measured
+          if (first) stage.classList.add("ready");
+          while (tiles.length < traits.length) tile();
+          // each card glides from where it is now
+          for (const t of tiles) t.from = { x: t.obj.position.x, y: -t.obj.position.y };
+          size();
+          maps.forEach((map, i) => {
+            const t = tiles[i], face = next(t);
+            showing.delete(t.srcs[face]);
+            t.srcs[face] = srcs[i];
+            t.faces[face].map = map;
+            t.faces[face].needsUpdate = true;
+            if (first) {
+              t.obj.visible = true;
+              t.from = { x: t.pos.x, y: t.pos.y };
+              return;
+            }
+            t.turns += 1;
+            t.flip = { from: t.obj.rotation.x, at: now + i * STAGGER_S };
+          });
+          step(!onScreen);
+          draw();
+        })
+        .catch(() => first && onFail());
     },
     destroy: () => {
       dead = true;
@@ -253,12 +262,12 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
       document.removeEventListener("visibilitychange", run);
       stage.removeEventListener("pointermove", onMove);
       stage.removeEventListener("pointerleave", onLeave);
-      for (const t of tiles) {
-        t.obj.geometry.dispose();
-        (t.obj.material as THREE.Material[]).slice(4).forEach((m) => m.dispose());
-        t.maps.forEach((m) => m.dispose());
-      }
-      sideMat.dispose();
+      sc.traverse((o) => {
+        const m = o as THREE.Mesh;
+        m.geometry?.dispose();
+        ([] as THREE.Material[]).concat(m.material || []).forEach((x) => x.dispose());
+      });
+      loaded.forEach((p) => p.then((x) => x.dispose()).catch(() => {}));
       cv.remove();
     },
   };

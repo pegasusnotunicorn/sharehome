@@ -41,11 +41,11 @@ export const DirectionDeckSection = () => {
 // (on the left) is its mirror image. On phones: two above the words and one below.
 const deckLayout = (mirror: number) => (w: number, h: number): DeckPose[] => {
   const stacked = w > innerWidth * 0.9; // phones and small tablets: the deck spans the step, words in the middle
-  const cw = stacked ? Math.min(w * 0.5, h * 0.3, 320) : Math.min(w * 0.5, h * 0.48, 400);
+  const cw = stacked ? Math.min(w * 0.46, h * 0.27, 300) : Math.min(w * 0.5, h * 0.48, 400);
   const poses: DeckPose[] = stacked
     ? [
-        { x: w * 0.19, y: -h * 0.36, w: cw, tilt: -6 },
-        { x: -w * 0.19, y: -h * 0.24, w: cw, tilt: 5 },
+        { x: w * 0.19, y: -h * 0.4, w: cw, tilt: -6 },
+        { x: -w * 0.19, y: -h * 0.29, w: cw, tilt: 5 },
         { x: -w * 0.05, y: h * 0.35, w: cw, tilt: -4 },
       ]
     : [

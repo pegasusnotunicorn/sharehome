@@ -31,11 +31,11 @@ interface DecksProps {
 // the words and one below
 const characterLayout = (w: number, h: number): DeckPose[] => {
   const stacked = w > innerWidth * 0.9; // phones and small tablets: the deck spans the step, words in the middle
-  const cw = stacked ? Math.min(w * 0.6, h * 0.32, 360) : Math.min(w * 0.46, h * 0.5, 440);
+  const cw = stacked ? Math.min(w * 0.52, h * 0.28, 340) : Math.min(w * 0.46, h * 0.5, 440);
   if (stacked)
     return [
-      { x: -w * 0.17, y: -h * 0.36, w: cw, tilt: 7 },
-      { x: w * 0.2, y: -h * 0.22, w: cw, tilt: -6 },
+      { x: -w * 0.17, y: -h * 0.4, w: cw, tilt: 7 },
+      { x: w * 0.2, y: -h * 0.3, w: cw, tilt: -6 },
       { x: w * 0.04, y: h * 0.35, w: cw, tilt: 3 },
     ];
   return [

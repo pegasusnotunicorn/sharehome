@@ -355,7 +355,18 @@
     min-width: 0;
   }
 
-  .open .ctasBottom {
+  /* not tappable until they've faded in, nor while the trailer plays or the expansion popup's open
+     (it slides up over the same spot: they step aside for it) */
+  .ctasBottom {
+    pointer-events: none;
+  }
+
+  .spoken .ctasBottom {
+    pointer-events: auto;
+  }
+
+  .open .ctasBottom,
+  :global(body):has([aria-labelledby="expansion-popup-title"]) .ctasBottom {
     opacity: 0;
     pointer-events: none;
   }

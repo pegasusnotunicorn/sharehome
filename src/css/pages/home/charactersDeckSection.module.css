@@ -2,7 +2,7 @@
   position: relative;
   width: 60%;
   height: 100%;
-  overflow:hidden;
+  overflow-x: clip; /* the cards come in from off the side; above and below they may lean out */
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -8,7 +8,7 @@
 // One WebGL renderer serves the whole page (card3d.ts): this deck renders through it and copies the
 // picture onto its own 2D canvas.
 import type * as THREE from "three";
-import { calm, cardShadow, loadThree, makeCard, renderer, studio } from "./card3d";
+import { bleedCanvas, calm, cardShadow, loadThree, makeCard, renderer, studio } from "./card3d";
 import type { Three } from "./card3d";
 import type { CardEdge, CardFaces } from "./cardViewer3d";
 import { clamp } from "./cardPose";
@@ -129,10 +129,10 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
   cv.setAttribute("aria-hidden", "true");
   const ctx = cv.getContext("2d");
   stage.prepend(cv);
-  let W = 0, H = 0;
+  let W = 0, H = 0, CW = 0, CH = 0; // the stage's size; the canvas's (it reaches past the stage)
   const draw = () => {
     if (!W || !H || !ctx) return;
-    r.setSize(W, H, false);
+    r.setSize(CW, CH, false);
     r.render(sc, cam);
     ctx.clearRect(0, 0, cv.width, cv.height);
     ctx.drawImage(r.domElement, 0, 0, cv.width, cv.height);
@@ -178,11 +178,11 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
     W = stage.clientWidth;
     H = stage.clientHeight;
     if (!W || !H) return;
-    const pr = r.getPixelRatio();
-    cv.width = Math.round(W * pr);
-    cv.height = Math.round(H * pr);
-    cam.aspect = W / H;
-    cam.position.set(0, 0, H / 2 / Math.tan((cam.fov * Math.PI) / 360));
+    // room above and below for a card leaning or lifting past the step's edges (not the sides: the
+    // cards come in from off the side)
+    ({ w: CW, h: CH } = bleedCanvas(cv, W, H, 0, Math.round(Math.max(160, H * 0.3)), r.getPixelRatio()));
+    cam.aspect = CW / CH;
+    cam.position.set(0, 0, CH / 2 / Math.tan((cam.fov * Math.PI) / 360));
     cam.updateProjectionMatrix();
     place();
     step(0, true);
@@ -262,7 +262,7 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
   // words' links still work), so the pointer is followed over the whole step
   let down: { x: number; y: number } | null = null;
   const onMove = (e: PointerEvent) => {
-    const b = stage.getBoundingClientRect();
+    const b = cv.getBoundingClientRect();
     ndc.set(((e.clientX - b.left) / b.width) * 2 - 1, -((e.clientY - b.top) / b.height) * 2 + 1);
     if (e.pointerType === "mouse") {
       lean.tx = ndc.x;

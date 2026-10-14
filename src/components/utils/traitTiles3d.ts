@@ -4,7 +4,7 @@
 // tag is laid out (the tags stay, hidden, so the page keeps its layout). One WebGL renderer serves
 // the whole page (card3d.ts).
 import type * as THREE from "three";
-import { calm, ease, loadThree, makeCard, renderer } from "./card3d";
+import { bleedCanvas, calm, ease, loadThree, makeCard, renderer } from "./card3d";
 import type { Three } from "./card3d";
 
 export interface Trait {
@@ -123,10 +123,10 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
   cv.setAttribute("aria-hidden", "true");
   const ctx = cv.getContext("2d");
   stage.append(cv);
-  let W = 0, H = 0;
+  let W = 0, H = 0, CW = 0, CH = 0; // the picture's size; the canvas's (it reaches past the picture)
   const draw = () => {
     if (!W || !H || !ctx) return;
-    r.setSize(W, H, false);
+    r.setSize(CW, CH, false);
     r.render(sc, cam);
     ctx.clearRect(0, 0, cv.width, cv.height);
     ctx.drawImage(r.domElement, 0, 0, cv.width, cv.height);
@@ -144,11 +144,11 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
     W = stage.offsetWidth;
     H = stage.offsetHeight;
     if (!W || !H) return;
-    const pr = r.getPixelRatio();
-    cv.width = Math.round(W * pr);
-    cv.height = Math.round(H * pr);
-    cam.aspect = W / H;
-    cam.position.set(0, 0, H / 2 / Math.tan((cam.fov * Math.PI) / 360));
+    // the tags sit near (and past) the picture's edges, and the cards lift as they turn over
+    const b = Math.round(Math.min(W, H) * 0.35);
+    ({ w: CW, h: CH } = bleedCanvas(cv, W, H, b, b, r.getPixelRatio()));
+    cam.aspect = CW / CH;
+    cam.position.set(0, 0, CH / 2 / Math.tan((cam.fov * Math.PI) / 360));
     cam.updateProjectionMatrix();
     place();
   };

@@ -1,4 +1,4 @@
-import { clamp, depthReach, lerp, outCubic } from "./cardPose";
+import { clamp, depthReach, ease, lerp, outCubic } from "./cardPose";
 import type { CardPose } from "./cardPose";
 
 // Where each card of a "How to play" deck is (deckCards3d.ts draws them; scripts/card-clipping.mjs
@@ -12,7 +12,8 @@ import type { CardPose } from "./cardPose";
 //     the last one dealt leaves first).
 //   - A card in flight stays above the pile until it has stopped tumbling, then settles flat onto
 //     its layer.
-//   - Hovered, a card lifts only if nothing rests on it.
+//   - Hovered, a card lifts straight up if nothing rests on it; one with a card on it first slides
+//     out from under, in its own layer, then lifts.
 
 // where a card lands: its centre in px from the stage's centre (y down, like the page), its width in
 // px and its tilt in degrees
@@ -58,9 +59,28 @@ const overlap = (A: number[][], B: number[][]) => {
     }
   return true;
 };
-// whether card i has another resting on it (so it can't lift without passing through it)
+// whether card i has another resting on it (so it can't lift straight up without passing through it)
 export const covered = (cards: DeckCardMotion[], i: number, aspect: number) =>
   cards.some((c, j) => j > i && overlap(footprint(cards[i].rest, aspect, 1.08), footprint(c.rest, aspect, 1.08)));
+
+// how far a covered card slides out, in its own layer (so it passes under the cards above it and over
+// those below), to come clear of everything resting on it: px, y down
+const slideOut = (cards: DeckCardMotion[], i: number, aspect: number): [number, number] => {
+  let r = { ...cards[i].rest };
+  const above = cards.filter((_, j) => j > i).map((c) => footprint(c.rest, aspect, 1.08));
+  for (let k = 0; k < 24; k++) {
+    let moved = false;
+    for (const B of above) {
+      const d = pushOut(footprint(r, aspect, 1.08), B);
+      if (d) {
+        r = { ...r, x: r.x + d[0] * 1.02, y: r.y + d[1] * 1.02 };
+        moved = true;
+      }
+    }
+    if (!moved) break;
+  }
+  return [r.x - cards[i].rest.x, r.y - cards[i].rest.y];
+};
 
 // dealt: how far through the deal (0 to 1); fromX: where the cards come in from (px, off the side);
 // H: the stage's height; lift: how far each card is lifted (hovered); t: seconds, for the sway
@@ -73,7 +93,13 @@ export function deckPoses(
   still = false
 ): (CardPose & { shown: boolean })[] {
   const layer = deckLayer(cards, aspect);
-  const ups = cards.map((_, j) => (lift[j] && !covered(cards, j, aspect) ? lift[j] : 0));
+  // hovered (once it's down): a card with nothing on it lifts straight up; a covered one slides out
+  // from under first, then lifts
+  const landed = cards.map((_, i) => dealt >= setsOff(i, cards.length) + FLIGHT);
+  const under = cards.map((_, i) => covered(cards, i, aspect));
+  const slides = cards.map((_, i) => (under[i] && lift[i] ? slideOut(cards, i, aspect) : ([0, 0] as [number, number])));
+  const out = cards.map((_, i) => (landed[i] && under[i] ? ease(clamp(lift[i] / 0.5)) : 0));
+  const ups = cards.map((_, i) => (!landed[i] ? 0 : under[i] ? clamp((lift[i] - 0.5) / 0.5) : lift[i]));
   return cards.map((c, i) => {
     const r = c.rest, h = r.w / aspect;
     const a = clamp((dealt - setsOff(i, cards.length)) / FLIGHT);
@@ -91,8 +117,8 @@ export function deckPoses(
     const up = ups[i];
 
     return {
-      x: lerp(fromX, r.x, e),
-      y: -(lerp(r.y + c.start.dy * H, r.y, e) + sway * SWAY_Y),
+      x: lerp(fromX, r.x, e) + slides[i][0] * out[i],
+      y: -(lerp(r.y + c.start.dy * H, r.y, e) + slides[i][1] * out[i] + sway * SWAY_Y),
       z: Math.max(flying, clearOfPile) + up * 70,
       rx: rx + sway * SWAY_RX,
       ry: ry + sway2 * SWAY_RY,
@@ -130,8 +156,18 @@ const pushOut = (P: number[][], Q: number[][]): [number, number] | null => {
   return best;
 };
 
+// the card moved the least it takes to be wholly within w x h (less `pad`), as far as it fits
+const inside = (r: DeckPose, aspect: number, w: number, h: number, pad: number): DeckPose => {
+  const f = footprint(r, aspect, 1), xs = f.map(([x]) => x), ys = f.map(([, y]) => y);
+  const dx = Math.max(0, -w / 2 + pad - Math.min(...xs)) - Math.max(0, Math.max(...xs) - (w / 2 - pad));
+  const dy = Math.max(0, -h / 2 + pad - Math.min(...ys)) - Math.max(0, Math.max(...ys) - (h / 2 - pad));
+  return { ...r, x: r.x + dx, y: r.y + dy };
+};
+const fits = (r: DeckPose, aspect: number, w: number, h: number, pad: number) =>
+  footprint(r, aspect, 1).every(([x, y]) => Math.abs(x) <= w / 2 - pad + 0.5 && Math.abs(y) <= h / 2 - pad + 0.5);
+
 // Moves (and if it must, shrinks) each card the least it takes to keep `margin` px clear of every
-// box, staying on the stage (w x h) as much as it can.
+// box and wholly on the stage (w x h).
 export function keepClear(rest: DeckPose[], aspect: number, boxes: ClearBox[], w: number, h: number, margin = 14): DeckPose[] {
   const grown = boxes.map((b) => [
     [b.x0 - margin, b.y0 - margin],
@@ -141,7 +177,9 @@ export function keepClear(rest: DeckPose[], aspect: number, boxes: ClearBox[], w
   ]);
   return rest.map((r0) => {
     let r = { ...r0 };
-    for (let shrink = 0; shrink < 6; shrink++) {
+    // full size if there's room, or down to about three quarters of it, no smaller
+    for (const size of [1, 0.9, 0.81, 0.73]) {
+      r = { ...r0, w: r0.w * size };
       for (let i = 0; i < 24; i++) {
         let moved = false;
         for (const B of grown) {
@@ -150,12 +188,12 @@ export function keepClear(rest: DeckPose[], aspect: number, boxes: ClearBox[], w
           r = { ...r, x: r.x + d[0], y: r.y + d[1] };
           moved = true;
         }
-        // back onto the stage (its middle, at least)
-        r = { ...r, x: Math.max(-w / 2, Math.min(w / 2, r.x)), y: Math.max(-h / 2, Math.min(h / 2, r.y)) };
+        // wholly inside its own step: resting cards don't hang over the next one (only a card that's
+        // moving, lifted or leaning, reaches past)
+        r = inside(r, aspect, w, h, 8);
         if (!moved) break;
       }
-      if (grown.every((B) => !pushOut(footprint(r, aspect, 1), B))) return r;
-      r = { ...r0, w: r0.w * 0.9 ** (shrink + 1) }; // no room: try it a little smaller
+      if (grown.every((B) => !pushOut(footprint(r, aspect, 1), B)) && fits(r, aspect, w, h, 8)) break;
     }
     return r;
   });

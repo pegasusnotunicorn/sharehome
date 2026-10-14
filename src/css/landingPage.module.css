@@ -181,7 +181,7 @@
   width: 100%;
   flex-direction: row;
   align-items: center;
-  overflow: hidden;
+  overflow-x: clip; /* the 3D cards may lean out above and below, not to the sides */
 }
 
 .characterTextContainer {
@@ -284,7 +284,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow-x: clip; /* the 3D cards may lean out above and below, not to the sides */
 }
 
 .eventsLeftContainer,
@@ -505,7 +505,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow-x: clip; /* the 3D cards may lean out above and below, not to the sides */
   text-wrap: balance;
 }
 

@@ -11,7 +11,7 @@
 // One WebGL renderer serves the whole page (card3d.ts): the wall renders through it and copies the
 // picture onto its own 2D canvas.
 import type * as THREE from "three";
-import { calm, ease, loadThree, makeCard, renderer, studio } from "./card3d";
+import { bleedCanvas, calm, ease, loadThree, makeCard, pointerReaches, renderer, studio } from "./card3d";
 import type { Three } from "./card3d";
 import { ATLAS } from "./footerCards3d";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
@@ -131,10 +131,10 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
   cv.setAttribute("aria-hidden", "true");
   const ctx = cv.getContext("2d");
   stage.prepend(cv);
-  let W = 0, H = 0, cw = 1, gap = 0;
+  let W = 0, H = 0, CW = 0, CH = 0, cw = 1, gap = 0; // CW x CH: the canvas, which reaches past the stage
   const draw = () => {
     if (!W || !H || !ctx) return;
-    r.setSize(W, H, false);
+    r.setSize(CW, CH, false);
     r.render(sc, cam);
     ctx.clearRect(0, 0, cv.width, cv.height);
     ctx.drawImage(r.domElement, 0, 0, cv.width, cv.height);
@@ -144,11 +144,10 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
     W = stage.clientWidth;
     H = stage.clientHeight;
     if (!W || !H) return;
-    const pr = r.getPixelRatio();
-    cv.width = Math.round(W * pr);
-    cv.height = Math.round(H * pr);
-    cam.aspect = W / H;
-    cam.position.set(0, 0, H / 2 / Math.tan((cam.fov * Math.PI) / 360));
+    // room above and below for the wall's ends, which curve toward you
+    ({ w: CW, h: CH } = bleedCanvas(cv, W, H, 0, Math.round(H * 0.15), r.getPixelRatio()));
+    cam.aspect = CW / CH;
+    cam.position.set(0, 0, CH / 2 / Math.tan((cam.fov * Math.PI) / 360));
     cam.updateProjectionMatrix();
     cw = cardWidth(W);
     // the halves stop a little way clear of the words; where the words fill the width, off the sides
@@ -217,24 +216,29 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
   io.observe(stage);
   document.addEventListener("visibilitychange", run);
 
-  // the pointer, where it reaches the wall's section (the hero and the words are over parts of it)
-  const area = stage.parentElement ?? stage;
-  let down: { x: number; y: number } | null = null;
-  const onMove = (e: PointerEvent) => {
-    const b = stage.getBoundingClientRect();
-    ndc.set(((e.clientX - b.left) / b.width) * 2 - 1, -((e.clientY - b.top) / b.height) * 2 + 1);
-    if (e.pointerType === "mouse") {
-      lean.tx = ndc.x;
-      lean.ty = -ndc.y;
-    }
-    hovered = e.pointerType === "mouse" || e.type === "pointerup" ? pick() : null;
-    area.style.cursor = hovered ? "pointer" : "";
+  // The pointer, followed over the whole page: the hero and the words below are over parts of the
+  // wall, so it counts wherever all that's in the way is see-through
+  let down: { x: number; y: number } | null = null, cursor = false;
+  const setCursor = (on: boolean) => {
+    if (on === cursor) return;
+    cursor = on;
+    document.body.style.cursor = on ? "pointer" : "";
   };
-  const onLeave = () => {
-    ndc.set(-9, -9);
-    lean.tx = lean.ty = 0;
-    hovered = null;
-    area.style.cursor = "";
+  const onMove = (e: PointerEvent) => {
+    if (!onScreen) {
+      hovered = null;
+      return setCursor(false);
+    }
+    const reaches = pointerReaches(stage, e.clientX, e.clientY);
+    const b = cv.getBoundingClientRect();
+    if (reaches) ndc.set(((e.clientX - b.left) / b.width) * 2 - 1, -((e.clientY - b.top) / b.height) * 2 + 1);
+    else ndc.set(-9, -9);
+    if (e.pointerType === "mouse") {
+      lean.tx = reaches ? ndc.x : 0;
+      lean.ty = reaches ? -ndc.y : 0;
+    }
+    hovered = reaches && (e.pointerType === "mouse" || e.type === "pointerup") ? pick() : null;
+    setCursor(!!hovered);
   };
   const onDown = (e: PointerEvent) => {
     down = { x: e.clientX, y: e.clientY };
@@ -245,10 +249,9 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
     onMove(e);
     if (hovered) onPick(hovered.card);
   };
-  area.addEventListener("pointermove", onMove);
-  area.addEventListener("pointerleave", onLeave);
-  area.addEventListener("pointerdown", onDown);
-  area.addEventListener("pointerup", onUp);
+  addEventListener("pointermove", onMove, { passive: true });
+  addEventListener("pointerdown", onDown, { passive: true });
+  addEventListener("pointerup", onUp);
 
   const ro = new ResizeObserver(size);
   ro.observe(stage);
@@ -268,11 +271,10 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
       io.disconnect();
       ro.disconnect();
       document.removeEventListener("visibilitychange", run);
-      area.removeEventListener("pointermove", onMove);
-      area.removeEventListener("pointerleave", onLeave);
-      area.removeEventListener("pointerdown", onDown);
-      area.removeEventListener("pointerup", onUp);
-      area.style.cursor = "";
+      removeEventListener("pointermove", onMove);
+      removeEventListener("pointerdown", onDown);
+      removeEventListener("pointerup", onUp);
+      setCursor(false);
       sc.traverse((o) => {
         const m = o as THREE.Mesh;
         m.geometry?.dispose();

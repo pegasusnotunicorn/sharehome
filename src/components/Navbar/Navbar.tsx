@@ -59,7 +59,7 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
   const isAtTop = scrollPosition === 0;
   const isLandingPageAtTop = isLandingPage && isAtTop;
 
-  const { showPopup, closePopup, dismissPopup } = usePinPopup({});
+  const { showPopup, closePopup, followed } = usePinPopup({ hold: trailerPlaying });
   const getNavLinkClassName = ({ isActive }: { isActive: boolean }) =>
     `${styles.navLink} noselect ${isActive ? styles.navLinkActive : ""}`;
 
@@ -67,7 +67,7 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
     <>
       <SocialIconDefs className={styles.navSocialDefs} />
       {!trailerPlaying && showPopup && (
-        <CharacterPinPopup closePopup={closePopup} dismissPopup={dismissPopup} />
+        <CharacterPinPopup closePopup={closePopup} followed={followed} />
       )}
 
       <div className={`${styles.navbar} ${isVisibleClass}`}>

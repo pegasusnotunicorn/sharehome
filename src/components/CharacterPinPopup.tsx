@@ -231,6 +231,7 @@ const CharacterPinPopup = ({ closePopup, followed }: CharacterPinPopupProps) => 
           text-decoration: underline;
           font-size: 0.75em;
           padding: 0;
+          padding-top: 0.5em;
           margin: 0;
           margin-top: 1em;
           border: 0;

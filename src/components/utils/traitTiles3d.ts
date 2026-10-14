@@ -4,7 +4,7 @@
 // tag is laid out (the tags stay, hidden, so the page keeps its layout). One WebGL renderer serves
 // the whole page (card3d.ts).
 import type * as THREE from "three";
-import { bleedCanvas, calm, ease, loadThree, makeCard, renderer } from "./card3d";
+import { bleedCanvas, calm, ease, loadTexture, loadThree, makeCard, paint, renderer, warm } from "./card3d";
 import type { Three } from "./card3d";
 
 export interface Trait {
@@ -47,14 +47,13 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
 
   // the card images, each loaded once; a card's other face shows its picture turned half way round
   // (the card flips end over end, which turns that face upside down)
-  const loader = new T.TextureLoader();
   const loaded = new Map<string, Promise<THREE.Texture>>();
   const art = (src: string, upsideDown: boolean) => {
     const key = `${src}|${upsideDown}`;
     if (!loaded.has(key))
       loaded.set(
         key,
-        loader.loadAsync(src).then((x) => {
+        loadTexture(T, src).then((x) => {
           x.colorSpace = T.SRGBColorSpace;
           x.anisotropy = Math.min(8, r.capabilities.getMaxAnisotropy());
           if (upsideDown) {
@@ -126,10 +125,7 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
   let W = 0, H = 0, CW = 0, CH = 0; // the picture's size; the canvas's (it reaches past the picture)
   const draw = () => {
     if (!W || !H || !ctx) return;
-    r.setSize(CW, CH, false);
-    r.render(sc, cam);
-    ctx.clearRect(0, 0, cv.width, cv.height);
-    ctx.drawImage(r.domElement, 0, 0, cv.width, cv.height);
+    paint(r, sc, cam, ctx, CW, CH);
   };
   let tags: HTMLElement[] = [];
   const place = () => {
@@ -215,6 +211,7 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
   stage.addEventListener("pointerleave", onLeave);
 
   const ro = new ResizeObserver(resize);
+  await warm(r, sc, cam); // shaders and pictures ready before its first frame
   ro.observe(stage);
 
   let shown = 0; // the latest set asked for (a slow image can't put an older set over a newer one)

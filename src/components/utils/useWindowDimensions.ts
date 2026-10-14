@@ -21,8 +21,11 @@ export default function useWindowDimensions(): WindowDimensions {
   );
 
   useEffect(() => {
+    // only when the width changes: on phones the height changes as the address bar slides in and
+    // out while scrolling, and re-rendering then stutters the scroll (`height` is as of the last
+    // width change)
     function handleResize() {
-      setWindowDimensions(getWindowDimensions());
+      setWindowDimensions((d) => (d.width === window.innerWidth ? d : getWindowDimensions()));
     }
 
     window.addEventListener("resize", handleResize);

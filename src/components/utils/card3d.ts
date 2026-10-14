@@ -20,7 +20,98 @@ export const renderer = (T: Three) => {
   r.shadowMap.enabled = true;
   r.shadowMap.type = T.VSMShadowMap;
   r.outputColorSpace = T.SRGBColorSpace;
+  // asking the driver about each shader as it's made waits for it to compile, which stalls a frame
+  // the first time a scene is drawn
+  r.debug.checkShaderErrors = !import.meta.env.PROD;
   return (shared = r);
+};
+
+// Draws a scene onto a page canvas `w` x `h` (CSS px) through the one renderer. Every scene on the
+// page shares that renderer, so it isn't resized to each one (resizing its canvas is costly, and
+// several scenes draw every frame): it only ever grows, each scene draws into its bottom-left corner,
+// and that corner is copied onto the page canvas.
+let room = { w: 0, h: 0 };
+export function paint(r: THREE.WebGLRenderer, sc: THREE.Scene, cam: THREE.Camera, ctx: CanvasRenderingContext2D, w: number, h: number) {
+  if (w > room.w || h > room.h) {
+    // just big enough for the biggest scene so far: no bigger, as every copy out of it smooths
+    // (antialiases) all of it, not just the scene's corner
+    room = { w: Math.max(room.w, Math.ceil(w / 32) * 32), h: Math.max(room.h, Math.ceil(h / 32) * 32) };
+    r.setSize(room.w, room.h, false);
+  }
+  r.setViewport(0, 0, w, h);
+  r.setScissor(0, 0, w, h);
+  r.setScissorTest(true);
+  r.render(sc, cam);
+  r.setScissorTest(false);
+  const src = r.domElement, pr = r.getPixelRatio(), pw = Math.floor(w * pr), ph = Math.floor(h * pr);
+  const out = ctx.canvas;
+  ctx.clearRect(0, 0, out.width, out.height);
+  ctx.drawImage(src, 0, src.height - ph, pw, ph, 0, 0, out.width, out.height);
+}
+
+// Gets a scene ready to draw without stalling a frame: its shaders compiled in the background, and
+// its pictures sent to the GPU one at a time when the page is idle. (Left to its first frame, both
+// happen at once there and then.) Scenes call it as they load, before they're on screen.
+const idle = (f: () => void) => ("requestIdleCallback" in window ? requestIdleCallback(f, { timeout: 500 }) : setTimeout(f, 16));
+export async function warm(r: THREE.WebGLRenderer, sc: THREE.Scene, cam: THREE.Camera) {
+  // (only where the browser compiles in the background; elsewhere it compiles on its first frame,
+  // which is drawn as the scene loads, before it's on screen, anyway)
+  if (r.extensions.has("KHR_parallel_shader_compile"))
+    try {
+      await r.compileAsync(sc, cam);
+    } catch {
+      // (it compiles on its first frame instead)
+    }
+  const maps = new Set<THREE.Texture>();
+  sc.traverse((o) => {
+    for (const m of ([] as THREE.Material[]).concat((o as THREE.Mesh).material || []))
+      for (const v of Object.values(m)) if ((v as THREE.Texture)?.isTexture && !(v as THREE.CubeTexture).isCubeTexture) maps.add(v as THREE.Texture);
+  });
+  for (const t of maps) await new Promise<void>((done) => idle(() => (r.initTexture(t), done())));
+}
+
+// A picture as a texture, decoded before it's drawn: left to the GPU upload, the browser decodes it
+// there and then, on the main thread, and the page stutters. As a bitmap, it's decoded off the main
+// thread, upside down as WebGL wants it, where the browser can do that (checked once: some only
+// say they can); otherwise as a decoded picture.
+export const decoded = (img: HTMLImageElement) => (img.decode ? img.decode().catch(() => {}) : Promise.resolve()).then(() => img);
+let flipsP: Promise<boolean> | null = null;
+const bitmapsFlip = () =>
+  (flipsP ||= (async () => {
+    if (typeof createImageBitmap !== "function") return false;
+    const c = document.createElement("canvas");
+    c.width = 1;
+    c.height = 2;
+    const g = c.getContext("2d")!;
+    g.fillStyle = "#f00";
+    g.fillRect(0, 0, 1, 1);
+    g.fillStyle = "#00f";
+    g.fillRect(0, 1, 1, 1);
+    const b = await createImageBitmap(c, { imageOrientation: "flipY" });
+    g.clearRect(0, 0, 1, 2);
+    g.drawImage(b, 0, 0);
+    b.close();
+    return g.getImageData(0, 0, 1, 1).data[2] > 128; // blue on top: it flipped
+  })().catch(() => false));
+export const loadTexture = async (T: Three, url: string) => {
+  if (await bitmapsFlip()) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(String(res.status));
+      const bmp = await createImageBitmap(await res.blob(), { imageOrientation: "flipY", premultiplyAlpha: "none", colorSpaceConversion: "none" });
+      const x = new T.Texture(bmp as unknown as HTMLImageElement);
+      x.flipY = false; // (it already is)
+      x.needsUpdate = true;
+      x.addEventListener("dispose", () => bmp.close());
+      return x;
+    } catch {
+      // (the picture as a picture, below)
+    }
+  }
+  const img = await decoded(await new T.ImageLoader().loadAsync(url));
+  const x = new T.Texture(img);
+  x.needsUpdate = true;
+  return x;
 };
 
 // what gold foil reflects: a soft studio room, made once (metal with nothing to reflect looks black)
@@ -50,7 +141,11 @@ export const cardShadow = (T: Three) => {
 };
 
 export const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
-export const calm = () => !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+// visitors who ask for less motion (read once, and kept up to date: scenes ask every frame)
+const reduce = typeof window !== "undefined" ? window.matchMedia?.("(prefers-reduced-motion: reduce)") : undefined;
+let calmNow = !!reduce?.matches;
+reduce?.addEventListener?.("change", (e) => (calmNow = e.matches));
+export const calm = () => calmNow;
 
 // a rounded card with a cream paper or gold foil edge; its long side is 1
 export function makeCard(T: Three, mm: [number, number], front: THREE.Texture, back: THREE.Texture, gold: THREE.Texture | null) {

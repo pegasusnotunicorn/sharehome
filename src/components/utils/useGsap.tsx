@@ -143,8 +143,15 @@ export const GsapWiggle = (props: GsapWiggleProps) => {
           duration: 0.1,
         });
     }
+    // it only wiggles while it's on screen (each wiggle restyles it every frame)
+    const io = new IntersectionObserver((e) => {
+      if (e.some((x) => x.isIntersecting)) tl?.resume();
+      else tl?.pause();
+    });
+    if (target.current) io.observe(target.current);
     return () => {
-      if (tl) tl.killTweensOf();
+      io.disconnect();
+      tl?.kill();
     };
   }, [target, degree]);
 

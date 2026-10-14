@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import BoxViewer from "../utils/BoxViewer";
 import BuyButton from "../utils/BuyButton";
 import DefaultButton from "../utils/DefaultButton";
@@ -112,21 +113,27 @@ export default function BoxHero({ onOpen, onSettled }: BoxHeroProps) {
         </span>
       </div>
 
-      {/* phones: along the bottom, where the site's own buttons sit on other pages (the navbar
-          leaves them off at the top of the home page) */}
-      {!isDesktop && (
-        <div className={`${styles.ctas} ${styles.ctasBottom}`}>
-          <BuyButton from="home_hero" animated compact icon="forward" variant="primary" color="red" text="Buy now!" />
-          <DefaultButton
-            compact
-            icon="star"
-            variant="primary"
-            color="yellow"
-            href="https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season"
-            text="Expansion!"
-          />
-        </div>
-      )}
+      {/* phones: fixed along the bottom of the screen all the way down the home page (the navbar
+          leaves its own off on the home page). Outside the hero, so the sections below it can't
+          cover them; the wrapper carries the hero's state, so they appear once Bizz has spoken and
+          make way while the trailer plays. */}
+      {!isDesktop &&
+        createPortal(
+          <div className={`${spoken ? styles.spoken : ""} ${open ? styles.open : ""}`.trim() || undefined}>
+            <div className={`${styles.ctas} ${styles.ctasBottom}`}>
+              <BuyButton from="home_hero" animated compact icon="forward" variant="primary" color="red" text="Buy now!" />
+              <DefaultButton
+                compact
+                icon="star"
+                variant="primary"
+                color="yellow"
+                href="https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season"
+                text="Expansion!"
+              />
+            </div>
+          </div>,
+          document.body
+        )}
     </section>
   );
 }

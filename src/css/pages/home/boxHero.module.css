@@ -338,8 +338,10 @@
     padding-bottom: 6.5rem;
   }
 
+  /* fixed to the screen, over the page's sections (under the menu and popups) */
   .ctasBottom {
-    position: absolute;
+    position: fixed;
+    z-index: 1000;
     left: 1rem;
     right: 1rem;
     bottom: 1rem;
@@ -353,9 +355,25 @@
     min-width: 0;
   }
 
-  .open .ctasBottom {
+  /* not tappable until they've faded in, nor while the trailer plays or the expansion popup's open
+     (it slides up over the same spot: they step aside for it) */
+  .ctasBottom {
+    pointer-events: none;
+  }
+
+  .spoken .ctasBottom {
+    pointer-events: auto;
+  }
+
+  .open .ctasBottom,
+  :global(body):has([aria-labelledby="expansion-popup-title"]) .ctasBottom {
     opacity: 0;
     pointer-events: none;
+  }
+
+  /* room under the footer, so its last line can be scrolled clear of them */
+  :global(body):has(.ctasBottom) :global(footer) {
+    padding-bottom: 5rem;
   }
 
 

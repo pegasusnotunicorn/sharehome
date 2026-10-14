@@ -4,7 +4,7 @@
 // page (browsers allow only a few contexts): each viewer renders through it and copies the picture
 // onto its own 2D canvas. Nothing renders unless something changed.
 import type * as THREE from "three";
-import { calm, ease, loadThree, makeCard, renderer, studio } from "./card3d";
+import { calm, ease, loadTexture, loadThree, makeCard, paint, renderer, studio } from "./card3d";
 import type { Three } from "./card3d";
 
 export type CardFace = string | HTMLCanvasElement;
@@ -86,12 +86,9 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   let W = 0, H = 0;
   const draw = () => {
     if (dead || !W || !H || !ctx) return;
-    r.setSize(W, H, false);
     cam.aspect = W / H;
     cam.updateProjectionMatrix();
-    r.render(sc, cam);
-    ctx.clearRect(0, 0, cv.width, cv.height);
-    ctx.drawImage(r.domElement, 0, 0, cv.width, cv.height);
+    paint(r, sc, cam, ctx, W, H);
   };
   const schedule = () => {
     if (!pending) pending = requestAnimationFrame(() => { pending = 0; draw(); });
@@ -111,7 +108,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   // the card's art
   const textures: THREE.Texture[] = [];
   const tex = async (f: CardFace) => {
-    const x = typeof f === "string" ? await new T.TextureLoader().loadAsync(f) : new T.CanvasTexture(f);
+    const x = typeof f === "string" ? await loadTexture(T, f) : new T.CanvasTexture(f);
     x.colorSpace = T.SRGBColorSpace;
     x.anisotropy = Math.min(8, r.capabilities.getMaxAnisotropy());
     textures.push(x);

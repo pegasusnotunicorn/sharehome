@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "../css/pages/contactPage.module.css";
 import { NavLink } from "react-router";
 import { BUY_DESTINATION, recordBuyClick } from "./utils/BuyButton";
+import { trackEvent } from "./utils/trackEvent";
 import PolaroidJourney from "./utils/PolaroidJourney";
 import { SOCIAL_LINKS, SocialIcon, SocialIconDefs } from "./utils/SocialIcons";
 
@@ -68,7 +69,13 @@ const ContactPage = () => {
             </p>
             <p>
               Thanks for visiting my humble page and please consider{" "}
-              <NavLink to={BUY_DESTINATION} onClick={recordBuyClick}>
+              <NavLink
+                to={BUY_DESTINATION}
+                onClick={() => {
+                  trackEvent("buy_click", { from: "contact" });
+                  recordBuyClick();
+                }}
+              >
                 buying the game!
               </NavLink>
             </p>

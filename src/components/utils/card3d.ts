@@ -211,6 +211,25 @@ export const pointerReaches = (scene: Element, x: number, y: number) => {
 // A scene's canvas reaches past its stage by (bx, by) px on each side, so cards that tumble, lift or
 // lean past the stage's edges aren't cut off (it draws over the neighbouring sections, and lets the
 // pointer through to them). Its middle stays on the stage's middle. Returns the canvas's size in px.
+// The same, reaching further on some sides than others ({ left, right, top, bottom } px). The view
+// stays centred on the stage: `view` sets a camera (px units, z = 0 at 1px per px) to draw the stage's
+// own view carried on out to the canvas's edges.
+export function stretchCanvas(cv: HTMLCanvasElement, W: number, H: number, by: { left: number; right: number; top: number; bottom: number }, pixelRatio: number) {
+  const w = W + by.left + by.right, h = H + by.top + by.bottom;
+  Object.assign(cv.style, { position: "absolute", left: `${-by.left}px`, top: `${-by.top}px`, width: `${w}px`, height: `${h}px`, pointerEvents: "none" });
+  cv.width = Math.round(w * pixelRatio);
+  cv.height = Math.round(h * pixelRatio);
+  // a frame as wide and as high either side of the stage's middle as the canvas reaches on its far side
+  const fx = Math.max(by.left, by.right), fy = Math.max(by.top, by.bottom), fw = W + 2 * fx, fh = H + 2 * fy;
+  const view = (cam: THREE.PerspectiveCamera) => {
+    cam.aspect = fw / fh;
+    cam.position.set(0, 0, fh / 2 / Math.tan((cam.fov * Math.PI) / 360));
+    cam.setViewOffset(fw, fh, fx - by.left, fy - by.top, w, h);
+    cam.updateProjectionMatrix();
+  };
+  return { w, h, view };
+}
+
 export function bleedCanvas(cv: HTMLCanvasElement, W: number, H: number, bx: number, by: number, pixelRatio: number) {
   const w = W + 2 * bx, h = H + 2 * by;
   Object.assign(cv.style, { position: "absolute", left: `${-bx}px`, top: `${-by}px`, width: `${w}px`, height: `${h}px`, pointerEvents: "none" });

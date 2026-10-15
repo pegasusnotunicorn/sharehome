@@ -1,7 +1,7 @@
 // Checks that the home page's 3D cards never pass through each other: the card wall below the hero
 // (wallPoses.ts) and the "How to play" decks (deckPoses.ts). It steps through the whole scroll at
 // every screen width the site lays out differently, with the idle sway at several moments and every
-// card hovered, treating each card as a slab (both faces, 5px apart) and looking for any edge of one
+// card hovered and turning over (clicked), treating each card as a slab (both faces, 5px apart) and looking for any edge of one
 // card passing through another.
 //
 //   npm run check-cards
@@ -9,7 +9,8 @@ import { wallPoses, hoverPose, CARD_ASPECT } from "../src/components/utils/wallP
 import { deckPoses } from "../src/components/utils/deckPoses.ts";
 import { characterLayout, directionEpisodeLayout } from "../src/components/Home/utils/deckLayouts.ts";
 
-// --- a card as a rectangle in 3D (three.js's rotation order: R = Rx * Ry * Rz) ---
+// --- a card as a rectangle in 3D (three.js's rotation order: R = Rx * Ry * Rz, then a turn over
+// sideways about its own upright middle: * Ry(flip)) ---
 const mul = (A, B) => A.map((r) => [0, 1, 2].map((j) => r[0] * B[0][j] + r[1] * B[1][j] + r[2] * B[2][j]));
 const Rx = (a) => [[1, 0, 0], [0, Math.cos(a), -Math.sin(a)], [0, Math.sin(a), Math.cos(a)]];
 const Ry = (a) => [[Math.cos(a), 0, Math.sin(a)], [0, 1, 0], [-Math.sin(a), 0, Math.cos(a)]];
@@ -20,7 +21,7 @@ const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 const SLAB = 2.5; // half the thickness we allow a card (the cards are about 2.3px thick)
 
 function face(q, w, h, off) {
-  const M = mul(mul(Rx(q.rx), Ry(q.ry)), Rz(q.rz));
+  const M = mul(mul(mul(Rx(q.rx), Ry(q.ry)), Rz(q.rz)), Ry(q.flip || 0));
   const u = apply(M, [1, 0, 0]), v = apply(M, [0, 1, 0]), n = apply(M, [0, 0, 1]);
   const c = [q.x + n[0] * off, q.y + n[1] * off, q.z + n[2] * off];
   const hw = (w * q.scale) / 2, hh = (h * q.scale) / 2;
@@ -42,6 +43,7 @@ let seed = 11;
 const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 const WIDTHS = [1920, 1600, 1440, 1280, 1024, 900, 820, 700, 600, 390, 360];
 const SWAY = [0, 1.3, 2.9, 4.6];
+const FLIPS = [0, 0.3, 0.9, Math.PI / 2, 2.2, 2.9, Math.PI, 3.6]; // a click turns a card over (and back)
 let failures = 0;
 const report = (name, bad) => {
   failures += bad.size;
@@ -69,10 +71,11 @@ for (const W of WIDTHS) {
             if (ps[i].scale > 0.02 && ps[j].scale > 0.02 && clip(ss[i], ss[j])) bad.add(`p ${p.toFixed(3)}: cards ${i} and ${j}`);
         if (trial || t || k % 10) continue;
         for (let i = 0; i < ps.length; i++)
-          for (const lift of [0.3, 0.6, 1]) {
-            const hs = slab(hoverPose(ps[i], lift, size.cw), size.cw, h);
-            for (let j = 0; j < ps.length; j++) if (j !== i && ps[j].scale > 0.02 && clip(hs, ss[j])) bad.add(`p ${p.toFixed(2)}: hovered ${i} into ${j}`);
-          }
+          for (const lift of [0.3, 0.6, 1])
+            for (const flip of FLIPS) {
+              const hs = slab(hoverPose(ps[i], lift, size.cw, flip), size.cw, h);
+              for (let j = 0; j < ps.length; j++) if (j !== i && ps[j].scale > 0.02 && clip(hs, ss[j])) bad.add(`p ${p.toFixed(2)}: hovered ${i}${flip ? ` turning over (${flip.toFixed(2)})` : ""} into ${j}`);
+            }
       }
     }
   }
@@ -101,13 +104,15 @@ for (const d of DECKS)
         for (const t of SWAY)
           for (const hovered of [-1, 0, 1, 2]) {
             if (hovered >= 0 && (trial || t || k % 10)) continue;
-            for (const amount of hovered < 0 ? [0] : [0.3, 0.6, 1]) {
+            // (a clicked card turns over once it's lifted all the way)
+            for (const [amount, turned] of hovered < 0 ? [[0, 0]] : [[0.3, 0], [0.6, 0], ...FLIPS.map((f) => [1, f])]) {
               const lift = rest.map((_, i) => (i === hovered ? amount : 0));
-              const ps = deckPoses(k / 1000, t, cards, { aspect: d.aspect, fromX, H }, lift);
+              const flip = rest.map((_, i) => (i === hovered ? turned : 0));
+              const ps = deckPoses(k / 1000, t, cards, { aspect: d.aspect, fromX, H }, lift, false, flip);
               const ss = ps.map((q, i) => slab(q, rest[i].w, rest[i].w / d.aspect));
               for (let i = 0; i < ps.length; i++)
                 for (let j = i + 1; j < ps.length; j++)
-                  if (ps[i].shown && ps[j].shown && clip(ss[i], ss[j])) bad.add(`dealt ${(k / 1000).toFixed(3)}${hovered >= 0 ? `, ${hovered} hovered` : ""}: cards ${i} and ${j}`);
+                  if (ps[i].shown && ps[j].shown && clip(ss[i], ss[j])) bad.add(`dealt ${(k / 1000).toFixed(3)}${hovered >= 0 ? `, ${hovered} hovered${turned ? ` turning over (${turned.toFixed(2)})` : ""}` : ""}: cards ${i} and ${j}`);
             }
           }
     }

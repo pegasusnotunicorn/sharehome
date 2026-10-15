@@ -193,7 +193,7 @@
   height: calc(100% - 2rem);
   width: 40%;
   padding: 2rem;
-  z-index: 9;
+  z-index: 12; /* over the 3D cards' canvas, which reaches in under the words (see below) */
 }
 
 .characterTextContainer h1 {
@@ -275,7 +275,22 @@
   width: 60%;
   padding: 2rem;
   padding-right: 4rem;
-  z-index: 10;
+  z-index: 12; /* over the 3D cards' canvas, which reaches in under the words (see below) */
+}
+
+/* A step's words sit over its 3D cards' canvas, which reaches in under them so a card or its shadow
+   leaning, lifting or turning over by the words isn't cut off. The cards keep clear of the words
+   themselves; the rest of the words' column lets the pointer through to the cards. */
+.characterTextContainer,
+.eventsLeftContainer,
+.goalsRightContainer {
+  pointer-events: none;
+}
+
+.characterTextContainer :is(p, h1, h2, h3, a, button, img),
+.eventsLeftContainer :is(p, h1, h2, h3, a, button, img),
+.goalsRightContainer :is(p, h1, h2, h3, a, button, img) {
+  pointer-events: auto;
 }
 .eventsLeftContainer {
   justify-content: flex-end;

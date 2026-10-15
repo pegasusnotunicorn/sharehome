@@ -1,4 +1,5 @@
-// A game card in 3D (three.js): drag to turn it any way, zoom toward the pointer, turn it over.
+// A game card in 3D (three.js): drag to turn it any way (let go, it turns straight back to rest), zoom
+// toward the pointer. Its canvas reaches below the stage, so the shadow under the card isn't cut off.
 // Lit like the studio mockups: one soft light from above, its shadow pooled on an invisible floor.
 // three.js is loaded the first time a viewer appears. One WebGL renderer serves every viewer on the
 // page (browsers allow only a few contexts): each viewer renders through it and copies the picture
@@ -21,6 +22,7 @@ export interface CardViewerApi {
 
 const REST: [number, number] = [-0.42, -0.12]; // turned 24° and tipped back 7°, so its edge shows
 const REST_Z = 1.4; // and zoomed in one step (the zoom-in button's step)
+const BELOW = 0.3; // how far the canvas reaches below the stage, for the shadow (of the stage's height)
 
 interface MountOptions {
   mm: [number, number];
@@ -83,12 +85,14 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   cv.dataset.cardCanvas = "";
   const ctx = cv.getContext("2d");
   stage.prepend(cv);
-  let W = 0, H = 0;
+  let W = 0, H = 0, B = 0; // the stage; B: how far the canvas reaches below it
   const draw = () => {
     if (dead || !W || !H || !ctx) return;
+    // the stage's view, carried on down past its bottom edge
     cam.aspect = W / H;
+    cam.setViewOffset(W, H, 0, 0, W, H + B);
     cam.updateProjectionMatrix();
-    paint(r, sc, cam, ctx, W, H);
+    paint(r, sc, cam, ctx, W, H + B);
   };
   const schedule = () => {
     if (!pending) pending = requestAnimationFrame(() => { pending = 0; draw(); });
@@ -96,9 +100,11 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   const size = () => {
     W = stage.clientWidth;
     H = stage.clientHeight;
+    B = Math.round(H * BELOW);
     const pr = r.getPixelRatio();
+    Object.assign(cv.style, { height: `${H + B}px`, bottom: "auto", pointerEvents: "none" });
     cv.width = Math.max(1, Math.round(W * pr));
-    cv.height = Math.max(1, Math.round(H * pr));
+    cv.height = Math.max(1, Math.round((H + B) * pr));
     draw();
   };
   const ro = new ResizeObserver(size);
@@ -180,15 +186,30 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     };
     raf = requestAnimationFrame(step);
   };
+  // left alone, it turns straight back to rest (the zoom stays)
+  const settle = () => {
+    cancelAnimationFrame(raf);
+    const q0 = q.clone(), t0 = performance.now(), ms = calm() ? 0 : 600;
+    const step = (now: number) => {
+      const t = ms ? Math.min(1, (now - t0) / ms) : 1;
+      q.slerpQuaternions(q0, rest, ease(t));
+      spin.quaternion.copy(q);
+      draw();
+      if (t < 1) raf = requestAnimationFrame(step);
+    };
+    if (ms) raf = requestAnimationFrame(step);
+    else step(t0);
+  };
   const coast = () => {
     cancelAnimationFrame(raf);
-    if (calm()) return;
+    if (calm()) return settle();
     const step = () => {
       v[0] *= 0.94;
       v[1] *= 0.94;
       turn(v[0], v[1]);
       draw();
       if (Math.hypot(...v) > 0.0008) raf = requestAnimationFrame(step);
+      else settle();
     };
     raf = requestAnimationFrame(step);
   };
@@ -198,7 +219,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   const ray = new T.Raycaster(), ndc = new T.Vector2(), plane = new T.Plane(), dir = CAM.clone().normalize();
   const a3 = new T.Vector3(), b3 = new T.Vector3();
   const hit = (cx: number, cy: number, out: THREE.Vector3) => {
-    const b = stage.getBoundingClientRect();
+    const b = cv.getBoundingClientRect(); // (the camera's view is the whole canvas, past the stage)
     ndc.set(((cx - b.left) / b.width) * 2 - 1, -((cy - b.top) / b.height) * 2 + 1);
     ray.setFromCamera(ndc, cam);
     plane.setFromNormalAndCoplanarPoint(dir, tgt);
@@ -219,7 +240,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     place();
     tgt.add(p0.sub(hit(cx, cy, b3)));
     fit();
-    stage.classList.toggle("zoomed", z > 1.01);
+    stage.classList.toggle("zoomed", Math.abs(z - REST_Z) > 0.01);
     schedule();
   };
   const panBy = (x0: number, y0: number, x1: number, y1: number) => {
@@ -258,7 +279,11 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     if (e.button > 0 || (e.target as Element).closest("button")) return;
     cancelAnimationFrame(raf);
     used();
-    stage.setPointerCapture(e.pointerId);
+    try {
+      stage.setPointerCapture(e.pointerId);
+    } catch {
+      // (a pointer the browser no longer tracks)
+    }
     pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (pts.size === 2) {
       // two fingers: pinch to zoom, move them together to pan
@@ -307,7 +332,8 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     const still = e.timeStamp - drag.t > 80;
     drag = null;
     stage.classList.remove("drag");
-    if (!still && Math.hypot(...v) > 0.004) coast(); // let go while moving: it coasts
+    if (!still && Math.hypot(...v) > 0.004) coast(); // let go while moving: it coasts, then settles
+    else settle();
   };
   stage.onpointerup = up;
   stage.onpointercancel = up;
@@ -317,7 +343,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   // The wheel zooms once the card is in use (or zoomed), so scrolling past it still scrolls the page.
   // A trackpad pinch arrives as a wheel with ctrlKey, and always zooms.
   function onWheel(e: WheelEvent) {
-    const inUse = stage.classList.contains("used") || z > 1.01 || document.activeElement === stage;
+    const inUse = stage.classList.contains("used") || Math.abs(z - REST_Z) > 0.01 || document.activeElement === stage;
     if (!e.ctrlKey && !inUse) return;
     e.preventDefault();
     used();
@@ -325,15 +351,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   }
   stage.addEventListener("wheel", onWheel, { passive: false });
   stage.onkeydown = (e) => {
-    const a = Math.PI / 12;
-    const m = ({ ArrowRight: [a, 0], ArrowLeft: [-a, 0], ArrowUp: [0, -a], ArrowDown: [0, a] } as Record<string, [number, number]>)[e.key];
-    if (m) {
-      e.preventDefault();
-      used();
-      cancelAnimationFrame(raf);
-      turn(...m);
-      schedule();
-    } else if (e.key === "+" || e.key === "=") {
+    if (e.key === "+" || e.key === "=") {
       e.preventDefault();
       used();
       zoomAt(1.25);

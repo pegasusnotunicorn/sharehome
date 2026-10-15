@@ -6,21 +6,20 @@
 //     little, to show the words behind it
 // Where each card is at each moment is worked out in wallPoses.ts, so that no two ever pass through
 // each other. The pointer leans the wall toward it, and the card under it lifts out; clicking it
-// opens that character's page. It renders only while it's on screen; visitors who ask for less
+// turns it over (and again, back) where it is. It renders only while it's on screen; visitors who ask for less
 // motion get it following the scroll without the idle sway.
 // One WebGL renderer serves the whole page (card3d.ts): the wall renders through it and copies the
 // picture onto its own 2D canvas.
 import type * as THREE from "three";
 import { bleedCanvas, calm, ease, loadTexture, loadThree, makeCard, paint, pointerReaches, renderer, studio, warm } from "./card3d";
 import type { Three } from "./card3d";
-import { ATLAS } from "./footerCards3d";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
 import { hoverPose, wallPoses } from "./wallPoses";
 import type { WallCardMotion } from "./wallPoses";
 
 export interface WallCard {
   front: () => Promise<HTMLCanvasElement>;
-  atlasIndex: number; // where its back is in the sprite sheet of card backs
+  atlasIndex: number; // its place in the cast: its printed back is images/pieces/characters/<place>-back.webp
   urlName: string;
 }
 
@@ -29,7 +28,6 @@ interface MountOptions {
   cols: number;
   cardWidth: (w: number) => number; // a card's width in px on a stage this wide
   wordsHalfWidth: () => number; // half the width of the words the wall parts to show
-  onPick: (card: WallCard) => void;
   onFail: () => void;
 }
 
@@ -42,7 +40,7 @@ const clamp = (x: number) => Math.min(1, Math.max(0, x));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise<WallApi | null> {
-  const { cards, cols, cardWidth, wordsHalfWidth, onPick, onFail } = opts;
+  const { cards, cols, cardWidth, wordsHalfWidth, onFail } = opts;
   let T: Three, r: THREE.WebGLRenderer;
   try {
     T = await loadThree();
@@ -58,11 +56,19 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
     x.anisotropy = Math.min(8, r.capabilities.getMaxAnisotropy());
     return x;
   };
-  let fronts: THREE.Texture[], backs: THREE.Texture, gold: THREE.Texture;
+  // each card's printed back, full size (sharp at the size the wall shows it; a card that's on the
+  // wall twice shares it)
+  const backUrl = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}-back.webp`;
+  const backOf = new Map<number, Promise<THREE.Texture>>();
+  const back = (i: number) => {
+    if (!backOf.has(i)) backOf.set(i, loadTexture(T, backUrl(i)).then(tex));
+    return backOf.get(i)!;
+  };
+  let fronts: THREE.Texture[], backs: THREE.Texture[], gold: THREE.Texture;
   try {
     [fronts, backs, gold] = await Promise.all([
       Promise.all(cards.map((c) => c.front().then((cv) => tex(new T.CanvasTexture(cv))))),
-      loadTexture(T, ATLAS.backs).then(tex),
+      Promise.all(cards.map((c) => back(c.atlasIndex))),
       studio(T, r),
     ]);
   } catch {
@@ -71,20 +77,9 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
   }
   if (!stage.isConnected) {
     fronts.forEach((x) => x.dispose());
-    backs.dispose();
+    new Set(backs).forEach((x) => x.dispose());
     return null;
   }
-
-  // one cell of the backs' sprite sheet (the sheet's image is shared, only the window moves)
-  const { cellW, cellH, pad } = ATLAS;
-  const sheetW = ATLAS.cols * cellW, sheetH = ATLAS.rows * cellH;
-  const backCell = (i: number) => {
-    const t = backs.clone();
-    const c = i % ATLAS.cols, row = Math.floor(i / ATLAS.cols);
-    t.repeat.set((cellW - 2 * pad) / sheetW, (cellH - 2 * pad) / sheetH);
-    t.offset.set((c * cellW + pad) / sheetW, 1 - ((row + 1) * cellH - pad) / sheetH);
-    return t;
-  };
 
   // lit like the card mockups: soft light from above, enough from the front that the art keeps its colours
   const sc = new T.Scene();
@@ -104,10 +99,12 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
     obj: THREE.Group;
     back: THREE.Texture;
     lift: number; // 0: in the wall, 1: lifted out (hovered)
+    turned: number; // how far it's turned over (radians): a click turns it a half turn more
+    turnTo: number;
   }
   const live: Live[] = cards.map((card, i) => {
     const row = Math.floor(i / cols), col = i % cols;
-    const back = backCell(card.atlasIndex);
+    const back = backs[i];
     const obj = new T.Group();
     obj.add(makeCard(T, CHARACTER_CARD_MM, fronts[i], back, gold));
     wall.add(obj);
@@ -118,6 +115,8 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
       obj,
       back,
       lift: 0,
+      turned: 0,
+      turnTo: 0,
     };
   });
 
@@ -180,9 +179,14 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
     live.forEach((l, i) => {
       const want = l === hovered ? 1 : 0;
       l.lift += (want - l.lift) * k(9);
-      const q = hoverPose(poses[i], l.lift, cw);
+      if (l.turned !== l.turnTo) {
+        l.turned += (l.turnTo - l.turned) * k(7);
+        if (Math.abs(l.turnTo - l.turned) < 0.01) l.turned = l.turnTo;
+      }
+      const q = hoverPose(poses[i], l.lift, cw, l.turned);
       l.obj.position.set(q.x, q.y, q.z);
       l.obj.rotation.set(q.rx, q.ry, q.rz);
+      l.obj.rotateY(q.flip || 0); // (turned over sideways, so its back reads the right way up)
       l.obj.scale.setScalar(cw * q.scale);
       l.obj.visible = q.scale > 0.01;
     });
@@ -246,7 +250,9 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
     if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 8) return;
     down = null;
     onMove(e);
-    if (hovered) onPick(hovered.card);
+    // a click (or a tap) turns it over, or back
+    if (hovered) hovered.turnTo += Math.PI;
+    if (e.pointerType !== "mouse") hovered = null;
   };
   addEventListener("pointermove", onMove, { passive: true });
   addEventListener("pointerdown", onDown, { passive: true });
@@ -281,8 +287,7 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
         ([] as THREE.Material[]).concat(m.material || []).forEach((x) => x.dispose());
       });
       fronts.forEach((x) => x.dispose());
-      live.forEach((l) => l.back.dispose());
-      backs.dispose();
+      new Set(backs).forEach((x) => x.dispose());
       cv.remove();
     },
   };

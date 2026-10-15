@@ -1,0 +1,38 @@
+/* The Smosh Games episode (SmoshSection.tsx), on the playthroughs' big screen (playthroughs.module.css) */
+.thumb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+button:hover > .thumb {
+  transform: scale(1.03);
+}
+
+/* the view count, in the corner */
+.views {
+  position: absolute;
+  top: clamp(10px, 2vw, 20px);
+  right: clamp(10px, 2vw, 20px);
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(20, 18, 30, 0.72);
+  color: #fff;
+  font-family: "Rowdies-Regular";
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  letter-spacing: 0.02em;
+}
+
+/* a little more room between it and "Real players, real stories" below */
+div.section {
+  margin-bottom: 5rem;
+}
+
+@media only screen and (max-width: 900px) {
+  div.section {
+    margin-bottom: 3.5rem;
+  }
+}

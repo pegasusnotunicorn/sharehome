@@ -9,6 +9,7 @@ export interface CardPose {
   ry: number;
   rz: number;
   scale: number;
+  flip?: number; // turned over sideways, about its own upright middle (radians, after rx, ry, rz): clicked
 }
 
 export const clamp = (x: number) => Math.min(1, Math.max(0, x));
@@ -30,3 +31,8 @@ export const depthReach = (hw: number, hh: number, rx: number, ry: number, rz: n
   const zx = -cx * sy * cz + sx * sz, zy = cx * sy * sz + sx * cz;
   return Math.abs(zx) * hw + Math.abs(zy) * hh;
 };
+
+// how far a card w wide comes out toward you while it turns over sideways (flip, radians): its side
+// edge swings back by half its width times the turn's sine, and a little more so it clears what's
+// behind it
+export const flipLift = (w: number, flip: number) => (w / 2) * Math.abs(Math.sin(flip)) + 6 * Math.min(1, Math.abs(Math.sin(flip)) * 8);

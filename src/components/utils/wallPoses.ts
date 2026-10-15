@@ -1,4 +1,4 @@
-import { clamp, ease, turn } from "./cardPose";
+import { clamp, ease, flipLift, turn } from "./cardPose";
 import type { CardPose } from "./cardPose";
 
 // Where every card of the home page's card wall is, at a point in the scroll (parallaxWall3d.ts
@@ -98,9 +98,12 @@ export function wallPoses(p: number, t: number, size: WallSize, cards: WallCardM
   });
 }
 
-// a hovered card (lift 0 to 1): straight out along its own facing, and a little bigger
-export function hoverPose(q: CardPose, lift: number, cw: number): CardPose {
-  const out = lift * (40 + cw * 0.04);
+// a hovered card (lift 0 to 1): straight out along its own facing, and a little bigger. Turning
+// over (flip, radians: clicked) it stays in its own column (it turns sideways about its upright
+// middle, so it only gets narrower) and comes out as far again as its side swings back, so that side
+// can't reach behind it
+export function hoverPose(q: CardPose, lift: number, cw: number, flip = 0): CardPose {
+  const out = lift * (40 + cw * 0.04) + flipLift(cw * (1 + 0.04 * lift), flip);
   const [nx, nz] = turn(0, 1, q.ry);
-  return { ...q, x: q.x + nx * out, z: q.z + nz * out, scale: q.scale * (1 + 0.04 * lift) };
+  return { ...q, x: q.x + nx * out, z: q.z + nz * out, scale: q.scale * (1 + 0.04 * lift), flip };
 }

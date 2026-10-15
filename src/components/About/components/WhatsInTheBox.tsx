@@ -58,6 +58,7 @@ const loadList = () =>
           back: c.back,
           sides: c.sides,
           name: c.name,
+          gold: d.name === "Characters", // the character cards' edges are gold foil
           deck: di,
           i,
           hay: `${c.name} ${c.text || ""}`.toLowerCase(),

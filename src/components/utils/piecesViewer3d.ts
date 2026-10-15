@@ -8,7 +8,7 @@
 // One WebGL renderer serves the whole page (card3d.ts): the viewer renders through it and copies the
 // picture onto its own 2D canvas.
 import type * as THREE from "three";
-import { calm, ease, loadTexture, loadThree, makeCard, paint, renderer } from "./card3d";
+import { calm, ease, loadTexture, loadThree, makeCard, paint, renderer, studio } from "./card3d";
 import type { Three } from "./card3d";
 
 export interface Piece {
@@ -18,6 +18,7 @@ export interface Piece {
   front: string;
   back: string;
   sides?: { near: string; far: string; left: string; right: string }; // the box's walls
+  gold?: boolean; // a gold foil edge (the character cards), not cream card stock
 }
 
 export interface PiecesViewerApi {
@@ -454,6 +455,7 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
       if (!dead && showing === p.key) onFail(p.key);
       return;
     }
+    const gold = p.gold ? await studio(T, r).catch(() => null) : null; // (what gold foil reflects, made once)
     if (dead || showing !== p.key) {
       Object.values(tx).forEach((t) => t.dispose());
       return;
@@ -462,7 +464,11 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
     textures.forEach((x) => x.dispose());
     textures = Object.values(tx);
     piece =
-      p.kind === "box" ? makeBox(T, p.mm, tx) : p.kind === "token" ? makeToken(T, p.mm, tx) : makeCard(T, [p.mm[0], p.mm[1]], tx.front, tx.back, null);
+      p.kind === "box"
+        ? makeBox(T, p.mm, tx)
+        : p.kind === "token"
+          ? makeToken(T, p.mm, tx)
+          : makeCard(T, [p.mm[0], p.mm[1]], tx.front, tx.back, gold);
     spin.add(piece);
     const pose = p.kind === "box" ? REST_BOX : REST_CARD;
     rest.setFromEuler(new T.Euler(pose.rx, pose.ry, 0, pose.order));

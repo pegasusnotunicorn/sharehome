@@ -190,7 +190,7 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
       const q = hoverPose(poses[i], l.lift, cw, l.turned);
       l.obj.position.set(q.x, q.y, q.z);
       l.obj.rotation.set(q.rx, q.ry, q.rz);
-      l.obj.rotateX(q.flip || 0);
+      l.obj.rotateY(q.flip || 0); // (turned over sideways, so its back reads the right way up)
       l.obj.scale.setScalar(cw * q.scale);
       l.obj.visible = q.scale > 0.01;
     });

@@ -99,10 +99,11 @@ export function wallPoses(p: number, t: number, size: WallSize, cards: WallCardM
 }
 
 // a hovered card (lift 0 to 1): straight out along its own facing, and a little bigger. Turning
-// over (flip, radians: clicked) it stays in its own column (it turns about its long middle) and comes
-// out as far again as its edge swings back, so that edge can't reach behind it
+// over (flip, radians: clicked) it stays in its own column (it turns sideways about its upright
+// middle, so it only gets narrower) and comes out as far again as its side swings back, so that side
+// can't reach behind it
 export function hoverPose(q: CardPose, lift: number, cw: number, flip = 0): CardPose {
-  const out = lift * (40 + cw * 0.04) + flipLift(cw / CARD_ASPECT, flip);
+  const out = lift * (40 + cw * 0.04) + flipLift(cw * (1 + 0.04 * lift), flip);
   const [nx, nz] = turn(0, 1, q.ry);
   return { ...q, x: q.x + nx * out, z: q.z + nz * out, scale: q.scale * (1 + 0.04 * lift), flip };
 }

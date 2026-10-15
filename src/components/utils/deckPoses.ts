@@ -91,7 +91,7 @@ export function deckPoses(
   { aspect, fromX, H }: { aspect: number; fromX: number; H: number },
   lift: number[],
   still = false,
-  flip: number[] = [] // turned over about its long middle (radians: clicked), once it's lifted
+  flip: number[] = [] // turned over sideways (radians: clicked), once it's lifted
 ): (CardPose & { shown: boolean; down: boolean })[] {
   const layer = deckLayer(cards, aspect);
   // hovered (once it's down): a card with nothing on it lifts straight up; a covered one slides out
@@ -102,7 +102,7 @@ export function deckPoses(
   const slides = cards.map((_, i) => (under[i] && lift[i] ? slideOut(cards, i, aspect) : ([0, 0] as [number, number])));
   const out = cards.map((_, i) => (landed[i] && under[i] ? ease(clamp(lift[i] / 0.5)) : 0));
   const ups = cards.map((_, i) => (!landed[i] ? 0 : under[i] ? clamp((lift[i] - 0.5) / 0.5) : lift[i]));
-  const turnReach = (j: number) => (landed[j] ? flipLift((cards[j].rest.w / aspect) * (1 + ups[j] * 0.04), flip[j] || 0) : 0);
+  const turnReach = (j: number) => (landed[j] ? flipLift(cards[j].rest.w * (1 + ups[j] * 0.04), flip[j] || 0) : 0);
   return cards.map((c, i) => {
     const r = c.rest, h = r.w / aspect;
     const a = clamp((dealt - setsOff(i, cards.length)) / FLIGHT);
@@ -114,7 +114,7 @@ export function deckPoses(
     const tumble = 1 - outCubic(clamp(a / 0.7));
     const rx = c.start.rx * tumble, ry = c.start.ry * tumble, rz = c.start.rz * tumble;
     // above everything already down (and any of it lifted) until it's flat, then down onto its layer
-    // (one turning over reaches out as far as it's lifted, and again as far as its edge swings up)
+    // (one turning over reaches out as far as it's lifted, and again as far as its side swings up)
     const pile = Math.max(0, ...cards.slice(0, i).map((_, j) => j * layer + ups[j] * 70 + 2 * turnReach(j))) + swayReach(r.w, h);
     const clearOfPile = tumble > 0 ? pile + depthReach(r.w / 2, h / 2, rx, ry, rz + r.tilt * DEG) + 8 : 0;
     const flying = lerp(c.start.z, restZ, outCubic(clamp((a - 0.6) / 0.4)));
@@ -123,7 +123,7 @@ export function deckPoses(
     return {
       x: lerp(fromX, r.x, e) + slides[i][0] * out[i],
       y: -(lerp(r.y + c.start.dy * H, r.y, e) + slides[i][1] * out[i] + sway * SWAY_Y),
-      // turning over, it comes out as far again as its edge swings back toward the pile
+      // turning over, it comes out as far again as its side swings back toward the pile
       z: Math.max(flying, clearOfPile) + up * 70 + turnReach(i),
       rx: rx + sway * SWAY_RX,
       ry: ry + sway2 * SWAY_RY,

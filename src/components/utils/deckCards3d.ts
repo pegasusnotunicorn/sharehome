@@ -231,7 +231,7 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
       }
       l.obj.position.set(q.x, q.y, q.z);
       l.obj.rotation.set(q.rx, q.ry, q.rz);
-      l.obj.rotateX(q.flip || 0);
+      l.obj.rotateY(q.flip || 0); // (turned over sideways, so its back reads the right way up)
       l.obj.scale.setScalar(l.rest.w * q.scale);
       l.obj.visible = q.shown;
       // its shadow on the page, behind every card: further off and fainter the higher the card is

@@ -10,6 +10,7 @@ import {
   EpisodeDeckSection,
 } from "./DirectionEpisodeDeckSection";
 import TestimonialsSection from "./TestimonialsSection";
+import SmoshSection from "./SmoshSection";
 import LikeHateSection from "./LikeHateSection";
 import BoxHero from "./BoxHero";
 import landingPageStyles from "../../css/landingPage.module.css";
@@ -53,6 +54,8 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
       />
 
       <MechanicsSection />
+
+      <SmoshSection />
 
       <TestimonialsSection />
 

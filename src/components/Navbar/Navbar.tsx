@@ -32,12 +32,15 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
   // while it's open: the page behind doesn't scroll, and Escape closes it
   useEffect(() => {
     if (!visible) return;
-    const root = document.documentElement, was = root.style.overflow;
+    // (the scrollbar's room is kept, so nothing on the page shifts sideways as it goes)
+    const root = document.documentElement, was = root.style.overflow, gutter = root.style.scrollbarGutter;
+    if (innerWidth > root.clientWidth) root.style.scrollbarGutter = "stable"; // (only if there's a scrollbar)
     root.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setVisibility(false);
     addEventListener("keydown", onKey);
     return () => {
       root.style.overflow = was;
+      root.style.scrollbarGutter = gutter;
       removeEventListener("keydown", onKey);
     };
   }, [visible]);

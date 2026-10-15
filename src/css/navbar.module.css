@@ -150,6 +150,7 @@
 .navLinkList {
   display: flex;
   flex-direction: column;
+  gap: 0.35rem; /* (so a hovered link's highlight doesn't touch the next one's) */
   margin: 0 -0.85rem;
 }
 

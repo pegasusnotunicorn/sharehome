@@ -1,14 +1,12 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router";
 import { GsapFadeScrub } from "../utils/useGsap";
-import ShootingStar from "./ShootingStar";
 import EmailForm from "../utils/EmailForm";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import DefaultButton from "../utils/DefaultButton";
 import BuyButton from "../utils/BuyButton";
 import { BUY_DESTINATION } from "../utils/BuyButton";
 import styles from "../../css/navbar.module.css";
-import shootingStarStyles from "../../css/utils/shootingStar.module.css";
 import "../../css/utils/hamburger.css";
 import useWindowScroll from "../utils/useWindowScroll";
 import CharacterPinPopup from "../CharacterPinPopup";
@@ -26,42 +24,54 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
 
   const [visible, setVisibility] = useState(false);
   const isVisibleClass = visible ? "is-active" : "";
-
   const { isDesktop } = useWindowDimensions();
-  const [mailButtonVisible, setMailButtonVisible] = useState(true);
-  const mailButtonVisibleClass = mailButtonVisible ? "is-active" : "";
 
-  const [mobileShowMail, setMobileShowMail] = useState(false);
-  const mobileShowLeftClass = mobileShowMail ? "" : "is-active";
-  const mobileShowRightClass = !mobileShowMail ? "" : "is-active";
+  const toggleNav = useCallback(() => setVisibility((v) => !v), []);
+  const closeNav = useCallback(() => setVisibility(false), []);
 
-  const toggleNav = useCallback(
-    (mailButton?: boolean) => {
-      setVisibility(!visible);
-
-      if (isDesktop) {
-        setMailButtonVisible(!mailButtonVisible);
-      } else {
-        if (mailButton === true) {
-          setMobileShowMail(true);
-          setVisibility(true);
-        } else {
-          setMailButtonVisible(true);
-          setMobileShowMail(false);
-        }
-      }
-    },
-    [isDesktop, mailButtonVisible, visible],
-  );
+  // while it's open: the page behind doesn't scroll, and Escape closes it
+  useEffect(() => {
+    if (!visible) return;
+    // (the scrollbar's room is kept, so nothing on the page shifts sideways as it goes)
+    const root = document.documentElement, was = root.style.overflow, gutter = root.style.scrollbarGutter;
+    if (innerWidth > root.clientWidth) root.style.scrollbarGutter = "stable"; // (only if there's a scrollbar)
+    root.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setVisibility(false);
+    addEventListener("keydown", onKey);
+    return () => {
+      root.style.overflow = was;
+      root.style.scrollbarGutter = gutter;
+      removeEventListener("keydown", onKey);
+    };
+  }, [visible]);
+  // closed, nothing in it can be reached (by Tab, or a screen reader). (React 18 doesn't pass `inert` on.)
+  const menuRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    menuRef.current?.toggleAttribute("inert", !visible);
+  }, [visible]);
+  // (a new page closes it)
+  useEffect(() => setVisibility(false), [location.pathname]);
 
   const scrollPosition = useWindowScroll();
-  const isActiveAndDesktop = isDesktop && visible;
   const isAtTop = scrollPosition === 0;
   const isLandingPageAtTop = isLandingPage && isAtTop;
 
   const { showPopup, closePopup, followed } = usePinPopup({ hold: trailerPlaying });
   const getNavLinkClassName = ({ isActive }: { isActive: boolean }) =>
     `${styles.navLink} noselect ${isActive ? styles.navLinkActive : ""}`;
+  const linkBody = (label: string, note: string, external?: boolean) => (
+    <>
+      <span className={styles.navLinkLabel}>
+        {label}
+        {external && (
+          <span className={styles.navLinkExternal} aria-hidden="true">
+            ↗
+          </span>
+        )}
+      </span>
+      <span className={styles.navLinkNote}>{note}</span>
+    </>
+  );
 
   return (
     <>
@@ -79,35 +89,6 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
           className={`${styles.topBar} noselect`}
         >
           <NavLink to="/" className={styles.logo} aria-label="Love, Career & Magic home" />
-          <div className={styles.navSocialBar}>
-            {SOCIAL_LINKS.map(
-              ({
-                href,
-                label,
-                iconId,
-                external = true,
-                brandColor,
-                hoverBackground,
-                hoverIconColor = "#fff",
-              }) => (
-              <a
-                key={label}
-                href={href}
-                target={external ? "_blank" : undefined}
-                rel={external ? "noreferrer" : undefined}
-                aria-label={label}
-                className={styles.navSocialIcon}
-                style={{
-                  ["--social-brand-color" as string]: brandColor,
-                  ["--social-brand-background" as string]: hoverBackground ?? brandColor,
-                  ["--social-brand-icon-color" as string]: hoverIconColor,
-                }}
-              >
-                <SocialIcon className={styles.navSocialSvg} iconId={iconId} />
-              </a>
-              ),
-            )}
-          </div>
           <div className={styles.topBarActions}>
             {!hideBuyButtons && (!isLandingPage || isDesktop) && !isLandingPageAtTop && (
               <BuyButton
@@ -116,7 +97,7 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
                 icon="forward"
                 variant="primary"
                 color="red"
-                className={`${mailButtonVisibleClass} ${styles.buyButton}`}
+                className={styles.buyButton}
                 text="Buy now!"
               />
             )}
@@ -133,9 +114,11 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
             )}
             <button
               className={`hamburger noselect ${styles.navToggle} ${isVisibleClass}`}
-              onClick={() => toggleNav()}
+              onClick={toggleNav}
               type="button"
-              aria-label={visible ? "Close navigation" : "Toggle navigation"}
+              aria-label={visible ? "Close menu" : "Open menu"}
+              aria-expanded={visible}
+              aria-controls="site-menu"
             >
               <span className="hamburger-box">
                 <span className="hamburger-inner" />
@@ -144,76 +127,94 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
           </div>
         </GsapFadeScrub>
 
-        {/* Slide-out menu */}
-        <div className={`${styles.menu} ${isVisibleClass}`}>
+        {/* The menu: a drawer from the right, over the dimmed page */}
+        <div className={`${styles.backdrop} ${isVisibleClass}`} onClick={closeNav} aria-hidden="true" />
+        <nav
+          id="site-menu"
+          className={`${styles.menu} ${isVisibleClass}`}
+          aria-label="Site menu"
+          ref={menuRef}
+        >
           <div className={styles.menuContent}>
-            <div className={`${styles.menuSection} ${styles.navLinks} ${mobileShowLeftClass}`}>
-              <div className={styles.navLinkList}>
-                <NavLink onClick={() => toggleNav()} to="/" className={getNavLinkClassName}>
-                  Home
-                </NavLink>
-                <NavLink
-                  onClick={() => toggleNav()}
-                  to="/howtoplay"
-                  className={getNavLinkClassName}
-                >
-                  How to play
-                </NavLink>
-                <NavLink
-                  onClick={() => toggleNav()}
-                  to="/characters"
-                  className={getNavLinkClassName}
-                >
-                  Characters
-                </NavLink>
-                <a
-                  onClick={() => toggleNav()}
-                  href="https://screentop.gg/@PegasusGames/lcm"
-                  className={`${styles.navLink} noselect`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Play online
-                </a>
-                <NavLink
-                  onClick={() => toggleNav()}
-                  to="/contact"
-                  className={getNavLinkClassName}
-                >
-                  Contact us
-                </NavLink>
-                <a
-                  href="https://pegasusgames.medium.com/"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  className={`${styles.navLink} noselect`}
-                >
-                  Blog
-                </a>
+            <div className={styles.navLinkList}>
+              <NavLink onClick={closeNav} to="/" end className={getNavLinkClassName}>
+                {linkBody("Home", "The game in a nutshell")}
+              </NavLink>
+              <NavLink onClick={closeNav} to="/howtoplay" className={getNavLinkClassName}>
+                {linkBody("How to play", "The rules, and what's in the box")}
+              </NavLink>
+              <NavLink onClick={closeNav} to="/characters" className={getNavLinkClassName}>
+                {linkBody("Characters", "Meet the 25 contestants")}
+              </NavLink>
+              <a
+                onClick={closeNav}
+                href="https://screentop.gg/@PegasusGames/lcm"
+                className={`${styles.navLink} noselect`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {linkBody("Play online", "Try it in your browser", true)}
+              </a>
+              <NavLink onClick={closeNav} to="/contact" className={getNavLinkClassName}>
+                {linkBody("Contact us", "Get in touch")}
+              </NavLink>
+              <a
+                onClick={closeNav}
+                href="https://pegasusgames.medium.com/"
+                rel="noopener noreferrer"
+                target="_blank"
+                className={`${styles.navLink} noselect`}
+              >
+                {linkBody("Blog", "Notes from the studio", true)}
+              </a>
+            </div>
+
+            <div className={styles.menuNews}>
+              <img loading="lazy" className={styles.menuNewsArt} src="/images/bizz_fukidashi.webp" alt="" />
+              <div className={styles.menuNewsBody}>
+                <p className={styles.menuNewsTitle}>Don’t miss the latest news.</p>
+                <EmailForm
+                  hideTitle
+                  inputId="menu-email"
+                  className={styles.menuEmail}
+                  formClassName={styles.menuEmailForm}
+                  inputClassName={styles.menuEmailInput}
+                  submitButtonClassName={styles.menuEmailButton}
+                />
               </div>
             </div>
 
-            <div className={`${styles.menuSection} ${styles.menuDivider}`} />
-
-            <div className={`${styles.menuSection} ${styles.emailSection} ${mobileShowRightClass}`}>
-              <ShootingStar className={shootingStarStyles.leftStar} isActive={visible} orientation="right" mirror />
-              <ShootingStar className={shootingStarStyles.rightStar} isActive={visible} orientation="left" delay="2" />
-              <ShootingStar className={shootingStarStyles.leftStar} isActive={visible} orientation="up" delay="4" />
-              <ShootingStar className={shootingStarStyles.leftStar} isActive={visible} orientation="down" delay="6" />
-              <EmailForm
-                hideTitle={false}
-                isActiveAndDesktop={isActiveAndDesktop}
-                titleIcon="/images/icons/email2.svg"
-              />
-              <img
-                loading="lazy"
-                className={styles.illustration}
-                src="/images/bizz_fukidashi.webp"
-                alt="Navbar illustration"
-              />
+            <div className={styles.menuSocials}>
+              {SOCIAL_LINKS.map(
+                ({
+                  href,
+                  label,
+                  iconId,
+                  external = true,
+                  brandColor,
+                  hoverBackground,
+                  hoverIconColor = "#fff",
+                }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={external ? "_blank" : undefined}
+                  rel={external ? "noreferrer" : undefined}
+                  aria-label={label}
+                  className={styles.navSocialIcon}
+                  style={{
+                    ["--social-brand-color" as string]: brandColor,
+                    ["--social-brand-background" as string]: hoverBackground ?? brandColor,
+                    ["--social-brand-icon-color" as string]: hoverIconColor,
+                  }}
+                >
+                  <SocialIcon className={styles.navSocialSvg} iconId={iconId} />
+                </a>
+                ),
+              )}
             </div>
           </div>
-        </div>
+        </nav>
       </div>
     </>
   );

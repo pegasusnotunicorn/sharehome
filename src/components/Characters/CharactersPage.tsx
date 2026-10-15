@@ -225,8 +225,8 @@ const CastIntro = () => {
   );
 };
 
-// The original cast as a wall of cards: each one's a link to its character's page, showing the printed
-// card, which turns 3D (castWall3d.ts) once it's loaded. The flat card stays where 3D can't be drawn.
+// The original cast as a wall of cards (no captions: the cards carry their names): each one's a link to
+// its character's page, showing the printed card, which turns 3D (castWall3d.ts) once it's loaded. The flat card stays where 3D can't be drawn.
 const CastWall = () => {
   const characters = useMemo(() => getAllCharacters(), []);
   const tiles = useRef<(HTMLAnchorElement | null)[]>([]);
@@ -262,7 +262,7 @@ const CastWall = () => {
 
   return (
     <section id="original-cast" className={charStyles.castSection} aria-label="The original cast">
-      <ul className={charStyles.castWall}>
+      <ul className={`${charStyles.castWall} ${charStyles.castWallBare}`}>
         {characters.map((c, i) => (
           <li key={c.urlName} className={charStyles.castItem}>
             <Link
@@ -283,10 +283,6 @@ const CastWall = () => {
                   width={768}
                   height={444}
                 />
-              </span>
-              <span className={`${charStyles.castCaption} noselect`}>
-                <span className={charStyles.castName}>{c.name}</span>
-                <span className={charStyles.castJob}>{[c.job, c.job2].filter(Boolean).join(" / ")}</span>
               </span>
             </Link>
           </li>

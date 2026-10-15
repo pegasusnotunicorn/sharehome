@@ -25,3 +25,14 @@ button:hover > .thumb {
   font-size: clamp(0.8rem, 1.2vw, 1rem);
   letter-spacing: 0.02em;
 }
+
+/* a little more room between it and "Real players, real stories" below */
+div.section {
+  margin-bottom: 5rem;
+}
+
+@media only screen and (max-width: 900px) {
+  div.section {
+    margin-bottom: 3.5rem;
+  }
+}

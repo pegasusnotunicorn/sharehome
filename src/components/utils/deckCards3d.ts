@@ -9,7 +9,7 @@
 // One WebGL renderer serves the whole page (card3d.ts): this deck renders through it and copies the
 // picture onto its own 2D canvas.
 import type * as THREE from "three";
-import { bleedCanvas, calm, cardShadow, loadTexture, loadThree, makeCard, paint, renderer, studio, warm } from "./card3d";
+import { calm, cardShadow, loadTexture, loadThree, makeCard, paint, renderer, stretchCanvas, studio, warm } from "./card3d";
 import type { Three } from "./card3d";
 import type { CardEdge, CardFaces } from "./cardViewer3d";
 import { clamp } from "./cardPose";
@@ -179,12 +179,14 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
     W = stage.clientWidth;
     H = stage.clientHeight;
     if (!W || !H) return;
-    // room above and below for a card leaning or lifting past the step's edges (not the sides: the
-    // cards come in from off the side)
-    ({ w: CW, h: CH } = bleedCanvas(cv, W, H, 0, Math.round(Math.max(160, H * 0.3)), r.getPixelRatio()));
-    cam.aspect = CW / CH;
-    cam.position.set(0, 0, CH / 2 / Math.tan((cam.fov * Math.PI) / 360));
-    cam.updateProjectionMatrix();
+    // room above and below for a card leaning or lifting past the step's edges, and beside the deck
+    // toward the step's words (which sit over it), for a card or its shadow leaning, lifting or turning
+    // past that side. Not past the other side: that's where the cards come in from, off the screen.
+    // (On phones the deck spans the whole step: nothing beside it.)
+    const v = Math.round(Math.max(160, H * 0.3)), toWords = W > innerWidth * 0.9 ? 0 : Math.min(Math.round(W * 0.3), 260);
+    const fit = stretchCanvas(cv, W, H, { left: side > 0 ? toWords : 0, right: side < 0 ? toWords : 0, top: v, bottom: v }, r.getPixelRatio());
+    ({ w: CW, h: CH } = fit);
+    fit.view(cam);
     place();
     step(0, true);
     draw();

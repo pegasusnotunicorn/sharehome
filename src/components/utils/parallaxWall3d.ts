@@ -13,14 +13,13 @@
 import type * as THREE from "three";
 import { bleedCanvas, calm, ease, loadTexture, loadThree, makeCard, paint, pointerReaches, renderer, studio, warm } from "./card3d";
 import type { Three } from "./card3d";
-import { ATLAS } from "./footerCards3d";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
 import { hoverPose, wallPoses } from "./wallPoses";
 import type { WallCardMotion } from "./wallPoses";
 
 export interface WallCard {
   front: () => Promise<HTMLCanvasElement>;
-  atlasIndex: number; // where its back is in the sprite sheet of card backs
+  atlasIndex: number; // its place in the cast: its printed back is images/pieces/characters/<place>-back.webp
   urlName: string;
 }
 
@@ -57,11 +56,19 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
     x.anisotropy = Math.min(8, r.capabilities.getMaxAnisotropy());
     return x;
   };
-  let fronts: THREE.Texture[], backs: THREE.Texture, gold: THREE.Texture;
+  // each card's printed back, full size (sharp at the size the wall shows it; a card that's on the
+  // wall twice shares it)
+  const backUrl = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}-back.webp`;
+  const backOf = new Map<number, Promise<THREE.Texture>>();
+  const back = (i: number) => {
+    if (!backOf.has(i)) backOf.set(i, loadTexture(T, backUrl(i)).then(tex));
+    return backOf.get(i)!;
+  };
+  let fronts: THREE.Texture[], backs: THREE.Texture[], gold: THREE.Texture;
   try {
     [fronts, backs, gold] = await Promise.all([
       Promise.all(cards.map((c) => c.front().then((cv) => tex(new T.CanvasTexture(cv))))),
-      loadTexture(T, ATLAS.backs).then(tex),
+      Promise.all(cards.map((c) => back(c.atlasIndex))),
       studio(T, r),
     ]);
   } catch {
@@ -70,20 +77,9 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
   }
   if (!stage.isConnected) {
     fronts.forEach((x) => x.dispose());
-    backs.dispose();
+    new Set(backs).forEach((x) => x.dispose());
     return null;
   }
-
-  // one cell of the backs' sprite sheet (the sheet's image is shared, only the window moves)
-  const { cellW, cellH, pad } = ATLAS;
-  const sheetW = ATLAS.cols * cellW, sheetH = ATLAS.rows * cellH;
-  const backCell = (i: number) => {
-    const t = backs.clone();
-    const c = i % ATLAS.cols, row = Math.floor(i / ATLAS.cols);
-    t.repeat.set((cellW - 2 * pad) / sheetW, (cellH - 2 * pad) / sheetH);
-    t.offset.set((c * cellW + pad) / sheetW, 1 - ((row + 1) * cellH - pad) / sheetH);
-    return t;
-  };
 
   // lit like the card mockups: soft light from above, enough from the front that the art keeps its colours
   const sc = new T.Scene();
@@ -108,7 +104,7 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
   }
   const live: Live[] = cards.map((card, i) => {
     const row = Math.floor(i / cols), col = i % cols;
-    const back = backCell(card.atlasIndex);
+    const back = backs[i];
     const obj = new T.Group();
     obj.add(makeCard(T, CHARACTER_CARD_MM, fronts[i], back, gold));
     wall.add(obj);
@@ -291,8 +287,7 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
         ([] as THREE.Material[]).concat(m.material || []).forEach((x) => x.dispose());
       });
       fronts.forEach((x) => x.dispose());
-      live.forEach((l) => l.back.dispose());
-      backs.dispose();
+      new Set(backs).forEach((x) => x.dispose());
       cv.remove();
     },
   };

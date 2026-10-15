@@ -19,7 +19,7 @@ export default function SmoshSection() {
   };
 
   return (
-    <GsapFadeScrub fadeIn className={`${landingPageStyles.mainpageContainer} ${styles.section}`}>
+    <GsapFadeScrub fadeIn className={`${landingPageStyles.mainpageContainer} ${styles.section} ${smosh.section}`}>
       <div className={styles.heading}>
         <p className={landingPageStyles.stepEyebrow}>As seen on Smosh Games</p>
         <h1 className={styles.title}>Smosh played it!</h1>

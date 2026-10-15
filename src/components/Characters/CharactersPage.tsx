@@ -10,14 +10,13 @@ import {
   getCharacterShareMeta,
   getSpecificPersonByURL,
 } from "../Characters/Characters";
-import { CharacterSpotlight } from "../utils/CharacterSpotlight";
+import CharacterProfile from "./CharacterProfile";
 import { GsapFadeScrub } from "../utils/useGsap";
 import { EmojiSection } from "../utils/EmojiSection";
 import CustomHelmet from "../utils/CustomHelmet";
 import DefaultButton from "../utils/DefaultButton";
 import Modal from "../utils/Modal";
 import charStyles from "../../css/pages/characterPage.module.css";
-import "../../css/utils/spotlight.css";
 import type { CharacterWithNav } from "../../types/character";
 
 // a character's printed card front, by their place in the cast
@@ -111,30 +110,6 @@ const CharactersPage = () => {
 
         {chosenCharacter ? (
           <>
-            <div className="subcontentWrapper margin-top min-width">
-              <div className={`characterContent ${charStyles.pageIntro}`}>
-                <h2 className={`subtitle ${charStyles.pageIntroTitle}`}>
-                  Characters
-                </h2>
-                <p className={charStyles.pageIntroLead}>
-                  Say hello to the cast of the reality show ✨
-                </p>
-                <a
-                  aria-label="Illustrations by Carolyn Frank"
-                  target="_blank"
-                  rel="noreferrer"
-                  href="https://www.instagram.com/carofranklyn/?hl=en"
-                  className={charStyles.illustrationLink}
-                >
-                  <img
-                    loading="lazy"
-                    src="/images/icons/star.svg"
-                    alt=""
-                  />
-                  Illustrations by Carolyn Frank
-                </a>
-              </div>
-            </div>
             <GsapFadeScrub fadeIn className="fadeInTextWrapper">
               <IndividualCharacter character={chosenCharacter} />
             </GsapFadeScrub>
@@ -155,7 +130,6 @@ const CharactersPage = () => {
 const IndividualCharacter = ({ character }: IndividualCharacterProps) => {
   const prevButton = character.prevCharURL ? (
     <DefaultButton
-      className={charStyles.characterNavButton}
       variant="secondary"
       border="dark"
       icon="prev"
@@ -163,12 +137,11 @@ const IndividualCharacter = ({ character }: IndividualCharacterProps) => {
       text="Prev"
     />
   ) : (
-    <div style={{ width: "100px" }}></div>
+    <div />
   );
 
   const nextButton = character.nextCharURL ? (
     <DefaultButton
-      className={charStyles.characterNavButton}
       variant="secondary"
       border="dark"
       iconPosition="right"
@@ -177,27 +150,14 @@ const IndividualCharacter = ({ character }: IndividualCharacterProps) => {
       text="Next"
     />
   ) : (
-    <div style={{ width: "100px" }}></div>
+    <div />
   );
 
   return (
-    <div className={charStyles.characterSpotlightContainer}>
-      <CharacterSpotlight
-        name={character.name}
-        index={character.index}
-        total={character.total}
-        mockup
-      />
+    <div className={charStyles.characterProfileContainer}>
+      <CharacterProfile character={character} />
       <div className={charStyles.characterButtonsWrapper}>
         {prevButton}
-        <DefaultButton
-          className={charStyles.characterNavButton}
-          variant="secondary"
-          border="dark"
-          icon="list"
-          navlink="/characters"
-          text="Return to list"
-        />
         {nextButton}
       </div>
     </div>

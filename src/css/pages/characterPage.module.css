@@ -5,41 +5,6 @@
   font-size: 2rem;
 }
 
-.pageIntro {
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 0 2rem;
-}
-
-.pageIntroEyebrow {
-  font-family: "Rowdies-Regular";
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  font-size: 0.7rem;
-  color: rgba(50, 50, 50, 0.55);
-}
-
-.pageIntroTitle {
-  font-size: clamp(2.8rem, 8vw, 5.5rem);
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.pageIntroLead {
-  max-width: 28rem;
-  font-family: "Rowdies-Light";
-  font-size: 0.9rem;
-  line-height: 1.2;
-  margin-bottom: 0;
-}
-
-.pageIntroBody {
-  max-width: 34rem;
-  margin-bottom: 0;
-}
-
 .illustrationLink {
   display: inline-flex;
   align-items: center;
@@ -60,93 +25,34 @@
 
 /* #endregion */
 
-/* #region---------------------------------------------------------SPOTLIGHT */
+/* #region---------------------------------------------------------A CHARACTER'S PAGE */
 
-.characterSpotlightContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.characterSpotlightContainer > :global(.characterSpotlightWrapper) {
-  width: 100%;
-  padding: 0;
-  margin-bottom: 1rem;
-}
-
-.characterSpotlightContainer :global(.spotlightBottomWrapper) {
-  border: 2px solid #323232;
-  border-radius: 8px;
-}
-
-.characterSpotlightContainer :global(.spotlightRightTopWrapper) {
-  padding: 0;
-  max-width: 500px;
+/* (the profile at the top is characterProfile.module.css) */
+.characterProfileContainer {
+  padding-bottom: 10vh;
 }
 
 .characterButtonsWrapper {
-  width: 100%;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10vh;
+  max-width: 1180px;
+  margin: 1.25rem auto 0;
+  padding: 0 2rem;
+  box-sizing: border-box;
 }
-
-.characterNavButton:hover {
-  transform: scale(1.03);
-  filter: saturate(1.15) brightness(1.05);
-  box-shadow:
-    0 6px 16px rgba(50, 50, 50, 0.2),
-    0 2px 6px rgba(0, 0, 0, 0.2);
-}
-
-
-
 
 @media only screen and (max-width: 900px) {
-  .pageIntro {
-    padding: 0.5rem 0 1.5rem;
-  }
-
-  .pageIntroLead {
-    font-size: 0.95rem;
-  }
-
-  .characterSpotlightContainer {
-    padding-left: 1rem;
-    padding-right: 1rem;
+  .characterProfileContainer {
     padding-bottom: 2rem;
-  }
-  .characterSpotlightContainer > :global(.characterSpotlightWrapper) {
-    width: 100%;
   }
   .characterButtonsWrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    align-items: stretch;
     gap: 1rem;
-    width: 100%;
+    padding: 0 1rem;
   }
   .characterButtonsWrapper > * {
     width: 100%;
-  }
-  .characterButtonsWrapper > :nth-child(2) {
-    grid-column: 1 / -1;
-  }
-  .characterButtonsWrapper > :nth-child(3) {
-    grid-column: 2;
-    grid-row: 1;
-  }
-  .characterSpotlightContainer :global(.spotlightLeftWrapper) {
-    width: calc(100% - 2rem);
-  }
-  .characterSpotlightContainer :global(.spotlightRightTopWrapper) {
-    max-width: none;
   }
 }
 

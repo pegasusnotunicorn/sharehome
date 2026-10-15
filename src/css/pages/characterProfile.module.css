@@ -1,0 +1,213 @@
+/* the top of a character's page (CharacterProfile.tsx): the same panel as the emoji section */
+
+.profile {
+  max-width: 1180px;
+  margin: 0 auto;
+  /* (clear of the logo and the buttons along the top) */
+  padding: 5rem 2rem 0;
+  box-sizing: border-box;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0.25rem 1rem;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.9rem;
+  color: #323232;
+  text-decoration: none;
+}
+
+.back span {
+  transition: transform 0.15s ease;
+}
+
+.back:hover span {
+  transform: translateX(-3px);
+}
+
+.count {
+  font-family: "Rowdies-Regular";
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.55);
+}
+
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 2.5rem;
+  padding: 2.5rem 3rem 2.75rem 1.5rem;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.55), transparent 55%),
+    #e9e6f6;
+  box-shadow: inset 0 0 0 1px rgba(88, 80, 160, 0.12);
+}
+
+.card {
+  min-width: 0;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  text-align: left;
+}
+
+.copy p,
+.copy li {
+  opacity: 1;
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.75rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #5b52a3;
+}
+
+.name {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(2.2rem, 4.2vw, 3.2rem);
+  font-weight: normal;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #323232;
+}
+
+.copy .lede {
+  margin: 0.9rem 0 0;
+  font-family: "Roboto Light";
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: rgba(50, 50, 50, 0.85);
+}
+
+.label {
+  margin: 1.5rem 0 0.6rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.6);
+}
+
+.ticks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ticks li {
+  position: relative;
+  padding-left: 1.75rem;
+  font-family: "Roboto Light";
+  font-size: 0.98rem;
+  line-height: 1.4;
+  color: #323232;
+}
+
+/* a tick in a little purple circle, as in the emoji section */
+.ticks li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.12em;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  background: #5b52a3
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    center / 0.8rem no-repeat;
+}
+
+.story {
+  margin-top: 1.25rem;
+}
+
+.copy .story p {
+  margin: 0 0 0.75rem;
+  font-family: "Roboto Light";
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: rgba(50, 50, 50, 0.85);
+}
+
+/* (on a wide screen the story's always there) */
+.storyToggle {
+  display: none;
+}
+
+.emojis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.emojiButton {
+  margin: 0;
+}
+
+/* a phone: the card on top, the story behind a button */
+@media only screen and (max-width: 900px) {
+  .profile {
+    padding: 4.75rem 1rem 0;
+  }
+
+  .panel {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1.25rem 1.25rem 2rem;
+    border-radius: 22px;
+  }
+
+  .story {
+    display: none;
+  }
+
+  .story.storyOpen {
+    display: block;
+  }
+
+  .storyToggle {
+    display: inline-block;
+    margin: 1rem 0 0;
+    padding: 0 0 0.1rem;
+    border: 0;
+    border-bottom: 2px solid rgba(50, 50, 50, 0.25);
+    background: none;
+    font-family: "Rowdies-Regular";
+    font-size: 0.95rem;
+    color: #323232;
+    cursor: pointer;
+  }
+
+  .emojis {
+    align-self: stretch;
+    margin-top: 1.5rem;
+  }
+
+  .emojiButton {
+    flex: 1;
+    justify-content: center;
+  }
+}

@@ -15,17 +15,3 @@
   align-items: center;
   text-align: center;
 }
-
-.videoModalCloseButtonWrapper {
-  width: calc(100% - 2rem);
-  max-width: 1000px;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.videoWrapper {
-  width: calc(100% - 2rem);
-  max-width: 1000px;
-  border-radius: 4px;
-  overflow: hidden;
-}

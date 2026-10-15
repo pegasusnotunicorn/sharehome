@@ -279,62 +279,6 @@
   margin-top: 0;
 }
 
-span.likeMode {
-  background: linear-gradient(
-    -45deg,
-    #9e0b0b 20%,
-    #dd7373 40%,
-    #ff5e5e 60%,
-    #ffcccc 80%
-  );
-  background-size: 200% auto;
-  background-clip: text;
-  text-fill-color: transparent;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: animated_text 5s ease-in-out infinite;
-}
-
-span.hateMode {
-  background: linear-gradient(
-    -45deg,
-    #372f9e 20%,
-    #5f5aa2 40%,
-    #7b74d4 60%,
-    #918aff 80%
-  );
-  background-size: 200% auto;
-  background-clip: text;
-  text-fill-color: transparent;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: animated_text 5s ease-in-out infinite;
-}
-
-.likeHateSVGWrapper {
-  margin-top: 2rem;
-  width: 100%;
-}
-
-.likeHateSVG {
-}
-
-@media only screen and (max-width: 900px) {
-  .likeHateSVG {
-  }
-}
-
-.thumbup {
-}
-
-.thumbdown {
-}
-
-.likeHateSVG img {
-  width: 125px;
-  height: 125px;
-}
-
 /* #endregion */
 
 /* the traits as 3D trait cards (traitTiles3d.ts), over the picture; the flat tags stay, hidden, to lay

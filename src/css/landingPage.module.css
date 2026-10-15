@@ -1,14 +1,4 @@
-/* #region--------------------------------------GENERAL */
 
-.mainContentWrapper {
-  position: relative;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  color: #323232;
-}
 
 .mainpageContainer {
   position: relative;
@@ -17,10 +7,6 @@
 
 .mainpageContainer h1 {
   font-size: 2.5rem;
-}
-
-.mainpageContainer p.noMargin {
-  margin: 0;
 }
 
 .stepEyebrow {
@@ -64,19 +50,6 @@
   z-index: 20;
 }
 
-.bulletWrapper {
-  max-width: 400px;
-  text-align: left;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.descriptionOpaque {
-  opacity: 0;
-}
-
 .descriptionWrapper {
   margin-top: 4rem;
   display: flex;
@@ -85,12 +58,6 @@
   flex-direction: column;
   text-align: center;
   width: calc(100% - 2rem);
-}
-
-.descriptionButtonWrapper {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
 }
 
 .descriptionWrapper > div {
@@ -142,9 +109,6 @@
   #howToPlay {
     height: 120px;
     margin-top: 15px;
-  }
-  .bulletWrapper {
-    max-width: unset;
   }
   .gameDetails {
     font-size: 0.85rem !important;
@@ -392,7 +356,6 @@
   margin-bottom: 0;
 }
 
-
 /* #endregion */
 
 /* #region--------------------------------------LIKES / HATES  */
@@ -497,18 +460,6 @@
   margin-left: 1rem;
 }
 
-.rulebookWrapper {
-  margin-top: 10rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.rulebookWrapper > a {
-  margin-left: 1rem;
-  margin-right: 1rem;
-}
-
 @media only screen and (max-width: 900px) {
   .mechanicsWrapper li {
     padding: 0.25rem;
@@ -520,21 +471,6 @@
     height: 125px;
     margin-right: 0.35rem;
     margin-left: 0.35rem;
-  }
-
-  .rulebookWrapper {
-    flex-direction: column;
-    margin-top: 4rem;
-    margin-bottom: 0rem;
-    width: 100%;
-  }
-
-  .rulebookWrapper > a {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    margin-left: 0;
-    margin-right: 0;
-    width: calc(100% - 2rem);
   }
 }
 
@@ -549,13 +485,4 @@
 
 #spotlightContainer > div > div > h1 {
   margin-bottom: 0 !important;
-}
-
-/* #endregion */
-
-/* #region TTRPG page specific */
-
-.textWrapper {
-  max-width: 600px !important;
-  text-wrap: unset;
 }

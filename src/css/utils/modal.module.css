@@ -13,7 +13,7 @@
 .panel {
   position: relative;
   background: #fff;
-  border-radius: 10px;
+  border-radius: 20px;
   padding: 2rem;
   max-width: 480px;
   width: 100%;
@@ -54,8 +54,8 @@
 /* #region--------------------------------------BUTTONS: the site's button style (see defaultButton.module.css) */
 
 .closeBtn {
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 38px;
+  height: 38px;
   box-sizing: border-box;
   border: 2px solid var(--chip-edge);
   border-radius: var(--chip-radius);
@@ -73,9 +73,14 @@
 .closeBtn:hover {
   background: #fff;
   color: var(--btn-ink);
-  border-color: var(--chip-edge);
+  border-color: var(--btn-ink);
   transform: translateY(-1px);
-  box-shadow: 0 4px 0 var(--chip-edge);
+  box-shadow: 0 4px 0 var(--btn-ink);
+}
+
+.closeBtn:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
 }
 
 .closeBtn:active {

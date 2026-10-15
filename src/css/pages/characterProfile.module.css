@@ -351,7 +351,11 @@
 
 /* the card's zoom buttons go and come back with the words; back once the card's its own again */
 .card button {
-  transition: opacity 0.35s ease;
+  /* (the fade, and the zoom chips' own lift and press) */
+  transition:
+    opacity 0.35s ease,
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
 }
 
 .card.toolsAway button {

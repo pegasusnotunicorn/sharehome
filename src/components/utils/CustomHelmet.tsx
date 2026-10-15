@@ -17,7 +17,7 @@ const CustomHelmet = (props: CustomHelmetProps) => (
     <meta
       itemProp="name"
       data-react-helmet="true"
-      content={props.description}
+      content={props.title}
     />
     <meta
       itemProp="description"

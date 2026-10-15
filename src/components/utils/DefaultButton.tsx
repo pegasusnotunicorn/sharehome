@@ -145,6 +145,13 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
           {iconTextContent}
         </button>
       );
+    } else if (onClick) {
+      // (something to press: a real button, so it can be reached and pressed from the keyboard)
+      return (
+        <button type="button" {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}>
+          {iconTextContent}
+        </button>
+      );
     } else {
       return (
         <div {...(props as React.HTMLAttributes<HTMLDivElement>)}>
@@ -168,7 +175,7 @@ const Icon = ({ icon, emoji }: IconProps): ReactNode => {
           loading="lazy"
           className={styles.btnIcon}
           src={`/images/emojis/${emoji}.webp`}
-          alt="button icon"
+          alt=""
         />
       </span>
     );
@@ -179,7 +186,7 @@ const Icon = ({ icon, emoji }: IconProps): ReactNode => {
           loading="lazy"
           className={styles.btnIcon}
           src={`/images/icons/${icon}.svg`}
-          alt="button icon"
+          alt=""
         />
       </span>
     );

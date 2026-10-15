@@ -1,4 +1,5 @@
 import CustomHelmet from "./utils/CustomHelmet";
+import usePageTitle from "./utils/usePageTitle";
 import PageIntro from "./utils/PageIntro";
 import { NavLink } from "react-router";
 
@@ -15,6 +16,7 @@ const ext = (href: string, text: string) => (
 );
 
 const PrivacyPage = () => {
+  usePageTitle("Privacy policy");
   return (
     <div className="content max-width">
       <CustomHelmet

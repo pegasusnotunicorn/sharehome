@@ -132,11 +132,13 @@ export const cardShadow = (T: Three) => {
   c.width = 256;
   c.height = 256;
   const ctx = c.getContext("2d")!;
-  ctx.filter = "blur(22px)";
+  // (a square's blurred shadow, the square itself drawn off the canvas: a canvas filter blur and
+  // roundRect aren't in older Safari)
+  ctx.shadowColor = "#000";
+  ctx.shadowBlur = 44;
+  ctx.shadowOffsetX = 1000;
   ctx.fillStyle = "#000";
-  ctx.beginPath();
-  ctx.roundRect(48, 48, 160, 160, 12);
-  ctx.fill();
+  ctx.fillRect(48 - 1000, 48, 160, 160);
   return (shadowTex = new T.CanvasTexture(c));
 };
 

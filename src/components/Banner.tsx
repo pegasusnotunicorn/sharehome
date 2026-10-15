@@ -14,8 +14,10 @@ const Banner = () => {
         target="_blank"
         rel="noopener noreferrer"
         className={styles["top-banner-marquee-link"]}
+        aria-label={text.replace(/^\S+\s/, "")}
       >
-        <div className={styles["top-banner-marquee"]}>
+        {/* (the text repeats to run across the screen: read once, from the label) */}
+        <div className={styles["top-banner-marquee"]} aria-hidden="true">
           <div className={styles["top-banner-track"]}>
             {[0, 1].map((group) => (
               <div key={group} className={styles["top-banner-group"]}>

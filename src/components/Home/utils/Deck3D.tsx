@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router";
 import type { ReactNode } from "react";
 import type { DeckApi, DeckCard } from "../../utils/deckCards3d";
 import type { DeckPose } from "../../utils/deckPoses";
@@ -68,7 +69,7 @@ const Deck3D = ({ className, cards, mm, edge, from, layout, fallback }: Deck3DPr
         <ul className={styles.links}>
           {links.map((c) => (
             <li key={c.href}>
-              <a href={c.href}>{c.label}</a>
+              <Link to={c.href!}>{c.label}</Link>
             </li>
           ))}
         </ul>

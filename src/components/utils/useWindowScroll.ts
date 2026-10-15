@@ -5,10 +5,10 @@ export default function useWindowScroll(): number {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrollPosition(document.body.scrollTop);
+      setScrollPosition(window.scrollY);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);

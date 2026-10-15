@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import styles from "../../css/utils/stepper.module.css";
 
 interface StepperProps {
@@ -12,21 +12,25 @@ interface StepperProps {
 const Stepper = ({ value, onChange, min = 0, max = 10, size = "default" }: StepperProps) => {
   const lg = size === "lg";
 
+  // what's typed, while it's being typed (it can be empty for a moment, to type a new number)
+  const [typed, setTyped] = useState<string | null>(null);
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value === "") return;
+    setTyped(e.target.value);
     const parsed = parseInt(e.target.value, 10);
     if (isNaN(parsed)) return;
     onChange(Math.min(max, Math.max(min, parsed)));
   };
 
-  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
-    const parsed = parseInt(e.target.value, 10);
-    if (isNaN(parsed)) onChange(min);
+  const handleBlur = () => {
+    if (typed !== null && isNaN(parseInt(typed, 10))) onChange(min);
+    setTyped(null);
   };
 
   return (
     <div className={`${styles.stepper}${lg ? ` ${styles.stepperLg}` : ""}`}>
       <button
+        type="button"
         className={`${styles.btn}${lg ? ` ${styles.btnLg}` : ""}`}
         onClick={() => onChange(Math.max(min, value - 1))}
         disabled={value <= min}
@@ -37,7 +41,7 @@ const Stepper = ({ value, onChange, min = 0, max = 10, size = "default" }: Stepp
       <input
         type="number"
         className={`${styles.count}${lg ? ` ${styles.countLg}` : ""}`}
-        value={value}
+        value={typed ?? value}
         onChange={handleInputChange}
         onBlur={handleBlur}
         min={min}
@@ -45,6 +49,7 @@ const Stepper = ({ value, onChange, min = 0, max = 10, size = "default" }: Stepp
         aria-label="Quantity"
       />
       <button
+        type="button"
         className={`${styles.btn}${lg ? ` ${styles.btnLg}` : ""}`}
         onClick={() => onChange(Math.min(max, value + 1))}
         disabled={value >= max}

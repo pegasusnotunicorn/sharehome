@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, A11y, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -109,6 +110,8 @@ const getPictureSlide = (
 };
 
 //make the swiper slides with the cards in them
+const reduceMotion = typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
 export const CarouselSection = (props: CarouselSectionProps) => {
   const { width } = useWindowDimensions();
 
@@ -123,7 +126,9 @@ export const CarouselSection = (props: CarouselSectionProps) => {
   const showNavigation = props.showNavigation ?? true;
   const mediaAspectRatio = props.mediaAspectRatio;
   const imageFit = props.imageFit ?? "contain";
-  const autoplayEnabled = props.autoplayEnabled ?? true;
+  // (not moving by itself for visitors who ask for less motion)
+  const autoplayEnabled = (props.autoplayEnabled ?? true) && !reduceMotion;
+  const [ranks] = useState(() => Array.from({ length: 200 }, Math.random));
 
   const swiperProps = {
     modules: [Navigation, Pagination, A11y, Autoplay],
@@ -172,10 +177,10 @@ export const CarouselSection = (props: CarouselSectionProps) => {
     }
   }
 
-  //randomize array
-  if (props.random) {
-    allPictures.sort(() => 0.5 - Math.random());
-  }
+  //randomize array (once: the same order on every render after)
+  const ranked = props.random
+    ? allPictures.map((p, i) => ({ p, r: ranks[i] ?? i })).sort((a, b) => a.r - b.r).map((x) => x.p)
+    : allPictures;
 
   return (
     <GsapFadeScrub
@@ -185,7 +190,7 @@ export const CarouselSection = (props: CarouselSectionProps) => {
         isContinuousAutoplay ? styles.continuousAutoplay : ""
       } ${props.className}`}
     >
-      <Swiper {...swiperProps}>{allPictures}</Swiper>
+      <Swiper {...swiperProps}>{ranked}</Swiper>
     </GsapFadeScrub>
   );
 };

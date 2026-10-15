@@ -31,7 +31,7 @@ const ArtbookDownloadPage = () => {
           <DefaultButton
             variant="primary"
             icon="rulebookWhite"
-            href="/artbook v2.pdf"
+            href="/Artbook%20v2.pdf"
             text="Download artbook"
           />
         </div>

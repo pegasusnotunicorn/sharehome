@@ -12,17 +12,21 @@ export const DeckRow = (props: DeckRowProps) => {
   let rowRef = useRef<HTMLDivElement>(null);
   let [rowTl, setRowTl] = useState<gsap.core.Timeline | null>(null);
   useLayoutEffect(() => {
-    setRowTl(
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: rowRef.current,
-          // markers: true,
-          scrub: 0.5,
-          start: "top bottom",
-          end: "bottom bottom",
-        },
-      })
-    );
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: rowRef.current,
+        // markers: true,
+        scrub: 0.5,
+        start: "top bottom",
+        end: "bottom bottom",
+      },
+    });
+    setRowTl(tl);
+    // (gone with the row: its scroll trigger too)
+    return () => {
+      tl.scrollTrigger?.kill();
+      tl.kill();
+    };
   }, [setRowTl]);
 
   return (

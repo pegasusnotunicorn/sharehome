@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 import { GsapFadeScrub } from "../utils/useGsap";
 import DefaultButton from "../utils/DefaultButton";
 import CarouselSection from "../utils/CarouselSection";
@@ -80,7 +81,7 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
               <p>
                 Mythological creatures with modern day jobs just like us humans.
                 <br />
-                <a href="/characters">Click here</a> to see all characters.
+                <Link to="/characters">Click here</Link> to see all characters.
               </p>
             </StepText>
           </GsapFadeScrub>

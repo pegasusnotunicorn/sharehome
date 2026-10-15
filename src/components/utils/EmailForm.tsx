@@ -59,12 +59,13 @@ export const EmailForm = (props: EmailFormProps) => {
         .then((response) => response.json())
         .then((data) => {
           if (!data.success || data.errors) {
-            if (data.errors.fields.email)
-              setResponse(data.errors.fields.email[0]);
+            setResponse(data.errors?.fields?.email?.[0] ?? "Something went wrong. Please try again.");
           } else {
             setResponse("Thank you! You're all signed up.");
           }
-        });
+        })
+        // (offline, or the sign-up service down: say so, rather than "Submitting..." for good)
+        .catch(() => setResponse("Something went wrong. Please try again."));
     } else {
       setResponse("Something went wrong. Please try again.");
     }

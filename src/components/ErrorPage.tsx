@@ -6,7 +6,7 @@ import errorStyles from "../css/pages/errorPage.module.css";
 
 const ErrorPage = () => {
   useEffect(() => {
-    document.title = "Something went wrong!";
+    document.title = "Page not found";
   }, []);
 
   return (

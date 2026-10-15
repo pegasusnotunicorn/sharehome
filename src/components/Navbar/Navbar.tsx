@@ -38,10 +38,14 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
     root.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setVisibility(false);
     addEventListener("keydown", onKey);
+    // (keyboard focus goes into the menu as it opens, and back to the menu button as it closes)
+    const opener = document.activeElement as HTMLElement | null;
+    requestAnimationFrame(() => menuRef.current?.querySelector<HTMLElement>("a, button, input")?.focus({ preventScroll: true }));
     return () => {
       root.style.overflow = was;
       root.style.scrollbarGutter = gutter;
       removeEventListener("keydown", onKey);
+      if (menuRef.current?.contains(document.activeElement)) opener?.focus({ preventScroll: true });
     };
   }, [visible]);
   // closed, nothing in it can be reached (by Tab, or a screen reader). (React 18 doesn't pass `inert` on.)

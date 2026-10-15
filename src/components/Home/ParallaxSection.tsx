@@ -54,10 +54,16 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
     document.body.style.overflow = "hidden"; // Prevent scrolling
     document.body.style.paddingRight = `${scrollbarWidth}px`; // Keep space for scrollbar
 
-    setTimeout(() => {
+    const restore = () => {
       document.body.style.overflow = ""; // Restore scrolling
       document.body.style.paddingRight = ""; // Remove scrollbar space simulation
-    }, 500);
+    };
+    const t = setTimeout(restore, 500);
+    // (left before then: the page can still scroll)
+    return () => {
+      clearTimeout(t);
+      restore();
+    };
   }, []);
 
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -89,7 +95,7 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
     if (!sectionRef.current || !flat) return;
     const sectionRefElement = sectionRef.current;
 
-    ScrollTrigger.create({
+    const st = ScrollTrigger.create({
       trigger: sectionRefElement,
       pin: true,
       scrub: 3,
@@ -103,8 +109,10 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
       ),
     });
 
+    // (only this one: the rest of the page's triggers, the navbar's among them, stay)
     return () => {
-      ScrollTrigger.getAll().forEach((st) => st.kill());
+      st.animation?.kill();
+      st.kill();
     };
   }, [flat]);
 

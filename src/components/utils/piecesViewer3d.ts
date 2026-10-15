@@ -403,8 +403,11 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
   const onDbl = (e: MouseEvent) => {
     if (!(e.target as Element).closest("button")) reset();
   };
-  // a trackpad pinch arrives as a wheel with ctrlKey
+  // The wheel zooms once the piece is in use (or zoomed), so scrolling past it still scrolls the page.
+  // A trackpad pinch arrives as a wheel with ctrlKey, and always zooms.
   const onWheel = (e: WheelEvent) => {
+    const inUse = stage.classList.contains("used") || Math.abs(z - 1) > 0.01 || document.activeElement === stage;
+    if (!e.ctrlKey && !inUse) return;
     e.preventDefault();
     used();
     zoomAt(Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0015)), e.clientX, e.clientY);

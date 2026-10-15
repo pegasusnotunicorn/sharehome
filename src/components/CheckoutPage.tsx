@@ -14,6 +14,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import CustomHelmet from "./utils/CustomHelmet";
+import usePageTitle from "./utils/usePageTitle";
 import Modal from "./utils/Modal";
 import Stepper from "./utils/Stepper";
 import MagnifierButton from "./utils/MagnifierButton";
@@ -947,6 +948,7 @@ const CheckoutIntro = () => (
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 const CheckoutPage = () => {
+  usePageTitle("Checkout");
   const { isDesktop } = useWindowDimensions();
   const appearance = isDesktop ? appearanceBase : appearanceMobile;
   const [lcmQty, setLcmQty] = useState(1);
@@ -960,6 +962,7 @@ const CheckoutPage = () => {
   const [visitor, setVisitor] = useState<VisitorShipping | null>(null);
   const [missingCountryModalOpen, setMissingCountryModalOpen] = useState(false);
   const [updatingSlug, setUpdatingSlug] = useState<ItemSlug | null>(null);
+  const [cartError, setCartError] = useState(false);
   // Survives the remount that a cart change forces, so the replacement
   // session can be created with the email already filled in. A ref, not
   // state — nothing renders from it and it shouldn't trigger a re-render.
@@ -999,6 +1002,7 @@ const CheckoutPage = () => {
     if (newLcmQty < 1) return;
 
     setUpdatingSlug(slug);
+    setCartError(false);
     try {
       const items: Record<string, number> = {
         lcm: newLcmQty,
@@ -1022,7 +1026,8 @@ const CheckoutPage = () => {
       setSessionId(newSid);
       setShippingRates(newRates ?? null);
     } catch {
-      // silently fail — user can retry
+      // (the order stays as it was: say so, and they can try again)
+      setCartError(true);
     } finally {
       setUpdatingSlug(null);
     }
@@ -1068,6 +1073,11 @@ const CheckoutPage = () => {
                   updatingSlug={updatingSlug}
                   shippingRates={shippingRates}
                 />
+                {cartError && (
+                  <p className={styles.checkoutError} role="alert">
+                    Couldn't update your order. Please try again.
+                  </p>
+                )}
                 <CartUpsell
                   cart={cart}
                   onUpdateItem={handleUpdateItem}

@@ -125,6 +125,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     textures.push(x);
     return x;
   };
+  let idle = 0; // (the wait before it zooms back, below)
   const cleanup = () => {
     dead = true;
     clearTimeout(idle);
@@ -223,7 +224,6 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     raf = requestAnimationFrame(step);
   };
   // left alone a while, zoomed, it zooms back (not while it's held)
-  let idle = 0;
   const zoomed = () => Math.abs(z - REST_Z) > 0.01 || tgt.distanceTo(AIM) > 0.001;
   const rest_ = () => {
     clearTimeout(idle);

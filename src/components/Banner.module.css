@@ -68,6 +68,18 @@
   animation-play-state: paused;
 }
 
+/* (still, for visitors who ask for less motion) */
+@media (prefers-reduced-motion: reduce) {
+  .top-banner-track {
+    animation: none;
+  }
+}
+
+.top-banner-marquee-link:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: -3px;
+}
+
 .top-banner-group {
   display: flex;
   align-items: center;

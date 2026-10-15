@@ -10,7 +10,7 @@ import { deckPoses } from "../src/components/utils/deckPoses.ts";
 import { characterLayout, directionEpisodeLayout } from "../src/components/Home/utils/deckLayouts.ts";
 
 // --- a card as a rectangle in 3D (three.js's rotation order: R = Rx * Ry * Rz, then a turn over
-// about its own long middle: * Rx(flip)) ---
+// sideways about its own upright middle: * Ry(flip)) ---
 const mul = (A, B) => A.map((r) => [0, 1, 2].map((j) => r[0] * B[0][j] + r[1] * B[1][j] + r[2] * B[2][j]));
 const Rx = (a) => [[1, 0, 0], [0, Math.cos(a), -Math.sin(a)], [0, Math.sin(a), Math.cos(a)]];
 const Ry = (a) => [[Math.cos(a), 0, Math.sin(a)], [0, 1, 0], [-Math.sin(a), 0, Math.cos(a)]];
@@ -21,7 +21,7 @@ const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 const SLAB = 2.5; // half the thickness we allow a card (the cards are about 2.3px thick)
 
 function face(q, w, h, off) {
-  const M = mul(mul(mul(Rx(q.rx), Ry(q.ry)), Rz(q.rz)), Rx(q.flip || 0));
+  const M = mul(mul(mul(Rx(q.rx), Ry(q.ry)), Rz(q.rz)), Ry(q.flip || 0));
   const u = apply(M, [1, 0, 0]), v = apply(M, [0, 1, 0]), n = apply(M, [0, 0, 1]);
   const c = [q.x + n[0] * off, q.y + n[1] * off, q.z + n[2] * off];
   const hw = (w * q.scale) / 2, hh = (h * q.scale) / 2;

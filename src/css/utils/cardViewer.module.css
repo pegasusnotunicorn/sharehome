@@ -139,14 +139,6 @@
   outline-offset: 2px;
 }
 
-/* zoom back out: only once it's zoomed in or out */
-.straighten {
-  visibility: hidden;
-}
-
-.stage:global(.zoomed) .straighten {
-  visibility: visible;
-}
 
 /* #region--------------------------------------BUTTONS: the site's button style (see defaultButton.module.css) */
 
@@ -220,4 +212,42 @@
 .stage:global(.zoomed) {
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.55);
+}
+
+/* Zoom back out: only once it's zoomed in or out. Until then it takes no room, so + and - sit in the
+   middle; it grows in beside them (the row stays centred, so they slide left to make room). */
+.tools .straighten {
+  width: 0;
+  margin-left: -8px; /* (the row's gap) */
+  border-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition:
+    width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-left 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    border-width 0.3s ease,
+    opacity 0.2s ease;
+}
+
+.stage:global(.zoomed) .tools .straighten {
+  width: 38px;
+  margin-left: 0;
+  border-width: 2px;
+  opacity: 1;
+  pointer-events: auto;
+  transition:
+    width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-left 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    border-width 0.3s ease,
+    opacity 0.25s ease 0.08s,
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tools .straighten,
+  .stage:global(.zoomed) .tools .straighten {
+    transition: none;
+  }
 }

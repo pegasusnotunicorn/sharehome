@@ -234,12 +234,78 @@ span.is-bold {
   }
 }
 
+/* Terms and privacy: the text in a white box, like the rest of the site's */
+.subcontentWrapper.legalWrapper {
+  max-width: 46rem;
+}
+
 .termsWrapper {
   text-align: left;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 1rem;
+  padding: 2rem 2.25rem 2.25rem;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.08),
+    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+}
+
+.termsWrapper p,
+.termsWrapper li {
+  font-family: "Roboto Light";
+  font-size: 1rem;
+  line-height: 1.65;
+  color: rgba(50, 50, 50, 0.88);
+  opacity: 1;
+}
+
+.termsWrapper .subtitle,
+.termsWrapper h2 {
+  margin: 0.75rem 0 0;
+  font-family: "Rowdies-Bold";
+  font-size: 1.45rem;
+  line-height: 1.15;
+  text-align: left;
+  color: #323232;
+}
+
+.termsWrapper > .subtitle:first-child,
+.termsWrapper > h2:first-child {
+  margin-top: 0;
+}
+
+.termsWrapper h3 {
+  margin: 0.5rem 0 0;
+  font-family: "Rowdies-Regular";
+  font-size: 1.05rem;
+  color: #323232;
+}
+
+.termsWrapper a {
+  color: #323232;
+  text-decoration: underline;
+  text-decoration-color: rgba(216, 30, 24, 0.5);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.termsWrapper a:hover {
+  text-decoration-color: #d81e18;
+}
+
+.legalBack {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0 3rem;
+}
+
+@media only screen and (max-width: 900px) {
+  .termsWrapper {
+    padding: 1.5rem 1.25rem 1.75rem;
+  }
 }
 
 .termsWrapper p,

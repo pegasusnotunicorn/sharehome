@@ -64,7 +64,8 @@ const useUTMPreservation = (): void => {
           });
 
           // Update the URL without triggering a page reload
-          window.history.replaceState({}, "", newUrl.toString());
+          // (keeping the router's own state on the entry, so Back and Forward still work)
+          window.history.replaceState(window.history.state, "", newUrl.toString());
         } catch (error) {
           console.error("Error parsing stored UTM data:", error);
         }

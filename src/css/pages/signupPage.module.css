@@ -1,0 +1,24 @@
+/* Sign up (SignupPage.tsx): the opening, then the form in a white box */
+.card {
+  max-width: 30rem;
+  margin: 0 auto 4rem;
+  padding: 1.75rem 1.75rem 1.5rem;
+  box-sizing: border-box;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.08),
+    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+}
+
+.card p {
+  margin: 0 0 1rem;
+  opacity: 1;
+}
+
+@media only screen and (max-width: 900px) {
+  .card {
+    margin: 0 1rem 2rem;
+    padding: 1.25rem;
+  }
+}

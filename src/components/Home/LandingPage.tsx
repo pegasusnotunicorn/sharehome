@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { Link } from "react-router";
 import { GsapFadeScrub } from "../utils/useGsap";
-import DefaultButton from "../utils/DefaultButton";
-import CarouselSection from "../utils/CarouselSection";
 import ParallaxSection from "./ParallaxSection";
 import MechanicsSection from "./MechanicsSection";
 import CharactersDeckSection from "./CharactersDeckSection";
@@ -14,9 +13,11 @@ import SmoshSection from "./SmoshSection";
 import LikeHateSection from "./LikeHateSection";
 import BoxHero from "./BoxHero";
 import landingPageStyles from "../../css/landingPage.module.css";
-import colorStyles from "../../css/utils/colors.module.css";
 import DescriptionContainer from "./DescriptionContainer";
 import StepText from "./utils/StepText";
+
+// (the photo carousel at the bottom, and the carousel library with it, load after the page is up)
+const CarouselSection = lazy(() => import("../utils/CarouselSection"));
 
 interface LandingPageProps {
   setTrailerPlaying: (playing: boolean) => void; // the trailer's playing, in the hero's box
@@ -80,7 +81,7 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
               <p>
                 Mythological creatures with modern day jobs just like us humans.
                 <br />
-                <a href="/characters">Click here</a> to see all characters.
+                <Link to="/characters">Click here</Link> to see all characters.
               </p>
             </StepText>
           </GsapFadeScrub>
@@ -167,6 +168,7 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
       <div
         className={`${landingPageStyles.mainpageContainer} ${landingPageStyles.carouselContainer}`}
       >
+        <Suspense fallback={null}>
         <CarouselSection
           className={landingPageStyles.mainpageCarousel}
           totalPictures={15}
@@ -178,6 +180,7 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
           autoplaySpeed={5500}
           showNavigation={false}
         />
+        </Suspense>
       </div>
     </div>
   );

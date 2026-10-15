@@ -1,3 +1,9 @@
+// The UTM cookie: JSON in base64. btoa only takes Latin-1, and campaign tags can hold emoji or
+// any script, so anything past ASCII is written as a JSON \\u escape first (JSON.parse turns it back,
+// so the readers in create-checkout-session and track-conversions read it as before).
+const encodeUtm = (data) =>
+  btoa(JSON.stringify(data).replace(/[\u0080-\uffff]/g, (c) => "\\u" + c.charCodeAt(0).toString(16).padStart(4, "0")));
+
 const IS_DEV = Deno.env.get("NETLIFY_DEV") === "true";
 
 const trackUtm = async (request, context) => {
@@ -52,14 +58,19 @@ const trackUtm = async (request, context) => {
       fb_client_id: fbClientId || "none",
     };
 
-    await context.cookies.set("utm_data", btoa(JSON.stringify(utmData)), {
-      secure: true,
-      httpOnly: true,
-      sameSite: "Lax",
-      maxAge: 86400 * 30, // 30-day expiration
-    });
+    try {
+      await context.cookies.set("utm_data", encodeUtm(utmData), {
+        secure: true,
+        httpOnly: true,
+        sameSite: "Lax",
+        maxAge: 86400 * 30, // 30-day expiration
+      });
+    } catch (err) {
+      // (never worth an error page in place of the site)
+      console.warn("⚠️ Couldn't store UTM data:", err.message);
+    }
 
-    console.log("📦 Stored UTM Data:", utmData);
+    if (IS_DEV) console.log("📦 Stored UTM Data:", utmData);
   } else if (hasFbclid && existingUtmData) {
     // fbclid arrived without source UTMs — patch just the fbclid field so
     // click-tracking stays fresh without clobbering the existing attribution.
@@ -67,7 +78,7 @@ const trackUtm = async (request, context) => {
       const existing = JSON.parse(atob(existingUtmData));
       existing.fbclid = searchParams.get("fbclid");
       existing.fb_client_id = fbClientId || existing.fb_client_id || "none";
-      await context.cookies.set("utm_data", btoa(JSON.stringify(existing)), {
+      await context.cookies.set("utm_data", encodeUtm(existing), {
         secure: true,
         httpOnly: true,
         sameSite: "Lax",

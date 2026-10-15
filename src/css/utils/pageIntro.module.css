@@ -1,36 +1,61 @@
+/* A page's opening (PageIntro.tsx): the same on every page */
 .intro {
-  gap: 0.75rem;
-  padding: 1rem 0 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 1rem 2.25rem;
+  box-sizing: border-box;
 }
 
-.introNoSub {
-  padding-bottom: 1rem;
+.intro .eyebrow {
+  margin: 0 0 0.9rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.78rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.6);
+  opacity: 1;
 }
 
 .title {
-  font-size: clamp(2.8rem, 8vw, 5.5rem);
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.lead {
-  max-width: 34rem;
   margin: 0;
-  font-family: "Rowdies-Light";
-  font-size: 1.05rem;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(3rem, 8.5vw, 6rem);
+  font-weight: normal;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: #323232;
 }
 
+.intro .lead {
+  max-width: 34rem;
+  margin: 1.1rem 0 0;
+  font-family: "Roboto Light";
+  font-size: 1.08rem;
+  line-height: 1.5;
+  color: rgba(50, 50, 50, 0.85);
+  opacity: 1;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 1.5rem;
+  margin-top: 1.6rem;
+}
+
+/* (clear of the logo and the menu button, which float over the top of the page here) */
 @media only screen and (max-width: 900px) {
   .intro {
-    padding: 0.5rem 0 1.5rem;
+    padding: 4.75rem 0 2rem;
   }
 
-  .introNoSub {
-    padding-bottom: 0.5rem;
-  }
-  .lead {
-    font-size: 0.95rem;
+  .intro .lead {
+    font-size: 1rem;
   }
 }

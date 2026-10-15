@@ -22,31 +22,6 @@
   background-color: #5f5aa2;
 }
 
-.top-banner.is-green {
-  background-color: #7daf9c;
-  color: #231916;
-}
-
-.top-banner.is-red {
-  background-color: #dd7373;
-  color: #231916;
-}
-
-/* white fails on sage and rose: ink text instead */
-.top-banner.is-green .top-banner-link,
-.top-banner.is-red .top-banner-link {
-  color: #231916;
-}
-
-.top-banner.is-yellow {
-  background-color: #f1db4b;
-  color: #323232;
-}
-
-.top-banner.is-yellow .top-banner-link {
-  color: #323232;
-}
-
 .top-banner-marquee-link {
   width: 100%;
   color: inherit;
@@ -66,6 +41,18 @@
 
 .top-banner-marquee-link:hover .top-banner-track {
   animation-play-state: paused;
+}
+
+/* (still, for visitors who ask for less motion) */
+@media (prefers-reduced-motion: reduce) {
+  .top-banner-track {
+    animation: none;
+  }
+}
+
+.top-banner-marquee-link:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: -3px;
 }
 
 .top-banner-group {
@@ -94,15 +81,6 @@
 
 .top-banner-text {
   font-weight: 500;
-}
-
-.top-banner-arrow {
-  font-size: 1.2em;
-  transition: transform 0.2s ease;
-}
-
-.top-banner-link:hover .top-banner-arrow {
-  transform: translateX(3px);
 }
 
 @keyframes bannerMarquee {

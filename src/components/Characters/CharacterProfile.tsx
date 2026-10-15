@@ -83,12 +83,18 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
     const r = ring.current;
     if (!r) return navigate(`/characters/${to.urlName}`);
     turning.current = true;
+    const from = window.location.pathname;
     clearTimeout(handover.current); // (a card that came in just now is already on its way out)
     setHush(true);
     const turned = r.turn(k); // (the ring draws the middle card from here, this frame...)
     if (viewerEl.current) viewerEl.current.style.opacity = "0"; // (...as the viewer goes)
     setSwung(true);
     await turned;
+    // (cut short by leaving: another page, or Back to another character. Not this turn's to finish)
+    if (!ring.current || window.location.pathname !== from) {
+      requestAnimationFrame(() => setHush(false));
+      return;
+    }
     // (still "turning" until the cards are the next character's: a click before then would start a
     // turn they'd cut short)
     navigate(`/characters/${to.urlName}`);

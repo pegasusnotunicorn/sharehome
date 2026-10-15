@@ -39,10 +39,6 @@ body {
   min-height: -webkit-fill-available;
 }
 
-.is-hidden {
-  display: none !important;
-}
-
 h1,
 h2,
 h3,
@@ -72,14 +68,6 @@ li {
 p,
 li {
   opacity: 0.85;
-}
-
-span.is-bold {
-  font-family: "Rowdies-Light";
-}
-
-.prelineWhiteSpace {
-  white-space: pre-line;
 }
 
 .noselect {
@@ -124,59 +112,10 @@ span.is-bold {
   }
 }
 
-.mirrored {
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
-}
-
-@media only screen and (min-width: 901px) {
-  .is-hidden-desktop {
-    display: none !important;
-  }
-}
-
 @media only screen and (max-width: 900px) {
   .is-hidden-mobile {
     display: none !important;
   }
-}
-
-.stickerTasksWrapper {
-  text-align: left;
-  font-size: 1.5rem;
-}
-
-.stickerTasksWrapper .taskWrapper:not(:last-child) {
-  margin-bottom: 1rem;
-  margin-top: 1rem;
-}
-
-.stickerTasksWrapper div {
-  display: flex;
-}
-
-.taskWrapper,
-.taskWrapper label {
-  cursor: pointer;
-}
-
-.checkWrapper {
-  margin-top: 0.15rem;
-}
-
-.stickerTasksWrapper input {
-  margin-right: 1rem;
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
-/* Reusable circular icon frame */
-.circularIconFrame {
-  border-radius: 100%;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0px 1px 3px rgb(0 0 0 / 10%);
-  padding: 4px;
 }
 
 /* #endregion */
@@ -193,6 +132,9 @@ span.is-bold {
   padding-bottom: 2rem;
   margin: auto;
   overflow: hidden;
+  /* (clipped the same, without being a scroll box: position: sticky works inside, e.g. the checkout
+     order summary) */
+  overflow: clip;
 }
 
 /* a page that ends in a full-width coloured section runs straight into the footer */
@@ -206,12 +148,6 @@ span.is-bold {
 
 .content p {
   margin-top: 0;
-}
-
-.contentWrapper {
-  margin: auto;
-  display: block;
-  margin-top: 10px;
 }
 
 .subcontentWrapper {
@@ -234,12 +170,78 @@ span.is-bold {
   }
 }
 
+/* Terms and privacy: the text in a white box, like the rest of the site's */
+.subcontentWrapper.legalWrapper {
+  max-width: 46rem;
+}
+
 .termsWrapper {
   text-align: left;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 1rem;
+  padding: 2rem 2.25rem 2.25rem;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.08),
+    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+}
+
+.termsWrapper p,
+.termsWrapper li {
+  font-family: "Roboto Light";
+  font-size: 1rem;
+  line-height: 1.65;
+  color: rgba(50, 50, 50, 0.88);
+  opacity: 1;
+}
+
+.termsWrapper .subtitle,
+.termsWrapper h2 {
+  margin: 0.75rem 0 0;
+  font-family: "Rowdies-Bold";
+  font-size: 1.45rem;
+  line-height: 1.15;
+  text-align: left;
+  color: #323232;
+}
+
+.termsWrapper > .subtitle:first-child,
+.termsWrapper > h2:first-child {
+  margin-top: 0;
+}
+
+.termsWrapper h3 {
+  margin: 0.5rem 0 0;
+  font-family: "Rowdies-Regular";
+  font-size: 1.05rem;
+  color: #323232;
+}
+
+.termsWrapper a {
+  color: #323232;
+  text-decoration: underline;
+  text-decoration-color: rgba(216, 30, 24, 0.5);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.termsWrapper a:hover {
+  text-decoration-color: #d81e18;
+}
+
+.legalBack {
+  display: flex;
+  justify-content: center;
+  margin: 0.5rem 0 3rem;
+}
+
+@media only screen and (max-width: 900px) {
+  .termsWrapper {
+    padding: 1.5rem 1.25rem 1.75rem;
+  }
 }
 
 .termsWrapper p,
@@ -265,9 +267,6 @@ span.is-bold {
   .subcontentWrapper.margin-top {
     margin-top: 0;
   }
-  .subcontentWrapper.padding-top {
-    padding-top: 5vh;
-  }
   .subtitle {
     text-align: center;
     margin-top: 0;
@@ -278,109 +277,11 @@ span.is-bold {
   max-width: 600px;
 }
 
-.subcontentWrapper.is-wider {
-  max-width: 1250px;
-}
-
-.subcontentWrapper.border-bottom {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-  margin-bottom: 20px;
-}
-
-.subcontentWrapper.border-top {
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
-  margin-top: 20px;
-}
-
 .subtitle {
   position: relative;
   word-break: break-word;
   font-weight: normal;
 }
-
-.subsubtitle {
-  margin-top: 0px;
-  position: relative;
-  font-weight: normal;
-}
-
-/* #endregion */
-
-/* #region------------------------------------------------------------------TITLE */
-
-.floating {
-  animation-name: floating;
-  animation-duration: 3s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
-}
-
-@keyframes floating {
-  0% {
-    transform: translate(0, 0px);
-  }
-  50% {
-    transform: translate(0, 5px);
-  }
-  100% {
-    transform: translate(0, -0px);
-  }
-}
-
-.floating-counter {
-  animation-name: floating-counter;
-  animation-duration: 3s;
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-in-out;
-}
-
-@keyframes floating-counter {
-  0% {
-    transform: translate(0, 0px);
-  }
-  50% {
-    transform: translate(0, -5px);
-  }
-  100% {
-    transform: translate(0, -0px);
-  }
-}
-
-.lcmContainer {
-  margin: auto;
-  padding-top: 5px;
-  width: 250px;
-}
-
-.lcmImage {
-  background: transparent;
-  width: 100%;
-  margin: 0;
-  min-height: 271.66px;
-}
-
-.sharehomegame {
-  text-align: right;
-  width: 109%;
-  margin-top: -10px !important;
-  font-size: 1.3rem;
-  font-family: "Rowdies-Regular";
-}
-
-/* #endregion */
-
-.couchContainer {
-  margin-top: 1rem;
-}
-
-/* Shared page content layout */
-.characterContent {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
 
 /* Shared GameModeIcons styles (used on landing + about pages) */
 .timePlayerInfoWrapper {

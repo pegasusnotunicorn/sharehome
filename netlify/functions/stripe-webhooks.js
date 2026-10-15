@@ -121,6 +121,15 @@ export default async function stripeWebhooks(request) {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object;
+      // A payment that settles later (a bank debit, if one is ever turned on) completes the session
+      // unpaid. Nothing ships until it's paid: say so, rather than buy a label for it.
+      if (session.payment_status === "unpaid") {
+        await alert(
+          "A checkout completed **unpaid** (a delayed payment method). No label was bought and the buyer wasn't enrolled; ship it by hand once Stripe shows it paid.",
+          { source: "stripe", sessionId: session.id, customer: session.customer_details?.email || "—" }
+        );
+        break;
+      }
       const customerEmail = session.customer_details?.email;
       const customerName = session.customer_details?.name;
 
@@ -240,19 +249,20 @@ export default async function stripeWebhooks(request) {
   return new Response("Webhook received", { status: 200 });
 }
 
-// Narrows the concurrent-delivery race window for a session. Two webhook
-// deliveries within the createLabel() window would both pass the metadata
-// idempotency check and both buy a label; the blob claim catches that.
+// Closes the concurrent-delivery race for a session. Two webhook deliveries
+// within the createLabel() window would both pass the metadata idempotency
+// check and both buy a label; the blob claim catches that. onlyIfNew makes
+// the claim one atomic write (a read then a write would let both through).
 // Fail-open: if Blobs is unreachable, we degrade to metadata-only idempotency.
 async function claimSessionForLabel(sessionId, eventId) {
   try {
-    const store = getStore("shippo-claimed-sessions");
-    const existing = await store.get(sessionId);
-    if (existing) return { claimed: false, by: existing };
-    await store.set(
+    const store = getStore({ name: "shippo-claimed-sessions", consistency: "strong" });
+    const { modified } = await store.set(
       sessionId,
-      JSON.stringify({ eventId, at: new Date().toISOString() })
+      JSON.stringify({ eventId, at: new Date().toISOString() }),
+      { onlyIfNew: true }
     );
+    if (!modified) return { claimed: false, by: await store.get(sessionId) };
     await maybeAlertBlobBloat(store);
     return { claimed: true };
   } catch (err) {
@@ -297,7 +307,8 @@ async function maybeAlertBlobBloat(store) {
 const ORDER_COUNTER_STORE = "shippo-order-counters";
 const ORDER_COUNTER_MAX_RETRIES = 5;
 async function nextDailyOrderNumber() {
-  const store = getStore(ORDER_COUNTER_STORE);
+  // (strong reads: a stale count would only waste retries and fall back to the session number)
+  const store = getStore({ name: ORDER_COUNTER_STORE, consistency: "strong" });
   const day = new Date().toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD
   // Scope key by Stripe mode so test runs never bump the live sequence.
   const mode = IS_DEV ? "test" : "live";
@@ -609,9 +620,13 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
       source: "shippo",
       sessionId: session.id,
       customer: session.customer_details?.email || "—",
-      shipTo: session.shipping_details?.address
-        ? `${session.shipping_details.name || ""} — ${session.shipping_details.address.city || ""}, ${session.shipping_details.address.state || ""} ${session.shipping_details.address.postal_code || ""} ${session.shipping_details.address.country || ""}`.trim()
-        : "—",
+      // (under the pinned API version the address is in collected_information)
+      shipTo: (() => {
+        const d = session.collected_information?.shipping_details || session.shipping_details;
+        return d?.address
+          ? `${d.name || ""} — ${d.address.city || ""}, ${d.address.state || ""} ${d.address.postal_code || ""} ${d.address.country || ""}`.trim()
+          : "—";
+      })(),
       error: err.message,
       nextSteps:
         "Buy the label manually in Shippo, then patch the Stripe session metadata (shippo_transaction_id, shippo_tracking_number, shippo_label_url) so any webhook retry won't double-buy.",
@@ -644,13 +659,25 @@ function countGames(session) {
 }
 
 async function postToDiscord(payload) {
-  if (!ALERT_WEBHOOK_URL) return;
-  try {
-    await fetch(ALERT_WEBHOOK_URL, {
+  if (!ALERT_WEBHOOK_URL) {
+    console.error("⚠️  ALERT_WEBHOOK_URL unset; this alert went nowhere:", JSON.stringify(payload).slice(0, 500));
+    return;
+  }
+  const send = () =>
+    fetch(ALERT_WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
+  try {
+    let res = await send();
+    // rate-limited: once more, after the wait Discord asks for (at most 2s)
+    if (res.status === 429) {
+      const wait = Math.min(2, Number(res.headers.get("retry-after")) || 1);
+      await new Promise((r) => setTimeout(r, wait * 1000));
+      res = await send();
+    }
+    if (!res.ok) console.error(`⚠️  Discord webhook refused (${res.status}):`, JSON.stringify(payload).slice(0, 500));
   } catch (err) {
     console.error("⚠️  Discord webhook failed:", err.message);
   }

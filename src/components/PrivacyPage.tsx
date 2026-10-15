@@ -1,5 +1,7 @@
 import CustomHelmet from "./utils/CustomHelmet";
+import usePageTitle from "./utils/usePageTitle";
 import PageIntro from "./utils/PageIntro";
+import DefaultButton from "./utils/DefaultButton";
 import { NavLink } from "react-router";
 
 // Full privacy policy. Also the privacy policy and data deletion URL for the
@@ -15,6 +17,7 @@ const ext = (href: string, text: string) => (
 );
 
 const PrivacyPage = () => {
+  usePageTitle("Privacy policy");
   return (
     <div className="content max-width">
       <CustomHelmet
@@ -22,13 +25,10 @@ const PrivacyPage = () => {
         description="How Pegasus Games collects, uses and protects your information on lovecareermagic.com and our social media accounts."
       />
 
-      <PageIntro title="Privacy policy" />
+      <PageIntro eyebrow="The fine print" title="Privacy policy" lead={`Effective ${EFFECTIVE_DATE}`} />
 
-      <div className="subcontentWrapper min-width">
+      <div className="subcontentWrapper legalWrapper">
         <div className="termsWrapper">
-          <p>
-            <strong>Effective date:</strong> {EFFECTIVE_DATE}
-          </p>
           <p>
             Pegasus Games ("we", "us") is the independent studio behind Love,
             Career & Magic, run by game designer Wonmin Lee in New York City.
@@ -350,12 +350,8 @@ const PrivacyPage = () => {
         </div>
       </div>
 
-      <div className="subcontentWrapper">
-        <div className="couchContainer">
-          <p style={{ marginTop: "1em" }}>
-            <NavLink to="/">Click here to go back home.</NavLink>
-          </p>
-        </div>
+      <div className="legalBack">
+        <DefaultButton navlink="/" variant="secondary" border="dark" icon="prev" text="Back to home" />
       </div>
     </div>
   );

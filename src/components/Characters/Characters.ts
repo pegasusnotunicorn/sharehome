@@ -818,7 +818,7 @@ export function getAllFinishedPeople(random?: boolean): Character[] {
 //returns details of all characters even the ones not finished
 export function getAllCharacters(random?: boolean): Character[] {
   if (random) {
-    return shuffle(allCharacters);
+    return shuffle([...allCharacters]); // (a copy: card art goes by each one's place in the list)
   } else {
     return allCharacters;
   }

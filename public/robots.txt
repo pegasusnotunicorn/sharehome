@@ -1,4 +1,6 @@
 User-agent: *
 Disallow: /thankyou  # Avoid indexing post-purchase pages
+Disallow: /buy  # A redirect to checkout that records an analytics event
+Disallow: /.netlify/
 
 Sitemap: https://lovecareermagic.com/sitemap.xml

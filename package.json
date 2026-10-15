@@ -24,8 +24,7 @@
     "sitemap": "^8.0.0",
     "stripe": "^17.7.0",
     "swiper": "^12.2.0",
-    "three": "0.160.0",
-    "webfontloader": "^1.6.28"
+    "three": "0.160.0"
   },
   "scripts": {
     "prebuild": "npm run generate-sitemap",

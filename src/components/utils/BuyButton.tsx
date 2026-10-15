@@ -17,7 +17,6 @@ export const recordBuyClick = () => {
   }
 };
 
-type OmitNavlink<T> = Omit<T, "navlink" | "href">;
 
 interface BuyButtonProps {
   text?: string;

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import CustomHelmet from "./utils/CustomHelmet";
+import usePageTitle from "./utils/usePageTitle";
 import DefaultButton from "./utils/DefaultButton";
 import PolaroidJourney from "./utils/PolaroidJourney";
 import { CONTACT_POLAROIDS } from "./utils/contactPolaroids";
@@ -41,6 +42,7 @@ const useShippingRegion = (): ShippingRegion => {
 
 const ThankYouPage = () => {
   const title = "Thank you for your order!";
+  usePageTitle(title);
 
   const [start] = useState(() => Math.floor(Math.random() * CONTACT_POLAROIDS.length));
   const region = useShippingRegion();

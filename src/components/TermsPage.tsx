@@ -1,8 +1,11 @@
 import CustomHelmet from "./utils/CustomHelmet";
+import usePageTitle from "./utils/usePageTitle";
 import PageIntro from "./utils/PageIntro";
+import DefaultButton from "./utils/DefaultButton";
 import { NavLink } from "react-router";
 
 const TermsPage = () => {
+  usePageTitle("Terms");
   return (
     <div className="content max-width">
       <CustomHelmet
@@ -10,9 +13,9 @@ const TermsPage = () => {
         description="Terms, return policy and privacy summary for Love, Career & Magic."
       />
 
-      <PageIntro title="Terms & privacy policy" />
+      <PageIntro eyebrow="The fine print" title="Terms" lead="Returns, and how your information is used." />
 
-      <div className="subcontentWrapper min-width">
+      <div className="subcontentWrapper legalWrapper">
         <div className="termsWrapper">
           <h2 className="subtitle">Terms and conditions</h2>
           <p>
@@ -74,12 +77,8 @@ const TermsPage = () => {
         </div>
       </div>
 
-      <div className="subcontentWrapper">
-        <div className="couchContainer">
-          <p style={{ marginTop: "1em" }}>
-            <NavLink to="/">Click here to go back home.</NavLink>
-          </p>
-        </div>
+      <div className="legalBack">
+        <DefaultButton navlink="/" variant="secondary" border="dark" icon="prev" text="Back to home" />
       </div>
     </div>
   );

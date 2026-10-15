@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router";
-import { GsapFadeScrub } from "../utils/useGsap";
 import EmailForm from "../utils/EmailForm";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import DefaultButton from "../utils/DefaultButton";
@@ -38,10 +37,14 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
     root.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setVisibility(false);
     addEventListener("keydown", onKey);
+    // (keyboard focus goes into the menu as it opens, and back to the menu button as it closes)
+    const opener = document.activeElement as HTMLElement | null;
+    requestAnimationFrame(() => menuRef.current?.querySelector<HTMLElement>("a, button, input")?.focus({ preventScroll: true }));
     return () => {
       root.style.overflow = was;
       root.style.scrollbarGutter = gutter;
       removeEventListener("keydown", onKey);
+      if (menuRef.current?.contains(document.activeElement)) opener?.focus({ preventScroll: true });
     };
   }, [visible]);
   // closed, nothing in it can be reached (by Tab, or a screen reader). (React 18 doesn't pass `inert` on.)
@@ -82,12 +85,7 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
 
       <div className={`${styles.navbar} ${isVisibleClass}`}>
         {/* Top bar: logo + action buttons + hamburger */}
-        <GsapFadeScrub
-          scrubStartCenter
-          scrub
-          fadeIn
-          className={`${styles.topBar} noselect`}
-        >
+        <div className={`${styles.topBar} noselect`}>
           <NavLink to="/" className={styles.logo} aria-label="Love, Career & Magic home" />
           <div className={styles.topBarActions}>
             {!hideBuyButtons && (!isLandingPage || isDesktop) && !isLandingPageAtTop && (
@@ -125,7 +123,7 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
               </span>
             </button>
           </div>
-        </GsapFadeScrub>
+        </div>
 
         {/* The menu: a drawer from the right, over the dimmed page */}
         <div className={`${styles.backdrop} ${isVisibleClass}`} onClick={closeNav} aria-hidden="true" />

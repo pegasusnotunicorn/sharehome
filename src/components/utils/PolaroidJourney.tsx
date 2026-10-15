@@ -130,7 +130,7 @@ const PolaroidJourney = ({ label, title, start = 0 }: PolaroidJourneyProps) => {
       )}
 
       {shownItem && (
-        <div className={galleryStyles.lightbox} onClick={() => setOpen(null)} role="presentation">
+        <div className={`${galleryStyles.lightbox} modal-overlay`} onClick={() => setOpen(null)} role="presentation">
           <div
             className={galleryStyles.lightboxCard}
             onClick={(e) => e.stopPropagation()}

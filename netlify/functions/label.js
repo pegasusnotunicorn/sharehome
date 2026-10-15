@@ -14,7 +14,13 @@ export default async function label(req) {
     return new Response("Not found", { status: 404 });
   }
 
-  const pdf = await getStore(STAMPED_LABEL_STORE).get(id, { type: "arrayBuffer" });
+  let pdf;
+  try {
+    pdf = await getStore(STAMPED_LABEL_STORE).get(id, { type: "arrayBuffer" });
+  } catch (err) {
+    console.error("Couldn't read the label:", err.message);
+    return new Response("The label couldn't be loaded. Try again in a moment.", { status: 502 });
+  }
   if (!pdf) return new Response("Not found", { status: 404 });
 
   return new Response(pdf, {

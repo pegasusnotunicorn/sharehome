@@ -633,15 +633,6 @@
   transition: background 0.15s, color 0.15s;
 }
 
-.cartUpsellBtn:hover {
-  background: #323232;
-  color: #fff;
-}
-
-.cartUpsellBtn:hover .spinner {
-  border-color: rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
-}
 
 /* ── Upsell carousel (mobile) ──────────────────────────────────── */
 
@@ -1318,13 +1309,7 @@
   box-shadow: 0 1px 0 var(--btn-ink);
 }
 .cartUpsellBtn {
-  height: 28px;
-  border-radius: 8px;
-}
-
-.cartUpsellBtn:hover:not(:disabled) {
-  background: #323232;
-  color: #fff;
+  height: 30px;
 }
 .upsellNavBtn {
   width: 2.1rem;
@@ -1575,3 +1560,21 @@
 }
 
 /* #endregion */
+
+/* every checkout button: the site's focus ring */
+.checkoutButton:focus-visible,
+.promoApplyBtn:focus-visible,
+.promoToggleBtn:focus-visible,
+.promoRemoveBtn:focus-visible,
+.modalClose:focus-visible,
+.qtyModalRemoveBtn:focus-visible,
+.cartUpsellBtn:focus-visible,
+.upsellNavBtn:focus-visible,
+.cartQtyBtn:focus-visible,
+.cartDetailsToggle:focus-visible,
+.shippingLabelBtn:focus-visible,
+.missingCountryLink:focus-visible,
+.promoInput:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
+}

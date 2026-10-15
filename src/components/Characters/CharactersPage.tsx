@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback, useMemo, useState } from "react";
-import { Link, useParams, useNavigate } from "react-router";
+import { Link, Navigate, useParams } from "react-router";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, A11y, Keyboard } from "swiper/modules";
 import "swiper/css";
@@ -13,6 +13,7 @@ import {
 import CharacterProfile from "./CharacterProfile";
 import { EmojiSection } from "../utils/EmojiSection";
 import CustomHelmet from "../utils/CustomHelmet";
+import usePageTitle from "../utils/usePageTitle";
 import Modal from "../utils/Modal";
 import charStyles from "../../css/pages/characterPage.module.css";
 import type { CharacterWithNav } from "../../types/character";
@@ -64,16 +65,11 @@ const expansionPlaceholders: ExpansionCharacter[] = [
 
 //render all characters or a specific one depending on URL
 const CharactersPage = () => {
-  const navigate = useNavigate();
-
   let { name } = useParams();
-
-  useEffect(() => {
-    document.title = "Characters";
-  }, []);
 
   //if there is a specifc character name, render that character page
   let chosenCharacter = name ? getSpecificPersonByURL(name) : false;
+  usePageTitle(chosenCharacter ? chosenCharacter.name : "Characters");
 
   //redirect to just /characters if typo a non-existant character
   if (
@@ -82,8 +78,7 @@ const CharactersPage = () => {
       !chosenCharacter ||
       chosenCharacter.ignoreInRandom)
   ) {
-    navigate("/characters");
-    return null;
+    return <Navigate to="/characters" replace />;
   } else {
     //custom meta tags for this page
     let title = "All playable characters";

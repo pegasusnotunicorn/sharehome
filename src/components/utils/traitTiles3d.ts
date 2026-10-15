@@ -66,8 +66,11 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
   const showing = new Set<string>();
   const pick = (type: Trait["type"]) => {
     let src = "";
-    do src = `/images/cards/traits/${type}-${1 + Math.floor(Math.random() * PER_KIND)}.webp`;
-    while (showing.has(src));
+    // (a few goes at one that isn't showing; never stuck, if somehow they all are)
+    for (let tries = 0; tries < 40; tries++) {
+      src = `/images/cards/traits/${type}-${1 + Math.floor(Math.random() * PER_KIND)}.webp`;
+      if (!showing.has(src)) break;
+    }
     return src;
   };
 
@@ -282,7 +285,8 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
       const next = (t: Tile | undefined) => (!t || first ? 0 : (t.turns + 1) % 2);
       Promise.all(srcs.map((src) => art(src)))
         .then((maps) => {
-          if (dead || ask !== shown) return;
+          // (a newer set's on its way: these were never shown)
+          if (dead || ask !== shown) return srcs.forEach((x) => showing.delete(x));
           tags = els;
           // the hidden tags take the cards' shape (CSS) before they're measured
           if (first) stage.classList.add("ready");
@@ -311,7 +315,10 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
           step(!onScreen);
           draw();
         })
-        .catch(() => first && onFail());
+        .catch(() => {
+          srcs.forEach((x) => showing.delete(x));
+          if (first) onFail();
+        });
     },
     destroy: () => {
       dead = true;

@@ -1,0 +1,33 @@
+/* The artbook download (ArtbookDownloadPage.tsx): the opening, then the book's mockups */
+.mockups {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.mockups img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.08),
+    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+}
+
+.back {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0 3rem;
+}
+
+@media only screen and (max-width: 900px) {
+  .mockups {
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+}

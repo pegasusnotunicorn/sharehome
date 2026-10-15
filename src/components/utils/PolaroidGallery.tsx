@@ -92,7 +92,7 @@ const PolaroidGallery = ({
 
       {activeItem && (
         <div
-          className={styles.lightbox}
+          className={`${styles.lightbox} modal-overlay`}
           onClick={() => setActiveIndex(null)}
           role="presentation"
         >
@@ -103,12 +103,9 @@ const PolaroidGallery = ({
             aria-modal="true"
             aria-label={activeItem.alt}
           >
-            <img
-              src="/images/icons/cross.svg"
-              alt="Close"
-              className={styles.lightboxClose}
-              onClick={() => setActiveIndex(null)}
-            />
+            <button type="button" className={styles.lightboxClose} onClick={() => setActiveIndex(null)} aria-label="Close">
+              <img src="/images/icons/cross.svg" alt="" style={{ display: "block", width: "100%", height: "100%" }} />
+            </button>
             <img
               src={activeItem.src}
               alt={activeItem.alt}

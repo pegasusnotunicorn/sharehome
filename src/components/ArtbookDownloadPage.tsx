@@ -1,8 +1,8 @@
-import { useEffect } from "react";
-import { NavLink } from "react-router";
-
 import CustomHelmet from "./utils/CustomHelmet";
 import DefaultButton from "./utils/DefaultButton";
+import PageIntro from "./utils/PageIntro";
+import usePageTitle from "./utils/usePageTitle";
+import styles from "../css/pages/artbookPage.module.css";
 
 const ArtbookDownloadPage = () => {
   //custom meta tags for this page
@@ -10,55 +10,23 @@ const ArtbookDownloadPage = () => {
   const splashImage = "https://lovecareermagic.com/images/artbook/mockup2.webp";
   const description =
     "Thank you so much for signing up for my newsletter. Here is the free digital artbook!";
-
-  //change title of page
-  useEffect(() => {
-    document.title = title;
-  }, [title]);
+  usePageTitle(title);
 
   return (
-    <div className="content max-width">
-      <CustomHelmet
-        title={title}
-        splashImage={splashImage}
-        description={description}
-      />
+    <div className="content">
+      <CustomHelmet title={title} splashImage={splashImage} description={description} />
 
-      <div className="subcontentWrapper margin-top min-width">
-        <div className="characterContent">
-          <h2 className="subtitle">Here is your digital artbook!</h2>
-          <p>{description}</p>
-          <DefaultButton
-            variant="primary"
-            icon="rulebookWhite"
-            href="/artbook v2.pdf"
-            text="Download artbook"
-          />
-        </div>
+      <PageIntro eyebrow="Free download" title="Your digital artbook" lead={description}>
+        <DefaultButton variant="primary" icon="rulebookWhite" href="/Artbook%20v2.pdf" text="Download artbook" />
+      </PageIntro>
+
+      <div className={styles.mockups}>
+        <img loading="lazy" src="/images/artbook/mockup2.webp" alt="The digital artbook, open" />
+        <img loading="lazy" src="/images/artbook/mockup1.webp" alt="The digital artbook, open at the cast" />
       </div>
 
-      <div className="subcontentWrapper">
-        <div className="couchContainer">
-          <img
-            loading="lazy"
-            className="couch"
-            style={{ width: "100%" }}
-            src="/images/artbook/mockup2.webp"
-            alt={description}
-          ></img>
-        </div>
-        <div className="couchContainer">
-          <img
-            loading="lazy"
-            className="couch"
-            style={{ width: "100%" }}
-            src="/images/artbook/mockup1.webp"
-            alt={description}
-          ></img>
-          <p style={{ marginTop: "1em" }}>
-            <NavLink to="/">Click here to go back home.</NavLink>
-          </p>
-        </div>
+      <div className={styles.back}>
+        <DefaultButton navlink="/" variant="secondary" border="dark" icon="prev" text="Back to home" />
       </div>
     </div>
   );

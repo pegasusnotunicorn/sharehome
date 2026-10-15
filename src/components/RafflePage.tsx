@@ -78,10 +78,10 @@ const RafflePage = () => {
   const done = status === "success";
 
   return (
-    <div className={`content max-width ${styles.rafflePage}`}>
-      <PageIntro title="Free game" lead="You must complete all 3 steps to be entered in the raffle 🎟️" className={styles.pageIntro} wrapperClassName={styles.pageIntroWrapper} />
+    <div className={`content ${styles.rafflePage}`}>
+      <PageIntro eyebrow="Raffle" title="Free game" lead="You must complete all 3 steps to be entered in the raffle 🎟️" />
 
-      <div className={`subcontentWrapper min-width ${styles.raffleContent}`}>
+      <div className={styles.raffleContent}>
 
         {/* Prize section */}
         <div className={styles.prizeSection}>
@@ -166,20 +166,14 @@ const RafflePage = () => {
             ) : (
               <>
                 <p className={styles.stepDesc}>We're making a Season 2. Follow along and be the first to know!</p>
-                <a
+                <DefaultButton
                   href={KICKSTARTER_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.kickstarterBtn}
                   onClick={() => setKickstarterClicked(true)}
-                >
-                  <DefaultButton
-                    text="Follow on Kickstarter →"
-                    variant="primary"
-                    color="kickstarter"
-                    className={styles.kickstarterBtnInner}
-                  />
-                </a>
+                  text="Follow on Kickstarter →"
+                  variant="primary"
+                  color="kickstarter"
+                  className={styles.kickstarterBtnInner}
+                />
               </>
             )}
           </div>

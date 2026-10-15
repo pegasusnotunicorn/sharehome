@@ -87,10 +87,21 @@ export default async function createCheckoutSession(req, context) {
   const referrer =
     cookieUtms.referrer && cookieUtms.referrer !== "none" ? cookieUtms.referrer : null;
 
+  // (the whole origin compared, not a prefix: "https://lovecareermagic.com.example" isn't ours)
   const trustedOrigins = [PROD_URL, "http://localhost:3000", "http://localhost:8888"];
-  const baseUrl = (returnUrl && trustedOrigins.some((o) => returnUrl.startsWith(o)))
+  const originOf = (u) => {
+    try {
+      return new URL(u).origin;
+    } catch {
+      return null;
+    }
+  };
+  const baseUrl = (typeof returnUrl === "string" && trustedOrigins.includes(originOf(returnUrl)))
     ? returnUrl
     : `${PROD_URL}/thankyou`;
+  // a bad address (a typo in a recovery link) is left off, rather than failing the whole checkout
+  const customerEmail =
+    typeof email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) ? email.trim().slice(0, 254) : null;
 
   if (!items || typeof items !== "object" || Array.isArray(items)) {
     console.error("Invalid items payload:", typeof items);
@@ -110,7 +121,12 @@ export default async function createCheckoutSession(req, context) {
     if (!validSlugs.includes(slug)) continue;
     const qty = Math.floor(Number(rawQty));
     const maxQty = slug === "lcm" ? LCM_MAX_QTY : PIN_MAX_QTY;
-    if (!isFinite(qty) || qty < 1 || qty > maxQty) continue;
+    if (!isFinite(qty) || qty < 1) continue;
+    // (more than the page allows: refused, rather than quietly dropping the item)
+    if (qty > maxQty) {
+      console.error(`Quantity over the limit for ${slug}:`, rawQty);
+      return new Response(JSON.stringify({ error: "Something went wrong." }), { status: 400, headers: { "Content-Type": "application/json" } });
+    }
     const priceId = PRICE_IDS[slug];
     if (!priceId) {
       console.error(`Missing price ID for: ${slug}`);
@@ -153,7 +169,7 @@ export default async function createCheckoutSession(req, context) {
         { shipping_rate: NORTH_AMERICAN_SHIPPING_ID },
         ...(EUROPE_SHIPPING_ID ? [{ shipping_rate: EUROPE_SHIPPING_ID }] : []),
       ],
-      ...(email && { customer_email: email }),
+      ...(customerEmail && { customer_email: customerEmail }),
     });
 
     return new Response(JSON.stringify({

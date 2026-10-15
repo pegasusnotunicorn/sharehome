@@ -33,7 +33,7 @@ const AboutPage = () => {
           <iframe
             src="https://www.youtube.com/embed/jKp0NWvWEQY?rel=0&modestbranding=1"
             title="How to play Love, Career & Magic"
-            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             frameBorder="0"
           />

@@ -205,11 +205,6 @@
 }
 
 @media only screen and (max-width: 900px) {
-  .directionEpisodeBottomTextWrapper {
-    padding-top: 0.5em !important;
-    padding-bottom: 0.5em !important;
-    font-size: 0.85em;
-  }
   .directionEpisodeTextWrapper {
     font-size: 2.2em;
   }
@@ -220,24 +215,6 @@
   :global(.directionEpisodeDecksContainer) .directionEpisodeTextWrapper {
     font-size: 1.8em;
   }
-}
-
-.directionEpisodeBottomTextWrapper:global(.yellowBackground) {
-  color: #323232;
-}
-
-.directionEpisodeBottomTextWrapper {
-  display: flex;
-  justify-content: space-between;
-  position: absolute;
-  bottom: 0;
-  color: #fff;
-  width: calc(100% - 4em);
-  padding: 1em;
-  padding-left: 2em;
-  padding-right: 2em;
-  margin: auto;
-  font-size: 1em;
 }
 
 /* #endregion ----------------------------------------------------------- */

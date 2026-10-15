@@ -9,7 +9,7 @@ const ExternalRedirect = ({ url }: ExternalRedirectProps) => {
     const currentUrl = new URL(window.location.href);
     const currentParams = currentUrl.searchParams;
 
-    const targetUrl = new URL(url);
+    const targetUrl = new URL(url, window.location.origin);
 
     currentParams.forEach((value, key) => {
       targetUrl.searchParams.set(key, value);

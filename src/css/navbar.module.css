@@ -313,7 +313,9 @@
 }
 
 .menuEmailInput:focus {
-  border-color: #5f5aa2;
+  border-color: var(--btn-ink);
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 2px;
 }
 
 .menuEmailButton {
@@ -337,7 +339,8 @@
 
 .menuSocials {
   display: grid;
-  grid-template-columns: repeat(9, minmax(0, 1fr));
+  /* (a row of them, wrapping on a small phone rather than shrinking past a fingertip) */
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
   gap: 0.45rem;
   margin-top: auto;
   padding-top: 1.75rem;

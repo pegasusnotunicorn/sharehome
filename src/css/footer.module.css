@@ -347,13 +347,6 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .castLink span,
-  .social {
-    transition: none;
-  }
-}
-
 /* #region--------------------------------------BUTTONS: the site's button style (see defaultButton.module.css) */
 
 .social {
@@ -382,3 +375,16 @@
 }
 
 /* #endregion */
+
+.social:focus-visible,
+.footer a:focus-visible {
+  outline: 3px solid #f4efe3;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .castLink span,
+  .social {
+    transition: none;
+  }
+}

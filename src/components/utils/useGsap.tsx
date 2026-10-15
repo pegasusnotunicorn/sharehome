@@ -84,6 +84,7 @@ export const GsapFadeScrub = (props: GsapFadeScrubProps) => {
     return () => {
       if (tl) tl.kill();
     };
+    // (the div below is a new one on each page: the fade binds to that one)
   }, [
     customFrom,
     customTo,
@@ -94,6 +95,7 @@ export const GsapFadeScrub = (props: GsapFadeScrubProps) => {
     markers,
     scrub,
     duration,
+    location.pathname,
   ]);
 
   return (
@@ -125,7 +127,8 @@ export const GsapWiggle = (props: GsapWiggleProps) => {
 
   useLayoutEffect(() => {
     let tl: gsap.core.Timeline | undefined;
-    if (target.current) {
+    // (not for visitors who ask for less motion)
+    if (target.current && !window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
       tl = gsap.timeline({
         repeat: -1,
         yoyo: true,
@@ -153,7 +156,8 @@ export const GsapWiggle = (props: GsapWiggleProps) => {
       io.disconnect();
       tl?.kill();
     };
-  }, [target, degree]);
+    // (the div below is a new one on each page: the wiggle binds to that one)
+  }, [target, degree, location.pathname]);
 
   return (
     <div

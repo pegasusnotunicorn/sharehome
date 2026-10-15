@@ -9,14 +9,18 @@
 }
 
 /* ---------------------------------------------------------------- the piece */
+/* (as wide as the decks and the cards below it; on a wide screen, wider than 3:2 rather than taller
+   than the window has room for) */
 .viewer {
   margin: 0 auto 1.5rem;
-  width: min(100%, calc(56vh * 3 / 2));
+  width: 100%;
 }
 
 .stage {
   position: relative;
   aspect-ratio: 3 / 2;
+  max-height: clamp(320px, 60vh, 620px);
+  width: 100%;
   border-radius: 12px;
   background: radial-gradient(ellipse at 50% 40%, #fff 0%, var(--paper) 75%);
   border: 2px solid var(--ink);
@@ -403,8 +407,10 @@
     flex-wrap: nowrap;
     overflow-x: auto;
     scrollbar-width: none;
-    margin: 0 -1rem;
-    padding: 0 1rem 2px;
+    /* (in line with everything else; the end fades, so you can tell there's more to scroll to) */
+    padding: 0 0 4px;
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+    mask-image: linear-gradient(90deg, #000 85%, transparent);
   }
 
   .decks::-webkit-scrollbar {

@@ -1,7 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { Link } from "react-router";
 import { GsapFadeScrub } from "../utils/useGsap";
-import DefaultButton from "../utils/DefaultButton";
 import ParallaxSection from "./ParallaxSection";
 import MechanicsSection from "./MechanicsSection";
 import CharactersDeckSection from "./CharactersDeckSection";

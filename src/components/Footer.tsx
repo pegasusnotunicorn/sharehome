@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router";
 import BuyButton from "./utils/BuyButton";
 import { SOCIAL_LINKS, SocialIcon } from "./utils/SocialIcons";

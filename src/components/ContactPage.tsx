@@ -90,6 +90,7 @@ const ContactPage = () => {
 // #region--------------------------------------THE JOURNEY: the polaroids, going round in 3D
 
 const AUTO_MS = 3600;
+const AFTER_TOUCH_MS = 8000; // after someone's turned it themselves, it waits longer before going on
 const PHOTOS = CONTACT_POLAROIDS.map((p) => ({ src: p.src, date: formatDate(p.date) }));
 
 const Journey = () => {
@@ -102,6 +103,12 @@ const Journey = () => {
   const [paused, setPaused] = useState(false); // the visitor's pause button
   const [held, setHeld] = useState(false); // a pointer or focus on it: it waits
   const [shown, setShown] = useState(false); // on screen
+  const touched = useRef(0); // when someone last turned it themselves
+  const [tick, setTick] = useState(0); // (to wait again, with the photo in front the same)
+  const nudge = (n: number) => {
+    touched.current = Date.now();
+    api.current?.turn(n);
+  };
 
   useEffect(() => {
     const el = stage.current;
@@ -113,6 +120,7 @@ const Journey = () => {
           photos: PHOTOS,
           onTurn: (i) => !gone && setAt(i),
           onOpen: (i) => !gone && setOpen(i),
+          onTouch: () => (touched.current = Date.now()),
           onFail: () => !gone && setFailed(true),
         })
       )
@@ -142,9 +150,15 @@ const Journey = () => {
   useEffect(() => {
     if (!live || paused || held || !shown || open !== null) return;
     if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
-    const t = setInterval(() => !document.hidden && api.current?.turn(1), AUTO_MS);
-    return () => clearInterval(t);
-  }, [live, paused, held, shown, open, at]);
+    // (each turn starts the wait again)
+    const wait = Math.max(AUTO_MS, touched.current + AFTER_TOUCH_MS - Date.now());
+    const t = setTimeout(() => {
+      // (the tab's out of sight, or it's been turned by hand meanwhile: wait again)
+      if (document.hidden || Date.now() < touched.current + AFTER_TOUCH_MS) setTick((n) => n + 1);
+      else api.current?.turn(1);
+    }, wait);
+    return () => clearTimeout(t);
+  }, [live, paused, held, shown, open, at, tick]);
 
   useEffect(() => {
     if (open === null) return;
@@ -171,7 +185,7 @@ const Journey = () => {
             {!live && <img className={styles.ringStill} src={CONTACT_POLAROIDS[0].src} alt="" />}
           </div>
           <div className={styles.journeyBar} onFocus={() => setHeld(true)} onBlur={() => setHeld(false)}>
-            <button type="button" className={styles.chip} onClick={() => api.current?.turn(-1)} aria-label="Previous photo">
+            <button type="button" className={styles.chip} onClick={() => nudge(-1)} aria-label="Previous photo">
               <Chevron flip />
             </button>
             <div className={styles.caption} aria-live={paused ? "polite" : "off"}>
@@ -182,7 +196,7 @@ const Journey = () => {
                 </span>
               </p>
             </div>
-            <button type="button" className={styles.chip} onClick={() => api.current?.turn(1)} aria-label="Next photo">
+            <button type="button" className={styles.chip} onClick={() => nudge(1)} aria-label="Next photo">
               <Chevron />
             </button>
           </div>

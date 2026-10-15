@@ -223,6 +223,8 @@
   width: 100vw;
   height: clamp(380px, 40vw, 560px);
   margin-top: 0.5rem;
+  /* (a swipe across turns the photos; up or down, it scrolls the page) */
+  touch-action: pan-y;
   user-select: none;
   -webkit-user-select: none;
 }

@@ -23,6 +23,7 @@ interface MountOptions {
   photos: Photo[];
   onTurn: (i: number) => void; // the photo now in front
   onOpen: (i: number) => void; // the one in front was clicked
+  onTouch?: () => void; // someone swiped or clicked it
   onFail: () => void;
 }
 
@@ -64,7 +65,7 @@ const polaroid = async (T: Three, p: Photo) => {
   g.strokeRect(m, m, side, side);
   if (p.date) {
     g.fillStyle = "rgba(50, 50, 50, 0.72)";
-    g.font = `${Math.round(W * 0.07)}px GochiHand, "Comic Sans MS", cursive`;
+    g.font = `${Math.round(W * 0.105)}px GochiHand, "Comic Sans MS", cursive`;
     g.textAlign = "center";
     g.textBaseline = "middle";
     g.fillText(p.date, W / 2, m + side + (H - m - side) / 2);
@@ -76,7 +77,7 @@ const polaroid = async (T: Three, p: Photo) => {
 
 const mod = (i: number, n: number) => ((i % n) + n) % n;
 
-export async function mountPolaroidRing(el: HTMLElement, { photos, onTurn, onOpen, onFail }: MountOptions): Promise<PolaroidRingApi | null> {
+export async function mountPolaroidRing(el: HTMLElement, { photos, onTurn, onOpen, onTouch, onFail }: MountOptions): Promise<PolaroidRingApi | null> {
   let T: Three, r: THREE.WebGLRenderer;
   try {
     T = await loadThree();
@@ -242,19 +243,23 @@ export async function mountPolaroidRing(el: HTMLElement, { photos, onTurn, onOpe
     dress();
     draw();
   };
+  // a turn under way, stopped where it's got to (the nearest photo in front, the rest of the way
+  // still to go), and how much of it was left
+  const halt = () => {
+    if (!raf) return 0;
+    cancelAnimationFrame(raf);
+    raf = 0;
+    const whole = Math.round(shift);
+    at = mod(at + whole, photos.length);
+    shift -= whole;
+    to -= whole;
+    wear();
+    return to;
+  };
   const turn = (n: number) => {
-    if (!n) return;
     // (another turn on top of one under way: on from where it's got to)
-    if (raf) {
-      cancelAnimationFrame(raf);
-      raf = 0;
-      const whole = Math.round(shift);
-      at = mod(at + whole, photos.length);
-      shift -= whole;
-      to -= whole;
-      n += to;
-      wear();
-    }
+    n += halt();
+    if (!n && !shift) return;
     n = Math.max(-SIDE + 1, Math.min(SIDE - 1, n));
     from = shift;
     to = n;
@@ -276,14 +281,66 @@ export async function mountPolaroidRing(el: HTMLElement, { photos, onTurn, onOpe
     const hit = ray.intersectObjects(cards.filter((c) => c.visible), true)[0];
     return hit ? cards.findIndex((c) => c === hit.object.parent) : -1;
   };
+  // a swipe (or a drag) across: the photos follow it, and let go, it settles on the nearest one, or the
+  // next one along if it was flicked
+  let swipe: { id: number; x0: number; y0: number; base: number; on: boolean; x: number; t: number; v: number } | null = null;
+  let swiped = false;
+  const perPhoto = () => Math.max(120, Math.min(360, Wr * (Wr < 700 ? 0.5 : 0.28)));
+  const onDown = (e: PointerEvent) => {
+    if (e.button > 0) return;
+    swiped = false;
+    swipe = { id: e.pointerId, x0: e.clientX, y0: e.clientY, base: 0, on: false, x: e.clientX, t: e.timeStamp, v: 0 };
+  };
+  const onDrag = (e: PointerEvent) => {
+    if (!swipe || e.pointerId !== swipe.id) return;
+    const dx = e.clientX - swipe.x0, dy = e.clientY - swipe.y0;
+    if (!swipe.on) {
+      if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return;
+      swipe.on = swiped = true;
+      onTouch?.();
+      try {
+        el.setPointerCapture(e.pointerId);
+      } catch {
+        // (a pointer the browser no longer tracks)
+      }
+      halt();
+      swipe.base = shift;
+      swipe.x0 = e.clientX;
+    }
+    const dt = Math.max(1, e.timeStamp - swipe.t);
+    swipe.v = (e.clientX - swipe.x) / dt;
+    swipe.x = e.clientX;
+    swipe.t = e.timeStamp;
+    shift = Math.max(-SIDE + 1.2, Math.min(SIDE - 1.2, swipe.base - (e.clientX - swipe.x0) / perPhoto()));
+    for (let d = 0; d <= SIDE + 1; d++) {
+      make(mod(at + Math.round(shift) + d, photos.length));
+      make(mod(at + Math.round(shift) - d, photos.length));
+    }
+    draw();
+  };
+  const onUp = (e: PointerEvent) => {
+    if (!swipe || e.pointerId !== swipe.id) return;
+    const s0 = swipe;
+    swipe = null;
+    if (!s0.on) return;
+    // (a flick carries on to the next one)
+    const fling = Math.abs(s0.v) > 0.35 && e.timeStamp - s0.t < 100 ? -Math.sign(s0.v) * 0.5 : 0;
+    turn(Math.max(-SIDE + 1, Math.min(SIDE - 1, Math.round(shift + fling))));
+  };
+  el.addEventListener("pointerdown", onDown);
+  el.addEventListener("pointermove", onDrag);
+  el.addEventListener("pointerup", onUp);
+  el.addEventListener("pointercancel", onUp);
   const onClick = (e: MouseEvent) => {
+    if (swiped) return;
     const slot = hitAt(e);
     if (slot < 0) return;
+    onTouch?.();
     if (slot === SIDE && !raf) onOpen(at);
     else if (slot !== SIDE) turn(slot - SIDE - Math.round(shift));
   };
   const onMove = (e: PointerEvent) => {
-    if (e.pointerType !== "mouse") return;
+    if (e.pointerType !== "mouse" || swipe?.on) return;
     el.style.cursor = hitAt(e) >= 0 ? "pointer" : "";
   };
   el.addEventListener("click", onClick);
@@ -300,6 +357,10 @@ export async function mountPolaroidRing(el: HTMLElement, { photos, onTurn, onOpe
       cancelAnimationFrame(raf);
       ro.disconnect();
       el.removeEventListener("click", onClick);
+      el.removeEventListener("pointerdown", onDown);
+      el.removeEventListener("pointermove", onDrag);
+      el.removeEventListener("pointerup", onUp);
+      el.removeEventListener("pointercancel", onUp);
       el.removeEventListener("pointermove", onMove);
       el.style.cursor = "";
       sc.traverse((o) => {

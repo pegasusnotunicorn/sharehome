@@ -6,7 +6,25 @@
       name="viewport"
       content="width=device-width,initial-scale=1.0,minimum-scale=1"
     />
-    <link rel="preload" as="image" href="/images/box/still.webp" fetchpriority="high" />
+    <!-- The home page's box, as early as possible (only there: other pages don't show it) -->
+    <script>
+      if (location.pathname === "/") {
+        var heroPreload = document.createElement("link");
+        heroPreload.rel = "preload";
+        heroPreload.as = "image";
+        heroPreload.href = "/images/box/still.webp";
+        heroPreload.setAttribute("fetchpriority", "high");
+        document.head.appendChild(heroPreload);
+        // (and the hero's background texture: otherwise found only once the home page's CSS is in)
+        if ("__HOME_BG__".charAt(0) === "/") {
+          var bgPreload = document.createElement("link");
+          bgPreload.rel = "preload";
+          bgPreload.as = "image";
+          bgPreload.href = "__HOME_BG__";
+          document.head.appendChild(bgPreload);
+        }
+      }
+    </script>
 
     <!-- Disable analytics/tracking on localhost so dev traffic doesn't pollute prod data -->
     <script>
@@ -17,7 +35,7 @@
     </script>
 
     <!-- MailerLite Universal -->
-    <script defer>
+    <script>
       if (window.__ANALYTICS_ENABLED__) {
         (function (w, d, e, u, f, l, n) {
           (w[f] =
@@ -68,9 +86,8 @@
     <!-- End Google Tag Manager -->
 
     <link rel="apple-touch-icon" href="/logo192.png" />
-    <link rel="icon" href="/favicon.ico?" type="image/x-icon" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="manifest" href="/manifest.json" />
-    <meta property="og:logo" content="/logo192.png" />
 
     <meta name="theme-color" content="#FFFFFF" />
 
@@ -84,8 +101,8 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@sysifuscorp" />
     <meta name="twitter:creator" content="@1minlee" />
-    <meta property="twitter:domain" content="lovecareermagic.com" />
-    <meta property="twitter:url" content="https://lovecareermagic.com" />
+    <meta name="twitter:domain" content="lovecareermagic.com" />
+    <meta name="twitter:url" content="https://lovecareermagic.com" />
     <meta
       name="twitter:title"
       content="Love, Career & Magic - 12m game for 2-6 players"
@@ -96,7 +113,7 @@
     />
     <meta
       name="twitter:image"
-      content="https://lovecareermagic.com/images/og-image-1080x1080.jpg"
+      content="https://lovecareermagic.com/images/og-image-1200x630.jpg"
     />
 
     <!-- Facebook Meta Tags -->
@@ -213,24 +230,23 @@
     <div id="modal"></div>
     <div id="sharehome"></div>
 
-    <!-- Hide the hero image if the path is not / -->
+    <!-- The home page's box until the app is up (written in only on the home page, so other pages
+         neither download it nor flash it) -->
+    <div id="hero-static"></div>
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        if (window.location.pathname !== "/") {
-          document.getElementById("hero-static").style.display = "none";
-        }
-      });
+      (function () {
+        var hero = document.getElementById("hero-static");
+        if (location.pathname !== "/") return hero.remove();
+        var img = document.createElement("img");
+        img.src = "/images/box/still.webp";
+        img.alt = "The Love, Career & Magic game box.";
+        img.className = "heroImageStatic";
+        img.width = 1440;
+        img.height = 1080;
+        img.setAttribute("fetchpriority", "high");
+        hero.appendChild(img);
+      })();
     </script>
-    <div id="hero-static">
-      <img
-        src="/images/box/still.webp"
-        alt="The Love, Career & Magic game box."
-        class="heroImageStatic"
-        width="1440"
-        height="1080"
-        fetchpriority="high"
-      />
-    </div>
     <script type="module" src="/src/index.ts"></script>
   </body>
 </html>

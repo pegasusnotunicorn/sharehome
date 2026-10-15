@@ -48,7 +48,7 @@ const CustomHelmet = (props: CustomHelmetProps) => (
     <meta
       property="og:url"
       data-react-helmet="true"
-      content={window.location.href}
+      content={window.location.origin + window.location.pathname /* (no tracking tags in a shared link) */}
     />
 
     <meta

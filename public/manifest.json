@@ -1,6 +1,6 @@
 {
-  "short_name": "SHAREHOME",
-  "name": "Love Career & Magic",
+  "short_name": "LC&M",
+  "name": "Love, Career & Magic",
   "icons": [
     {
       "src": "favicon.ico",
@@ -18,8 +18,8 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#ffffff",
   "background_color": "#ffffff"
 }

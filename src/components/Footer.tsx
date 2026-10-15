@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router";
-import { getAllCharacters } from "./Characters/Characters";
 import BuyButton from "./utils/BuyButton";
 import { SOCIAL_LINKS, SocialIcon } from "./utils/SocialIcons";
 import useWindowDimensions from "./utils/useWindowDimensions";
@@ -17,8 +16,10 @@ const EXPLORE: { label: string; to?: string; href?: string }[] = [
   { label: "Contact us", to: "/contact" },
 ];
 
-// a handful of the cast, a different handful each visit
-const pickCast = (count: number): FooterCard[] =>
+// a handful of the cast, a different handful each visit. (The cast's data is loaded with the cards, as
+// the footer comes near, rather than with every page.)
+type CastData = typeof import("./Characters/Characters");
+const pickCast = ({ getAllCharacters }: CastData, count: number): FooterCard[] =>
   getAllCharacters()
     .map((c, index) => ({ index, name: c.name, urlName: c.urlName, done: !c.ignoreInRandom }))
     .filter((c) => c.done)
@@ -40,20 +41,29 @@ const Footer = () => {
   const [hover, setHover] = useState<{ name: string; x: number; y: number } | null>(null);
   const [flat, setFlat] = useState(false); // the 3D cards can't be shown: a fan of flat cards instead
   const isMobile = width <= 900;
-  const cast = useMemo(() => pickCast(isMobile ? 5 : 9), [isMobile]);
+  const count = isMobile ? 5 : 9;
+  const [cast, setCast] = useState<FooterCard[]>([]);
 
   // the 3D cards load when the footer is about to scroll into view
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
     let api: FooterCardsApi | null = null, gone = false;
-    const fail = () => !gone && setFlat(true);
+    const castData = () => import("./Characters/Characters");
+    // (the flat fan needs the cast too)
+    const fail = () =>
+      castData()
+        .then((m) => !gone && setCast((c) => (c.length ? c : pickCast(m, count))))
+        .catch(() => {})
+        .finally(() => !gone && setFlat(true));
     stage.classList.remove("ready");
     const start = () =>
-      import("./utils/footerCards3d")
-        .then(({ mountFooterCards }) =>
-          mountFooterCards(stage, {
-            cards: cast,
+      Promise.all([import("./utils/footerCards3d"), castData()])
+        .then(([{ mountFooterCards }, m]) => {
+          const cards = pickCast(m, count);
+          if (!gone) setCast(cards);
+          return mountFooterCards(stage, {
+            cards,
             onHover: (c, x, y) => setHover(c ? { name: c.name, x, y } : null),
             onPick: (c) => {
               const to = `/characters/${c.urlName}`;
@@ -61,8 +71,8 @@ const Footer = () => {
               else navigate(to);
             },
             onFail: fail,
-          })
-        )
+          });
+        })
         .then((a) => (gone ? a?.destroy() : (api = a)))
         .catch(fail);
     const io = new IntersectionObserver(
@@ -80,7 +90,7 @@ const Footer = () => {
       api?.destroy();
       setHover(null);
     };
-  }, [cast, navigate]);
+  }, [count, navigate]);
 
   return (
     <footer className={styles.footer}>

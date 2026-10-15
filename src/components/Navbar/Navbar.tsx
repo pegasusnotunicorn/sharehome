@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router";
-import { GsapFadeScrub } from "../utils/useGsap";
 import EmailForm from "../utils/EmailForm";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import DefaultButton from "../utils/DefaultButton";
@@ -86,12 +85,7 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
 
       <div className={`${styles.navbar} ${isVisibleClass}`}>
         {/* Top bar: logo + action buttons + hamburger */}
-        <GsapFadeScrub
-          scrubStartCenter
-          scrub
-          fadeIn
-          className={`${styles.topBar} noselect`}
-        >
+        <div className={`${styles.topBar} noselect`}>
           <NavLink to="/" className={styles.logo} aria-label="Love, Career & Magic home" />
           <div className={styles.topBarActions}>
             {!hideBuyButtons && (!isLandingPage || isDesktop) && !isLandingPageAtTop && (
@@ -129,7 +123,7 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
               </span>
             </button>
           </div>
-        </GsapFadeScrub>
+        </div>
 
         {/* The menu: a drawer from the right, over the dimmed page */}
         <div className={`${styles.backdrop} ${isVisibleClass}`} onClick={closeNav} aria-hidden="true" />

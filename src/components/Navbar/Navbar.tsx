@@ -90,6 +90,7 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
           <div className={styles.topBarActions}>
             {!hideBuyButtons && (!isLandingPage || isDesktop) && !isLandingPageAtTop && (
               <BuyButton
+                from={isDesktop ? "navbar" : "mobile_bar"}
                 animated
                 compact
                 icon="forward"

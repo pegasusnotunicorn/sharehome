@@ -26,12 +26,12 @@
       }
     </script>
 
-    <!-- Disable analytics/tracking on localhost so dev traffic doesn't pollute prod data -->
+    <!-- Analytics and tracking only on the live site, so test traffic doesn't land in the live reports -->
     <script>
+      // (the live site only: not localhost, nor Netlify's deploy previews, whose visits were
+      // landing in the live reports)
       window.__ANALYTICS_ENABLED__ =
-        location.hostname !== "localhost" &&
-        location.hostname !== "127.0.0.1" &&
-        !location.hostname.endsWith(".local");
+        location.hostname === "lovecareermagic.com" || location.hostname === "www.lovecareermagic.com";
     </script>
 
     <!-- MailerLite Universal -->

@@ -1,60 +1,165 @@
 .emojiSection {
-  background-color: rgba(0, 0, 0, 0.1);
-  padding-top: 2.5rem;
-  padding-bottom: 5rem;
+  padding: 1rem 2rem 5rem;
 }
 
-.emojiDescriptionWrapper p {
-  margin-bottom: 0;
+/* one panel: the offer on one side, the stickers on the other */
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 3rem;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 3rem 3.25rem;
+  box-sizing: border-box;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(255, 255, 255, 0.55), transparent 55%),
+    #e9e6f6;
+  box-shadow: inset 0 0 0 1px rgba(88, 80, 160, 0.12);
 }
 
-.emojiLead {
-  font-family: "Roboto-Regular";
-}
-
-.emojiDescriptionWrapper ul {
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   text-align: left;
 }
 
-.emojisWrapper {
+.eyebrow {
+  margin: 0 0 0.75rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.75rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #5b52a3;
+  opacity: 1;
+}
+
+.title {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(2rem, 4vw, 2.9rem);
+  font-weight: normal;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #323232;
+}
+
+.copy .lede {
+  margin: 1rem 0 0;
+  font-family: "Roboto Light";
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: rgba(50, 50, 50, 0.85);
+  opacity: 1;
+}
+
+.perks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 1.25rem 0 1.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.perks li {
+  position: relative;
+  padding-left: 1.75rem;
+  font-family: "Roboto Light";
+  font-size: 0.98rem;
+  line-height: 1.4;
+  color: #323232;
+  opacity: 1;
+}
+
+/* a tick in a little purple circle */
+.perks li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.12em;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  background: #5b52a3
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    center / 0.8rem no-repeat;
+}
+
+.cta {
+  margin: 0;
+}
+
+/* the stickers */
+.stickers {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
   width: 100%;
+  max-width: 440px;
+  justify-self: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sticker {
+  opacity: 1;
+}
+
+.sticker a {
   display: flex;
-  margin: auto;
-  flex-wrap: wrap;
-  text-align: center;
+  align-items: center;
   justify-content: center;
-}
-
-.emojiWrapper {
-  margin: auto;
-  border-radius: 100%;
-  padding: calc(1rem - 5px);
-  border: 5px solid #fff;
+  aspect-ratio: 1;
+  border-radius: 50%;
   background: #fff;
-  margin: 0.25rem;
-  box-shadow: 0px 0px 5px rgb(0 0 0 / 5%);
-  cursor: pointer;
-  transition: all 0.25s ease-in-out;
+  box-shadow:
+    0 0 0 4px #fff,
+    0 8px 16px -8px rgba(50, 40, 90, 0.45);
+  transform: rotate(var(--tilt, 0deg));
+  transition: transform 0.2s ease;
 }
 
-.emojiWrapper:global(.active) {
-  transform: scale(1.75);
-  border: 5px solid #222;
-  z-index: 8;
+.sticker a:hover,
+.sticker a:focus-visible {
+  transform: rotate(0deg) scale(1.12);
 }
 
-.emojiWrapper img {
-  width: 50px;
-  height: 50px;
+.sticker a:focus-visible {
+  outline: 3px solid #323232;
+  outline-offset: 4px;
 }
 
-.emojiButtonsWrapper {
-  margin: auto;
-  display: flex;
-  margin-top: 0rem;
-  margin-bottom: 2rem;
+.sticker img {
+  width: 68%;
+  height: 68%;
+  object-fit: contain;
 }
 
-.emojiPackDownloadButton {
-  margin: auto;
+/* on a phone: one column, the stickers on top */
+@media only screen and (max-width: 900px) {
+  .emojiSection {
+    padding: 0.5rem 1rem 4rem;
+  }
+  .panel {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem 1.25rem 2.25rem;
+    border-radius: 22px;
+  }
+  .stickers {
+    order: -1;
+    gap: 0.75rem;
+    max-width: 360px;
+  }
+  /* three rows of four */
+  .sticker:nth-child(n + 13) {
+    display: none;
+  }
+  .cta {
+    align-self: stretch;
+  }
 }

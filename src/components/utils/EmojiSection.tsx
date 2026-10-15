@@ -1,112 +1,60 @@
-import { useEffect } from "react";
+import { useMemo } from "react";
+import { Link } from "react-router";
 import { getAllFinishedPeople } from "../Characters/Characters";
 import styles from "../../css/utils/emojisection.module.css";
-import "../../css/utils/spotlight.css";
-import { GsapFadeScrub } from "./useGsap";
 import DefaultButton from "../utils/DefaultButton";
-import useWindowDimensions from "../utils/useWindowDimensions";
-
-interface EmojiWrapperProps {
-  urlName: string;
-  emoji: string;
-  index: number;
-}
-
-//a single emoji wrapper
-const EmojiWrapper = ({ urlName, emoji, index }: EmojiWrapperProps) => {
-  return (
-    <a aria-label={emoji} href={`/characters/${urlName}`}>
-      <div id={`emojiWrapper${index}`} className={styles.emojiWrapper}>
-        <img
-          loading="lazy"
-          src={`/images/emojis/${emoji}.webp`}
-          className="emojiImage"
-          title={emoji}
-          alt={`${emoji}`}
-        />
-      </div>
-    </a>
-  );
-};
 
 interface EmojiSectionProps {
   className?: string;
 }
 
-export const EmojiSection = (props: EmojiSectionProps) => {
-  //how many emojis should display
-  let { width } = useWindowDimensions();
-  const cutoffNumber =
-    width < 389 ? 9 : width < 479 ? 12 : width >= 568 && width <= 900 ? 12 : width <= 900 ? 10 : 24;
+// how many stickers show: three rows of four on a phone, two rows of eight on a wide screen (the CSS
+// hides the rest)
+const SHOWN = 16;
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      let allEmojiDom = document.getElementsByClassName(styles.emojiWrapper);
-      let activeEmoji = document.querySelectorAll(`.${styles.emojiWrapper}.active`);
-      if (activeEmoji.length > 0 && activeEmoji[0])
-        activeEmoji[0].classList.remove("active");
-
-      let randomNum = Math.floor(Math.random() * allEmojiDom.length);
-      document
-        .getElementById(`emojiWrapper${randomNum}`)
-        ?.classList.add("active");
-    }, 2500);
-    return () => clearInterval(interval);
-  }, []);
-
-  //get all emojis
-  let allCharacters = getAllFinishedPeople(true);
-  let allEmojis: { urlName: string; emoji: string }[] = [];
-  allCharacters.forEach((elem) => {
-    let emojiObj: { urlName: string; emoji: string }[] = [];
-    elem.emoji.forEach((x) => {
-      emojiObj.push({
-        urlName: elem.urlName,
-        emoji: x,
-      });
-    });
-    allEmojis = allEmojis.concat(emojiObj);
-  });
-  allEmojis = allEmojis.slice(0, cutoffNumber);
-
-  const emojiElements = allEmojis.map((elem, index) => {
-    return (
-      <EmojiWrapper
-        key={`emojiWrapper${index}`}
-        index={index}
-        emoji={elem.emoji}
-        urlName={elem.urlName}
-      />
-    );
-  });
+// The free emojis on Discord: what you get for joining, beside a sheet of the emojis as stickers, each
+// a link to its character
+export const EmojiSection = ({ className = "" }: EmojiSectionProps) => {
+  const emojis = useMemo(
+    () =>
+      getAllFinishedPeople(true)
+        .flatMap((c) => c.emoji.map((emoji) => ({ urlName: c.urlName, name: c.name, emoji })))
+        .slice(0, SHOWN),
+    []
+  );
 
   return (
-    <div id="emojis" className={`${styles.emojiSection} ${props.className}`}>
-      <div className="subcontentWrapper padding-top min-width">
-        <GsapFadeScrub fadeIn className="fadeInTextWrapper">
-          <div className={`characterContent ${styles.emojiDescriptionWrapper}`}>
-            <h2>Free character emojis</h2>
-            <p className={styles.emojiLead}>
-              Join the Discord community to use these emojis for free right now!
-            </p>
-            <ul>
-              <li>See previews and unreleased content before anyone else.</li>
-              <li>Be a part of the developer journey from the beginning.</li>
-              <li>Playtest and give feedback to help shape the games.</li>
-            </ul>
-          </div>
-          <div className={styles.emojiButtonsWrapper}>
-            <DefaultButton
-              variant="primary"
-              href="https://discord.com/invite/nv89cRgEsS"
-              className={styles.emojiPackDownloadButton}
-              icon="discordWhite"
-              text="Get free emojis"
-            />
-          </div>
-        </GsapFadeScrub>
-        <div className={styles.emojisWrapper}>{emojiElements}</div>
+    <section id="emojis" className={`${styles.emojiSection} ${className}`} aria-labelledby="emojis-title">
+      <div className={styles.panel}>
+        <div className={styles.copy}>
+          <p className={styles.eyebrow}>Free on Discord</p>
+          <h2 id="emojis-title" className={styles.title}>
+            Free character emojis
+          </h2>
+          <p className={styles.lede}>Join the Discord community to use these emojis for free right now!</p>
+          <ul className={styles.perks}>
+            <li>See previews and unreleased content before anyone else.</li>
+            <li>Be a part of the developer journey from the beginning.</li>
+            <li>Playtest and give feedback to help shape the games.</li>
+          </ul>
+          <DefaultButton
+            variant="primary"
+            href="https://discord.com/invite/nv89cRgEsS"
+            className={styles.cta}
+            icon="discordWhite"
+            text="Get free emojis"
+          />
+        </div>
+        <ul className={styles.stickers} aria-label="Some of the emojis">
+          {emojis.map((e, i) => (
+            <li key={e.emoji} className={styles.sticker} style={{ "--tilt": `${((i * 37) % 11) - 5}deg` } as React.CSSProperties}>
+              <Link to={`/characters/${e.urlName}`} aria-label={`${e.name}'s emoji`}>
+                <img loading="lazy" src={`/images/emojis/${e.emoji}.webp`} alt="" width={64} height={64} />
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
-    </div>
+    </section>
   );
 };

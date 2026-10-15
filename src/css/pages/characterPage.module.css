@@ -152,126 +152,7 @@
 
 /* #endregion */
 
-/* #region---------------------------------------------------------ALL CHARACTERS */
-
-.allcharactersWrapper {
-  padding-bottom: 2rem;
-  scroll-margin-top: 7rem;
-}
-
-:global(#second-season-cast) {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  padding-bottom: 4rem;
-  border-top: 1px solid rgba(50, 50, 50, 0.14);
-}
-
-.sectionIntro {
-  width: calc(100% - 2rem);
-  max-width: 1200px;
-  margin: 0 auto 1.5rem;
-  padding: 0 1rem;
-  box-sizing: border-box;
-}
-
-.sectionEyebrow {
-  margin: 0 0 0.5rem;
-  font-family: "Rowdies-Regular";
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
-  color: rgba(50, 50, 50, 0.72);
-}
-
-.charactersContainer {
-  width: calc(100% - 2rem);
-  display: flex;
-  margin-left: 1rem;
-  margin-right: 1rem;
-  flex-wrap: wrap;
-  min-height: 100vh;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.compactCharactersContainer {
-  min-height: 0;
-}
-
-@media only screen and (max-width: 900px) {
-  .charactersContainer {
-    justify-content: center;
-  }
-}
-
-.characterWrapper {
-  width: calc(20% - 1rem);
-  min-height: 250px;
-  position: relative;
-  box-shadow: 0 12.5px 25px -15px rgba(50, 50, 73, 0.4),
-    0 10px 10px -10px rgba(50, 50, 73, 0.3);
-}
-
-.characterWrapper:not(.notDone):hover,
-.characterWrapper.spotlit {
-  z-index: 99;
-}
-
-@media only screen and (min-width: 800px) {
-  .characterWrapper:not(.notDone):hover .characterInnerWrapper,
-  .characterWrapper.spotlit .characterInnerWrapper {
-    transform: scale(1.25);
-  }
-}
-
-.characterWrapper:not(.notDone):hover .caption,
-.characterWrapper.spotlit .caption {
-  opacity: 1;
-  bottom: 0px;
-}
-
-.characterWrapper:not(.notDone) {
-  cursor: pointer;
-}
-
-.characterWrapper.staticCard {
-  cursor: default;
-}
-
-.characterInnerWrapper {
-  transition: transform 0.25s;
-  border-radius: 0.5rem;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
-
-.characterWrapper {
-  border-radius: 0.5rem;
-}
-
-.notDone {
-}
-
-.characterWrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.cardOverlayText {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: "Rowdies-Regular";
-  font-size: clamp(5rem, 12vw, 8rem);
-  line-height: 1;
-  color: #fff;
-  text-shadow: 0 10px 24px rgba(50, 50, 73, 0.28);
-  pointer-events: none;
-}
+/* #region---------------------------------------------------------SEASON TWO SKETCHES */
 
 .sketchCountBadge {
   position: absolute;
@@ -297,7 +178,6 @@
   height: 18px;
   filter: invert(1);
 }
-
 
 .sketchViewerCard {
   position: relative;
@@ -393,101 +273,276 @@
   }
 }
 
-.staticCard {
-  cursor: default;
+
+/* #endregion */
+
+/* #region---------------------------------------------------------CAST WALL */
+
+.castIntro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 1rem 2.75rem;
+  box-sizing: border-box;
 }
 
-.caption {
-  opacity: 0;
+.castEyebrow {
+  margin: 0 0 0.9rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.78rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.6);
+  opacity: 1;
+}
+
+.castTitle {
   margin: 0;
-  background-image: linear-gradient(rgba(255, 255, 255, 0), #323232);
-  color: white;
-  position: absolute;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(3rem, 8.5vw, 6rem);
+  font-weight: normal;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: #323232;
+}
+
+/* (over the page's own rule for paragraphs) */
+.castIntro .castLede {
+  max-width: 34rem;
+  margin: 1.1rem 0 0;
+  font-family: "Roboto Light";
+  font-size: 1.08rem;
+  line-height: 1.5;
+  color: rgba(50, 50, 50, 0.85);
+  opacity: 1;
+}
+
+.castActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem 1.5rem;
+  margin-top: 1.6rem;
+}
+
+.castSection {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0.5rem 2rem 4.5rem;
+  box-sizing: border-box;
+}
+
+.castWall {
+  --cols: 5;
+  --gap: 1.75rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2.4rem var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.castItem {
+  position: relative;
+  opacity: 1;
+  width: calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
+}
+
+/* the card being looked at, over its neighbours (its canvas reaches past it) */
+.castItem:hover,
+.castItem:focus-within {
+  z-index: 2;
+}
+
+.castTile {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.castStage {
+  position: relative;
+  display: block;
+  aspect-ratio: 120 / 69.44;
+  border-radius: 6px;
+}
+
+.castFlat {
+  display: block;
   width: 100%;
-  bottom: -150px;
-  transition: bottom 0.25s, opacity 0.25s;
+  height: 100%;
+  border-radius: inherit;
+  box-shadow:
+    0 0 0 1.5px #d9b45a,
+    0 10px 18px -10px rgba(35, 28, 40, 0.55);
+  transition: opacity 0.25s;
+}
+
+/* drawn in 3D: the flat card underneath goes */
+.castLive .castFlat {
+  opacity: 0;
+}
+
+.castTile:focus-visible .castStage {
+  outline: 3px solid #323232;
+  outline-offset: 7px;
+}
+
+.castCaption {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  margin-top: 0.95rem;
   text-align: center;
 }
 
-.caption p {
-  line-height: 100% !important;
+.castName {
   font-family: "Rowdies-Regular";
-  margin: 0;
-  padding: 10px;
-}
-
-.caption > .name {
-  font-size: 2rem;
-  border-bottom: 1px solid #fff;
-}
-
-.caption > .details {
-  font-family: "Rowdies-Light";
   font-size: 1rem;
+  line-height: 1.15;
+  color: #323232;
+  text-decoration: underline 2px transparent;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s;
 }
 
-.caption > .details > span {
-  padding-right: 5px;
+.castTile:hover .castName,
+.castTile:focus-visible .castName {
+  text-decoration-color: currentColor;
 }
 
-/* phone */
+.castJob {
+  font-family: "Roboto Light";
+  font-size: 0.85rem;
+  line-height: 1.3;
+  color: rgba(50, 50, 50, 0.7);
+}
+
+/* season two: the same wall, flat, the sketches as they come */
+.seasonTwo {
+  margin-top: 1rem;
+  padding: 3.5rem 2rem 5rem;
+  border-top: 1px solid rgba(50, 50, 50, 0.12);
+  scroll-margin-top: 7rem;
+}
+
+.seasonTwo .castIntro {
+  padding-top: 0;
+}
+
+.seasonTwoTitle {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: normal;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #323232;
+}
+
+.seasonTwoWall {
+  max-width: 1256px;
+  margin: 0 auto;
+}
+
+.sketchTile {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.sketchStage .castFlat {
+  object-fit: cover;
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.12),
+    0 10px 18px -10px rgba(35, 28, 40, 0.45);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.sketchTile:hover .castFlat,
+.sketchTile:focus-visible .castFlat {
+  transform: translateY(-4px) rotate(-1deg);
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.12),
+    0 18px 26px -14px rgba(35, 28, 40, 0.5);
+}
+
+.sketchPending {
+  cursor: default;
+}
+
+.sketchMystery {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.sketchPending .castName {
+  color: rgba(50, 50, 50, 0.8);
+}
+
+@media only screen and (max-width: 1100px) {
+  .castWall {
+    --cols: 3;
+  }
+}
+
+/* (clear of the logo and the menu button, which float over the top of the page here) */
 @media only screen and (max-width: 900px) {
-  .characterWrapper:not(.notDone) .caption {
-    opacity: 1;
-    bottom: 0px;
-  }
-
-  .characterWrapper {
-    width: calc(50% - 1rem);
-    height: 100px !important;
-    font-size: 0.6rem;
-  }
-
-  .caption > .name {
-    border-bottom: 0;
-  }
-  .caption {
-    border-radius: 0.5rem;
-    /* taller and darker, so a white name stays readable on the palest art */
-    padding-top: 2.5rem;
-    background-image: linear-gradient(
-      rgba(35, 25, 22, 0),
-      rgba(35, 25, 22, 0.75) 45%,
-      rgba(35, 25, 22, 0.92)
-    );
-  }
-  .caption > .name {
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  .castHero {
+    padding-top: 4.75rem;
   }
 }
 
-@media only screen and (max-width: 450px) {
-  .caption > .name {
-    font-size: 1.3rem;
+@media only screen and (max-width: 640px) {
+  .castIntro {
+    padding-bottom: 2rem;
   }
-}
-
-@media only screen and (max-width: 375px) {
-  .caption > .name {
-    font-size: 1.1rem;
-  }
-}
-
-/* larger phone */
-@media only screen and (min-width: 900px) and (max-width: 1200px) {
-  .characterWrapper {
-    width: calc(33% - 1rem);
-    min-height: 198px !important;
-    font-size: 0.9rem;
-  }
-}
-
-/* tablet */
-@media only screen and (min-width: 1200px) and (max-width: 1600px) {
-  .characterWrapper {
-    width: calc(25% - 1rem);
-    min-height: 126px !important;
+  .castIntro .castLede {
     font-size: 1rem;
+  }
+  .castSection {
+    padding: 0.25rem 1rem 3.5rem;
+  }
+  .seasonTwo {
+    padding: 2.5rem 1rem 3.5rem;
+  }
+  .castWall {
+    --cols: 2;
+    --gap: 1rem;
+    row-gap: 1.6rem;
+  }
+  .castCaption {
+    margin-top: 0.7rem;
+  }
+  .castName {
+    font-size: 0.88rem;
+  }
+  .castJob {
+    font-size: 0.76rem;
   }
 }
 

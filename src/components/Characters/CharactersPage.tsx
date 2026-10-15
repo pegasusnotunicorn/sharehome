@@ -11,7 +11,6 @@ import {
   getSpecificPersonByURL,
 } from "../Characters/Characters";
 import CharacterProfile from "./CharacterProfile";
-import { GsapFadeScrub } from "../utils/useGsap";
 import { EmojiSection } from "../utils/EmojiSection";
 import CustomHelmet from "../utils/CustomHelmet";
 import Modal from "../utils/Modal";
@@ -109,9 +108,9 @@ const CharactersPage = () => {
 
         {chosenCharacter ? (
           <>
-            <GsapFadeScrub fadeIn className="fadeInTextWrapper">
-              <IndividualCharacter character={chosenCharacter} />
-            </GsapFadeScrub>
+            {/* (not in a fade-in: that starts over on every page, and from one character to the
+                next the page stays, the cards swinging round) */}
+            <IndividualCharacter character={chosenCharacter} />
           </>
         ) : (
           <>

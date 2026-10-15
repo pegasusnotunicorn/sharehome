@@ -75,7 +75,7 @@ export async function mountCardRing(el: HTMLElement, { mm, viewer, onPick, onFai
   const fill = new T.DirectionalLight(0xffffff, 0.8);
   fill.position.set(0.7, 0.5, 3);
   sc.add(fill);
-  const floor = new T.Mesh(new T.PlaneGeometry(14, 14), new T.ShadowMaterial({ opacity: 0.12 }));
+  const floor = new T.Mesh(new T.PlaneGeometry(14, 14), new T.ShadowMaterial({ opacity: 0.17 }));
   floor.rotation.x = -Math.PI / 2;
   floor.position.y = -0.6;
   floor.receiveShadow = true;
@@ -109,9 +109,18 @@ export async function mountCardRing(el: HTMLElement, { mm, viewer, onPick, onFai
   };
 
   let fronts: string[] = [], shift = 0, middle = false, dead = false;
+  // the cards to the sides stand back in a mist the colour of the page, thicker the further out (the
+  // one in the middle, clear of it): each card's own colours are washed toward it
+  const MIST = new T.Color(0xf4f2ec);
+  const mist = (a: number) => Math.min(0.85, 0.42 * Math.min(1, a) + 0.22 * Math.max(0, a - 1));
   const pose = () => {
     cards.forEach((obj, i) => {
       const k = i - SIDE - shift;
+      const m = mist(Math.abs(k));
+      for (const mat of [faceOf(obj), backOf(obj)]) {
+        mat.color.setScalar(1 - m);
+        mat.emissive.copy(MIST).multiplyScalar(m);
+      }
       const p = place(k);
       obj.position.set(p.x, 0, p.z);
       obj.rotation.set(p.rx, p.ry, 0, "YXZ");
@@ -231,6 +240,7 @@ export async function mountCardRing(el: HTMLElement, { mm, viewer, onPick, onFai
         };
         step(t0);
       }),
+    // (drawn there and then, so it's gone in the same frame as the viewer shows)
     showMiddle: (on) => {
       middle = on;
       draw();

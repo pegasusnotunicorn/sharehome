@@ -4,13 +4,14 @@ import { Link, useNavigate } from "react-router";
 import CardTurn from "../utils/CardTurn";
 import CardViewer from "../utils/CardViewer";
 import type { CardRingApi } from "../utils/cardRing3d";
-import { CHARACTER_CARD_MM, characterCardFaces } from "./characterCardFaces";
+import { CHARACTER_CARD_MM } from "./characterCardFaces";
 import { getAllCharacters } from "./Characters";
 import type { CharacterWithNav } from "../../types/character";
 import styles from "../../css/pages/characterProfile.module.css";
 
-// a character's printed card front, by their place in the cast
+// a character's printed card, by their place in the cast
 const cardFront = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}.webp`;
+const cardBack = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}-back.webp`;
 
 // The top of a character's page: who they are, over their card in 3D. Either side of it stand the cards
 // of the characters round the cast from them, angled back like a rotary card file on its side
@@ -76,8 +77,10 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
     const r = ring.current;
     if (!r) return navigate(`/characters/${to.urlName}`);
     turning.current = true;
+    const turned = r.turn(k); // (the ring draws the middle card from here, this frame...)
+    if (viewerEl.current) viewerEl.current.style.opacity = "0"; // (...as the viewer goes)
     setSwung(true);
-    await r.turn(k);
+    await turned;
     turning.current = false;
     navigate(`/characters/${to.urlName}`);
   };
@@ -102,11 +105,13 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
       <span className={styles.stepName}>{to.name}</span>
     </Link>
   );
-  // the new card's in: the viewer shows it, then the ring stops drawing it
+  // the new card's in: the viewer shows it and the ring stops drawing it, in the same frame (the same
+  // printed card, in the same place, lit the same: no change you can see)
   const ready = () => {
     if (!swung) return;
+    if (viewerEl.current) viewerEl.current.style.opacity = "";
+    ring.current?.showMiddle(false);
     setSwung(false);
-    setTimeout(() => ring.current?.showMiddle(false), 260);
   };
 
   return (
@@ -138,9 +143,9 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
             key={c.urlName}
             mm={CHARACTER_CARD_MM}
             edge="gold"
-            faces={characterCardFaces(c)}
+            faces={async () => ({ front: cardFront(at), back: cardBack(at) })}
             label={`${c.name}'s card from Love, Career & Magic`}
-            still={c.image.url}
+            still={cardFront(at)}
             intro={!swung}
             onReady={ready}
             fallback={

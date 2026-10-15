@@ -105,13 +105,11 @@
   z-index: 1;
   width: min(560px, 100%);
   margin: 0 auto;
-  transition: opacity 0.25s ease;
 }
 
 /* (a turn's under way: the ring's drawing this card) */
 .card.cardAway {
   opacity: 0;
-  transition: none;
 }
 
 .steps {
@@ -143,36 +141,38 @@
   text-align: right;
 }
 
+/* the same small grey square as the card's zoom buttons */
 .stepArrow {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
   box-sizing: border-box;
-  /* the site's square button, a size up (see defaultButton.module.css) */
-  border-radius: 16px;
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
   background: #fff;
-  border: 2px solid var(--btn-ink, #323232);
-  box-shadow: 0 4px 0 var(--btn-ink, #323232);
+  color: var(--btn-ink);
+  box-shadow: 0 3px 0 var(--chip-edge);
   transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
 }
 
 .stepArrow svg {
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
 }
 
 .step:hover .stepArrow {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 0 var(--btn-ink, #323232);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--chip-edge);
 }
 
 .step:active .stepArrow {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 var(--btn-ink, #323232);
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--chip-edge);
 }
 
 .step:focus-visible {
@@ -187,7 +187,7 @@
 .stepName {
   max-width: 10rem;
   font-family: "Rowdies-Regular";
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   line-height: 1.2;
   color: rgba(50, 50, 50, 0.7);
 }
@@ -283,23 +283,10 @@
     padding: 4.75rem 1rem 0;
   }
 
-  .steps {
-    margin-top: -2.5rem;
-  }
-
+  /* (under the card's zoom buttons) */
+  .steps,
   .stage:has(:global(.zoomed)) .steps {
-    margin-top: 0.75rem;
-  }
-
-  .stepArrow {
-    flex: 0 0 auto;
-    width: 46px;
-    height: 46px;
-  }
-
-  .stepArrow svg {
-    width: 20px;
-    height: 20px;
+    margin-top: 0.5rem;
   }
 
   .details {

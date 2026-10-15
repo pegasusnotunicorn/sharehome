@@ -80,7 +80,7 @@
   height: 8cqh;
   translate: -50% -50%;
   border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.14), transparent);
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.07), transparent);
 }
 
 @keyframes stillShimmer {

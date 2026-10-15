@@ -66,7 +66,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
   const fillBack = new T.DirectionalLight(0xffffff, 0.8);
   fillBack.position.set(-0.7, 0.5, -3);
   sc.add(fillBack);
-  const floorMat = new T.ShadowMaterial({ opacity: 0.17 });
+  const floorMat = new T.ShadowMaterial({ opacity: 0.085 });
   const floor = new T.Mesh(new T.PlaneGeometry(8, 8), floorMat);
   floor.rotation.x = -Math.PI / 2;
   floor.position.y = FLOOR;

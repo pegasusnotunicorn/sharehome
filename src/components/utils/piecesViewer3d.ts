@@ -152,7 +152,7 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
   const back = new T.DirectionalLight(0xffffff, 0.8); // the same from behind, so the back reads as bright as the front
   back.position.set(-0.7, 0.5, -3);
   sc.add(back);
-  const floor = new T.Mesh(new T.PlaneGeometry(6, 6), new T.ShadowMaterial({ opacity: 0.17 }));
+  const floor = new T.Mesh(new T.PlaneGeometry(6, 6), new T.ShadowMaterial({ opacity: 0.085 }));
   floor.rotation.x = -Math.PI / 2;
   floor.position.y = -0.6;
   floor.receiveShadow = true;

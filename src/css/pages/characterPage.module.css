@@ -348,6 +348,11 @@
   list-style: none;
 }
 
+/* the original cast's wall has no captions: its rows sit closer */
+.castWallBare {
+  row-gap: 2rem;
+}
+
 .castItem {
   position: relative;
   opacity: 1;
@@ -534,6 +539,9 @@
     --cols: 2;
     --gap: 1rem;
     row-gap: 1.6rem;
+  }
+  .castWallBare {
+    row-gap: 1.1rem;
   }
   .castCaption {
     margin-top: 0.7rem;

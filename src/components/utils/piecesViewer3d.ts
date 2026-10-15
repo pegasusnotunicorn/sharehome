@@ -118,7 +118,9 @@ function makeToken(T: Three, mm: number[], tx: Record<string, THREE.Texture>) {
     uv.setXY(i, z > 0 ? x + 0.5 : 0.5 - x, p.getY(i) / (2 * r) + 0.5); // the back mirrored, so it reads right once it turns over
   }
   const bump = grain(T);
-  const art = (map: THREE.Texture) => new T.MeshStandardMaterial({ map, color: 0xfff0d6, roughness: 0.85, metalness: 0, bumpMap: bump, bumpScale: 0.35 });
+  // (its face white paint, lit a little from within so it reads white, not grey, in the soft light)
+  const art = (map: THREE.Texture) =>
+    new T.MeshStandardMaterial({ map, color: 0xffffff, emissive: 0xffffff, emissiveMap: map, emissiveIntensity: 0.22, roughness: 0.85, metalness: 0, bumpMap: bump, bumpScale: 0.35 });
   const m = new T.Mesh(geo, [new T.MeshStandardMaterial({ color: 0x141212, roughness: 0.85, bumpMap: bump, bumpScale: 0.35 }), art(tx.front), art(tx.back)]);
   m.castShadow = true;
   const grp = new T.Group();

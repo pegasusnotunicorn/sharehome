@@ -16,7 +16,7 @@ const dateFormatter = new Intl.DateTimeFormat(undefined, {
   timeZone: "UTC",
 });
 
-const formatDate = (iso?: string) => {
+export const formatDate = (iso?: string) => {
   if (!iso) return undefined;
   const parsed = new Date(`${iso}T00:00:00Z`);
   if (Number.isNaN(parsed.getTime())) return iso;

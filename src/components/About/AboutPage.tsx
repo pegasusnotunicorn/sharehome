@@ -1,43 +1,34 @@
 import { useEffect } from "react";
 import Roleplay from "./components/Roleplay";
-import useWindowDimensions from "../utils/useWindowDimensions";
-import PageIntro from "../utils/PageIntro";
+import DefaultButton from "../utils/DefaultButton";
 import aboutStyles from "../../css/pages/aboutPage.module.css";
-import type { CardMainStyle } from "../../types/card";
 
 const AboutPage = () => {
-  const { isMobile } = useWindowDimensions();
-
-  // styling for character cards on about page
-  let cardStyle: CardMainStyle = isMobile
-    ? { width: "120px", height: "70px", fontSize: "1px" }
-    : { width: "175px", height: "100px", fontSize: "1.5px" };
-
   useEffect(() => {
     document.title = "How to play";
   }, []);
 
   return (
-    <div className="content max-width">
-      <PageIntro
-        minWidth={false}
-        title="How to play"
-      >
-        <a
-          href="/rulebook.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          className={aboutStyles.rulebookLink}
-        >
-          <img
-            loading="lazy"
-            src="/images/icons/rulebook.svg"
-            alt=""
+    <div className={`content ${aboutStyles.page}`}>
+      <header className={aboutStyles.intro}>
+        <p className={aboutStyles.eyebrow}>2–6 players · 12 minutes</p>
+        <h1 className={aboutStyles.title}>How to play</h1>
+        <p className={aboutStyles.lede}>
+          Four episodes, three minutes each. Improvise your way through a reality show and keep the ratings
+          up ✨
+        </p>
+        <div className={aboutStyles.actions}>
+          <DefaultButton
+            href="/rulebook.pdf"
+            variant="secondary"
+            border="dark"
+            icon="rulebook"
+            text="Rulebook PDF"
           />
-          Click here for the rulebook PDF
-        </a>
-      </PageIntro>
-      <div className={aboutStyles.videoWrapper}>
+        </div>
+      </header>
+
+      <section className={aboutStyles.video} aria-label="Video">
         <div className={aboutStyles.videoEmbed}>
           <iframe
             src="https://www.youtube.com/embed/jKp0NWvWEQY?rel=0&modestbranding=1"
@@ -47,8 +38,9 @@ const AboutPage = () => {
             frameBorder="0"
           />
         </div>
-      </div>
-      <Roleplay cardStyle={cardStyle} />
+      </section>
+
+      <Roleplay />
     </div>
   );
 };

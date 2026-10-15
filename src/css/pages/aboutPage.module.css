@@ -1,42 +1,86 @@
-/* #region--------------------------------------VIDEO */
+/* How to play (AboutPage.tsx, Roleplay.tsx): the opening and the video, then the setup, the rules and
+   every piece in 3D, one at a time, as white boxes like a character's page. As wide as the other pages'
+   sections: 1180px, inside 2rem sides. */
 
-.rulebookLink {
-  display: inline-flex;
+.page {
+  max-width: calc(1180px + 4rem);
+  padding-left: 2rem;
+  padding-right: 2rem;
+  box-sizing: border-box;
+}
+
+.page p,
+.page li {
+  opacity: 1;
+}
+
+/* #region--------------------------------------THE OPENING */
+
+.intro {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  color: #323232;
-  font-family: "Rowdies-Regular";
-  font-size: 0.9rem;
-  text-decoration: none;
-  padding-bottom: 0.1rem;
-  border-bottom: 2px solid rgba(50, 50, 50, 0.15);
-}
-
-.rulebookLink img {
-  width: 18px;
-  height: 18px;
-}
-
-.videoWrapper {
   text-align: center;
-  width: calc(100% - 2rem);
-  margin: 2rem auto;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 0 2.25rem;
+}
+
+.page .eyebrow {
+  margin: 0 0 0.9rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.78rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.6);
+}
+
+.title {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(3rem, 8.5vw, 6rem);
+  font-weight: normal;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: #323232;
+}
+
+.page .lede {
+  max-width: 34rem;
+  margin: 1.1rem 0 0;
+  font-family: "Roboto Light";
+  font-size: 1.08rem;
+  line-height: 1.5;
+  color: rgba(50, 50, 50, 0.85);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1.6rem;
+}
+
+.video {
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .videoEmbed {
   position: relative;
-  padding-bottom: 56.25%;
-  height: 0;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-radius: 8px;
-  box-shadow: 0 16px 36px -28px rgba(50, 50, 73, 0.55);
+  border-radius: 20px;
+  background: #e9e4d8;
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.08),
+    0 14px 30px -22px rgba(50, 40, 30, 0.35);
 }
 
 .videoEmbed iframe {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   border: 0;
@@ -44,440 +88,478 @@
 
 /* #endregion */
 
-/* #region--------------------------------------TOP */
+/* #region--------------------------------------THE TABS: a row of pills, the open one dark */
 
-.howToPlayContainer {
+.parts {
+  padding: 3.5rem 0 4.5rem;
+  scroll-margin-top: 5.5rem;
+}
+
+.tabs {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  padding: 2rem;
-}
-
-.howToPlayWrapper {
-  width: 100%;
-  display: inline-block;
-  border: 5px solid #323232;
-  border-radius: 5px;
-  color: #323232;
-  padding: 2rem;
-  vertical-align: top;
-  margin-bottom: 2rem;
-  text-decoration: none;
-  transition: transform 0.5s ease 0s, -webkit-transform 0.5s ease 0s;
-}
-
-@media only screen and (max-width: 900px) {
-  .pageIntro {
-    padding-top: 0.5rem;
-  }
-
-  .pageIntroLead {
-    font-size: 0.95rem;
-  }
-
-  .howToPlayWrapper {
-    width: 100%;
-  }
-}
-
-.tabsWrapper {
-  display: flex;
-  align-items: flex-end;
-  width: calc(100% - 2rem);
-  margin: 1rem auto 0;
-  overflow: hidden;
-  padding-top: 10px;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0 auto 2rem;
+  max-width: 720px;
 }
 
 .tab {
   flex: 1;
-  padding: 0.75rem 1rem;
-  font-family: "Rowdies-Regular";
-  font-size: 1.1rem;
-  cursor: pointer;
-  border: 2px solid #323232;
-  border-bottom: 2px solid #323232;
-  background: #fff;
-  color: #6e6563;
-  border-radius: 8px 8px 0 0;
-  transform: translateY(10px);
-  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
-}
-
-.tabSubtext {
-  display: block;
-  font-family: "Rowdies-Light";
-  font-size: 0.55rem;
-  margin-top: 0.25rem;
-  opacity: 0.7;
-}
-
-@media only screen and (min-width: 451px) {
-  .tabSubtext {
-    font-size: 0.75rem;
-  }
-}
-
-/* a tab's name, shortened on phones */
-.tabLabel {
-  display: block;
-}
-
-.tabLabel.tabLabelShort {
-  display: none;
-}
-
-@media only screen and (max-width: 480px) {
-  .tabLabel.tabLabelLong {
-    display: none;
-  }
-
-  .tabLabel.tabLabelShort {
-    display: block;
-  }
-}
-
-.tab:not(.tabActive):hover {
-  color: #323232;
-  background-color: #fff;
-  transform: translateY(5px);
-}
-
-.tabActive {
-  background-color: #323232;
-  color: #fff;
-  cursor: default;
-  transform: translateY(0);
-  border-bottom: none;
-}
-
-.showRulesButtonBottom {
-  width: fit-content;
-  margin-left: auto;
-  margin-right: 0;
-  margin-top: 2rem !important;
-  min-height: 42px;
-  padding: 0.65rem 1rem;
-  font-size: 0.95rem;
-}
-
-.showSetupButtonBottom {
-  margin-left: 0;
-  margin-right: auto;
-}
-
-/* #endregion */
-
-/* #region--------------------------------------ALL STEPS */
-
-.allStepsContainer {
-  display: none;
-  padding: 1.5rem;
-  border: 2px solid #323232;
-  border-radius: 0 0 8px 8px;
-  width: calc(100% - 2rem - 3rem - 4px);
-  margin-left: auto;
-  margin-right: auto;
-  background: #fff;
-}
-
-.allStepsContainer:global(.is-active) {
-  display: block;
-  margin-bottom: 5vh;
-}
-
-@media only screen and (max-width: 900px) {
-  .tabsWrapper {
-    width: calc(100% - 2rem);
-  }
-  .allStepsContainer {
-    width: calc(100% - 2rem - 2rem - 4px);
-    margin-left: auto;
-    margin-right: auto;
-    padding: 1rem;
-  }
-}
-
-.stepWrapper {
-  width: 100%;
-  padding: 0;
-  margin: 0;
-}
-
-.allStepsContainer .stepWrapper + .stepWrapper {
-  margin-top: 2rem;
-}
-
-@media only screen and (max-width: 900px) {
-  .showRulesButtonBottom {
-    margin-bottom: 0;
-  }
-}
-
-.stepTitle {
-  width: 100%;
-  font-family: "Rowdies-Regular";
-  background: transparent;
-  color: #5f5aa2;
-  padding: 0 0 0.4rem;
-  font-size: 0.85rem !important;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  border-bottom: 2px solid rgba(0, 0, 0, 0.08);
-  margin: 0 0 1.25rem;
-  text-align: left;
-}
-
-
-/* #endregion */
-
-/* #region--------------------------------------STEP LAYOUT */
-
-.stepLayout {
-  display: flex;
-  align-items: flex-start;
-  gap: 2rem;
-}
-
-.stepIllustration {
-  flex-shrink: 0;
-  width: 180px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.stepTextContent {
-  flex: 1;
+  gap: 0.15rem;
   min-width: 0;
-  text-align: left;
+  padding: 0.7rem 0.75rem 0.65rem;
+  border: 2px solid var(--chip-edge);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--btn-ink);
+  box-shadow: 0 3px 0 var(--chip-edge);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
-.stepTextContent .boldText {
+@media (hover: hover) {
+  .tab:not(.tabActive):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 0 var(--chip-edge);
+  }
+}
+
+.tab:not(.tabActive):active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--chip-edge);
+}
+
+.tab:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
+}
+
+.tabActive {
+  background: var(--btn-ink);
+  border-color: var(--btn-ink);
+  color: #fff;
+  box-shadow: 0 3px 0 #000;
+  cursor: default;
+}
+
+.tabLabel {
   font-family: "Rowdies-Regular";
-  margin: 0 0 0.75rem;
-  font-size: 0.85rem;
-  line-height: 1.4;
-  text-align: left;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  font-size: 1rem;
+  line-height: 1.2;
 }
 
-.stepTextContent .bulletList {
-  list-style: disc;
-  padding-left: 1.25rem;
-  margin: 0;
-}
-
-.stepTextContent .bulletList li {
+.tabNote {
   font-family: "Rowdies-Light";
-  font-size: 0.85rem;
-  line-height: 1.6;
-  color: #555;
-  margin-bottom: 0.35rem;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  opacity: 0.65;
+}
+
+.short {
+  display: none;
+}
+
+/* #endregion */
+
+/* #region--------------------------------------A STEP: its pieces on the table beside the words */
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 2.5rem;
+  align-items: center;
+  padding: 1.75rem;
+  border-radius: 20px;
+  background: #fff;
   text-align: left;
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.08),
+    0 14px 30px -22px rgba(50, 40, 30, 0.35);
 }
 
-.stepTextContent .bulletList li:last-child {
-  margin-bottom: 0;
+/* every other step the other way round, so the page zigzags */
+.step:nth-child(even) .stepScene {
+  order: 2;
 }
 
-.stepNote {
+.stepWords {
+  padding: 0.5rem 1rem 0.5rem 0;
+}
+
+.step:nth-child(even) .stepWords {
+  padding: 0.5rem 0 0.5rem 1rem;
+}
+
+.page .stepEyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.7rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.78rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.6);
+}
+
+/* the step's number in a red circle, like a character's hobbies */
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  background: rgba(216, 30, 24, 0.1);
+  color: #d81e18;
+  font-family: "Rowdies-Regular";
+  font-size: 0.85rem;
+  letter-spacing: 0;
+}
+
+.stepTitle {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  font-weight: normal;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #323232;
+}
+
+.page .stepLead {
+  margin: 0.8rem 0 1rem;
+  font-family: "Roboto Light";
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: #323232;
+}
+
+.points {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.page .points li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-family: "Roboto Light";
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: rgba(50, 50, 50, 0.85);
+}
+
+.points li::before {
+  content: "";
+  position: absolute;
+  left: 0.2rem;
+  top: 0.62em;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #d81e18;
+  opacity: 0.55;
+}
+
+/* what the game's for, in a yellow note */
+.goal {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  gap: 0.8rem;
+  margin-top: 1.4rem;
+  padding: 1rem 1.15rem;
+  border-radius: 14px;
+  background: #fbf3c8;
+  box-shadow: inset 0 0 0 1px rgba(160, 130, 20, 0.18);
 }
 
-.stepNote img {
-  width: 24px;
-  height: 24px;
+.goal img {
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
   margin-top: 2px;
 }
 
-.stepNote p {
-  font-family: "Rowdies-Light";
-  font-size: 0.8rem;
-  line-height: 1.6;
-  color: #6e6563;
+.page .goal p {
   margin: 0;
+  font-family: "Roboto Light";
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #323232;
 }
 
-/* illustration images */
-.stepIllustration .cardImg {
-  width: 100px;
-  height: 75px;
-  border-radius: 0.5rem;
-  object-fit: contain;
+.goal b {
+  font-family: "Rowdies-Regular";
+  font-weight: normal;
 }
 
-.stepIllustration .cardImgRow {
-  display: flex;
-  gap: 0.35rem;
-  justify-content: center;
-  flex-wrap: wrap;
+/* #endregion */
+
+/* #region--------------------------------------A SCENE: the printed pieces, laid on a table */
+
+.stepScene {
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 50% 40%, #fffdf8 0%, #f3eee2 80%);
+  box-shadow: inset 0 0 0 1px rgba(50, 50, 50, 0.06);
+  overflow: hidden;
 }
 
-.stepIllustration .cardImgSmall {
-  width: 70px;
-  height: 50px;
-  border-radius: 0.35rem;
-  object-fit: contain;
+.scene {
+  position: relative;
+  aspect-ratio: 5 / 4;
+  container-type: inline-size;
 }
 
-.stepIllustration .wideImage {
-  width: 150px;
+.piece {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  translate: -50% -50%;
+  rotate: var(--r);
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* the pieces drift apart a little when the scene's looked at */
+@media (hover: hover) {
+  .step:hover .piece:not(.art) {
+    transform: translateY(calc(-3px - var(--i) * 1px)) rotate(calc(var(--i) * 0.6deg - 1deg));
+  }
+}
+
+.card,
+.character,
+.trait {
+  border-radius: 2.2cqi;
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.1),
+    0 8px 16px -10px rgba(35, 28, 40, 0.3);
+}
+
+/* the character cards' edges are gold foil */
+.character {
+  border-radius: 2.6cqi;
+  box-shadow:
+    0 0 0 1.5px #d9b45a,
+    0 10px 18px -10px rgba(35, 28, 40, 0.3);
+}
+
+.trait {
+  border-radius: 1.2cqi;
+}
+
+/* (the token's art is square: just the round token) */
+.token {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  clip-path: circle(48%);
+  filter: drop-shadow(0 4px 4px rgba(35, 28, 40, 0.18));
+}
+
+.art {
   height: auto;
 }
 
-.stepIllustration .tokenRow {
+/* #endregion */
+
+/* #region--------------------------------------THE GOLDEN RULES */
+
+.golden {
+  margin-top: 1rem;
+  padding: 2.5rem 1.75rem 1.75rem;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.08),
+    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+}
+
+.goldenHead {
   display: flex;
-  gap: 0.25rem;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.75rem;
 }
 
-.stepIllustration .tokenImg {
-  width: 40px;
-  height: 40px;
-}
-
-/* golden rules: two-column grid */
-.goldenRulesGrid {
+.goldenGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
-.goldenRuleCard {
+.goldenRule {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  align-items: center;
+  text-align: center;
+  padding: 1.75rem 1.5rem 1.6rem;
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 50% 30%, #fffdf8 0%, #f3eee2 85%);
 }
 
-.goldenRuleCard .ruleIllustration {
-  display: flex;
-  justify-content: center;
+.goldenRule img {
+  width: 190px;
+  height: 130px;
+  object-fit: contain;
+  margin-bottom: 1rem;
 }
 
-.goldenRuleCard .ruleIllustration img {
-  width: 150px;
-  height: auto;
-}
-
-.goldenRuleCard .boldText {
-  font-family: "Rowdies-Regular";
+.goldenRule h3 {
   margin: 0 0 0.5rem;
-  font-size: 0.85rem;
-  line-height: 1.4;
-  text-align: left;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  font-family: "Rowdies-Regular";
+  font-size: 1.15rem;
+  line-height: 1.25;
+  color: #323232;
 }
 
-.goldenRuleCard .bulletList {
-  list-style: disc;
-  padding-left: 1.25rem;
+.page .goldenRule p {
+  max-width: 28rem;
   margin: 0;
+  font-family: "Roboto Light";
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: rgba(50, 50, 50, 0.85);
 }
 
-.goldenRuleCard .bulletList li {
-  font-family: "Rowdies-Light";
-  font-size: 0.85rem;
-  line-height: 1.6;
-  color: #555;
-  text-align: left;
-}
+/* #endregion */
 
-/* character arc traits (Step 1 illustration) */
-.traitsList {
+/* #region--------------------------------------ON TO THE NEXT PART */
+
+.partFooter {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  width: 180px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
 }
 
-.characterArc {
-  padding: 0.3rem;
-  border-radius: 0.25rem;
-  font-size: 0.7rem;
+/* What's in the box: in a white box like the steps */
+.boxPanel {
+  padding: 1.75rem;
+  border-radius: 20px;
+  background: #fff;
+  text-align: left;
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.08),
+    0 14px 30px -22px rgba(50, 40, 30, 0.35);
 }
 
-.characterArc.goodArc {
-  background-color: #94de8f;
-}
+/* #endregion */
 
-.characterArc.badArc {
-  background-color: #a769d4;
-}
-
-.characterArc.chaoticArc {
-  background-color: #9b9b9b;
-}
-
-.characterArcText {
-  color: #222;
-  background-color: #fff;
-  border-radius: 0.2rem;
-  padding: 0.2rem 0.35rem;
-}
+/* #region--------------------------------------SMALLER SCREENS */
 
 @media only screen and (max-width: 900px) {
-  .stepLayout {
-    flex-direction: column;
+  .page {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* (clear of the logo and the menu button, which float over the top of the page here) */
+  .intro {
+    padding: 4.75rem 0 2rem;
+  }
+
+  .parts {
+    padding: 2.5rem 0 3.5rem;
+  }
+
+  .step {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding: 1rem 1rem 1.5rem;
+  }
+
+  .step:nth-child(even) .stepScene {
+    order: 0;
+  }
+
+  .stepWords,
+  .step:nth-child(even) .stepWords {
+    padding: 0 0.35rem;
+  }
+
+  .golden {
+    padding: 2rem 1rem 1rem;
+  }
+
+  .goldenGrid {
+    grid-template-columns: 1fr;
     gap: 1rem;
   }
 
-  .stepIllustration {
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 2rem;
+  .boxPanel {
+    padding: 1rem;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .page .lede {
+    font-size: 1rem;
   }
 
-  .stepIllustration .cardImg {
-    width: 100px;
-    height: 75px;
+  .tabs {
+    gap: 0.4rem;
   }
 
-  .stepIllustration .cardImgSmall {
-    width: 75px;
-    height: 55px;
+  .tab {
+    padding: 0.6rem 0.35rem 0.55rem;
   }
 
-  .stepIllustration .wideImage {
-    width: 120px;
+  .tabLabel {
+    font-size: 0.88rem;
   }
 
-  .stepIllustration .tokenImg {
-    width: 35px;
-    height: 35px;
+  .tabNote {
+    font-size: 0.62rem;
   }
 
-  .traitsList {
-    width: 140px;
+  .long {
+    display: none;
   }
 
-  .characterArc {
-    font-size: 0.6rem;
+  .short {
+    display: inline;
   }
 
-  .goldenRuleCard .ruleIllustration img {
-    width: 100px;
+  .page .stepLead {
+    font-size: 1.02rem;
   }
 
-  .goldenRulesGrid {
-    grid-template-columns: 1fr;
+  .partFooter {
+    flex-direction: column-reverse;
+    align-items: stretch;
   }
 
-  .allStepsContainer :global(.directionEpisodeTextWrapper) {
-    font-size: 1.5rem !important;
+  .partFooter > span {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .piece,
+  .tab {
+    transition: none;
   }
 }
 

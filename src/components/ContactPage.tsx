@@ -192,7 +192,7 @@ const Journey = () => {
               <p key={at} className={styles.captionText}>
                 {item.caption}
                 <span className={styles.captionMeta}>
-                  {formatDate(item.date)} · {at + 1} of {CONTACT_POLAROIDS.length}
+                  {formatDate(item.date)}
                 </span>
               </p>
             </div>

@@ -21,9 +21,8 @@
   aspect-ratio: 3 / 2;
   max-height: clamp(320px, 60vh, 620px);
   width: 100%;
-  border-radius: 12px;
+  border-radius: 14px;
   background: radial-gradient(ellipse at 50% 40%, #fff 0%, var(--paper) 75%);
-  border: 2px solid var(--ink);
   overflow: hidden;
   touch-action: none;
   cursor: grab;

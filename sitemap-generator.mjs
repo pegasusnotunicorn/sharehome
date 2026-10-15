@@ -17,16 +17,15 @@ const hostname = "https://lovecareermagic.com";
 const routes = [
   "/",
   "/howtoplay",
-  "/freeartbook",
   "/digitalartbook",
   "/characters",
   "/contact",
-  "/thankyou",
   "/terms",
   "/privacy",
   "/rulebook",
-  "/buy",
 ];
+// (not listed: /thankyou, which robots.txt keeps out; /buy, a redirect that records a checkout event
+// each time it's fetched, crawlers included)
 
 // Get character names dynamically
 const allCharacters = getAllCharacters();

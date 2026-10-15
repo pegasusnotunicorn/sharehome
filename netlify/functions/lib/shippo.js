@@ -35,6 +35,17 @@ const MAX_USD_12X = Number(process.env.SHIPPO_MAX_LABEL_USD_12X || "30");
 // Netlify function instance is fine. Cold start re-fetches.
 let templatesByNamePromise = null;
 
+// A Shippo response as JSON, or its text when it isn't any (a gateway 502/504 page), so a failure
+// still reports its HTTP status rather than a JSON SyntaxError
+async function readBody(res) {
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text.slice(0, 300);
+  }
+}
+
 async function getTemplatesByName() {
   if (templatesByNamePromise) return templatesByNamePromise;
   templatesByNamePromise = (async () => {
@@ -44,7 +55,7 @@ async function getTemplatesByName() {
     const res = await fetch(`${SHIPPO_BASE}/user-parcel-templates/`, {
       headers: { Authorization: `ShippoToken ${SHIPPO_API_KEY}` },
     });
-    const data = await res.json();
+    const data = await readBody(res);
     if (!res.ok) {
       throw new Error(`Shippo /user-parcel-templates/ ${res.status}: ${JSON.stringify(data)}`);
     }
@@ -112,7 +123,7 @@ async function shippoFetch(path, body) {
     body: JSON.stringify(body),
   });
 
-  const data = await res.json();
+  const data = await readBody(res);
   if (!res.ok) {
     throw new Error(
       `Shippo ${path} ${res.status}: ${JSON.stringify(data)}`

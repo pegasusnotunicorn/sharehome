@@ -36,6 +36,7 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
   const viewerEl = useRef<HTMLDivElement>(null);
   // a turn under way, or just made: the viewer waits, hidden, until its card's in; the ring shows it
   const [swung, setSwung] = useState(false);
+  useEffect(() => () => clearTimeout(handover.current), []);
   // the words fade out while the cards swing round, and back in as the next character's
   const [hush, setHush] = useState(false);
   const turning = useRef(false);
@@ -70,6 +71,7 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
   fronts.current = [-4, -3, -2, -1, 0, 1, 2, 3, 4].map((k) => cardFront(around(k)));
   useEffect(() => {
     ring.current?.set(fronts.current);
+    turning.current = false; // (the cards are this character's now: the next turn can start)
     // (the cards change with the character)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [c.urlName]);
@@ -81,12 +83,14 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
     const r = ring.current;
     if (!r) return navigate(`/characters/${to.urlName}`);
     turning.current = true;
+    clearTimeout(handover.current); // (a card that came in just now is already on its way out)
     setHush(true);
     const turned = r.turn(k); // (the ring draws the middle card from here, this frame...)
     if (viewerEl.current) viewerEl.current.style.opacity = "0"; // (...as the viewer goes)
     setSwung(true);
     await turned;
-    turning.current = false;
+    // (still "turning" until the cards are the next character's: a click before then would start a
+    // turn they'd cut short)
     navigate(`/characters/${to.urlName}`);
     requestAnimationFrame(() => setHush(false));
   };
@@ -114,9 +118,14 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
   // the new card's in: once the picture shown while it loaded has faded from under it, the viewer shows
   // it and the ring stops drawing it, in the same frame (the same printed card, in the same place, lit
   // the same: no change you can see)
+  const handover = useRef(0);
   const ready = () => {
     if (!swung) return;
-    setTimeout(() => {
+    clearTimeout(handover.current);
+    handover.current = window.setTimeout(() => {
+      // (not mid-swing: another click turned the cards on before this one came in; the next one's
+      // card hands over when it's in)
+      if (turning.current) return;
       if (viewerEl.current) viewerEl.current.style.opacity = "";
       ring.current?.showMiddle(false);
       setSwung(false);
@@ -147,7 +156,7 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
 
       <div className={styles.stage}>
         <div ref={ringEl} className={styles.ring} />
-        <div ref={viewerEl} className={`${styles.card} ${swung ? styles.cardAway : ""}`}>
+        <div ref={viewerEl} className={`${styles.card} ${swung ? styles.cardAway : ""} ${hush || swung ? styles.toolsAway : ""}`}>
           <CardViewer
             key={c.urlName}
             mm={CHARACTER_CARD_MM}

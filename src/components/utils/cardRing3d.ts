@@ -237,18 +237,26 @@ export async function mountCardRing(el: HTMLElement, { mm, viewer, onPick, onFai
   el.addEventListener("click", onClick);
   el.addEventListener("pointermove", onMove);
 
-  let raf = 0;
+  // a turn under way: cut short (by a new set of cards, or a new turn), it's still over
+  let raf = 0, finish: (() => void) | null = null;
+  const stop = () => {
+    cancelAnimationFrame(raf);
+    const f = finish;
+    finish = null;
+    f?.();
+  };
   const api: CardRingApi = {
     set: (f) => {
+      stop();
       fronts = f;
       shift = 0;
-      cancelAnimationFrame(raf);
       dress();
       draw();
     },
     turn: (n) =>
       new Promise<void>((done) => {
-        cancelAnimationFrame(raf);
+        stop();
+        finish = done;
         middle = true;
         const t0 = performance.now(), ms = calm() ? 0 : TURN_MS * Math.min(1.6, 0.7 + 0.3 * Math.abs(n));
         // (eased out with a little settle, like a card dropping into place)
@@ -258,7 +266,10 @@ export async function mountCardRing(el: HTMLElement, { mm, viewer, onPick, onFai
           shift = n * e(t);
           draw();
           if (t < 1) raf = requestAnimationFrame(step);
-          else done();
+          else {
+            finish = null;
+            done();
+          }
         };
         step(t0);
       }),
@@ -269,7 +280,7 @@ export async function mountCardRing(el: HTMLElement, { mm, viewer, onPick, onFai
     },
     destroy: () => {
       dead = true;
-      cancelAnimationFrame(raf);
+      stop();
       ro.disconnect();
       el.removeEventListener("click", onClick);
       el.removeEventListener("pointermove", onMove);

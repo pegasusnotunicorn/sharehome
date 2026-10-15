@@ -118,8 +118,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* (up into the room under the card, where its shadow falls) */
-  margin-top: -3rem;
+  /* (up into the room under the card, level with its zoom buttons: 38px tall, 6px off the bottom) */
+  margin-top: -44px;
   pointer-events: none;
 }
 
@@ -283,10 +283,9 @@
     padding: 4.75rem 1rem 0;
   }
 
-  /* (under the card's zoom buttons) */
-  .steps,
-  .stage:has(:global(.zoomed)) .steps {
-    margin-top: 0.5rem;
+  /* (no room for the names beside the zoom buttons) */
+  .stepName {
+    display: none;
   }
 
   .details {
@@ -337,4 +336,15 @@
   .words {
     transition: none;
   }
+}
+
+/* the card's zoom buttons go and come back with the words; back once the card's its own again */
+.card button {
+  transition: opacity 0.35s ease;
+}
+
+.card.toolsAway button {
+  opacity: 0;
+  pointer-events: none;
+  transition-duration: 0.2s;
 }

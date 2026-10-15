@@ -1,5 +1,5 @@
-import { useEffect, useRef, useCallback, useState } from "react";
-import { useParams, useNavigate } from "react-router";
+import { useEffect, useRef, useCallback, useMemo, useState } from "react";
+import { Link, useParams, useNavigate } from "react-router";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, A11y, Keyboard } from "swiper/modules";
 import "swiper/css";
@@ -8,6 +8,7 @@ import "swiper/css/pagination";
 import {
   getAllCharacters,
   getCharacterShareMeta,
+  getRandomPerson,
   getSpecificPersonByURL,
 } from "../Characters/Characters";
 import { CharacterSpotlight } from "../utils/CharacterSpotlight";
@@ -19,24 +20,12 @@ import Modal from "../utils/Modal";
 import charStyles from "../../css/pages/characterPage.module.css";
 import "../../css/utils/spotlight.css";
 import type { CharacterWithNav } from "../../types/character";
-import { CHARACTER_ART_SIZES, characterArtSrcSet } from "../utils/characterArt";
+
+// a character's printed card front, by their place in the cast
+const cardFront = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}.webp`;
 
 interface IndividualCharacterProps {
   character: CharacterWithNav;
-}
-
-interface CharacterGridCardProps {
-  name: string;
-  details: string[];
-  imageSrc: string;
-  imageAlt: string;
-  imageObjectPosition?: string;
-  overlayText?: string;
-  sketchCount?: number;
-  onClick?: () => void;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
-  className?: string;
 }
 
 const expansionPlaceholderImage = `data:image/svg+xml;utf8,${encodeURIComponent(`
@@ -77,64 +66,6 @@ const expansionPlaceholders: ExpansionCharacter[] = [
   { id: 10, name: "Phido", race: "Cerberus", job: "Body Guard" },
 ];
 
-const CharacterGridCard = ({
-  name,
-  details,
-  imageSrc,
-  imageAlt,
-  imageObjectPosition,
-  overlayText,
-  sketchCount,
-  onClick,
-  onMouseEnter,
-  onMouseLeave,
-  className,
-}: CharacterGridCardProps) => {
-  return (
-    <div
-      className={`${charStyles.characterWrapper} ${className || ""}`.trim()}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-    >
-      <div
-        className={charStyles.characterInnerWrapper}
-        onClick={onClick}
-      >
-        <img
-          loading="lazy"
-          className="boxes"
-          src={imageSrc}
-          srcSet={characterArtSrcSet(imageSrc)}
-          sizes={CHARACTER_ART_SIZES}
-          style={{ objectPosition: imageObjectPosition || "center" }}
-          alt={imageAlt}
-        />
-        {overlayText && (
-          <div className={charStyles.cardOverlayText}>{overlayText}</div>
-        )}
-        {sketchCount && sketchCount > 1 && (
-          <div
-            className={charStyles.sketchCountBadge}
-            aria-label={`${sketchCount} sketches available`}
-            title={`${sketchCount} sketches`}
-          >
-            <img src="/images/icons/stack.svg" alt="" />
-            <span>{sketchCount}</span>
-          </div>
-        )}
-        <div className={`${charStyles.caption} noselect`}>
-          <p className={charStyles.name}>{name}</p>
-          <p className={`${charStyles.details} is-hidden-mobile`}>
-            {details.map((detail) => (
-              <span key={`${name}-${detail}`}>{detail}</span>
-            ))}
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 //render all characters or a specific one depending on URL
 const CharactersPage = () => {
   const navigate = useNavigate();
@@ -158,13 +89,6 @@ const CharactersPage = () => {
     navigate("/characters");
     return null;
   } else {
-    let characterContent =
-      chosenCharacter && !chosenCharacter.ignoreInRandom ? (
-        <IndividualCharacter character={chosenCharacter} />
-      ) : (
-        <AllCharacters />
-      );
-
     //custom meta tags for this page
     let title = "All playable characters";
     let splashImage =
@@ -186,33 +110,42 @@ const CharactersPage = () => {
           description={description}
         />
 
-        <div className="subcontentWrapper margin-top min-width">
-          <div className={`characterContent ${charStyles.pageIntro}`}>
-            <h2 className={`subtitle ${charStyles.pageIntroTitle}`}>
-              Characters
-            </h2>
-            <p className={charStyles.pageIntroLead}>
-              Say hello to the cast of the reality show ✨
-            </p>
-            <a
-              aria-label="Illustrations by Carolyn Frank"
-              target="_blank"
-              rel="noreferrer"
-              href="https://www.instagram.com/carofranklyn/?hl=en"
-              className={charStyles.illustrationLink}
-            >
-              <img
-                loading="lazy"
-                src="/images/icons/star.svg"
-                alt=""
-              />
-              Illustrations by Carolyn Frank
-            </a>
-          </div>
-        </div>
-        <GsapFadeScrub fadeIn className="fadeInTextWrapper">
-          {characterContent}
-        </GsapFadeScrub>
+        {chosenCharacter ? (
+          <>
+            <div className="subcontentWrapper margin-top min-width">
+              <div className={`characterContent ${charStyles.pageIntro}`}>
+                <h2 className={`subtitle ${charStyles.pageIntroTitle}`}>
+                  Characters
+                </h2>
+                <p className={charStyles.pageIntroLead}>
+                  Say hello to the cast of the reality show ✨
+                </p>
+                <a
+                  aria-label="Illustrations by Carolyn Frank"
+                  target="_blank"
+                  rel="noreferrer"
+                  href="https://www.instagram.com/carofranklyn/?hl=en"
+                  className={charStyles.illustrationLink}
+                >
+                  <img
+                    loading="lazy"
+                    src="/images/icons/star.svg"
+                    alt=""
+                  />
+                  Illustrations by Carolyn Frank
+                </a>
+              </div>
+            </div>
+            <GsapFadeScrub fadeIn className="fadeInTextWrapper">
+              <IndividualCharacter character={chosenCharacter} />
+            </GsapFadeScrub>
+          </>
+        ) : (
+          <>
+            <CastIntro />
+            <CastWall />
+          </>
+        )}
         {!chosenCharacter && <ExpansionCharactersSection />}
         <EmojiSection />
       </div>
@@ -272,87 +205,99 @@ const IndividualCharacter = ({ character }: IndividualCharacterProps) => {
   );
 };
 
-//get all characters and their details
-const AllCharacters = () => {
+// The cast page's opening: what they are, and a way in for anyone who'd rather not choose
+const CastIntro = () => {
   const navigate = useNavigate();
-  let { name } = useParams();
-  let chosenCharacter = name ? getSpecificPersonByURL(name) : false;
-  const pausedRef = useRef(false);
-  const charactersContainerRef = useRef<HTMLDivElement | null>(null);
+  return (
+    <header className={`${charStyles.castIntro} ${charStyles.castHero}`}>
+      <p className={charStyles.castEyebrow}>Season one · 25 contestants</p>
+      <h1 className={charStyles.castTitle}>Meet the cast</h1>
+      <p className={charStyles.castLede}>Say hello to the cast of the reality show ✨</p>
+      <div className={charStyles.castActions}>
+        <button type="button" className={charStyles.castSurprise} onClick={() => navigate(`/characters/${getRandomPerson().urlName}`)}>
+          <img src="/images/icons/star.svg" alt="" />
+          Surprise me
+        </button>
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://www.instagram.com/carofranklyn/?hl=en"
+          className={charStyles.illustrationLink}
+        >
+          Illustrations by Carolyn Frank
+        </a>
+      </div>
+    </header>
+  );
+};
 
-  const redirectToSpecificCharacter = (character: { urlName: string; ignoreInRandom: boolean }) => {
-    if (chosenCharacter !== character && !character.ignoreInRandom) {
-      navigate(`/characters/${character.urlName}`);
-    }
-  };
-
-  const clearSpotlight = useCallback(() => {
-    const active = charactersContainerRef.current?.querySelector(
-      `.${charStyles.characterWrapper}.${charStyles.spotlit}`
-    );
-    if (active) active.classList.remove(charStyles.spotlit);
-  }, []);
+// The original cast as a wall of cards: each one's a link to its character's page, showing the printed
+// card, which turns 3D (castWall3d.ts) once it's loaded. The flat card stays where 3D can't be drawn.
+const CastWall = () => {
+  const characters = useMemo(() => getAllCharacters(), []);
+  const tiles = useRef<(HTMLAnchorElement | null)[]>([]);
+  const [ready, setReady] = useState<boolean[]>([]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (pausedRef.current) return;
-      clearSpotlight();
-      const all = charactersContainerRef.current?.querySelectorAll(
-        `.${charStyles.characterWrapper}:not(.${charStyles.notDone})`
-      );
-      if (!all) return;
-      if (all.length === 0) return;
-      const randomIndex = Math.floor(Math.random() * all.length);
-      all[randomIndex].classList.add(charStyles.spotlit);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, [clearSpotlight]);
-
-  const onMouseEnter = useCallback(() => {
-    pausedRef.current = true;
-    clearSpotlight();
-  }, [clearSpotlight]);
-
-  const onMouseLeave = useCallback(() => {
-    pausedRef.current = false;
-  }, []);
-
-  const allCharacters = getAllCharacters();
-  const existingCharacters = allCharacters.map((elem, index) => {
-    const name = elem.name;
-    const race = elem.race;
-    let job = elem.job;
-    if (elem.job2) {
-      job = `${elem.job} / ${elem.job2}`;
-    }
-
-    let ignoreInRandom = elem.ignoreInRandom ? charStyles.notDone : "";
-    return (
-      <CharacterGridCard
-        key={index}
-        className={ignoreInRandom}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        onClick={() => {
-          redirectToSpecificCharacter(elem);
-        }}
-        name={name}
-        details={[String(elem.age), race, job]}
-        imageSrc={elem.image.url.replace("big", "small")}
-        imageObjectPosition={elem.image.objectPosition}
-        imageAlt={elem.name}
-      />
-    );
-  });
+    let gone = false;
+    let api: { destroy: () => void } | null = null;
+    const els = tiles.current.slice(0, characters.length);
+    if (els.some((el) => !el)) return;
+    import("../utils/castWall3d")
+      .then(({ mountCastWall }) =>
+        mountCastWall(
+          els.map((link, i) => ({
+            link: link!,
+            stage: link!.querySelector<HTMLElement>(`.${charStyles.castStage}`)!,
+            src: cardFront(i),
+            onReady: () => !gone && setReady((r) => Object.assign([...r], { [i]: true })),
+          })),
+          () => {}
+        )
+      )
+      .then((a) => {
+        if (gone) a?.destroy();
+        else api = a;
+      })
+      .catch(() => {});
+    return () => {
+      gone = true;
+      api?.destroy();
+    };
+  }, [characters]);
 
   return (
-    <section id="original-cast" className={charStyles.allcharactersWrapper}>
-      <div className={charStyles.sectionIntro}>
-        <p className={charStyles.sectionEyebrow}>THE ORIGINAL CAST</p>
-      </div>
-      <div ref={charactersContainerRef} className={charStyles.charactersContainer}>
-        {existingCharacters}
-      </div>
+    <section id="original-cast" className={charStyles.castSection} aria-label="The original cast">
+      <ul className={charStyles.castWall}>
+        {characters.map((c, i) => (
+          <li key={c.urlName} className={charStyles.castItem}>
+            <Link
+              ref={(el) => {
+                tiles.current[i] = el;
+              }}
+              to={`/characters/${c.urlName}`}
+              className={charStyles.castTile}
+              aria-label={`${c.name}, the ${c.race}`}
+            >
+              <span className={`${charStyles.castStage} ${ready[i] ? charStyles.castLive : ""}`}>
+                <img
+                  className={charStyles.castFlat}
+                  src={cardFront(i)}
+                  alt=""
+                  loading={i < 10 ? "eager" : "lazy"}
+                  decoding="async"
+                  width={768}
+                  height={444}
+                />
+              </span>
+              <span className={`${charStyles.castCaption} noselect`}>
+                <span className={charStyles.castName}>{c.name}</span>
+                <span className={charStyles.castJob}>{[c.job, c.job2].filter(Boolean).join(" / ")}</span>
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 };
@@ -381,34 +326,70 @@ const ExpansionCharactersSection = () => {
     setActiveCharacterId(character.id);
   };
 
-  const upcomingCharacters = expansionPlaceholders.map((character) => {
-    const sketches = character.sketches ?? [];
-    const hasSketches = sketches.length > 0;
-    const latestSketch = hasSketches ? sketches[sketches.length - 1] : undefined;
-    const cardClass = hasSketches ? "" : charStyles.staticCard;
-    return (
-      <CharacterGridCard
-        key={character.id}
-        className={cardClass}
-        name={character.name}
-        details={[character.race, character.job]}
-        imageSrc={latestSketch || expansionPlaceholderImage}
-        imageAlt={hasSketches ? `${character.name} sketch` : `${character.name} placeholder art`}
-        overlayText={hasSketches ? undefined : "?"}
-        onClick={hasSketches ? () => openViewer(character) : undefined}
-        sketchCount={sketches.length}
-      />
-    );
-  });
-
   return (
-    <section id="second-season-cast" className={charStyles.allcharactersWrapper}>
-      <div className={charStyles.sectionIntro}>
-        <p className={charStyles.sectionEyebrow}>THE SECOND SEASON CAST</p>
-      </div>
-      <div className={`${charStyles.charactersContainer} ${charStyles.compactCharactersContainer}`}>
-        {upcomingCharacters}
-      </div>
+    <section id="second-season-cast" className={charStyles.seasonTwo} aria-labelledby="season-two-title">
+      <header className={charStyles.castIntro}>
+        <p className={charStyles.castEyebrow}>Coming in season two</p>
+        <h2 id="season-two-title" className={charStyles.seasonTwoTitle}>
+          The new arrivals
+        </h2>
+        <p className={charStyles.castLede}>
+          {expansionPlaceholders.length} new contestants are on their way in the expansion. Here's a peek at the
+          sketches so far.
+        </p>
+      </header>
+      <ul className={`${charStyles.castWall} ${charStyles.seasonTwoWall}`}>
+        {expansionPlaceholders.map((character) => {
+          const sketches = character.sketches ?? [];
+          const latest = sketches[sketches.length - 1];
+          const inner = (
+            <>
+              <span className={`${charStyles.castStage} ${charStyles.sketchStage}`}>
+                <img
+                  className={charStyles.castFlat}
+                  src={latest || expansionPlaceholderImage}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+                {!latest && (
+                  <span className={charStyles.sketchMystery} aria-hidden="true">
+                    ?
+                  </span>
+                )}
+                {sketches.length > 1 && (
+                  <span className={charStyles.sketchCountBadge} title={`${sketches.length} sketches`}>
+                    <img src="/images/icons/stack.svg" alt="" />
+                    <span>{sketches.length}</span>
+                  </span>
+                )}
+              </span>
+              <span className={`${charStyles.castCaption} noselect`}>
+                <span className={charStyles.castName}>{character.name}</span>
+                <span className={charStyles.castJob}>
+                  {character.race} · {character.job}
+                </span>
+              </span>
+            </>
+          );
+          return (
+            <li key={character.id} className={charStyles.castItem}>
+              {latest ? (
+                <button
+                  type="button"
+                  className={`${charStyles.castTile} ${charStyles.sketchTile}`}
+                  onClick={() => openViewer(character)}
+                  aria-label={`See ${sketches.length > 1 ? `${sketches.length} sketches` : "the sketch"} of ${character.name}, the ${character.race}`}
+                >
+                  {inner}
+                </button>
+              ) : (
+                <div className={`${charStyles.castTile} ${charStyles.sketchPending}`}>{inner}</div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
 
       {activeCharacter && activeSketches.length > 0 && (
         <Modal

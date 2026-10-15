@@ -147,10 +147,11 @@ let calmNow = !!reduce?.matches;
 reduce?.addEventListener?.("change", (e) => (calmNow = e.matches));
 export const calm = () => calmNow;
 
-// a rounded card with a cream paper or gold foil edge; its long side is 1
-export function makeCard(T: Three, mm: [number, number], front: THREE.Texture, back: THREE.Texture, gold: THREE.Texture | null) {
+// a rounded card with a cream paper or gold foil edge; its long side is 1. (`thick`: how thick it is,
+// in mm; small cards are drawn a little thicker, so their edges still show)
+export function makeCard(T: Three, mm: [number, number], front: THREE.Texture, back: THREE.Texture, gold: THREE.Texture | null, thick = 0.72) {
   const k = 1 / Math.max(mm[0], mm[1]);
-  const w = mm[0] * k, h = mm[1] * k, r = 3.5 * k, t = 0.72 * k;
+  const w = mm[0] * k, h = mm[1] * k, r = 3.5 * k, t = thick * k;
   const s = new T.Shape();
   s.moveTo(-w / 2 + r, -h / 2);
   s.lineTo(w / 2 - r, -h / 2);

@@ -57,8 +57,6 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
 
       <SmoshSection />
 
-      <TestimonialsSection />
-
       <GsapFadeScrub
         fadeIn
         scrubStartBot
@@ -163,6 +161,8 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
           </StepText>
         </GsapFadeScrub>
       </div>
+
+      <TestimonialsSection />
 
       <div
         className={`${landingPageStyles.mainpageContainer} ${landingPageStyles.carouselContainer}`}

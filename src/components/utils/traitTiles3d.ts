@@ -89,7 +89,7 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
     srcs: [string, string];
     type: Trait["type"];
     turns: number; // half turns done (odd: its second face is showing)
-    flip: { from: number; at: number } | null; // a flip under way: from which angle, starting when
+    flip: { from: number; at: number; quick?: boolean } | null; // a flip under way: from which angle, starting when (quick: clicked)
     pos: { x: number; y: number; w: number; h: number };
     from: { x: number; y: number };
     phase: number;
@@ -162,12 +162,23 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
     lean.y += (lean.ty - lean.y) * (still ? 1 : 0.08);
     group.rotation.set(lean.y * 0.12, lean.x * 0.2, 0);
     for (const t of tiles) {
-      let a = 1;
+      // a new character's traits turn over in an even sweep; a clicked card turns over the way the
+      // other cards on the page do, fast at first, then settling
+      let a = 1, e = 1;
       if (t.flip) {
-        a = still ? 1 : Math.min(1, Math.max(0, (now - t.flip.at) / FLIP_S));
-        if (a >= 1) t.flip = null;
+        const since = Math.max(0, now - t.flip.at);
+        if (t.flip.quick) {
+          e = still ? 1 : 1 - Math.exp(-7 * since);
+          a = e > 0.995 ? 1 : e;
+        } else {
+          a = still ? 1 : Math.min(1, since / FLIP_S);
+          e = ease(a);
+        }
+        if (a >= 1) {
+          t.flip = null;
+          e = 1;
+        }
       }
-      const e = ease(a);
       const angle = t.flip ? t.flip.from + (t.turns * Math.PI - t.flip.from) * e : t.turns * Math.PI;
       const sway = still ? 0 : Math.sin(now * 1.3 + t.phase);
       const x = t.from.x + (t.pos.x - t.from.x) * e, y = t.from.y + (t.pos.y - t.from.y) * e;
@@ -231,7 +242,7 @@ export async function mountTraitTiles(stage: HTMLElement, onFail: () => void): P
     // Showing its back, it turns back over to its trait (still on the other face)
     const turnOver = () => {
       t.turns += 1;
-      t.flip = { from: t.obj.rotation.y, at: now };
+      t.flip = { from: t.obj.rotation.y, at: now, quick: true };
       if (!onScreen) {
         step(true);
         draw();

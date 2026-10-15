@@ -24,6 +24,7 @@ interface MountOptions {
   onTurn: (i: number) => void; // the photo now in front
   onOpen: (i: number) => void; // the one in front was clicked
   onTouch?: () => void; // someone swiped or clicked it
+  start?: number; // the photo in front to begin with
   onFail: () => void;
 }
 
@@ -77,7 +78,7 @@ const polaroid = async (T: Three, p: Photo) => {
 
 const mod = (i: number, n: number) => ((i % n) + n) % n;
 
-export async function mountPolaroidRing(el: HTMLElement, { photos, onTurn, onOpen, onTouch, onFail }: MountOptions): Promise<PolaroidRingApi | null> {
+export async function mountPolaroidRing(el: HTMLElement, { photos, start = 0, onTurn, onOpen, onTouch, onFail }: MountOptions): Promise<PolaroidRingApi | null> {
   let T: Three, r: THREE.WebGLRenderer;
   try {
     T = await loadThree();
@@ -152,7 +153,7 @@ export async function mountPolaroidRing(el: HTMLElement, { photos, onTurn, onOpe
     );
   };
 
-  let at = 0, shift = 0, dead = false;
+  let at = mod(start, photos.length), shift = 0, dead = false;
   const itemOf = (slot: number) => mod(at + slot - SIDE, photos.length);
   const wear = () =>
     cards.forEach((obj, slot) => {

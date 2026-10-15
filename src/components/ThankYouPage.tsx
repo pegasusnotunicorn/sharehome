@@ -1,26 +1,26 @@
 import { useEffect, useMemo, useState } from "react";
-import { NavLink } from "react-router";
 import CustomHelmet from "./utils/CustomHelmet";
-import PageIntro from "./utils/PageIntro";
-import PolaroidGallery from "./utils/PolaroidGallery";
+import DefaultButton from "./utils/DefaultButton";
+import PolaroidJourney from "./utils/PolaroidJourney";
 import { CONTACT_POLAROIDS } from "./utils/contactPolaroids";
 import styles from "../css/pages/thankYouPage.module.css";
-
-const RANDOM_POLAROID_COUNT = 4;
 
 type ShippingRegion = "loading" | "us" | "europe";
 
 // Which shipping copy to show, looked up from the order's shipping address.
 // Anything that isn't a confirmed Europe order falls back to the US copy.
+// (?preview=europe or ?preview=us shows that one, to see how it reads.)
 const useShippingRegion = (): ShippingRegion => {
-  const sessionId = useMemo(
-    () => new URLSearchParams(window.location.search).get("checkout_session_id"),
-    []
+  const [sessionId, preview] = useMemo(() => {
+    const q = new URLSearchParams(window.location.search);
+    return [q.get("checkout_session_id"), q.get("preview")];
+  }, []);
+  const [region, setRegion] = useState<ShippingRegion>(
+    preview === "europe" ? "europe" : preview === "us" || !sessionId ? "us" : "loading"
   );
-  const [region, setRegion] = useState<ShippingRegion>(sessionId ? "loading" : "us");
 
   useEffect(() => {
-    if (!sessionId) return;
+    if (!sessionId || preview) return;
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
     fetch(`/.netlify/functions/order-region?checkout_session_id=${encodeURIComponent(sessionId)}`, {
@@ -34,27 +34,15 @@ const useShippingRegion = (): ShippingRegion => {
       clearTimeout(timeout);
       controller.abort();
     };
-  }, [sessionId]);
+  }, [sessionId, preview]);
 
   return region;
-};
-
-const pickRandomPolaroids = (count: number) => {
-  const indices = CONTACT_POLAROIDS.map((_, i) => i);
-  for (let i = indices.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [indices[i], indices[j]] = [indices[j], indices[i]];
-  }
-  return indices
-    .slice(0, count)
-    .sort((a, b) => a - b)
-    .map((i) => ({ ...CONTACT_POLAROIDS[i], hideOnMobile: false }));
 };
 
 const ThankYouPage = () => {
   const title = "Thank you for your order!";
 
-  const polaroids = useMemo(() => pickRandomPolaroids(RANDOM_POLAROID_COUNT), []);
+  const [start] = useState(() => Math.floor(Math.random() * CONTACT_POLAROIDS.length));
   const region = useShippingRegion();
   const isEurope = region === "europe";
   // Hold the region-specific copy back until the lookup settles, so a Europe
@@ -69,27 +57,25 @@ const ThankYouPage = () => {
         description="We have received your order and will ship your game to you within 3-5 business days."
       />
 
-      <PageIntro title="Thank you for your order!" lead="Your game is on its way 📦">
-        <NavLink to="/" className={styles.homeLink}>
-          Click here to go back home
-        </NavLink>
-      </PageIntro>
-
-      <div className={styles.shipmentCard}>
-        <div className={styles.shipmentVerticalWrapper}>
-          <img
-            src="/images/loucheck.webp"
-            alt="Lou the cat is checking your order"
-            className={styles.louImage}
-            loading="lazy"
-          />
+      <header className={styles.intro}>
+        <p className={styles.eyebrow}>Order confirmed</p>
+        <h1 className={styles.title}>Thank you!</h1>
+        <p className={styles.lede}>Your game is on its way 📦</p>
+        <div className={styles.actions}>
+          <DefaultButton navlink="/" variant="secondary" border="dark" icon="prev" text="Back to home" />
         </div>
-        <div className={styles.shipmentVerticalWrapper}>
-          <h2>
-            Lou the cat is on the case 🐈
-            <br />
-            Head of Fulfillment.
-          </h2>
+      </header>
+
+      <section className={styles.lou}>
+        <img
+          src="/images/loucheck.webp"
+          alt="Lou the cat is checking your order"
+          className={styles.louImage}
+          loading="lazy"
+        />
+        <div className={styles.louWords}>
+          <p className={styles.label}>Head of Fulfillment</p>
+          <h2 className={styles.louTitle}>Lou the cat is on the case&nbsp;🐈</h2>
           {regionReady && (
             <>
               {isEurope ? (
@@ -148,9 +134,9 @@ const ThankYouPage = () => {
             </>
           )}
         </div>
-      </div>
+      </section>
 
-      <PolaroidGallery items={polaroids} />
+      <PolaroidJourney label="Thanks for being part of it" title="The journey so far" start={start} />
     </div>
   );
 };

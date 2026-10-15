@@ -1,126 +1,196 @@
+/* Thank you (ThankYouPage.tsx): the opening, Lou's note about the order in a white box, then the
+   polaroids going round (PolaroidJourney.tsx). As wide as the other pages' sections: 1180px, inside
+   2rem sides. */
+
 .thankYouPage {
   min-height: calc(100svh - var(--footer-height));
+  max-width: calc(1180px + 4rem);
+  padding-left: 2rem;
+  padding-right: 2rem;
+  box-sizing: border-box;
 }
 
-.shipmentCard {
+.thankYouPage p {
+  opacity: 1;
+}
+
+/* #region--------------------------------------THE OPENING */
+
+.intro {
   display: flex;
-  justify-content: flex-start;
-  align-items: stretch;
-  width: calc(100% - 8rem);
-  max-width: 1040px;
-  margin: 0 auto 2rem;
-  padding: 2rem;
-  gap: 2rem;
-  border: 2px solid #323232;
-  border-radius: 8px;
-  background: #fff;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 0 2.5rem;
 }
 
-.shipmentVerticalWrapper {
-  text-align: left;
-  padding: 0;
-  flex: 1;
-}
-
-.shipmentVerticalWrapper:first-child {
-  padding-right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  overflow: hidden;
-  flex: 1;
-  border-radius: 6px;
-}
-
-.shipmentVerticalWrapper:last-child {
-  padding-left: 0;
-  padding-bottom: 0;
-}
-
-.shipmentVerticalWrapper:last-child p:last-child {
-  margin-bottom: 0;
-}
-
-.shipmentVerticalWrapper h2 {
-  margin-top: 0;
-  white-space: pre-line;
-}
-
-.notice {
-  margin: 1rem 0;
-  padding: 0.85rem 1rem;
-  border-left: 4px solid #5f5aa2;
-  border-radius: 4px;
-  background: rgba(95, 90, 162, 0.08);
+.thankYouPage .eyebrow {
+  margin: 0 0 0.9rem;
   font-family: "Rowdies-Regular";
-  font-size: 0.95rem;
-  line-height: 1.5;
+  font-size: 0.78rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #3e8f6e;
+}
+
+.title {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(3rem, 8.5vw, 6rem);
+  font-weight: normal;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
   color: #323232;
 }
 
-.notice strong {
-  font-family: "Rowdies-Regular";
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  color: #5f5aa2;
-  display: block;
-  margin-bottom: 0.25rem;
+.thankYouPage .lede {
+  margin: 1.1rem 0 0;
+  font-family: "Roboto Light";
+  font-size: 1.08rem;
+  line-height: 1.5;
+  color: rgba(50, 50, 50, 0.85);
 }
 
-.shipmentVerticalWrapper img {
-  border-radius: 5px;
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.6rem;
+}
+
+/* #endregion */
+
+/* #region--------------------------------------LOU'S NOTE: a white box, like a character page's */
+
+.lou {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 2.5rem;
+  align-items: center;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 1.75rem;
+  border-radius: 20px;
+  background: #fff;
+  text-align: left;
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.08),
+    0 14px 30px -22px rgba(50, 40, 30, 0.35);
 }
 
 .louImage {
+  display: block;
   width: 100%;
   height: 100%;
-  display: block;
-  margin: 0 auto;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
   object-position: center 35%;
+  border-radius: 14px;
 }
 
-.homeLink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  color: #323232;
-  font-family: "Rowdies-Regular";
-  font-size: 0.9rem;
-  text-decoration: none;
-  padding-bottom: 0.1rem;
-  border-bottom: 2px solid rgba(50, 50, 50, 0.15);
+.louWords {
+  /* (room for the words before they're in, so the box doesn't jump) */
+  min-height: 16rem;
+  padding: 0.5rem 1rem 0.5rem 0;
 }
+
+.thankYouPage .label {
+  margin: 0 0 0.7rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.78rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.6);
+}
+
+.louTitle {
+  margin: 0 0 1rem;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  font-weight: normal;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #323232;
+}
+
+.louWords p {
+  margin: 0 0 0.85rem;
+  font-family: "Roboto Light";
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(50, 50, 50, 0.88);
+}
+
+.louWords p:last-child {
+  margin-bottom: 0;
+}
+
+.louWords a {
+  color: #323232;
+  text-decoration: underline;
+  text-decoration-color: rgba(216, 30, 24, 0.5);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.louWords a:hover {
+  text-decoration-color: #d81e18;
+}
+
+/* "please note": a yellow note, like How to play's */
+.louWords .notice {
+  margin: 1.1rem 0;
+  padding: 1rem 1.15rem;
+  border-radius: 14px;
+  background: #fbf3c8;
+  box-shadow: inset 0 0 0 1px rgba(160, 130, 20, 0.18);
+  color: #323232;
+  font-size: 0.95rem;
+}
+
+.notice strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-family: "Rowdies-Regular";
+  font-weight: normal;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #8a6d0b;
+}
+
+/* #endregion */
+
+/* #region--------------------------------------SMALLER SCREENS */
 
 @media only screen and (max-width: 900px) {
   .thankYouPage {
     min-height: calc(100svh - var(--footer-height-mobile));
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
-  .shipmentCard {
-    flex-direction: column;
-    width: calc(100% - 4rem);
-    margin: 0 1rem 1rem;
-    padding: 1rem;
-    gap: 1rem;
-    align-items: stretch;
+
+  /* (clear of the logo and the menu button, which float over the top of the page here) */
+  .intro {
+    padding: 4.75rem 0 2rem;
   }
-  .shipmentVerticalWrapper {
-    padding: 0 !important;
+
+  .lou {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding: 1rem 1rem 1.5rem;
   }
-  .shipmentVerticalWrapper:first-child {
-    width: 100%;
-  }
+
   .louImage {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 16 / 10;
     object-position: center 30%;
   }
-  .shipmentVerticalWrapper h2 {
-    font-size: clamp(1.8rem, 5.5vw, 2.2rem);
+
+  .louWords {
+    min-height: 0;
+    padding: 0 0.35rem;
   }
 }
+
+/* #endregion */

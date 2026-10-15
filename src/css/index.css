@@ -7,6 +7,17 @@
   --navbar-height: 82px;
   --footer-height: 340px;
   --footer-height-mobile: 220px;
+
+  /* Buttons, all over the site: chunky, like a game piece. A solid face with a hard edge under it
+     (its "depth") that it lifts off when hovered and presses into when clicked. */
+  --btn-ink: #323232;
+  --btn-radius: 12px;
+  --btn-depth: 4px;
+  --btn-focus: #5f5aa2;
+  /* the small square ones (zoom, close, arrows) */
+  --chip-size: 40px;
+  --chip-radius: 12px;
+  --chip-edge: rgba(50, 50, 50, 0.22);
 }
 
 html {

@@ -190,14 +190,6 @@
   justify-content: center;
 }
 
-.backOrderButton:hover {
-  transform: none;
-  filter: none;
-  box-shadow:
-    0 3px 8px rgba(217, 85, 85, 0.3),
-    0 1px 3px rgba(0, 0, 0, 0.15);
-}
-
 @media only screen and (max-width: 900px) {
   .buyPage {
     min-height: calc(100svh - var(--footer-height-mobile));

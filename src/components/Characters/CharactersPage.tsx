@@ -14,7 +14,6 @@ import CharacterProfile from "./CharacterProfile";
 import { GsapFadeScrub } from "../utils/useGsap";
 import { EmojiSection } from "../utils/EmojiSection";
 import CustomHelmet from "../utils/CustomHelmet";
-import DefaultButton from "../utils/DefaultButton";
 import Modal from "../utils/Modal";
 import charStyles from "../../css/pages/characterPage.module.css";
 import type { CharacterWithNav } from "../../types/character";
@@ -127,42 +126,11 @@ const CharactersPage = () => {
   }
 };
 
-const IndividualCharacter = ({ character }: IndividualCharacterProps) => {
-  const prevButton = character.prevCharURL ? (
-    <DefaultButton
-      variant="secondary"
-      border="dark"
-      icon="prev"
-      navlink={`/characters/${character.prevCharURL}`}
-      text="Prev"
-    />
-  ) : (
-    <div />
-  );
-
-  const nextButton = character.nextCharURL ? (
-    <DefaultButton
-      variant="secondary"
-      border="dark"
-      iconPosition="right"
-      icon="next"
-      navlink={`/characters/${character.nextCharURL}`}
-      text="Next"
-    />
-  ) : (
-    <div />
-  );
-
-  return (
-    <div className={charStyles.characterProfileContainer}>
-      <CharacterProfile character={character} />
-      <div className={charStyles.characterButtonsWrapper}>
-        {prevButton}
-        {nextButton}
-      </div>
-    </div>
-  );
-};
+const IndividualCharacter = ({ character }: IndividualCharacterProps) => (
+  <div className={charStyles.characterProfileContainer}>
+    <CharacterProfile character={character} />
+  </div>
+);
 
 // The cast page's opening
 const CastIntro = () => {

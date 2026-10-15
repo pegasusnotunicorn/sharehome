@@ -32,27 +32,9 @@
   padding-bottom: 10vh;
 }
 
-.characterButtonsWrapper {
-  display: flex;
-  justify-content: space-between;
-  max-width: 1180px;
-  margin: 1.25rem auto 0;
-  padding: 0 2rem;
-  box-sizing: border-box;
-}
-
 @media only screen and (max-width: 900px) {
   .characterProfileContainer {
     padding-bottom: 2rem;
-  }
-  .characterButtonsWrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    padding: 0 1rem;
-  }
-  .characterButtonsWrapper > * {
-    width: 100%;
   }
 }
 

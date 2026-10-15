@@ -1,6 +1,9 @@
 import { type ReactNode, useEffect, useState } from "react";
 import styles from "../../css/utils/polaroidGallery.module.css";
 
+// The polaroids as a flat grid that opens one large: what PolaroidJourney shows where its 3D ring
+// can't be drawn
+
 export interface PolaroidGalleryItem {
   src: string;
   alt: string;

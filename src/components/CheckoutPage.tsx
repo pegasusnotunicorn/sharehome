@@ -14,7 +14,6 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import CustomHelmet from "./utils/CustomHelmet";
-import PageIntro from "./utils/PageIntro";
 import Modal from "./utils/Modal";
 import Stepper from "./utils/Stepper";
 import MagnifierButton from "./utils/MagnifierButton";
@@ -937,6 +936,14 @@ const MissingCountryModal = ({ europeEnabled, onClose }: { europeEnabled: boolea
   </Modal>
 );
 
+const CheckoutIntro = () => (
+  <header className={styles.intro}>
+    <p className={styles.eyebrow}>Secure checkout</p>
+    <h1 className={styles.title}>Checkout</h1>
+    <p className={styles.lede}>Free shipping anywhere in the US 📦</p>
+  </header>
+);
+
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 const CheckoutPage = () => {
@@ -1028,7 +1035,7 @@ const CheckoutPage = () => {
           title="Checkout — Love, Career & Magic"
           description="Complete your purchase of Love, Career & Magic."
         />
-        <PageIntro title="Checkout" />
+        <CheckoutIntro />
         <p style={{ textAlign: "center", fontFamily: "Roboto Light", color: "#b54848", marginTop: "2rem" }}>
           {initError}
         </p>
@@ -1042,7 +1049,7 @@ const CheckoutPage = () => {
         title="Checkout — Love, Career & Magic"
         description="Complete your purchase of Love, Career & Magic."
       />
-      <PageIntro title="Checkout" />
+      <CheckoutIntro />
       {visitor?.canShip === false && visitor.country && (
         <ShippingWaitlistNotice country={visitor.country} />
       )}
@@ -1099,6 +1106,10 @@ const CheckoutPage = () => {
         )}
       </div>
       <p className={styles.stripeAttr}>
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <rect x="5" y="11" width="14" height="10" rx="2" />
+          <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+        </svg>
         Payments secured by{" "}
         <a href="https://stripe.com" target="_blank" rel="noreferrer">Stripe</a>
       </p>

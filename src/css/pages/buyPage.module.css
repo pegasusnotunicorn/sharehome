@@ -1414,6 +1414,20 @@
   font-size: 1.08rem;
   line-height: 1.5;
   color: rgba(50, 50, 50, 0.85);
+  /* (a new line, for another country, fades in) */
+  animation: ledeIn 0.4s ease both;
+}
+
+@keyframes ledeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .buyPage .lede {
+    animation: none;
+  }
 }
 
 .checkoutSection {

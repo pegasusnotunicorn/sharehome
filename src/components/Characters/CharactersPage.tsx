@@ -8,7 +8,6 @@ import "swiper/css/pagination";
 import {
   getAllCharacters,
   getCharacterShareMeta,
-  getRandomPerson,
   getSpecificPersonByURL,
 } from "../Characters/Characters";
 import { CharacterSpotlight } from "../utils/CharacterSpotlight";
@@ -205,23 +204,14 @@ const IndividualCharacter = ({ character }: IndividualCharacterProps) => {
   );
 };
 
-// The cast page's opening: what they are, and a way in for anyone who'd rather not choose
+// The cast page's opening
 const CastIntro = () => {
-  const navigate = useNavigate();
   return (
     <header className={`${charStyles.castIntro} ${charStyles.castHero}`}>
       <p className={charStyles.castEyebrow}>Season one · 25 contestants</p>
       <h1 className={charStyles.castTitle}>Meet the cast</h1>
       <p className={charStyles.castLede}>Say hello to the cast of the reality show ✨</p>
       <div className={charStyles.castActions}>
-        <DefaultButton
-          button="button"
-          variant="secondary"
-          border="dark"
-          icon="star"
-          text="Surprise me"
-          onClick={() => navigate(`/characters/${getRandomPerson().urlName}`)}
-        />
         <a
           target="_blank"
           rel="noreferrer"

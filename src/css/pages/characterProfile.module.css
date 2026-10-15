@@ -1,0 +1,350 @@
+/* the top of a character's page (CharacterProfile.tsx): centred on their card, the details in white
+   boxes below */
+
+/* (as wide as the sections below it: the emoji section's 1180px, inside the same 2rem sides) */
+.profile {
+  max-width: calc(1180px + 4rem);
+  margin: 0 auto;
+  /* (clear of the logo and the buttons along the top) */
+  padding: 5rem 2rem 0;
+  box-sizing: border-box;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.9rem;
+  color: #323232;
+  text-decoration: none;
+}
+
+.back span {
+  transition: transform 0.15s ease;
+}
+
+.back:hover span {
+  transform: translateX(-3px);
+}
+
+.count {
+  font-family: "Rowdies-Regular";
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.55);
+}
+
+/* who they are */
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.head p {
+  opacity: 1;
+}
+
+.eyebrow {
+  margin: 0 0 0.6rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.78rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #d81e18;
+}
+
+.name {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: normal;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #323232;
+}
+
+.head .meta {
+  margin: 0.75rem 0 0;
+  font-family: "Roboto Light";
+  font-size: 1.05rem;
+  line-height: 1.45;
+  color: rgba(50, 50, 50, 0.8);
+}
+
+/* their card in the middle; the cards round the cast either side of it, behind (the ring, its canvas
+   across the whole width); Prev / Next under it, out at the sides */
+.stage {
+  position: relative;
+  margin-top: 0.75rem;
+}
+
+/* (out to the window's edges, and down into the boxes below for the shadows: the cards stand on the
+   page) */
+.ring {
+  position: absolute;
+  top: 0;
+  bottom: -4rem;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  z-index: 0;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  width: min(560px, 100%);
+  margin: 0 auto;
+}
+
+/* (a turn's under way: the ring's drawing this card) */
+.card.cardAway {
+  opacity: 0;
+}
+
+.steps {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* (up into the room under the card, level with its zoom buttons: 38px tall, 6px off the bottom) */
+  margin-top: -44px;
+  pointer-events: none;
+}
+
+.steps > * {
+  pointer-events: auto;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #323232;
+  text-decoration: none;
+  text-align: left;
+}
+
+.next {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+/* the same small grey square as the card's zoom buttons */
+.stepArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  box-sizing: border-box;
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
+  background: #fff;
+  color: var(--btn-ink);
+  box-shadow: 0 3px 0 var(--chip-edge);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.stepArrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+.step:hover .stepArrow {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--chip-edge);
+}
+
+.step:active .stepArrow {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--chip-edge);
+}
+
+.step:focus-visible {
+  outline: none;
+}
+
+.step:focus-visible .stepArrow {
+  outline: 3px solid #5f5aa2;
+  outline-offset: 3px;
+}
+
+.stepName {
+  max-width: 10rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.85rem;
+  line-height: 1.2;
+  color: rgba(50, 50, 50, 0.7);
+}
+
+/* the details: two white boxes */
+.details {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.box {
+  padding: 1.75rem 2rem 2rem;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.08),
+    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+}
+
+.box p,
+.box li {
+  opacity: 1;
+}
+
+.label {
+  margin: 0 0 1rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.78rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.6);
+}
+
+.hobbies {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: hobby;
+}
+
+.hobbies li {
+  position: relative;
+  padding-left: 2.25rem;
+  font-family: "Roboto Light";
+  font-size: 1rem;
+  line-height: 1.45;
+  color: #323232;
+  counter-increment: hobby;
+}
+
+/* numbered in little red circles */
+.hobbies li::before {
+  content: counter(hobby);
+  position: absolute;
+  left: 0;
+  top: 0.05em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 50%;
+  background: rgba(216, 30, 24, 0.1);
+  color: #d81e18;
+  font-family: "Rowdies-Regular";
+  font-size: 0.75rem;
+}
+
+.box .story p {
+  margin: 0 0 0.8rem;
+  font-family: "Roboto Light";
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: rgba(50, 50, 50, 0.88);
+}
+
+/* (on a wide screen the story's always there) */
+.storyToggle {
+  display: none;
+}
+
+/* a phone: the rest of the story behind a button */
+@media only screen and (max-width: 900px) {
+  .profile {
+    padding: 4.75rem 1rem 0;
+  }
+
+  /* (no room for the names beside the zoom buttons) */
+  .stepName {
+    display: none;
+  }
+
+  .details {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1.75rem;
+  }
+
+  .box {
+    padding: 1.5rem 1.25rem 1.6rem;
+  }
+
+  /* (the first paragraph shows; the rest waits behind the button) */
+  .story p:not(:first-child) {
+    display: none;
+  }
+
+  .story.storyOpen p {
+    display: block;
+  }
+
+  .storyToggle {
+    display: inline-block;
+    margin-top: 0.25rem;
+    padding: 0 0 0.1rem;
+    border: 0;
+    border-bottom: 2px solid rgba(50, 50, 50, 0.25);
+    background: none;
+    font-family: "Rowdies-Regular";
+    font-size: 0.95rem;
+    color: #323232;
+    cursor: pointer;
+  }
+
+}
+
+/* the words, faded out while the cards swing round to the next character, and back in as theirs */
+.words {
+  transition: opacity 0.35s ease;
+}
+
+.words.hushed {
+  opacity: 0;
+  transition-duration: 0.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .words {
+    transition: none;
+  }
+}
+
+/* the card's zoom buttons go and come back with the words; back once the card's its own again */
+.card button {
+  transition: opacity 0.35s ease;
+}
+
+.card.toolsAway button {
+  opacity: 0;
+  pointer-events: none;
+  transition-duration: 0.2s;
+}

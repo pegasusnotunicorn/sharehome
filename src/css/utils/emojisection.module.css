@@ -109,7 +109,7 @@
   opacity: 1;
 }
 
-.sticker a {
+.stickerFace {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -123,14 +123,8 @@
   transition: transform 0.2s ease;
 }
 
-.sticker a:hover,
-.sticker a:focus-visible {
+.stickerFace:hover {
   transform: rotate(0deg) scale(1.12);
-}
-
-.sticker a:focus-visible {
-  outline: 3px solid #323232;
-  outline-offset: 4px;
 }
 
 .sticker img {

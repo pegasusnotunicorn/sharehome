@@ -267,3 +267,32 @@
     scroll-snap-align: start;
   }
 }
+
+/* #region--------------------------------------BUTTONS: the site's button style (see defaultButton.module.css) */
+
+@media only screen and (max-width: 900px) {
+  .arrow {
+    width: 42px;
+    height: 42px;
+    box-sizing: border-box;
+    border: 2px solid var(--btn-ink);
+    border-radius: var(--chip-radius);
+    background: #fff;
+    color: var(--btn-ink);
+    box-shadow: 0 3px 0 var(--btn-ink);
+    transform: none;
+    transition:
+      transform 0.12s ease,
+      box-shadow 0.12s ease,
+      background-color 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .arrow:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--btn-ink);
+  }
+}
+
+/* #endregion */

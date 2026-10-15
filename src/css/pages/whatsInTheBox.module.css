@@ -439,3 +439,107 @@
     height: 40px;
   }
 }
+
+/* #region--------------------------------------BUTTONS: the site's button style (see defaultButton.module.css) */
+
+.tools button {
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
+  background: #fff;
+  color: var(--btn-ink);
+  box-shadow: 0 3px 0 var(--chip-edge);
+  transform: none;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+.tools button:hover {
+  background: #fff;
+  color: var(--btn-ink);
+  border-color: var(--chip-edge);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--chip-edge);
+}
+
+.tools button:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--chip-edge);
+}
+.step {
+  width: 46px;
+  height: 46px;
+  box-sizing: border-box;
+  border: 2px solid var(--btn-ink);
+  border-radius: var(--chip-radius);
+  background: #fff;
+  color: var(--btn-ink);
+  box-shadow: 0 3px 0 var(--btn-ink);
+  transform: none;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.step:hover {
+  background: #fff;
+  color: var(--btn-ink);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--btn-ink);
+}
+
+.step:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--btn-ink);
+}
+
+.pageNumber {
+  border-radius: 10px;
+}
+
+.pageNumber[aria-current="page"] {
+  border-color: var(--btn-ink);
+  box-shadow: 0 3px 0 #0f0f0f;
+}
+.retry {
+  border: 2px solid var(--btn-ink);
+  border-radius: var(--btn-radius);
+  background: #fff;
+  color: var(--btn-ink);
+  box-shadow: 0 3px 0 var(--btn-ink);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.retry:hover:not(:disabled) {
+  background: #fffdf6;
+  color: var(--btn-ink);
+  border-color: var(--btn-ink);
+  transform: translateY(-1px);
+  box-shadow: 0 calc(3px + 1px) 0 var(--btn-ink);
+}
+
+.retry:active:not(:disabled) {
+  transform: translateY(calc(3px - 1px));
+  box-shadow: 0 1px 0 var(--btn-ink);
+}
+
+@media only screen and (max-width: 700px) {
+  .tools button {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* #endregion */

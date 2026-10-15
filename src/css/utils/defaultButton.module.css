@@ -1,238 +1,215 @@
+/* The site's buttons (DefaultButton.tsx). Chunky, like a game piece: a solid face over a hard
+   edge (its depth, --btn-depth); hovered it lifts a little off it, pressed it sinks into it. */
+
 /* #region--------------------------------------BASE */
 
 .btn {
+  --edge: var(--btn-edge, rgba(0, 0, 0, 0.25));
   position: relative;
   box-sizing: border-box;
-  font-family: "Rowdies-Regular";
-  font-size: inherit;
-  cursor: pointer;
-  padding: 10px 15px;
-  border-radius: 8px;
-  text-decoration: none;
-  line-height: 125%;
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 0.55rem;
   width: fit-content;
-  border: none;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 2px solid transparent;
+  border-radius: var(--btn-radius);
   outline: none;
+  font-family: "Rowdies-Regular";
+  font-size: inherit;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 var(--btn-depth) 0 var(--edge);
   transition:
-    transform 0.2s ease,
-    box-shadow 0.3s ease,
-    background 0.2s ease,
-    border-color 0.2s ease,
-    filter 0.2s ease;
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.15s ease,
+    filter 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 calc(var(--btn-depth) + 2px) 0 var(--edge);
 }
 
 .btn:active {
-  transform: scale(0.97);
-  transition-duration: 0.05s;
+  transform: translateY(calc(var(--btn-depth) - 1px));
+  box-shadow: 0 1px 0 var(--edge);
+  transition-duration: 0.04s;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
+}
+
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* #endregion */
 
-/* #region--------------------------------------PRIMARY */
+/* #region--------------------------------------PRIMARY: a solid colour */
 
 .primary {
-  background:
-    linear-gradient(
-      135deg,
-      var(--btn-color-light) 0%,
-      var(--btn-color) 40%,
-      var(--btn-color) 60%,
-      var(--btn-color-dark) 100%
-    );
+  background-color: var(--btn-color);
+  border-color: var(--btn-color);
   color: #fff;
-  box-shadow:
-    0 3px 8px var(--btn-color-glow),
-    0 1px 3px rgba(0, 0, 0, 0.15);
+  --btn-edge: var(--btn-color-dark);
 }
 
-/* Ensure white text on colored primary buttons overrides parent `a` color rules */
+/* (white text over parents' rules for links) */
 a.btn.primary {
   color: #fff;
 }
 
-/* Watercolor texture overlay */
-.primary::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: url("/images/bg_texture.webp");
-  background-size: 200px;
-  opacity: 0.2;
-  mix-blend-mode: overlay;
-  border-radius: inherit;
-  pointer-events: none;
-}
-
 .primary:hover {
-  transform: scale(1.03);
-  filter: saturate(1.15) brightness(1.05);
-  box-shadow:
-    0 6px 16px var(--btn-color-glow),
-    0 2px 6px rgba(0, 0, 0, 0.2);
-}
-
-.primary:active {
-  filter: saturate(1.3) brightness(0.92);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.3),
-    inset 0 2px 4px rgba(0, 0, 0, 0.15);
+  filter: brightness(1.05);
 }
 
 /* #endregion */
 
-/* #region--------------------------------------SECONDARY */
+/* #region--------------------------------------SECONDARY: white, outlined in ink */
 
 .secondary {
-  background: rgba(255, 255, 255, 0.9);
-  color: #323232;
-  box-shadow:
-    0 0 0 0.5px rgba(50, 50, 50, 0.15),
-    2px 3px 6px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-color: var(--btn-ink);
+  color: var(--btn-ink);
+  --btn-edge: var(--btn-ink);
+}
+
+a.btn.secondary {
+  color: var(--btn-ink);
 }
 
 .secondary:hover {
-  background: rgba(245, 245, 245, 1);
-  box-shadow:
-    0 0 0 1px rgba(50, 50, 50, 0.2),
-    3px 4px 8px rgba(0, 0, 0, 0.12);
-  transform: translateY(-1px);
-}
-
-.secondary:active {
-  background: rgba(235, 235, 235, 1);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fffdf6;
 }
 
 /* #endregion */
 
-/* #region--------------------------------------GHOST */
+/* #region--------------------------------------GHOST: just an outline, no depth */
 
 .ghost {
-  background: transparent;
-  color: #323232;
-  border: 1px solid rgba(50, 50, 50, 0.2);
+  background-color: transparent;
+  border-color: rgba(50, 50, 50, 0.3);
+  color: var(--btn-ink);
   box-shadow: none;
 }
 
-.ghost:hover {
-  background: rgba(255, 255, 255, 0.8);
-  border-color: rgba(50, 50, 50, 0.4);
-  box-shadow: 2px 3px 6px rgba(0, 0, 0, 0.1);
-}
-
+.ghost:hover,
 .ghost:active {
-  background: rgba(240, 240, 240, 0.9);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.7);
+  border-color: var(--btn-ink);
+  box-shadow: none;
+  transform: none;
 }
 
 /* #endregion */
 
-/* #region--------------------------------------COLORS */
+/* #region--------------------------------------COLOURS */
 
 .colorDark {
   --btn-color: #323232;
-  --btn-color-light: #454545;
-  --btn-color-dark: #1a1a1a;
-  --btn-color-glow: rgba(50, 50, 50, 0.25);
+  --btn-color-dark: #0f0f0f;
 }
 
 .colorRed {
-  --btn-color: #d95555;
-  --btn-color-light: #e27272;
-  --btn-color-dark: #c24040;
-  --btn-color-glow: rgba(217, 85, 85, 0.3);
+  /* Pegasus red (white on it: 5.0:1) */
+  --btn-color: #d81e18;
+  --btn-color-dark: #8f1410;
 }
 
 .colorGreen {
-  --btn-color: #7daf9c;
-  --btn-color-light: #96c4b3;
-  --btn-color-dark: #649a85;
-  --btn-color-glow: rgba(125, 175, 156, 0.3);
+  --btn-color: #4f8a73;
+  --btn-color-dark: #2f5c4a;
 }
 
 .colorPurple {
   --btn-color: #5f5aa2;
-  --btn-color-light: #7a76b5;
-  --btn-color-dark: #4a4690;
-  --btn-color-glow: rgba(95, 90, 162, 0.3);
+  --btn-color-dark: #3c3878;
 }
 
 .colorYellow {
   --btn-color: #f1db4b;
-  --btn-color-light: #f5e577;
-  --btn-color-dark: #e5cc2a;
-  --btn-color-glow: rgba(241, 219, 75, 0.3);
-}
-
-.colorRed.primary {
-  /* solid Pegasus red: white text needs 4.5:1, which the lighter red gradient missed (5.0:1 here) */
-  background: #d81e18;
-}
-
-.colorRed.primary::before {
-  display: none;
-}
-
-.colorYellow.primary,
-a.colorYellow.primary {
-  color: #323232;
-}
-
-.colorYellow .btnIcon {
-  filter: brightness(0) saturate(100%);
+  --btn-color-dark: #b39d1b;
 }
 
 .colorWhite {
   --btn-color: #ffffff;
-  --btn-color-light: #ffffff;
-  --btn-color-dark: #f0f0f0;
-  --btn-color-glow: rgba(255, 255, 255, 0.2);
+  --btn-color-dark: rgba(0, 0, 0, 0.28);
 }
 
 .colorKickstarter {
   --btn-color: #05ce78;
-  --btn-color-light: #2bd88e;
-  --btn-color-dark: #03b86b;
-  --btn-color-glow: rgba(5, 206, 120, 0.3);
+  --btn-color-dark: #038a50;
 }
 
+/* dark text on the light faces */
+.colorYellow.primary,
+a.colorYellow.primary,
 .colorWhite.primary,
 a.colorWhite.primary {
-  color: #323232;
+  color: var(--btn-ink);
 }
 
-.colorWhite.ghost {
+.colorYellow .btnIcon,
+.colorWhite.primary .btnIcon {
+  filter: brightness(0) saturate(100%);
+}
+
+/* white, outlined, over something dark */
+.colorWhite.ghost,
+.colorWhite.secondary {
+  background-color: transparent;
+  border-color: rgba(255, 255, 255, 0.7);
   color: #fff;
-  border-color: rgba(255, 255, 255, 0.3);
+  --btn-edge: rgba(255, 255, 255, 0.35);
 }
 
-.colorWhite.ghost:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.6);
+a.btn.colorWhite.secondary {
+  color: #fff;
+}
+
+.colorWhite.ghost:hover,
+.colorWhite.secondary:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: #fff;
 }
 
 /* #endregion */
 
-/* #region--------------------------------------BORDERS */
+/* #region--------------------------------------BORDERS (the outline is part of every button now) */
 
 .borderDark {
-  border: 2px solid #323232;
+  border-color: var(--btn-ink);
 }
 
 .borderLight {
-  border: 2px solid #fff;
+  border-color: #fff;
 }
 
 /* #endregion */
 
 /* #region--------------------------------------SIZE */
 
+.compact {
+  min-height: 40px;
+  padding: 8px 14px;
+}
+
 .large {
-  font-size: 1.2rem;
-  padding: 15px 60px;
+  min-height: 54px;
+  padding: 14px 44px;
+  font-size: 1.15rem;
 }
 
 /* #endregion */
@@ -240,15 +217,14 @@ a.colorWhite.primary {
 /* #region--------------------------------------ICON */
 
 .btnIcon {
-  width: 25px;
-  height: 25px;
-  margin-right: 10px;
+  display: block;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
 }
 
-.reversed .btnIcon {
-  margin-right: 0;
-  margin-left: 10px;
+.btn > span:has(> .btnIcon) {
+  display: flex;
 }
 
 /* #endregion */
@@ -260,11 +236,23 @@ a.colorWhite.primary {
 }
 
 @keyframes iconBounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
   50% {
-    transform: translateX(5px);
+    transform: translateX(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .btn:hover,
+  .btn:active {
+    transition: none;
+  }
+  .animated .btnIcon {
+    animation: none;
   }
 }
 
@@ -274,23 +262,28 @@ a.colorWhite.primary {
 
 @media only screen and (max-width: 900px) {
   .btn:not(.compact) {
-    width: calc(100%);
-    padding: 10px 0;
+    width: 100%;
   }
 
+  /* (no hover on a phone: only the press) */
   .btn:hover {
     transform: none;
+    box-shadow: 0 var(--btn-depth) 0 var(--edge);
     filter: none;
   }
 
-  .secondary:hover {
-    transform: none;
+  .ghost:hover {
+    box-shadow: none;
+  }
+
+  .btn:active {
+    transform: translateY(calc(var(--btn-depth) - 1px));
+    box-shadow: 0 1px 0 var(--edge);
   }
 
   .large {
     font-size: 1rem;
-    min-width: unset;
-    padding: 10px 15px;
+    padding: 12px 18px;
   }
 }
 

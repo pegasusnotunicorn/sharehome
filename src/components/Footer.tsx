@@ -148,7 +148,12 @@ const Footer = () => {
                 aria-label={s.label}
                 title={s.label}
                 className={styles.social}
-                style={{ ["--brand" as string]: s.brandColor }}
+                style={{
+                  ["--brand" as string]: s.brandColor,
+                  // (hovered, as in the menu: the brand's own background and icon colour)
+                  ["--social-brand-background" as string]: s.hoverBackground ?? s.brandColor,
+                  ["--social-brand-icon-color" as string]: s.hoverIconColor ?? "#fff",
+                }}
               >
                 <SocialIcon iconId={s.iconId} className={styles.socialSvg} />
               </a>

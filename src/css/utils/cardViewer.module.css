@@ -96,13 +96,14 @@
 }
 
 
+/* zoom in, out, back: in a row at the bottom, under the card */
 .tools {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  left: 50%;
+  bottom: 6px;
+  translate: -50% 0;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   z-index: 1;
 }
 
@@ -138,12 +139,115 @@
   outline-offset: 2px;
 }
 
-/* zoom back out: only once it's zoomed in or out */
-.straighten {
-  visibility: hidden;
+
+/* #region--------------------------------------BUTTONS: the site's button style (see defaultButton.module.css) */
+
+.tool {
+  width: 38px;
+  height: 38px;
+  box-sizing: border-box;
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
+  background: #fff;
+  color: var(--btn-ink);
+  box-shadow: 0 3px 0 var(--chip-edge);
+  transform: none;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+  display: grid;
+  place-items: center;
+  padding: 0;
 }
 
-.stage:global(.zoomed) .straighten {
-  visibility: visible;
+@media (hover: hover) {
+  .tool:hover {
+    background: #fff;
+    color: var(--btn-ink);
+    border-color: var(--chip-edge);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 0 var(--chip-edge);
+  }
+
+  .tool:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--chip-edge);
+  }
 }
 
+@media (hover: none) {
+  .tool:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 var(--chip-edge);
+  }
+}
+
+/* #endregion */
+
+/* Zoomed: the card is seen through the stage, a framed window with rounded corners, and never
+   spills over the page around it. (The canvas is the stage and the shadow's room below it, 0.3 of
+   the stage's height: the clip keeps just the stage.) */
+.stage:global(.zoomed) > canvas {
+  clip-path: inset(0 0 calc(100% - 100% / 1.3) 0 round 20px);
+}
+
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  box-shadow: inset 0 0 0 2px rgba(50, 50, 50, 0.14);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.stage:global(.zoomed)::after {
+  opacity: 1;
+}
+
+.stage:global(.zoomed) {
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+/* Zoom back out: only once it's zoomed in or out. Until then it takes no room, so + and - sit in the
+   middle; it grows in beside them (the row stays centred, so they slide left to make room). */
+.tools .straighten {
+  width: 0;
+  margin-left: -8px; /* (the row's gap) */
+  border-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  transition:
+    width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-left 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    border-width 0.3s ease,
+    opacity 0.2s ease;
+}
+
+.stage:global(.zoomed) .tools .straighten {
+  width: 38px;
+  margin-left: 0;
+  border-width: 2px;
+  opacity: 1;
+  pointer-events: auto;
+  transition:
+    width 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    margin-left 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    border-width 0.3s ease,
+    opacity 0.25s ease 0.08s,
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tools .straighten,
+  .stage:global(.zoomed) .tools .straighten {
+    transition: none;
+  }
+}

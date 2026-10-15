@@ -50,3 +50,37 @@
   height: 0.9rem;
   display: block;
 }
+
+/* #region--------------------------------------BUTTONS: the site's button style (see defaultButton.module.css) */
+
+.closeBtn {
+  width: 2.25rem;
+  height: 2.25rem;
+  box-sizing: border-box;
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
+  background: #fff;
+  color: var(--btn-ink);
+  box-shadow: 0 3px 0 var(--chip-edge);
+  transform: none;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+.closeBtn:hover {
+  background: #fff;
+  color: var(--btn-ink);
+  border-color: var(--chip-edge);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--chip-edge);
+}
+
+.closeBtn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--chip-edge);
+}
+
+/* #endregion */

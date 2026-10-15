@@ -10,31 +10,33 @@
   margin: 0;
   width: 44px;
   height: 42px;
-  border: none;
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  /* the site's small square button (see defaultButton.module.css) */
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
+  background-color: #fff;
+  box-shadow: 0 3px 0 var(--chip-edge);
   transition:
-    transform 0.2s ease,
-    background-color 0.15s ease,
-    box-shadow 0.15s ease,
-    filter 0.2s ease;
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    border-color 0.15s ease;
 }
 
 .hamburger:hover {
-  background-color: rgba(255, 255, 255, 0.95);
-  box-shadow:
-    0 6px 16px rgba(50, 50, 50, 0.2),
-    0 2px 6px rgba(0, 0, 0, 0.2);
-  transform: scale(1.03);
-  filter: saturate(1.15) brightness(1.05);
+  border-color: var(--btn-ink);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--btn-ink);
 }
 
 .hamburger:active {
-  transform: scale(0.97);
-  transition-duration: 0.05s;
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--btn-ink);
+  transition-duration: 0.04s;
+}
+
+.hamburger:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
 }
 
 .hamburger-box {
@@ -73,23 +75,7 @@
   top: 14px;
 }
 
-/* Open state — X icon, no frosted glass */
-.hamburger.is-active {
-  background-color: transparent;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  box-shadow: none;
-}
-
-.hamburger.is-active:hover {
-  background-color: rgba(255, 255, 255, 0.95);
-  box-shadow:
-    0 6px 16px rgba(50, 50, 50, 0.2),
-    0 2px 6px rgba(0, 0, 0, 0.2);
-  transform: scale(1.03);
-  filter: saturate(1.15) brightness(1.05);
-}
-
+/* open: the same button, an X */
 .hamburger.is-active .hamburger-inner {
   transform: translate3d(0, 7px, 0) rotate(45deg);
 }
@@ -104,7 +90,8 @@
 
 @media only screen and (max-width: 900px) {
   .hamburger:hover {
+    border-color: var(--chip-edge);
     transform: none;
-    filter: none;
+    box-shadow: 0 3px 0 var(--chip-edge);
   }
 }

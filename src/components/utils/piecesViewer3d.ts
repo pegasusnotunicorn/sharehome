@@ -2,9 +2,9 @@
 // its flat front and back art, lit like the studio mockups: soft light from above and its shadow on
 // an invisible floor. Drag turns it any way (it coasts when let go, then turns straight back to rest),
 // two fingers pinch to zoom and move together to pan, the wheel (or a trackpad pinch) zooms toward
-// the pointer, + and - zoom, and Home, 0 or a double-click zoom back out. A new piece makes one slow
-// turn to show it's 3D, unless it's already been grabbed. Visitors who ask for less motion get no
-// turn, coast or easing.
+// the pointer, + and - zoom, and Home, 0 or a double-click zoom back out (as does leaving it alone for
+// 3 seconds). A new piece makes one slow turn to show it's 3D, unless it's already been grabbed.
+// Visitors who ask for less motion get no turn, coast or easing.
 // One WebGL renderer serves the whole page (card3d.ts): the viewer renders through it and copies the
 // picture onto its own 2D canvas.
 import type * as THREE from "three";
@@ -37,6 +37,7 @@ interface MountOptions {
 const REST_CARD = { rx: -0.12, ry: -0.42, order: "YXZ" as const };
 const REST_BOX = { rx: 0.62, ry: -0.42, order: "XYZ" as const };
 const ZOOM_MAX = 4;
+const IDLE_MS = 3000; // left alone this long, zoomed, it zooms back out
 
 // a mesh from flat quads, each [material, outward normal, 4 corners as [x, y, z, u, v]] (wound to face outward)
 type Quad = [number, [number, number, number], number[][]];
@@ -264,7 +265,20 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
     };
     raf = requestAnimationFrame(step);
   };
-  const used = () => stage.classList.add("used");
+  // left alone a while zoomed (in or out), it zooms back (not while it's held)
+  let idle = 0;
+  const restSoon = () => {
+    clearTimeout(idle);
+    idle = window.setTimeout(() => {
+      if (dead) return;
+      if (pts.size) return restSoon();
+      if (z > 1.01 || tgt.distanceTo(AIM) > 0.001) reset();
+    }, IDLE_MS);
+  };
+  const used = () => {
+    stage.classList.add("used");
+    restSoon();
+  };
 
   // zoom: the camera moves toward the piece, keeping the spot under the pointer (or between two
   // fingers) where it is
@@ -365,6 +379,7 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
   };
   const onUp = (e: PointerEvent) => {
     pts.delete(e.pointerId);
+    restSoon(); // (the wait starts again from when it's let go)
     if (pinch) {
       // one finger left: it turns again, no coast
       if (pts.size < 2) {
@@ -489,6 +504,7 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
     reset,
     destroy: () => {
       dead = true;
+      clearTimeout(idle);
       cancelAnimationFrame(raf);
       cancelAnimationFrame(pending);
       ro.disconnect();

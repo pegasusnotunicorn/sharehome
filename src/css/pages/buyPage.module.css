@@ -1189,3 +1189,193 @@
   font-size: 13px;
   color: #df1b41;
 }
+
+/* #region--------------------------------------BUTTONS: the site's button style (see defaultButton.module.css) */
+
+.checkoutButton {
+  border: 2px solid #5f5aa2;
+  border-radius: var(--btn-radius);
+  background: #5f5aa2;
+  color: #fff;
+  box-shadow: 0 4px 0 #3c3878;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    filter 0.15s ease;
+}
+
+.checkoutButton:hover:not(:disabled) {
+  background: #5f5aa2;
+  border-color: #5f5aa2;
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 calc(4px + 1px) 0 #3c3878;
+}
+
+.checkoutButton:active:not(:disabled) {
+  transform: translateY(calc(4px - 1px));
+  box-shadow: 0 1px 0 #3c3878;
+}
+.promoApplyBtn {
+  border: 2px solid #323232;
+  border-radius: var(--btn-radius);
+  background: #323232;
+  color: #fff;
+  box-shadow: 0 3px 0 #0f0f0f;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    filter 0.15s ease;
+}
+
+.promoApplyBtn:hover:not(:disabled) {
+  background: #323232;
+  border-color: #323232;
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 calc(3px + 1px) 0 #0f0f0f;
+}
+
+.promoApplyBtn:active:not(:disabled) {
+  transform: translateY(calc(3px - 1px));
+  box-shadow: 0 1px 0 #0f0f0f;
+}
+.modalClose {
+  border: 2px solid #323232;
+  border-radius: var(--btn-radius);
+  background: #323232;
+  color: #fff;
+  box-shadow: 0 4px 0 #0f0f0f;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    filter 0.15s ease;
+}
+
+.modalClose:hover:not(:disabled) {
+  background: #323232;
+  border-color: #323232;
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 calc(4px + 1px) 0 #0f0f0f;
+}
+
+.modalClose:active:not(:disabled) {
+  transform: translateY(calc(4px - 1px));
+  box-shadow: 0 1px 0 #0f0f0f;
+}
+.qtyModalRemoveBtn {
+  border: 2px solid var(--btn-ink);
+  border-radius: var(--btn-radius);
+  background: #fff;
+  color: var(--btn-ink);
+  box-shadow: 0 4px 0 var(--btn-ink);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.qtyModalRemoveBtn:hover:not(:disabled) {
+  background: #fffdf6;
+  color: var(--btn-ink);
+  border-color: var(--btn-ink);
+  transform: translateY(-1px);
+  box-shadow: 0 calc(4px + 1px) 0 var(--btn-ink);
+}
+
+.qtyModalRemoveBtn:active:not(:disabled) {
+  transform: translateY(calc(4px - 1px));
+  box-shadow: 0 1px 0 var(--btn-ink);
+}
+.qtyModalRemoveBtn:hover:not(:disabled) {
+  color: #c0392b;
+}
+.cartUpsellBtn {
+  border: 2px solid var(--btn-ink);
+  border-radius: var(--btn-radius);
+  background: #fff;
+  color: var(--btn-ink);
+  box-shadow: 0 2px 0 var(--btn-ink);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.cartUpsellBtn:hover:not(:disabled) {
+  background: #fffdf6;
+  color: var(--btn-ink);
+  border-color: var(--btn-ink);
+  transform: translateY(-1px);
+  box-shadow: 0 calc(2px + 1px) 0 var(--btn-ink);
+}
+
+.cartUpsellBtn:active:not(:disabled) {
+  transform: translateY(calc(2px - 1px));
+  box-shadow: 0 1px 0 var(--btn-ink);
+}
+.cartUpsellBtn {
+  height: 28px;
+  border-radius: 8px;
+}
+
+.cartUpsellBtn:hover:not(:disabled) {
+  background: #323232;
+  color: #fff;
+}
+.upsellNavBtn {
+  width: 2.1rem;
+  height: 2.1rem;
+  box-sizing: border-box;
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
+  background: #fff;
+  color: var(--btn-ink);
+  box-shadow: 0 3px 0 var(--chip-edge);
+  transform: none;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+  border-radius: 10px;
+}
+.upsellNavBtn:hover:not(:disabled) {
+  background: #fff;
+  color: var(--btn-ink);
+  border-color: var(--btn-ink);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--btn-ink);
+}
+
+.upsellNavBtn:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--chip-edge);
+}
+.cartQtyBtn {
+  border: 2px solid var(--chip-edge);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 0 var(--chip-edge);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.cartQtyBtn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 var(--btn-ink);
+}
+
+.cartQtyBtn:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 var(--btn-ink);
+}
+
+/* #endregion */

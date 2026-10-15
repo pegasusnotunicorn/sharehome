@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { Link } from "react-router";
 import { getAllFinishedPeople } from "../Characters/Characters";
 import styles from "../../css/utils/emojisection.module.css";
 import DefaultButton from "../utils/DefaultButton";
@@ -12,8 +11,7 @@ interface EmojiSectionProps {
 // hides the rest)
 const SHOWN = 16;
 
-// The free emojis on Discord: what you get for joining, beside a sheet of the emojis as stickers, each
-// a link to its character
+// The free emojis on Discord: what you get for joining, beside a sheet of the emojis as stickers
 export const EmojiSection = ({ className = "" }: EmojiSectionProps) => {
   const emojis = useMemo(
     () =>
@@ -48,9 +46,9 @@ export const EmojiSection = ({ className = "" }: EmojiSectionProps) => {
         <ul className={styles.stickers} aria-label="Some of the emojis">
           {emojis.map((e, i) => (
             <li key={e.emoji} className={styles.sticker} style={{ "--tilt": `${((i * 37) % 11) - 5}deg` } as React.CSSProperties}>
-              <Link to={`/characters/${e.urlName}`} aria-label={`${e.name}'s emoji`}>
-                <img loading="lazy" src={`/images/emojis/${e.emoji}.webp`} alt="" width={64} height={64} />
-              </Link>
+              <span className={styles.stickerFace}>
+                <img loading="lazy" src={`/images/emojis/${e.emoji}.webp`} alt={`${e.name}'s emoji`} width={64} height={64} />
+              </span>
             </li>
           ))}
         </ul>

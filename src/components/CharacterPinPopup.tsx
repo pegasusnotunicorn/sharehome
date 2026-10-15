@@ -174,26 +174,29 @@ const CharacterPinPopup = ({ closePopup, followed }: CharacterPinPopupProps) => 
           position: absolute;
           top: 0.5em;
           right: 0.5em;
-          width: 2rem;
-          height: 2rem;
-          padding: 0.45rem;
-          border: 1px solid rgba(50, 50, 50, 0.12);
-          border-radius: 8px;
-          background: #fff;
-          box-shadow: 0 8px 18px -14px rgba(0, 0, 0, 0.35);
+          width: 2.25rem;
+          height: 2.25rem;
+          padding: 0.5rem;
           box-sizing: border-box;
-          transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+          /* the site's small square button (see defaultButton.module.css) */
+          border: 2px solid var(--chip-edge);
+          border-radius: var(--chip-radius);
+          background: #fff;
+          box-shadow: 0 3px 0 var(--chip-edge);
+          transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.15s ease;
         }
         .close-x-btn img {
           width: 100%;
           height: 100%;
         }
         .close-x-btn:hover {
-          background-color: #f5f5f5;
-          box-shadow:
-            0 0 0 1px rgba(50, 50, 50, 0.2),
-            3px 4px 8px rgba(0, 0, 0, 0.12);
-          transform: scale(1.03);
+          border-color: var(--btn-ink);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 0 var(--btn-ink);
+        }
+        .close-x-btn:active {
+          transform: translateY(2px);
+          box-shadow: 0 1px 0 var(--btn-ink);
         }
         .modal-content {
           display: flex;

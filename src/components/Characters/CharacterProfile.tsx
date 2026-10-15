@@ -11,6 +11,8 @@ import styles from "../../css/pages/characterProfile.module.css";
 
 // a character's printed card, by their place in the cast
 const cardFront = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}.webp`;
+// (how long the picture a 3D card shows while it loads takes to fade: cardViewer.module.css .still)
+const STILL_FADE_MS = 450;
 const cardBack = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}-back.webp`;
 
 // The top of a character's page: who they are, over their card in 3D. Either side of it stand the cards
@@ -34,6 +36,8 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
   const viewerEl = useRef<HTMLDivElement>(null);
   // a turn under way, or just made: the viewer waits, hidden, until its card's in; the ring shows it
   const [swung, setSwung] = useState(false);
+  // the words fade out while the cards swing round, and back in as the next character's
+  const [hush, setHush] = useState(false);
   const turning = useRef(false);
   useEffect(() => {
     const el = ringEl.current;
@@ -63,7 +67,7 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const fronts = useRef<string[]>([]);
-  fronts.current = [-3, -2, -1, 0, 1, 2, 3].map((k) => cardFront(around(k)));
+  fronts.current = [-4, -3, -2, -1, 0, 1, 2, 3, 4].map((k) => cardFront(around(k)));
   useEffect(() => {
     ring.current?.set(fronts.current);
     // (the cards change with the character)
@@ -77,12 +81,14 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
     const r = ring.current;
     if (!r) return navigate(`/characters/${to.urlName}`);
     turning.current = true;
+    setHush(true);
     const turned = r.turn(k); // (the ring draws the middle card from here, this frame...)
     if (viewerEl.current) viewerEl.current.style.opacity = "0"; // (...as the viewer goes)
     setSwung(true);
     await turned;
     turning.current = false;
     navigate(`/characters/${to.urlName}`);
+    requestAnimationFrame(() => setHush(false));
   };
   const goRef = useRef(go);
   goRef.current = go;
@@ -105,18 +111,21 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
       <span className={styles.stepName}>{to.name}</span>
     </Link>
   );
-  // the new card's in: the viewer shows it and the ring stops drawing it, in the same frame (the same
-  // printed card, in the same place, lit the same: no change you can see)
+  // the new card's in: once the picture shown while it loaded has faded from under it, the viewer shows
+  // it and the ring stops drawing it, in the same frame (the same printed card, in the same place, lit
+  // the same: no change you can see)
   const ready = () => {
     if (!swung) return;
-    if (viewerEl.current) viewerEl.current.style.opacity = "";
-    ring.current?.showMiddle(false);
-    setSwung(false);
+    setTimeout(() => {
+      if (viewerEl.current) viewerEl.current.style.opacity = "";
+      ring.current?.showMiddle(false);
+      setSwung(false);
+    }, STILL_FADE_MS);
   };
 
   return (
     <article className={styles.profile} aria-labelledby="character-name">
-      <div className={styles.topRow}>
+      <div className={`${styles.topRow} ${styles.words} ${hush ? styles.hushed : ""}`}>
         <Link to="/characters" className={styles.back}>
           <span aria-hidden="true">←</span> All characters
         </Link>
@@ -125,7 +134,7 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
         </span>
       </div>
 
-      <header className={styles.head}>
+      <header className={`${styles.head} ${styles.words} ${hush ? styles.hushed : ""}`}>
         <p className={styles.eyebrow}>{c.title || `The ${c.race}`}</p>
         <h1 id="character-name" className={styles.name}>
           {c.name}
@@ -156,13 +165,13 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
             }
           />
         </div>
-        <div className={styles.steps}>
+        <div className={`${styles.steps} ${styles.words} ${hush ? styles.hushed : ""}`}>
           {step(prev, "prev")}
           {step(next, "next")}
         </div>
       </div>
 
-      <div className={styles.details}>
+      <div className={`${styles.details} ${styles.words} ${hush ? styles.hushed : ""}`}>
         <section className={styles.box} aria-labelledby="story-title">
           <h2 id="story-title" className={styles.label}>
             Their story

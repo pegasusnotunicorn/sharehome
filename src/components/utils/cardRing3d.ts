@@ -13,7 +13,7 @@ import { calm, loadTexture, loadThree, makeCard, paint, renderer, studio } from 
 import type { Three } from "./card3d";
 
 export interface CardRingApi {
-  // the cards, in order round the cast, the one on show in the middle (3 either side)
+  // the cards, in order round the cast, the one on show in the middle (4 either side)
   set: (fronts: string[]) => void;
   // swing round `n` cards (+1: the next one comes in); resolves once it's there
   turn: (n: number) => Promise<void>;
@@ -29,7 +29,10 @@ interface MountOptions {
   onFail: () => void;
 }
 
-const SIDE = 3; // cards either side
+// cards either side: three showing, and a fourth past them, unseen, that fades in as the ring turns it
+// round (and the third fades out as it turns away)
+const SIDE = 4;
+const seen = (a: number) => Math.min(1, Math.max(0, 3.55 - a)); // how solid a card `a` steps out is
 // (the viewer's camera and its card at rest: see cardViewer3d.ts)
 const AIM: [number, number, number] = [0, -0.06, 0];
 const CAM: [number, number, number] = [0, 0.38, 3.1];
@@ -85,11 +88,23 @@ export async function mountCardRing(el: HTMLElement, { mm, viewer, onPick, onFai
   const blank = new T.Texture();
   const cards = Array.from({ length: SIDE * 2 + 1 }, () => {
     const obj = makeCard(T, mm, blank, blank, gold);
+    obj.traverse((o) => {
+      for (const m of ([] as THREE.Material[]).concat((o as THREE.Mesh).material || [])) m.transparent = true;
+    });
     sc.add(obj);
     return obj;
   });
+  const fade = (obj: THREE.Group, a: number) =>
+    obj.traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      for (const m of ([] as THREE.Material[]).concat(mesh.material)) m.opacity = a;
+      mesh.castShadow = a > 0.5; // (a shadow can't fade: it goes when the card's mostly gone)
+    });
   const faceOf = (obj: THREE.Group) => (obj.children[0] as THREE.Mesh).material as THREE.MeshStandardMaterial;
   const backOf = (obj: THREE.Group) => (obj.children[1] as THREE.Mesh).material as THREE.MeshStandardMaterial;
+  const edgeOf = (obj: THREE.Group) => ((obj.children[2] as THREE.Mesh).material as THREE.MeshStandardMaterial[])[1];
+  const GOLD = edgeOf(cards[0]).color.clone(), GOLD_SHINE = edgeOf(cards[0]).envMapIntensity;
 
   const textures = new Map<string, Promise<THREE.Texture>>();
   const loaded = new Map<string, THREE.Texture>();
@@ -121,10 +136,17 @@ export async function mountCardRing(el: HTMLElement, { mm, viewer, onPick, onFai
         mat.color.setScalar(1 - m);
         mat.emissive.copy(MIST).multiplyScalar(m);
       }
+      // (and its gold edge, which shines less)
+      const edge = edgeOf(obj);
+      edge.color.copy(GOLD).multiplyScalar(1 - m);
+      edge.emissive.copy(MIST).multiplyScalar(m);
+      edge.envMapIntensity = GOLD_SHINE * (1 - m);
       const p = place(k);
       obj.position.set(p.x, 0, p.z);
       obj.rotation.set(p.rx, p.ry, 0, "YXZ");
-      obj.visible = !!fronts[i] && (Math.abs(k) > 0.001 || middle) && Math.abs(k) <= SIDE;
+      const a = seen(Math.abs(k));
+      fade(obj, a);
+      obj.visible = !!fronts[i] && (Math.abs(k) > 0.001 || middle) && a > 0.001;
     });
   };
   // each card its picture: those already in at once (a turn's end hands the same cards on), the others

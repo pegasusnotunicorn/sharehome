@@ -322,3 +322,19 @@
   }
 
 }
+
+/* the words, faded out while the cards swing round to the next character, and back in as theirs */
+.words {
+  transition: opacity 0.35s ease;
+}
+
+.words.hushed {
+  opacity: 0;
+  transition-duration: 0.2s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .words {
+    transition: none;
+  }
+}

@@ -214,10 +214,14 @@ const CastIntro = () => {
       <h1 className={charStyles.castTitle}>Meet the cast</h1>
       <p className={charStyles.castLede}>Say hello to the cast of the reality show ✨</p>
       <div className={charStyles.castActions}>
-        <button type="button" className={charStyles.castSurprise} onClick={() => navigate(`/characters/${getRandomPerson().urlName}`)}>
-          <img src="/images/icons/star.svg" alt="" />
-          Surprise me
-        </button>
+        <DefaultButton
+          button="button"
+          variant="secondary"
+          border="dark"
+          icon="star"
+          text="Surprise me"
+          onClick={() => navigate(`/characters/${getRandomPerson().urlName}`)}
+        />
         <a
           target="_blank"
           rel="noreferrer"

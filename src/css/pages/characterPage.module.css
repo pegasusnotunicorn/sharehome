@@ -329,38 +329,6 @@
   margin-top: 1.6rem;
 }
 
-.castSurprise {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.15rem;
-  border: 2px solid #323232;
-  border-radius: 999px;
-  background: #fff;
-  color: #323232;
-  font-family: "Rowdies-Regular";
-  font-size: 0.95rem;
-  line-height: 1;
-  cursor: pointer;
-  box-shadow: 0 3px 0 #323232;
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-
-.castSurprise img {
-  width: 16px;
-  height: 16px;
-}
-
-.castSurprise:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 0 #323232;
-}
-
-.castSurprise:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 #323232;
-}
-
 .castSection {
   max-width: 1320px;
   margin: 0 auto;

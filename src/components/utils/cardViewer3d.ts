@@ -1,5 +1,6 @@
 // A game card in 3D (three.js): drag to turn it any way (let go, it turns straight back to rest), zoom
-// toward the pointer. Its canvas reaches below the stage, so the shadow under the card isn't cut off.
+// toward the pointer (left alone 3 seconds, it zooms back). Its canvas reaches below the stage, so the
+// shadow under the card isn't cut off.
 // Lit like the studio mockups: one soft light from above, its shadow pooled on an invisible floor.
 // three.js is loaded the first time a viewer appears. One WebGL renderer serves every viewer on the
 // page (browsers allow only a few contexts): each viewer renders through it and copies the picture
@@ -28,11 +29,15 @@ interface MountOptions {
   mm: [number, number];
   faces: () => Promise<CardFaces>;
   edge?: CardEdge;
+  intro?: boolean; // the slow turn the first time it's on screen (not when it's just been swung in)
+  onReady?: () => void; // the card's showing
   onFail: () => void;
 }
 
+const IDLE_MS = 3000; // left alone this long, zoomed in (or out), it zooms back
+
 // Turns `stage` (a 4:3 box) into a card viewer. Resolves once the card is showing.
-export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "paper", onFail }: MountOptions): Promise<CardViewerApi | null> {
+export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "paper", intro = true, onReady, onFail }: MountOptions): Promise<CardViewerApi | null> {
   let T: Three, r: THREE.WebGLRenderer;
   try {
     T = await loadThree();
@@ -122,6 +127,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   };
   const cleanup = () => {
     dead = true;
+    clearTimeout(idle);
     cancelAnimationFrame(raf);
     cancelAnimationFrame(pending);
     ro.disconnect();
@@ -158,6 +164,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   spin.quaternion.copy(rest);
   draw();
   stage.classList.add("ready");
+  onReady?.();
 
   const X = new T.Vector3(1, 0, 0), Y = new T.Vector3(0, 1, 0), tmp = new T.Quaternion();
   const turn = (ax: number, ay: number) => {
@@ -213,7 +220,21 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     };
     raf = requestAnimationFrame(step);
   };
-  const used = () => stage.classList.add("used");
+  // left alone a while, zoomed, it zooms back (not while it's held)
+  let idle = 0;
+  const zoomed = () => Math.abs(z - REST_Z) > 0.01 || tgt.distanceTo(AIM) > 0.001;
+  const rest_ = () => {
+    clearTimeout(idle);
+    idle = window.setTimeout(() => {
+      if (dead) return;
+      if (pts.size) return rest_();
+      if (zoomed()) reset();
+    }, IDLE_MS);
+  };
+  const used = () => {
+    stage.classList.add("used");
+    rest_();
+  };
 
   // zoom: the camera moves toward the card, keeping the spot under the pointer (or between two fingers) where it is
   const ray = new T.Raycaster(), ndc = new T.Vector2(), plane = new T.Plane(), dir = CAM.clone().normalize();
@@ -318,6 +339,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   };
   const up = (e: PointerEvent) => {
     pts.delete(e.pointerId);
+    rest_(); // (the wait starts again from when it's let go)
     if (pinch) {
       // one finger left: it turns again, no coast
       if (pts.size < 2) {
@@ -366,7 +388,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   };
 
   // one slow turn to show it's 3D, the first time it's on screen, unless it's already been grabbed
-  if (!calm()) {
+  if (intro && !calm()) {
     io = new IntersectionObserver(
       (entries) => {
         if (!entries.some((x) => x.isIntersecting)) return;

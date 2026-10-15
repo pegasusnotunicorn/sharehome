@@ -14,12 +14,16 @@ interface CardViewerProps {
   label: string;
   still?: string; // an image of the front, shown on the card's shape until the 3D card is in
   fallback?: ReactNode;
+  intro?: boolean; // its slow turn the first time it's on screen (default: yes)
+  onReady?: () => void; // the 3D card's showing
 }
 
-const CardViewer = ({ mm, faces, edge, label, still, fallback }: CardViewerProps) => {
+const CardViewer = ({ mm, faces, edge, label, still, fallback, intro, onReady }: CardViewerProps) => {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const api = useRef<CardViewerApi | null>(null);
   const [failed, setFailed] = useState(false);
+  const ready = useRef(onReady);
+  ready.current = onReady;
 
   useEffect(() => {
     const stage = stageRef.current;
@@ -28,7 +32,7 @@ const CardViewer = ({ mm, faces, edge, label, still, fallback }: CardViewerProps
     const start = () => {
       import("./cardViewer3d")
         .then(({ mountCardViewer }) =>
-          mountCardViewer(stage, { mm, faces, edge, onFail: () => !gone && setFailed(true) })
+          mountCardViewer(stage, { mm, faces, edge, intro, onReady: () => !gone && ready.current?.(), onFail: () => !gone && setFailed(true) })
         )
         .then((a) => {
           if (gone) a?.destroy();

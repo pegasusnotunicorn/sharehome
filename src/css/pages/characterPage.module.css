@@ -217,8 +217,9 @@
   margin-top: 1.6rem;
 }
 
+/* (the page's sections are all as wide as the emoji section: 1180px, inside 2rem sides) */
 .castSection {
-  max-width: 1320px;
+  max-width: calc(1180px + 4rem);
   margin: 0 auto;
   padding: 0.5rem 2rem 4.5rem;
   box-sizing: border-box;
@@ -345,7 +346,7 @@
 }
 
 .seasonTwoWall {
-  max-width: 1256px;
+  max-width: 1180px;
   margin: 0 auto;
 }
 

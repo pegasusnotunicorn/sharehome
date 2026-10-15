@@ -1,5 +1,5 @@
 // Builds the character card sprite sheets the footer's 3D cards use: every character's front and back,
-// drawn by the same code as the 3D card on their page (characterCardFaces.ts), 5 across and 5 down.
+// drawn by the same code as the home page's character deck (characterCardFaces.ts), 5 across and 5 down.
 //
 //   npm start                                  (in another terminal)
 //   node scripts/card-atlas.mjs [http://localhost:3000]
@@ -7,7 +7,8 @@
 // It drives your installed Chrome; set CHROMIUM_PATH to use another Chromium.
 //
 // Writes public/images/cards/character-fronts.webp and character-backs.webp. Run it again when a
-// character's art or text changes, or a character is added (then update ATLAS_COLS/ROWS in footerCards3d.ts).
+// character's art or text changes, or a character is added (then update the cols/rows in footerCards3d.ts's
+// ATLAS and Footer.tsx's SHEET to match).
 import { chromium } from "playwright-core";
 import fs from "fs";
 

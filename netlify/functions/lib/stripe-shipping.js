@@ -6,11 +6,12 @@
 // address, or null otherwise.
 //
 // `shipping` is the raw Stripe block — callers use `shipping.address.country`
-// for region checks. `to` is the Shippo recipient shape. Stripe renamed
-// `shipping` → `shipping_details` in newer API versions; both are accepted.
+// for region checks. `to` is the Shippo recipient shape.
 export function shippingAddressFromSession(session) {
-  // Field moved across Stripe API versions:
-  // 2020: session.shipping → 2022: session.shipping_details → 2025: session.collected_information.shipping_details
+  // The address sits in a different field depending on the API version a
+  // session was made under: collected_information.shipping_details (the
+  // pinned 2025 version), shipping_details or shipping (older sessions and
+  // test fixtures). All three are read.
   const shipping =
     session.shipping_details ||
     session.collected_information?.shipping_details ||

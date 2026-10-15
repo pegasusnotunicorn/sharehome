@@ -180,7 +180,7 @@ const CheckoutFormSkeleton = () => (
 
 // ── Checkout form ─────────────────────────────────────────────────────────────
 
-const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInternational, onOpenMissingCountry }: { sessionId: string | null; shippingRates: ShippingRates | null; onEmailCaptured: (email: string) => void; onOpenInternational: () => void; onOpenMissingCountry: () => void }) => {
+const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInternational, onOpenMissingCountry, onCountry }: { sessionId: string | null; shippingRates: ShippingRates | null; onEmailCaptured: (email: string) => void; onOpenInternational: () => void; onOpenMissingCountry: () => void; onCountry: (country: string) => void }) => {
   const checkoutState = useCheckoutElements();
   const [readyCount, setReadyCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -193,6 +193,12 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
   const [termsAgreed, setTermsAgreed] = useState(false);
   // Europe deliveries need a phone number for the carrier; US ones don't.
   const [shippingCountry, setShippingCountry] = useState<string | undefined>(undefined);
+  // (the page's opening line follows the country they ship to)
+  const onCountryRef = useRef(onCountry);
+  onCountryRef.current = onCountry;
+  useEffect(() => {
+    if (shippingCountry) onCountryRef.current(shippingCountry);
+  }, [shippingCountry]);
   const [phone, setPhone] = useState("");
   const [phoneTouched, setPhoneTouched] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -937,11 +943,25 @@ const MissingCountryModal = ({ europeEnabled, onClose }: { europeEnabled: boolea
   </Modal>
 );
 
-const CheckoutIntro = () => (
+// a country's flag, from its two-letter code
+const flagOf = (code: string) =>
+  /^[A-Z]{2}$/.test(code) ? String.fromCodePoint(...[...code].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65)) : "";
+
+// The opening's line about shipping: for the country they're shipping to (picked in the form), or
+// else where they seem to be (create-checkout-session's lookup), or else what ships where.
+const shippingLine = (country: string | null, canShip: boolean | null, europe: boolean) => {
+  if (country === "US") return "Free shipping anywhere in the US 📦";
+  const name = countryName(country);
+  if (country && name && canShip !== false) return `Now shipping to ${name} ${flagOf(country)}`.trim();
+  if (country && canShip === false) return europe ? "Shipping to the US and Europe 📦" : "Shipping to the US 📦";
+  return europe ? "Free shipping in the US, and now shipping to Europe 📦" : "Free shipping anywhere in the US 📦";
+};
+
+const CheckoutIntro = ({ line = shippingLine(null, null, false) }: { line?: string }) => (
   <header className={styles.intro}>
     <p className={styles.eyebrow}>Secure checkout</p>
     <h1 className={styles.title}>Checkout</h1>
-    <p className={styles.lede}>Free shipping anywhere in the US 📦</p>
+    <p key={line} className={styles.lede}>{line}</p>
   </header>
 );
 
@@ -962,6 +982,7 @@ const CheckoutPage = () => {
   const [visitor, setVisitor] = useState<VisitorShipping | null>(null);
   const [missingCountryModalOpen, setMissingCountryModalOpen] = useState(false);
   const [updatingSlug, setUpdatingSlug] = useState<ItemSlug | null>(null);
+  const [shipCountry, setShipCountry] = useState<string | null>(null); // picked in the address form
   const [cartError, setCartError] = useState(false);
   // Survives the remount that a cart change forces, so the replacement
   // session can be created with the email already filled in. A ref, not
@@ -1054,7 +1075,17 @@ const CheckoutPage = () => {
         title="Checkout — Love, Career & Magic"
         description="Complete your purchase of Love, Career & Magic."
       />
-      <CheckoutIntro />
+      <CheckoutIntro
+        line={
+          // (a country picked in the form; else the one they seem to be in; a picked country can always be shipped to)
+          // (until the session's in, where they are isn't known yet: the line's room is kept, empty)
+          !clientSecret
+            ? "\u00a0"
+            : shipCountry
+              ? shippingLine(shipCountry, true, !!shippingRates?.europe)
+              : shippingLine(visitor?.country ?? null, visitor?.canShip ?? null, !!shippingRates?.europe)
+        }
+      />
       {visitor?.canShip === false && visitor.country && (
         <ShippingWaitlistNotice country={visitor.country} />
       )}
@@ -1090,6 +1121,7 @@ const CheckoutPage = () => {
                 onEmailCaptured={(email) => { capturedEmailRef.current = email; }}
                 onOpenInternational={() => setInternationalModalOpen(true)}
                 onOpenMissingCountry={() => setMissingCountryModalOpen(true)}
+                onCountry={setShipCountry}
               />
             </div>
           </CheckoutElementsProvider>

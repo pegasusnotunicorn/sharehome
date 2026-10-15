@@ -1,82 +1,17 @@
-.email {
-}
+/* Contact us (ContactPage.tsx): the opening and the socials, a white box about me, then the polaroids
+   going round in 3D (polaroidRing3d.ts). As wide as the other pages' sections: 1180px, inside 2rem sides. */
 
 .contactPage {
   min-height: calc(100svh - var(--footer-height));
+  max-width: calc(1180px + 4rem);
+  padding-left: 2rem;
+  padding-right: 2rem;
+  box-sizing: border-box;
 }
 
-.aboutMeWrapper {
-  display: flex;
-  justify-content: flex-start;
-  align-items: stretch;
-  width: calc(100% - 8rem);
-  max-width: 1040px;
-  margin: 0 auto 2rem;
-  padding: 2rem;
-  gap: 2rem;
-  border: 2px solid #323232;
-  border-radius: 8px;
-  background: #fff;
-}
-
-.aboutMeVerticalWrapper {
-  text-align: left;
-  padding: 0;
-  flex: 1;
-}
-
-.aboutMeVerticalWrapper:first-child {
-  padding-right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  overflow: hidden;
-  flex: 1;
-  border-radius: 6px;
-}
-
-.aboutMeVerticalWrapper:last-child {
-  padding-left: 0;
-  padding-bottom: 0;
-}
-
-.aboutMeVerticalWrapper:last-child p:last-child {
-  margin-bottom: 0;
-}
-
-.aboutMeVerticalWrapper h2 {
-  margin-top: 0;
-  white-space: pre-line;
-}
-
-.aboutMeVerticalWrapper img {
-  border-radius: 5px;
-}
-
-.wonminImage {
-  width: 100%;
-  height: 100%;
-  display: block;
-  margin: 0 auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-  object-position: center 30%;
-}
-
-.desktopOnlyGreeting {
-  display: inline;
-}
-
-.readMoreButton {
-  display: none;
-}
-
-.readMoreButtonWrapper {
-  display: none;
-}
-
-.contactPolaroids {
-  margin-bottom: 2rem;
+.contactPage p,
+.contactPage li {
+  opacity: 1;
 }
 
 .socialIconDefs {
@@ -87,178 +22,59 @@
   pointer-events: none;
 }
 
-.socialIconsWrapper {
+/* #region--------------------------------------THE OPENING */
+
+.intro {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 0 2.5rem;
 }
 
-.socialIconsWrapper a {
+.contactPage .eyebrow {
+  margin: 0 0 0.9rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.78rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.6);
+}
+
+.title {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(3rem, 8.5vw, 6rem);
+  font-weight: normal;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: #323232;
+}
+
+.contactPage .lede {
+  margin: 1.1rem 0 0;
+  font-family: "Roboto Light";
+  font-size: 1.08rem;
+  line-height: 1.5;
+  color: rgba(50, 50, 50, 0.85);
+}
+
+/* the socials: chips like the menu's, in their brand colours when pointed at */
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+  margin-top: 1.6rem;
+  max-width: 34rem;
+}
+
+.socials a {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 42px;
-  border-radius: 8px;
-  background-color: #fff;
-  color: #323232;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
-}
-
-.socialIconsWrapper a:hover {
-  background: var(--social-brand-background, var(--social-brand-color, #f5f5f5));
-  color: var(--social-brand-icon-color, #fff);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
-  transform: scale(1.1);
-}
-
-.socialIcon {
-  width: 22px;
-  height: 22px;
-  display: block;
-  color: inherit;
-}
-
-/* tablet */
-@media only screen and (min-width: 900px) and (max-width: 1200px) {
-}
-
-/* mobile */
-@media only screen and (max-width: 900px) {
-  .contactPage {
-    min-height: calc(100svh - var(--footer-height-mobile));
-  }
-  .aboutMeWrapper {
-    flex-direction: column-reverse;
-    width: calc(100% - 4rem);
-    margin: 0 1rem 1rem;
-    padding: 1rem;
-    gap: 1rem;
-    align-items: stretch;
-  }
-  .aboutMeVerticalWrapper {
-    padding: 0 !important;
-  }
-
-  .aboutMeVerticalWrapper:first-child {
-    width: 100%;
-  }
-
-  .wonminImage {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    margin-left: auto;
-    margin-right: auto;
-    aspect-ratio: 16 / 9;
-    object-position: center 10%;
-  }
-
-  .desktopOnlyGreeting {
-    display: none;
-  }
-
-  .readMoreButton {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: fit-content;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    background: transparent;
-    color: #323232;
-    font-family: "Rowdies-Regular";
-    font-size: 0.9rem;
-    text-decoration: none;
-    border-bottom: 2px solid rgba(50, 50, 50, 0.15);
-    cursor: pointer;
-  }
-
-  .readMoreButtonWrapper {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
-
-  .socialIconsWrapper {
-    display: grid;
-    width: min(100%, 17rem);
-    margin-left: auto;
-    margin-right: auto;
-    grid-template-columns: repeat(10, minmax(0, 1fr));
-    column-gap: 0;
-    row-gap: 0.5rem;
-    justify-items: center;
-  }
-  .socialIconsWrapper a {
-    width: 44px;
-    height: 42px;
-  }
-
-  .socialIconsWrapper > :nth-child(1) {
-    grid-column: 2 / span 2;
-  }
-
-  .socialIconsWrapper > :nth-child(2) {
-    grid-column: 4 / span 2;
-  }
-
-  .socialIconsWrapper > :nth-child(3) {
-    grid-column: 6 / span 2;
-  }
-
-  .socialIconsWrapper > :nth-child(4) {
-    grid-column: 8 / span 2;
-  }
-
-  .socialIconsWrapper > :nth-child(5) {
-    grid-column: 1 / span 2;
-  }
-
-  .socialIconsWrapper > :nth-child(6) {
-    grid-column: 3 / span 2;
-  }
-
-  .socialIconsWrapper > :nth-child(7) {
-    grid-column: 5 / span 2;
-  }
-
-  .socialIconsWrapper > :nth-child(8) {
-    grid-column: 7 / span 2;
-  }
-
-  .socialIconsWrapper > :nth-child(9) {
-    grid-column: 9 / span 2;
-  }
-
-  .socialIcon {
-    width: 22px;
-    height: 22px;
-  }
-
-  .contactPolaroids {
-    margin-bottom: 1rem;
-  }
-
-  .aboutMeVerticalWrapper h2 {
-    font-size: clamp(2rem, 6vw, 2.4rem);
-  }
-
-}
-
-@media only screen and (max-width: 400px) {
-  .aboutMeVerticalWrapper h2 {
-    font-size: 1.9rem;
-  }
-}
-
-/* #region--------------------------------------BUTTONS: the site's button style (see defaultButton.module.css) */
-
-.socialIconsWrapper a {
   width: 44px;
   height: 44px;
   box-sizing: border-box;
@@ -267,7 +83,6 @@
   background: #fff;
   color: var(--btn-ink);
   box-shadow: 0 3px 0 var(--chip-edge);
-  transform: none;
   transition:
     transform 0.12s ease,
     box-shadow 0.12s ease,
@@ -276,7 +91,8 @@
     border-color 0.15s ease;
 }
 
-.socialIconsWrapper a:hover {
+.socials a:hover,
+.socials a:focus-visible {
   background: var(--social-brand-background, var(--social-brand-color, #fff));
   color: var(--social-brand-icon-color, #fff);
   border-color: var(--btn-ink);
@@ -284,9 +100,160 @@
   box-shadow: 0 4px 0 var(--btn-ink);
 }
 
-.socialIconsWrapper a:active {
+.socials a:active {
   transform: translateY(2px);
   box-shadow: 0 1px 0 var(--btn-ink);
+}
+
+.socialIcon {
+  width: 20px;
+  height: 20px;
+  display: block;
+  color: inherit;
+}
+
+/* #endregion */
+
+/* #region--------------------------------------ABOUT ME: a white box, like a character page's */
+
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 2.5rem;
+  align-items: center;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 1.75rem;
+  border-radius: 20px;
+  background: #fff;
+  text-align: left;
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.08),
+    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+}
+
+.portrait {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center 30%;
+  border-radius: 14px;
+}
+
+.aboutWords {
+  padding: 0.5rem 1rem 0.5rem 0;
+}
+
+.contactPage .label {
+  margin: 0 0 0.7rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.78rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.6);
+}
+
+.aboutTitle {
+  margin: 0 0 1rem;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+  font-weight: normal;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #323232;
+}
+
+.contactPage .bio p {
+  margin: 0 0 0.85rem;
+  font-family: "Roboto Light";
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(50, 50, 50, 0.88);
+}
+
+.bio a {
+  color: #323232;
+  text-decoration: underline;
+  text-decoration-color: rgba(216, 30, 24, 0.5);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.bio a:hover {
+  text-decoration-color: #d81e18;
+}
+
+/* (on a wide screen it's all there) */
+.readMore {
+  display: none;
+  padding: 0 0 0.1rem;
+  border: 0;
+  border-bottom: 2px solid rgba(50, 50, 50, 0.15);
+  background: none;
+  color: #323232;
+  font-family: "Rowdies-Regular";
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.readMore:hover {
+  border-color: #323232;
+}
+
+.readMore:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
+}
+
+/* #endregion */
+
+/* #region--------------------------------------SMALLER SCREENS */
+
+@media only screen and (max-width: 900px) {
+  .contactPage {
+    min-height: calc(100svh - var(--footer-height-mobile));
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* (clear of the logo and the menu button, which float over the top of the page here) */
+  .intro {
+    padding: 4.75rem 0 2rem;
+  }
+
+  .socials {
+    max-width: 17rem;
+  }
+
+  .about {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding: 1rem 1rem 1.5rem;
+  }
+
+  .portrait {
+    aspect-ratio: 16 / 10;
+    object-position: center 15%;
+  }
+
+  .aboutWords {
+    padding: 0 0.35rem;
+  }
+
+  /* the rest of it behind a button */
+  .bio:not(.bioOpen) p:not(:first-child) {
+    display: none;
+  }
+
+  .readMore {
+    display: inline-block;
+    margin-top: 0.25rem;
+  }
+
 }
 
 /* #endregion */

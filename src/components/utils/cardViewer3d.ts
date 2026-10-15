@@ -67,7 +67,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   const fillBack = new T.DirectionalLight(0xffffff, 0.8); // the same from behind, so the back reads as bright as the front
   fillBack.position.set(-0.7, 0.5, -3);
   sc.add(fillBack);
-  const floorMat = new T.ShadowMaterial({ opacity: 0.17 });
+  const floorMat = new T.ShadowMaterial({ opacity: 0.085 });
   const floor = new T.Mesh(new T.PlaneGeometry(6, 6), floorMat);
   floor.rotation.x = -Math.PI / 2;
   floor.position.y = -0.6;
@@ -143,6 +143,8 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     stage.onpointerdown = stage.onpointermove = stage.onpointerup = stage.onpointercancel = null;
     stage.ondblclick = stage.onkeydown = null;
     stage.removeEventListener("wheel", onWheel);
+    stage.removeEventListener("pointermove", onHover);
+    stage.style.cursor = "";
   };
   let io: IntersectionObserver | null = null;
   let front: THREE.Texture, back: THREE.Texture, gold: THREE.Texture | null = null;
@@ -296,8 +298,34 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
     const [p, o] = [...pts.values()];
     return [(p.x + o.x) / 2, (p.y + o.y) / 2, Math.hypot(p.x - o.x, p.y - o.y)];
   };
+  // Only the card itself (and a little round it) is held to turn it, not the room round it on the stage,
+  // so a swipe or a tap beside it still scrolls the page or reaches the buttons. Zoomed in, the whole
+  // window is the card.
+  const box = new T.Box3(), corner = new T.Vector3();
+  const onCard = (cx: number, cy: number) => {
+    if (zoomed()) return true;
+    const b = cv.getBoundingClientRect();
+    box.setFromObject(spin);
+    if (box.isEmpty()) return false;
+    let l = Infinity, rt = -Infinity, t = Infinity, bt = -Infinity;
+    for (let i = 0; i < 8; i++) {
+      corner.set(i & 1 ? box.max.x : box.min.x, i & 2 ? box.max.y : box.min.y, i & 4 ? box.max.z : box.min.z).project(cam);
+      const x = b.left + ((corner.x + 1) / 2) * b.width, y = b.top + ((1 - corner.y) / 2) * b.height;
+      l = Math.min(l, x);
+      rt = Math.max(rt, x);
+      t = Math.min(t, y);
+      bt = Math.max(bt, y);
+    }
+    const pad = 10;
+    return cx >= l - pad && cx <= rt + pad && cy >= t - pad && cy <= bt + pad;
+  };
+  function onHover(e: PointerEvent) {
+    if (e.pointerType === "mouse" && !pts.size) stage.style.cursor = onCard(e.clientX, e.clientY) ? "" : "default";
+  }
+  stage.addEventListener("pointermove", onHover);
   stage.onpointerdown = (e) => {
     if (e.button > 0 || (e.target as Element).closest("button")) return;
+    if (!pts.size && !onCard(e.clientX, e.clientY)) return;
     cancelAnimationFrame(raf);
     used();
     try {

@@ -1379,3 +1379,199 @@
 }
 
 /* #endregion */
+
+/* #region--------------------------------------THE PAGE: like the others (the opening, white boxes) */
+
+/* (as wide as the other pages' sections: 1180px, inside 2rem sides) */
+.buyPage {
+  max-width: calc(1180px + 4rem);
+  padding-left: 2rem;
+  padding-right: 2rem;
+  box-sizing: border-box;
+}
+
+.buyPage p {
+  opacity: 1;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2.5rem 0 2.25rem;
+}
+
+.buyPage .eyebrow {
+  margin: 0 0 0.9rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.78rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.6);
+}
+
+.title {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(3rem, 8.5vw, 6rem);
+  font-weight: normal;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  color: #323232;
+}
+
+.buyPage .lede {
+  margin: 1.1rem 0 0;
+  font-family: "Roboto Light";
+  font-size: 1.08rem;
+  line-height: 1.5;
+  color: rgba(50, 50, 50, 0.85);
+}
+
+.checkoutSection {
+  width: 100%;
+  max-width: 1040px;
+}
+
+.checkoutLayout {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  gap: 1.5rem;
+}
+
+.checkoutLeft {
+  gap: 1.5rem;
+  top: 6rem;
+}
+
+/* the order, the add-ons and the form: white boxes, like a character page's */
+.cartSummary,
+.upsellCard,
+.checkoutFormWrapper {
+  padding: 1.5rem;
+  border: 0;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.08),
+    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+}
+
+.checkoutFormWrapper {
+  padding: 1.75rem;
+}
+
+.cartSummary {
+  gap: 1rem;
+}
+
+.cartSummaryEyebrow,
+.cartUpsellLabel,
+.formSectionLabel {
+  font-size: 0.78rem;
+  color: rgba(50, 50, 50, 0.6);
+}
+
+.cartItemImage,
+.cartUpsellImage {
+  border: 0;
+  border-radius: 12px;
+  background: radial-gradient(ellipse at 50% 40%, #fffdf8 0%, #f3eee2 85%);
+}
+
+.cartItemName {
+  font-size: 1rem;
+}
+
+.cartItemPrice {
+  font-size: 1rem;
+}
+
+.cartDivider,
+.cartTotalDivider {
+  border-top-color: rgba(50, 50, 50, 0.1);
+}
+
+.skeletonBlock {
+  border-radius: 10px;
+  background: linear-gradient(90deg, #f3f0e8 25%, #ebe6da 50%, #f3f0e8 75%);
+  background-size: 600px 100%;
+}
+
+/* "we don't ship there yet": a yellow note, like How to play's */
+.waitlistNotice {
+  max-width: 1040px;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-left: 0;
+  border-radius: 14px;
+  background: #fbf3c8;
+  box-shadow: inset 0 0 0 1px rgba(160, 130, 20, 0.18);
+}
+
+.stripeAttr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  margin: 1.5rem auto 3rem;
+  font-size: 0.8rem;
+  color: rgba(50, 50, 50, 0.5);
+}
+
+.stripeAttr a {
+  color: rgba(50, 50, 50, 0.7);
+  text-decoration: underline;
+  text-decoration-color: rgba(50, 50, 50, 0.2);
+  text-underline-offset: 2px;
+}
+
+@media only screen and (max-width: 900px) {
+  .buyPage {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* (clear of the logo and the menu button, which float over the top of the page here) */
+  .intro {
+    padding: 4.75rem 0 1.75rem;
+  }
+
+  .checkoutSection {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .checkoutLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .checkoutLayout,
+  .checkoutLeft {
+    gap: 1rem;
+  }
+
+  .cartSummary,
+  .upsellCard {
+    padding: 1.15rem;
+  }
+
+  .checkoutFormWrapper {
+    padding: 1.25rem 1.15rem 1.5rem;
+  }
+
+  .waitlistNotice {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .stripeAttr {
+    width: 100%;
+  }
+}
+
+/* #endregion */

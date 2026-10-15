@@ -104,7 +104,7 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
     deck.add(obj);
     const shadow = new T.Mesh(
       new T.PlaneGeometry(1.6, 1.6 / aspect),
-      new T.MeshBasicMaterial({ map: shadowMap, transparent: true, opacity: 0.3, depthWrite: false })
+      new T.MeshBasicMaterial({ map: shadowMap, transparent: true, opacity: 0.15, depthWrite: false })
     );
     shadow.renderOrder = -1;
     deck.add(shadow);
@@ -241,7 +241,7 @@ export async function mountDeck(stage: HTMLElement, opts: MountOptions): Promise
       l.shadow.position.set(q.x + 10 + q.z * 0.06, q.y - 16 - q.z * 0.12, -40);
       l.shadow.rotation.z = q.rz;
       l.shadow.scale.setScalar(l.rest.w * (1 + q.z * 0.0006));
-      (l.shadow.material as THREE.MeshBasicMaterial).opacity = 0.3 * clamp(1 - q.z / 600);
+      (l.shadow.material as THREE.MeshBasicMaterial).opacity = 0.15 * clamp(1 - q.z / 600);
     });
   };
 

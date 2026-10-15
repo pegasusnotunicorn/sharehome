@@ -118,7 +118,9 @@ function makeToken(T: Three, mm: number[], tx: Record<string, THREE.Texture>) {
     uv.setXY(i, z > 0 ? x + 0.5 : 0.5 - x, p.getY(i) / (2 * r) + 0.5); // the back mirrored, so it reads right once it turns over
   }
   const bump = grain(T);
-  const art = (map: THREE.Texture) => new T.MeshStandardMaterial({ map, color: 0xfff0d6, roughness: 0.85, metalness: 0, bumpMap: bump, bumpScale: 0.35 });
+  // (its face white paint, lit a little from within so it reads white, not grey, in the soft light)
+  const art = (map: THREE.Texture) =>
+    new T.MeshStandardMaterial({ map, color: 0xffffff, emissive: 0xffffff, emissiveMap: map, emissiveIntensity: 0.22, roughness: 0.85, metalness: 0, bumpMap: bump, bumpScale: 0.35 });
   const m = new T.Mesh(geo, [new T.MeshStandardMaterial({ color: 0x141212, roughness: 0.85, bumpMap: bump, bumpScale: 0.35 }), art(tx.front), art(tx.back)]);
   m.castShadow = true;
   const grp = new T.Group();
@@ -152,7 +154,7 @@ export async function mountPiecesViewer(stage: HTMLElement, { onFail }: MountOpt
   const back = new T.DirectionalLight(0xffffff, 0.8); // the same from behind, so the back reads as bright as the front
   back.position.set(-0.7, 0.5, -3);
   sc.add(back);
-  const floor = new T.Mesh(new T.PlaneGeometry(6, 6), new T.ShadowMaterial({ opacity: 0.17 }));
+  const floor = new T.Mesh(new T.PlaneGeometry(6, 6), new T.ShadowMaterial({ opacity: 0.085 }));
   floor.rotation.x = -Math.PI / 2;
   floor.position.y = -0.6;
   floor.receiveShadow = true;

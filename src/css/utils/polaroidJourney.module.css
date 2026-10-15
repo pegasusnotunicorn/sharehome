@@ -1,0 +1,199 @@
+/* The polaroids going round in 3D (PolaroidJourney.tsx, polaroidRing3d.ts): on the contact and thank-you
+   pages, under a title, the caption of the one in front below it */
+
+.journey {
+  padding: 4.5rem 0 3.5rem;
+}
+
+.journeyHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.journeyTitle {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: normal;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #323232;
+}
+
+/* out to the window's edges */
+.ring {
+  position: relative;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  height: clamp(380px, 40vw, 560px);
+  margin-top: 0.5rem;
+  /* (a swipe across turns the photos; up or down, it scrolls the page) */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* until the 3D's in: the first photo, flat, where it'll be */
+.ringStill {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 66%;
+  aspect-ratio: 88 / 107;
+  translate: -50% -52%;
+  box-sizing: border-box;
+  padding: 2.4% 2.4% 13%;
+  object-fit: cover;
+  background: #fbfaf6;
+  border-radius: 4px;
+  box-shadow: 0 14px 24px -18px rgba(35, 28, 40, 0.3);
+  animation: stillIn 0.4s ease both;
+}
+
+@keyframes stillIn {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Prev, what's in the photo in front, Next */
+.journeyBar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  max-width: 640px;
+  margin: -2.25rem auto 0;
+  position: relative;
+}
+
+.chip {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  box-sizing: border-box;
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
+  background: #fff;
+  color: var(--btn-ink);
+  box-shadow: 0 3px 0 var(--chip-edge);
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+@media (hover: hover) {
+  .chip:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 0 var(--chip-edge);
+  }
+}
+
+.chip:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--chip-edge);
+}
+
+.chip:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
+}
+
+.caption {
+  min-height: 3.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.journey .captionText {
+  margin: 0;
+  font-family: "Roboto Light";
+  font-size: 1.05rem;
+  line-height: 1.45;
+  color: #323232;
+  animation: captionIn 0.5s ease both;
+}
+
+.captionText a {
+  color: inherit;
+}
+
+@keyframes captionIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.lightboxClose {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  box-sizing: border-box;
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
+  background: #fff;
+  box-shadow: 0 3px 0 var(--chip-edge);
+  cursor: pointer;
+}
+
+.lightboxClose img {
+  width: 14px;
+  height: 14px;
+}
+
+.flatPolaroids {
+  margin-top: 1.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey .captionText,
+  .ringStill {
+    animation: none;
+  }
+}
+
+.journey .label {
+  margin: 0 0 0.7rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.78rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.6);
+}
+
+.journey p {
+  opacity: 1;
+}
+
+@media only screen and (max-width: 900px) {
+  .journey {
+    padding: 3.5rem 0 2.5rem;
+  }
+
+  .ring {
+    height: clamp(340px, 100vw, 440px);
+  }
+
+  .journeyBar {
+    gap: 0.6rem;
+    margin-top: -1.75rem;
+  }
+
+  .journey .captionText {
+    font-size: 0.98rem;
+  }
+}

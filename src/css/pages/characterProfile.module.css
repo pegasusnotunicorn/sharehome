@@ -160,6 +160,17 @@
     box-shadow 0.12s ease;
 }
 
+/* (a fingertip's worth round it still counts) */
+.stepArrow {
+  position: relative;
+}
+
+.stepArrow::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}
+
 .stepArrow svg {
   width: 16px;
   height: 16px;

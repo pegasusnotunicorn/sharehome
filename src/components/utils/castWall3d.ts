@@ -134,7 +134,7 @@ export async function mountCastWall(tiles: CastTile[], onFail: () => void): Prom
     // (well behind it, so the card never dips into it as it tilts)
     shadow.position.set(w * 0.01 * l.ry, -w * (0.035 + 0.05 * l.lift), -w * 0.3);
     shadow.scale.set(w * 1.32 * spread, w * ASPECT * 1.45 * spread, 1);
-    shadowMat.opacity = 0.42 - 0.12 * l.lift;
+    shadowMat.opacity = 0.21 - 0.06 * l.lift;
     paint(r, sc, cam, l.ctx, l.CW, l.CH);
   };
 

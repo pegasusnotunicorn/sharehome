@@ -1,432 +1,371 @@
-import { useState } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
 import WhatsInTheBox from "./WhatsInTheBox";
-import Card from "../../Card/Card";
-import { getRandomTrait } from "../../Card/ExampleTraits";
 import DefaultButton from "../../utils/DefaultButton";
-import useWindowDimensions from "../../utils/useWindowDimensions";
 import aboutStyles from "../../../css/pages/aboutPage.module.css";
-import type { CardMainStyle } from "../../../types/card";
 
-interface RoleplayProps {
-  cardStyle: CardMainStyle;
-}
-
-interface SetupProps {
-  showSetup: boolean;
-  cardStyle: CardMainStyle;
-  toggleSteps: () => void;
-}
-
-interface RulesProps {
-  showRules: boolean;
-  toggleSteps: () => void;
-}
+// The How to play page's three parts (the setup, the rules, every piece in 3D), one at a time. Each step's
+// a white box: a little scene of the printed pieces it's about, laid on the table, and the words.
 
 type Tab = "setup" | "rules" | "box";
 
-const Roleplay = ({ cardStyle }: RoleplayProps) => {
-  const [tab, setTab] = useState<Tab>("setup");
-  const [tabKey, setTabKey] = useState(0);
-  const [boxOpened, setBoxOpened] = useState(false); // the pieces load the first time their tab opens, and stay
-  const showRules = tab === "rules";
-  const toggleSteps = () => {
-    setTab(showRules ? "setup" : "rules");
-  };
-
-  const switchTab = (next: Tab) => {
-    if (next === tab) {
-      return;
-    }
-
-    setTab(next);
-    if (next === "box") setBoxOpened(true);
-    else setTabKey(k => k + 1);
-  };
-
-  return (
-    <>
-      <div className={aboutStyles.tabsWrapper}>
-        <button
-          className={`${aboutStyles.tab} ${tab === "setup" ? aboutStyles.tabActive : ""}`}
-          onClick={() => switchTab("setup")}
-        >
-          <span className={aboutStyles.tabLabel}>Game setup</span>
-          <span className={aboutStyles.tabSubtext}>less than 3 min</span>
-        </button>
-        <button
-          className={`${aboutStyles.tab} ${showRules ? aboutStyles.tabActive : ""}`}
-          onClick={() => switchTab("rules")}
-        >
-          <span className={aboutStyles.tabLabel}>Game rules</span>
-          <span className={aboutStyles.tabSubtext}>12 min per game</span>
-        </button>
-        <button
-          className={`${aboutStyles.tab} ${tab === "box" ? aboutStyles.tabActive : ""}`}
-          onClick={() => switchTab("box")}
-        >
-          <span className={`${aboutStyles.tabLabel} ${aboutStyles.tabLabelLong}`}>What&apos;s in the box</span>
-          <span className={`${aboutStyles.tabLabel} ${aboutStyles.tabLabelShort}`}>In the box</span>
-          <span className={aboutStyles.tabSubtext}>every piece, in 3D</span>
-        </button>
-      </div>
-      <Setup
-        key={`setup-${tabKey}`}
-        showSetup={tab === "setup"}
-        cardStyle={cardStyle}
-        toggleSteps={toggleSteps}
-      />
-      <Rules key={`rules-${tabKey}`} showRules={showRules} toggleSteps={toggleSteps} />
-      {boxOpened && (
-        <div className={`${aboutStyles.allStepsContainer}${tab === "box" ? " is-active" : ""}`}>
-          <WhatsInTheBox />
-        </div>
-      )}
-    </>
-  );
-};
-
-const Setup = ({ showSetup, cardStyle, toggleSteps }: SetupProps) => {
-  const cardProps = {
-    type: "member",
-    mainStyle: cardStyle,
-    disableFlip: true,
-    showFront: true,
-    disableText: true,
-    enableQuestionMark: true,
-  };
-
-  const [randomTraits] = useState(() =>
-    [
-      { text: getRandomTrait("good"), type: "good" as const },
-      { text: getRandomTrait("bad"), type: "bad" as const },
-      { text: getRandomTrait("chaotic"), type: "chaotic" as const },
-    ].sort(() => 0.5 - Math.random())
-  );
-
-  return (
-    <div className={`${aboutStyles.allStepsContainer}${showSetup ? " is-active" : ""}`}>
-      {/* STEP 1: Deal character cards & traits */}
-      <div className={aboutStyles.stepWrapper}>
-        <h2 className={aboutStyles.stepTitle}>
-          Step 1 — Deal character cards & traits
-        </h2>
-        <div className={aboutStyles.stepLayout}>
-          <div className={aboutStyles.stepIllustration}>
-            <Card {...cardProps} />
-            <div className={aboutStyles.traitsList}>
-              {randomTraits.map((trait, i) => (
-                <div key={i} className={`${aboutStyles.characterArc} ${aboutStyles[`${trait.type}Arc`]}`}>
-                  <div className={aboutStyles.characterArcText}>{trait.text}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className={aboutStyles.stepTextContent}>
-            <h3 className={aboutStyles.boldText}>
-              Each player is given a random Character Card and three random Character Traits.
-            </h3>
-            <ul className={aboutStyles.bulletList}>
-              <li>Place your Character Card in the plastic card standee for all to see.</li>
-              <li>For Character Traits, every player receives one of each color at random.</li>
-              <li>Form your Character Arc by rearranging the order of your Character Traits.</li>
-            </ul>
-            <div className={aboutStyles.stepNote}>
-              <img loading="lazy" src="/images/icons/flag.svg" alt="goal" />
-              <p>
-                The goal of the game is to score points. The higher you score, the
-                better the ratings will be for your season. Fulfill as many Direction
-                Cards as you can as a group and complete your Character Arcs to earn points.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* STEP 2: Set up the table */}
-      <div className={aboutStyles.stepWrapper}>
-        <h2 className={aboutStyles.stepTitle}>
-          Step 2 — Set up the table
-        </h2>
-        <div className={aboutStyles.stepLayout}>
-          <div className={aboutStyles.stepIllustration}>
-            <img
-              loading="lazy"
-              className={aboutStyles.cardImg}
-              src="/images/illustrations/episodecard.webp"
-              alt="episode card"
-            />
-            <div className={aboutStyles.cardImgRow}>
-              <img
-                loading="lazy"
-                className={aboutStyles.cardImgSmall}
-                src="/images/illustrations/directioncard0.webp"
-                alt="direction card"
-              />
-              <img
-                loading="lazy"
-                className={aboutStyles.cardImgSmall}
-                src="/images/illustrations/directioncard1.webp"
-                alt="direction card"
-              />
-            </div>
-          </div>
-          <div className={aboutStyles.stepTextContent}>
-            <h3 className={aboutStyles.boldText}>
-              Place the Episode Cards, Direction Cards, and Point Tokens in the center of the table.
-            </h3>
-            <ul className={aboutStyles.bulletList}>
-              <li>Every player must be able to read the cards clearly so please sit accordingly.</li>
-              <li>Place a phone in clear view of everyone and set a timer for 3 minutes.</li>
-              <li>Split the Direction Cards into two decks according to their point values.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      {/* STEP 3: Start playing */}
-      <div className={aboutStyles.stepWrapper}>
-        <h2 className={aboutStyles.stepTitle}>
-          Step 3 — Start playing!
-        </h2>
-        <div className={aboutStyles.stepLayout}>
-          <div className={aboutStyles.stepIllustration}>
-            <Card {...cardProps} enableQuestionMark={false} />
-            <img
-              loading="lazy"
-              className={aboutStyles.wideImage}
-              src="/images/illustrations/rules/membertalk.svg"
-              alt="members talking"
-            />
-          </div>
-          <div className={aboutStyles.stepTextContent}>
-            <h3 className={aboutStyles.boldText}>
-              Starting with the oldest Character, all players introduce themselves.
-            </h3>
-            <ul className={aboutStyles.bulletList}>
-              <li>Feel free to omit or replace any of the written character details as you see fit.</li>
-              <li>Make sure to also mention your Character Arc so others are aware of it.</li>
-              <li>Remember, this is your reality TV show debut!</li>
-              <li>Continue clockwise until all players have introduced themselves.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <DefaultButton
-        className={aboutStyles.showRulesButtonBottom}
-        variant="secondary"
-        border="dark"
-        iconPosition="right"
-        icon="next"
-        onClick={() => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-          toggleSteps();
-        }}
-        text="Take me to the game rules"
-      />
-    </div>
-  );
-};
-
-const tokenSources = [
-  ["/images/icons/5point.png", "/images/icons/1point.png", "/images/icons/5point.png", "/images/icons/1point.png"],
-  ["/images/icons/1point.png", "/images/icons/5point.png", "/images/icons/1point.png", "/images/icons/5point.png"],
+const TABS: { id: Tab; label: string; short?: string; note: string }[] = [
+  { id: "setup", label: "Game setup", note: "less than 3 min" },
+  { id: "rules", label: "Game rules", note: "12 min per game" },
+  { id: "box", label: "What's in the box", short: "In the box", note: "every piece, in 3D" },
 ];
 
-const Rules = ({ showRules, toggleSteps }: RulesProps) => {
-  const { width } = useWindowDimensions();
-  const [tokenRotations] = useState(() =>
-    tokenSources.map(row => row.map(() => Math.floor(Math.random() * 360)))
-  );
+const Roleplay = () => {
+  const [tab, setTab] = useState<Tab>("setup");
+  const [boxOpened, setBoxOpened] = useState(false); // the pieces load the first time their tab opens, and stay
 
-  const isMobile = width <= 900;
-  const isSmall = width <= 480;
-  const goalCardStyle = {
-    type: "episode",
-    disableFlip: true,
-    showFront: true,
-    mainStyle: {
-      width: isSmall ? "180px" : isMobile ? "160px" : "180px",
-      height: isSmall ? "120px" : isMobile ? "110px" : "120px",
-      fontSize: isSmall ? "5px" : isMobile ? "4.5px" : "4.5px",
-    },
+  const open = (next: Tab, scroll = false) => {
+    setTab(next);
+    if (next === "box") setBoxOpened(true);
+    if (scroll) document.getElementById("how-to-play-parts")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
-    <div className={`${aboutStyles.allStepsContainer}${showRules ? " is-active" : ""}`}>
-      {/* EPISODE CARDS */}
-      <div className={aboutStyles.stepWrapper}>
-        <h2 className={aboutStyles.stepTitle}>
-          Episode Cards — Drive the story each round
-        </h2>
-        <div className={aboutStyles.stepLayout}>
-          <div className={aboutStyles.stepIllustration}>
-            <Card {...goalCardStyle} />
-          </div>
-          <div className={aboutStyles.stepTextContent}>
-            <h3 className={aboutStyles.boldText}>
-              Flip over an Episode Card. This will be the location for Episode One.
-            </h3>
-            <ul className={aboutStyles.bulletList}>
-              <li>Every episode is one &quot;round&quot; of the game.</li>
-              <li>Each episode lasts three minutes.</li>
-              <li>You will play four episodes in total.</li>
-              <li>Do not start the timer just yet.</li>
-            </ul>
-          </div>
-        </div>
+    <section className={aboutStyles.parts} id="how-to-play-parts">
+      <div className={aboutStyles.tabs} role="tablist" aria-label="How to play">
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            id={`tab-${t.id}`}
+            aria-controls={`panel-${t.id}`}
+            aria-selected={tab === t.id}
+            className={`${aboutStyles.tab}${tab === t.id ? ` ${aboutStyles.tabActive}` : ""}`}
+            onClick={() => open(t.id)}
+          >
+            <span className={aboutStyles.tabLabel}>
+              {t.short ? (
+                <>
+                  <span className={aboutStyles.long}>{t.label}</span>
+                  <span className={aboutStyles.short}>{t.short}</span>
+                </>
+              ) : (
+                t.label
+              )}
+            </span>
+            <span className={aboutStyles.tabNote}>{t.note}</span>
+          </button>
+        ))}
       </div>
 
-      {/* DIRECTION CARDS */}
-      <div className={aboutStyles.stepWrapper}>
-        <h2 className={aboutStyles.stepTitle}>
-          Direction Cards — Score points by completing challenges
-        </h2>
-        <div className={aboutStyles.stepLayout}>
-          <div className={aboutStyles.stepIllustration}>
-            <div className={aboutStyles.cardImgRow}>
-              <img
-                loading="lazy"
-                className={aboutStyles.cardImgSmall}
-                src="/images/illustrations/directioncard0.webp"
-                alt="direction card"
-              />
-              <img
-                loading="lazy"
-                className={aboutStyles.cardImgSmall}
-                src="/images/illustrations/directioncard1.webp"
-                alt="direction card"
-              />
-              <img
-                loading="lazy"
-                className={aboutStyles.cardImgSmall}
-                src="/images/illustrations/directioncard2.webp"
-                alt="direction card"
-              />
-            </div>
-            <img
-              loading="lazy"
-              className={aboutStyles.wideImage}
-              src="/images/illustrations/rules/commentatortalk.svg"
-              alt="commentators talking"
-            />
-          </div>
-          <div className={aboutStyles.stepTextContent}>
-            <h3 className={aboutStyles.boldText}>
-              Flip over three cards from both Direction Card decks. Six total cards should be face up at all times.
-            </h3>
-            <ul className={aboutStyles.bulletList}>
-              <li>The executives of the show are trying to instill chaos into the plot!</li>
-              <li>In three minutes, complete as many Direction Cards as you can as a group.</li>
-              <li>Each Direction Card is worth one or two points.</li>
-              <li>Replenish a card as soon as you complete it.</li>
-            </ul>
-          </div>
-        </div>
+      <div role="tabpanel" id="panel-setup" aria-labelledby="tab-setup" hidden={tab !== "setup"}>
+        {tab === "setup" && <Setup next={() => open("rules", true)} />}
       </div>
-
-      {/* POINT TOKENS */}
-      <div className={aboutStyles.stepWrapper}>
-        <h2 className={aboutStyles.stepTitle}>
-          Point Tokens — Track your progress
-        </h2>
-        <div className={aboutStyles.stepLayout}>
-          <div className={aboutStyles.stepIllustration}>
-            {tokenSources.map((row, ri) => (
-              <div key={ri} className={aboutStyles.tokenRow}>
-                {row.map((src, ci) => (
-                  <img
-                    key={ci}
-                    loading="lazy"
-                    className={aboutStyles.tokenImg}
-                    style={{ transform: `rotate(${tokenRotations[ri][ci]}deg)` }}
-                    src={src}
-                    alt="point token"
-                  />
-                ))}
-              </div>
-            ))}
-          </div>
-          <div className={aboutStyles.stepTextContent}>
-            <h3 className={aboutStyles.boldText}>
-              Point tokens can be used to earn extra points during the game.
-            </h3>
-            <ul className={aboutStyles.bulletList}>
-              <li>
-                Anytime someone references something from a previous episode, place a
-                Point Token on that Episode Card to earn an extra point.
-              </li>
-              <li>
-                Just because someone else completed a Direction Card before you had a
-                chance to speak, does not mean you lost your chance. Place a Point Token
-                on the current Episode Card to earn an extra point and say what you
-                wanted to say.
-              </li>
-            </ul>
-          </div>
-        </div>
+      <div role="tabpanel" id="panel-rules" aria-labelledby="tab-rules" hidden={tab !== "rules"}>
+        {tab === "rules" && <Rules back={() => open("setup", true)} next={() => open("box", true)} />}
       </div>
-
-      {/* TWO GOLDEN RULES */}
-      <div className={aboutStyles.stepWrapper}>
-        <h2 className={aboutStyles.stepTitle}>
-          Two golden rules — Always keep these in mind
-        </h2>
-        <div className={aboutStyles.goldenRulesGrid}>
-          <div className={aboutStyles.goldenRuleCard}>
-            <div className={aboutStyles.ruleIllustration}>
-              <img
-                loading="lazy"
-                src="/images/illustrations/rules/commentatorpoint2.svg"
-                alt="everything must make sense"
-              />
-            </div>
-            <div>
-              <h3 className={aboutStyles.boldText}>Everything must somehow make sense.</h3>
-              <ul className={aboutStyles.bulletList}>
-                <li>
-                  It does not matter how convoluted, far-fetched, or shoe-horned in
-                  your story is. As long as it makes sense, it&apos;s okay.
-                </li>
-              </ul>
-            </div>
+      <div role="tabpanel" id="panel-box" aria-labelledby="tab-box" hidden={tab !== "box"}>
+        {boxOpened && (
+          <div className={aboutStyles.boxPanel}>
+            <WhatsInTheBox />
           </div>
-          <div className={aboutStyles.goldenRuleCard}>
-            <div className={aboutStyles.ruleIllustration}>
-              <img
-                loading="lazy"
-                src="/images/illustrations/rules/reveal2.svg"
-                alt="yes and rule"
-              />
-            </div>
-            <div>
-              <h3 className={aboutStyles.boldText}>
-                The golden improv rule of &quot;Yes, and...&quot;
-              </h3>
-              <ul className={aboutStyles.bulletList}>
-                <li>
-                  If something is said, it is true unless it directly contradicts
-                  something else that was already said.
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
+    </section>
+  );
+};
 
-      <DefaultButton
-        className={`${aboutStyles.showRulesButtonBottom} ${aboutStyles.showSetupButtonBottom}`}
-        variant="secondary"
-        border="dark"
-        icon="prev"
-        onClick={() => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-          toggleSteps();
-        }}
-        text="Back to game setup"
+// #region--------------------------------------THE PIECES
+
+const nn = (i: number) => String(i + 1).padStart(2, "0");
+const pick = (n: number) => Math.floor(Math.random() * n);
+const pickSome = (n: number, k: number) => {
+  const out: number[] = [];
+  while (out.length < k) {
+    const i = pick(n);
+    if (!out.includes(i)) out.push(i);
+  }
+  return out;
+};
+
+const character = (i: number) => `/images/pieces/characters/${nn(i)}.webp`;
+const episode = (i: number) => `/images/pieces/episodes/${nn(i)}.webp`;
+const trait = (kind: "good" | "bad" | "chaotic", i: number) => `/images/pieces/${kind}-traits/${nn(i)}.webp`;
+const direction = (deck: "director" | "producer" | "showrunner", i: number) => `/images/pieces/${deck}/${nn(i)}.webp`;
+const TOKEN = "/images/pieces/box/token-front.webp";
+const TOKEN_BACK = "/images/pieces/box/token-back.webp";
+const EPISODE_BACK = "/images/pieces/episodes/back.webp";
+
+// a piece on the table: where its middle is (of the scene's width and height), how wide (of the scene's
+// width), and its turn
+interface Piece {
+  src: string;
+  x: number;
+  y: number;
+  w: number;
+  r?: number;
+  kind?: "character" | "card" | "trait" | "token" | "art";
+  alt?: string;
+}
+
+const Scene = ({ pieces, label }: { pieces: Piece[]; label: string }) => (
+  <div className={aboutStyles.scene} role="img" aria-label={label}>
+    {pieces.map((p, i) => (
+      <img
+        key={i}
+        src={p.src}
+        alt=""
+        loading="lazy"
+        draggable={false}
+        className={`${aboutStyles.piece} ${aboutStyles[p.kind || "card"]}`}
+        style={{ "--x": `${p.x}%`, "--y": `${p.y}%`, "--w": `${p.w}%`, "--r": `${p.r || 0}deg`, "--i": i } as CSSProperties}
       />
+    ))}
+  </div>
+);
+
+// #endregion
+
+// #region--------------------------------------A STEP
+
+interface StepProps {
+  n: number;
+  eyebrow: string;
+  title: string;
+  lead: string;
+  points: ReactNode[];
+  scene: ReactNode;
+  children?: ReactNode;
+}
+
+const Step = ({ n, eyebrow, title, lead, points, scene, children }: StepProps) => (
+  <article className={aboutStyles.step}>
+    <div className={aboutStyles.stepScene}>{scene}</div>
+    <div className={aboutStyles.stepWords}>
+      <p className={aboutStyles.stepEyebrow}>
+        <span className={aboutStyles.stepNumber}>{n}</span>
+        {eyebrow}
+      </p>
+      <h2 className={aboutStyles.stepTitle}>{title}</h2>
+      <p className={aboutStyles.stepLead}>{lead}</p>
+      <ul className={aboutStyles.points}>
+        {points.map((p, i) => (
+          <li key={i}>{p}</li>
+        ))}
+      </ul>
+      {children}
+    </div>
+  </article>
+);
+
+const Footer = ({ children }: { children: ReactNode }) => <div className={aboutStyles.partFooter}>{children}</div>;
+
+// #endregion
+
+// #region--------------------------------------SETUP
+
+const Setup = ({ next }: { next: () => void }) => {
+  const [deal] = useState(() => ({
+    you: pick(25),
+    them: pickSome(25, 2),
+    traits: [trait("good", pick(30)), trait("bad", pick(30)), trait("chaotic", pick(30))].sort(() => 0.5 - Math.random()),
+    directions: [direction("director", pick(50)), direction("producer", pick(50)), direction("showrunner", pick(50))],
+  }));
+
+  return (
+    <div className={aboutStyles.steps}>
+      <Step
+        n={1}
+        eyebrow="Step one"
+        title="Deal character cards & traits"
+        lead="Each player is given a random Character Card and three random Character Traits."
+        points={[
+          "Place your Character Card in the plastic card standee for all to see.",
+          "For Character Traits, every player receives one of each color at random.",
+          "Form your Character Arc by rearranging the order of your Character Traits.",
+        ]}
+        scene={
+          <Scene
+            label="A character card and three character traits"
+            pieces={[
+              { src: character(deal.you), kind: "character", x: 36, y: 42, w: 62, r: -4 },
+              { src: deal.traits[0], kind: "trait", x: 72, y: 62, w: 44, r: 3 },
+              { src: deal.traits[1], kind: "trait", x: 70, y: 75, w: 44, r: -2 },
+              { src: deal.traits[2], kind: "trait", x: 73, y: 88, w: 44, r: 1.5 },
+            ]}
+          />
+        }
+      >
+        <div className={aboutStyles.goal}>
+          <img loading="lazy" src="/images/icons/flag.svg" alt="" />
+          <p>
+            <b>The goal:</b> score points. The higher you score, the better the ratings for your season. Fulfill
+            as many Direction Cards as you can as a group and complete your Character Arcs to earn points.
+          </p>
+        </div>
+      </Step>
+
+      <Step
+        n={2}
+        eyebrow="Step two"
+        title="Set up the table"
+        lead="Place the Episode Cards, Direction Cards, and Point Tokens in the center of the table."
+        points={[
+          "Every player must be able to read the cards clearly so please sit accordingly.",
+          "Place a phone in clear view of everyone and set a timer for 3 minutes.",
+          "Split the Direction Cards into two decks according to their point values.",
+        ]}
+        scene={
+          <Scene
+            label="Episode cards, direction cards and point tokens in the middle of the table"
+            pieces={[
+              { src: EPISODE_BACK, x: 26, y: 33, w: 40, r: -5 },
+              { src: deal.directions[0], x: 70, y: 27, w: 40, r: 4 },
+              { src: deal.directions[1], x: 63, y: 66, w: 40, r: -3 },
+              { src: TOKEN, kind: "token", x: 20, y: 74, w: 13, r: 20 },
+              { src: TOKEN_BACK, kind: "token", x: 31, y: 82, w: 13, r: -40 },
+              { src: TOKEN, kind: "token", x: 27, y: 66, w: 13, r: 75 },
+            ]}
+          />
+        }
+      />
+
+      <Step
+        n={3}
+        eyebrow="Step three"
+        title="Start playing!"
+        lead="Starting with the oldest Character, all players introduce themselves."
+        points={[
+          "Feel free to omit or replace any of the written character details as you see fit.",
+          "Make sure to also mention your Character Arc so others are aware of it.",
+          "Remember, this is your reality TV show debut!",
+          "Continue clockwise until all players have introduced themselves.",
+        ]}
+        scene={
+          <Scene
+            label="Players introducing their characters"
+            pieces={[
+              { src: character(deal.them[0]), kind: "character", x: 30, y: 36, w: 50, r: -6 },
+              { src: character(deal.them[1]), kind: "character", x: 70, y: 40, w: 50, r: 5 },
+              { src: "/images/illustrations/rules/membertalk.svg", kind: "art", x: 50, y: 80, w: 46 },
+            ]}
+          />
+        }
+      />
+
+      <Footer>
+        <span />
+        <DefaultButton variant="secondary" border="dark" iconPosition="right" icon="next" onClick={next} text="Next: the game rules" />
+      </Footer>
     </div>
   );
 };
+
+// #endregion
+
+// #region--------------------------------------RULES
+
+const Rules = ({ back, next }: { back: () => void; next: () => void }) => {
+  const [deal] = useState(() => ({
+    episodes: pickSome(50, 2),
+    directions: [direction("director", pick(50)), direction("producer", pick(50)), direction("showrunner", pick(50))],
+  }));
+
+  return (
+    <div className={aboutStyles.steps}>
+      <Step
+        n={1}
+        eyebrow="Episode cards"
+        title="Drive the story each round"
+        lead="Flip over an Episode Card. This will be the location for Episode One."
+        points={[
+          <>Every episode is one &quot;round&quot; of the game.</>,
+          "Each episode lasts three minutes.",
+          "You will play four episodes in total.",
+          "Do not start the timer just yet.",
+        ]}
+        scene={
+          <Scene
+            label="An episode card, face up on the deck"
+            pieces={[
+              { src: EPISODE_BACK, x: 40, y: 46, w: 52, r: -6 },
+              { src: episode(deal.episodes[0]), x: 56, y: 54, w: 58, r: 4 },
+            ]}
+          />
+        }
+      />
+
+      <Step
+        n={2}
+        eyebrow="Direction cards"
+        title="Score points by completing challenges"
+        lead="Flip over three cards from both Direction Card decks. Six total cards should be face up at all times."
+        points={[
+          "The executives of the show are trying to instill chaos into the plot!",
+          "In three minutes, complete as many Direction Cards as you can as a group.",
+          "Each Direction Card is worth one or two points.",
+          "Replenish a card as soon as you complete it.",
+        ]}
+        scene={
+          <Scene
+            label="Direction cards, face up"
+            pieces={[
+              { src: deal.directions[0], x: 27, y: 30, w: 42, r: -6 },
+              { src: deal.directions[1], x: 73, y: 30, w: 42, r: 5 },
+              { src: deal.directions[2], x: 50, y: 58, w: 42, r: -1 },
+              { src: "/images/illustrations/rules/commentatortalk.svg", kind: "art", x: 50, y: 88, w: 34 },
+            ]}
+          />
+        }
+      />
+
+      <Step
+        n={3}
+        eyebrow="Point tokens"
+        title="Track your progress"
+        lead="Point tokens can be used to earn extra points during the game."
+        points={[
+          "Anytime someone references something from a previous episode, place a Point Token on that Episode Card to earn an extra point.",
+          "Just because someone else completed a Direction Card before you had a chance to speak, does not mean you lost your chance. Place a Point Token on the current Episode Card to earn an extra point and say what you wanted to say.",
+        ]}
+        scene={
+          <Scene
+            label="Point tokens on an episode card"
+            pieces={[
+              { src: episode(deal.episodes[1]), x: 50, y: 48, w: 66, r: -3 },
+              { src: TOKEN, kind: "token", x: 28, y: 74, w: 16, r: 15 },
+              { src: TOKEN_BACK, kind: "token", x: 42, y: 80, w: 16, r: -30 },
+              { src: TOKEN, kind: "token", x: 73, y: 22, w: 16, r: 60 },
+            ]}
+          />
+        }
+      />
+
+      <section className={aboutStyles.golden}>
+        <header className={aboutStyles.goldenHead}>
+          <p className={aboutStyles.stepEyebrow}>Always keep these in mind</p>
+          <h2 className={aboutStyles.stepTitle}>Two golden rules</h2>
+        </header>
+        <div className={aboutStyles.goldenGrid}>
+          <article className={aboutStyles.goldenRule}>
+            <img loading="lazy" src="/images/illustrations/rules/commentatorpoint2.svg" alt="" />
+            <h3>Everything must somehow make sense.</h3>
+            <p>
+              It does not matter how convoluted, far-fetched, or shoe-horned in your story is. As long as it makes
+              sense, it&apos;s okay.
+            </p>
+          </article>
+          <article className={aboutStyles.goldenRule}>
+            <img loading="lazy" src="/images/illustrations/rules/reveal2.svg" alt="" />
+            <h3>The golden improv rule of &quot;Yes, and...&quot;</h3>
+            <p>If something is said, it is true unless it directly contradicts something else that was already said.</p>
+          </article>
+        </div>
+      </section>
+
+      <Footer>
+        <DefaultButton variant="secondary" border="dark" icon="prev" onClick={back} text="Back to game setup" />
+        <DefaultButton variant="secondary" border="dark" iconPosition="right" icon="next" onClick={next} text="See every piece in 3D" />
+      </Footer>
+    </div>
+  );
+};
+
+// #endregion
 
 export default Roleplay;

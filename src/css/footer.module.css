@@ -367,14 +367,16 @@
     border-color 0.15s ease;
 }
 
+/* (on the dark footer its edge is a light one, hovered too: a dark one wouldn't show) */
 .social:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.45);
+  border-color: rgba(244, 239, 227, 0.85);
+  box-shadow: 0 4px 0 rgba(244, 239, 227, 0.55);
 }
 
 .social:active {
   transform: translateY(2px);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+  box-shadow: 0 1px 0 rgba(244, 239, 227, 0.55);
 }
 
 /* #endregion */

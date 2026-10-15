@@ -1,8 +1,9 @@
 /* the top of a character's page (CharacterProfile.tsx): centred on their card, the details in white
    boxes below */
 
+/* (as wide as the sections below it: the emoji section's 1180px, inside the same 2rem sides) */
 .profile {
-  max-width: 1080px;
+  max-width: calc(1180px + 4rem);
   margin: 0 auto;
   /* (clear of the logo and the buttons along the top) */
   padding: 5rem 2rem 0;
@@ -260,11 +261,15 @@
     margin-top: 0.25rem;
   }
 
-  /* (up into the room under the card, where its shadow falls) */
+  /* (up into the room under the card, where its shadow falls; zoomed, the card fills that room) */
   .step {
     position: relative;
     z-index: 1;
     margin-top: -3.25rem;
+  }
+
+  .stage:has(:global(.zoomed)) .step {
+    margin-top: 0.75rem;
   }
 
   .card {
@@ -304,16 +309,18 @@
     padding: 1.5rem 1.25rem 1.6rem;
   }
 
-  .story {
+  /* (the first paragraph shows; the rest waits behind the button) */
+  .story p:not(:first-child) {
     display: none;
   }
 
-  .story.storyOpen {
+  .story.storyOpen p {
     display: block;
   }
 
   .storyToggle {
     display: inline-block;
+    margin-top: 0.25rem;
     padding: 0 0 0.1rem;
     border: 0;
     border-bottom: 2px solid rgba(50, 50, 50, 0.25);

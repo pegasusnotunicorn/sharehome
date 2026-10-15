@@ -9,8 +9,8 @@ import type { CharacterWithNav } from "../../types/character";
 import styles from "../../css/pages/characterProfile.module.css";
 
 // The top of a character's page: who they are over their card in 3D, centred, with the characters
-// either side of them a step away, round the cast (above the fold, on a phone too); below, their hobbies and their
-// story side by side, and their emoji. On a phone the story waits behind a button.
+// either side of them a step away, round the cast (above the fold, on a phone too); below, their story and their
+// hobbies side by side, and their emoji. On a phone the rest of their story waits behind a button.
 const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => {
   const [story, setStory] = useState(false);
   const work = (job: string, employer: string | false | undefined) => (employer ? `${job} at ${employer}` : job);
@@ -73,17 +73,6 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
       </div>
 
       <div className={styles.details}>
-        <section className={styles.box} aria-labelledby="hobbies-title">
-          <h2 id="hobbies-title" className={styles.label}>
-            Hobbies
-          </h2>
-          <ul className={styles.hobbies}>
-            {c.hobbies.map((h) => (
-              <li key={h}>{h.trim()}</li>
-            ))}
-          </ul>
-        </section>
-
         <section className={styles.box} aria-labelledby="story-title">
           <h2 id="story-title" className={styles.label}>
             Their story
@@ -93,20 +82,33 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
               <p key={p.slice(0, 24)}>{p}</p>
             ))}
           </div>
-          <button
-            type="button"
-            className={styles.storyToggle}
-            aria-expanded={story}
-            aria-controls="character-story"
-            onClick={() => setStory((s) => !s)}
-          >
-            {story ? "Show less" : "Read their story"}
-          </button>
+          {c.description.length > 1 && (
+            <button
+              type="button"
+              className={styles.storyToggle}
+              aria-expanded={story}
+              aria-controls="character-story"
+              onClick={() => setStory((s) => !s)}
+            >
+              {story ? "Show less" : "Read more"}
+            </button>
+          )}
           <div className={styles.emojis}>
             {c.emoji.map((e) => (
               <DefaultButton key={e} variant="secondary" emoji={e} text="Download emoji" compact className={styles.emojiButton} />
             ))}
           </div>
+        </section>
+
+        <section className={styles.box} aria-labelledby="hobbies-title">
+          <h2 id="hobbies-title" className={styles.label}>
+            Hobbies
+          </h2>
+          <ul className={styles.hobbies}>
+            {c.hobbies.map((h) => (
+              <li key={h}>{h.trim()}</li>
+            ))}
+          </ul>
         </section>
       </div>
     </article>

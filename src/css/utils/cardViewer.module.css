@@ -193,3 +193,30 @@
 }
 
 /* #endregion */
+
+/* Zoomed: the card is seen through the stage, a framed window with rounded corners, and never
+   spills over the page around it. (The canvas is the stage and the shadow's room below it, 0.3 of
+   the stage's height: the clip keeps just the stage.) */
+.stage:global(.zoomed) > canvas {
+  clip-path: inset(0 0 calc(100% - 100% / 1.3) 0 round 20px);
+}
+
+.stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  box-shadow: inset 0 0 0 2px rgba(50, 50, 50, 0.14);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.stage:global(.zoomed)::after {
+  opacity: 1;
+}
+
+.stage:global(.zoomed) {
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.55);
+}

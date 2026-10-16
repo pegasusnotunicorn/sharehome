@@ -109,8 +109,11 @@ export function play(sound: Sound) {
       note(a, 1200, 0, 0.05, "square", 0.04);
       break;
     case "timeUp":
-      note(a, 392, 0, 0.25, "sawtooth", 0.08);
-      note(a, 330, 0.22, 0.45, "sawtooth", 0.08);
+      // an alarm clock going off: three bursts of fast rings, then a low buzz
+      for (let burst = 0; burst < 3; burst++)
+        for (let r = 0; r < 6; r++) note(a, r % 2 ? 1568 : 1760, burst * 0.42 + r * 0.055, 0.05, "square", 0.16);
+      note(a, 220, 1.3, 0.55, "sawtooth", 0.22);
+      note(a, 165, 1.3, 0.55, "sawtooth", 0.18);
       break;
     case "wrap":
       note(a, 784, 0, 0.12);

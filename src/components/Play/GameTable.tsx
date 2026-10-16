@@ -160,8 +160,9 @@ const Flight = ({ plan, done }: { plan: FlightPlan; done: () => void }) => {
 
 // a pile of point tokens: a rainbow one for each 5, a plain one for each 1 left over
 const TokenStack = ({ count }: { count: number }) => {
-  const fives = Math.floor(count / 5);
-  const ones = count % 5;
+  // (at most five pieces shown, so the pile keeps its size)
+  const fives = Math.min(5, Math.floor(count / 5));
+  const ones = Math.min(5 - fives, count % 5);
   return (
     <span className={styles.tokenStack} aria-label={`${count} point${count === 1 ? "" : "s"} in tokens`}>
       {Array.from({ length: fives }, (_, i) => (
@@ -341,6 +342,24 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   const slotRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const playCardsRef = useRef<HTMLSpanElement>(null);
   const [flights, setFlights] = useState<FlightPlan[]>([]);
+  // time's up, across the whole screen for a moment
+  const [timeUp, setTimeUp] = useState<{ episode: number; points: number } | null>(null);
+  const lastPhase = useRef(game.phase);
+  // then: did you play one of your traits this episode?
+  const [traitPick, setTraitPick] = useState(false);
+  const endTimeUp = () => {
+    setTimeUp(null);
+    const hand = game.hands[me];
+    if (game.phase === "break" && hand && hand.traits.some((t) => t.done === null) && !hand.traits.some((t) => t.done === game.episode))
+      setTraitPick(true);
+  };
+  useEffect(() => {
+    if (game.phase === "break" && lastPhase.current === "playing") {
+      const e = game.episodes[game.episode - 1];
+      setTimeUp({ episode: game.episode, points: e.completed.reduce((n, c) => n + DIRECTION_POINTS[c.deck] + c.tokens, 0) });
+    }
+    lastPhase.current = game.phase;
+  }, [game.phase, game.episode, game.episodes]);
   const inFlight = useMemo(() => new Set(flights.map((f) => f.id)), [flights]);
   // (cards on the table when it first opens are just there: only cards dealt after come from a deck)
   const [dealing, setDealing] = useState(false);
@@ -678,7 +697,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                       <div className={styles.pastCount}>
                         <span key={`n${bumped}`} className={`${styles.pastTokensLine}${bumped ? ` ${styles.countPop}` : ""}`}>
                           <TokenStack count={past.tokens} />
-                          {past.tokens > 0 && <b>{past.tokens}</b>}
+                          <b>{past.tokens > 0 ? past.tokens : ""}</b>
                         </span>
                         <button
                           type="button"
@@ -725,6 +744,50 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
           <div className={styles.zoomCards}>
             <img src={art.character(zoom.character)} alt="" width="768" height="444" />
             <img src={art.characterBack(zoom.character)} alt={`${name("character", zoom.character)}: details`} width="768" height="444" />
+          </div>
+        </Modal>
+      )}
+      {timeUp && (
+        <div className={styles.timeUp} onClick={endTimeUp} role="alert" onAnimationEnd={(e) => e.animationName.includes("timeUpOut") && endTimeUp()}>
+          <div className={styles.timeUpCard}>
+            <span className={styles.timeUpClock} aria-hidden>
+              ⏰
+            </span>
+            <h2 className={styles.timeUpTitle}>Time’s up!</h2>
+            <span className={styles.timeUpPoints}>
+              Episode {timeUp.episode}: +{timeUp.points}
+            </span>
+          </div>
+        </div>
+      )}
+      {traitPick && game.hands[me] && (
+        <Modal onClose={() => setTraitPick(false)} panelClassName={`${modalStyles.panel} ${styles.traitPanel}`} ariaLabel="Your traits">
+          <h2 className={modalStyles.title}>Did you play a trait?</h2>
+          <div className={styles.traitPick}>
+            {game.hands[me].traits.map((t, slot) =>
+              t.done === null ? (
+                <button
+                  key={t.kind}
+                  type="button"
+                  className={styles.traitPickCard}
+                  onClick={() => {
+                    send({ t: "trait", player: me, slot });
+                    setTraitPick(false);
+                  }}
+                  aria-label={name(t.kind, t.i) || `${t.kind} trait`}
+                >
+                  <img src={art.trait(t.kind, t.i)} alt="" width="768" height="219" />
+                </button>
+              ) : (
+                <span key={t.kind} className={`${styles.traitPickCard} ${styles.traitPickDone}`}>
+                  <img src={art.trait(t.kind, t.i)} alt="" width="768" height="219" />
+                  <span className={styles.traitStamp}>✓ Ep {t.done}</span>
+                </span>
+              )
+            )}
+          </div>
+          <div className={modalStyles.actions}>
+            <DefaultButton onClick={() => setTraitPick(false)} text="Not this time" variant="secondary" border="dark" />
           </div>
         </Modal>
       )}
@@ -1019,12 +1082,12 @@ const Prompt = ({ game, epPoints }: { game: GameView; epPoints: number }) => {
   else if (game.phase === "break")
     text = (
       <>
-        <b>That’s a wrap! +{epPoints}</b> Tap any traits you played.
+        <b>Episode {game.episode} done, +{epPoints}.</b> Tap any traits you played, then go on.
       </>
     );
   if (!text) return null;
   return (
-    <div className={`${styles.prompt}${game.phase === "break" ? ` ${styles.promptWrap}` : ""}`} role="status">
+    <div className={styles.prompt} role="status">
       {text}
     </div>
   );

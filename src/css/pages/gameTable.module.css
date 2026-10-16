@@ -359,11 +359,8 @@
 
 .prompt {
   padding: 0.85rem 1.15rem;
-  border-radius: 6px;
-  background:
-    linear-gradient(#e85d55, #e85d55) 0 0 / 100% 4px no-repeat,
-    repeating-linear-gradient(transparent 0 26px, rgba(91, 124, 191, 0.18) 26px 27px),
-    #fffdf6;
+  border-radius: 12px;
+  background: #fffdf6;
   box-shadow: var(--card-shadow);
   font-family: "Roboto Light";
   font-size: 1rem;
@@ -378,12 +375,6 @@
   font-weight: normal;
 }
 
-.promptWrap {
-  background:
-    linear-gradient(#5f5aa2, #5f5aa2) 0 0 / 100% 4px no-repeat,
-    repeating-linear-gradient(transparent 0 26px, rgba(91, 124, 191, 0.18) 26px 27px),
-    #fffdf6;
-}
 
 @keyframes fadeIn {
   from {
@@ -2034,4 +2025,154 @@
 .pastTokensLine b {
   font-family: "Rowdies-Bold";
   font-size: 0.8rem;
+}
+
+/* time's up: across the whole screen, big, then gone (or tap it away) */
+.timeUp {
+  position: fixed;
+  inset: 0;
+  z-index: 200000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: radial-gradient(circle at 50% 50%, rgba(216, 30, 24, 0.55), rgba(28, 26, 43, 0.82) 70%);
+  backdrop-filter: blur(3px);
+  cursor: pointer;
+  animation: timeUpIn 0.25s ease-out both, timeUpOut 0.4s 2.6s ease-in forwards;
+}
+
+.timeUpCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  text-align: center;
+  animation: timeUpPop 0.7s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+
+.timeUpClock {
+  font-size: clamp(4rem, 14vw, 8rem);
+  line-height: 1;
+  animation: ring 0.12s 0.2s linear 8 alternate;
+}
+
+.timeUpTitle {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(3.2rem, 12vw, 7.5rem);
+  font-weight: normal;
+  line-height: 0.95;
+  color: #fff;
+  text-shadow:
+    0 6px 0 #8f1410,
+    0 14px 30px rgba(0, 0, 0, 0.45);
+  transform: rotate(-3deg);
+}
+
+.timeUpPoints {
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  background: #f1db4b;
+  box-shadow: 0 4px 0 #b39d1b;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  color: #323232;
+  transform: rotate(2deg);
+}
+
+@keyframes timeUpIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes timeUpOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes timeUpPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-12deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.12) rotate(3deg);
+  }
+}
+
+@keyframes ring {
+  from {
+    transform: rotate(-14deg);
+  }
+  to {
+    transform: rotate(14deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeUp,
+  .timeUpCard,
+  .timeUpClock {
+    animation: timeUpOut 0.3s 2.6s forwards;
+  }
+}
+
+/* after time's up: your traits, big, to tap the one you played */
+.traitPanel {
+  max-width: 30rem;
+}
+
+.traitPick {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin: 0.4rem 0 1.4rem;
+}
+
+.traitPickCard {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  box-shadow: 0 1px 0 #ebe6da, 0 2px 0 #d9d2c3, 0 8px 14px -8px rgba(30, 40, 70, 0.45);
+  cursor: pointer;
+}
+
+.traitPickCard img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+button.traitPickCard:hover {
+  animation: wiggle 0.45s ease-in-out;
+}
+
+button.traitPickCard:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
+}
+
+.traitPickDone img {
+  filter: grayscale(0.8);
+  opacity: 0.5;
+}
+
+/* the callback counter keeps one width, whatever the count, so its minus never moves */
+.pastTokensLine .tokenStack {
+  width: 54px;
+}
+
+.pastTokensLine b {
+  display: inline-block;
+  min-width: 1.6em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }

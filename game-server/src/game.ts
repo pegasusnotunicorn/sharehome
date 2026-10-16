@@ -47,7 +47,8 @@ const dealHand = (game: StoredGame): Hand | null => {
   };
 };
 
-export function newGame(playerIds: string[]): StoredGame {
+// (picks: the characters players chose in the waiting room; everyone else is dealt one)
+export function newGame(playerIds: string[], picks: Record<string, number> = {}): StoredGame {
   const game: StoredGame = {
     phase: "ready",
     episode: 1,
@@ -74,7 +75,14 @@ export function newGame(playerIds: string[]): StoredGame {
     for (let s = 0; s < FACE_UP_PER_DECK; s++) game.faceUp[deck].push(game.piles[deck].shift() ?? null);
   }
   game.episodes.push({ card: game.piles.episodes.shift()!, tokens: 0, completed: [] });
-  for (const p of playerIds) addPlayer(game, p);
+  for (const p of playerIds) {
+    const chosen = picks[p];
+    if (chosen !== undefined && game.piles.characters.includes(chosen)) {
+      game.piles.characters.splice(game.piles.characters.indexOf(chosen), 1);
+      game.piles.characters.unshift(chosen);
+    }
+    addPlayer(game, p);
+  }
   countLeft(game);
   return game;
 }

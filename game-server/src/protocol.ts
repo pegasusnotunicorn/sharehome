@@ -128,6 +128,9 @@ export interface RoomView {
   hostId: string | null;
   phase: "lobby" | "game";
   players: Player[];
+  // in the waiting room: the character each player picked (by its place in the deck), and who's ready
+  picks: Record<string, number>;
+  ready: Record<string, boolean>;
   game: GameView | null;
   // the server's clock as it sent this, so the page can line its own clock up with it
   now: number;
@@ -146,6 +149,8 @@ export type ClientMessage =
   | { t: "makeHost"; id: string } // host only
   | { t: "leave" }
   | { t: "start" } // host only
+  | { t: "pick"; character: number | null } // in the waiting room: yours, or none
+  | { t: "ready"; ready: boolean } // once you've picked
   | { t: "newCharacter" } // your own, before the first episode starts
   | { t: "startClock" }
   | { t: "pause" }

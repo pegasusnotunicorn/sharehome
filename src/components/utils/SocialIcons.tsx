@@ -70,8 +70,10 @@ export const SOCIAL_LINKS: SocialLink[] = [
   },
 ];
 
-export const SocialIconDefs = ({ className }: { className?: string }) => (
-  <svg aria-hidden="true" className={className}>
+// The icons' shapes, once for the whole site (Router.tsx): the menu, the footer and the contact page
+// all draw from them, whichever of those is on the page
+export const SocialIconDefs = () => (
+  <svg aria-hidden="true" style={{ position: "absolute", width: 0, height: 0, overflow: "hidden", pointerEvents: "none" }}>
     <symbol
       id="social-icon-email"
       viewBox="0 0 24 24"

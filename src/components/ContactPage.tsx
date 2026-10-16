@@ -4,7 +4,7 @@ import { NavLink } from "react-router";
 import { BUY_DESTINATION, recordBuyClick } from "./utils/BuyButton";
 import { trackEvent } from "./utils/trackEvent";
 import PolaroidJourney from "./utils/PolaroidJourney";
-import { SOCIAL_LINKS, SocialIcon, SocialIconDefs } from "./utils/SocialIcons";
+import { SOCIAL_LINKS, SocialIcon } from "./utils/SocialIcons";
 
 const ContactPage = () => {
   const [isBioExpanded, setIsBioExpanded] = useState(false);
@@ -15,7 +15,6 @@ const ContactPage = () => {
 
   return (
     <div className={`content ${styles.contactPage}`}>
-      <SocialIconDefs className={styles.socialIconDefs} />
       <header className={styles.intro}>
         <p className={styles.eyebrow}>Say hi</p>
         <h1 className={styles.title}>Contact us</h1>

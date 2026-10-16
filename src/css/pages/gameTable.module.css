@@ -866,7 +866,7 @@
 /* the dock: the two apps */
 .dock {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   gap: 0.3rem;
   margin-top: 0.35rem;
   padding: 0.25rem;
@@ -1471,7 +1471,7 @@
 
   .dock {
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
     margin: 0;
     border-radius: 10px 20px 20px 10px;
   }
@@ -2289,73 +2289,55 @@ button.traitPickCard:focus-visible {
 
 /* #region--------------------------------------THE R.E.M.O.T.E. */
 
-/* a little remote lying on the table's bottom-left corner: easy to find, out of the way */
-.remoteOnTable {
-  position: absolute;
-  left: 22px;
-  bottom: 22px;
-  z-index: 5;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 46px;
-  padding: 0;
-  border: 0;
-  border-radius: 9px;
-  background: linear-gradient(160deg, #4a4858, #2c2b36);
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
-    0 4px 8px -2px rgba(20, 20, 40, 0.45);
-  opacity: 0.75;
-  cursor: pointer;
-  transform: rotate(-12deg);
-  transition: opacity 0.15s ease;
-}
-
-.remoteOnTable:hover,
-.remoteOnTable:focus-visible {
-  opacity: 1;
-}
-
-.remoteDots {
-  display: grid;
-  grid-template-columns: 7px 7px;
-  gap: 3px;
-}
-
-.remoteDots i {
-  width: 7px;
-  height: 7px;
-  border-radius: 2px;
-}
-
-.remotePanel {
-  max-width: 26rem;
-}
-
-.remoteGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.6rem;
-}
-
-.remoteButton {
+/* the phone's remote app: six keys */
+.remoteApp {
   display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.45rem;
-  border: 0;
-  border-radius: 14px;
-  background: #f7f5ef;
-  font-family: "Rowdies-Regular";
-  font-size: 0.92rem;
-  text-align: left;
-  color: #323232;
-  cursor: pointer;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
 }
 
-.remoteButton:hover {
-  background: #efece3;
+.remotePad {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.remotePadKey {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.3rem 0.1rem;
+  border: 0;
+  border-radius: 12px;
+  background: var(--c);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+  font-family: "Rowdies-Regular";
+  font-size: 0.56rem;
+  line-height: 1.05;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.remotePadKey:active {
+  transform: translateY(2px);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.remotePadKey svg {
+  width: 20px;
+  height: 20px;
+}
+
+.remoteNote {
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.66rem;
+  text-align: center;
+  color: rgba(244, 239, 227, 0.6);
 }
 
 .remoteKey {
@@ -2417,13 +2399,6 @@ button.traitPickCard:focus-visible {
   from {
     opacity: 0;
     transform: translate(-50%, -20px) scale(0.9);
-  }
-}
-
-@media only screen and (max-width: 760px) {
-  .remoteOnTable {
-    left: 14px;
-    bottom: 14px;
   }
 }
 

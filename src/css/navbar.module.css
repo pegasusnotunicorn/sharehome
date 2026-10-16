@@ -337,14 +337,6 @@
 
 /* ===== SOCIALS ===== */
 
-.navSocialDefs {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
 /* The nine socials in one row; on a phone narrow enough to make them smaller than a fingertip there,
    two even rows instead, five over four, the shorter one centred */
 .menuSocials {

@@ -10,7 +10,7 @@ import "../../css/utils/hamburger.css";
 import useWindowScroll from "../utils/useWindowScroll";
 import CharacterPinPopup from "../CharacterPinPopup";
 import { usePinPopup } from "../utils/usePinPopup";
-import { SOCIAL_LINKS, SocialIcon, SocialIconDefs } from "../utils/SocialIcons";
+import { SOCIAL_LINKS, SocialIcon } from "../utils/SocialIcons";
 
 interface NavbarMainProps {
   trailerPlaying?: boolean; // the home page's trailer is playing: the pin popup waits
@@ -80,7 +80,6 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
 
   return (
     <>
-      <SocialIconDefs className={styles.navSocialDefs} />
       {!trailerPlaying && showPopup && (
         <CharacterPinPopup closePopup={closePopup} followed={followed} />
       )}

@@ -17,6 +17,7 @@ import {
   CODE_PATTERN,
   MAX_PLAYERS,
   MIN_PLAYERS,
+  DECK_SIZES,
   cleanName,
   type ByeReason,
   type ClientMessage,
@@ -128,6 +129,9 @@ interface StoredRoom {
   emptySince: number | null;
   // the game on the table (null: in the lobby)
   game?: StoredGame | null;
+  // in the waiting room: who picked which character, and who's ready
+  picks?: Record<string, number>;
+  ready?: Record<string, boolean>;
 }
 
 export class Room extends DurableObject<Env> {
@@ -247,7 +251,35 @@ export class Room extends DurableObject<Env> {
       }
       case "start": {
         if (!isHost || room.game || room.players.length < MIN_PLAYERS) return;
-        room.game = newGame(room.players.map((p) => p.id));
+        room.game = newGame(
+          room.players.map((p) => p.id),
+          room.picks ?? {}
+        );
+        room.ready = {};
+        break;
+      }
+      case "pick": {
+        if (room.game) return;
+        const picks = (room.picks ??= {});
+        const ready = (room.ready ??= {});
+        if (msg.character === null) {
+          delete picks[playerId];
+          delete ready[playerId];
+          break;
+        }
+        const c = msg.character;
+        if (!Number.isInteger(c) || c < 0 || c >= DECK_SIZES.characters) return;
+        // (one player per character)
+        if (Object.entries(picks).some(([id, pick]) => pick === c && id !== playerId)) return;
+        picks[playerId] = c;
+        break;
+      }
+      case "ready": {
+        if (room.game) return;
+        const ready = (room.ready ??= {});
+        if (msg.ready && room.picks?.[playerId] === undefined) return;
+        if (msg.ready) ready[playerId] = true;
+        else delete ready[playerId];
         break;
       }
       case "toLobby": {
@@ -331,6 +363,8 @@ export class Room extends DurableObject<Env> {
     if (index < 0) return false;
     room.players.splice(index, 1);
     if (room.game) removeFromGame(room.game, id);
+    if (room.picks) delete room.picks[id];
+    if (room.ready) delete room.ready[id];
     for (const ws of this.ctx.getWebSockets(id)) this.bye(ws, reason, reason === "kicked" ? CLOSE_KICKED : CLOSE_LEFT);
     if (room.hostId === id) {
       const next = room.players.find((p) => this.isOnline(p.id)) ?? room.players[0];
@@ -358,6 +392,8 @@ export class Room extends DurableObject<Env> {
       hostId: room.hostId,
       phase: room.game ? "game" : "lobby",
       players: room.players.map((p) => ({ ...p, online: this.isOnline(p.id, closing) })),
+      picks: room.picks ?? {},
+      ready: room.ready ?? {},
       game: room.game ? gameView(room.game) : null,
       now: Date.now(),
     };

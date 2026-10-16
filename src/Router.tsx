@@ -14,6 +14,7 @@ import ScrollToTop from "./ScrollToTop";
 import Footer from "./components/Footer";
 import ExternalRedirect from "./components/ExternalRedirect";
 import useUTMPreservation from "./hooks/useUTMPreservation";
+import { SocialIconDefs } from "./components/utils/SocialIcons";
 
 const LandingPage = lazy(() => import("./components/Home/LandingPage"));
 const AboutPage = lazy(() => import("./components/About/AboutPage"));
@@ -67,6 +68,7 @@ const Router = () => {
   return (
     <BrowserRouter>
       <MetaTags />
+      <SocialIconDefs />
       <ScrollToTop />
       <AppRoutes />
     </BrowserRouter>

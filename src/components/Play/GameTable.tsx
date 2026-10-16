@@ -18,6 +18,7 @@ import {
 import DefaultButton from "../utils/DefaultButton";
 import Modal from "../utils/Modal";
 import Confirm from "./Confirm";
+import Finale from "./Finale";
 import { isMuted, play, setMuted } from "./sounds";
 import modalStyles from "../../css/utils/modal.module.css";
 import styles from "../../css/pages/gameTable.module.css";
@@ -226,7 +227,7 @@ const loadNames = () =>
     })
     .catch(() => ({})));
 
-const useNames = () => {
+export const useNames = () => {
   const [names, setNames] = useState<Names>({});
   useEffect(() => {
     let live = true;
@@ -320,7 +321,6 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   const [muted, setMutedState] = useState(isMuted);
   const [ending, setEnding] = useState(false);
   const [rules, setRules] = useState(false);
-  const [remoteOpen, setRemoteOpen] = useState(false);
   // a button just pressed on the R.E.M.O.T.E., by anyone: shown to everyone for a moment
   const [remoteShown, setRemoteShown] = useState<RemoteButton | null>(null);
   const lastRemote = useRef(game.remote?.id ?? null);
@@ -335,7 +335,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   }, [game.remote]);
   const [cloth, setCloth] = useState<Cloth>(readCloth);
   const [picking, setPicking] = useState(false);
-  const [phoneTab, setPhoneTab] = useState<"clock" | "log">("clock");
+  const [phoneTab, setPhoneTab] = useState<"clock" | "log" | "remote">("clock");
   // the newest log entry seen on the phone (a dot on the tab when there's something newer)
   const [seenLog, setSeenLog] = useState<string | null>(null);
   const clockTime = useWallClock();
@@ -569,7 +569,6 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                     </span>
                     <div className={styles.phoneActions}>
                       {game.phase === "ready" && <DefaultButton onClick={() => send({ t: "startClock" })} text="Start" color="red" />}
-                      {running && <DefaultButton onClick={() => send({ t: "pause" })} text="Pause" color="white" />}
                       {paused && <DefaultButton onClick={() => send({ t: "resume" })} text="Resume" color="red" />}
                       {game.phase === "break" && (
                         <DefaultButton
@@ -613,6 +612,30 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                         )}
                       </button>
                     </div>
+                  </div>
+                ) : phoneTab === "remote" ? (
+                  <div className={styles.remoteApp} id="phone-remote">
+                    <div className={styles.logHead}>
+                      <span>R.E.M.O.T.E.</span>
+                      <span className={styles.logClock}>{mmss(left)}</span>
+                    </div>
+                    <div className={styles.remotePad}>
+                      {REMOTE_BUTTONS.map((b) => (
+                        <button
+                          key={b}
+                          type="button"
+                          className={styles.remotePadKey}
+                          style={{ "--c": REMOTE[b].color } as CSSProperties}
+                          onClick={() => send({ t: "remote", button: b })}
+                          aria-label={`${REMOTE[b].label}: ${REMOTE[b].text}`}
+                          title={REMOTE[b].label}
+                        >
+                          <RemoteIcon d={REMOTE[b].icon} stroke={b === "replay"} />
+                          <span>{REMOTE[b].label}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <span className={styles.remoteNote}>Everyone sees it, not who pressed it.</span>
                   </div>
                 ) : (
                   <div className={styles.logApp} id="phone-log">
@@ -673,6 +696,20 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                   </svg>
                   What’s happened
                   {unread && <span className={styles.unread} aria-label="new" />}
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={phoneTab === "remote"}
+                  aria-controls="phone-remote"
+                  className={phoneTab === "remote" ? styles.dockOn : ""}
+                  onClick={() => setPhoneTab("remote")}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden>
+                    <rect x="7" y="2.5" width="10" height="19" rx="3" />
+                    <path d="M10 7h.01M14 7h.01M10 11h.01M14 11h.01M10 15h.01M14 15h.01" strokeWidth="3" />
+                  </svg>
+                  Remote
                 </button>
               </div>
               <span className={styles.homeBar} aria-hidden />
@@ -750,13 +787,6 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
           </div>
         </Modal>
       )}
-      <button type="button" className={styles.remoteOnTable} onClick={() => setRemoteOpen(true)} aria-label="The R.E.M.O.T.E. (safety tool)" title="R.E.M.O.T.E.">
-        <span className={styles.remoteDots} aria-hidden>
-          {REMOTE_BUTTONS.map((b) => (
-            <i key={b} style={{ background: REMOTE[b].color }} />
-          ))}
-        </span>
-      </button>
       {timeUp && (
         <div className={styles.timeUp} onClick={endTimeUp} role="alert" onAnimationEnd={(e) => e.animationName.includes("timeUpOut") && endTimeUp()}>
           <div className={styles.timeUpCard}>
@@ -805,7 +835,6 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
         <Flight key={f.id} plan={f} done={() => setFlights((all) => all.filter((x) => x.id !== f.id))} />
       ))}
       {rules && <RulesDialog close={() => setRules(false)} />}
-      {remoteOpen && <RemoteDialog press={(button) => send({ t: "remote", button })} close={() => setRemoteOpen(false)} />}
       {remoteShown && (
         <div className={styles.remoteShown} role="alert" onClick={() => setRemoteShown(null)} style={{ "--c": REMOTE[remoteShown].color } as CSSProperties}>
           <span className={styles.remoteKey}>
@@ -888,32 +917,6 @@ const RemoteIcon = ({ d, stroke }: { d: string; stroke?: boolean }) => (
   <svg viewBox="0 0 24 24" aria-hidden>
     <path d={d} fill={stroke ? "none" : "currentColor"} stroke={stroke ? "currentColor" : "none"} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
-);
-
-const RemoteDialog = ({ press, close }: { press: (b: RemoteButton) => void; close: () => void }) => (
-  <Modal onClose={close} panelClassName={`${modalStyles.panel} ${styles.remotePanel}`} ariaLabel="The R.E.M.O.T.E.">
-    <h2 className={modalStyles.title}>The R.E.M.O.T.E.</h2>
-    <p className={modalStyles.text}>Everyone sees the button, not who pressed it.</p>
-    <div className={styles.remoteGrid}>
-      {REMOTE_BUTTONS.map((b) => (
-        <button
-          key={b}
-          type="button"
-          className={styles.remoteButton}
-          style={{ "--c": REMOTE[b].color } as CSSProperties}
-          onClick={() => {
-            press(b);
-            close();
-          }}
-        >
-          <span className={styles.remoteKey}>
-            <RemoteIcon d={REMOTE[b].icon} stroke={b === "replay"} />
-          </span>
-          {REMOTE[b].label}
-        </button>
-      ))}
-    </div>
-  </Modal>
 );
 
 // pressing and holding: once at once, then again and again, faster
@@ -1274,48 +1277,6 @@ const Seat = ({
         })}
       </ul>
     </article>
-  );
-};
-
-// the season's done: the ratings, as the rulebook has them
-const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; isHost: boolean; send: (msg: ClientMessage) => void }) => {
-  const s = score(game);
-  const host = room.players.find((p) => p.id === room.hostId);
-  return (
-    <section className={styles.finale}>
-      <p className={styles.finaleKicker}>{game.outOfCards ? "Out of direction cards · the ratings are in" : "Season finale · the ratings are in"}</p>
-      <h2 className={styles.finaleRating}>{s.rating}</h2>
-      <p className={styles.finaleScore}>
-        <b>{s.perPlayer}</b> points per player
-      </p>
-      <dl className={styles.breakdown}>
-        <div>
-          <dt>Direction cards</dt>
-          <dd>{s.cards}</dd>
-        </div>
-        <div>
-          <dt>Tokens</dt>
-          <dd>{s.tokens}</dd>
-        </div>
-        <div>
-          <dt>Character Arcs</dt>
-          <dd>{s.arcs}</dd>
-        </div>
-        <div>
-          <dt>
-            Total ÷ {s.players} player{s.players > 1 ? "s" : ""}
-          </dt>
-          <dd>
-            {s.total} ÷ {s.players}
-          </dd>
-        </div>
-      </dl>
-      {isHost ? (
-        <DefaultButton onClick={() => send({ t: "toLobby" })} text="Back to the room for another season" color="yellow" />
-      ) : (
-        <p className={styles.finaleNote}>{host?.name || "The host"} can start another season.</p>
-      )}
-    </section>
   );
 };
 

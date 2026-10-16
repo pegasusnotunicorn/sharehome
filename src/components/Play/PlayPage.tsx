@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { useNavigate, useParams } from "react-router";
 import { EPISODES, EPISODE_SECONDS, MAX_PLAYERS, MIN_PLAYERS, NAME_MAX, cleanName, type Player, type RoomView } from "../../../game-server/src/protocol";
 import CustomHelmet from "../utils/CustomHelmet";
@@ -9,7 +9,7 @@ import PageIntro from "../utils/PageIntro";
 import usePageTitle from "../utils/usePageTitle";
 import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, playerId, roomInfo, saveName, savedName } from "./gameServer";
 import Confirm from "./Confirm";
-import GameTable, { PLAYER_COLORS } from "./GameTable";
+import GameTable, { PLAYER_COLORS, useNames } from "./GameTable";
 import Toast from "./Toast";
 import useRoom from "./useRoom";
 import styles from "../../css/pages/playPage.module.css";
@@ -314,6 +314,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
   const { room, status, error, bye, send } = useRoom(code, name);
   const [removing, setRemoving] = useState<Player | null>(null);
   const [leaving, setLeaving] = useState(false);
+  const [startCheck, setStartCheck] = useState(false);
   const me = playerId();
 
   if (status === "refused") return <Missing code={code} full={error === "full"} />;
@@ -345,6 +346,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
   const isHost = room.hostId === me;
   const seats = Array.from({ length: MAX_PLAYERS }, (_, i) => room.players[i] ?? null);
   const canStart = isHost && room.players.length >= MIN_PLAYERS;
+  const notReady = room.players.filter((p) => !room.ready?.[p.id]);
   const reconnecting = status === "reconnecting" && (
     <p className={styles.reconnecting} role="status">
       <span className={styles.reconnectingDot} /> Reconnecting…
@@ -411,7 +413,12 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
             </li>
           </ul>
           {canStart ? (
-            <DefaultButton onClick={() => send({ t: "start" })} text="Start the show" color="red" className={styles.startButton} />
+            <DefaultButton
+              onClick={() => (notReady.length ? setStartCheck(true) : send({ t: "start" }))}
+              text="Start the show"
+              color="red"
+              className={styles.startButton}
+            />
           ) : (
             <button type="button" className={`${styles.startButton} ${styles.startWaiting}`} disabled>
               Start the show
@@ -419,6 +426,8 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
           )}
         </section>
       </div>
+
+      <CharacterPicker room={room} me={me} send={send} />
 
       <section className={styles.cast} aria-labelledby="cast-title">
         <div className={styles.castHead}>
@@ -448,6 +457,18 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
         </button>
       </div>
 
+      {startCheck && (
+        <Confirm
+          title="Start without everyone ready?"
+          text={`${notReady.map((p) => p.name).join(", ")} ${notReady.length === 1 ? "isn’t" : "aren’t"} ready yet. Anyone without a character gets a random one.`}
+          action="Start anyway"
+          onConfirm={() => {
+            setStartCheck(false);
+            send({ t: "start" });
+          }}
+          onClose={() => setStartCheck(false)}
+        />
+      )}
       {removing && (
         <Confirm
           title={`Remove ${removing.name}?`}
@@ -476,6 +497,53 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
   );
 };
 
+// the waiting room's characters: pick yours (one player each), then say you're ready
+const CharacterPicker = ({ room, me, send }: { room: RoomView; me: string; send: ReturnType<typeof useRoom>["send"] }) => {
+  const name = useNames();
+  const mine = room.picks?.[me];
+  const ready = !!room.ready?.[me];
+  const takenBy = (c: number) => room.players.find((p) => p.id !== me && room.picks?.[p.id] === c);
+  const color = (p: Player) => PLAYER_COLORS[p.color % PLAYER_COLORS.length];
+  const meP = room.players.find((p) => p.id === me);
+  return (
+    <section className={styles.picker} aria-labelledby="picker-title">
+      <div className={styles.castHead}>
+        <h2 className={styles.sectionTitle} id="picker-title">
+          Pick your character
+        </h2>
+        <DefaultButton
+          onClick={() => send({ t: "ready", ready: !ready })}
+          text={ready ? "Ready!" : mine === undefined ? "Pick one to get ready" : "I’m ready"}
+          color={ready ? "green" : "red"}
+          className={`${styles.readyButton}${mine === undefined ? ` ${styles.muted}` : ""}`}
+        />
+      </div>
+      <ul className={styles.pickGrid}>
+        {Array.from({ length: 25 }, (_, c) => {
+          const other = takenBy(c);
+          const isMine = mine === c;
+          return (
+            <li key={c}>
+              <button
+                type="button"
+                className={`${styles.pickCard}${isMine ? ` ${styles.pickMine}` : ""}${other ? ` ${styles.pickTaken}` : ""}`}
+                style={{ "--seat": isMine && meP ? color(meP) : other ? color(other) : undefined } as CSSProperties}
+                disabled={!!other}
+                onClick={() => send({ t: "pick", character: isMine ? null : c })}
+                aria-pressed={isMine}
+                aria-label={`${name("character", c) || `Character ${c + 1}`}${other ? `, taken by ${other.name}` : ""}`}
+              >
+                <img src={`/images/pieces/characters/${String(c + 1).padStart(2, "0")}.webp`} alt="" loading="lazy" width="768" height="444" />
+                {(isMine || other) && <span className={styles.pickWho}>{isMine ? "You" : other!.name}</span>}
+              </button>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+};
+
 const StartNote = ({ room, isHost }: { room: RoomView; isHost: boolean }) => {
   const host = room.players.find((p) => p.id === room.hostId);
   const short = MIN_PLAYERS - room.players.length;
@@ -485,7 +553,14 @@ const StartNote = ({ room, isHost }: { room: RoomView; isHost: boolean }) => {
         Waiting for {short} more player{short > 1 ? "s" : ""} to join.
       </p>
     );
-  if (isHost) return <p className={styles.showtimeLine}>Everyone in? You’re the host, so you start the show.</p>;
+  const ready = room.players.filter((p) => room.ready?.[p.id]).length;
+  if (ready < room.players.length)
+    return (
+      <p className={styles.showtimeLine}>
+        {ready} of {room.players.length} ready. {isHost ? "Pick your characters, then start the show." : "Pick your character, then hit Ready."}
+      </p>
+    );
+  if (isHost) return <p className={styles.showtimeLine}>Everyone’s ready. Start the show!</p>;
   return <p className={styles.showtimeLine}>Waiting for {host?.name || "the host"} to start the show.</p>;
 };
 
@@ -528,15 +603,22 @@ const Seat = ({
       className={`${styles.seat}${player.online ? "" : ` ${styles.seatAway}`}${mine ? ` ${styles.seatMine}` : ""}`}
       style={{ "--seat": colorOf(player) } as React.CSSProperties}
     >
-      <span className={styles.seatToken} aria-hidden>
-        {player.name.charAt(0).toUpperCase()}
-      </span>
+      {room.picks?.[player.id] !== undefined ? (
+        <span className={`${styles.seatToken} ${styles.seatPicked}`} aria-hidden>
+          <img src={`/images/pieces/characters/${String(room.picks[player.id] + 1).padStart(2, "0")}.webp`} alt="" />
+        </span>
+      ) : (
+        <span className={styles.seatToken} aria-hidden>
+          {player.name.charAt(0).toUpperCase()}
+        </span>
+      )}
 
       <span className={styles.seatName}>{player.name}</span>
 
       <span className={styles.seatTags}>
         {room.hostId === player.id && <span className={`${styles.tag} ${styles.tagHost}`}>Host</span>}
         {mine && <span className={styles.tag}>You</span>}
+        {room.ready?.[player.id] && <span className={`${styles.tag} ${styles.tagReady}`}>Ready</span>}
         {!player.online && <span className={styles.awayNote}>stepped out</span>}
       </span>
 

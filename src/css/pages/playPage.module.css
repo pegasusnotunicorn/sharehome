@@ -1195,3 +1195,129 @@
 .dialogFoot {
   margin-top: 1.4rem;
 }
+
+/* #region--------------------------------------PICKING CHARACTERS */
+
+.picker {
+  margin: 0 0 2.25rem;
+}
+
+.readyButton {
+  min-width: 11rem;
+}
+
+.pickGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pickCard {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  box-shadow: 0 1px 0 #ebe6da, 0 2px 0 #d9d2c3, 0 8px 14px -8px rgba(30, 40, 70, 0.4);
+  cursor: pointer;
+  transition: box-shadow 0.15s ease;
+}
+
+.pickCard img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.pickCard:hover:not(:disabled) {
+  animation: pickWiggle 0.45s ease-in-out;
+}
+
+@keyframes pickWiggle {
+  25% {
+    transform: rotate(1.6deg);
+  }
+  60% {
+    transform: rotate(-1.2deg);
+  }
+}
+
+.pickCard:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
+}
+
+.pickMine {
+  box-shadow:
+    0 0 0 3px #fff,
+    0 0 0 6px var(--seat),
+    0 12px 20px -10px rgba(30, 40, 70, 0.5);
+}
+
+.pickTaken {
+  cursor: default;
+}
+
+.pickTaken img {
+  filter: grayscale(0.85) brightness(0.9);
+  opacity: 0.55;
+}
+
+.pickWho {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  max-width: calc(100% - 12px);
+  padding: 0.12rem 0.55rem;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: var(--seat);
+  font-family: "Rowdies-Regular";
+  font-size: 0.72rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #fff;
+  transform: translateX(-50%);
+}
+
+/* a seat with its character picked: the picture in the token */
+.seatPicked {
+  overflow: hidden;
+  padding: 0;
+}
+
+.seatPicked img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 30%;
+}
+
+.tagReady {
+  background: #4f8a73;
+  color: #fff;
+}
+
+@media only screen and (max-width: 760px) {
+  .pickGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .picker .castHead {
+    flex-wrap: wrap;
+  }
+
+  .readyButton {
+    width: 100%;
+  }
+}
+
+/* #endregion */

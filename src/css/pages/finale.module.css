@@ -1,0 +1,464 @@
+/* The ratings (Play/Finale.tsx): a season poster (the cast at the kitchen table, the rating over it,
+   a rosette with the score), the cast's cards, the episodes and the sums, then sharing. Confetti
+   falls over all of it. */
+
+.finale {
+  --ink: #323232;
+  --night: #1c1a2b;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  text-align: center;
+}
+
+.finale p {
+  opacity: 1;
+}
+
+.confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 120000;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+
+/* #region--------------------------------------THE POSTER */
+
+.poster {
+  position: relative;
+  display: grid;
+  min-height: 30rem;
+  border-radius: 26px;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow:
+    0 0 0 8px #fffaf0,
+    0 30px 60px -26px rgba(28, 26, 43, 0.75);
+  animation: posterIn 0.7s cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
+}
+
+@keyframes posterIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) rotate(-1deg);
+  }
+}
+
+.posterArt {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+  animation: kenBurns 18s ease-in-out infinite alternate;
+}
+
+@keyframes kenBurns {
+  to {
+    transform: scale(1.08) translateY(-2%);
+  }
+}
+
+.posterShade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(70% 60% at 50% 55%, rgba(28, 26, 43, 0.25), rgba(28, 26, 43, 0.8)),
+    linear-gradient(rgba(28, 26, 43, 0.15), rgba(28, 26, 43, 0.85));
+}
+
+.posterText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem 1.5rem;
+}
+
+.finale .kicker {
+  margin: 0;
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  background: rgba(28, 26, 43, 0.6);
+  font-family: "Rowdies-Regular";
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #f1db4b;
+}
+
+.rating {
+  max-width: 48rem;
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(2.6rem, 7vw, 5.4rem);
+  font-weight: normal;
+  line-height: 0.98;
+  color: #fff;
+  text-shadow:
+    0 6px 0 #8f1410,
+    0 18px 40px rgba(0, 0, 0, 0.55);
+  transform: rotate(-2deg);
+  animation: stampIn 0.6s 0.3s cubic-bezier(0.2, 1.5, 0.4, 1) both;
+}
+
+@keyframes stampIn {
+  from {
+    opacity: 0;
+    transform: rotate(-8deg) scale(1.6);
+  }
+}
+
+/* the score on an award rosette */
+.rosette {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 9.5rem;
+  height: 9.5rem;
+  margin-top: 0.5rem;
+  animation: rosetteIn 0.7s 0.7s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+
+@keyframes rosetteIn {
+  from {
+    opacity: 0;
+    transform: scale(0.3) rotate(-30deg);
+  }
+}
+
+.rosetteRibbons {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: repeating-conic-gradient(#d81e18 0 10deg, #f1db4b 10deg 20deg);
+  clip-path: polygon(50% 0%, 61% 8%, 75% 5%, 81% 18%, 95% 25%, 92% 39%, 100% 50%, 92% 61%, 95% 75%, 81% 82%, 75% 95%, 61% 92%, 50% 100%, 39% 92%, 25% 95%, 19% 82%, 5% 75%, 8% 61%, 0% 50%, 8% 39%, 5% 25%, 19% 18%, 25% 5%, 39% 8%);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+  animation: spin 30s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rosetteFace {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 72%;
+  height: 72%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fffbe8, #f7e7a6);
+  box-shadow:
+    inset 0 0 0 4px #e0a91b,
+    inset 0 -6px 0 rgba(0, 0, 0, 0.08);
+}
+
+.rosetteFace b {
+  font-family: "Rowdies-Bold";
+  font-size: 2.6rem;
+  font-weight: normal;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.rosetteFace small {
+  max-width: 5.5rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.68rem;
+  line-height: 1.1;
+  color: rgba(50, 50, 50, 0.75);
+}
+
+/* #endregion */
+
+/* #region--------------------------------------THE CAST AND THE SEASON */
+
+.cast {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.castCard {
+  width: min(13rem, 42vw);
+  margin: 0;
+  transform: rotate(var(--r));
+  animation: dealIn 0.5s var(--d) cubic-bezier(0.2, 1.3, 0.4, 1) both;
+}
+
+@keyframes dealIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px) rotate(calc(var(--r) * 4)) scale(0.8);
+  }
+}
+
+.castCard img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 5px #fffaf0,
+    0 0 0 8px var(--seat),
+    0 16px 26px -12px rgba(30, 40, 70, 0.55);
+}
+
+.castCard figcaption {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.8rem;
+}
+
+.castCard b {
+  font-family: "Rowdies-Bold";
+  font-size: 1.1rem;
+  font-weight: normal;
+  color: var(--seat);
+}
+
+.castCard span {
+  font-family: "GochiHand";
+  font-size: 1.05rem;
+  color: rgba(50, 50, 50, 0.75);
+}
+
+.season {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(50, 50, 50, 0.08), 0 18px 34px -26px rgba(40, 30, 20, 0.45);
+}
+
+.episodes {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.episode {
+  margin: 0;
+  transform: rotate(var(--r));
+}
+
+.episode img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 1px 0 #ebe6da, 0 2px 0 #d9d2c3, 0 8px 14px -8px rgba(30, 40, 70, 0.45);
+}
+
+.episode figcaption {
+  margin-top: 0.5rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.85rem;
+  color: rgba(50, 50, 50, 0.75);
+}
+
+.episode b {
+  color: #4f8a73;
+}
+
+.sums {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.sums div {
+  padding: 0.6rem;
+  border-radius: 12px;
+  background: #f7f5ef;
+}
+
+.sums dt {
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.75rem;
+  color: rgba(50, 50, 50, 0.7);
+}
+
+.sums dd {
+  margin: 0.1rem 0 0;
+  font-family: "Rowdies-Bold";
+  font-size: 1.35rem;
+  color: var(--ink);
+}
+
+.sums .sumTotal {
+  background: #fbf3cf;
+}
+
+/* #endregion */
+
+/* #region--------------------------------------SHARING */
+
+.share {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 1.75rem;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 22px;
+  background:
+    radial-gradient(90% 80% at 85% 0%, rgba(95, 90, 162, 0.55), transparent 65%),
+    var(--night);
+  color: #f4efe3;
+  text-align: left;
+}
+
+.sharePreview img,
+.shareLoading {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1080 / 1350;
+  border-radius: 12px;
+  box-shadow: 0 18px 30px -14px rgba(0, 0, 0, 0.6);
+  transform: rotate(-2deg);
+}
+
+.shareLoading {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.shareSide h3 {
+  margin: 0 0 1rem;
+  font-family: "Rowdies-Bold";
+  font-size: 1.8rem;
+  font-weight: normal;
+  color: #fff;
+}
+
+.shareMain {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.25rem;
+}
+
+.social {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  font-family: "Rowdies-Bold";
+  font-size: 1rem;
+  color: #fff;
+  text-decoration: none;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
+}
+
+.social:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.social svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.shareNote {
+  display: block;
+  min-height: 1.4rem;
+  margin-top: 0.8rem;
+  font-family: "GochiHand";
+  font-size: 1.15rem;
+  color: #f1db4b;
+}
+
+.again {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1rem;
+}
+
+.again p {
+  margin: 0;
+  font-family: "GochiHand";
+  font-size: 1.25rem;
+  color: rgba(50, 50, 50, 0.7);
+}
+
+/* #endregion */
+
+@media (prefers-reduced-motion: reduce) {
+  .poster,
+  .posterArt,
+  .rating,
+  .rosette,
+  .rosetteRibbons,
+  .castCard {
+    animation: none;
+  }
+}
+
+@media only screen and (max-width: 860px) {
+  .season,
+  .share {
+    grid-template-columns: 1fr;
+  }
+
+  .sharePreview {
+    max-width: 18rem;
+    margin: 0 auto;
+  }
+
+  .shareSide {
+    text-align: center;
+  }
+
+  .shareMain,
+  .socials {
+    justify-content: center;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .poster {
+    min-height: 24rem;
+    border-radius: 18px;
+  }
+
+  .episodes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .season,
+  .share {
+    padding: 1rem;
+  }
+}

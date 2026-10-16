@@ -79,7 +79,15 @@ const Stage = ({
       {lead && <p className={styles.lead}>{lead}</p>}
       {children && <div className={styles.stageActions}>{children}</div>}
     </div>
-    {art && <img className={styles.stageArt} src="/images/cards-floating.webp" alt="" width="1200" height="900" />}
+    {art && (
+      <img
+        className={styles.stageArt}
+        src="/images/illustrations/splash-1000.webp"
+        alt="Six of the game's characters around a kitchen table"
+        width="1000"
+        height="600"
+      />
+    )}
   </header>
 );
 
@@ -181,19 +189,17 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
 
       <div className={styles.doors}>
         <form className={`${styles.door} ${styles.doorHost}`} onSubmit={create}>
-          <span className={styles.doorNumber}>A</span>
           <h2 className={styles.doorTitle}>Host a game</h2>
           <p className={styles.doorNote}>Make a room and you’re the host: you start the show when everyone’s in.</p>
           <NameField name={name} setName={setName} />
-          <DefaultButton button="submit" text={busy ? "Making a room…" : "Create a game"} color="red" className={styles.wide} />
+          <DefaultButton button="submit" text={busy ? "Making a room…" : "Create a game"} color="red" className={`${styles.wide} ${styles.doorButton}`} />
         </form>
 
         <form className={`${styles.door} ${styles.doorJoin}`} onSubmit={join}>
-          <span className={styles.doorNumber}>B</span>
           <h2 className={styles.doorTitle}>Join a game</h2>
           <p className={styles.doorNote}>Type the four letters your host sent you, or just open their link.</p>
           <CodeInput code={code} setCode={setCode} />
-          <DefaultButton button="submit" text="Join" color="dark" className={`${styles.wide}${isCode(code) ? "" : ` ${styles.muted}`}`} />
+          <DefaultButton button="submit" text="Join" color="dark" className={`${styles.wide} ${styles.doorButton}${isCode(code) ? "" : ` ${styles.muted}`}`} />
         </form>
       </div>
 

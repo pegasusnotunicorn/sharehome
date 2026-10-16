@@ -134,18 +134,21 @@
   margin-top: 1.6rem;
 }
 
+/* the key art (the cast around the kitchen table), framed like a still from the show */
 .stageArt {
-  width: 115%;
+  width: 100%;
   height: auto;
-  margin: -2rem -10% -2.5rem 0;
-  filter: drop-shadow(0 26px 30px rgba(0, 0, 0, 0.45));
-  transform: rotate(-4deg);
+  border: 6px solid #fffaf0;
+  border-radius: 16px;
+  box-sizing: border-box;
+  box-shadow: 0 26px 40px -18px rgba(0, 0, 0, 0.65);
+  transform: rotate(2.5deg);
   animation: drift 7s ease-in-out infinite alternate;
 }
 
 @keyframes drift {
   to {
-    transform: rotate(-1deg) translateY(-8px);
+    transform: rotate(1deg) translateY(-6px);
   }
 }
 
@@ -237,21 +240,6 @@
 .doorAlone {
   max-width: 30rem;
   margin: 0 auto 1.75rem;
-}
-
-.doorNumber {
-  position: absolute;
-  top: 1.25rem;
-  right: 1.4rem;
-  display: grid;
-  place-items: center;
-  width: 2.1rem;
-  height: 2.1rem;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--door) 12%, #fff);
-  font-family: "Rowdies-Bold";
-  font-size: 1rem;
-  color: var(--door);
 }
 
 .doorTitle {
@@ -384,10 +372,16 @@
 
 /* #region--------------------------------------BEFORE A ROOM */
 
+/* (the two cards the same height, their buttons at their feet, on one line) */
 .doors {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  align-items: stretch;
   gap: 1.5rem;
+}
+
+.doorButton {
+  margin-top: auto;
 }
 
 /* #endregion */
@@ -1041,8 +1035,8 @@
   }
 
   .stageArt {
-    width: min(100%, 26rem);
-    margin: -0.5rem auto -2rem;
+    width: min(100%, 28rem);
+    margin: 1.5rem auto 0;
   }
 
   .seats {

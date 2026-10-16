@@ -735,8 +735,7 @@
 .seatCorner:focus-visible,
 .seatMenu button:focus-visible,
 .seatInvite:focus-visible,
-.textButton:focus-visible,
-.chip:focus-visible {
+.textButton:focus-visible {
   outline: 3px solid var(--btn-focus);
   outline-offset: 2px;
 }
@@ -793,29 +792,6 @@
 
 .seatMenu .danger {
   color: #b3160f;
-}
-
-.rename {
-  display: flex;
-  gap: 0.4rem;
-  width: 100%;
-}
-
-.renameInput {
-  height: 40px;
-  text-align: center;
-}
-
-.chip {
-  flex: none;
-  padding: 0 0.85rem;
-  border: 2px solid var(--btn-ink);
-  border-radius: 10px;
-  background: var(--btn-ink);
-  font-family: "Rowdies-Regular";
-  font-size: 0.9rem;
-  color: #fff;
-  cursor: pointer;
 }
 
 /* an open seat: a dashed outline, the first one an invite */
@@ -918,13 +894,64 @@
   color: var(--ink);
 }
 
-/* (the stage, waiting for its cast) */
-.showtimeArt {
-  align-self: center;
-  width: 9.5rem;
-  height: auto;
-  margin: auto 0;
+/* before the show: who's in, how long it takes, the call */
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0.25rem 0 0.5rem;
+  padding: 0;
+  list-style: none;
 }
+
+.checklist li {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 14px;
+  background: #f7f5ef;
+}
+
+.checklist img,
+.checklist svg {
+  justify-self: center;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  color: #5f5aa2;
+}
+
+.checklist span {
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto Light";
+  font-size: 0.88rem;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+
+.checklist b {
+  font-family: "Rowdies-Regular";
+  font-size: 0.98rem;
+  font-weight: normal;
+  color: var(--ink);
+}
+
+.checklist a {
+  width: fit-content;
+  color: #5f5aa2;
+}
+
+.checkDone {
+  box-shadow: inset 0 0 0 1.5px rgba(79, 138, 115, 0.45);
+}
+
+.checklist .checkDone {
+  background: #eef6f1;
+}
+
 
 
 
@@ -975,50 +1002,6 @@
 
 .textButton:hover {
   color: var(--ink);
-}
-
-/* #endregion */
-
-/* #region--------------------------------------DIALOGS */
-
-.dialog {
-  position: relative;
-  width: 100%;
-  max-width: 26rem;
-  padding: 2rem 1.75rem 1.6rem;
-  box-sizing: border-box;
-  border-radius: 22px;
-  background: #fff;
-  box-shadow:
-    inset 0 6px 0 #d81e18,
-    0 30px 60px -30px rgba(0, 0, 0, 0.5);
-  text-align: left;
-  animation: pop 0.18s ease-out both;
-}
-
-
-.dialogTitle {
-  margin: 0 2.5rem 0.5rem 0;
-  font-family: "Rowdies-Bold";
-  font-size: 1.5rem;
-  font-weight: normal;
-  line-height: 1.15;
-  color: #323232;
-}
-
-.dialog .dialogText {
-  margin: 0 0 1.4rem;
-  font-family: "Roboto Light";
-  font-size: 1rem;
-  line-height: 1.45;
-  color: rgba(50, 50, 50, 0.8);
-  opacity: 1;
-}
-
-.dialogActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.6rem;
 }
 
 /* #endregion */
@@ -1127,9 +1110,7 @@
     text-align: center;
   }
 
-  .showtimeArt {
-    display: none;
-  }
+
 
   .showtime .showtimeLine {
     font-size: 1.1rem;
@@ -1146,9 +1127,6 @@
     width: 100%;
   }
 
-  .dialogActions > * {
-    flex: 1;
-  }
 }
 
 /* the invite link's page: the opening, the name and the call, one width */
@@ -1230,4 +1208,9 @@
   .toast {
     bottom: 5.5rem;
   }
+}
+
+/* a dialog's buttons, under a field */
+.dialogFoot {
+  margin-top: 1.4rem;
 }

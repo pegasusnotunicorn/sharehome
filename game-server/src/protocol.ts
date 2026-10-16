@@ -64,6 +64,8 @@ export interface Hand {
 export interface CompletedCard {
   id: string;
   deck: DirectionDeck;
+  // where it lay face up
+  slot: number;
   i: number;
   // tokens from players who'd had something to say for it too
   tokens: number;

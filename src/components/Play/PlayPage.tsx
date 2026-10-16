@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useNavigate, useParams } from "react-router";
-import { MAX_PLAYERS, MIN_PLAYERS, NAME_MAX, cleanName, type Player, type RoomView } from "../../../game-server/src/protocol";
+import { EPISODES, EPISODE_SECONDS, MAX_PLAYERS, MIN_PLAYERS, NAME_MAX, cleanName, type Player, type RoomView } from "../../../game-server/src/protocol";
 import CustomHelmet from "../utils/CustomHelmet";
 import DefaultButton from "../utils/DefaultButton";
 import Modal from "../utils/Modal";
+import modalStyles from "../../css/utils/modal.module.css";
 import PageIntro from "../utils/PageIntro";
 import usePageTitle from "../utils/usePageTitle";
 import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, playerId, roomInfo, saveName, savedName } from "./gameServer";
@@ -374,7 +375,35 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
             </span>
             <StartNote room={room} isHost={isHost} />
           </div>
-          <img className={styles.showtimeArt} src="/images/illustrations/acting.webp" alt="" width="600" height="600" loading="lazy" />
+          <ul className={styles.checklist}>
+            <li className={room.players.length >= MIN_PLAYERS ? styles.checkDone : ""}>
+              <img src="/images/icons/playercount.svg" alt="" width="24" height="24" />
+              <span>
+                <b>
+                  {room.players.length} of {MAX_PLAYERS} players in
+                </b>
+                {room.players.length < MIN_PLAYERS ? `At least ${MIN_PLAYERS} to start` : "Enough to start"}
+              </span>
+            </li>
+            <li>
+              <img src="/images/icons/sandclock.svg" alt="" width="16" height="26" />
+              <span>
+                <b>
+                  {EPISODES} episodes, {EPISODE_SECONDS / 60} minutes each
+                </b>
+                About 15 minutes in all
+              </span>
+            </li>
+            <li>
+              <DiscordIcon />
+              <span>
+                <b>Everyone on a call?</b>
+                <a href={DISCORD_URL} target="_blank" rel="noreferrer">
+                  Grab a voice room on our Discord
+                </a>
+              </span>
+            </li>
+          </ul>
           {canStart ? (
             <DefaultButton onClick={() => send({ t: "start" })} text="Start the show" color="red" className={styles.startButton} />
           ) : (
@@ -497,35 +526,7 @@ const Seat = ({
         {player.name.charAt(0).toUpperCase()}
       </span>
 
-      {editing ? (
-        <form
-          className={styles.rename}
-          onSubmit={(e) => {
-            e.preventDefault();
-            const clean = cleanName(draft);
-            if (clean) {
-              send({ t: "rename", name: clean });
-              saveName(clean);
-            }
-            setEditing(false);
-          }}
-        >
-          <input
-            className={`${styles.input} ${styles.renameInput}`}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value.slice(0, NAME_MAX))}
-            onKeyDown={(e) => e.key === "Escape" && setEditing(false)}
-            maxLength={NAME_MAX}
-            aria-label="Your name"
-            autoFocus
-          />
-          <button type="submit" className={styles.chip}>
-            Save
-          </button>
-        </form>
-      ) : (
-        <span className={styles.seatName}>{player.name}</span>
-      )}
+      <span className={styles.seatName}>{player.name}</span>
 
       <span className={styles.seatTags}>
         {room.hostId === player.id && <span className={`${styles.tag} ${styles.tagHost}`}>Host</span>}
@@ -533,7 +534,7 @@ const Seat = ({
         {!player.online && <span className={styles.awayNote}>stepped out</span>}
       </span>
 
-      {mine && !editing && (
+      {mine && (
         <button
           type="button"
           className={styles.seatCorner}
@@ -593,6 +594,30 @@ const Seat = ({
           )}
         </div>
       )}
+
+      {editing && (
+        <Modal onClose={() => setEditing(false)} ariaLabel="Change your name">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const clean = cleanName(draft);
+              if (clean) {
+                send({ t: "rename", name: clean });
+                saveName(clean);
+              }
+              setEditing(false);
+            }}
+          >
+            <h2 className={modalStyles.title}>Change your name</h2>
+            <p className={modalStyles.text}>Everyone in the room sees the new one straight away.</p>
+            <NameField name={draft} setName={setDraft} autoFocus />
+            <div className={`${modalStyles.actions} ${styles.dialogFoot}`}>
+              <DefaultButton onClick={() => setEditing(false)} text="Cancel" variant="secondary" border="dark" />
+              <DefaultButton button="submit" text="Save" color="red" />
+            </div>
+          </form>
+        </Modal>
+      )}
     </li>
   );
 };
@@ -646,9 +671,9 @@ const Invite = ({ code }: { code: string }) => {
       <p className={styles.inviteNote}>Send the link, or have friends type the code in at lovecareermagic.com/play.</p>
       <DefaultButton onClick={copy} text={copied ? "Link copied!" : "Copy invite link"} color="yellow" className={styles.inviteButton} />
       {failed && (
-        <Modal onClose={() => setFailed(false)} panelClassName={styles.dialog} ariaLabel="Invite link">
-          <h2 className={styles.dialogTitle}>Your invite link</h2>
-          <p className={styles.dialogText}>Copy it and send it to your friends.</p>
+        <Modal onClose={() => setFailed(false)} ariaLabel="Invite link">
+          <h2 className={modalStyles.title}>Your invite link</h2>
+          <p className={modalStyles.text}>Copy it and send it to your friends.</p>
           <input className={styles.input} value={link} readOnly onFocus={(e) => e.target.select()} autoFocus />
         </Modal>
       )}

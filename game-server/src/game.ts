@@ -170,7 +170,7 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
       if (card === undefined || card === null) return false;
       const drawn = game.piles[msg.deck].shift() ?? null;
       cards[msg.slot] = drawn;
-      const done = { id: id(), deck: msg.deck, i: card, tokens: 0, by };
+      const done = { id: id(), deck: msg.deck, slot: msg.slot, i: card, tokens: 0, by };
       ep.completed.push(done);
       game.drawnFor[done.id] = { deck: msg.deck, slot: msg.slot, drawn };
       countLeft(game);

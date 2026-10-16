@@ -831,7 +831,7 @@ const CartSummary = ({
 // ── International modal ───────────────────────────────────────────────────────
 
 const InternationalModal = ({ onClose }: { onClose: () => void }) => (
-  <Modal onClose={onClose} panelClassName={styles.internationalPanel}>
+  <Modal onClose={onClose}>
     <h2 className={styles.modalTitle}>Shipping to Europe 🇪🇺</h2>
     <p className={styles.modalBody}>
       Love, Career &amp; Magic is finally available in Europe! I'm working
@@ -932,7 +932,7 @@ const ShippingWaitlistNotice = ({ country }: { country: string }) => {
 };
 
 const MissingCountryModal = ({ europeEnabled, onClose }: { europeEnabled: boolean; onClose: () => void }) => (
-  <Modal onClose={onClose} panelClassName={styles.internationalPanel}>
+  <Modal onClose={onClose}>
     <h2 className={styles.modalTitle}>Don't see your country?</h2>
     <p className={styles.modalBody}>
       Right now I can only ship to the US{europeEnabled ? " and Europe" : ""}.{" "}

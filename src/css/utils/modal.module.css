@@ -10,14 +10,65 @@
   padding: 1rem;
 }
 
+/* The site's dialog: a white card with a band of red along its top (an inset shadow, so it follows
+   the corners), a bold title, a line or two, and its buttons along the foot (.title, .text, .actions) */
 .panel {
   position: relative;
-  background: #fff;
-  border-radius: 20px;
-  padding: 2rem;
-  max-width: 480px;
   width: 100%;
+  max-width: 28rem;
+  padding: 2rem 1.75rem 1.6rem;
+  box-sizing: border-box;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow:
+    inset 0 6px 0 var(--dialog-band, #d81e18),
+    0 30px 60px -30px rgba(0, 0, 0, 0.5);
   text-align: left;
+  animation: dialogIn 0.18s ease-out both;
+}
+
+@keyframes dialogIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}
+
+.panel .title {
+  margin: 0 2.5rem 0.5rem 0;
+  font-family: "Rowdies-Bold";
+  font-size: 1.5rem;
+  font-weight: normal;
+  line-height: 1.15;
+  letter-spacing: 0;
+  color: #323232;
+}
+
+.panel .text {
+  margin: 0 0 1.4rem;
+  font-family: "Roboto Light";
+  font-size: 1rem;
+  line-height: 1.5;
+  color: rgba(50, 50, 50, 0.8);
+  opacity: 1;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+@media only screen and (max-width: 640px) {
+  .actions > * {
+    flex: 1;
+  }
 }
 
 .closeBtn {

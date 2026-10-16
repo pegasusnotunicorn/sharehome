@@ -1,0 +1,36 @@
+# Publishes the online game's room server (game-server/) to Cloudflare whenever it changes on main.
+# Needs the repo secrets CLOUDFLARE_API_TOKEN ("Edit Cloudflare Workers" token) and
+# CLOUDFLARE_ACCOUNT_ID, both from the business Cloudflare account.
+name: Deploy game server
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "game-server/**"
+      - ".github/workflows/deploy-game-server.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-game-server
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: game-server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: game-server/package-lock.json
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

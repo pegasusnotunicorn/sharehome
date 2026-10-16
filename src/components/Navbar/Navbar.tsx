@@ -19,7 +19,9 @@ interface NavbarMainProps {
 export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
   const location = useLocation();
   const isLandingPage = location.pathname === "/";
-  const hideBuyButtons = ["/buy", BUY_DESTINATION, "/thankyou", "/raffle"].includes(location.pathname);
+  // (and in an online game room, where they'd sit over the game)
+  const hideBuyButtons =
+    ["/buy", BUY_DESTINATION, "/thankyou", "/raffle"].includes(location.pathname) || location.pathname.startsWith("/play/");
 
   const [visible, setVisibility] = useState(false);
   const isVisibleClass = visible ? "is-active" : "";

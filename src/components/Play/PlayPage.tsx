@@ -31,7 +31,7 @@ const PlayPage = () => {
       {!GAME_SERVER ? (
         <PageIntro eyebrow="Play online" title="Coming soon" lead="Online games are almost ready. Check back soon!" />
       ) : !code ? (
-        <Start name={name} setName={setName} />
+        <Start name={name} setName={setName} created={() => setJoined(true)} />
       ) : !isCode(code) ? (
         <Missing code={code} />
       ) : joined && name ? (
@@ -69,7 +69,7 @@ const NameField = ({ name, setName, autoFocus }: { name: string; setName: (n: st
   </label>
 );
 
-const Start = ({ name, setName }: { name: string; setName: (n: string) => void }) => {
+const Start = ({ name, setName, created }: { name: string; setName: (n: string) => void; created: () => void }) => {
   const navigate = useNavigate();
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
@@ -85,6 +85,7 @@ const Start = ({ name, setName }: { name: string; setName: (n: string) => void }
       const room = await createRoom();
       saveName(clean);
       setName(clean);
+      created();
       navigate(`/play/${room}`);
     } catch {
       setProblem("We couldn’t make a room just now. Try again in a moment.");

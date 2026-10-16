@@ -4,7 +4,9 @@
 .playPage {
   min-height: calc(100svh - var(--footer-height));
   max-width: calc(980px + 4rem);
-  padding: 0 2rem 4rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  padding-bottom: 4rem;
   box-sizing: border-box;
 }
 
@@ -301,7 +303,9 @@
 
 @media only screen and (max-width: 760px) {
   .playPage {
-    padding: 0 1rem 3rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 3rem;
   }
 
   .startCards,

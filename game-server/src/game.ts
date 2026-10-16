@@ -164,10 +164,9 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
     }
 
     case "complete": {
-      // (the clock starts as soon as someone says something: a card done first starts it, and a
-      // card done while it's paused starts it again)
-      if (game.phase === "ready") startClock(game, now);
-      else if (game.phase === "playing" && game.pausedLeft !== null) {
+      // (only while the clock's running: the episode's started with the phone's Start; a card
+      // done while it's paused starts it again)
+      if (game.phase === "playing" && game.pausedLeft !== null) {
         game.endsAt = now + game.pausedLeft;
         game.pausedLeft = null;
       }
@@ -188,7 +187,7 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
         game.endsAt = null;
         game.pausedLeft = null;
         game.outOfCards = true;
-        log(game, by, "Out of direction cards: that’s a wrap on the season!");
+        log(game, by, "That’s a wrap on the season!");
       }
       return true;
     }
@@ -217,7 +216,8 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
     }
 
     case "discard": {
-      if (game.phase !== "ready") return false;
+      // (between episodes: before the first, the cards dealt are the ones played)
+      if (game.phase !== "ready" || game.episode === 1) return false;
       const cards = game.faceUp[msg.deck];
       const card = cards?.[msg.slot];
       if (card === undefined || card === null) return false;
@@ -250,7 +250,8 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
     case "trait": {
       const hand = game.hands[msg.player];
       const trait = hand?.traits[msg.slot];
-      if (!trait || game.phase === "over") return false;
+      // (your own, and only once the episode's over: did you play it?)
+      if (!trait || game.phase !== "break" || msg.player !== by) return false;
       if (trait.done !== null) {
         // (undone: only in the episode it was played, so an earlier one stays settled)
         if (trait.done !== game.episode) return false;

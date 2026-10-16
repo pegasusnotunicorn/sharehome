@@ -285,7 +285,7 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
         <img className={styles.posterArt} src="/images/illustrations/splash.webp" alt="" />
         <div className={styles.posterShade} />
         <div className={styles.posterText}>
-          <p className={styles.kicker}>{game.outOfCards ? "Out of direction cards!" : "Season finale"} · the ratings are in</p>
+          <p className={styles.kicker}>{game.outOfCards ? "That’s a wrap!" : "Season finale"} · the ratings are in</p>
           <h2 className={styles.rating}>{s.rating}</h2>
           <div className={styles.rosette} aria-label={`${s.perPlayer} points per player`}>
             <span className={styles.rosetteRibbons} aria-hidden />

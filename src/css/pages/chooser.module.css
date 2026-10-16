@@ -71,32 +71,10 @@
   color: var(--ink, #323232);
 }
 
+/* (the site's dialog close button, in the header's corner) */
 .close {
-  position: absolute;
+  top: 0;
   right: 0;
-  top: 50%;
-  translate: 0 -50%;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 2px solid #2b2233;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 3px 0 #2b2233;
-  color: #2b2233;
-  cursor: pointer;
-}
-
-.close svg {
-  width: 18px;
-  height: 18px;
-}
-
-.close:active {
-  translate: 0 calc(-50% + 2px);
-  box-shadow: 0 1px 0 #2b2233;
 }
 
 /* (the carousel, its card in the middle of the space there is) */
@@ -105,26 +83,21 @@
   margin: 0 auto;
 }
 
-/* who's on show, and the button to play them */
+/* the button to play them (who they are is on the card) */
 .who {
   position: relative;
   z-index: 2;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  width: min(560px, 100%);
-  margin: 0.35rem auto 0;
-  padding: 0.6rem 0.6rem 0.6rem 1.1rem;
-  box-sizing: border-box;
-  border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 10px 24px -18px rgba(28, 26, 43, 0.6);
+  justify-content: center;
+  /* (clear of the card's zoom buttons above) */
+  margin: 1.4rem auto 0;
   transition: opacity 0.3s ease;
 }
 
-.whoText {
-  min-width: 0;
+.who > * {
+  min-width: 14rem;
+  max-width: 100%;
+  white-space: nowrap;
 }
 
 .hushed {
@@ -132,37 +105,24 @@
   transition-duration: 0.15s;
 }
 
-.eyebrow {
-  margin: 0;
-  font-family: "Rowdies-Regular";
-  font-size: 0.72rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #b8241f;
-}
-
-.name {
-  margin: 0.1rem 0 0;
-  font-family: "Rowdies-Bold";
-  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
-  line-height: 1.15;
-  color: var(--ink, #323232);
-}
-
 /* the whole cast, a fighting game's select screen: a grid of portraits, each with its name; the one
    on show under a yellow cursor, the ones picked in their player's colour with the player's name */
 .roster {
   position: relative;
   z-index: 2;
-  display: grid;
-  grid-template-columns: repeat(13, minmax(0, 1fr));
+  /* (rows of tiles, each row centred, the last one too however many are left) */
+  --tile: 4.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 0.4rem;
-  margin: 1rem 0 0;
-  padding: 0.6rem;
-  border-radius: 18px;
-  background: #2b2233;
-  box-shadow: inset 0 3px 10px rgba(0, 0, 0, 0.45);
+  margin: 1.1rem 0 0;
+  padding: 0;
   list-style: none;
+}
+
+.roster > li {
+  flex: 0 0 var(--tile);
 }
 
 .tile {
@@ -268,15 +228,18 @@
   outline-offset: 2px;
 }
 
-@media only screen and (max-width: 1100px) {
-  .roster {
-    grid-template-columns: repeat(9, minmax(0, 1fr));
-  }
+/* (desktop: nine to a row, three rows; a phone: five to a row) */
+.roster {
+  width: 100%;
+  max-width: calc(9 * var(--tile) + 8 * 0.4rem);
+  margin-inline: auto;
+  box-sizing: border-box;
 }
 
 @media only screen and (max-width: 760px) {
   .roster {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    --tile: calc((100% - 4 * 0.3rem) / 5);
+    max-width: none;
   }
 }
 
@@ -294,22 +257,13 @@
     justify-content: flex-start;
   }
 
-  /* (who it is above, the button below it, full width) */
-  .who {
-    flex-direction: column;
-    gap: 0.55rem;
-    padding: 0.7rem;
-    text-align: center;
-  }
-
-  .who > :last-child {
+  .who > * {
     width: 100%;
     max-width: none;
   }
 
   .roster {
     gap: 0.3rem;
-    padding: 0.45rem;
   }
 }
 

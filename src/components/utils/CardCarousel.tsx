@@ -29,12 +29,14 @@ interface CardCarouselProps {
   onTurn: (to: number) => void;
   // the arrow keys turn it too (where it's the only thing on screen)
   keys?: boolean;
+  // the card on show stays as it's left when let go (doesn't turn or zoom back to rest)
+  hold?: boolean;
   // how wide the card on show is (default: up to 560px)
   cardWidth?: string;
   className?: string;
 }
 
-const CardCarousel = ({ index, count, mm, front, back, name, label, href, fallback, onTurnStart, onTurn, keys, cardWidth, className }: CardCarouselProps) => {
+const CardCarousel = ({ index, count, mm, front, back, name, label, href, fallback, onTurnStart, onTurn, keys, hold, cardWidth, className }: CardCarouselProps) => {
   const around = (k: number) => (index + k + count * 4) % count;
 
   const ring = useRef<CardRingApi | null>(null);
@@ -182,6 +184,7 @@ const CardCarousel = ({ index, count, mm, front, back, name, label, href, fallba
           still={front(index)}
           intro={!swung}
           onReady={ready}
+          hold={hold}
           fallback={fallback?.(index)}
         />
       </div>

@@ -7,10 +7,11 @@ import Icon from "../utils/Icons";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
 import { getAllCharacters } from "../Characters/Characters";
 import { PLAYER_COLORS } from "./GameTable";
+import modalStyles from "../../css/utils/modal.module.css";
 import styles from "../../css/pages/chooser.module.css";
 
 // The waiting room's character picker, a big dialog: the cast's cards in 3D like on the character pages
-// (CardCarousel), turned through one at a time; under the card, who it is and a button to play them (or
+// (CardCarousel), turned through one at a time; under the card, a button to play them (or
 // who has already); and under that the whole cast as a grid of faces, a fighting game's select screen:
 // a tap goes straight to one, and who's taken whom is marked on it.
 
@@ -60,8 +61,8 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
     <div className={styles.chooser} role="dialog" aria-modal="true" aria-label="Pick your character" onClick={(e) => e.stopPropagation()}>
       <header className={styles.head}>
         <h2 className={styles.title}>Pick your character</h2>
-        <button type="button" className={styles.close} onClick={close} aria-label="Close">
-          <Icon name="close" strokeWidth={2.6} />
+        <button type="button" className={`${modalStyles.closeBtn} ${styles.close}`} onClick={close} aria-label="Close">
+          <Icon name="close" strokeWidth={2.6} className={modalStyles.closeIcon} />
         </button>
       </header>
 
@@ -79,19 +80,16 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
           requestAnimationFrame(() => setTurning(false));
         }}
         keys
+        hold
         cardWidth="min(420px, 100%, calc((100dvh - 470px) * 1.45))"
         className={styles.carousel}
       />
 
       <div className={`${styles.who}${turning ? ` ${styles.hushed}` : ""}`} aria-live="polite">
-        <div className={styles.whoText}>
-          <p className={styles.eyebrow}>{c.title || `The ${c.race}`}</p>
-          <p className={styles.name}>{c.name}</p>
-        </div>
         {mine === at ? (
           <DefaultButton onClick={close} text="That’s you!" icon="check" color="green" />
         ) : other ? (
-          <DefaultButton disabled text={`${other.name} is playing them`} icon="removePerson" />
+          <DefaultButton disabled text={`Taken by ${other.name}`} icon="removePerson" />
         ) : (
           <DefaultButton
             onClick={() => {

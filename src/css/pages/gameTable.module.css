@@ -402,6 +402,7 @@
   justify-content: space-between;
   gap: 0.5rem;
   padding: 0.4rem 0.7rem;
+  border-radius: 10px;
   background: #fffdf6;
   box-shadow: var(--card-shadow);
   transform: rotate(-1deg);
@@ -994,8 +995,10 @@
 }
 
 .rulesButton {
+  /* (as tall as the round buttons beside it) */
+  height: 32px;
   margin-left: auto;
-  padding: 0.3rem 0.65rem;
+  padding: 0 0.7rem;
   border: 0;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.1);

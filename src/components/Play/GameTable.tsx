@@ -16,7 +16,7 @@ import {
 import DefaultButton from "../utils/DefaultButton";
 import Modal from "../utils/Modal";
 import Confirm from "./Confirm";
-import Picnic from "./Picnic";
+import Picnic, { PicnicPaint } from "./Picnic";
 import { isMuted, play, setMuted } from "./sounds";
 import modalStyles from "../../css/utils/modal.module.css";
 import styles from "../../css/pages/gameTable.module.css";
@@ -268,6 +268,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
 
   return (
     <div className={styles.room}>
+      <PicnicPaint />
       <div className={`${styles.tabletop}${clothClass(cloth)}`}>
         <Prompt game={game} epPoints={epPoints} />
 

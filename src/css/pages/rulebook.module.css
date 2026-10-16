@@ -213,6 +213,154 @@
   outline: none;
 }
 
+/* (going straight to a section: the pile fades, and the section's page comes in) */
+.jumping .page {
+  opacity: 0;
+  transition: opacity 0.15s ease !important;
+}
+
+.page {
+  animation: pageIn 0.2s ease both;
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+  }
+}
+
+/* the sections, along the top: a tap goes straight to one */
+.sections {
+  position: absolute;
+  top: -54px;
+  left: 0;
+  right: 56px;
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  transition: opacity 0.25s ease;
+}
+
+.sections::-webkit-scrollbar {
+  display: none;
+}
+
+.section {
+  flex: none;
+  height: 38px;
+  padding: 0 0.85rem;
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
+  background: #fff;
+  box-shadow: 0 3px 0 var(--chip-edge);
+  font-family: "Rowdies-Regular";
+  font-size: 0.85rem;
+  color: var(--btn-ink);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    border-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.section:hover {
+  border-color: var(--btn-ink);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--btn-ink);
+}
+
+.section:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--chip-edge);
+}
+
+.section:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 2px;
+}
+
+.sectionOn {
+  border-color: #f1db4b;
+  background: #f1db4b;
+  box-shadow: 0 3px 0 #b39d1b;
+}
+
+.sectionOn:hover {
+  border-color: #b39d1b;
+  box-shadow: 0 4px 0 #b39d1b;
+}
+
+/* the last page: a review, please. On a screen the page's QR codes are no use: the buttons go over them */
+.review {
+  position: absolute;
+  top: 64%;
+  left: 50%;
+  z-index: 6;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: min(60%, 40rem);
+  min-height: 26%;
+  padding: clamp(0.5rem, 1.6vw, 1.1rem);
+  box-sizing: border-box;
+  border-radius: 16px;
+  background: #fffdf6;
+  box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.45);
+  translate: -50% 0;
+  animation: pageIn 0.25s ease both;
+}
+
+.reviewButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.2rem;
+  border: 2px solid #8f1410;
+  border-radius: var(--btn-radius, 12px);
+  background: #d81e18;
+  box-shadow: 0 4px 0 #8f1410;
+  font-family: "Rowdies-Regular";
+  font-size: clamp(0.8rem, 1.6vw, 1.05rem);
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.reviewButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #8f1410;
+  color: #fff;
+}
+
+.reviewButton svg {
+  width: 1.1em;
+  height: 1.1em;
+}
+
+.short {
+  display: none;
+}
+
+.reviewPlain {
+  border-color: #323232;
+  background: #fff;
+  box-shadow: 0 4px 0 #323232;
+  color: #323232;
+}
+
+.reviewPlain:hover {
+  box-shadow: 0 6px 0 #323232;
+  color: #323232;
+}
+
 /* #endregion */
 
 /* #region--------------------------------------THE BAR (turn the page, close) */
@@ -238,8 +386,10 @@
 
 .in .bar,
 .in .close,
+.in .sections,
 .out .bar,
-.out .close {
+.out .close,
+.out .sections {
   opacity: 0;
   pointer-events: none;
 }
@@ -316,5 +466,47 @@
   .in .book,
   .out .book {
     animation-duration: 0.01s !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .section {
+    height: 32px;
+    padding: 0 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .sections {
+    top: -46px;
+  }
+
+  .review {
+    top: 66%;
+    flex-wrap: nowrap;
+    gap: 0.35rem;
+    width: 78%;
+    min-height: 26%;
+    padding: 0.4rem;
+    border-radius: 10px;
+  }
+
+  .reviewButton {
+    gap: 0.3rem;
+    padding: 0.35rem 0.55rem;
+    border-width: 1.5px;
+    box-shadow: 0 2px 0 #8f1410;
+    font-size: 0.68rem;
+  }
+
+  .reviewPlain {
+    box-shadow: 0 2px 0 #323232;
+  }
+
+  .long {
+    display: none;
+  }
+
+  .short {
+    display: inline;
   }
 }

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import {
   DIRECTION_DECKS,
   DIRECTION_POINTS,
@@ -18,9 +19,14 @@ import {
 import DefaultButton from "../utils/DefaultButton";
 import Icon from "../utils/Icons";
 import Modal from "../utils/Modal";
+import CardViewer from "../utils/CardViewer";
+import CharacterDetails from "../Characters/CharacterDetails";
+import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
+import { getAllCharacters } from "../Characters/Characters";
 import Confirm from "./Confirm";
 import Finale from "./Finale";
-import { openRulebook } from "./Rulebook";
+import { DISCORD_URL } from "./gameServer";
+import { openRulebook, rulebookOpensAt } from "./Rulebook";
 import { isMuted, play, setMuted } from "./sounds";
 import modalStyles from "../../css/utils/modal.module.css";
 import styles from "../../css/pages/gameTable.module.css";
@@ -30,6 +36,8 @@ import styles from "../../css/pages/gameTable.module.css";
 // a phone with the clock, earlier episodes for callbacks, a sticky note of what's happened, and
 // everyone's seat (their character and traits, face up). Cards never move when they're tapped: a new
 // one flips over where the last one lay. Between episodes, the wrap; after the fourth, the ratings.
+
+const CAST = getAllCharacters();
 
 export const PLAYER_COLORS = ["#d81e18", "#5f5aa2", "#4f8a73", "#e0a91b", "#3d7fb8", "#d9652b"];
 
@@ -48,7 +56,7 @@ const art = {
 };
 
 // the card backs, fetched as the table opens, so a new card can always show its back at once
-const preloadBacks = () => {
+export const preloadBacks = () => {
   for (const src of [art.episodeBack, ...["director", "producer", "showrunner"].map((d) => art.directionBack(d as DirectionDeck))]) {
     const img = new Image();
     img.src = src;
@@ -96,7 +104,10 @@ const Loading = ({ out }: { out: boolean }) => (
   <div className={`${styles.loading}${out ? ` ${styles.loadingOut}` : ""}`} role="status" aria-label="Setting the table">
     <div className={styles.loadingDeck} aria-hidden>
       {(["director", "producer", "showrunner"] as DirectionDeck[]).map((d, i) => (
-        <img key={d} src={art.directionBack(d)} alt="" style={{ "--i": i } as CSSProperties} />
+        // (a plain back in the deck's colour, until its picture's in: it never shows half-loaded)
+        <span key={d} className={`${styles.loadingCard} ${styles[d]}`} style={{ "--i": i } as CSSProperties}>
+          <img src={art.directionBack(d)} alt="" onLoad={(e) => e.currentTarget.classList.add(styles.loadingIn)} />
+        </span>
       ))}
     </div>
     <span className={styles.loadingWord}>Setting the table</span>
@@ -114,6 +125,7 @@ const FlipCard = ({
   width,
   height,
   from,
+  tilt = 0,
 }: {
   front: string;
   back: string;
@@ -121,6 +133,7 @@ const FlipCard = ({
   width: number;
   height: number;
   from?: HTMLElement | null;
+  tilt?: number; // (the angle it lies at, in degrees: it leaves the deck square, and settles to it)
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [dealt, setDealt] = useState(!from);
@@ -137,7 +150,7 @@ const FlipCard = ({
     const b = el.getBoundingClientRect();
     const anim = el.animate(
       [
-        { transform: `translate(${a.left + a.width / 2 - (b.left + b.width / 2)}px, ${a.top + a.height / 2 - (b.top + b.height / 2)}px) scale(${a.width / b.width})` },
+        { transform: `translate(${a.left + a.width / 2 - (b.left + b.width / 2)}px, ${a.top + a.height / 2 - (b.top + b.height / 2)}px) rotate(${-tilt}deg) scale(${a.width / b.width})` },
         { transform: "none" },
       ],
       { duration: 420, delay: 220, easing: "cubic-bezier(0.25, 0.8, 0.3, 1)", fill: "backwards" }
@@ -176,6 +189,7 @@ interface FlightPlan {
   from: Rect;
   to: Rect;
   tilt: number;
+  away?: boolean; // (into the deck: it goes as it gets there)
 }
 
 // a played card on its way from its slot to the play area (over everything, then gone)
@@ -191,7 +205,7 @@ const Flight = ({ plan, done }: { plan: FlightPlan; done: () => void }) => {
       [
         { transform: "translate(0, 0) rotate(0deg) scale(1)" },
         { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 30}px) rotate(${plan.tilt / 2}deg) scale(${(1 + to.width / from.width) / 2 + 0.05})`, offset: 0.5 },
-        { transform: `translate(${dx}px, ${dy}px) rotate(${plan.tilt}deg) scale(${to.width / from.width})` },
+        { transform: `translate(${dx}px, ${dy}px) rotate(${plan.tilt}deg) scale(${to.width / from.width})`, ...(plan.away ? { opacity: 0 } : {}) },
       ],
       { duration: 560, easing: "cubic-bezier(0.45, 0, 0.3, 1)", fill: "forwards" }
     );
@@ -254,7 +268,8 @@ const clothClass = (c: Cloth) => (c === "blue" ? "" : ` ${styles[`cloth-${c}`]}`
 const DECK_LABEL: Record<DirectionDeck, string> = { director: "Director", producer: "Producer", showrunner: "Showrunner" };
 
 // each card lies a little askew, always the same way (so nothing shifts when the table changes)
-const tilt = (seed: number) => `${(((seed * 37) % 7) - 3) * 0.6}deg`;
+const tiltDeg = (seed: number) => (((seed * 37) % 7) - 3) * 0.6;
+const tilt = (seed: number) => `${tiltDeg(seed)}deg`;
 
 // the cards' names (for screen readers and the log), from the pieces list
 type Names = Record<string, string[]>;
@@ -368,6 +383,11 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   const left = useClock(game, room.now);
   useTableSounds(game);
   useEffect(preloadBacks, []);
+  // (while the game's on, the rulebook opens on the game's rules)
+  useEffect(() => {
+    rulebookOpensAt("rules");
+    return () => void rulebookOpensAt(null);
+  }, []);
   const loaded = useTableLoaded(game);
   // (the loading screen fades off, then goes)
   const [loadingGone, setLoadingGone] = useState(false);
@@ -418,14 +438,18 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   // time's up, across the whole screen for a moment
   const [timeUp, setTimeUp] = useState<{ episode: number; points: number } | null>(null);
   const lastPhase = useRef(game.phase);
-  // then: did you play one of your traits this episode?
-  const [traitPick, setTraitPick] = useState(false);
-  const endTimeUp = () => {
-    setTimeUp(null);
-    const hand = game.hands[me];
-    if (game.phase === "break" && hand && hand.traits.some((t) => t.done === null) && !hand.traits.some((t) => t.done === game.episode))
-      setTraitPick(true);
-  };
+  // the phone, held up full screen: what to do now, with the one thing to press. It comes up by
+  // itself at each step (before the first episode, before each one after, and once time's up),
+  // once each; put down, it goes back to the table.
+  const phoneRef = useRef<HTMLDivElement>(null);
+  const step = `${game.phase}-${game.episode}`;
+  const [coachSeen, setCoachSeen] = useState<string | null>(null);
+  const coachOpen = coachSeen !== step && (game.phase === "ready" || game.phase === "break") && !timeUp && loadingGone;
+  const stepNow = useRef(step);
+  stepNow.current = step;
+  // (put down: not again until the next step; whichever step it's on as it's put down)
+  const closeCoach = () => setCoachSeen(stepNow.current);
+  const endTimeUp = () => setTimeUp(null);
   useEffect(() => {
     if (game.phase === "break" && lastPhase.current === "playing") {
       const e = game.episodes[game.episode - 1];
@@ -482,6 +506,24 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
         }
       }
     }
+    // a card swapped away: back it goes, into its deck (a new one's dealt in its place)
+    if (seen.current && !reducedMotion()) {
+      const done = new Set(ep.completed.filter((c) => !seen.current!.has(c.id)).map((c) => `${c.deck}-${c.i}`));
+      for (const deck of DIRECTION_DECKS) {
+        lastFaceUp.current[deck]?.forEach((was, slot) => {
+          if (was === null || was === game.faceUp[deck][slot] || done.has(`${deck}-${was}`)) return;
+          const slotEl = slotRefs.current[`${deck}-${slot}`];
+          const stack = stackRefs.current[deck];
+          if (!slotEl || !stack) return;
+          const r = (el: HTMLElement) => {
+            const b = el.getBoundingClientRect();
+            return { left: b.left, top: b.top, width: b.width, height: b.height };
+          };
+          const plan = { id: `away-${deck}-${was}-${Date.now()}`, src: art.direction(deck, was), from: r(slotEl), to: r(stack), tilt: 0, away: true };
+          setFlights((all) => [...all, plan]);
+        });
+      }
+    }
     seen.current = ids;
     lastFaceUp.current = game.faceUp;
   }, [ep.completed, game.faceUp]);
@@ -511,7 +553,6 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
     <div className={styles.room}>
       {!loadingGone && <Loading out={loaded} />}
       <div className={`${styles.tabletop}${clothClass(cloth)}`}>
-        <Prompt game={game} epPoints={epPoints} />
 
         {others.length > 0 && (
           <div className={styles.othersRow}>
@@ -575,6 +616,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                             width={768}
                             height={497}
                             from={dealing ? stackRefs.current[deck] : null}
+                            tilt={tiltDeg(card + slot)}
                           />
                         </button>
                       )}
@@ -600,7 +642,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
 
           {/* #region the phone (the clock, and what's happened), and callbacks */}
           <aside className={styles.side}>
-            <div className={`${styles.phone}${game.phase === "break" ? ` ${styles.phoneUp}` : ""}`}>
+            <div ref={phoneRef} className={`${styles.phone}${game.phase === "break" ? ` ${styles.phoneUp}` : ""}${coachOpen ? ` ${styles.phoneAway}` : ""}`}>
               <span className={styles.phoneIsland} aria-hidden />
               <div className={styles.statusBar} aria-hidden>
                 <span>{clockTime}</span>
@@ -641,7 +683,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                       <span>
                         <b>{points.total}</b> pts
                       </span>
-                      <button type="button" className={styles.rulesButton} onClick={openRulebook}>
+                      <button type="button" className={styles.rulesButton} onClick={() => openRulebook("rules")}>
                         Rules
                       </button>
                       <button type="button" className={styles.clothButton} onClick={() => setPicking(true)} aria-label="Settings" title="Settings">
@@ -676,7 +718,9 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                   <div className={styles.remoteApp} id="phone-remote">
                     <div className={styles.logHead}>
                       <span>R.E.M.O.T.E.</span>
-                      <span className={styles.logClock}>{mmss(left)}</span>
+                      <button type="button" className={styles.remoteInfo} onClick={() => openRulebook("remote")} aria-label="What's the R.E.M.O.T.E.? (the rulebook)" title="What's this?">
+                        <Icon name="info" strokeWidth={2.4} />
+                      </button>
                     </div>
                     {/* the R.E.M.O.T.E. card itself: its six painted buttons */}
                     <div className={styles.remotePad}>
@@ -837,12 +881,25 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
 
       {zoom && (
         <Modal onClose={() => setZoom(null)} panelClassName={`${modalStyles.panel} ${styles.zoomPanel}`} ariaLabel={name("character", zoom.character)}>
-          <h2 className={modalStyles.title}>{name("character", zoom.character) || zoom.player.name}</h2>
-
-          <div className={styles.zoomCards}>
-            <img src={art.character(zoom.character)} alt="" width="768" height="444" />
-            <img src={art.characterBack(zoom.character)} alt={`${name("character", zoom.character)}: details`} width="768" height="444" />
+          <h2 className={`${modalStyles.title} ${styles.zoomTitle}`}>{name("character", zoom.character) || zoom.player.name}</h2>
+          {/* their card in 3D, as on their page: drag to turn it, zoom in; their story and hobbies below */}
+          <div className={styles.zoomCard}>
+            <CardViewer
+              mm={CHARACTER_CARD_MM}
+              edge="gold"
+              faces={async () => ({ front: art.character(zoom.character), back: art.characterBack(zoom.character) })}
+              label={`${name("character", zoom.character)}'s card`}
+              still={art.character(zoom.character)}
+              hold
+              fallback={
+                <div className={styles.zoomCards}>
+                  <img src={art.character(zoom.character)} alt="" width="768" height="444" />
+                  <img src={art.characterBack(zoom.character)} alt={`${name("character", zoom.character)}: details`} width="768" height="444" />
+                </div>
+              }
+            />
           </div>
+          {CAST[zoom.character] && <CharacterDetails character={CAST[zoom.character]} className={styles.zoomDetails} />}
         </Modal>
       )}
       {timeUp && (
@@ -858,36 +915,75 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
           </div>
         </div>
       )}
-      {traitPick && game.hands[me] && (
-        <Modal onClose={() => setTraitPick(false)} panelClassName={`${modalStyles.panel} ${styles.traitPanel}`} ariaLabel="Your traits">
-          <h2 className={modalStyles.title}>Did you play a trait?</h2>
-          <div className={styles.traitPick}>
-            {game.hands[me].traits.map((t, slot) =>
-              t.done === null ? (
-                <button
-                  key={t.kind}
-                  type="button"
-                  className={styles.traitPickCard}
-                  onClick={() => {
-                    send({ t: "trait", player: me, slot });
-                    setTraitPick(false);
-                  }}
-                  aria-label={name(t.kind, t.i) || `${t.kind} trait`}
-                >
-                  <img src={art.trait(t.kind, t.i)} alt="" width="768" height="219" />
-                </button>
-              ) : (
-                <span key={t.kind} className={`${styles.traitPickCard} ${styles.traitPickDone}`}>
-                  <img src={art.trait(t.kind, t.i)} alt="" width="768" height="219" />
-                  <span className={styles.traitStamp}>✓ Ep {t.done}</span>
+      {coachOpen && (
+        <Coach origin={phoneRef.current} onClose={closeCoach} label={game.phase === "break" ? `Episode ${game.episode} done` : `Episode ${game.episode}`}>
+          {(close) =>
+            game.phase === "break" ? (
+              <>
+                <span className={styles.coachEyebrow}>Episode {game.episode} done</span>
+                <h2 className={styles.coachTitle}>
+                  +{epPoints} point{epPoints === 1 ? "" : "s"}!
+                </h2>
+                {game.hands[me] && game.hands[me].traits.some((t) => t.done === null || t.done === game.episode) && (
+                  <>
+                    <p className={styles.coachText}>Did you play one of your traits? Tap it.</p>
+                    <div className={styles.traitPick}>
+                      {game.hands[me].traits.map((t, slot) =>
+                        t.done === null || t.done === game.episode ? (
+                          <button
+                            key={t.kind}
+                            type="button"
+                            className={`${styles.traitPickCard}${t.done === game.episode ? ` ${styles.traitPickOn}` : ""}`}
+                            disabled={t.done === null && game.hands[me].traits.some((x) => x.done === game.episode)}
+                            onClick={() => send({ t: "trait", player: me, slot })}
+                            aria-pressed={t.done === game.episode}
+                            aria-label={name(t.kind, t.i) || `${t.kind} trait`}
+                          >
+                            <img src={art.trait(t.kind, t.i)} alt="" width="768" height="219" />
+                            {t.done === game.episode && <span className={styles.traitStamp}>✓ Ep {t.done}</span>}
+                          </button>
+                        ) : null
+                      )}
+                    </div>
+                  </>
+                )}
+                {/* (the phone stays up: the next episode's on it) */}
+                <DefaultButton
+                  onClick={() => send({ t: "nextEpisode" })}
+                  text={game.episode >= EPISODES ? "See the ratings" : `On to episode ${game.episode + 1}`}
+                  icon={game.episode >= EPISODES ? "trophy" : "forward"}
+                  color="red"
+                  className={styles.coachCta}
+                />
+              </>
+            ) : game.episode === 1 ? (
+              <>
+                <span className={styles.coachEyebrow}>Before the show</span>
+                <h2 className={styles.coachTitle}>Introduce yourselves</h2>
+                <p className={styles.coachText}>Oldest character first: who you are, and what you’re after. Then start the clock.</p>
+                <DefaultButton
+                  onClick={() => close(() => send({ t: "startClock" }))}
+                  text="Start episode 1"
+                  icon="play"
+                  color="red"
+                  className={styles.coachCta}
+                />
+                <a className={styles.coachLink} href={DISCORD_URL} target="_blank" rel="noreferrer">
+                  <Icon name="discord" /> Not on a call? Voice chat on Discord
+                </a>
+              </>
+            ) : (
+              <>
+                <span className={styles.coachEyebrow}>
+                  Episode {game.episode} of {EPISODES}
                 </span>
-              )
-            )}
-          </div>
-          <div className={modalStyles.actions}>
-            <DefaultButton onClick={() => setTraitPick(false)} text="Not this time" icon="close" variant="secondary" border="dark" />
-          </div>
-        </Modal>
+                <h2 className={styles.coachTitle}>New episode!</h2>
+                <p className={styles.coachText}>Swap any cards you don’t want, then start the clock.</p>
+                <DefaultButton onClick={() => close()} text="Swap cards" icon="again" color="red" className={styles.coachCta} />
+              </>
+            )
+          }
+        </Coach>
       )}
       {flights.map((f) => (
         <Flight key={f.id} plan={f} done={() => setFlights((all) => all.filter((x) => x.id !== f.id))} />
@@ -1171,33 +1267,63 @@ const PlayedDialog = ({
   );
 };
 
-// the rules, close at hand: how a round goes, what scores, and the two golden rules
-// what to do now: a director's note on the table
-const Prompt = ({ game, epPoints }: { game: GameView; epPoints: number }) => {
-  let text: React.ReactNode = null;
-  if (game.phase === "ready" && game.episode === 1)
-    text = (
-      <>
-        <b>Introduce yourselves,</b> oldest character first, then start the clock.
-      </>
-    );
-  else if (game.phase === "ready")
-    text = (
-      <>
-        <b>Episode {game.episode} is next.</b> Swap any cards you don’t want, then start the clock.
-      </>
-    );
-  else if (game.phase === "break")
-    text = (
-      <>
-        <b>Episode {game.episode} done, +{epPoints}.</b> Tap any traits you played, then go on.
-      </>
-    );
-  if (!text) return null;
-  return (
-    <div className={styles.prompt} role="status">
-      {text}
-    </div>
+// The phone, held up to the screen: from where it lies on the table it comes up, big, in the middle,
+// over everything (the table dimmed behind it); put down, it goes back to its place.
+const Coach = ({
+  origin,
+  onClose,
+  label,
+  children,
+}: {
+  origin: HTMLElement | null;
+  onClose: () => void;
+  label: string;
+  children: (close: (then?: () => void) => void) => React.ReactNode;
+}) => {
+  const panel = useRef<HTMLDivElement>(null);
+  const [leaving, setLeaving] = useState(false);
+  // (from the phone on the table to here, and back)
+  const fromPhone = () => {
+    const el = panel.current;
+    if (!origin || !el || reducedMotion()) return null;
+    const a = origin.getBoundingClientRect(), b = el.getBoundingClientRect();
+    return `translate(${a.left + a.width / 2 - (b.left + b.width / 2)}px, ${a.top + a.height / 2 - (b.top + b.height / 2)}px) scale(${a.width / b.width}, ${a.height / b.height})`;
+  };
+  useLayoutEffect(() => {
+    const t = fromPhone();
+    if (t) panel.current!.animate([{ transform: t, opacity: 0.6 }, { transform: "none", opacity: 1 }], { duration: 420, easing: "cubic-bezier(0.2, 1, 0.3, 1)" });
+    play("whoosh");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  // put down (then, whatever was pressed to put it down happens)
+  const close = (then?: () => void) => {
+    if (leaving) return;
+    setLeaving(true);
+    const done = () => {
+      onClose();
+      then?.();
+    };
+    const t = fromPhone();
+    if (!t) return done();
+    panel.current!.animate([{ transform: "none" }, { transform: t, opacity: 0.4 }], { duration: 340, easing: "cubic-bezier(0.5, 0, 0.75, 0)", fill: "forwards" }).onfinish = done;
+  };
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
+    addEventListener("keydown", onKey);
+    return () => removeEventListener("keydown", onKey);
+  });
+  return createPortal(
+    <div className={`${styles.coach}${leaving ? ` ${styles.coachLeaving}` : ""}`} onClick={() => close()}>
+      <div ref={panel} className={styles.coachPhone} role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.stopPropagation()}>
+        <span className={styles.coachIsland} aria-hidden />
+        <button type="button" className={styles.coachClose} onClick={() => close()} aria-label="Put the phone down">
+          <Icon name="close" strokeWidth={2.6} />
+        </button>
+        <div className={styles.coachScreen}>{children(close)}</div>
+        <span className={styles.coachHome} aria-hidden />
+      </div>
+    </div>,
+    document.body
   );
 };
 

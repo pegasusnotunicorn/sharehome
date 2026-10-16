@@ -139,6 +139,14 @@ const PATHS = {
       <path d="M20 19v-4h-4" />
     </>
   ),
+  // (i)
+  info: (
+    <>
+      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0" />
+      <path d="M12 11v5" />
+      <path d="M12 7.5h.01" />
+    </>
+  ),
   // two people
   players: (
     <>

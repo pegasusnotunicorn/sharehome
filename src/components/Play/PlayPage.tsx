@@ -10,7 +10,7 @@ import PageIntro from "../utils/PageIntro";
 import usePageTitle from "../utils/usePageTitle";
 import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, playerId, roomInfo, saveName, savedName } from "./gameServer";
 import Confirm from "./Confirm";
-import GameTable, { PLAYER_COLORS, useNames } from "./GameTable";
+import GameTable, { PLAYER_COLORS, preloadBacks, useNames } from "./GameTable";
 import Toast from "./Toast";
 import Rulebook from "./Rulebook";
 import CharacterChooser from "./CharacterChooser";
@@ -324,6 +324,11 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
   const [leaving, setLeaving] = useState(false);
   const [startCheck, setStartCheck] = useState(false);
   const me = playerId();
+  // (the loading screen's cards, fetched while everyone's still in the waiting room)
+  useEffect(() => {
+    const t = setTimeout(preloadBacks, 1500);
+    return () => clearTimeout(t);
+  }, []);
 
   if (status === "refused") return <Missing code={code} full={error === "full"} />;
   if (status === "gone") {
@@ -412,6 +417,12 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
                 {EPISODES} × {EPISODE_SECONDS / 60} min
               </b>
               <span>episodes</span>
+            </li>
+            <li>
+              <Icon name="discord" />
+              <a href={DISCORD_URL} target="_blank" rel="noreferrer">
+                Voice chat on Discord
+              </a>
             </li>
           </ul>
           <DefaultButton

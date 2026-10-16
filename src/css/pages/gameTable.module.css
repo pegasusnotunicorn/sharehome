@@ -358,23 +358,6 @@
   color: #fff;
 }
 
-.prompt {
-  padding: 0.85rem 1.15rem;
-  border-radius: 12px;
-  background: #fffdf6;
-  box-shadow: var(--card-shadow);
-  font-family: "Roboto Light";
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--ink);
-  animation: fadeIn 0.3s ease-out both;
-}
-
-.prompt b {
-  margin-right: 0.35rem;
-  font-family: "Rowdies-Regular";
-  font-weight: normal;
-}
 
 
 @keyframes fadeIn {
@@ -1090,7 +1073,9 @@
   opacity: 0.6;
 }
 
+/* (as tall as the traits beside it: the name sits in the middle of the space under the card) */
 .seatCharacter {
+  align-self: stretch;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -1140,6 +1125,7 @@
   align-items: center;
   gap: 0.45rem;
   min-width: 0;
+  margin-block: auto;
 }
 
 .nameToken {
@@ -1259,9 +1245,25 @@
 
 /* the character up close: both sides, one above the other, each as wide as the dialog */
 .zoomPanel {
-  max-width: 50rem;
+  width: min(64rem, calc(100vw - 2rem));
+  max-width: none;
   max-height: calc(100svh - 2rem);
   overflow-y: auto;
+  background: #f6f1e6;
+}
+
+.zoomTitle {
+  text-align: center;
+}
+
+/* (the card as big as fits: the zoom buttons under it) */
+.zoomCard {
+  width: min(560px, 100%, calc((100svh - 220px) * 1.55));
+  margin: 0 auto 0.5rem;
+}
+
+.zoomDetails {
+  margin-top: 1.25rem;
 }
 
 .zoomCards {
@@ -1585,22 +1587,6 @@
   }
 }
 
-/* tape (half see-through, a little crooked) holding the note to the table */
-.prompt::before {
-  content: "";
-  position: absolute;
-  top: -9px;
-  left: 50%;
-  width: 72px;
-  height: 18px;
-  background: rgba(241, 219, 75, 0.55);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-  transform: translateX(-50%) rotate(-3deg);
-}
-
-.prompt {
-  position: relative;
-}
 
 /* the seats: quilted placemats, stitched in the player's color */
 .seat {
@@ -2150,16 +2136,14 @@
   }
 }
 
-/* after time's up: your traits, big, to tap the one you played */
-.traitPanel {
-  max-width: 30rem;
-}
 
+/* your traits, on the phone once time's up: tap the one you played */
 .traitPick {
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
-  margin: 0.4rem 0 1.4rem;
+  gap: 0.6rem;
+  width: 100%;
+  margin: 0.2rem 0 0.4rem;
 }
 
 .traitPickCard {
@@ -2189,9 +2173,15 @@ button.traitPickCard:focus-visible {
   outline-offset: 3px;
 }
 
-.traitPickDone img {
-  filter: grayscale(0.8);
-  opacity: 0.5;
+.traitPickCard:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.traitPickOn {
+  box-shadow:
+    0 0 0 3px #f1db4b,
+    0 8px 14px -8px rgba(0, 0, 0, 0.6);
 }
 
 /* the callback counter keeps one width, whatever the count, so its minus never moves */
@@ -2359,7 +2349,7 @@ button.traitPickCard:focus-visible {
 .remotePadKey img {
   width: min(2.7rem, 100%);
   aspect-ratio: 1;
-  border-radius: 14px;
+  filter: drop-shadow(0 3px 2px rgba(0, 0, 0, 0.45));
   transition: transform 0.12s ease;
 }
 
@@ -2379,6 +2369,30 @@ button.traitPickCard:focus-visible {
 .remotePadKey:focus-visible img {
   outline: 3px solid #f1db4b;
   outline-offset: 2px;
+  border-radius: 12px;
+}
+
+/* (i): what the remote's for, in the rulebook */
+.remoteInfo {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #f4efe3;
+  cursor: pointer;
+}
+
+.remoteInfo:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.remoteInfo svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* a button pressed: the whole screen, for everyone, for a moment (a tap anywhere lets it go) */
@@ -2410,8 +2424,7 @@ button.traitPickCard:focus-visible {
 .remoteShownCard img {
   width: clamp(8rem, 30vmin, 13rem);
   aspect-ratio: 1;
-  border-radius: 28px;
-  box-shadow: 0 24px 50px -18px rgba(0, 0, 0, 0.8);
+  filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.55));
   animation: remotePress 0.6s ease 0.35s both;
 }
 
@@ -2498,17 +2511,29 @@ button.traitPickCard:focus-visible {
   aspect-ratio: 768 / 497;
 }
 
-.loadingDeck img {
+.loadingCard {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
   border-radius: 9px;
+  overflow: hidden;
+  background: var(--deck);
   box-shadow:
     0 1px 0 #ebe6da,
     0 2px 0 #d9d2c3,
     0 14px 22px -10px rgba(30, 40, 70, 0.5);
   animation: shuffle 1.5s cubic-bezier(0.45, 0, 0.3, 1) calc(var(--i) * -0.5s) infinite;
+}
+
+.loadingCard img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.loadingCard .loadingIn {
+  opacity: 1;
 }
 
 /* (each card in turn slides out from under the pile, swings round and drops on top) */
@@ -2564,7 +2589,7 @@ button.traitPickCard:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .loadingDeck img {
+  .loadingCard {
     animation: none;
   }
 }
@@ -2574,7 +2599,19 @@ button.traitPickCard:focus-visible {
 /* (on a phone: the remote's six buttons in a row, the phone's buttons a little smaller) */
 @media only screen and (max-width: 760px) {
   /* the remote: its six buttons in a row */
+  /* (no title: just the (i), in the corner) */
+  .remoteApp {
+    position: relative;
+  }
+
   .remoteApp .logHead {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    z-index: 2;
+  }
+
+  .remoteApp .logHead > span {
     display: none;
   }
 
@@ -2591,7 +2628,6 @@ button.traitPickCard:focus-visible {
 
   .remotePadKey img {
     width: min(2.6rem, 100%);
-    border-radius: 10px;
   }
 
   .phoneFoot .clothButton,
@@ -2600,3 +2636,173 @@ button.traitPickCard:focus-visible {
     height: 28px;
   }
 }
+
+/* #region--------------------------------------THE PHONE, HELD UP */
+
+/* the phone from the table, big in the middle of the screen: what to do now, and the button for it */
+.coach {
+  position: fixed;
+  inset: 0;
+  z-index: 140000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(28, 22, 34, 0.6);
+  backdrop-filter: blur(3px);
+  animation: coachDim 0.3s ease both;
+}
+
+.coachLeaving {
+  animation: coachUndim 0.34s ease both;
+}
+
+@keyframes coachDim {
+  from {
+    background-color: transparent;
+    backdrop-filter: blur(0);
+  }
+}
+
+@keyframes coachUndim {
+  to {
+    background-color: transparent;
+    backdrop-filter: blur(0);
+  }
+}
+
+.coachPhone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(25rem, 100%);
+  max-height: calc(100dvh - 2rem);
+  padding: 0.6rem;
+  box-sizing: border-box;
+  border-radius: 44px;
+  background: linear-gradient(145deg, #3a3848, #22212c);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.12),
+    inset 0 0 0 4px #15141c,
+    0 40px 80px -30px rgba(0, 0, 0, 0.8);
+  color: #f4efe3;
+  transform-origin: center;
+}
+
+.coachIsland {
+  position: absolute;
+  top: 1.15rem;
+  left: 50%;
+  z-index: 2;
+  width: 30%;
+  height: 20px;
+  border-radius: 99px;
+  background: #0b0b10;
+  transform: translateX(-50%);
+}
+
+.coachClose {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #f4efe3;
+  cursor: pointer;
+}
+
+.coachClose:hover {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.coachClose svg {
+  width: 16px;
+  height: 16px;
+}
+
+.coachScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 19rem;
+  padding: 4rem 1.4rem 1.6rem;
+  overflow-y: auto;
+  border-radius: 36px 36px 30px 30px;
+  background:
+    radial-gradient(90% 50% at 50% 0%, rgba(95, 90, 162, 0.6), transparent 70%),
+    #16151f;
+  text-align: center;
+}
+
+.coachEyebrow {
+  font-family: "Rowdies-Regular";
+  font-size: 0.75rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #f1db4b;
+}
+
+.room .coachTitle,
+.coachTitle {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-weight: normal;
+  font-size: clamp(1.7rem, 7vw, 2.2rem);
+  line-height: 1.1;
+  color: #fff;
+}
+
+.coachText {
+  margin: 0;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: rgba(244, 239, 227, 0.85);
+}
+
+.coachCta {
+  width: 100%;
+  margin-top: auto;
+}
+
+.coachLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.85rem;
+  color: #b9b5ff;
+  text-underline-offset: 3px;
+}
+
+.coachLink:hover {
+  color: #fff;
+}
+
+.coachLink svg {
+  width: 18px;
+  height: 18px;
+}
+
+.coachHome {
+  align-self: center;
+  width: 36%;
+  height: 5px;
+  margin-top: 0.5rem;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* (the phone on the table, while it's held up) */
+.phoneAway {
+  opacity: 0;
+}
+
+/* #endregion */

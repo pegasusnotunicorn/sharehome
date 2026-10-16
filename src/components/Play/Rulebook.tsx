@@ -10,13 +10,35 @@ import styles from "../../css/pages/rulebook.module.css";
 // it too (the phone's Rules button), with openRulebook().
 
 const OPEN_EVENT = "lcm:open-rulebook";
-export const openRulebook = () => window.dispatchEvent(new Event(OPEN_EVENT));
+// open it (at a section of it, or where it opens by default)
+export const openRulebook = (section?: Section) => window.dispatchEvent(new CustomEvent(OPEN_EVENT, { detail: section }));
+// where it opens: the cover, or (while a game's on, set by the table) the game's rules
+let opensAt: Section | null = null;
+export const rulebookOpensAt = (section: Section | null) => (opensAt = section);
 
 // the printed rulebook's pages (public/rulebook.pdf), a picture each: its cover first, then the rest
 // in order (the picture and the quote inside the cover after it)
 const ORDER = [3, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 const PAGES = ORDER.length;
 const pageSrc = (n: number) => `/images/rulebook/${String(ORDER[n]).padStart(2, "0")}.webp`;
+
+// the sections to go straight to: their first page (in the order above)
+const SECTIONS = [
+  { id: "setup", label: "Setup", page: 5 },
+  { id: "rules", label: "Game rules", page: 6 },
+  { id: "scoring", label: "Scoring", page: 7 },
+  { id: "example", label: "Example round", page: 8 },
+  { id: "remote", label: "R.E.M.O.T.E.", page: 11 },
+  { id: "advanced", label: "Advanced", page: 12 },
+] as const;
+type Section = (typeof SECTIONS)[number]["id"];
+const pageOf = (s: Section | null | undefined) => SECTIONS.find((x) => x.id === s)?.page ?? 0;
+// the section a page is in
+const sectionAt = (n: number) => [...SECTIONS].reverse().find((x) => x.page <= n)?.id ?? null;
+
+// (the last page asks for a review: the game on BoardGameGeek, and our socials)
+const BGG_URL = "https://boardgamegeek.com/boardgame/355824/love-career-and-magic";
+const SOCIALS_URL = "https://linktr.ee/pegasusgames";
 
 const TURN_MS = 420;
 const OPEN_MS = 400;
@@ -40,8 +62,9 @@ const Rulebook = () => {
 
   const stageRef = useRef(stage);
   stageRef.current = stage;
-  const open = useCallback(() => {
+  const open = useCallback((section?: Section | null) => {
     if (stageRef.current !== "closed") return;
+    setView(pageOf(section ?? opensAt));
     opener.current = document.activeElement as HTMLElement | null;
     stageRef.current = "in";
     setStage("in");
@@ -67,9 +90,22 @@ const Rulebook = () => {
   }, []);
 
   useEffect(() => {
-    window.addEventListener(OPEN_EVENT, open);
-    return () => window.removeEventListener(OPEN_EVENT, open);
+    const on = (e: Event) => open((e as CustomEvent<Section | undefined>).detail);
+    window.addEventListener(OPEN_EVENT, on);
+    return () => window.removeEventListener(OPEN_EVENT, on);
   }, [open]);
+
+  // straight to a section: the page fades, and the section's first page is there
+  const [jumping, setJumping] = useState(false);
+  const jump = (n: number) => {
+    if (flying || jumping || n === view) return;
+    play("page");
+    setJumping(true);
+    later(() => {
+      setView(n);
+      setJumping(false);
+    }, 160);
+  };
 
   const go = useCallback(
     (dir: 1 | -1) => {
@@ -177,7 +213,7 @@ const Rulebook = () => {
       <button
         type="button"
         className={`${styles.launcher}${shown ? ` ${styles.launcherAway}` : ""}`}
-        onClick={open}
+        onClick={() => open()}
         aria-label="Open the rulebook"
         title="Rulebook"
       >
@@ -192,7 +228,7 @@ const Rulebook = () => {
           <div className={`${styles.overlay} ${styles[stage]}`} onClick={close}>
             <div
               ref={bookRef}
-              className={styles.book}
+              className={`${styles.book}${jumping ? ` ${styles.jumping}` : ""}`}
               role="dialog"
               aria-modal="true"
               aria-label="Rulebook"
@@ -215,6 +251,36 @@ const Rulebook = () => {
               })}
               <button type="button" className={`${styles.edge} ${styles.edgePrev}`} onClick={tap(-1)} disabled={view === 0} aria-hidden tabIndex={-1} />
               <button type="button" className={`${styles.edge} ${styles.edgeNext}`} onClick={tap(1)} disabled={view >= PAGES - 1} aria-hidden tabIndex={-1} />
+
+              {/* the last page: a review, please */}
+              {view === PAGES - 1 && !flying && drag === null && (
+                <div className={styles.review}>
+                  <a className={styles.reviewButton} href={BGG_URL} target="_blank" rel="noreferrer">
+                    <Icon name="star" strokeWidth={2.2} />
+                    <span className={styles.long}>Review us on BoardGameGeek</span>
+                    <span className={styles.short}>Review on BGG</span>
+                  </a>
+                  <a className={`${styles.reviewButton} ${styles.reviewPlain}`} href={SOCIALS_URL} target="_blank" rel="noreferrer">
+                    <Icon name="share" strokeWidth={2.2} />
+                    Follow us
+                  </a>
+                </div>
+              )}
+
+              {/* straight to a section */}
+              <nav className={styles.sections} aria-label="Sections" onPointerDown={(e) => e.stopPropagation()}>
+                {SECTIONS.map((x) => (
+                  <button
+                    key={x.id}
+                    type="button"
+                    className={`${styles.section}${sectionAt(view) === x.id ? ` ${styles.sectionOn}` : ""}`}
+                    onClick={() => jump(x.page)}
+                    aria-current={sectionAt(view) === x.id}
+                  >
+                    {x.label}
+                  </button>
+                ))}
+              </nav>
 
               <div className={styles.bar}>
                 <button type="button" className={styles.turn} onClick={() => go(-1)} disabled={view === 0} aria-label="Previous page">

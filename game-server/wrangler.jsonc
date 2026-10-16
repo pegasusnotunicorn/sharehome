@@ -1,0 +1,15 @@
+// The online game's room server (see README.md). `npm run deploy` publishes it to Cloudflare.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "lcm-game",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "observability": { "enabled": true },
+  "vars": {
+    "ALLOWED_ORIGINS": "https://lovecareermagic.com,https://www.lovecareermagic.com"
+  },
+  "durable_objects": {
+    "bindings": [{ "name": "ROOMS", "class_name": "Room" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Room"] }]
+}

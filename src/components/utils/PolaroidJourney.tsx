@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import PolaroidGallery, { formatDate } from "./PolaroidGallery";
+import PolaroidGallery, { PolaroidLightbox, formatDate } from "./PolaroidGallery";
 import { CONTACT_POLAROIDS } from "./contactPolaroids";
 import type { PolaroidRingApi } from "./polaroidRing3d";
 import styles from "../../css/utils/polaroidJourney.module.css";
-import galleryStyles from "../../css/utils/polaroidGallery.module.css";
-import Icon from "./Icons";
 
 // The polaroids from the journey so far, going round in 3D (polaroidRing3d.ts) under a title, the
 // caption of the one in front below it: on the contact and thank-you pages. It goes round by itself
@@ -90,13 +88,6 @@ const PolaroidJourney = ({ label, title, start = 0 }: PolaroidJourneyProps) => {
     return () => clearTimeout(t);
   }, [live, held, shown, open, at, tick]);
 
-  useEffect(() => {
-    if (open === null) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
-
   const item = CONTACT_POLAROIDS[at];
   const shownItem = open !== null ? CONTACT_POLAROIDS[open] : null;
 
@@ -130,26 +121,7 @@ const PolaroidJourney = ({ label, title, start = 0 }: PolaroidJourneyProps) => {
         </div>
       )}
 
-      {shownItem && (
-        <div className={`${galleryStyles.lightbox} modal-overlay`} onClick={() => setOpen(null)} role="presentation">
-          <div
-            className={galleryStyles.lightboxCard}
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label={shownItem.alt}
-          >
-            <button type="button" className={styles.lightboxClose} onClick={() => setOpen(null)} aria-label="Close">
-              <Icon name="close" strokeWidth={2.6} />
-            </button>
-            <img src={shownItem.src} alt={shownItem.alt} className={galleryStyles.lightboxPhoto} />
-            <div className={galleryStyles.lightboxCaptionWrapper}>
-              <p className={galleryStyles.lightboxCaption}>{shownItem.caption}</p>
-              <p className={galleryStyles.lightboxDate}>{formatDate(shownItem.date)}</p>
-            </div>
-          </div>
-        </div>
-      )}
+      {shownItem && <PolaroidLightbox item={shownItem} onClose={() => setOpen(null)} />}
     </section>
   );
 };

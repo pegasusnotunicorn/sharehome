@@ -1,6 +1,7 @@
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useState } from "react";
 import styles from "../../css/utils/polaroidGallery.module.css";
-import Icon from "./Icons";
+import Modal from "./Modal";
+import modalStyles from "../../css/utils/modal.module.css";
 
 // The polaroids as a flat grid that opens one large: what PolaroidJourney shows where its 3D ring
 // can't be drawn
@@ -49,19 +50,6 @@ const PolaroidGallery = ({
   const connectorClass = showConnector ? styles.withConnector : "";
   const activeItem = activeIndex !== null ? items[activeIndex] : null;
 
-  useEffect(() => {
-    if (activeIndex === null) return;
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setActiveIndex(null);
-      }
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activeIndex]);
-
   return (
     <>
       <div className={`${styles.polaroidGrid} ${connectorClass} ${className ?? ""}`.trim()}>
@@ -94,42 +82,22 @@ const PolaroidGallery = ({
         ))}
       </div>
 
-      {activeItem && (
-        <div
-          className={`${styles.lightbox} modal-overlay`}
-          onClick={() => setActiveIndex(null)}
-          role="presentation"
-        >
-          <div
-            className={styles.lightboxCard}
-            onClick={(event) => event.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label={activeItem.alt}
-          >
-            <button type="button" className={styles.lightboxClose} onClick={() => setActiveIndex(null)} aria-label="Close">
-              <Icon name="close" strokeWidth={2.6} className={styles.lightboxCloseIcon} />
-            </button>
-            <img
-              src={activeItem.src}
-              alt={activeItem.alt}
-              className={styles.lightboxPhoto}
-            />
-            {(activeItem.caption || activeItem.date) && (
-              <div className={styles.lightboxCaptionWrapper}>
-                {activeItem.caption && (
-                  <p className={styles.lightboxCaption}>{activeItem.caption}</p>
-                )}
-                {activeItem.date && (
-                  <p className={styles.lightboxDate}>{formatDate(activeItem.date)}</p>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {activeItem && <PolaroidLightbox item={activeItem} onClose={() => setActiveIndex(null)} />}
     </>
   );
 };
+
+// A polaroid opened large: the site's dialog, the photo, its caption and date
+export const PolaroidLightbox = ({ item, onClose }: { item: { src: string; alt: string; caption?: ReactNode; date?: string }; onClose: () => void }) => (
+  <Modal onClose={onClose} panelClassName={`${modalStyles.panel} ${styles.lightboxPanel}`} ariaLabel={item.alt}>
+    <img src={item.src} alt={item.alt} className={styles.lightboxPhoto} />
+    {(item.caption || item.date) && (
+      <div className={styles.lightboxCaptionWrapper}>
+        {item.caption && <p className={styles.lightboxCaption}>{item.caption}</p>}
+        {item.date && <p className={styles.lightboxDate}>{formatDate(item.date)}</p>}
+      </div>
+    )}
+  </Modal>
+);
 
 export default PolaroidGallery;

@@ -182,8 +182,24 @@ export const CLOSE_LEFT = 4004;
 export const CLOSE_REPLACED = 4005; // the same player opened the room in another tab
 export const CLOSE_REFUSED = 4006; // see the error sent just before
 
-export const cleanName = (name: unknown) =>
-  typeof name === "string" ? name.replace(/\s+/g, " ").trim().slice(0, NAME_MAX) : "";
+// a name as it's shown to everyone: plain text, one line, at most NAME_MAX characters. Out go control
+// characters, invisible and direction-flipping ones, stacks of accents ("zalgo"), angle brackets and
+// braces (the log's placeholders); and it's cut by whole characters (an emoji's never split in half)
+export const cleanName = (name: unknown) => {
+  if (typeof name !== "string") return "";
+  const n = name
+    .normalize("NFC")
+    .replace(/[\u0000-\u001f\u007f-\u009f]/g, " ")
+    .replace(/[\u200b\u200c\u200e\u200f\u202a-\u202e\u2060-\u206f\ufeff\ufff9-\ufffb]/g, "")
+    .replace(/(\p{M}{2})\p{M}+/gu, "$1")
+    .replace(/[<>{}]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  // (by what reads as one character, where the browser can tell: an emoji family's one)
+  const Seg = (Intl as unknown as { Segmenter?: new () => { segment: (s: string) => Iterable<{ segment: string }> } }).Segmenter;
+  const chars = Seg ? Array.from(new Seg().segment(n), (x) => x.segment) : Array.from(n);
+  return chars.slice(0, NAME_MAX).join("").trim();
+};
 
 // #region--------------------------------------SCORING (the page and the server both count)
 

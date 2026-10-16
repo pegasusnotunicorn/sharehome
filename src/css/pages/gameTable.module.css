@@ -18,7 +18,8 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding-top: calc(var(--navbar-height) + 0.25rem);
+  /* (no navbar, and no little rulebook in the corner: the phone has Rules) */
+  padding-top: 0.75rem;
   text-align: left;
 }
 
@@ -326,7 +327,9 @@
 .middle {
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 2fr) minmax(0, 0.8fr);
-  grid-template-areas: "episode decks side";
+  grid-template-areas:
+    "episode decks side"
+    "mine mine side";
   gap: 1.75rem;
   align-items: start;
 }
@@ -416,7 +419,8 @@
   grid-area: decks;
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  /* (room under each row for the swap chips on the cards' bottom edges) */
+  gap: 1.6rem;
 }
 
 .director {
@@ -542,10 +546,13 @@
   filter: saturate(0.6) brightness(0.97);
 }
 
+/* (a slot whose deck's run out: the same size as a card, so nothing round it moves) */
 .slotEmpty {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
   display: grid;
   place-items: center;
-  height: 100%;
   border: 2px dashed rgba(91, 124, 191, 0.4);
   border-radius: 10px;
   font-family: "GochiHand";
@@ -553,20 +560,58 @@
   color: rgba(50, 50, 50, 0.45);
 }
 
+/* before an episode: swap a card you don't want (a big chip on the card's bottom edge, its words
+   still there to read) */
 .swap {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 100%;
+  left: 50%;
   z-index: 2;
-  padding: 0.2rem 0.6rem;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid #323232;
+  border-radius: 12px;
+  background: #f1db4b;
+  box-shadow: 0 4px 0 #323232;
   font-family: "Rowdies-Regular";
-  font-size: 0.75rem;
+  font-size: 1rem;
   color: var(--ink);
+  white-space: nowrap;
   cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.swap:hover {
+  transform: translate(-50%, calc(-50% - 2px));
+  box-shadow: 0 6px 0 #323232;
+}
+
+.swap:active {
+  transform: translate(-50%, calc(-50% + 3px));
+  box-shadow: 0 1px 0 #323232;
+}
+
+.swap svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media only screen and (max-width: 760px) {
+  .swap {
+    gap: 0.3rem;
+    padding: 0.35rem 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .swap svg {
+    width: 15px;
+    height: 15px;
+  }
 }
 
 /* the points rising off a completed card */
@@ -1007,16 +1052,6 @@
   border-radius: 8px;
 }
 
-.pastEmpty {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 768 / 549;
-  border: 2px dashed rgba(91, 124, 191, 0.45);
-  border-radius: 8px;
-  font-family: "GochiHand";
-  font-size: 1rem;
-  color: rgba(50, 50, 50, 0.5);
-}
 
 /* #endregion */
 
@@ -1031,6 +1066,7 @@
 }
 
 .mineRow {
+  grid-area: mine;
   display: flex;
   justify-content: center;
 }
@@ -1205,7 +1241,8 @@
   cursor: default;
 }
 
-.trait:disabled:not(.traitDone) img {
+/* (another trait's been played this episode: this one waits) */
+.traitLocked img {
   opacity: 0.5;
 }
 
@@ -1371,7 +1408,8 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
     grid-template-areas:
       "episode decks"
-      "side side";
+      "side side"
+      "mine mine";
   }
 
   .side {
@@ -1409,7 +1447,8 @@
       "phone"
       "episode"
       "decks"
-      "callbacks";
+      "callbacks"
+      "mine";
     gap: 1.25rem;
   }
 
@@ -1429,7 +1468,7 @@
      dock, its three apps in a row) */
   .phone {
     position: sticky;
-    top: calc(var(--banner-height) + var(--navbar-height) + 0.5rem);
+    top: calc(var(--banner-height) + 0.4rem);
     z-index: 20;
     display: flex;
     flex-direction: column;
@@ -2789,6 +2828,7 @@ button.traitPickCard:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  margin-top: 0.5rem;
   font-family: "Roboto Regular", sans-serif;
   font-size: 0.85rem;
   color: #b9b5ff;
@@ -2846,5 +2886,14 @@ button.traitPickCard:focus-visible {
   from {
     opacity: 0;
     transform: translate(-50%, -50%) rotate(-6deg) scale(1.6);
+  }
+}
+
+/* on a wide screen (callbacks under the phone), the earlier episodes one above the other, each with
+   its tokens and minus under it (the column runs down beside your seat, never pushing it down) */
+@media only screen and (min-width: 1101px) {
+  .pastRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.8rem;
   }
 }

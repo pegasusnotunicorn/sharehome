@@ -144,7 +144,9 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
                 aria-label={`${ch.name}${taken ? `, ${taken.name} is playing them` : mine === i ? ", yours" : ""}`}
                 aria-current={i + 1 === at}
               >
-                <img src={`/images/emojis/${ch.emoji?.[0]}.webp`} alt="" draggable={false} loading="lazy" />
+                <img src={`/images/emojis/${ch.emoji?.[0]}.webp`} alt="" draggable={false} onLoad={(e) => e.currentTarget.classList.add(styles.tileIn)} />
+                {/* (a shimmer where the face will be, till it's in) */}
+                <span className={styles.tileSkel} aria-hidden />
                 <span className={styles.tileName}>{short(ch.name)}</span>
                 {who && <span className={styles.tileWho}>{mine === i ? "You" : who.name}</span>}
               </button>

@@ -148,7 +148,6 @@ const Voice = ({ stacked }: { stacked?: boolean }) => (
     </span>
     <div className={styles.voiceText}>
       <h2 className={styles.voiceTitle}>Talk it out on Discord</h2>
-      <p>Play on a call: grab a free voice room on our Discord.</p>
     </div>
     <DefaultButton href={DISCORD_URL} text="Open our Discord" icon="discord" color="purple" className={styles.voiceButton} />
   </aside>
@@ -389,6 +388,8 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
 
       {reconnecting}
 
+      {/* (on a phone, your character comes first: it's the thing to do) */}
+      <div className={styles.lobby}>
       <div className={styles.lobbyTop}>
         <Invite code={room.code} room={room} />
         <section className={styles.showtime}>
@@ -425,14 +426,17 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
               </a>
             </li>
           </ul>
-          <DefaultButton
-            onClick={() => (notReady.length ? setStartCheck(true) : send({ t: "start" }))}
-            disabled={!canStart}
-            text="Start the show"
-            icon="clapper"
-            color="red"
-            className={styles.startButton}
-          />
+          {/* (the host's to press: the others wait for it) */}
+          {isHost && (
+            <DefaultButton
+              onClick={() => (notReady.length ? setStartCheck(true) : send({ t: "start" }))}
+              disabled={!canStart}
+              text="Start the show"
+              icon="clapper"
+              color="red"
+              className={styles.startButton}
+            />
+          )}
         </section>
       </div>
 
@@ -459,6 +463,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
       </section>
 
       <Voice />
+      </div>
 
       <div className={styles.leave}>
         <button type="button" className={styles.textButton} onClick={() => setLeaving(true)}>
@@ -674,16 +679,18 @@ const Seat = ({
           </button>
           {menu && (
             <div className={styles.seatMenu} role="menu">
-              <button
-                type="button"
-                role="menuitem"
-                onClick={() => {
-                  setMenu(false);
-                  send({ t: "makeHost", id: player.id });
-                }}
-              >
-                Make host
-              </button>
+              {player.online && (
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setMenu(false);
+                    send({ t: "makeHost", id: player.id });
+                  }}
+                >
+                  Make host
+                </button>
+              )}
               <button
                 type="button"
                 role="menuitem"
@@ -729,7 +736,7 @@ const Seat = ({
 const EmptySeat = ({ code, first }: { code: string; first: boolean }) => {
   const copy = useCopyLink(code);
   return (
-    <li className={styles.seatEmpty}>
+    <li className={`${styles.seatEmpty}${first ? "" : ` ${styles.seatOpen}`}`}>
       {first ? (
         <button type="button" className={styles.seatInvite} onClick={copy.copy}>
           <span className={styles.seatPlus} aria-hidden>

@@ -126,6 +126,7 @@ const FlipCard = ({
   height,
   from,
   tilt = 0,
+  wait = 220,
 }: {
   front: string;
   back: string;
@@ -134,6 +135,7 @@ const FlipCard = ({
   height: number;
   from?: HTMLElement | null;
   tilt?: number; // (the angle it lies at, in degrees: it leaves the deck square, and settles to it)
+  wait?: number; // (how long it stays on the deck before it's dealt, in ms)
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [dealt, setDealt] = useState(!from);
@@ -146,21 +148,31 @@ const FlipCard = ({
   useLayoutEffect(() => {
     const el = dealer.current;
     if (!from || !el || reducedMotion()) return setDealt(true);
-    const a = from.getBoundingClientRect();
+    // (from exactly where the deck's top card lies, at its angle: it lifts off the top of the pile)
+    const top = from.querySelector("img") ?? from;
+    const a = top.getBoundingClientRect();
     const b = el.getBoundingClientRect();
+    const deckTilt = parseFloat(getComputedStyle(top).getPropertyValue("--tilt")) || 0;
+    // (till it goes, it's not there: the deck's own top card is)
+    el.style.visibility = "hidden";
+    const show = setTimeout(() => (el.style.visibility = ""), wait);
     const anim = el.animate(
       [
-        { transform: `translate(${a.left + a.width / 2 - (b.left + b.width / 2)}px, ${a.top + a.height / 2 - (b.top + b.height / 2)}px) rotate(${-tilt}deg) scale(${a.width / b.width})` },
+        { transform: `translate(${a.left + a.width / 2 - (b.left + b.width / 2)}px, ${a.top + a.height / 2 - (b.top + b.height / 2)}px) rotate(${deckTilt - tilt}deg) scale(${a.width / b.width})` },
         { transform: "none" },
       ],
-      { duration: 420, delay: 220, easing: "cubic-bezier(0.25, 0.8, 0.3, 1)", fill: "backwards" }
+      { duration: 420, delay: wait, easing: "cubic-bezier(0.25, 0.8, 0.3, 1)", fill: "backwards" }
     );
     anim.onfinish = () => setDealt(true);
-    return () => anim.cancel();
+    return () => {
+      clearTimeout(show);
+      el.style.visibility = "";
+      anim.cancel();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <span ref={dealer} className={styles.dealer}>
+    <span ref={dealer} className={styles.dealer} data-dealing={loaded && dealt ? undefined : ""}>
       <span className={`${styles.flipper}${loaded && dealt ? ` ${styles.flipped}` : ""}`}>
         <img ref={ref} className={styles.face} src={front} alt={alt} width={width} height={height} onLoad={() => setLoaded(true)} />
         <img className={`${styles.face} ${styles.faceBack}`} src={back} alt="" width={width} height={height} aria-hidden />
@@ -168,6 +180,9 @@ const FlipCard = ({
     </span>
   );
 };
+
+// (a swap: how long the new card waits on the deck, while the old one goes back into it)
+const SWAP_WAIT = 600;
 
 // where a played card lands in the play area: from the card itself, so it stays put
 const landing = (id: string) => {
@@ -313,9 +328,12 @@ const useClock = (game: GameView, serverNow: number) => {
     const timer = setInterval(() => setNow(Date.now() + offset), 250);
     return () => clearInterval(timer);
   }, [game.endsAt, offset]);
+  // (the time now, not as it was at the last tick: the clock that's just started reads right at once)
+  void now;
+  const at = Date.now() + offset;
   const left =
     game.endsAt !== null
-      ? Math.max(0, game.endsAt - now)
+      ? Math.max(0, game.endsAt - at)
       : game.pausedLeft !== null
         ? game.pausedLeft
         : game.phase === "ready"
@@ -528,6 +546,13 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
     lastFaceUp.current = game.faceUp;
   }, [ep.completed, game.faceUp]);
 
+  // a card just swapped out of this slot (not completed): the new one waits on the deck till the old
+  // one's back in it, then it's dealt (else the old one, flying in over the deck, hides it leaving)
+  const swappedOut = (deck: DirectionDeck, slot: number, card: number) => {
+    const was = lastFaceUp.current[deck]?.[slot];
+    return was !== null && was !== undefined && was !== card && !ep.completed.some((c) => c.deck === deck && c.i === was);
+  };
+
   const players = room.players.filter((p) => game.hands[p.id]);
   const mine = players.find((p) => p.id === me);
   const others = players.filter((p) => p.id !== me);
@@ -601,8 +626,11 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                           type="button"
                           className={styles.card}
                           style={{ "--tilt": tilt(card + slot) } as CSSProperties}
-                          disabled={game.phase === "break"}
-                          onClick={() => {
+                          disabled={game.phase !== "playing"}
+                          onClick={(e) => {
+                            // (a card still on its way out of the deck, or not turned over yet: not
+                            // there to play)
+                            if (e.currentTarget.querySelector("[data-dealing]")) return;
                             // (a card done while the clock's paused starts it again)
                             if (paused) send({ t: "resume" });
                             send({ t: "complete", deck, slot });
@@ -617,6 +645,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                             height={497}
                             from={dealing ? stackRefs.current[deck] : null}
                             tilt={tiltDeg(card + slot)}
+                            wait={swappedOut(deck, slot, card) ? SWAP_WAIT : undefined}
                           />
                         </button>
                       )}
@@ -627,8 +656,9 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                             +{f.points}
                           </span>
                         ))}
-                      {card !== null && game.phase === "ready" && game.left[deck] > 0 && (
-                        <button type="button" className={styles.swap} onClick={() => send({ t: "discard", deck, slot })}>
+                      {card !== null && game.phase === "ready" && game.episode > 1 && game.left[deck] > 0 && (
+                        <button type="button" className={styles.swap} onClick={() => send({ t: "discard", deck, slot })} aria-label={`Swap “${name(deck, card)}”`}>
+                          <Icon name="again" strokeWidth={2.4} />
                           Swap
                         </button>
                       )}
@@ -861,9 +891,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                         />
                       </div>
                     </div>
-                  ) : (
-                    <span key={i} className={styles.pastEmpty} aria-hidden />
-                  );
+                  ) : null;
                 })}
               </div>
             </section>
@@ -871,13 +899,15 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
 
           </aside>
           {/* #endregion */}
-        </div>
 
-        {mine && (
-          <div className={styles.mineRow}>
-            <Seat player={mine} big {...seatProps} />
-          </div>
-        )}
+          {/* your own seat: in the same grid, under the episode and the decks (beside the phone's
+              column, however long that gets) */}
+          {mine && (
+            <div className={styles.mineRow}>
+              <Seat player={mine} big {...seatProps} />
+            </div>
+          )}
+        </div>
       </div>
 
 
@@ -1397,8 +1427,8 @@ const Seat = ({
             <li key={t.kind}>
               <button
                 type="button"
-                className={`${styles.trait}${done ? ` ${styles.traitDone}` : ""}`}
-                disabled={!mine || locked || (done && t.done !== game.episode)}
+                className={`${styles.trait}${done ? ` ${styles.traitDone}` : ""}${locked ? ` ${styles.traitLocked}` : ""}`}
+                disabled={!mine || game.phase !== "break" || locked || (done && t.done !== game.episode)}
                 onClick={() => send({ t: "trait", player: player.id, slot })}
                 aria-pressed={done}
                 aria-label={`${name(t.kind, t.i) || `${t.kind} trait`}${done ? `, played in episode ${t.done}` : ""}`}

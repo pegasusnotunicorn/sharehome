@@ -189,6 +189,8 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 1.25rem;
+  max-width: calc(var(--per, 4) * min(13rem, 42vw) + (var(--per, 4) - 1) * 1.25rem);
+  margin-inline: auto;
 }
 
 .castCard {

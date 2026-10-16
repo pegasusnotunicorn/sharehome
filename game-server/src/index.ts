@@ -269,7 +269,8 @@ export class Room extends DurableObject<Env> {
         break;
       }
       case "makeHost": {
-        if (!isHost || !room.players.some((p) => p.id === msg.id)) return;
+        // (only to someone who's here: a host who's gone can't run the room)
+        if (!isHost || !room.players.some((p) => p.id === msg.id) || !this.isOnline(msg.id)) return;
         room.hostId = msg.id;
         room.hostAwaySince = this.isOnline(msg.id) ? null : Date.now();
         break;
@@ -421,6 +422,7 @@ export class Room extends DurableObject<Env> {
   private isOnline(id: string, closing?: WebSocket) {
     return this.openSockets(closing, id).length > 0;
   }
+
 
   private view(closing?: WebSocket): RoomView {
     const room = this.room!;

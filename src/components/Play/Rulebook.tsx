@@ -13,8 +13,13 @@ const OPEN_EVENT = "lcm:open-rulebook";
 // open it (at a section of it, or where it opens by default)
 export const openRulebook = (section?: Section) => window.dispatchEvent(new CustomEvent(OPEN_EVENT, { detail: section }));
 // where it opens: the cover, or (while a game's on, set by the table) the game's rules
+// (and while a game's on, the little book in the corner's gone: the phone has Rules)
 let opensAt: Section | null = null;
-export const rulebookOpensAt = (section: Section | null) => (opensAt = section);
+const MODE_EVENT = "lcm:rulebook-mode";
+export const rulebookOpensAt = (section: Section | null) => {
+  opensAt = section;
+  window.dispatchEvent(new Event(MODE_EVENT));
+};
 
 // the printed rulebook's pages (public/rulebook.pdf), a picture each: its cover first, then the rest
 // in order (the picture and the quote inside the cover after it)
@@ -53,7 +58,31 @@ const Rulebook = () => {
   const [flying, setFlying] = useState<1 | -1 | null>(null);
   // a drag under way: how far, in px
   const [drag, setDrag] = useState<number | null>(null);
+  // zoomed in on the page: how far, and where to (dragged about, in px)
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const unzoom = () => {
+    setZoom(1);
+    setPan({ x: 0, y: 0 });
+  };
+  // (kept inside the page: it never shows past its edges)
+  const clampPan = (p: { x: number; y: number }, z = zoom) => {
+    const b = bookRef.current;
+    const mx = b ? (b.clientWidth * (z - 1)) / 2 : 0, my = b ? (b.clientHeight * (z - 1)) / 2 : 0;
+    return { x: Math.max(-mx, Math.min(mx, p.x)), y: Math.max(-my, Math.min(my, p.y)) };
+  };
+  const zoomBy = (to: number) => {
+    const z = Math.max(1, Math.min(3, to));
+    setZoom(z);
+    setPan((p) => (z === 1 ? { x: 0, y: 0 } : clampPan(p, z)));
+  };
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const [inGame, setInGame] = useState(opensAt !== null);
+  useEffect(() => {
+    const on = () => setInGame(opensAt !== null);
+    window.addEventListener(MODE_EVENT, on);
+    return () => window.removeEventListener(MODE_EVENT, on);
+  }, []);
   const bookRef = useRef<HTMLDivElement>(null);
   const opener = useRef<HTMLElement | null>(null);
 
@@ -79,6 +108,7 @@ const Rulebook = () => {
     later(() => {
       setStage("closed");
       setView(0);
+      unzoom();
       opener.current?.focus({ preventScroll: true });
     }, OPEN_MS);
   }, []);
@@ -100,6 +130,7 @@ const Rulebook = () => {
   const jump = (n: number) => {
     if (flying || jumping || n === view) return;
     play("page");
+    unzoom();
     setJumping(true);
     later(() => {
       setView(n);
@@ -114,6 +145,7 @@ const Rulebook = () => {
       if (next < 0 || next >= PAGES) return setDrag(null);
       play("page");
       setDrag(null);
+      unzoom();
       setFlying(dir);
       later(() => {
         setView(next);
@@ -144,17 +176,25 @@ const Rulebook = () => {
   }, [stage]);
 
   // a drag (a finger, or the mouse) moves the page with it; let go far enough and it turns
-  const start = useRef<{ x: number; y: number; id: number } | null>(null);
+  // (zoomed in, a drag moves about the page instead)
+  const start = useRef<{ x: number; y: number; id: number; pan: { x: number; y: number } } | null>(null);
   const dragged = useRef(false);
   const onPointerDown = (e: React.PointerEvent) => {
     if (flying || e.button !== 0) return;
-    start.current = { x: e.clientX, y: e.clientY, id: e.pointerId };
+    start.current = { x: e.clientX, y: e.clientY, id: e.pointerId, pan };
     dragged.current = false;
   };
   const onPointerMove = (e: React.PointerEvent) => {
     const s = start.current;
     if (!s || s.id !== e.pointerId) return;
     const dx = e.clientX - s.x, dy = e.clientY - s.y;
+    if (zoom > 1) {
+      if (!dragged.current && Math.hypot(dx, dy) < 6) return;
+      if (!dragged.current) (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+      dragged.current = true;
+      setPan(clampPan({ x: s.pan.x + dx, y: s.pan.y + dy }));
+      return;
+    }
     if (!dragged.current) {
       if (Math.abs(dx) < 8 || Math.abs(dx) < Math.abs(dy)) return;
       dragged.current = true;
@@ -167,7 +207,7 @@ const Rulebook = () => {
   const onPointerUp = (e: React.PointerEvent) => {
     const s = start.current;
     start.current = null;
-    if (!s || !dragged.current) return;
+    if (!s || !dragged.current || zoom > 1) return;
     const dx = e.clientX - s.x;
     if (dx < -SWIPE) go(1);
     else if (dx > SWIPE) go(-1);
@@ -176,6 +216,7 @@ const Rulebook = () => {
   // (a drag isn't a tap on the page's edge too)
   const tap = (dir: 1 | -1) => () => {
     if (dragged.current) return (dragged.current = false);
+    if (zoom > 1) return;
     go(dir);
   };
 
@@ -210,6 +251,7 @@ const Rulebook = () => {
 
   return (
     <>
+      {!inGame && (
       <button
         type="button"
         className={`${styles.launcher}${shown ? ` ${styles.launcherAway}` : ""}`}
@@ -222,6 +264,7 @@ const Rulebook = () => {
         </span>
         <span className={styles.launcherText}>Rules</span>
       </button>
+      )}
 
       {shown &&
         createPortal(
@@ -245,7 +288,17 @@ const Rulebook = () => {
                 if (!p) return null;
                 return (
                   <div key={n} className={`${styles.page}${p.cls ? ` ${p.cls}` : ""}`} style={p.style} aria-hidden={n !== view}>
-                    <img src={pageSrc(n)} alt={n === view ? `Rulebook, page ${n + 1}` : ""} width="1614" height="906" draggable={false} decoding="async" />
+                    <img
+                      src={pageSrc(n)}
+                      alt={n === view ? `Rulebook, page ${n + 1}` : ""}
+                      width="1614"
+                      height="906"
+                      draggable={false}
+                      decoding="async"
+                      className={n === view && zoom > 1 ? styles.zoomed : undefined}
+                      style={n === view ? { transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})` } : undefined}
+                      onDoubleClick={n === view ? () => (zoom > 1 ? unzoom() : zoomBy(2)) : undefined}
+                    />
                     {/* the last page: a review, please (on the page, so it comes and goes with it) */}
                     {n === PAGES - 1 && (
                       <div className={styles.review} onPointerDown={(e) => e.stopPropagation()}>
@@ -290,6 +343,13 @@ const Rulebook = () => {
                 </span>
                 <button type="button" className={styles.turn} onClick={() => go(1)} disabled={view >= PAGES - 1} aria-label="Next page">
                   <Icon name="next" strokeWidth={2.6} />
+                </button>
+                <span className={styles.barGap} aria-hidden />
+                <button type="button" className={styles.turn} onClick={() => zoomBy(zoom - 0.5)} disabled={zoom <= 1} aria-label="Zoom out">
+                  <Icon name="minus" strokeWidth={2.6} />
+                </button>
+                <button type="button" className={styles.turn} onClick={() => zoomBy(zoom + 0.5)} disabled={zoom >= 3} aria-label="Zoom in">
+                  <Icon name="plus" strokeWidth={2.6} />
                 </button>
               </div>
               <button type="button" className={styles.close} onClick={close} aria-label="Close the rulebook">

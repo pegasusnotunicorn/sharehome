@@ -132,54 +132,6 @@
   }
 }
 
-.lightboxClose {
-  position: absolute;
-  top: 0.6rem;
-  right: 0.6rem;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  box-sizing: border-box;
-  border: 2px solid var(--chip-edge);
-  border-radius: var(--chip-radius);
-  background: #fff;
-  box-shadow: 0 3px 0 var(--chip-edge);
-  cursor: pointer;
-}
-
-.lightboxClose svg {
-  width: 14px;
-  height: 14px;
-}
-
-/* (the site's close button: lifts a little on hover, sinks when pressed) */
-.lightboxClose {
-  color: var(--btn-ink);
-  transition:
-    transform 0.12s ease,
-    box-shadow 0.12s ease,
-    border-color 0.15s ease;
-}
-
-.lightboxClose:hover {
-  border-color: var(--btn-ink);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 0 var(--btn-ink);
-}
-
-.lightboxClose:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 var(--chip-edge);
-}
-
-.lightboxClose:focus-visible {
-  outline: 3px solid var(--btn-focus);
-  outline-offset: 3px;
-}
-
 .flatPolaroids {
   margin-top: 1.5rem;
 }

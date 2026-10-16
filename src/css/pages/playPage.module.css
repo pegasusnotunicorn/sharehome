@@ -1575,3 +1575,102 @@
     animation: none;
   }
 }
+
+/* #region--------------------------------------THE WAITING ROOM ON A PHONE */
+
+.lobby {
+  display: flex;
+  flex-direction: column;
+}
+
+@media only screen and (max-width: 640px) {
+  /* your character first (the thing to do); the invite card's gone (Invite a friend, in the cast,
+     copies the link) */
+  .lobby .picker {
+    order: -1;
+    margin-bottom: 1.25rem;
+  }
+
+  .lobby .invite {
+    display: none;
+  }
+
+  .intro {
+    padding-bottom: 0.75rem;
+  }
+
+  /* your character: the card and its name in the middle, the buttons under them */
+  .myPick {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    text-align: center;
+  }
+
+  .myPickName {
+    flex: none;
+    margin: 0;
+  }
+
+  .myPickActions {
+    align-self: stretch;
+  }
+
+  /* the cast: a slim row each, the open seats left out but the one to invite a friend */
+  .seats {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .seat,
+  .seatEmpty {
+    min-height: 0;
+    border-radius: 16px;
+  }
+
+  .seat {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    padding: 0.7rem 3.2rem 0.7rem 0.8rem;
+    text-align: left;
+    animation: none;
+  }
+
+  .seatTokenWrap .seatToken,
+  .seatToken {
+    width: 2.6rem;
+    height: 2.6rem;
+    font-size: 1.1rem;
+  }
+
+  .seatTokenWrap .readyTick {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .seatName {
+    font-size: 1.05rem;
+  }
+
+  .seatTags {
+    min-height: 0;
+    margin-left: auto;
+  }
+
+  .seatCorner,
+  .seatMenuWrap {
+    top: 50%;
+    translate: 0 -50%;
+  }
+
+  .seatOpen {
+    display: none;
+  }
+
+  .seatEmpty {
+    min-height: 3.4rem;
+  }
+}
+
+/* #endregion */

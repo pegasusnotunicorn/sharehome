@@ -406,8 +406,8 @@ const Voice = ({ compact }: { compact?: boolean }) => (
   <section className={`${styles.card} ${styles.voice}${compact ? "" : ` ${styles.narrow}`}`}>
     <h2 className={styles.cardTitle}>Talk it out on Discord</h2>
     <p className={styles.note}>
-      Love, Career &amp; Magic is all improv, so you’ll want to hear each other. Grab a free voice room on our Discord
-      server, or use any call you like.
+      Love, Career &amp; Magic is all about talking with each other, so you’ll want to be on a call together. Grab a
+      free voice room on our Discord server, or use any call you like.
     </p>
     <DefaultButton href={DISCORD_URL} text="Open our Discord" color="purple" className={styles.wide} />
   </section>

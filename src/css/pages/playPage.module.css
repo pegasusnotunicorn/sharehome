@@ -339,16 +339,13 @@
   transform: rotate(2deg);
 }
 
+/* the box being typed into: the name field's focus, on it alone */
 .codeSlotNext {
-  border-color: #5f5aa2;
+  border-color: var(--btn-ink);
   border-style: solid;
   background: #fff;
-}
-
-.codeInputFocused {
-  border-radius: 16px;
   outline: 3px solid var(--btn-focus);
-  outline-offset: 4px;
+  outline-offset: 2px;
 }
 
 .codeField {

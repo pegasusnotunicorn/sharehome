@@ -216,7 +216,7 @@ const CodeInput = ({ code, setCode }: { code: string; setCode: (c: string) => vo
   return (
     <label className={styles.field}>
       <span className={styles.fieldLabel}>Room code</span>
-      <span className={`${styles.codeInput}${focused ? ` ${styles.codeInputFocused}` : ""}`}>
+      <span className={styles.codeInput}>
         {[0, 1, 2, 3].map((i) => (
           <span
             key={i}

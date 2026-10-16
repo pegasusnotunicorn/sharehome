@@ -135,6 +135,8 @@ export interface RoomView {
   // how many are watching (spectators: no seat; they see the table, and can't touch it). Counted as
   // the room's sent; a spectator coming or going doesn't send it again on their own
   watching: number;
+  // whether more spectators may come in (the host can close the doors)
+  watchOpen: boolean;
   // the server's clock as it sent this, so the page can line its own clock up with it
   now: number;
 }
@@ -148,6 +150,8 @@ export interface Slot {
 // browser → room
 export type ClientMessage =
   | { t: "chat"; text: string } // a line in the chat (players and spectators)
+  | { t: "removeWatcher"; id: string } // host only: a spectator out (and their chat lines), not to come back
+  | { t: "watchOpen"; open: boolean } // host only: let more spectators in, or not
   | { t: "rename"; name: string }
   | { t: "kick"; id: string } // host only
   | { t: "makeHost"; id: string } // host only
@@ -214,6 +218,7 @@ export type ServerMessage =
   | { t: "chat"; line: ChatLine } // a new line
   | { t: "chatLog"; lines: ChatLine[] } // the chat so far, as a socket opens
   | { t: "chatSlow" } // too fast: that line wasn't sent
+  | { t: "watching"; n: number; open: boolean } // the audience's changed (to the players only)
   | { t: "error"; error: RoomError }
   // sent just before the room closes a socket for good (a socket's own close can be slow to arrive)
   | { t: "bye"; reason: ByeReason };
@@ -221,7 +226,7 @@ export type ServerMessage =
 // ("expired": the room closed, after a long while)
 export type ByeReason = "kicked" | "left" | "replaced" | "expired";
 
-export type RoomError = "not-found" | "full" | "bad-request" | "watch-full";
+export type RoomError = "not-found" | "full" | "bad-request" | "watch-full" | "watch-closed" | "removed";
 
 // Why the room closed a socket, so the page knows not to reconnect
 export const CLOSE_KICKED = 4003;

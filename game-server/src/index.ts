@@ -167,6 +167,10 @@ interface StoredRoom {
   emptySince: number | null;
   // the game on the table (null: in the lobby)
   game?: StoredGame | null;
+  // devices the host has removed: they can't come back (to play or watch)
+  removed?: string[];
+  // the host's closed the doors to more spectators
+  watchClosed?: boolean;
   // in the waiting room: who picked which character, and who's ready
   picks?: Record<string, number>;
   ready?: Record<string, boolean>;
@@ -232,16 +236,19 @@ export class Room extends DurableObject<Env> {
     if (!PLAYER_ID.test(playerId)) return refuse("bad-request");
 
     let player = room.players.find((p) => p.id === playerId);
+    if (!player && room.removed?.includes(playerId)) return refuse("removed");
 
     // a spectator: anyone not already playing who asks to watch, or arrives once the room's full or
     // the show's started. Cheap by design: nothing's saved and nobody else is sent anything (they see
     // the count of watchers with the room's next change); the room sends them the table as it is
     if (!player && (url.searchParams.get("watch") === "1" || room.players.length >= MAX_PLAYERS || room.game)) {
+      if (room.watchClosed) return refuse("watch-closed");
       if (this.ctx.getWebSockets(WATCH).length >= maxWatching(this.env)) return refuse("watch-full");
       this.ctx.acceptWebSocket(server, [WATCH]);
       server.serializeAttachment({ playerId, watch: true, name: cleanName(url.searchParams.get("name")) });
       this.send(server, { t: "state", room: this.view() });
       if (this.chat.length) this.send(server, { t: "chatLog", lines: this.chat });
+      this.tellPlayersWatching();
       return new Response(null, { status: 101, webSocket: client });
     }
 
@@ -316,6 +323,34 @@ export class Room extends DurableObject<Env> {
       case "kick": {
         if (!isHost || msg.id === playerId) return;
         if (!this.removePlayer(msg.id, "kicked")) return;
+        this.bar(msg.id);
+        break;
+      }
+      case "removeWatcher": {
+        if (!isHost || typeof msg.id !== "string" || msg.id === playerId || room.players.some((p) => p.id === msg.id)) return;
+        const theirs = this.ctx.getWebSockets(WATCH).filter((ws) => (ws.deserializeAttachment() as { playerId?: string } | null)?.playerId === msg.id);
+        const said = this.chat.some((l) => l.by === msg.id);
+        if (!theirs.length && !said) return;
+        for (const ws of theirs) this.bye(ws, "kicked", CLOSE_KICKED);
+        this.bar(msg.id);
+        // (and what they said goes too)
+        if (said) {
+          this.chat = this.chat.filter((l) => l.by !== msg.id);
+          await this.ctx.storage.put("chat", this.chat);
+          const log = JSON.stringify({ t: "chatLog", lines: this.chat } satisfies ServerMessage);
+          for (const ws of this.openSockets()) {
+            try {
+              ws.send(log);
+            } catch {
+              // (gone)
+            }
+          }
+        }
+        break;
+      }
+      case "watchOpen": {
+        if (!isHost) return;
+        room.watchClosed = !msg.open;
         break;
       }
       case "makeHost": {
@@ -381,8 +416,8 @@ export class Room extends DurableObject<Env> {
     const room = this.room;
     if (!room) return;
     const { playerId, watch } = (ws.deserializeAttachment() as { playerId?: string; watch?: boolean }) || {};
-    // (a spectator going: nothing to save, nobody to tell)
-    if (watch) return;
+    // (a spectator going: nothing to save; the players see the count go down)
+    if (watch) return this.tellPlayersWatching(ws);
     const now = Date.now();
     if (playerId && room.hostId === playerId && !this.isOnline(playerId, ws)) room.hostAwaySince = now;
     // (gone from a game, with no other tab still open: everyone's told)
@@ -493,6 +528,7 @@ export class Room extends DurableObject<Env> {
       ready: room.ready ?? {},
       game: room.game ? gameView(room.game) : null,
       watching: this.ctx.getWebSockets(WATCH).filter((ws) => ws !== closing && ws.readyState === WebSocket.OPEN).length,
+      watchOpen: !room.watchClosed,
       now: Date.now(),
     };
   }
@@ -503,6 +539,26 @@ export class Room extends DurableObject<Env> {
     } catch {
       // (a socket that's just gone: the close handler tidies up)
     }
+  }
+
+  // how many are watching, to the players alone (a handful of tiny messages, however big the audience)
+  private tellPlayersWatching(closing?: WebSocket) {
+    if (!this.room) return;
+    const n = this.ctx.getWebSockets(WATCH).filter((ws) => ws !== closing && ws.readyState === WebSocket.OPEN).length;
+    const msg = JSON.stringify({ t: "watching", n, open: !this.room.watchClosed } satisfies ServerMessage);
+    for (const ws of this.playerSockets()) {
+      try {
+        ws.send(msg);
+      } catch {
+        // (gone)
+      }
+    }
+  }
+
+  // someone the host's removed: not to come back (the last 100 kept)
+  private bar(id: string) {
+    const room = this.room!;
+    room.removed = [...(room.removed ?? []).filter((x) => x !== id), id].slice(-100);
   }
 
   private bye(ws: WebSocket, reason: ByeReason, code: number) {

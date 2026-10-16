@@ -357,6 +357,18 @@ const Lobby = ({ code, name, watch, takeSeat }: { code: string; name: string; wa
         <DefaultButton navlink="/play" text="Start a game" icon="plus" color="red" />
       </Stage>
     );
+  if (status === "refused" && error === "watch-closed")
+    return (
+      <Stage eyebrow={<>Game {code}</>} title="The doors are closed" lead="The host isn’t letting any more spectators in to this show. Start your own game instead!">
+        <DefaultButton navlink="/play" text="Start a game" icon="plus" color="red" />
+      </Stage>
+    );
+  if (status === "refused" && error === "removed")
+    return (
+      <Stage eyebrow={<>Game {code}</>} title="You’ve been written out" lead="The host took you out of this show.">
+        <DefaultButton navlink="/play" text="Start a game" icon="plus" color="red" />
+      </Stage>
+    );
   if (status === "refused") return <Missing code={code} full={error === "full"} />;
   if (status === "gone") {
     return (
@@ -390,8 +402,8 @@ const Lobby = ({ code, name, watch, takeSeat }: { code: string; name: string; wa
   const spectating = !room.players.some((p) => p.id === me);
   const watchers = (
     <>
-      <Watchers room={room} spectating={spectating} takeSeat={takeSeat} leave={() => navigate("/play")} />
-      <Chat lines={chat} me={me} send={send} slow={chatSlow} />
+      <Watchers room={room} spectating={spectating} isHost={isHost} send={send} takeSeat={takeSeat} leave={() => navigate("/play")} />
+      <Chat lines={chat} me={me} send={send} slow={chatSlow} isHost={isHost} />
     </>
   );
   const seats = Array.from({ length: MAX_PLAYERS }, (_, i) => room.players[i] ?? null);
@@ -810,15 +822,40 @@ const useCopyLink = (code: string) => {
 // The invite: the room's code (a tap copies it) and its link, to copy, and the faces of the cast so far
 // the audience: how many are watching (to everyone), and for a spectator, that they're watching, a
 // way to take a seat while there's one free before the show, and a way out
-const Watchers = ({ room, spectating, takeSeat, leave }: { room: RoomView; spectating: boolean; takeSeat: () => void; leave: () => void }) => {
+const Watchers = ({
+  room,
+  spectating,
+  isHost,
+  send,
+  takeSeat,
+  leave,
+}: {
+  room: RoomView;
+  spectating: boolean;
+  isHost: boolean;
+  send: ReturnType<typeof useRoom>["send"];
+  takeSeat: () => void;
+  leave: () => void;
+}) => {
   const seat = !room.game && room.players.length < MAX_PLAYERS;
-  if (!spectating && !room.watching) return null;
+  // (the host always has it: the doors to open or close)
+  if (!spectating && !room.watching && !isHost) return null;
   return (
     <div className={`${styles.watchers}${spectating ? ` ${styles.watchersMe}` : ""}`} role="status">
       <span className={styles.watchersCount}>
         <Icon name="eye" />
-        {spectating ? "You’re watching" : `${room.watching} watching`}
+        {spectating ? "You’re watching" : `${room.watching} watching${room.watchOpen ? "" : " · doors closed"}`}
       </span>
+      {isHost && (
+        <button
+          type="button"
+          className={room.watchOpen ? styles.watchersLeave : styles.watchersSeat}
+          onClick={() => send({ t: "watchOpen", open: !room.watchOpen })}
+          title={room.watchOpen ? "Stop any more spectators coming in" : "Let spectators in again"}
+        >
+          {room.watchOpen ? "Close the doors" : "Open the doors"}
+        </button>
+      )}
       {spectating && seat && (
         <button type="button" className={styles.watchersSeat} onClick={takeSeat}>
           Take a seat

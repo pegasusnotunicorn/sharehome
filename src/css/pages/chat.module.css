@@ -125,6 +125,36 @@
   overflow-wrap: anywhere;
 }
 
+/* (the host's way to remove a spectator: on their line) */
+.lines li {
+  position: relative;
+}
+
+.remove {
+  position: absolute;
+  top: 4px;
+  right: -34px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1.5px solid rgba(50, 50, 50, 0.15);
+  border-radius: 8px;
+  background: #fff;
+  color: #b3261e;
+  cursor: pointer;
+}
+
+.remove:hover {
+  border-color: #b3261e;
+}
+
+.remove svg {
+  width: 16px;
+  height: 16px;
+}
+
 .lines li.mine {
   align-self: flex-end;
   border-radius: 14px 14px 4px 14px;

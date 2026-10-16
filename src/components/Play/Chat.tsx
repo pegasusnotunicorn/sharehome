@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { CHAT_EMOJI, CHAT_MAX, type ChatLine, type ClientMessage } from "../../../game-server/src/protocol";
 import Icon from "../utils/Icons";
+import Confirm from "./Confirm";
 import { PLAYER_COLORS } from "./GameTable";
 import styles from "../../css/pages/chat.module.css";
 
@@ -30,9 +31,11 @@ interface ChatProps {
   me: string;
   send: (msg: ClientMessage) => void;
   slow: number; // when a line was last turned back for coming too fast
+  isHost: boolean; // (the host can remove a spectator, from what they've said)
 }
 
-const Chat = ({ lines, me, send, slow }: ChatProps) => {
+const Chat = ({ lines, me, send, slow, isHost }: ChatProps) => {
+  const [removing, setRemoving] = useState<ChatLine | null>(null);
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [picking, setPicking] = useState(false);
@@ -103,6 +106,11 @@ const Chat = ({ lines, me, send, slow }: ChatProps) => {
                   )}
                 </span>
                 <Text text={l.text} />
+                {isHost && l.watching && l.by !== me && (
+                  <button type="button" className={styles.remove} onClick={() => setRemoving(l)} aria-label={`Remove ${l.name} from the show`} title="Remove from the show">
+                    <Icon name="removePerson" strokeWidth={2.2} />
+                  </button>
+                )}
               </li>
             ))}
           </ol>
@@ -136,6 +144,20 @@ const Chat = ({ lines, me, send, slow }: ChatProps) => {
             </button>
           </form>
         </section>
+      )}
+
+      {removing && (
+        <Confirm
+          title={`Remove ${removing.name}?`}
+          text="They’ll be taken out of the show, what they’ve said goes from the chat, and they can’t come back to this room."
+          action="Remove"
+          icon="removePerson"
+          onConfirm={() => {
+            send({ t: "removeWatcher", id: removing.by });
+            setRemoving(null);
+          }}
+          onClose={() => setRemoving(null)}
+        />
       )}
     </>
   );

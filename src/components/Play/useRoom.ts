@@ -51,6 +51,7 @@ export default function useRoom(code: string | null, name: string, watch = false
         else if (msg.t === "chatLog") setChat(msg.lines);
         else if (msg.t === "chat") setChat((all) => [...all.filter((l) => l.id !== msg.line.id), msg.line].slice(-60));
         else if (msg.t === "chatSlow") setChatSlow(Date.now());
+        else if (msg.t === "watching") setRoom((r) => (r ? { ...r, watching: msg.n, watchOpen: msg.open } : r));
         else if (msg.t === "error") {
           done = true;
           setError(msg.error);

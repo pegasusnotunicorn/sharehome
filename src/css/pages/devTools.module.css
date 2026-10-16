@@ -1,0 +1,67 @@
+/* DEV TOOLS: for trying the UI out (take out before merging, with DevTools.tsx) */
+.dev {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 170000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: "Roboto Regular", sans-serif;
+}
+
+.toggle {
+  padding: 6px 12px;
+  border: 2px solid #ff00aa;
+  border-radius: 8px;
+  background: #1b1b1f;
+  font-family: monospace;
+  font-weight: bold;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: #ff5ccf;
+  cursor: pointer;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 250px;
+  padding: 10px;
+  border: 2px solid #ff00aa;
+  border-radius: 10px;
+  background: #1b1b1f;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  color: #fff;
+}
+
+.panel b {
+  margin-bottom: 4px;
+  font-family: monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ff5ccf;
+}
+
+.panel button {
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 6px;
+  background: #2e2e36;
+  font-size: 13px;
+  text-align: left;
+  color: #fff;
+  cursor: pointer;
+}
+
+.panel button:hover:not(:disabled) {
+  background: #44444f;
+}
+
+.panel button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}

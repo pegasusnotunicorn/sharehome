@@ -140,3 +140,51 @@
 }
 
 /* #endregion */
+
+/* #region--------------------------------------VARIANTS AND EXTRAS */
+
+/* a Kickstarter dialog: the band in Kickstarter green */
+.kickstarter {
+  --dialog-band: #05ce78;
+}
+
+/* a picture across the top of a dialog */
+.picture {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0.75rem 0 1.25rem;
+  border-radius: 12px;
+}
+
+/* a button the dialog's width */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.stack > * {
+  width: 100%;
+}
+
+/* a quiet way out under the buttons */
+.later {
+  display: block;
+  margin: 0.9rem auto 0;
+  padding: 0.2rem 0.4rem;
+  border: 0;
+  background: none;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.85rem;
+  color: rgba(50, 50, 50, 0.7);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.later:hover {
+  color: #323232;
+}
+
+/* #endregion */

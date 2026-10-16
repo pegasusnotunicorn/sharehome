@@ -126,6 +126,7 @@ const FlipCard = ({
   height,
   from,
   tilt = 0,
+  wait = 220,
 }: {
   front: string;
   back: string;
@@ -134,6 +135,7 @@ const FlipCard = ({
   height: number;
   from?: HTMLElement | null;
   tilt?: number; // (the angle it lies at, in degrees: it leaves the deck square, and settles to it)
+  wait?: number; // (how long it stays on the deck before it's dealt, in ms)
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [dealt, setDealt] = useState(!from);
@@ -153,14 +155,14 @@ const FlipCard = ({
         { transform: `translate(${a.left + a.width / 2 - (b.left + b.width / 2)}px, ${a.top + a.height / 2 - (b.top + b.height / 2)}px) rotate(${-tilt}deg) scale(${a.width / b.width})` },
         { transform: "none" },
       ],
-      { duration: 420, delay: 220, easing: "cubic-bezier(0.25, 0.8, 0.3, 1)", fill: "backwards" }
+      { duration: 420, delay: wait, easing: "cubic-bezier(0.25, 0.8, 0.3, 1)", fill: "backwards" }
     );
     anim.onfinish = () => setDealt(true);
     return () => anim.cancel();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <span ref={dealer} className={styles.dealer}>
+    <span ref={dealer} className={styles.dealer} data-dealing={loaded && dealt ? undefined : ""}>
       <span className={`${styles.flipper}${loaded && dealt ? ` ${styles.flipped}` : ""}`}>
         <img ref={ref} className={styles.face} src={front} alt={alt} width={width} height={height} onLoad={() => setLoaded(true)} />
         <img className={`${styles.face} ${styles.faceBack}`} src={back} alt="" width={width} height={height} aria-hidden />
@@ -168,6 +170,9 @@ const FlipCard = ({
     </span>
   );
 };
+
+// (a swap: how long the new card waits on the deck, while the old one goes back into it)
+const SWAP_WAIT = 600;
 
 // where a played card lands in the play area: from the card itself, so it stays put
 const landing = (id: string) => {
@@ -528,6 +533,13 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
     lastFaceUp.current = game.faceUp;
   }, [ep.completed, game.faceUp]);
 
+  // a card just swapped out of this slot (not completed): the new one waits on the deck till the old
+  // one's back in it, then it's dealt (else the old one, flying in over the deck, hides it leaving)
+  const swappedOut = (deck: DirectionDeck, slot: number, card: number) => {
+    const was = lastFaceUp.current[deck]?.[slot];
+    return was !== null && was !== undefined && was !== card && !ep.completed.some((c) => c.deck === deck && c.i === was);
+  };
+
   const players = room.players.filter((p) => game.hands[p.id]);
   const mine = players.find((p) => p.id === me);
   const others = players.filter((p) => p.id !== me);
@@ -602,7 +614,10 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                           className={styles.card}
                           style={{ "--tilt": tilt(card + slot) } as CSSProperties}
                           disabled={game.phase !== "playing"}
-                          onClick={() => {
+                          onClick={(e) => {
+                            // (a card still on its way out of the deck, or not turned over yet: not
+                            // there to play)
+                            if (e.currentTarget.querySelector("[data-dealing]")) return;
                             // (a card done while the clock's paused starts it again)
                             if (paused) send({ t: "resume" });
                             send({ t: "complete", deck, slot });
@@ -617,6 +632,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                             height={497}
                             from={dealing ? stackRefs.current[deck] : null}
                             tilt={tiltDeg(card + slot)}
+                            wait={swappedOut(deck, slot, card) ? SWAP_WAIT : undefined}
                           />
                         </button>
                       )}
@@ -862,9 +878,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                         />
                       </div>
                     </div>
-                  ) : (
-                    <span key={i} className={styles.pastEmpty} aria-hidden />
-                  );
+                  ) : null;
                 })}
               </div>
             </section>

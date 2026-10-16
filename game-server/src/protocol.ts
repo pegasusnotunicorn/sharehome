@@ -143,7 +143,13 @@ export interface Slot {
 }
 
 // browser → room
+// ---- DEV TOOLS (for trying the UI out; take out before merging) ----
+export const DEV_ACTIONS = ["addPlayer", "removePlayer", "playersAway", "botCard", "botRemote", "tenSeconds", "endEpisode", "finale"] as const;
+export type DevAction = (typeof DEV_ACTIONS)[number];
+// ---- END DEV TOOLS ----
+
 export type ClientMessage =
+  | { t: "dev"; action: DevAction } // DEV TOOLS (host only; take out before merging)
   | { t: "rename"; name: string }
   | { t: "kick"; id: string } // host only
   | { t: "makeHost"; id: string } // host only

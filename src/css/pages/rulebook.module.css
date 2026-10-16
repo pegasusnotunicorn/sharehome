@@ -167,6 +167,7 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
+  transition: transform 0.2s ease;
   -webkit-user-drag: none;
 }
 
@@ -179,6 +180,21 @@
 .under2 {
   transform: translate(12px, 11px) rotate(1.2deg);
   filter: brightness(0.9);
+}
+
+/* (the page on top takes a double-click, to zoom in or out; zoomed in, a drag moves about it) */
+.page > img[style] {
+  pointer-events: auto;
+}
+
+.page > img.zoomed {
+  cursor: grab;
+  transition-duration: 0.08s;
+}
+
+/* (a gap in the bar between turning the page and zooming) */
+.barGap {
+  width: 0.5rem;
 }
 
 /* the half of the page a tap turns to: a hint of the edge on hover */

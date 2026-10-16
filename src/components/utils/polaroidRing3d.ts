@@ -131,6 +131,9 @@ export async function mountPolaroidRing(el: HTMLElement, { photos, start = 0, on
   const faceOf = (obj: THREE.Group) => (obj.children[0] as THREE.Mesh).material as THREE.MeshStandardMaterial;
   const backOf = (obj: THREE.Group) => (obj.children[1] as THREE.Mesh).material as THREE.MeshStandardMaterial;
   const edgeOf = (obj: THREE.Group) => ((obj.children[2] as THREE.Mesh).material as THREE.MeshStandardMaterial[])[1];
+  // (matte photo paper: a glossy face catches the light from the front as a white sheen, and the
+  // photo in front looks hazy)
+  for (const obj of cards) faceOf(obj).roughness = backOf(obj).roughness = 1;
   const EDGE = edgeOf(cards[0]).color.clone();
   const MIST = new T.Color(0xf4f2ec);
 

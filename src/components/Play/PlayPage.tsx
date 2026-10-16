@@ -14,6 +14,7 @@ import GameTable, { PLAYER_COLORS, preloadBacks, useNames } from "./GameTable";
 import Toast from "./Toast";
 import Rulebook from "./Rulebook";
 import CharacterChooser from "./CharacterChooser";
+import DevTools from "./DevTools"; // DEV TOOLS (take out before merging)
 import { getAllCharacters } from "../Characters/Characters";
 import useRoom from "./useRoom";
 import styles from "../../css/pages/playPage.module.css";
@@ -148,7 +149,6 @@ const Voice = ({ stacked }: { stacked?: boolean }) => (
     </span>
     <div className={styles.voiceText}>
       <h2 className={styles.voiceTitle}>Talk it out on Discord</h2>
-      <p>Play on a call: grab a free voice room on our Discord.</p>
     </div>
     <DefaultButton href={DISCORD_URL} text="Open our Discord" icon="discord" color="purple" className={styles.voiceButton} />
   </aside>
@@ -374,6 +374,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
       <>
         {reconnecting}
         <GameTable room={room} me={me} isHost={isHost} send={send} />
+        {isHost && <DevTools room={room} send={send} />}{/* DEV TOOLS (take out before merging) */}
       </>
     );
   }
@@ -389,6 +390,9 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
 
       {reconnecting}
 
+      {isHost && <DevTools room={room} send={send} />}{/* DEV TOOLS (take out before merging) */}
+      {/* (on a phone, your character comes first: it's the thing to do) */}
+      <div className={styles.lobby}>
       <div className={styles.lobbyTop}>
         <Invite code={room.code} room={room} />
         <section className={styles.showtime}>
@@ -425,14 +429,17 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
               </a>
             </li>
           </ul>
-          <DefaultButton
-            onClick={() => (notReady.length ? setStartCheck(true) : send({ t: "start" }))}
-            disabled={!canStart}
-            text="Start the show"
-            icon="clapper"
-            color="red"
-            className={styles.startButton}
-          />
+          {/* (the host's to press: the others wait for it) */}
+          {isHost && (
+            <DefaultButton
+              onClick={() => (notReady.length ? setStartCheck(true) : send({ t: "start" }))}
+              disabled={!canStart}
+              text="Start the show"
+              icon="clapper"
+              color="red"
+              className={styles.startButton}
+            />
+          )}
         </section>
       </div>
 
@@ -459,6 +466,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
       </section>
 
       <Voice />
+      </div>
 
       <div className={styles.leave}>
         <button type="button" className={styles.textButton} onClick={() => setLeaving(true)}>
@@ -729,7 +737,7 @@ const Seat = ({
 const EmptySeat = ({ code, first }: { code: string; first: boolean }) => {
   const copy = useCopyLink(code);
   return (
-    <li className={styles.seatEmpty}>
+    <li className={`${styles.seatEmpty}${first ? "" : ` ${styles.seatOpen}`}`}>
       {first ? (
         <button type="button" className={styles.seatInvite} onClick={copy.copy}>
           <span className={styles.seatPlus} aria-hidden>

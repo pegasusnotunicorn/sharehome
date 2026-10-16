@@ -611,7 +611,8 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
 type Played = GameView["episodes"][number]["completed"];
 
 // The play area: the cards completed this episode, dropped one over the other in a space that never
-// grows (the newest on top). It's one thing to tap: it opens the list of them all.
+// grows (the newest on top, the oldest gone past eight). It's one thing to tap: it opens the list of
+// them all.
 const PlayArea = ({ cards, points, open }: { cards: Played; points: number; open: () => void }) => {
   const shown = cards.slice(-8);
   return (
@@ -622,20 +623,24 @@ const PlayArea = ({ cards, points, open }: { cards: Played; points: number; open
       aria-label={`Played this episode: ${cards.length} card${cards.length === 1 ? "" : "s"}, +${points}. See them all`}
     >
       <span className={styles.playCards} aria-hidden>
-        {shown.map((c, i) => (
-          <img
-            key={c.id}
-            src={art.direction(c.deck, c.i)}
-            alt=""
-            style={
-              {
-                "--x": `${((c.i * 37 + i * 53) % 46) + 4}%`,
-                "--y": `${((c.i * 29 + i * 17) % 34) + 6}%`,
-                "--tilt": `${((c.i * 13 + i * 7) % 24) - 12}deg`,
-              } as CSSProperties
-            }
-          />
-        ))}
+        {shown.map((c) => {
+          // (where a card lands comes from the card itself, so it stays put as others come and go)
+          const h = hash(c.id);
+          return (
+            <img
+              key={c.id}
+              src={art.direction(c.deck, c.i)}
+              alt=""
+              style={
+                {
+                  "--x": `${(h % 46) + 4}%`,
+                  "--y": `${((h >> 6) % 34) + 6}%`,
+                  "--tilt": `${((h >> 12) % 24) - 12}deg`,
+                } as CSSProperties
+              }
+            />
+          );
+        })}
       </span>
       <span className={styles.playLabel}>
         {cards.length === 0 ? (
@@ -648,6 +653,13 @@ const PlayArea = ({ cards, points, open }: { cards: Played; points: number; open
       </span>
     </button>
   );
+};
+
+// a number from a card's id, the same every time
+const hash = (id: string) => {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 16777619);
+  return h >>> 0;
 };
 
 const PAGE = 5;

@@ -150,6 +150,17 @@ const useClock = (game: GameView, serverNow: number) => {
   return left;
 };
 
+// the time of day, for the phone's status bar
+const useWallClock = () => {
+  const fmt = () => new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }).replace(/\s?[AP]M$/i, "");
+  const [t, setT] = useState(fmt);
+  useEffect(() => {
+    const timer = setInterval(() => setT(fmt()), 15_000);
+    return () => clearInterval(timer);
+  }, []);
+  return t;
+};
+
 const mmss = (ms: number) => {
   const s = Math.ceil(ms / 1000);
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -197,6 +208,10 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   const [rules, setRules] = useState(false);
   const [cloth, setCloth] = useState<Cloth>(readCloth);
   const [picking, setPicking] = useState(false);
+  const [phoneTab, setPhoneTab] = useState<"clock" | "log">("clock");
+  // the newest log entry seen on the phone (a dot on the tab when there's something newer)
+  const [seenLog, setSeenLog] = useState<string | null>(null);
+  const clockTime = useWallClock();
   const pickCloth = (c: Cloth) => {
     setCloth(c);
     try {
@@ -214,6 +229,10 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   const seen = useRef<Set<string> | null>(null);
 
   const closeMenu = useCallback(() => setPicked(null), []);
+  const unread = phoneTab !== "log" && game.log.length > 0 && game.log[0].id !== seenLog;
+  useEffect(() => {
+    if (phoneTab === "log") setSeenLog(game.log[0]?.id ?? null);
+  }, [phoneTab, game.log]);
   const ep = game.episodes[game.episode - 1];
   useEffect(() => {
     const ids = new Set(ep.completed.map((c) => c.id));
@@ -380,63 +399,144 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
           </section>
           {/* #endregion */}
 
-          {/* #region the phone (the clock), callbacks, and the sticky note */}
+          {/* #region the phone (the clock, and what's happened), and callbacks */}
           <aside className={styles.side}>
-            <div className={`${styles.phone}${game.phase === "break" ? ` ${styles.phoneUp}` : ""}`} role="timer" aria-live="off">
-              <span className={styles.phoneNotch} aria-hidden />
-              <span className={styles.phoneLabel}>{game.phase === "break" ? "Time’s up!" : paused ? "Paused" : `Episode ${game.episode}`}</span>
-              <span className={`${styles.phoneTime}${running && left < 10_000 ? ` ${styles.phoneLow}` : ""}`}>{mmss(left)}</span>
-              <span className={styles.phoneTrack}>
-                <span style={{ transform: `scaleX(${left / (EPISODE_SECONDS * 1000)})` }} />
-              </span>
-              <div className={styles.phoneActions}>
-                {game.phase === "ready" && <DefaultButton onClick={() => send({ t: "startClock" })} text="Start" color="red" />}
-                {running && <DefaultButton onClick={() => send({ t: "pause" })} text="Pause" color="white" />}
-                {paused && <DefaultButton onClick={() => send({ t: "resume" })} text="Resume" color="red" />}
-                {game.phase === "break" && (
-                  <DefaultButton
-                    onClick={() => send({ t: "nextEpisode" })}
-                    text={game.episode >= EPISODES ? "Ratings" : `Episode ${game.episode + 1}`}
-                    color="yellow"
-                  />
+            <div className={`${styles.phone}${game.phase === "break" ? ` ${styles.phoneUp}` : ""}`}>
+              <span className={styles.phoneIsland} aria-hidden />
+              <div className={styles.statusBar} aria-hidden>
+                <span>{clockTime}</span>
+                <span className={styles.statusIcons}>
+                  <svg viewBox="0 0 18 12">
+                    <rect x="0" y="8" width="3" height="4" rx="1" />
+                    <rect x="5" y="5" width="3" height="7" rx="1" />
+                    <rect x="10" y="2" width="3" height="10" rx="1" />
+                    <rect x="15" y="0" width="3" height="12" rx="1" />
+                  </svg>
+                  <span className={styles.battery}>
+                    <span />
+                  </span>
+                </span>
+              </div>
+
+              <div className={styles.screen}>
+                {phoneTab === "clock" ? (
+                  <div className={styles.clockApp} role="timer" aria-live="off" id="phone-clock">
+                    <span className={styles.phoneLabel}>{game.phase === "break" ? "Time’s up!" : paused ? "Paused" : `Episode ${game.episode} of ${EPISODES}`}</span>
+                    <span className={`${styles.phoneTime}${running && left < 10_000 ? ` ${styles.phoneLow}` : ""}`}>{mmss(left)}</span>
+                    <span className={styles.phoneTrack}>
+                      <span style={{ transform: `scaleX(${left / (EPISODE_SECONDS * 1000)})` }} />
+                    </span>
+                    <div className={styles.phoneActions}>
+                      {game.phase === "ready" && <DefaultButton onClick={() => send({ t: "startClock" })} text="Start" color="red" />}
+                      {running && <DefaultButton onClick={() => send({ t: "pause" })} text="Pause" color="white" />}
+                      {paused && <DefaultButton onClick={() => send({ t: "resume" })} text="Resume" color="red" />}
+                      {game.phase === "break" && (
+                        <DefaultButton
+                          onClick={() => send({ t: "nextEpisode" })}
+                          text={game.episode >= EPISODES ? "Ratings" : `Episode ${game.episode + 1}`}
+                          color="yellow"
+                        />
+                      )}
+                    </div>
+                    <div className={styles.phoneFoot}>
+                      <span>
+                        <b>{points.total}</b> pts
+                      </span>
+                      <button type="button" className={styles.rulesButton} onClick={() => setRules(true)}>
+                        Rules
+                      </button>
+                      <button type="button" className={styles.clothButton} onClick={() => setPicking(true)} aria-label="Change the tablecloth" title="Tablecloth">
+                        <svg viewBox="0 0 24 24" aria-hidden>
+                          <path d="M12 3a9 9 0 0 0 0 18c1.1 0 1.7-.8 1.7-1.6 0-.5-.2-.8-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.6 1.7-1.6h2A4.6 4.6 0 0 0 21 10.8C21 6.5 17 3 12 3z" />
+                          <circle cx="7.5" cy="11" r="1" />
+                          <circle cx="10.5" cy="7.5" r="1" />
+                          <circle cx="15" cy="7.5" r="1" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.mute}
+                        onClick={() => {
+                          setMuted(!muted);
+                          setMutedState(!muted);
+                        }}
+                        aria-label={muted ? "Turn sound on" : "Turn sound off"}
+                        aria-pressed={!muted}
+                      >
+                        {muted ? (
+                          <svg viewBox="0 0 24 24" aria-hidden>
+                            <path d="M11 5 6 9H3v6h3l5 4zM17 9l4 6M21 9l-4 6" />
+                          </svg>
+                        ) : (
+                          <svg viewBox="0 0 24 24" aria-hidden>
+                            <path d="M11 5 6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.logApp} id="phone-log">
+                    <div className={styles.logHead}>
+                      <span>What’s happened</span>
+                      <span className={styles.logClock}>{mmss(left)}</span>
+                    </div>
+                    {game.log.length === 0 ? (
+                      <p className={styles.logEmpty}>Nothing yet!</p>
+                    ) : (
+                      <ul className={styles.logList}>
+                        {game.log.map((l) => {
+                          const who = l.by && room.players.find((p) => p.id === l.by);
+                          return (
+                            <li key={l.id} style={{ "--who": who ? PLAYER_COLORS[who.color % PLAYER_COLORS.length] : "#8a86c9" } as CSSProperties}>
+                              <span className={styles.logDot} aria-hidden>
+                                {who ? who.name.charAt(0).toUpperCase() : "★"}
+                              </span>
+                              <span>{l.text.replace(/\{([^}]+)\}/g, (_, id) => nameOf(id))}</span>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    )}
+                  </div>
                 )}
               </div>
-              <div className={styles.phoneFoot}>
-                <span>
-                  <b>{points.total}</b> pts
-                </span>
-                <button type="button" className={styles.rulesButton} onClick={() => setRules(true)}>
-                  Rules
-                </button>
-                <button type="button" className={styles.clothButton} onClick={() => setPicking(true)} aria-label="Change the tablecloth" title="Tablecloth">
+
+              <div className={styles.dock} role="tablist" aria-label="Phone">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={phoneTab === "clock"}
+                  aria-controls="phone-clock"
+                  className={phoneTab === "clock" ? styles.dockOn : ""}
+                  onClick={() => setPhoneTab("clock")}
+                >
                   <svg viewBox="0 0 24 24" aria-hidden>
-                    <path d="M12 3a9 9 0 0 0 0 18c1.1 0 1.7-.8 1.7-1.6 0-.5-.2-.8-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.6 1.7-1.6h2A4.6 4.6 0 0 0 21 10.8C21 6.5 17 3 12 3z" />
-                    <circle cx="7.5" cy="11" r="1" />
-                    <circle cx="10.5" cy="7.5" r="1" />
-                    <circle cx="15" cy="7.5" r="1" />
+                    <circle cx="12" cy="13" r="8" />
+                    <path d="M12 9v4l2.5 2.5M9.5 2.5h5" />
                   </svg>
+                  Timer
                 </button>
                 <button
                   type="button"
-                  className={styles.mute}
+                  role="tab"
+                  aria-selected={phoneTab === "log"}
+                  aria-controls="phone-log"
+                  className={phoneTab === "log" ? styles.dockOn : ""}
                   onClick={() => {
-                    setMuted(!muted);
-                    setMutedState(!muted);
+                    setPhoneTab("log");
+                    setSeenLog(game.log[0]?.id ?? null);
                   }}
-                  aria-label={muted ? "Turn sound on" : "Turn sound off"}
-                  aria-pressed={!muted}
                 >
-                  {muted ? (
-                    <svg viewBox="0 0 24 24" aria-hidden>
-                      <path d="M11 5 6 9H3v6h3l5 4zM17 9l4 6M21 9l-4 6" />
-                    </svg>
-                  ) : (
-                    <svg viewBox="0 0 24 24" aria-hidden>
-                      <path d="M11 5 6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" />
-                    </svg>
-                  )}
+                  <svg viewBox="0 0 24 24" aria-hidden>
+                    <path d="M4 5h16v11H8l-4 4z" />
+                    <path d="M8 9h8M8 12h5" />
+                  </svg>
+                  What’s happened
+                  {unread && <span className={styles.unread} aria-label="new" />}
                 </button>
               </div>
+              <span className={styles.homeBar} aria-hidden />
             </div>
 
             {game.episode > 1 && (
@@ -485,18 +585,6 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
             </section>
             )}
 
-            <section className={styles.note} aria-labelledby="note-title">
-              <h3 id="note-title">What’s happened</h3>
-              {game.log.length === 0 ? (
-                <p>Nothing yet!</p>
-              ) : (
-                <ul>
-                  {game.log.map((l) => (
-                    <li key={l.id}>{l.text.replace(/\{([^}]+)\}/g, (_, id) => nameOf(id))}</li>
-                  ))}
-                </ul>
-              )}
-            </section>
           </aside>
           {/* #endregion */}
         </div>

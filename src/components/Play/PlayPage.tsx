@@ -122,14 +122,7 @@ const CodeTiles = ({ code, small }: { code: string; small?: boolean }) => (
   </span>
 );
 
-const DiscordIcon = () => (
-  <svg className={styles.discordIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-    <path d="M8 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" />
-    <path d="M14 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" />
-    <path d="M15.5 17c0 1 1.5 3 2 3c1.5 0 2.833 -1.667 3.5 -3c.667 -1.667 .5 -5.833 -1.5 -11.5c-1.457 -1.015 -3 -1.34 -4.5 -1.5l-.972 1.923a11.913 11.913 0 0 0 -4.053 0l-.975 -1.923c-1.5 .16 -3.043 .485 -4.5 1.5c-2 5.667 -2.167 9.833 -1.5 11.5c.667 1.333 2 3 3.5 3c.5 0 2 -2 2 -3" />
-    <path d="M7 16.5c3.5 1 6.5 1 10 0" />
-  </svg>
-);
+const DiscordIcon = () => <Icon name="discord" className={styles.discordIcon} />;
 
 const NameField = ({ name, setName, autoFocus }: { name: string; setName: (n: string) => void; autoFocus?: boolean }) => (
   <label className={styles.field}>
@@ -402,31 +395,23 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
           </div>
           <ul className={styles.checklist}>
             <li className={room.players.length >= MIN_PLAYERS ? styles.checkDone : ""}>
-              <img src="/images/icons/playercount.svg" alt="" width="24" height="24" />
-              <span>
-                <b>
-                  {room.players.length} of {MAX_PLAYERS} players in
-                </b>
-                {room.players.length < MIN_PLAYERS ? `At least ${MIN_PLAYERS} to start` : "Enough to start"}
-              </span>
+              <Icon name="players" />
+              <b>
+                {room.players.length}/{MAX_PLAYERS}
+              </b>
+              <span>players</span>
+              {room.players.length >= MIN_PLAYERS ? (
+                <Icon name="check" strokeWidth={2.8} className={styles.checkTick} />
+              ) : (
+                <span className={styles.checkNeed}>need {MIN_PLAYERS - room.players.length} more</span>
+              )}
             </li>
             <li>
-              <img src="/images/icons/sandclock.svg" alt="" width="16" height="26" />
-              <span>
-                <b>
-                  {EPISODES} episodes, {EPISODE_SECONDS / 60} minutes each
-                </b>
-                About 15 minutes in all
-              </span>
-            </li>
-            <li>
-              <DiscordIcon />
-              <span>
-                <b>Everyone on a call?</b>
-                <a href={DISCORD_URL} target="_blank" rel="noreferrer">
-                  Grab a voice room on our Discord
-                </a>
-              </span>
+              <Icon name="timer" />
+              <b>
+                {EPISODES} × {EPISODE_SECONDS / 60} min
+              </b>
+              <span>episodes</span>
             </li>
           </ul>
           <DefaultButton

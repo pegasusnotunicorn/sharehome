@@ -16,8 +16,12 @@ import styles from "../../css/pages/chooser.module.css";
 // a tap goes straight to one, and who's taken whom is marked on it.
 
 const CAST = getAllCharacters();
-const front = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}.webp`;
-const back = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}-back.webp`;
+// the cards to turn through: a "?" card first (someone at random), then the cast (card i is CAST[i - 1])
+const COUNT = CAST.length + 1;
+const RANDOM = 0;
+const front = (i: number) => (i === RANDOM ? "/images/pieces/characters/random.webp" : `/images/pieces/characters/${String(i).padStart(2, "0")}.webp`);
+const back = (i: number) => (i === RANDOM ? "/images/pieces/characters/random-back.webp" : `/images/pieces/characters/${String(i).padStart(2, "0")}-back.webp`);
+const nameOf = (i: number) => (i === RANDOM ? "Random" : CAST[i - 1].name);
 // what they're called for short: "Köttr, The Grumpy" → Köttr, "Elias & Maya" stays two
 const short = (name: string) => {
   if (name === "Domination Armor Set") return "Dommy"; // (what everyone calls them, as their card says)
@@ -36,8 +40,8 @@ interface Props {
 const CharacterChooser = ({ room, me, pick, close }: Props) => {
   const mine = room.picks?.[me];
   const takenBy = (c: number) => room.players.find((p) => p.id !== me && room.picks?.[p.id] === c);
-  // (it opens on yours, or the first one nobody has)
-  const [at, setAt] = useState(() => mine ?? Math.max(0, CAST.findIndex((_, i) => !takenBy(i))));
+  // (it opens on yours, or on the "?" card)
+  const [at, setAt] = useState(() => (mine === undefined ? RANDOM : mine + 1));
   const [turning, setTurning] = useState(false);
 
   // Escape closes it, and the page behind doesn't scroll
@@ -52,9 +56,17 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
     };
   }, [close]);
 
-  const c = CAST[at];
-  const other = takenBy(at);
+  const c = at === RANDOM ? null : at - 1;
+  const other = c === null ? undefined : takenBy(c);
   const me_ = room.players.find((p) => p.id === me);
+  // someone nobody else has, at random (not the one you've got, if there's another)
+  const pickRandom = () => {
+    const free = CAST.map((_, i) => i).filter((i) => !takenBy(i));
+    const fresh = free.filter((i) => i !== mine);
+    const pool = fresh.length ? fresh : free;
+    if (pool.length) pick(pool[Math.floor(Math.random() * pool.length)]);
+    close();
+  };
 
   return createPortal(
     <div className={styles.backdrop} onClick={close}>
@@ -68,12 +80,12 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
 
       <CardCarousel
         index={at}
-        count={CAST.length}
+        count={COUNT}
         mm={CHARACTER_CARD_MM}
         front={front}
         back={back}
-        name={(i) => CAST[i].name}
-        label={(i) => `${CAST[i].name}'s card`}
+        name={nameOf}
+        label={(i) => (i === RANDOM ? "A random character" : `${nameOf(i)}'s card`)}
         onTurnStart={() => setTurning(true)}
         onTurn={(i) => {
           setAt(i);
@@ -86,17 +98,19 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
       />
 
       <div className={`${styles.who}${turning ? ` ${styles.hushed}` : ""}`} aria-live="polite">
-        {mine === at ? (
+        {c === null ? (
+          <DefaultButton onClick={pickRandom} text="Play anyone" icon="shuffle" color="red" />
+        ) : mine === c ? (
           <DefaultButton onClick={close} text="That’s you!" icon="check" color="green" />
         ) : other ? (
           <DefaultButton disabled text={`Taken by ${other.name}`} icon="removePerson" />
         ) : (
           <DefaultButton
             onClick={() => {
-              pick(at);
+              pick(c);
               close();
             }}
-            text={`Play ${short(c.name)}`}
+            text={`Play ${short(CAST[c].name)}`}
             icon="check"
             color="red"
           />
@@ -105,6 +119,20 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
 
       {/* the whole cast: a tap goes straight to one */}
       <ul className={styles.roster} aria-label="The cast">
+        <li>
+          <button
+            type="button"
+            className={`${styles.tile} ${styles.tileRandom}${at === RANDOM ? ` ${styles.tileOn}` : ""}`}
+            onClick={() => !turning && setAt(RANDOM)}
+            aria-label="Anyone, at random"
+            aria-current={at === RANDOM}
+          >
+            <span className={styles.tileQ} aria-hidden>
+              ?
+            </span>
+            <span className={styles.tileName}>Random</span>
+          </button>
+        </li>
         {CAST.map((ch, i) => {
           const taken = takenBy(i);
           const who = mine === i ? me_ : taken;
@@ -112,11 +140,11 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
             <li key={ch.urlName}>
               <button
                 type="button"
-                className={`${styles.tile}${i === at ? ` ${styles.tileOn}` : ""}${taken ? ` ${styles.tileTaken}` : ""}${who ? ` ${styles.tilePicked}` : ""}`}
+                className={`${styles.tile}${i + 1 === at ? ` ${styles.tileOn}` : ""}${taken ? ` ${styles.tileTaken}` : ""}${who ? ` ${styles.tilePicked}` : ""}`}
                 style={{ "--seat": who ? colorOf(who) : undefined } as CSSProperties}
-                onClick={() => !turning && setAt(i)}
+                onClick={() => !turning && setAt(i + 1)}
                 aria-label={`${ch.name}${taken ? `, ${taken.name} is playing them` : mine === i ? ", yours" : ""}`}
-                aria-current={i === at}
+                aria-current={i + 1 === at}
               >
                 <img src={`/images/emojis/${ch.emoji?.[0]}.webp`} alt="" draggable={false} loading="lazy" />
                 <span className={styles.tileName}>{short(ch.name)}</span>

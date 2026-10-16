@@ -222,6 +222,23 @@
   color: #fff;
 }
 
+/* the "?" tile: anyone, at random */
+.tileRandom {
+  background: linear-gradient(170deg, #6c67b3 30%, #4f4a94);
+}
+
+.tileQ {
+  position: absolute;
+  inset: 0 0 22%;
+  display: grid;
+  place-items: center;
+  font-family: "Rowdies-Bold";
+  font-size: 2.3rem;
+  line-height: 1;
+  color: #f1db4b;
+  text-shadow: 0 3px 0 #2f2b66;
+}
+
 .tileTaken img {
   filter: grayscale(0.85);
   opacity: 0.55;

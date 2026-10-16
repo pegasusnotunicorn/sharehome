@@ -682,16 +682,18 @@ const Seat = ({
           </button>
           {menu && (
             <div className={styles.seatMenu} role="menu">
-              <button
-                type="button"
-                role="menuitem"
-                onClick={() => {
-                  setMenu(false);
-                  send({ t: "makeHost", id: player.id });
-                }}
-              >
-                Make host
-              </button>
+              {player.online && (
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setMenu(false);
+                    send({ t: "makeHost", id: player.id });
+                  }}
+                >
+                  Make host
+                </button>
+              )}
               <button
                 type="button"
                 role="menuitem"

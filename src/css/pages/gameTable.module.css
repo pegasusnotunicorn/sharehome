@@ -2884,15 +2884,15 @@ button.traitPickCard:focus-visible {
   }
 }
 
-/* on a wide screen, the earlier episodes one above the other, each with its tokens and minus under it */
-@media only screen and (min-width: 761px) {
+/* on a wide screen (callbacks under the phone), the earlier episodes two to a row, each with its
+   tokens and minus under it: small, so the column's never taller than the decks beside it */
+@media only screen and (min-width: 1101px) {
   .pastRow {
-    grid-template-columns: minmax(0, 1fr);
-    justify-items: center;
-    gap: 0.9rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem 0.5rem;
   }
 
-  .pastSlot {
-    width: min(100%, 13rem);
+  .side {
+    gap: 1rem;
   }
 }

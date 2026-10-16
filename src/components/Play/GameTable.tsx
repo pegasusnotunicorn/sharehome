@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import {
   DIRECTION_DECKS,
   DIRECTION_POINTS,
@@ -37,7 +37,9 @@ const art = {
   directionBack: (deck: DirectionDeck) => `/images/pieces/${deck}/back.webp`,
   trait: (kind: TraitKind, i: number) => `/images/pieces/${kind}-traits/${nn(i)}.webp`,
   episodeBack: "/images/pieces/episodes/back.webp",
+  // the point tokens: one side's worth 1, the other (the rainbow) 5
   token: "/images/pieces/box/token-front.webp",
+  token5: "/images/pieces/box/token-back.webp",
 };
 
 // the card backs, fetched as the table opens, so a new card can always show its back at once
@@ -48,18 +50,127 @@ const preloadBacks = () => {
   }
 };
 
-// A card dealt onto the table: its back first (always ready), turned over once its face has loaded
-const FlipCard = ({ front, back, alt, width, height }: { front: string; back: string; alt: string; width: number; height: number }) => {
-  const [ready, setReady] = useState(false);
+const reducedMotion = () => typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// A card dealt onto the table: it slides out of its deck face down (when `from`, the deck, is given),
+// then turns over once its face has loaded, so the picture never shows up half-loaded
+const FlipCard = ({
+  front,
+  back,
+  alt,
+  width,
+  height,
+  from,
+}: {
+  front: string;
+  back: string;
+  alt: string;
+  width: number;
+  height: number;
+  from?: HTMLElement | null;
+}) => {
+  const [loaded, setLoaded] = useState(false);
+  const [dealt, setDealt] = useState(!from);
   const ref = useRef<HTMLImageElement>(null);
+  const dealer = useRef<HTMLSpanElement>(null);
   useEffect(() => {
-    // (a face that's already here, from the cache, turns over at once)
-    if (ref.current?.complete && ref.current.naturalWidth) setReady(true);
+    // (a face that's already here, from the cache, is ready at once)
+    if (ref.current?.complete && ref.current.naturalWidth) setLoaded(true);
+  }, []);
+  useLayoutEffect(() => {
+    const el = dealer.current;
+    if (!from || !el || reducedMotion()) return setDealt(true);
+    const a = from.getBoundingClientRect();
+    const b = el.getBoundingClientRect();
+    const anim = el.animate(
+      [
+        { transform: `translate(${a.left + a.width / 2 - (b.left + b.width / 2)}px, ${a.top + a.height / 2 - (b.top + b.height / 2)}px) scale(${a.width / b.width})` },
+        { transform: "none" },
+      ],
+      { duration: 420, delay: 220, easing: "cubic-bezier(0.25, 0.8, 0.3, 1)", fill: "backwards" }
+    );
+    anim.onfinish = () => setDealt(true);
+    return () => anim.cancel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <span className={`${styles.flipper}${ready ? ` ${styles.flipped}` : ""}`}>
-      <img ref={ref} className={styles.face} src={front} alt={alt} width={width} height={height} onLoad={() => setReady(true)} />
-      <img className={`${styles.face} ${styles.faceBack}`} src={back} alt="" width={width} height={height} aria-hidden />
+    <span ref={dealer} className={styles.dealer}>
+      <span className={`${styles.flipper}${loaded && dealt ? ` ${styles.flipped}` : ""}`}>
+        <img ref={ref} className={styles.face} src={front} alt={alt} width={width} height={height} onLoad={() => setLoaded(true)} />
+        <img className={`${styles.face} ${styles.faceBack}`} src={back} alt="" width={width} height={height} aria-hidden />
+      </span>
+    </span>
+  );
+};
+
+// where a played card lands in the play area: from the card itself, so it stays put
+const landing = (id: string) => {
+  const h = hash(id);
+  return { x: (h % 46) + 4, y: ((h >> 6) % 34) + 6, tilt: ((h >> 12) % 24) - 12 };
+};
+
+// a number from a card's id, the same every time
+function hash(id: string) {
+  let h = 2166136261;
+  for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 16777619);
+  return h >>> 0;
+}
+
+type Rect = { left: number; top: number; width: number; height: number };
+interface FlightPlan {
+  id: string;
+  src: string;
+  from: Rect;
+  to: Rect;
+  tilt: number;
+}
+
+// a played card on its way from its slot to the play area (over everything, then gone)
+const Flight = ({ plan, done }: { plan: FlightPlan; done: () => void }) => {
+  const ref = useRef<HTMLImageElement>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const { from, to } = plan;
+    const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+    const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+    const anim = el.animate(
+      [
+        { transform: "translate(0, 0) rotate(0deg) scale(1)" },
+        { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 30}px) rotate(${plan.tilt / 2}deg) scale(${(1 + to.width / from.width) / 2 + 0.05})`, offset: 0.5 },
+        { transform: `translate(${dx}px, ${dy}px) rotate(${plan.tilt}deg) scale(${to.width / from.width})` },
+      ],
+      { duration: 560, easing: "cubic-bezier(0.45, 0, 0.3, 1)", fill: "forwards" }
+    );
+    anim.onfinish = done;
+    return () => anim.cancel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return (
+    <img
+      ref={ref}
+      className={styles.flight}
+      src={plan.src}
+      alt=""
+      aria-hidden
+      style={{ left: plan.from.left, top: plan.from.top, width: plan.from.width, height: plan.from.height }}
+    />
+  );
+};
+
+// a pile of point tokens: a rainbow one for each 5, a plain one for each 1 left over
+const TokenStack = ({ count }: { count: number }) => {
+  const fives = Math.floor(count / 5);
+  const ones = count % 5;
+  return (
+    <span className={styles.tokenStack} aria-label={`${count} point${count === 1 ? "" : "s"} in tokens`}>
+      {Array.from({ length: fives }, (_, i) => (
+        <img key={`f${i}`} src={art.token5} alt="" />
+      ))}
+      {Array.from({ length: ones }, (_, i) => (
+        <img key={`o${i}`} src={art.token} alt="" />
+      ))}
+      {count === 0 && <img className={styles.tokenNone} src={art.token} alt="" />}
     </span>
   );
 };
@@ -225,6 +336,18 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   // the "+2" that rises off a card when someone completes it
   const [floaters, setFloaters] = useState<{ id: string; deck: DirectionDeck; slot: number; points: number }[]>([]);
   const seen = useRef<Set<string> | null>(null);
+  // the decks, the face-up slots and the play area on the screen, for cards moving between them
+  const stackRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const slotRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const playCardsRef = useRef<HTMLSpanElement>(null);
+  const [flights, setFlights] = useState<FlightPlan[]>([]);
+  const inFlight = useMemo(() => new Set(flights.map((f) => f.id)), [flights]);
+  // (cards on the table when it first opens are just there: only cards dealt after come from a deck)
+  const [dealing, setDealing] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setDealing(true), 50);
+    return () => clearTimeout(t);
+  }, []);
   // the face-up cards as they were, to tell which slot a completed card came from
   const lastFaceUp = useRef(game.faceUp);
 
@@ -253,6 +376,18 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
         const f = { id: c.id, deck: c.deck, slot: was >= 0 ? was : (c.slot ?? 0), points: DIRECTION_POINTS[c.deck] };
         setFloaters((all) => [...all, f]);
         setTimeout(() => setFloaters((all) => all.filter((x) => x.id !== f.id)), 1100);
+        // the card flies from its slot to where it lands in the play area
+        const slotEl = slotRefs.current[`${c.deck}-${f.slot}`];
+        const area = playCardsRef.current;
+        if (slotEl && area && !reducedMotion()) {
+          const from = slotEl.getBoundingClientRect();
+          const a = area.getBoundingClientRect();
+          const at = landing(c.id);
+          const w = a.width * 0.46;
+          const to = { left: a.left + (a.width * at.x) / 100, top: a.top + (a.height * at.y) / 100, width: w, height: (w * 497) / 768 };
+          const plan = { id: c.id, src: art.direction(c.deck, c.i), from: { left: from.left, top: from.top, width: from.width, height: from.height }, to, tilt: at.tilt };
+          setFlights((all) => [...all, plan]);
+        }
       }
     }
     seen.current = ids;
@@ -299,7 +434,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
             <div className={styles.episodeCard} style={{ "--tilt": tilt(ep.card + 3) } as CSSProperties}>
               <FlipCard key={ep.card} front={art.episode(ep.card)} back={art.episodeBack} alt={name("episode", ep.card)} width={768} height={549} />
             </div>
-            <PlayArea cards={ep.completed} points={epPoints} open={() => setPlayedOpen(true)} />
+            <PlayArea cards={ep.completed} points={epPoints} open={() => setPlayedOpen(true)} hidden={inFlight} areaRef={playCardsRef} />
           </section>
           {/* #endregion */}
 
@@ -314,14 +449,18 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                   </span>
                 </div>
                 <div className={styles.deckRow}>
-                  <div className={styles.stack} aria-label={`${game.left[deck]} cards left`}>
+                  <div ref={(el) => {
+                      stackRefs.current[deck] = el;
+                    }} className={styles.stack} aria-label={`${game.left[deck]} cards left`}>
                     <img src={art.directionBack(deck)} alt="" width="768" height="497" />
                     <span className={styles.stackCount}>{game.left[deck]}</span>
                   </div>
                   {game.faceUp[deck].map((card, slot) => (
-                    <div key={slot} className={styles.slot}>
+                    <div key={slot} ref={(el) => {
+                        slotRefs.current[`${deck}-${slot}`] = el;
+                      }} className={styles.slot}>
                       {card === null ? (
-                        <span className={styles.slotEmpty}>Empty</span>
+                        <span className={styles.slotEmpty} />
                       ) : (
                         <button
                           key={card}
@@ -336,7 +475,14 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                           }}
                           aria-label={`Complete “${name(deck, card)}” (${DIRECTION_POINTS[deck]} points)`}
                         >
-                          <FlipCard front={art.direction(deck, card)} back={art.directionBack(deck)} alt="" width={768} height={497} />
+                          <FlipCard
+                            front={art.direction(deck, card)}
+                            back={art.directionBack(deck)}
+                            alt=""
+                            width={768}
+                            height={497}
+                            from={dealing ? stackRefs.current[deck] : null}
+                          />
                         </button>
                       )}
                       {floaters
@@ -522,7 +668,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                         <img src={art.episode(past.card)} alt="" width="768" height="549" />
                         {bumped > 0 && (
                           <>
-                            <img className={styles.tokenDrop} src={art.token} alt="" aria-hidden />
+                            <img className={styles.tokenDrop} src={past.tokens % 5 === 0 ? art.token5 : art.token} alt="" aria-hidden />
                             <span className={styles.callbackPlus} aria-hidden>
                               +1
                             </span>
@@ -531,7 +677,8 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                       </button>
                       <div className={styles.pastCount}>
                         <span key={`n${bumped}`} className={`${styles.pastTokensLine}${bumped ? ` ${styles.countPop}` : ""}`}>
-                          <img src={art.token} alt="" />×{past.tokens}
+                          <TokenStack count={past.tokens} />
+                          {past.tokens > 0 && <b>{past.tokens}</b>}
                         </span>
                         <button
                           type="button"
@@ -545,9 +692,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                       </div>
                     </div>
                   ) : (
-                    <span key={i} className={styles.pastEmpty}>
-                      Ep {i + 1}
-                    </span>
+                    <span key={i} className={styles.pastEmpty} aria-hidden />
                   );
                 })}
               </div>
@@ -583,6 +728,9 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
           </div>
         </Modal>
       )}
+      {flights.map((f) => (
+        <Flight key={f.id} plan={f} done={() => setFlights((all) => all.filter((x) => x.id !== f.id))} />
+      ))}
       {rules && <RulesDialog close={() => setRules(false)} />}
       {playedOpen && (
         <PlayedDialog
@@ -633,7 +781,19 @@ type Played = GameView["episodes"][number]["completed"];
 // The play area: the cards completed this episode, dropped one over the other in a space that never
 // grows (the newest on top, the oldest gone past eight). It's one thing to tap: it opens the list of
 // them all.
-const PlayArea = ({ cards, points, open }: { cards: Played; points: number; open: () => void }) => {
+const PlayArea = ({
+  cards,
+  points,
+  open,
+  hidden,
+  areaRef,
+}: {
+  cards: Played;
+  points: number;
+  open: () => void;
+  hidden: Set<string>;
+  areaRef: React.RefObject<HTMLSpanElement | null>;
+}) => {
   const shown = cards.slice(-8);
   return (
     <button
@@ -642,10 +802,10 @@ const PlayArea = ({ cards, points, open }: { cards: Played; points: number; open
       onClick={open}
       aria-label={`Played this episode: ${cards.length} card${cards.length === 1 ? "" : "s"}, +${points}. See them all`}
     >
-      <span className={styles.playCards} aria-hidden>
+      <span ref={areaRef} className={styles.playCards} aria-hidden>
         {shown.map((c) => {
           // (where a card lands comes from the card itself, so it stays put as others come and go)
-          const h = hash(c.id);
+          const at = landing(c.id);
           return (
             <img
               key={c.id}
@@ -653,9 +813,10 @@ const PlayArea = ({ cards, points, open }: { cards: Played; points: number; open
               alt=""
               style={
                 {
-                  "--x": `${(h % 46) + 4}%`,
-                  "--y": `${((h >> 6) % 34) + 6}%`,
-                  "--tilt": `${((h >> 12) % 24) - 12}deg`,
+                  "--x": `${at.x}%`,
+                  "--y": `${at.y}%`,
+                  "--tilt": `${at.tilt}deg`,
+                  visibility: hidden.has(c.id) ? "hidden" : undefined,
                 } as CSSProperties
               }
             />
@@ -671,12 +832,6 @@ const PlayArea = ({ cards, points, open }: { cards: Played; points: number; open
   );
 };
 
-// a number from a card's id, the same every time
-const hash = (id: string) => {
-  let h = 2166136261;
-  for (let i = 0; i < id.length; i++) h = Math.imul(h ^ id.charCodeAt(i), 16777619);
-  return h >>> 0;
-};
 
 const PAGE = 5;
 

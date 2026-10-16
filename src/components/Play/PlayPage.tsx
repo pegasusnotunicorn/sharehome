@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import { EPISODES, EPISODE_SECONDS, MAX_PLAYERS, MIN_PLAYERS, NAME_MAX, cleanName, type Player, type RoomView } from "../../../game-server/src/protocol";
 import CustomHelmet from "../utils/CustomHelmet";
 import DefaultButton from "../utils/DefaultButton";
+import Icon from "../utils/Icons";
 import Modal from "../utils/Modal";
 import modalStyles from "../../css/utils/modal.module.css";
 import PageIntro from "../utils/PageIntro";
@@ -530,10 +531,7 @@ const CharacterPicker = ({ room, me, send }: { room: RoomView; me: string; send:
         <button type="button" className={`${styles.myPickCard}${mine === undefined ? ` ${styles.myPickEmpty}` : ""}`} onClick={() => setOpen(true)} aria-label={mine === undefined ? "Pick a character" : `Change your character, ${name("character", mine)}`}>
           {mine === undefined ? <span aria-hidden>?</span> : <img src={card(mine)} alt="" width="768" height="444" />}
         </button>
-        <div className={styles.myPickText}>
-          <b>{mine === undefined ? "No one yet" : name("character", mine) || `Character ${mine + 1}`}</b>
-          <span>{mine === undefined ? "Pick who you’ll play, then get ready." : ready ? "You’re ready. Tap Ready! to take it back." : "Happy with them? Get ready."}</span>
-        </div>
+        <b className={styles.myPickName}>{mine === undefined ? "No one yet" : name("character", mine) || `Character ${mine + 1}`}</b>
         <div className={styles.myPickActions}>
           <DefaultButton
             onClick={() => setOpen(true)}
@@ -543,14 +541,20 @@ const CharacterPicker = ({ room, me, send }: { room: RoomView; me: string; send:
             color={mine === undefined ? "red" : undefined}
             border={mine === undefined ? undefined : "dark"}
           />
-          <DefaultButton
-            onClick={() => send({ t: "ready", ready: !ready })}
+          {/* a tick box: ticked, you're ready (the same button, the same words, either way) */}
+          <button
+            type="button"
+            role="checkbox"
+            aria-checked={ready}
             disabled={mine === undefined}
-            text={ready ? "Ready!" : "I’m ready"}
-            icon="check"
-            color={ready ? "green" : "red"}
-            className={styles.readyButton}
-          />
+            onClick={() => send({ t: "ready", ready: !ready })}
+            className={`${styles.readyToggle}${ready ? ` ${styles.readyOn}` : ""}`}
+          >
+            <span className={styles.readyBox} aria-hidden>
+              <Icon name="check" strokeWidth={3.2} />
+            </span>
+            I’m ready
+          </button>
         </div>
       </div>
 
@@ -572,7 +576,7 @@ const StartNote = ({ room, isHost }: { room: RoomView; isHost: boolean }) => {
   if (ready < room.players.length)
     return (
       <p className={styles.showtimeLine}>
-        {ready} of {room.players.length} ready. {isHost ? "Pick your characters, then start the show." : "Pick your character, then hit Ready."}
+        {ready} of {room.players.length} ready
       </p>
     );
   if (isHost) return <p className={styles.showtimeLine}>Everyone’s ready. Start the show!</p>;
@@ -618,22 +622,24 @@ const Seat = ({
       className={`${styles.seat}${player.online ? "" : ` ${styles.seatAway}`}${mine ? ` ${styles.seatMine}` : ""}`}
       style={{ "--seat": colorOf(player) } as React.CSSProperties}
     >
-      {room.picks?.[player.id] !== undefined ? (
-        <span className={`${styles.seatToken} ${styles.seatPicked}`} aria-hidden>
-          <img src={`/images/emojis/${CHARACTERS[room.picks[player.id]]?.emoji?.[0]}.webp`} alt="" draggable={false} />
-        </span>
-      ) : (
-        <span className={styles.seatToken} aria-hidden>
-          {player.name.charAt(0).toUpperCase()}
-        </span>
-      )}
+      <span className={styles.seatTokenWrap}>
+        {room.picks?.[player.id] !== undefined ? (
+          <span className={`${styles.seatToken} ${styles.seatPicked}`} aria-hidden>
+            <img src={`/images/emojis/${CHARACTERS[room.picks[player.id]]?.emoji?.[0]}.webp`} alt="" draggable={false} />
+          </span>
+        ) : (
+          <span className={styles.seatToken} aria-hidden>
+            {player.name.charAt(0).toUpperCase()}
+          </span>
+        )}
+        {room.ready?.[player.id] && <ReadyTick />}
+      </span>
 
       <span className={styles.seatName}>{player.name}</span>
 
       <span className={styles.seatTags}>
         {room.hostId === player.id && <span className={`${styles.tag} ${styles.tagHost}`}>Host</span>}
         {mine && <span className={styles.tag}>You</span>}
-        {room.ready?.[player.id] && <span className={`${styles.tag} ${styles.tagReady}`}>Ready</span>}
         {!player.online && <span className={styles.awayNote}>stepped out</span>}
       </span>
 
@@ -759,6 +765,13 @@ const useCopyLink = (code: string) => {
 };
 
 // The invite: the room's code (a tap copies it) and its link, to copy, and the faces of the cast so far
+// a player who's ready: a tick on their face
+const ReadyTick = () => (
+  <span className={styles.readyTick} role="img" aria-label="Ready">
+    <Icon name="check" strokeWidth={3.4} />
+  </span>
+);
+
 const Invite = ({ code, room }: { code: string; room: RoomView }) => {
   const { link, copied, failed, setFailed, copy } = useCopyLink(code);
   const [codeCopied, setCodeCopied] = useState(false);
@@ -795,6 +808,7 @@ const Invite = ({ code, room }: { code: string; room: RoomView }) => {
               title={p.name}
             >
               <img src={`/images/emojis/${CHARACTERS[room.picks[p.id]]?.emoji?.[0]}.webp`} alt={p.name} draggable={false} />
+              {room.ready?.[p.id] && <ReadyTick />}
             </li>
           ))}
         </ul>

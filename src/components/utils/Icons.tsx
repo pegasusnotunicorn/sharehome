@@ -139,6 +139,13 @@ const PATHS = {
       <path d="M20 19v-4h-4" />
     </>
   ),
+  // ↶ take it back
+  undo: (
+    <>
+      <path d="M9 14l-4-4l4-4" />
+      <path d="M5 10h10a5 5 0 0 1 0 10h-3" />
+    </>
+  ),
   removePerson: (
     <>
       <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0-8 0" />

@@ -550,8 +550,8 @@
 .inviteFace {
   width: 3.6rem;
   height: 3.6rem;
+  position: relative;
   border-radius: 50%;
-  overflow: hidden;
   /* (a soft, spotlit backdrop in the player's color, like a portrait; the face's white paper melts into it) */
   isolation: isolate;
   background:
@@ -1334,24 +1334,13 @@
   color: rgba(50, 40, 30, 0.3);
 }
 
-.myPickText {
-  display: grid;
-  gap: 0.2rem;
+.myPickName {
   min-width: 0;
   margin-right: auto;
-}
-
-.myPickText b {
   font-family: "Rowdies-Bold";
   font-weight: normal;
   font-size: 1.2rem;
   color: var(--ink);
-}
-
-.myPickText span {
-  font-family: "Roboto Light", sans-serif;
-  font-size: 0.95rem;
-  color: rgba(50, 50, 50, 0.65);
 }
 
 .myPickActions {
@@ -1361,8 +1350,126 @@
   justify-content: flex-end;
 }
 
-.readyButton {
-  min-width: 11rem;
+/* I'm ready: a tick box, the same button either way; ticked, the box fills green */
+.readyToggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  padding: 8px 18px 8px 12px;
+  border: 2px solid var(--ink, #323232);
+  border-radius: var(--btn-radius, 12px);
+  background: #fff;
+  box-shadow: 0 var(--btn-depth, 4px) 0 var(--ink, #323232);
+  font-family: "Rowdies-Regular";
+  font-size: inherit;
+  line-height: 1.2;
+  color: var(--ink, #323232);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.readyToggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 calc(var(--btn-depth, 4px) + 2px) 0 var(--ink, #323232);
+}
+
+.readyToggle:active {
+  transform: translateY(calc(var(--btn-depth, 4px) - 1px));
+  box-shadow: 0 1px 0 var(--ink, #323232);
+}
+
+.readyToggle:focus-visible {
+  outline: 3px solid #f1db4b;
+  outline-offset: 3px;
+}
+
+.readyToggle:disabled {
+  border-color: rgba(50, 50, 50, 0.18);
+  background: #efebe3;
+  box-shadow: none;
+  color: rgba(50, 50, 50, 0.38);
+  transform: none;
+  cursor: not-allowed;
+}
+
+.readyBox {
+  display: grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid currentColor;
+  border-radius: 6px;
+  box-sizing: border-box;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.readyBox svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: #fff;
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  transition: stroke-dashoffset 0.25s ease 0.05s;
+}
+
+.readyOn .readyBox {
+  border-color: #4f8a73;
+  background: #4f8a73;
+}
+
+.readyOn .readyBox svg {
+  stroke-dashoffset: 0;
+}
+
+/* (a ready player's face: a green tick on its corner) */
+.readyTick {
+  position: absolute;
+  right: -0.3rem;
+  bottom: -0.3rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 7px;
+  background: #4f8a73;
+  box-shadow:
+    0 0 0 2px #fff,
+    0 3px 6px -2px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  rotate: 8deg;
+  animation: tickPop 0.35s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+
+.readyTick svg {
+  width: 72%;
+  height: 72%;
+}
+
+@keyframes tickPop {
+  from {
+    scale: 0;
+  }
+}
+
+.seatTokenWrap {
+  position: relative;
+  display: grid;
+}
+
+.seatTokenWrap .readyTick {
+  right: -0.2rem;
+  bottom: -0.2rem;
+  width: 1.7rem;
+  height: 1.7rem;
 }
 @keyframes pickWiggle {
   25% {
@@ -1374,7 +1481,6 @@
 }
 /* a seat with its character picked: the picture in the token */
 .seatPicked {
-  overflow: hidden;
   padding: 0;
 }
 
@@ -1395,11 +1501,6 @@
   mix-blend-mode: multiply;
 }
 
-.tagReady {
-  background: #4f8a73;
-  color: #fff;
-}
-
 @media only screen and (max-width: 760px) {
   /* (on a phone: the card and its name side by side, the buttons below, full width) */
   .myPick {
@@ -1412,7 +1513,7 @@
     width: 7.5rem;
   }
 
-  .myPickText {
+  .myPickName {
     flex: 1 1 0;
   }
 

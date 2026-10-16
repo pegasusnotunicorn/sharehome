@@ -137,16 +137,6 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
   const name = `{${by}}`; // (the page puts the player's name in)
 
   switch (msg.t) {
-    case "newCharacter": {
-      const hand = game.hands[by];
-      if (!hand || game.episode !== 1 || game.phase !== "ready") return false;
-      const next = game.piles.characters.shift();
-      if (next === undefined) return false;
-      game.piles.characters.push(hand.character);
-      hand.character = next;
-      return true;
-    }
-
     case "startClock": {
       if (game.phase !== "ready") return false;
       startClock(game, now);

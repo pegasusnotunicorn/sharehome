@@ -16,6 +16,7 @@ import {
   type TraitKind,
 } from "../../../game-server/src/protocol";
 import DefaultButton from "../utils/DefaultButton";
+import Icon from "../utils/Icons";
 import Modal from "../utils/Modal";
 import Confirm from "./Confirm";
 import Finale from "./Finale";
@@ -53,6 +54,54 @@ const preloadBacks = () => {
     img.src = src;
   }
 };
+
+// everything the table shows as it opens: fetched behind the loading screen, so the table appears
+// whole rather than as a pile of blank cards filling in (never more than a few seconds' wait)
+const useTableLoaded = (game: GameView) => {
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    const ep = game.episodes[game.episode - 1];
+    const srcs = new Set<string>([
+      art.episodeBack,
+      art.token,
+      art.token5,
+      "/images/pieces/remote/slate.webp",
+      ...(ep ? [art.episode(ep.card)] : []),
+      ...DIRECTION_DECKS.flatMap((d) => [art.directionBack(d), ...game.faceUp[d].filter((c): c is number => c !== null).map((c) => art.direction(d, c))]),
+      ...Object.values(game.hands).flatMap((h) => [art.character(h.character), ...h.traits.map((t) => art.trait(t.kind, t.i))]),
+    ]);
+    const one = (src: string) =>
+      new Promise<void>((done) => {
+        const img = new Image();
+        img.onload = img.onerror = () => done();
+        img.src = src;
+      });
+    const shown = new Promise((r) => setTimeout(r, 900)); // (long enough to see it, not to wait on it)
+    const enough = new Promise((r) => setTimeout(r, 6000));
+    let live = true;
+    Promise.race([Promise.all([...srcs].map(one)), enough])
+      .then(() => shown)
+      .then(() => live && setLoaded(true));
+    return () => {
+      live = false;
+    };
+    // (once, as the table opens)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return loaded;
+};
+
+// the loading screen: the deck's backs shuffling over the tablecloth
+const Loading = ({ out }: { out: boolean }) => (
+  <div className={`${styles.loading}${out ? ` ${styles.loadingOut}` : ""}`} role="status" aria-label="Setting the table">
+    <div className={styles.loadingDeck} aria-hidden>
+      {(["director", "producer", "showrunner"] as DirectionDeck[]).map((d, i) => (
+        <img key={d} src={art.directionBack(d)} alt="" style={{ "--i": i } as CSSProperties} />
+      ))}
+    </div>
+    <span className={styles.loadingWord}>Setting the table</span>
+  </div>
+);
 
 const reducedMotion = () => typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -110,7 +159,7 @@ const FlipCard = ({
 // where a played card lands in the play area: from the card itself, so it stays put
 const landing = (id: string) => {
   const h = hash(id);
-  return { x: (h % 46) + 4, y: ((h >> 6) % 34) + 6, tilt: ((h >> 12) % 24) - 12 };
+  return { x: (h % 46) + 4, y: ((h >> 6) % 38) + 14, tilt: ((h >> 12) % 24) - 12 };
 };
 
 // a number from a card's id, the same every time
@@ -319,6 +368,14 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   const left = useClock(game, room.now);
   useTableSounds(game);
   useEffect(preloadBacks, []);
+  const loaded = useTableLoaded(game);
+  // (the loading screen fades off, then goes)
+  const [loadingGone, setLoadingGone] = useState(false);
+  useEffect(() => {
+    if (!loaded) return;
+    const t = setTimeout(() => setLoadingGone(true), 500);
+    return () => clearTimeout(t);
+  }, [loaded]);
   const [muted, setMutedState] = useState(isMuted);
   const [ending, setEnding] = useState(false);
   // a button just pressed on the R.E.M.O.T.E., by anyone: shown to everyone for a moment
@@ -452,6 +509,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
 
   return (
     <div className={styles.room}>
+      {!loadingGone && <Loading out={loaded} />}
       <div className={`${styles.tabletop}${clothClass(cloth)}`}>
         <Prompt game={game} epPoints={epPoints} />
 
@@ -620,28 +678,27 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                       <span>R.E.M.O.T.E.</span>
                       <span className={styles.logClock}>{mmss(left)}</span>
                     </div>
+                    {/* the R.E.M.O.T.E. card itself: its six painted buttons */}
                     <div className={styles.remotePad}>
                       {REMOTE_BUTTONS.map((b) => (
                         <button
                           key={b}
                           type="button"
                           className={styles.remotePadKey}
-                          style={{ "--c": REMOTE[b].color } as CSSProperties}
                           onClick={() => send({ t: "remote", button: b })}
                           aria-label={`${REMOTE[b].label}: ${REMOTE[b].text}`}
                           title={REMOTE[b].label}
                         >
-                          <RemoteIcon d={REMOTE[b].icon} stroke={b === "replay"} />
+                          <img src={remoteArt(b)} alt="" draggable={false} />
                           <span>{REMOTE[b].label}</span>
                         </button>
                       ))}
                     </div>
-                    <span className={styles.remoteNote}>Everyone sees it, not who pressed it.</span>
                   </div>
                 ) : (
                   <div className={styles.logApp} id="phone-log">
                     <div className={styles.logHead}>
-                      <span>What’s happened</span>
+                      <span>Log</span>
                       <span className={styles.logClock}>{mmss(left)}</span>
                     </div>
                     {game.log.length === 0 ? (
@@ -695,7 +752,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                     <path d="M4 5h16v11H8l-4 4z" />
                     <path d="M8 9h8M8 12h5" />
                   </svg>
-                  What’s happened
+                  Log
                   {unread && <span className={styles.unread} aria-label="new" />}
                 </button>
                 <button
@@ -837,13 +894,11 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
       ))}
       {remoteShown && (
         <div className={styles.remoteShown} role="alert" onClick={() => setRemoteShown(null)} style={{ "--c": REMOTE[remoteShown].color } as CSSProperties}>
-          <span className={styles.remoteKey}>
-            <RemoteIcon d={REMOTE[remoteShown].icon} stroke={remoteShown === "replay"} />
-          </span>
-          <span>
-            <b>{REMOTE[remoteShown].label}</b>
-            {REMOTE[remoteShown].text}
-          </span>
+          <div className={styles.remoteShownCard}>
+            <img src={remoteArt(remoteShown)} alt="" draggable={false} />
+            <h2>{REMOTE[remoteShown].label}</h2>
+            <p>{REMOTE[remoteShown].text}</p>
+          </div>
         </div>
       )}
       {playedOpen && (
@@ -906,20 +961,16 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
 
 // The R.E.M.O.T.E. (the rulebook's safety tool, after Script Change by Beau Jágr Sheldon): a tap on a
 // button, shown to everyone without who pressed it, and everyone goes along with it, no fuss
-const REMOTE: Record<RemoteButton, { label: string; text: string; color: string; icon: string }> = {
-  pause: { label: "Pause", text: "Let’s stop for a moment and talk.", color: "#e05a5a", icon: "M7 5h3v14H7zM14 5h3v14h-3z" },
-  play: { label: "Play", text: "All good, carry on.", color: "#4f7fd1", icon: "M8 5l11 7-11 7z" },
-  rewind: { label: "Rewind", text: "Let’s take that last bit back and redo it.", color: "#e0962f", icon: "M11 6v12L3 12zM20 6v12l-8-6z" },
-  forward: { label: "Fast-forward", text: "Let’s skip past this and move on.", color: "#4f9a5a", icon: "M4 6v12l8-6zM13 6v12l8-6z" },
-  replay: { label: "Instant replay", text: "That was great: more of that, please!", color: "#9a5fc0", icon: "M12 5a7 7 0 1 1-6.6 4.7M5 4v5h5" },
-  frame: { label: "Frame by frame", text: "Let’s slow down and go gently here.", color: "#e06a3a", icon: "M6 5h2v14H6zM11 5l9 7-9 7z" },
+const REMOTE: Record<RemoteButton, { label: string; text: string; color: string }> = {
+  pause: { label: "Pause", text: "Let’s stop for a moment and talk.", color: "#e05a5a" },
+  play: { label: "Play", text: "All good, carry on.", color: "#3f5f9a" },
+  rewind: { label: "Rewind", text: "Let’s take that last bit back and redo it.", color: "#e0962f" },
+  forward: { label: "Fast-forward", text: "Let’s skip past this and move on.", color: "#4f9a5a" },
+  replay: { label: "Instant replay", text: "That was great: more of that, please!", color: "#8a4fa8" },
+  frame: { label: "Frame by frame", text: "Let’s slow down and go gently here.", color: "#e06a3a" },
 };
-
-const RemoteIcon = ({ d, stroke }: { d: string; stroke?: boolean }) => (
-  <svg viewBox="0 0 24 24" aria-hidden>
-    <path d={d} fill={stroke ? "none" : "currentColor"} stroke={stroke ? "currentColor" : "none"} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
+// (each button as it's painted on the card in the box)
+const remoteArt = (b: RemoteButton) => `/images/pieces/remote/${b}.webp`;
 
 // pressing and holding: once at once, then again and again, faster
 const useHold = (action: () => void) => {
@@ -986,6 +1037,7 @@ const PlayArea = ({
       type="button"
       className={styles.playArea}
       onClick={open}
+      disabled={cards.length === 0}
       aria-label={`Played this episode: ${cards.length} card${cards.length === 1 ? "" : "s"}, +${points}. See them all`}
     >
       <span ref={areaRef} className={styles.playCards} aria-hidden>
@@ -1083,8 +1135,14 @@ const PlayedDialog = ({
                 <span>
                   <b>+{DIRECTION_POINTS[c.deck] + c.tokens}</b> {nameOf(c.by)}
                 </span>
-                <button type="button" className={`${styles.chipButton} ${styles.chipDanger}`} onClick={() => send({ t: "undo", id: c.id })}>
-                  Undo
+                <button
+                  type="button"
+                  className={`${styles.chipButton} ${styles.chipDanger} ${styles.chipIcon}`}
+                  onClick={() => send({ t: "undo", id: c.id })}
+                  aria-label={`Undo “${name(c.deck, c.i)}”`}
+                  title="Undo"
+                >
+                  <Icon name="undo" strokeWidth={2.4} />
                 </button>
               </div>
             </li>
@@ -1194,11 +1252,6 @@ const Seat = ({
           {mine && <span className={styles.you}>You</span>}
           {arcDone(hand) && <span className={styles.arc}>Arc +10</span>}
         </div>
-        {mine && game.phase === "ready" && game.episode === 1 && (
-          <button type="button" className={styles.textButton} onClick={() => send({ t: "newCharacter" })}>
-            Draw a different character
-          </button>
-        )}
       </div>
       <ul className={styles.traits} aria-label={`${player.name}’s traits`}>
         {hand.traits.map((t, slot) => {

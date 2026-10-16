@@ -81,7 +81,7 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
         }}
         keys
         hold
-        cardWidth="min(420px, 100%, calc((100dvh - 470px) * 1.45))"
+        cardWidth="min(420px, 100%, max(220px, calc((100dvh - var(--chrome)) * 1.45)))"
         className={styles.carousel}
       />
 

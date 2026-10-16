@@ -317,7 +317,11 @@ export class Room extends DurableObject<Env> {
     await this.ctx.storage.put("room", room);
     const due = [
       room.emptySince !== null ? room.emptySince + IDLE_TTL : Infinity,
-      room.hostAwaySince !== null && room.players.length > 1 ? room.hostAwaySince + HOST_GRACE : Infinity,
+      // (only while there's someone online to hand it to: otherwise, once the grace was up, the clock
+      // would come due again and again, a few times a second, until someone came back)
+      room.hostAwaySince !== null && room.players.some((p) => p.id !== room.hostId && this.isOnline(p.id))
+        ? room.hostAwaySince + HOST_GRACE
+        : Infinity,
       room.game?.phase === "playing" && room.game.endsAt !== null ? room.game.endsAt : Infinity,
     ];
     const next = Math.min(...due);

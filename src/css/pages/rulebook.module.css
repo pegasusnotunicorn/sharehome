@@ -1,5 +1,5 @@
-/* The rulebook in a room: a little book where the navbar would be, and the book itself, which slides in,
-   swings its cover open and turns its pages (see Rulebook.tsx) */
+/* The rulebook in a room: a little book where the navbar would be, and the printed rulebook's pages,
+   a pile of rounded cards to swipe through (see Rulebook.tsx) */
 
 /* #region--------------------------------------THE LITTLE BOOK (top left) */
 
@@ -90,16 +90,15 @@
   z-index: 1000;
   display: grid;
   place-items: center;
-  padding: 72px 12px 88px;
+  padding: 130px 12px 104px;
   background: rgba(28, 22, 34, 0.62);
   backdrop-filter: blur(3px);
-  perspective: 2200px;
   overflow: hidden;
   animation: overlayIn 0.35s ease both;
 }
 
 .out {
-  animation: overlayOut 0.45s ease 0.45s both;
+  animation: overlayOut 0.4s ease both;
 }
 
 @keyframes overlayIn {
@@ -116,577 +115,246 @@
   }
 }
 
-/* a page: its width (the height follows, a card's shape) */
+/* the book: a landscape page (the printed rulebook's), as big as fits */
 .book {
-  --pw: min(400px, calc(100vw - 24px), calc((100dvh - 170px) * 0.72));
-  --ph: calc(var(--pw) / 0.72);
-  --closed-shift: 0px;
+  --pw: min(1100px, calc(100vw - 24px), calc((100dvh - 240px) * 1.7826));
   position: relative;
   width: var(--pw);
-  height: var(--ph);
-  transform-style: preserve-3d;
+  aspect-ratio: 581 / 326;
   outline: none;
-  text-align: left;
-}
-
-.two {
-  --pw: min(440px, calc((100vw - 48px) / 2), calc((100dvh - 170px) * 0.72));
-  /* (shut, only the cover's there, on the right: the book's moved over, to be in the middle) */
-  --closed-shift: calc(var(--pw) / -2);
-  width: calc(var(--pw) * 2);
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
 }
 
 .in .book {
-  animation: bookIn 0.9s cubic-bezier(0.3, 0.7, 0.3, 1) both;
+  animation: bookIn 0.55s cubic-bezier(0.2, 1.2, 0.4, 1) both;
 }
 
 .out .book {
-  animation: bookOut 0.9s cubic-bezier(0.6, 0, 0.7, 0.4) both;
+  animation: bookOut 0.4s cubic-bezier(0.6, 0, 0.8, 0.4) both;
 }
 
 @keyframes bookIn {
-  0% {
-    transform: translateX(calc(-50vw - 100%)) rotate(-14deg);
-  }
-  45% {
-    transform: translateX(var(--closed-shift)) rotate(-2deg);
-  }
-  60% {
-    transform: translateX(var(--closed-shift)) rotate(0deg);
-  }
-  100% {
-    transform: none;
+  from {
+    opacity: 0;
+    transform: translateY(40px) rotate(-3deg) scale(0.9);
   }
 }
 
 @keyframes bookOut {
-  0% {
-    transform: none;
-  }
-  45% {
-    transform: translateX(var(--closed-shift));
-  }
-  100% {
-    transform: translateX(calc(-50vw - 100%)) rotate(-12deg);
+  to {
+    opacity: 0;
+    transform: translateY(40px) rotate(2deg) scale(0.92);
   }
 }
 
-/* (until it's open, the pages are hidden under the cover) */
-.in .half,
-.out .half,
-.in .spine,
-.out .spine {
-  animation: pagesShow 0.9s steps(1) both;
-}
-
-.in .halfLeft,
-.in .spine {
-  animation-name: pagesShowLeft;
-}
-
-.out .half,
-.out .spine {
-  animation-name: pagesHide;
-}
-
-@keyframes pagesShow {
-  0% {
-    visibility: hidden;
-  }
-  50% {
-    visibility: visible;
-  }
-}
-
-/* (the left page shows once the cover's past it) */
-@keyframes pagesShowLeft {
-  0% {
-    visibility: hidden;
-  }
-  72% {
-    visibility: visible;
-  }
-}
-
-@keyframes pagesHide {
-  0% {
-    visibility: visible;
-  }
-  50% {
-    visibility: hidden;
-  }
-  100% {
-    visibility: hidden;
-  }
-}
-
-.half {
-  position: absolute;
-  top: 0;
-  width: var(--pw);
-  height: 100%;
-  cursor: pointer;
-}
-
-.halfLeft {
-  left: 0;
-}
-
-.halfRight {
-  left: 0;
-}
-
-.two .halfRight,
-.two .leaf,
-.two .cover {
-  left: var(--pw);
-}
-
-/* the gutter's shadow, down the middle */
-.spine {
-  display: none;
-}
-
-.two .spine {
-  display: block;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: calc(var(--pw) - 3px);
-  width: 6px;
-  z-index: 2;
-  background: linear-gradient(90deg, rgba(60, 40, 20, 0.25), rgba(60, 40, 20, 0.05) 50%, rgba(60, 40, 20, 0.25));
-  pointer-events: none;
-}
-
-/* #endregion */
-
-/* #region--------------------------------------A PAGE */
-
+/* a page: the printed page, on rounded card */
 .page {
   position: absolute;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  box-sizing: border-box;
-  padding: calc(var(--pw) * 0.08) calc(var(--pw) * 0.085) calc(var(--pw) * 0.1);
+  border-radius: clamp(10px, 1.6vw, 18px);
   overflow: hidden;
-  background:
-    url("/images/bg_texture.webp") center / 400px,
-    #fffaf0;
-  background-blend-mode: multiply;
-  color: #2b2233;
-  border-radius: 4px 14px 14px 4px;
+  background: #fff;
   box-shadow:
-    inset 14px 0 18px -14px rgba(60, 40, 20, 0.35),
-    0 18px 40px -18px rgba(0, 0, 0, 0.7);
+    0 1px 0 #ebe6da,
+    0 2px 0 #d9d2c3,
+    0 30px 60px -24px rgba(0, 0, 0, 0.75);
+  will-change: transform;
 }
 
-/* (a left page: the round corners and the gutter's shade the other way round) */
-.leftPage,
-.leafBackFace .page {
-  border-radius: 14px 4px 4px 14px;
-  box-shadow:
-    inset -14px 0 18px -14px rgba(60, 40, 20, 0.35),
-    0 18px 40px -18px rgba(0, 0, 0, 0.7);
+.page > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  -webkit-user-drag: none;
 }
 
-/* the book's single page on a phone keeps a cover's edge on its left */
-.book:not(.two) .page {
-  border-radius: 6px 14px 14px 6px;
-  border-left: 6px solid #8f1410;
-  box-shadow:
-    inset 14px 0 18px -14px rgba(60, 40, 20, 0.35),
-    0 18px 40px -18px rgba(0, 0, 0, 0.7);
+/* (the pages under it: their edges peek out, a pile) */
+.under {
+  transform: translate(6px, 6px) rotate(0.6deg);
+  filter: brightness(0.96);
 }
 
-.blank {
-  background-color: #fbf3e2;
+.under2 {
+  transform: translate(12px, 11px) rotate(1.2deg);
+  filter: brightness(0.9);
 }
 
-.eyebrow {
-  margin: 0;
-  font-family: "Rowdies-Regular";
-  font-size: 0.68rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #b8241f;
-}
-
-.title {
-  margin: -0.2rem 0 0;
-  font-family: "Rowdies-Bold";
-  font-weight: normal;
-  font-size: clamp(1.25rem, calc(var(--pw) * 0.068), 1.75rem);
-  line-height: 1.12;
-}
-
-.artBox {
-  position: relative;
-  flex: 0 0 auto;
-  height: 40%;
-  margin: 0.15rem 0;
-}
-
-.art {
+/* the half of the page a tap turns to: a hint of the edge on hover */
+.edge {
   position: absolute;
-  left: var(--x);
-  top: var(--y);
-  width: var(--w);
-  translate: -50% -50%;
-  rotate: var(--r);
-  border-radius: 6%;
-  box-shadow: 0 8px 14px -8px rgba(0, 0, 0, 0.55);
-}
-
-.token {
-  border-radius: 50%;
-}
-
-.line {
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.body {
-  font-family: "Roboto Light", sans-serif;
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  font-size: clamp(0.88rem, calc(var(--pw) * 0.04), 1rem);
-  line-height: 1.45;
-}
-
-.body ul,
-.body ol {
-  display: grid;
-  gap: 0.45rem;
-  margin: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 5;
+  width: 22%;
   padding: 0;
-  list-style: none;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.body ul > li {
-  position: relative;
-  padding-left: 1.15rem;
-}
-
-.body ul > li::before {
-  content: "";
-  position: absolute;
-  left: 0.15rem;
-  top: 0.55em;
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 50%;
-  background: #e05a5a;
-}
-
-.golden {
-  counter-reset: rule;
-}
-
-.golden > li {
-  counter-increment: rule;
-  position: relative;
-  padding-left: 2.1rem;
-}
-
-.golden > li::before {
-  content: counter(rule);
-  position: absolute;
+.edgePrev {
   left: 0;
-  top: 0;
-  display: grid;
-  place-items: center;
-  width: 1.55rem;
-  height: 1.55rem;
-  border-radius: 50%;
-  background: #f1db4b;
-  font-family: "Rowdies-Bold";
-  font-size: 0.85rem;
+  cursor: w-resize;
 }
 
-.body b {
-  font-family: "Roboto Regular", sans-serif;
-  font-weight: normal;
+.edgeNext {
+  right: 0;
+  cursor: e-resize;
 }
 
-.note {
-  margin: 0 0 0.7rem;
+.edge:disabled {
+  cursor: default;
 }
 
-.body ul.remote {
-  grid-template-columns: 1fr 1fr;
-  gap: 0.4rem;
+.edge:focus-visible {
+  outline: none;
 }
 
-.body ul.remote > li {
-  display: grid;
-  gap: 0.1rem;
-  padding: 0.45rem 0.55rem 0.5rem 0.75rem;
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--c) 14%, #fff);
-  border-left: 4px solid var(--c);
-  font-size: 0.82em;
-  line-height: 1.25;
+/* (going straight to a section: the pile fades, and the section's page comes in) */
+.jumping .page {
+  opacity: 0;
+  transition: opacity 0.15s ease !important;
 }
 
-.body ul.remote > li::before {
-  display: none;
+.page {
+  animation: pageIn 0.2s ease both;
 }
 
-.body ul.remote b {
-  color: color-mix(in srgb, var(--c) 70%, #2b2233);
-}
-
-.body ul.ratings {
-  gap: 0.2rem;
-}
-
-.body ul.ratings > li {
-  display: grid;
-  grid-template-columns: 3.4rem 1fr;
-  align-items: baseline;
-  padding: 0.3rem 0.5rem;
-  border-radius: 8px;
-  font-size: 0.9em;
-}
-
-.body ul.ratings > li:nth-child(odd) {
-  background: rgba(241, 219, 75, 0.22);
-}
-
-.body ul.ratings > li::before {
-  display: none;
-}
-
-.body ul.ratings span {
-  font-family: "Rowdies-Bold";
-  color: #b8241f;
-}
-
-.folio {
-  position: absolute;
-  bottom: calc(var(--pw) * 0.035);
-  left: 50%;
-  translate: -50% 0;
-  font-family: "Rowdies-Regular";
-  font-size: 0.75rem;
-  color: rgba(43, 34, 51, 0.5);
-}
-
-/* #endregion */
-
-/* #region--------------------------------------A PAGE TURNING */
-
-.leaf {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 3;
-  width: var(--pw);
-  height: 100%;
-  transform-origin: left center;
-  transform-style: preserve-3d;
-  pointer-events: none;
-}
-
-.leafFront,
-.leafBackFace {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-.leafBackFace {
-  transform: rotateY(180deg);
-}
-
-/* (the page's shade deepens as it lifts, and lightens as it lands) */
-.leafFront::after,
-.leafBackFace::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  animation: leafShade 0.62s ease-in-out both;
-}
-
-.leafForward {
-  animation: turnForward 0.62s cubic-bezier(0.45, 0.05, 0.35, 1) both;
-}
-
-.leafBack {
-  animation: turnBack 0.62s cubic-bezier(0.45, 0.05, 0.35, 1) both;
-}
-
-@keyframes turnForward {
+@keyframes pageIn {
   from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(-180deg);
-  }
-}
-
-@keyframes turnBack {
-  from {
-    transform: rotateY(-180deg);
-  }
-  to {
-    transform: rotateY(0deg);
-  }
-}
-
-@keyframes leafShade {
-  0%,
-  100% {
-    background: transparent;
-  }
-  50% {
-    background: linear-gradient(90deg, rgba(60, 40, 20, 0.28), rgba(60, 40, 20, 0.05));
-  }
-}
-
-/* on a phone there's no left page: the turned page goes on over, out of sight */
-.book:not(.two) .leafForward {
-  animation-name: turnForwardAway;
-}
-
-.book:not(.two) .leafBack {
-  animation-name: turnBackIn;
-}
-
-@keyframes turnForwardAway {
-  from {
-    transform: rotateY(0deg);
-    opacity: 1;
-  }
-  70% {
-    opacity: 1;
-  }
-  to {
-    transform: rotateY(-160deg);
     opacity: 0;
   }
 }
 
-@keyframes turnBackIn {
-  from {
-    transform: rotateY(-160deg);
-    opacity: 0;
-  }
-  30% {
-    opacity: 1;
-  }
-  to {
-    transform: rotateY(0deg);
-    opacity: 1;
-  }
-}
-
-/* #endregion */
-
-/* #region--------------------------------------THE COVER */
-
-.cover {
+/* the sections, along the top: a tap goes straight to one */
+/* (in rows when they don't fit on one, growing upward, clear of the close button) */
+.sections {
   position: absolute;
-  top: 0;
+  bottom: calc(100% + 12px);
   left: 0;
-  z-index: 4;
-  width: var(--pw);
-  height: 100%;
-  transform-origin: left center;
-  transform-style: preserve-3d;
-  pointer-events: none;
-  visibility: hidden;
-}
-
-.in .cover {
-  visibility: visible;
-  animation: coverOpen 0.55s cubic-bezier(0.5, 0, 0.3, 1) 0.42s both;
-}
-
-.out .cover {
-  visibility: visible;
-  animation: coverOpen 0.45s cubic-bezier(0.5, 0, 0.3, 1) reverse both;
-}
-
-@keyframes coverOpen {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(-180deg);
-  }
-}
-
-.coverFront,
-.coverInside {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  border-radius: 6px 16px 16px 6px;
-}
-
-/* the cover: the printed rulebook's, the game's logo on textured card, "Rulebook" under it */
-.coverFront {
+  right: 56px;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.4rem;
+  transition: opacity 0.25s ease;
+}
+
+.section {
+  flex: none;
+  height: 38px;
+  padding: 0 0.85rem;
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
+  background: #fff;
+  box-shadow: 0 3px 0 var(--chip-edge);
+  font-family: "Rowdies-Regular";
+  font-size: 0.85rem;
+  color: var(--btn-ink);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    border-color 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.section:hover {
+  border-color: var(--btn-ink);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--btn-ink);
+}
+
+.section:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--chip-edge);
+}
+
+.section:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 2px;
+}
+
+.sectionOn {
+  border-color: #f1db4b;
+  background: #f1db4b;
+  box-shadow: 0 3px 0 #b39d1b;
+}
+
+.sectionOn:hover {
+  border-color: #b39d1b;
+  box-shadow: 0 4px 0 #b39d1b;
+}
+
+/* the last page: a review, please. On a screen the page's QR codes are no use: the buttons go over them */
+.review {
+  position: absolute;
+  top: 64%;
+  left: 50%;
+  z-index: 6;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  overflow: hidden;
-  background:
-    linear-gradient(90deg, rgba(60, 40, 20, 0.28), rgba(60, 40, 20, 0.04) 7%, transparent 9%),
-    url("/images/bg_texture.webp") center / 420px,
-    #fbf6ea;
-  box-shadow:
-    inset 0 0 30px rgba(120, 90, 50, 0.12),
-    0 20px 40px -16px rgba(0, 0, 0, 0.75);
+  gap: 0.6rem;
+  width: min(60%, 40rem);
+  min-height: 26%;
+  padding: clamp(0.5rem, 1.6vw, 1.1rem);
+  box-sizing: border-box;
+  border-radius: 16px;
+  background: #fffdf6;
+  box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.45);
+  translate: -50% 0;
 }
 
-.coverLogo {
-  width: 62%;
-  margin-left: 4%;
-  filter: drop-shadow(0 6px 10px rgba(60, 40, 20, 0.22));
+.reviewButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.2rem;
+  border: 2px solid #8f1410;
+  border-radius: var(--btn-radius, 12px);
+  background: #d81e18;
+  box-shadow: 0 4px 0 #8f1410;
+  font-family: "Rowdies-Regular";
+  font-size: clamp(0.8rem, 1.6vw, 1.05rem);
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
 }
 
-.coverWord {
-  margin-left: 4%;
-  font-family: "Rowdies-Bold";
-  font-size: clamp(1.1rem, calc(var(--pw) * 0.06), 1.5rem);
-  letter-spacing: 0.5px;
-  color: #2b2233;
+.reviewButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #8f1410;
+  color: #fff;
 }
 
-/* (the inside of the cover, seen for a moment as it swings over) */
-.coverInside {
-  transform: rotateY(180deg);
-  border-radius: 16px 6px 6px 16px;
-  background:
-    url("/images/bg_texture.webp") center / 420px,
-    #f4ecdb;
-  animation: insideFade 0.55s 0.42s both;
+.reviewButton svg {
+  width: 1.1em;
+  height: 1.1em;
 }
 
-.out .coverInside {
-  animation: insideFade 0.45s reverse both;
+.short {
+  display: none;
 }
 
-@keyframes insideFade {
-  0%,
-  75% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+.reviewPlain {
+  border-color: #323232;
+  background: #fff;
+  box-shadow: 0 4px 0 #323232;
+  color: #323232;
+}
+
+.reviewPlain:hover {
+  box-shadow: 0 6px 0 #323232;
+  color: #323232;
 }
 
 /* #endregion */
@@ -696,7 +364,7 @@
 .bar {
   position: absolute;
   left: 50%;
-  bottom: -64px;
+  bottom: -80px;
   translate: -50% 0;
   display: flex;
   align-items: center;
@@ -714,8 +382,10 @@
 
 .in .bar,
 .in .close,
+.in .sections,
 .out .bar,
-.out .close {
+.out .close,
+.out .sections {
   opacity: 0;
   pointer-events: none;
 }
@@ -775,7 +445,10 @@
 }
 
 .pageCount {
-  min-width: 7.5rem;
+  min-width: 5rem;
+  padding: 0.35rem 0.8rem;
+  border-radius: 10px;
+  background: rgba(28, 22, 34, 0.72);
   text-align: center;
   font-family: "Rowdies-Regular";
   font-size: 0.85rem;
@@ -787,12 +460,45 @@
 
 @media (prefers-reduced-motion: reduce) {
   .in .book,
-  .out .book,
-  .in .cover,
-  .out .cover,
-  .leafForward,
-  .leafBack {
+  .out .book {
     animation-duration: 0.01s !important;
-    animation-delay: 0s !important;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .section {
+    height: 32px;
+    padding: 0 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .review {
+    top: 66%;
+    flex-wrap: nowrap;
+    gap: 0.35rem;
+    width: 78%;
+    min-height: 26%;
+    padding: 0.4rem;
+    border-radius: 10px;
+  }
+
+  .reviewButton {
+    gap: 0.3rem;
+    padding: 0.35rem 0.55rem;
+    border-width: 1.5px;
+    box-shadow: 0 2px 0 #8f1410;
+    font-size: 0.68rem;
+  }
+
+  .reviewPlain {
+    box-shadow: 0 2px 0 #323232;
+  }
+
+  .long {
+    display: none;
+  }
+
+  .short {
+    display: inline;
   }
 }

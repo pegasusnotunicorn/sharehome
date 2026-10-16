@@ -151,7 +151,6 @@ export type ClientMessage =
   | { t: "start" } // host only
   | { t: "pick"; character: number | null } // in the waiting room: yours, or none
   | { t: "ready"; ready: boolean } // once you've picked
-  | { t: "newCharacter" } // your own, before the first episode starts
   | { t: "startClock" }
   | { t: "pause" }
   | { t: "resume" }

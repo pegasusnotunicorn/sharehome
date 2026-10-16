@@ -25,7 +25,7 @@ import {
   type RoomView,
   type ServerMessage,
 } from "./protocol";
-import { addPlayer, gameView, move, newGame, removePlayer as removeFromGame, tick, type StoredGame } from "./game";
+import { addPlayer, gameView, logPresence, move, newGame, removePlayer as removeFromGame, tick, type StoredGame } from "./game";
 
 export interface Env {
   ROOMS: DurableObjectNamespace<Room>;
@@ -206,6 +206,8 @@ export class Room extends DurableObject<Env> {
     if (!PLAYER_ID.test(playerId)) return refuse("bad-request");
 
     let player = room.players.find((p) => p.id === playerId);
+    // (back after their connection dropped, in a game: everyone's told)
+    if (player && room.game && !this.isOnline(playerId)) logPresence(room.game, playerId, true);
     if (!player) {
       if (room.players.length >= MAX_PLAYERS) return refuse("full");
       const taken = new Set(room.players.map((p) => p.color));
@@ -330,6 +332,8 @@ export class Room extends DurableObject<Env> {
     const { playerId } = (ws.deserializeAttachment() as { playerId?: string }) || {};
     const now = Date.now();
     if (playerId && room.hostId === playerId && !this.isOnline(playerId, ws)) room.hostAwaySince = now;
+    // (gone from a game, with no other tab still open: everyone's told)
+    if (playerId && room.game && room.players.some((p) => p.id === playerId) && !this.isOnline(playerId, ws)) logPresence(room.game, playerId, false);
     if (this.openSockets(ws).length === 0) room.emptySince = now;
     await this.save();
     this.broadcast(ws);

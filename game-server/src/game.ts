@@ -111,6 +111,9 @@ const log = (game: StoredGame, by: string, text: string) => {
   game.log.length = Math.min(game.log.length, LOG_MAX);
 };
 
+// someone's connection dropped, or they're back (the page puts their name in)
+export const logPresence = (game: StoredGame, by: string, online: boolean) => log(game, by, `{${by}} ${online ? "is back" : "disconnected"}`);
+
 const current = (game: StoredGame) => game.episodes[game.episode - 1];
 
 const startClock = (game: StoredGame, now: number) => {
@@ -137,16 +140,6 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
   const name = `{${by}}`; // (the page puts the player's name in)
 
   switch (msg.t) {
-    case "newCharacter": {
-      const hand = game.hands[by];
-      if (!hand || game.episode !== 1 || game.phase !== "ready") return false;
-      const next = game.piles.characters.shift();
-      if (next === undefined) return false;
-      game.piles.characters.push(hand.character);
-      hand.character = next;
-      return true;
-    }
-
     case "startClock": {
       if (game.phase !== "ready") return false;
       startClock(game, now);

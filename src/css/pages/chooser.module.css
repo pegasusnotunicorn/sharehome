@@ -21,6 +21,8 @@
 
 /* the dialog: big, but the page still round it */
 .chooser {
+  /* (the height of everything but the card: the card is as big as the rest leaves room for) */
+  --chrome: 470px;
   position: relative;
   display: grid;
   grid-template-rows: auto auto auto auto;
@@ -30,6 +32,7 @@
   box-sizing: border-box;
   border-radius: 24px;
   overflow: hidden auto;
+  scrollbar-width: thin;
   background:
     radial-gradient(60% 40% at 50% 26%, #fffdf6, transparent 75%),
     #f6f1e6;
@@ -117,7 +120,8 @@
   justify-content: center;
   gap: 0.4rem;
   margin: 1.1rem 0 0;
-  padding: 0;
+  /* (room for the tile on show, which is a little bigger, so it never makes the dialog scroll) */
+  padding: 0.3rem 0;
   list-style: none;
 }
 
@@ -218,6 +222,22 @@
   color: #fff;
 }
 
+/* the "?" tile: anyone, at random */
+.tileRandom {
+  background: #1b1b1f;
+}
+
+.tileQ {
+  position: absolute;
+  inset: 0 0 22%;
+  display: grid;
+  place-items: center;
+  font-family: "Rowdies-Bold";
+  font-size: 2.3rem;
+  line-height: 1;
+  color: #fff;
+}
+
 .tileTaken img {
   filter: grayscale(0.85);
   opacity: 0.55;
@@ -238,8 +258,14 @@
 
 @media only screen and (max-width: 760px) {
   .roster {
-    --tile: calc((100% - 4 * 0.3rem) / 5);
+    /* (five to a row on a phone; never bigger than on a desktop, in a narrow window) */
+    --tile: min(calc((100% - 4 * 0.3rem) / 5), 4.6rem);
     max-width: none;
+  }
+
+  /* (narrower, the faces take another row or two) */
+  .chooser {
+    --chrome: 570px;
   }
 }
 

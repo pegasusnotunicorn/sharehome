@@ -139,6 +139,48 @@ const PATHS = {
       <path d="M20 19v-4h-4" />
     </>
   ),
+  // (i)
+  info: (
+    <>
+      <path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0" />
+      <path d="M12 11v5" />
+      <path d="M12 7.5h.01" />
+    </>
+  ),
+  // two people
+  players: (
+    <>
+      <path d="M6 7.5a3 3 0 1 0 6 0a3 3 0 1 0-6 0" />
+      <path d="M3 20v-1.5a4.5 4.5 0 0 1 4.5-4.5h3a4.5 4.5 0 0 1 4.5 4.5V20" />
+      <path d="M15.5 4.6a3 3 0 0 1 0 5.8" />
+      <path d="M18 14.2a4.5 4.5 0 0 1 3 4.3V20" />
+    </>
+  ),
+  // a stopwatch
+  timer: (
+    <>
+      <path d="M5 13a7 7 0 1 0 14 0a7 7 0 1 0-14 0" />
+      <path d="M12 10v3l2 2" />
+      <path d="M10 3h4" />
+      <path d="M12 3v3" />
+    </>
+  ),
+  // crossed arrows: at random
+  shuffle: (
+    <>
+      <path d="M18 4l3 3l-3 3" />
+      <path d="M18 20l3-3l-3-3" />
+      <path d="M3 7h3a5 5 0 0 1 5 5a5 5 0 0 0 5 5h5" />
+      <path d="M21 7h-5a4.98 4.98 0 0 0-3 1m-4 8a4.98 4.98 0 0 1-3 1h-3" />
+    </>
+  ),
+  // ↶ take it back
+  undo: (
+    <>
+      <path d="M9 14l-4-4l4-4" />
+      <path d="M5 10h10a5 5 0 0 1 0 10h-3" />
+    </>
+  ),
   removePerson: (
     <>
       <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0-8 0" />

@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import CardCarousel from "../utils/CardCarousel";
 import CardTurn from "../utils/CardTurn";
+import CharacterDetails from "./CharacterDetails";
 import { CHARACTER_CARD_MM } from "./characterCardFaces";
 import { getAllCharacters } from "./Characters";
 import type { CharacterWithNav } from "../../types/character";
@@ -18,7 +19,6 @@ const cardBack = (i: number) => `/images/pieces/characters/${String(i + 1).padSt
 // phone the rest of their story waits behind a button.
 const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => {
   const navigate = useNavigate();
-  const [story, setStory] = useState(false);
   const work = (job: string, employer: string | false | undefined) => (employer ? `${job} at ${employer}` : job);
   const jobs = [work(c.job, c.employer), c.job2 && work(c.job2, c.employer2)].filter(Boolean).join(" · ");
   const all = getAllCharacters();
@@ -74,40 +74,7 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
         }}
       />
 
-      <div className={`${styles.details} ${styles.words} ${hush ? styles.hushed : ""}`}>
-        <section className={styles.box} aria-labelledby="story-title">
-          <h2 id="story-title" className={styles.label}>
-            Their story
-          </h2>
-          <div className={`${styles.story} ${story ? styles.storyOpen : ""}`} id="character-story">
-            {c.description.map((p) => (
-              <p key={p.slice(0, 24)}>{p}</p>
-            ))}
-          </div>
-          {c.description.length > 1 && (
-            <button
-              type="button"
-              className={styles.storyToggle}
-              aria-expanded={story}
-              aria-controls="character-story"
-              onClick={() => setStory((s) => !s)}
-            >
-              {story ? "Show less" : "Read more"}
-            </button>
-          )}
-        </section>
-
-        <section className={styles.box} aria-labelledby="hobbies-title">
-          <h2 id="hobbies-title" className={styles.label}>
-            Hobbies
-          </h2>
-          <ul className={styles.hobbies}>
-            {c.hobbies.map((h) => (
-              <li key={h}>{h.trim()}</li>
-            ))}
-          </ul>
-        </section>
-      </div>
+      <CharacterDetails character={c} className={`${styles.words} ${hush ? styles.hushed : ""}`} />
     </article>
   );
 };

@@ -4,14 +4,15 @@ import { MAX_PLAYERS, MIN_PLAYERS, NAME_MAX, cleanName, type Player, type RoomVi
 import CustomHelmet from "../utils/CustomHelmet";
 import DefaultButton from "../utils/DefaultButton";
 import Modal from "../utils/Modal";
+import PageIntro from "../utils/PageIntro";
 import usePageTitle from "../utils/usePageTitle";
 import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, playerId, roomInfo, saveName, savedName } from "./gameServer";
 import useRoom from "./useRoom";
 import styles from "../../css/pages/playPage.module.css";
 
 // Play online (/play, and a room at /play/CODE), dressed as the show's backstage: a stage-lit panel
-// up top, then making or joining a room, or, in a room, the cast's six seats and the start of the
-// show. The table comes next.
+// up top, then making or joining a room; in a room, the page's own heading, then the invite (a
+// stage-lit card) beside the start of the show, and the cast's six seats. The table comes next.
 
 const PLAYER_COLORS = ["#d81e18", "#5f5aa2", "#4f8a73", "#e0a91b", "#3d7fb8", "#d9652b"];
 const colorOf = (p: Player) => PLAYER_COLORS[p.color % PLAYER_COLORS.length];
@@ -350,15 +351,37 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
   const seats = Array.from({ length: MAX_PLAYERS }, (_, i) => room.players[i] ?? null);
   return (
     <>
-      <Stage eyebrow="Game room" title="Backstage" lead="The cast is getting ready. Send your friends the link: everyone joins from their own device.">
-        <Invite code={room.code} />
-      </Stage>
+      <PageIntro
+        eyebrow="Game room"
+        title="Backstage"
+        lead="The cast is getting ready. Send your friends the link: everyone joins from their own device."
+        className={styles.intro}
+      />
 
       {status === "reconnecting" && (
         <p className={styles.reconnecting} role="status">
           <span className={styles.reconnectingDot} /> Reconnecting…
         </p>
       )}
+
+      <div className={styles.lobbyTop}>
+        <Invite code={room.code} />
+        <section className={styles.showtime}>
+          <div className={styles.showtimeText}>
+            <span className={styles.onAir}>
+              <span className={styles.onAirLight} /> On air soon
+            </span>
+            <StartNote room={room} isHost={isHost} />
+          </div>
+          <img className={styles.showtimeArt} src="/images/illustrations/acting.webp" alt="" width="600" height="600" loading="lazy" />
+          <div className={styles.showtimeAction}>
+            <span className={styles.startButton} aria-disabled="true">
+              Start the show
+            </span>
+            <span className={styles.soon}>The game table opens soon</span>
+          </div>
+        </section>
+      </div>
 
       <section className={styles.cast} aria-labelledby="cast-title">
         <div className={styles.castHead}>
@@ -378,21 +401,6 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
             )
           )}
         </ul>
-      </section>
-
-      <section className={styles.showtime}>
-        <div className={styles.showtimeText}>
-          <span className={styles.onAir}>
-            <span className={styles.onAirLight} /> On air soon
-          </span>
-          <StartNote room={room} isHost={isHost} />
-        </div>
-        <div className={styles.showtimeAction}>
-          <span className={styles.startButton} aria-disabled="true">
-            Start the show
-          </span>
-          <span className={styles.soon}>The game table opens soon</span>
-        </div>
       </section>
 
       <Voice />
@@ -625,11 +633,15 @@ const useCopyLink = (code: string) => {
 const Invite = ({ code }: { code: string }) => {
   const { link, copied, failed, setFailed, copy } = useCopyLink(code);
   return (
-    <div className={styles.invite}>
+    <section className={styles.invite} aria-labelledby="invite-title">
+      <h2 className={styles.inviteTitle} id="invite-title">
+        Invite your cast
+      </h2>
       <div className={styles.inviteCode}>
         <span className={styles.inviteLabel}>Room code</span>
         <CodeTiles code={code} />
       </div>
+      <p className={styles.inviteNote}>Send the link, or have friends type the code in at lovecareermagic.com/play.</p>
       <DefaultButton onClick={copy} text={copied ? "Link copied!" : "Copy invite link"} color="yellow" className={styles.inviteButton} />
       {failed && (
         <Modal onClose={() => setFailed(false)} panelClassName={styles.dialog} ariaLabel="Invite link">
@@ -638,7 +650,7 @@ const Invite = ({ code }: { code: string }) => {
           <input className={styles.input} value={link} readOnly onFocus={(e) => e.target.select()} autoFocus />
         </Modal>
       )}
-    </div>
+    </section>
   );
 };
 

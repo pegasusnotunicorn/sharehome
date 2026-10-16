@@ -146,15 +146,9 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
               <NavLink onClick={closeNav} to="/characters" className={getNavLinkClassName}>
                 {linkBody("Characters", "Meet the 25 contestants")}
               </NavLink>
-              <a
-                onClick={closeNav}
-                href="https://screentop.gg/@PegasusGames/lcm"
-                className={`${styles.navLink} noselect`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {linkBody("Play online", "Try it in your browser", true)}
-              </a>
+              <NavLink onClick={closeNav} to="/play" className={getNavLinkClassName}>
+                {linkBody("Play online", "Play with friends in your browser")}
+              </NavLink>
               <NavLink onClick={closeNav} to="/contact" className={getNavLinkClassName}>
                 {linkBody("Contact us", "Get in touch")}
               </NavLink>

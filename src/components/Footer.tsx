@@ -12,7 +12,7 @@ const EXPLORE: { label: string; to?: string; href?: string }[] = [
   { label: "Home", to: "/" },
   { label: "How to play", to: "/howtoplay" },
   { label: "Characters", to: "/characters" },
-  { label: "Play online", href: "https://screentop.gg/@PegasusGames/lcm" },
+  { label: "Play online", to: "/play" },
   { label: "Blog", href: "https://pegasusgames.medium.com/" },
   { label: "Contact us", to: "/contact" },
 ];

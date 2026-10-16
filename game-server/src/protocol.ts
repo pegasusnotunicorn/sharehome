@@ -23,6 +23,11 @@ export const DECK_SIZES = {
   chaotic: 30,
 } as const;
 
+// The R.E.M.O.T.E. (from the rulebook, after Script Change by Beau Jágr Sheldon): a safety tool, a tap
+// on one of its buttons that everyone at the table goes along with, no fuss
+export const REMOTE_BUTTONS = ["pause", "play", "rewind", "forward", "replay", "frame"] as const;
+export type RemoteButton = (typeof REMOTE_BUTTONS)[number];
+
 export const DIRECTION_DECKS = ["director", "producer", "showrunner"] as const;
 export type DirectionDeck = (typeof DIRECTION_DECKS)[number];
 export const TRAIT_KINDS = ["good", "bad", "chaotic"] as const;
@@ -94,6 +99,8 @@ export interface GameView {
   phase: GamePhase;
   // the game ended early: every direction card has been played
   outOfCards?: boolean;
+  // the last R.E.M.O.T.E. button pressed (shown to everyone, without who)
+  remote?: { id: string; button: RemoteButton; at: number } | null;
   // the current episode, from 1
   episode: number;
   // when the clock runs out (server time), or how long's left while it's paused
@@ -150,6 +157,7 @@ export type ClientMessage =
   | { t: "token"; on: "card"; id: string; add: boolean }
   | { t: "trait"; player: string; slot: number }
   | { t: "nextEpisode" }
+  | { t: "remote"; button: RemoteButton }
   | { t: "toLobby" }; // host only
 
 // room → browser

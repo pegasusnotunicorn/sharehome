@@ -5,6 +5,7 @@
    Cards lie a little askew and never move when they're tapped: a new card flips over in place. */
 
 .room {
+  position: relative;
   --ink: #323232;
   --ink-soft: rgba(50, 50, 50, 0.72);
   --night: #1c1a2b;
@@ -2259,3 +2260,171 @@ button.traitPickCard:focus-visible {
   height: 28px;
   font-size: 1.1rem;
 }
+
+/* each callback counter stays inside its own column, however many tokens */
+.pastSlot .pastCount {
+  align-self: stretch;
+  justify-content: space-between;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.15rem 0.2rem 0.15rem 0.35rem;
+}
+
+.pastSlot .pastTokensLine {
+  min-width: 0;
+  gap: 0.2rem;
+}
+
+.pastSlot .pastTokensLine .tokenStack {
+  width: auto;
+}
+
+.pastSlot .pastTokensLine b {
+  min-width: 0;
+}
+
+.pastSlot .minus {
+  flex: none;
+}
+
+/* #region--------------------------------------THE R.E.M.O.T.E. */
+
+/* a little remote lying on the table's bottom-left corner: easy to find, out of the way */
+.remoteOnTable {
+  position: absolute;
+  left: 22px;
+  bottom: 22px;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 46px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: linear-gradient(160deg, #4a4858, #2c2b36);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 4px 8px -2px rgba(20, 20, 40, 0.45);
+  opacity: 0.75;
+  cursor: pointer;
+  transform: rotate(-12deg);
+  transition: opacity 0.15s ease;
+}
+
+.remoteOnTable:hover,
+.remoteOnTable:focus-visible {
+  opacity: 1;
+}
+
+.remoteDots {
+  display: grid;
+  grid-template-columns: 7px 7px;
+  gap: 3px;
+}
+
+.remoteDots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+}
+
+.remotePanel {
+  max-width: 26rem;
+}
+
+.remoteGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.remoteButton {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem;
+  border: 0;
+  border-radius: 14px;
+  background: #f7f5ef;
+  font-family: "Rowdies-Regular";
+  font-size: 0.92rem;
+  text-align: left;
+  color: #323232;
+  cursor: pointer;
+}
+
+.remoteButton:hover {
+  background: #efece3;
+}
+
+.remoteKey {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  background: var(--c);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+  color: #fff;
+}
+
+.remoteKey svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* a button pressed: shown to everyone at the top of the screen, for a moment */
+.remoteShown {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  z-index: 150000;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: max-content;
+  max-width: calc(100vw - 2rem);
+  padding: 0.7rem 1.1rem 0.7rem 0.7rem;
+  box-sizing: border-box;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow:
+    inset 0 0 0 3px var(--c),
+    0 18px 36px -14px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transform: translateX(-50%);
+  animation: remoteIn 0.35s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+.remoteShown > span:last-child {
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.95rem;
+  color: rgba(50, 50, 50, 0.8);
+}
+
+.remoteShown b {
+  font-family: "Rowdies-Bold";
+  font-size: 1.15rem;
+  font-weight: normal;
+  color: #323232;
+}
+
+@keyframes remoteIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px) scale(0.9);
+  }
+}
+
+@media only screen and (max-width: 760px) {
+  .remoteOnTable {
+    left: 14px;
+    bottom: 14px;
+  }
+}
+
+/* #endregion */

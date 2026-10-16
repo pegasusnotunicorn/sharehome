@@ -4,11 +4,13 @@ import {
   DIRECTION_POINTS,
   EPISODES,
   EPISODE_SECONDS,
+  REMOTE_BUTTONS,
   arcDone,
   score,
   type ClientMessage,
   type DirectionDeck,
   type GameView,
+  type RemoteButton,
   type Player,
   type RoomView,
   type TraitKind,
@@ -160,9 +162,9 @@ const Flight = ({ plan, done }: { plan: FlightPlan; done: () => void }) => {
 
 // a pile of point tokens: a rainbow one for each 5, a plain one for each 1 left over
 const TokenStack = ({ count }: { count: number }) => {
-  // (at most five pieces shown, so the pile keeps its size)
-  const fives = Math.min(5, Math.floor(count / 5));
-  const ones = Math.min(5 - fives, count % 5);
+  // (at most three pieces shown, so the pile keeps its size: the number says the rest)
+  const fives = Math.min(3, Math.floor(count / 5));
+  const ones = Math.min(3 - fives, count % 5);
   return (
     <span className={styles.tokenStack} aria-label={`${count} point${count === 1 ? "" : "s"} in tokens`}>
       {Array.from({ length: fives }, (_, i) => (
@@ -318,6 +320,19 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   const [muted, setMutedState] = useState(isMuted);
   const [ending, setEnding] = useState(false);
   const [rules, setRules] = useState(false);
+  const [remoteOpen, setRemoteOpen] = useState(false);
+  // a button just pressed on the R.E.M.O.T.E., by anyone: shown to everyone for a moment
+  const [remoteShown, setRemoteShown] = useState<RemoteButton | null>(null);
+  const lastRemote = useRef(game.remote?.id ?? null);
+  useEffect(() => {
+    const r = game.remote;
+    if (!r || r.id === lastRemote.current) return;
+    lastRemote.current = r.id;
+    setRemoteShown(r.button);
+    play("deal");
+    const t = setTimeout(() => setRemoteShown(null), 5000);
+    return () => clearTimeout(t);
+  }, [game.remote]);
   const [cloth, setCloth] = useState<Cloth>(readCloth);
   const [picking, setPicking] = useState(false);
   const [phoneTab, setPhoneTab] = useState<"clock" | "log">("clock");
@@ -325,6 +340,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   const [seenLog, setSeenLog] = useState<string | null>(null);
   const clockTime = useWallClock();
   const pickCloth = (c: Cloth) => {
+    if (c !== cloth) play("whoosh");
     setCloth(c);
     try {
       localStorage.setItem(CLOTH_KEY, c);
@@ -697,15 +713,11 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                           <TokenStack count={past.tokens} />
                           <b>{past.tokens > 0 ? past.tokens : ""}</b>
                         </span>
-                        <button
-                          type="button"
-                          className={styles.minus}
+                        <MinusButton
                           disabled={past.tokens === 0}
-                          onClick={() => send({ t: "token", on: "episode", episode: i + 1, add: false })}
-                          aria-label={`Take a callback token off episode ${i + 1}`}
-                        >
-                          −
-                        </button>
+                          onMinus={() => send({ t: "token", on: "episode", episode: i + 1, add: false })}
+                          label={`Take a callback token off episode ${i + 1}`}
+                        />
                       </div>
                     </div>
                   ) : (
@@ -738,6 +750,13 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
           </div>
         </Modal>
       )}
+      <button type="button" className={styles.remoteOnTable} onClick={() => setRemoteOpen(true)} aria-label="The R.E.M.O.T.E. (safety tool)" title="R.E.M.O.T.E.">
+        <span className={styles.remoteDots} aria-hidden>
+          {REMOTE_BUTTONS.map((b) => (
+            <i key={b} style={{ background: REMOTE[b].color }} />
+          ))}
+        </span>
+      </button>
       {timeUp && (
         <div className={styles.timeUp} onClick={endTimeUp} role="alert" onAnimationEnd={(e) => e.animationName.includes("timeUpOut") && endTimeUp()}>
           <div className={styles.timeUpCard}>
@@ -786,6 +805,18 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
         <Flight key={f.id} plan={f} done={() => setFlights((all) => all.filter((x) => x.id !== f.id))} />
       ))}
       {rules && <RulesDialog close={() => setRules(false)} />}
+      {remoteOpen && <RemoteDialog press={(button) => send({ t: "remote", button })} close={() => setRemoteOpen(false)} />}
+      {remoteShown && (
+        <div className={styles.remoteShown} role="alert" onClick={() => setRemoteShown(null)} style={{ "--c": REMOTE[remoteShown].color } as CSSProperties}>
+          <span className={styles.remoteKey}>
+            <RemoteIcon d={REMOTE[remoteShown].icon} stroke={remoteShown === "replay"} />
+          </span>
+          <span>
+            <b>{REMOTE[remoteShown].label}</b>
+            {REMOTE[remoteShown].text}
+          </span>
+        </div>
+      )}
       {playedOpen && (
         <PlayedDialog
           episode={game.episode}
@@ -839,6 +870,90 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
         />
       )}
     </div>
+  );
+};
+
+// The R.E.M.O.T.E. (the rulebook's safety tool, after Script Change by Beau Jágr Sheldon): a tap on a
+// button, shown to everyone without who pressed it, and everyone goes along with it, no fuss
+const REMOTE: Record<RemoteButton, { label: string; text: string; color: string; icon: string }> = {
+  pause: { label: "Pause", text: "Let’s stop for a moment and talk.", color: "#e05a5a", icon: "M7 5h3v14H7zM14 5h3v14h-3z" },
+  play: { label: "Play", text: "All good, carry on.", color: "#4f7fd1", icon: "M8 5l11 7-11 7z" },
+  rewind: { label: "Rewind", text: "Let’s take that last bit back and redo it.", color: "#e0962f", icon: "M11 6v12L3 12zM20 6v12l-8-6z" },
+  forward: { label: "Fast-forward", text: "Let’s skip past this and move on.", color: "#4f9a5a", icon: "M4 6v12l8-6zM13 6v12l8-6z" },
+  replay: { label: "Instant replay", text: "That was great: more of that, please!", color: "#9a5fc0", icon: "M12 5a7 7 0 1 1-6.6 4.7M5 4v5h5" },
+  frame: { label: "Frame by frame", text: "Let’s slow down and go gently here.", color: "#e06a3a", icon: "M6 5h2v14H6zM11 5l9 7-9 7z" },
+};
+
+const RemoteIcon = ({ d, stroke }: { d: string; stroke?: boolean }) => (
+  <svg viewBox="0 0 24 24" aria-hidden>
+    <path d={d} fill={stroke ? "none" : "currentColor"} stroke={stroke ? "currentColor" : "none"} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const RemoteDialog = ({ press, close }: { press: (b: RemoteButton) => void; close: () => void }) => (
+  <Modal onClose={close} panelClassName={`${modalStyles.panel} ${styles.remotePanel}`} ariaLabel="The R.E.M.O.T.E.">
+    <h2 className={modalStyles.title}>The R.E.M.O.T.E.</h2>
+    <p className={modalStyles.text}>Everyone sees the button, not who pressed it.</p>
+    <div className={styles.remoteGrid}>
+      {REMOTE_BUTTONS.map((b) => (
+        <button
+          key={b}
+          type="button"
+          className={styles.remoteButton}
+          style={{ "--c": REMOTE[b].color } as CSSProperties}
+          onClick={() => {
+            press(b);
+            close();
+          }}
+        >
+          <span className={styles.remoteKey}>
+            <RemoteIcon d={REMOTE[b].icon} stroke={b === "replay"} />
+          </span>
+          {REMOTE[b].label}
+        </button>
+      ))}
+    </div>
+  </Modal>
+);
+
+// pressing and holding: once at once, then again and again, faster
+const useHold = (action: () => void) => {
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const act = useRef(action);
+  act.current = action;
+  const stop = useCallback(() => {
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = null;
+  }, []);
+  useEffect(() => stop, [stop]);
+  const start = (e: React.PointerEvent) => {
+    if (e.button !== 0) return;
+    stop();
+    act.current();
+    let delay = 380;
+    const again = () => {
+      act.current();
+      delay = Math.max(60, delay * 0.75);
+      timer.current = setTimeout(again, delay);
+    };
+    timer.current = setTimeout(again, delay);
+  };
+  return {
+    onPointerDown: start,
+    onPointerUp: stop,
+    onPointerLeave: stop,
+    onPointerCancel: stop,
+    // (a key press, or a click with no pointer: once)
+    onClick: (e: React.MouseEvent) => e.detail === 0 && act.current(),
+  };
+};
+
+const MinusButton = ({ disabled, onMinus, label }: { disabled: boolean; onMinus: () => void; label: string }) => {
+  const hold = useHold(onMinus);
+  return (
+    <button type="button" className={styles.minus} disabled={disabled} aria-label={label} {...hold}>
+      −
+    </button>
   );
 };
 

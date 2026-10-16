@@ -8,6 +8,7 @@ import {
   EPISODES,
   EPISODE_SECONDS,
   FACE_UP_PER_DECK,
+  REMOTE_BUTTONS,
   TRAIT_KINDS,
   type ClientMessage,
   type DirectionDeck,
@@ -260,6 +261,20 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
       }
       const whose = msg.player === by ? "their" : `{${msg.player}}’s`;
       log(game, by, `${name} ${trait.done !== null ? "played" : "took back"} ${whose} ${trait.kind} trait`);
+      return true;
+    }
+
+    case "remote": {
+      if (!REMOTE_BUTTONS.includes(msg.button)) return false;
+      game.remote = { id: id(), button: msg.button, at: now };
+      // (pause stops the clock; play starts it again)
+      if (msg.button === "pause" && game.phase === "playing" && game.endsAt !== null) {
+        game.pausedLeft = Math.max(0, game.endsAt - now);
+        game.endsAt = null;
+      } else if (msg.button === "play" && game.phase === "playing" && game.pausedLeft !== null) {
+        game.endsAt = now + game.pausedLeft;
+        game.pausedLeft = null;
+      }
       return true;
     }
 

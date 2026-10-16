@@ -1,7 +1,7 @@
 // The table's sound effects, made on the spot with Web Audio (no files to load): short, soft and
 // cheerful, like cards and chips on a table. Muting is kept in this browser.
 
-type Sound = "deal" | "complete" | "undo" | "token" | "trait" | "start" | "tick" | "timeUp" | "wrap" | "finale";
+type Sound = "whoosh" | "deal" | "complete" | "undo" | "token" | "trait" | "start" | "tick" | "timeUp" | "wrap" | "finale";
 
 let ctx: AudioContext | null = null;
 const MUTE_KEY = "lcm-play-muted";
@@ -79,6 +79,28 @@ export function play(sound: Sound) {
   const a = audio();
   if (!a || a.state !== "running") return;
   switch (sound) {
+    case "whoosh": {
+      // a tablecloth shaken out over the table: a soft rush of air, rising then falling
+      const length = Math.floor(a.sampleRate * 0.45);
+      const buffer = a.createBuffer(1, length, a.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < length; i++) data[i] = Math.random() * 2 - 1;
+      const src = a.createBufferSource();
+      src.buffer = buffer;
+      const filter = a.createBiquadFilter();
+      filter.type = "bandpass";
+      filter.Q.value = 1.4;
+      filter.frequency.setValueAtTime(500, a.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(2600, a.currentTime + 0.18);
+      filter.frequency.exponentialRampToValueAtTime(700, a.currentTime + 0.45);
+      const gain = a.createGain();
+      gain.gain.setValueAtTime(0.0001, a.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.22, a.currentTime + 0.14);
+      gain.gain.exponentialRampToValueAtTime(0.0001, a.currentTime + 0.45);
+      src.connect(filter).connect(gain).connect(a.destination);
+      src.start();
+      break;
+    }
     case "deal":
       swish(a, 0, 0.1, 0.1);
       break;

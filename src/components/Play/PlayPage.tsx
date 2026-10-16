@@ -1,18 +1,21 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useNavigate, useParams } from "react-router";
 import { MAX_PLAYERS, MIN_PLAYERS, NAME_MAX, cleanName, type Player, type RoomView } from "../../../game-server/src/protocol";
 import CustomHelmet from "../utils/CustomHelmet";
 import DefaultButton from "../utils/DefaultButton";
+import Modal from "../utils/Modal";
 import PageIntro from "../utils/PageIntro";
 import usePageTitle from "../utils/usePageTitle";
 import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, playerId, roomInfo, saveName, savedName } from "./gameServer";
 import useRoom from "./useRoom";
 import styles from "../../css/pages/playPage.module.css";
 
-// Play online (/play, and a room at /play/CODE): make a room or join one by its code, then the
-// room's lobby: who's in, who's host, the invite link, and the call on Discord. The table comes next.
+// Play online (/play, and a room at /play/CODE), dressed as the show's backstage: a stage-lit panel
+// up top, then making or joining a room; in a room, the page's own heading, then the invite (a
+// stage-lit card) beside the start of the show, and the cast's six seats. The table comes next.
 
 const PLAYER_COLORS = ["#d81e18", "#5f5aa2", "#4f8a73", "#e0a91b", "#3d7fb8", "#d9652b"];
+const colorOf = (p: Player) => PLAYER_COLORS[p.color % PLAYER_COLORS.length];
 
 const PlayPage = () => {
   const { code: rawCode } = useParams();
@@ -29,7 +32,7 @@ const PlayPage = () => {
         description="Make a game room, send your friends the link and play Love, Career & Magic together online."
       />
       {!GAME_SERVER ? (
-        <PageIntro eyebrow="Play online" title="Coming soon" lead="Online games are almost ready. Check back soon!" />
+        <Stage eyebrow="Play online" title="Coming soon" lead="Online games are almost ready. Check back soon!" art />
       ) : !code ? (
         <Start name={name} setName={setName} created={() => setJoined(true)} />
       ) : !isCode(code) ? (
@@ -51,7 +54,52 @@ const PlayPage = () => {
   );
 };
 
-// #region--------------------------------------BEFORE A ROOM
+// #region--------------------------------------PIECES
+
+// The stage-lit panel every screen opens with
+const Stage = ({
+  eyebrow,
+  title,
+  lead,
+  art,
+  children,
+}: {
+  eyebrow: ReactNode;
+  title: ReactNode;
+  lead?: ReactNode;
+  art?: boolean;
+  children?: ReactNode;
+}) => (
+  <header className={`${styles.stage}${art ? ` ${styles.stageWithArt}` : ""}`}>
+    <div className={styles.stageText}>
+      <p className={styles.eyebrow}>{eyebrow}</p>
+      <h1 className={styles.title}>{title}</h1>
+      {lead && <p className={styles.lead}>{lead}</p>}
+      {children && <div className={styles.stageActions}>{children}</div>}
+    </div>
+    {art && <img className={styles.stageArt} src="/images/cards-floating.webp" alt="" width="1200" height="900" />}
+  </header>
+);
+
+// A room code as letter tiles
+const CodeTiles = ({ code, small }: { code: string; small?: boolean }) => (
+  <span className={`${styles.tiles}${small ? ` ${styles.tilesSmall}` : ""}`} aria-label={`Room code ${code.split("").join(" ")}`}>
+    {code.split("").map((c, i) => (
+      <span key={i} className={styles.tile} aria-hidden>
+        {c}
+      </span>
+    ))}
+  </span>
+);
+
+const DiscordIcon = () => (
+  <svg className={styles.discordIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M8 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" />
+    <path d="M14 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" />
+    <path d="M15.5 17c0 1 1.5 3 2 3c1.5 0 2.833 -1.667 3.5 -3c.667 -1.667 .5 -5.833 -1.5 -11.5c-1.457 -1.015 -3 -1.34 -4.5 -1.5l-.972 1.923a11.913 11.913 0 0 0 -4.053 0l-.975 -1.923c-1.5 .16 -3.043 .485 -4.5 1.5c-2 5.667 -2.167 9.833 -1.5 11.5c.667 1.333 2 3 3.5 3c.5 0 2 -2 2 -3" />
+    <path d="M7 16.5c3.5 1 6.5 1 10 0" />
+  </svg>
+);
 
 const NameField = ({ name, setName, autoFocus }: { name: string; setName: (n: string) => void; autoFocus?: boolean }) => (
   <label className={styles.field}>
@@ -68,6 +116,27 @@ const NameField = ({ name, setName, autoFocus }: { name: string; setName: (n: st
     />
   </label>
 );
+
+// The game is played out loud: the call happens on our Discord
+const Voice = () => (
+  <aside className={styles.voice}>
+    <span className={styles.voiceBadge}>
+      <DiscordIcon />
+    </span>
+    <div className={styles.voiceText}>
+      <h2 className={styles.voiceTitle}>Talk it out on Discord</h2>
+      <p>
+        Love, Career &amp; Magic is all about talking with each other, so you’ll want to be on a call together. Grab
+        a free voice room on our Discord server, or use any call you like.
+      </p>
+    </div>
+    <DefaultButton href={DISCORD_URL} text="Open our Discord" color="purple" className={styles.voiceButton} />
+  </aside>
+);
+
+// #endregion
+
+// #region--------------------------------------BEFORE A ROOM
 
 const Start = ({ name, setName, created }: { name: string; setName: (n: string) => void; created: () => void }) => {
   const navigate = useNavigate();
@@ -100,14 +169,18 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
 
   return (
     <>
-      <PageIntro
-        eyebrow={`${MIN_PLAYERS}–${MAX_PLAYERS} players · on a call`}
-        title="Play online"
-        lead="Make a game room, send your friends the link, and hop on a call together. Every card is on the table for everyone to see."
+      <Stage
+        eyebrow={`Play online · ${MIN_PLAYERS}–${MAX_PLAYERS} players`}
+        title="Your show, online"
+        lead="Make a room, send your friends the link and hop on a call. Every card is on the table for everyone to see."
+        art
       />
-      <div className={styles.startCards}>
-        <form className={styles.card} onSubmit={create}>
-          <h2 className={styles.cardTitle}>Host a game</h2>
+
+      <div className={styles.doors}>
+        <form className={`${styles.door} ${styles.doorHost}`} onSubmit={create}>
+          <span className={styles.doorNumber}>A</span>
+          <h2 className={styles.doorTitle}>Host a game</h2>
+          <p className={styles.doorNote}>Make a room and you’re the host: you start the show when everyone’s in.</p>
           <NameField name={name} setName={setName} />
           <DefaultButton button="submit" text={busy ? "Making a room…" : "Create a game"} color="red" className={styles.wide} />
           {problem && (
@@ -116,35 +189,77 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
             </p>
           )}
         </form>
-        <form className={styles.card} onSubmit={join}>
-          <h2 className={styles.cardTitle}>Join a game</h2>
-          <label className={styles.field}>
-            <span className={styles.fieldLabel}>Room code</span>
-            <input
-              className={`${styles.input} ${styles.codeInput}`}
-              value={code}
-              onChange={(e) => setCode(normalizeCode(e.target.value))}
-              placeholder="ABCD"
-              autoComplete="off"
-              autoCapitalize="characters"
-              spellCheck={false}
-              inputMode="text"
-              required
-            />
-          </label>
-          <DefaultButton button="submit" text="Join" color="dark" className={styles.wide} />
-          <p className={styles.note}>Got a link from a friend? Just open it.</p>
+
+        <form className={`${styles.door} ${styles.doorJoin}`} onSubmit={join}>
+          <span className={styles.doorNumber}>B</span>
+          <h2 className={styles.doorTitle}>Join a game</h2>
+          <p className={styles.doorNote}>Type the four letters your host sent you, or just open their link.</p>
+          <CodeInput code={code} setCode={setCode} />
+          <DefaultButton button="submit" text="Join" color="dark" className={`${styles.wide}${isCode(code) ? "" : ` ${styles.muted}`}`} />
         </form>
       </div>
+
+      <ol className={styles.steps}>
+        <li>
+          <span className={styles.stepNumber}>1</span>
+          <strong>Make a room</strong>
+          <span>It gets a four-letter code.</span>
+        </li>
+        <li>
+          <span className={styles.stepNumber}>2</span>
+          <strong>Send the link</strong>
+          <span>Up to {MAX_PLAYERS} players, each on their own device.</span>
+        </li>
+        <li>
+          <span className={styles.stepNumber}>3</span>
+          <strong>Hop on a call</strong>
+          <span>Then the host starts the show.</span>
+        </li>
+      </ol>
+
       <Voice />
     </>
   );
 };
 
+// Four letter tiles over a real text field (so typing, pasting and the keyboard all just work)
+const CodeInput = ({ code, setCode }: { code: string; setCode: (c: string) => void }) => {
+  const [focused, setFocused] = useState(false);
+  return (
+    <label className={styles.field}>
+      <span className={styles.fieldLabel}>Room code</span>
+      <span className={`${styles.codeInput}${focused ? ` ${styles.codeInputFocused}` : ""}`}>
+        {[0, 1, 2, 3].map((i) => (
+          <span
+            key={i}
+            className={`${styles.codeSlot}${code[i] ? ` ${styles.codeSlotFilled}` : ""}${focused && i === Math.min(code.length, 3) ? ` ${styles.codeSlotNext}` : ""}`}
+            aria-hidden
+          >
+            {code[i] || ""}
+          </span>
+        ))}
+        <input
+          className={styles.codeField}
+          value={code}
+          onChange={(e) => setCode(normalizeCode(e.target.value))}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          autoComplete="off"
+          autoCapitalize="characters"
+          spellCheck={false}
+          maxLength={8}
+          aria-label="Room code"
+          required
+        />
+      </span>
+    </label>
+  );
+};
+
 const Missing = ({ code, full }: { code: string; full?: boolean }) => (
-  <PageIntro
-    eyebrow={`Game ${code}`}
-    title={full ? "This game is full" : "No game here"}
+  <Stage
+    eyebrow={<>Game {code}</>}
+    title={full ? "This show is full" : "No game here"}
     lead={
       full
         ? `A game has room for ${MAX_PLAYERS} players, and this one has them all. Ask the host to make another, or start your own.`
@@ -152,7 +267,7 @@ const Missing = ({ code, full }: { code: string; full?: boolean }) => (
     }
   >
     <DefaultButton navlink="/play" text="Start a game" color="red" />
-  </PageIntro>
+  </Stage>
 );
 
 // someone's link, the first time: their name, then in
@@ -173,9 +288,11 @@ const JoinByLink = ({ code, name, setName, join }: { code: string; name: string;
 
   return (
     <>
-      <PageIntro eyebrow="You’re invited" title={`Game ${code}`} lead="Pop your name in and you’re at the table." />
+      <Stage eyebrow="You’re invited" title="Take a seat" lead="You’ve been cast in a game of Love, Career & Magic. Pop your name in and head backstage.">
+        <CodeTiles code={code} small />
+      </Stage>
       <form
-        className={`${styles.card} ${styles.narrow}`}
+        className={`${styles.door} ${styles.doorHost} ${styles.doorAlone}`}
         onSubmit={(e) => {
           e.preventDefault();
           const clean = cleanName(name);
@@ -184,6 +301,7 @@ const JoinByLink = ({ code, name, setName, join }: { code: string; name: string;
           join();
         }}
       >
+        <h2 className={styles.doorTitle}>Who’s playing?</h2>
         <NameField name={name} setName={setName} autoFocus />
         <DefaultButton button="submit" text="Join the game" color="red" className={styles.wide} />
       </form>
@@ -199,20 +317,22 @@ const JoinByLink = ({ code, name, setName, join }: { code: string; name: string;
 const Lobby = ({ code, name }: { code: string; name: string }) => {
   const navigate = useNavigate();
   const { room, status, error, bye, send } = useRoom(code, name);
+  const [removing, setRemoving] = useState<Player | null>(null);
+  const [leaving, setLeaving] = useState(false);
   const me = playerId();
 
   if (status === "refused") return <Missing code={code} full={error === "full"} />;
   if (status === "gone") {
     return (
-      <PageIntro
-        eyebrow={`Game ${code}`}
-        title={bye === "kicked" ? "You were removed" : bye === "replaced" ? "Open in another tab" : "You left the game"}
+      <Stage
+        eyebrow={<>Game {code}</>}
+        title={bye === "kicked" ? "You’ve been written out" : bye === "replaced" ? "Open in another tab" : "That’s a wrap"}
         lead={
           bye === "kicked"
             ? "The host took you out of this game."
             : bye === "replaced"
               ? "This game is open in another tab or window, so it carries on there."
-              : "Thanks for playing!"
+              : "You left the game. Thanks for playing!"
         }
       >
         {bye === "replaced" ? (
@@ -220,68 +340,101 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
         ) : (
           <DefaultButton navlink="/play" text="Start a new game" color="red" />
         )}
-      </PageIntro>
+      </Stage>
     );
   }
   if (!room) {
-    return <PageIntro eyebrow={`Game ${code}`} title="Joining…" lead="Finding your seat at the table." />;
+    return <Stage eyebrow="Game room" title="Backstage" lead="Finding your seat…" />;
   }
 
   const isHost = room.hostId === me;
+  const seats = Array.from({ length: MAX_PLAYERS }, (_, i) => room.players[i] ?? null);
   return (
     <>
       <PageIntro
         eyebrow="Game room"
-        title={<span className={styles.code}>{room.code}</span>}
-        lead="Send your friends the link (or the code, to type in at lovecareermagic.com/play). Everyone joins from their own device."
-      >
-        <InviteButton code={room.code} />
-      </PageIntro>
+        title="Backstage"
+        lead="The cast is getting ready. Send your friends the link: everyone joins from their own device."
+        className={styles.intro}
+      />
 
       {status === "reconnecting" && (
         <p className={styles.reconnecting} role="status">
-          Reconnecting…
+          <span className={styles.reconnectingDot} /> Reconnecting…
         </p>
       )}
 
-      <div className={styles.lobby}>
-        <section className={styles.card} aria-labelledby="players-title">
-          <h2 className={styles.cardTitle} id="players-title">
-            Players <span className={styles.count}>{room.players.length} of {MAX_PLAYERS}</span>
-          </h2>
-          <ul className={styles.players}>
-            {room.players.map((p) => (
-              <PlayerRow key={p.id} player={p} room={room} me={me} isHost={isHost} send={send} />
-            ))}
-          </ul>
-        </section>
-
-        <div className={styles.side}>
-          <section className={styles.card}>
-            <h2 className={styles.cardTitle}>Start the show</h2>
+      <div className={styles.lobbyTop}>
+        <Invite code={room.code} />
+        <section className={styles.showtime}>
+          <div className={styles.showtimeText}>
+            <span className={styles.onAir}>
+              <span className={styles.onAirLight} /> On air soon
+            </span>
             <StartNote room={room} isHost={isHost} />
-            <DefaultButton
-              text="Start the game"
-              color="red"
-              className={`${styles.wide} ${styles.disabled}`}
-            />
-            <p className={styles.note}>The game table is on its way. For now, this room gets everyone together.</p>
-          </section>
-          <Voice compact />
-        </div>
+          </div>
+          <img className={styles.showtimeArt} src="/images/illustrations/acting.webp" alt="" width="600" height="600" loading="lazy" />
+          <div className={styles.showtimeAction}>
+            <span className={styles.startButton} aria-disabled="true">
+              Start the show
+            </span>
+            <span className={styles.soon}>The game table opens soon</span>
+          </div>
+        </section>
       </div>
 
+      <section className={styles.cast} aria-labelledby="cast-title">
+        <div className={styles.castHead}>
+          <h2 className={styles.sectionTitle} id="cast-title">
+            The cast
+          </h2>
+          <span className={styles.castCount}>
+            {room.players.length} of {MAX_PLAYERS} seats
+          </span>
+        </div>
+        <ul className={styles.seats}>
+          {seats.map((p, i) =>
+            p ? (
+              <Seat key={p.id} player={p} room={room} me={me} isHost={isHost} send={send} remove={() => setRemoving(p)} />
+            ) : (
+              <EmptySeat key={`empty-${i}`} code={room.code} first={i === room.players.length} />
+            )
+          )}
+        </ul>
+      </section>
+
+      <Voice />
+
       <div className={styles.leave}>
-        <DefaultButton
-          onClick={() => {
+        <button type="button" className={styles.textButton} onClick={() => setLeaving(true)}>
+          Leave the game
+        </button>
+      </div>
+
+      {removing && (
+        <Confirm
+          title={`Remove ${removing.name}?`}
+          text="They’ll be taken out of this room. They can come back with the invite link."
+          action="Remove"
+          onConfirm={() => {
+            send({ t: "kick", id: removing.id });
+            setRemoving(null);
+          }}
+          onClose={() => setRemoving(null)}
+        />
+      )}
+      {leaving && (
+        <Confirm
+          title="Leave the game?"
+          text={isHost && room.players.length > 1 ? "Someone else will take over as host." : "You can rejoin with the invite link."}
+          action="Leave"
+          onConfirm={() => {
             send({ t: "leave" });
             navigate("/play");
           }}
-          text="Leave the game"
-          variant="ghost"
-          compact
+          onClose={() => setLeaving(false)}
         />
-      </div>
+      )}
     </>
   );
 };
@@ -289,33 +442,59 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
 const StartNote = ({ room, isHost }: { room: RoomView; isHost: boolean }) => {
   const host = room.players.find((p) => p.id === room.hostId);
   const short = MIN_PLAYERS - room.players.length;
-  if (short > 0) return <p className={styles.note}>Waiting for at least {short} more player{short > 1 ? "s" : ""}.</p>;
-  if (isHost) return <p className={styles.note}>Everyone in? You’re the host, so you start the game.</p>;
-  return <p className={styles.note}>Waiting for {host?.name || "the host"} to start the game.</p>;
+  if (short > 0)
+    return (
+      <p className={styles.showtimeLine}>
+        Waiting for {short} more player{short > 1 ? "s" : ""} to join.
+      </p>
+    );
+  if (isHost) return <p className={styles.showtimeLine}>Everyone in? You’re the host, so you start the show.</p>;
+  return <p className={styles.showtimeLine}>Waiting for {host?.name || "the host"} to start the show.</p>;
 };
 
-const PlayerRow = ({
+const Seat = ({
   player,
   room,
   me,
   isHost,
   send,
+  remove,
 }: {
   player: Player;
   room: RoomView;
   me: string;
   isHost: boolean;
   send: ReturnType<typeof useRoom>["send"];
+  remove: () => void;
 }) => {
   const mine = player.id === me;
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(player.name);
+  const [menu, setMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // (the host's menu closes on a click or tap anywhere else, or Escape)
+  useEffect(() => {
+    if (!menu) return;
+    const away = (e: PointerEvent) => !menuRef.current?.contains(e.target as Node) && setMenu(false);
+    const key = (e: KeyboardEvent) => e.key === "Escape" && setMenu(false);
+    document.addEventListener("pointerdown", away);
+    document.addEventListener("keydown", key);
+    return () => {
+      document.removeEventListener("pointerdown", away);
+      document.removeEventListener("keydown", key);
+    };
+  }, [menu]);
 
   return (
-    <li className={`${styles.player}${player.online ? "" : ` ${styles.away}`}`}>
-      <span className={styles.token} style={{ background: PLAYER_COLORS[player.color % PLAYER_COLORS.length] }} aria-hidden>
+    <li
+      className={`${styles.seat}${player.online ? "" : ` ${styles.seatAway}`}${mine ? ` ${styles.seatMine}` : ""}`}
+      style={{ "--seat": colorOf(player) } as React.CSSProperties}
+    >
+      <span className={styles.seatToken} aria-hidden>
         {player.name.charAt(0).toUpperCase()}
       </span>
+
       {editing ? (
         <form
           className={styles.rename}
@@ -333,84 +512,172 @@ const PlayerRow = ({
             className={`${styles.input} ${styles.renameInput}`}
             value={draft}
             onChange={(e) => setDraft(e.target.value.slice(0, NAME_MAX))}
+            onKeyDown={(e) => e.key === "Escape" && setEditing(false)}
             maxLength={NAME_MAX}
             aria-label="Your name"
             autoFocus
           />
-          <button type="submit" className={styles.rowButton}>
+          <button type="submit" className={styles.chip}>
             Save
           </button>
         </form>
       ) : (
-        <span className={styles.playerName}>
-          {player.name}
-          {mine && <span className={styles.tag}>You</span>}
-          {room.hostId === player.id && <span className={`${styles.tag} ${styles.hostTag}`}>Host</span>}
-          {!player.online && <span className={styles.awayNote}>away</span>}
-        </span>
+        <span className={styles.seatName}>{player.name}</span>
       )}
-      {!editing && (
-        <span className={styles.rowActions}>
-          {mine && (
-            <button
-              type="button"
-              className={styles.rowButton}
-              onClick={() => {
-                setDraft(player.name);
-                setEditing(true);
-              }}
-            >
-              Rename
-            </button>
-          )}
-          {isHost && !mine && (
-            <>
-              <button type="button" className={styles.rowButton} onClick={() => send({ t: "makeHost", id: player.id })}>
+
+      <span className={styles.seatTags}>
+        {room.hostId === player.id && <span className={`${styles.tag} ${styles.tagHost}`}>Host</span>}
+        {mine && <span className={styles.tag}>You</span>}
+        {!player.online && <span className={styles.awayNote}>stepped out</span>}
+      </span>
+
+      {mine && !editing && (
+        <button
+          type="button"
+          className={styles.seatCorner}
+          onClick={() => {
+            setDraft(player.name);
+            setEditing(true);
+          }}
+          aria-label="Change your name"
+          title="Change your name"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden>
+            <path d="M4 20h4L18.5 9.5a2.83 2.83 0 0 0-4-4L4 16v4M13.5 6.5l4 4" />
+          </svg>
+        </button>
+      )}
+
+      {isHost && !mine && (
+        <div className={styles.seatMenuWrap} ref={menuRef}>
+          <button
+            type="button"
+            className={styles.seatCorner}
+            onClick={() => setMenu((m) => !m)}
+            aria-label={`Options for ${player.name}`}
+            aria-expanded={menu}
+            aria-haspopup="menu"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden>
+              <circle cx="5" cy="12" r="1.4" />
+              <circle cx="12" cy="12" r="1.4" />
+              <circle cx="19" cy="12" r="1.4" />
+            </svg>
+          </button>
+          {menu && (
+            <div className={styles.seatMenu} role="menu">
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => {
+                  setMenu(false);
+                  send({ t: "makeHost", id: player.id });
+                }}
+              >
                 Make host
               </button>
               <button
                 type="button"
-                className={styles.rowButton}
-                onClick={() => window.confirm(`Remove ${player.name} from the game?`) && send({ t: "kick", id: player.id })}
+                role="menuitem"
+                className={styles.danger}
+                onClick={() => {
+                  setMenu(false);
+                  remove();
+                }}
               >
-                Remove
+                Remove from game
               </button>
-            </>
+            </div>
           )}
-        </span>
+        </div>
       )}
     </li>
   );
 };
 
-const InviteButton = ({ code }: { code: string }) => {
+const EmptySeat = ({ code, first }: { code: string; first: boolean }) => {
+  const copy = useCopyLink(code);
+  return (
+    <li className={styles.seatEmpty}>
+      {first ? (
+        <button type="button" className={styles.seatInvite} onClick={copy.copy}>
+          <span className={styles.seatPlus} aria-hidden>
+            +
+          </span>
+          <span className={styles.seatEmptyText}>{copy.copied ? "Link copied!" : "Invite a friend"}</span>
+        </button>
+      ) : (
+        <span className={styles.seatEmptyText}>Open seat</span>
+      )}
+    </li>
+  );
+};
+
+const useCopyLink = (code: string) => {
   const [copied, setCopied] = useState(false);
+  const [failed, setFailed] = useState(false);
   const link = `${window.location.origin}/play/${code}`;
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(link);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch {
-      window.prompt("Copy the invite link:", link);
-      return;
+      setFailed(true);
     }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
-  return <DefaultButton onClick={copy} text={copied ? "Link copied!" : "Copy invite link"} color="red" />;
+  return { link, copied, failed, setFailed, copy };
 };
 
-// #endregion
+// The invite: the room's code and its link, to copy
+const Invite = ({ code }: { code: string }) => {
+  const { link, copied, failed, setFailed, copy } = useCopyLink(code);
+  return (
+    <section className={styles.invite} aria-labelledby="invite-title">
+      <h2 className={styles.inviteTitle} id="invite-title">
+        Invite your cast
+      </h2>
+      <div className={styles.inviteCode}>
+        <span className={styles.inviteLabel}>Room code</span>
+        <CodeTiles code={code} />
+      </div>
+      <p className={styles.inviteNote}>Send the link, or have friends type the code in at lovecareermagic.com/play.</p>
+      <DefaultButton onClick={copy} text={copied ? "Link copied!" : "Copy invite link"} color="yellow" className={styles.inviteButton} />
+      {failed && (
+        <Modal onClose={() => setFailed(false)} panelClassName={styles.dialog} ariaLabel="Invite link">
+          <h2 className={styles.dialogTitle}>Your invite link</h2>
+          <p className={styles.dialogText}>Copy it and send it to your friends.</p>
+          <input className={styles.input} value={link} readOnly onFocus={(e) => e.target.select()} autoFocus />
+        </Modal>
+      )}
+    </section>
+  );
+};
 
-// The game is played out loud: the call happens on our Discord
-const Voice = ({ compact }: { compact?: boolean }) => (
-  <section className={`${styles.card} ${styles.voice}${compact ? "" : ` ${styles.narrow}`}`}>
-    <h2 className={styles.cardTitle}>Talk it out on Discord</h2>
-    <p className={styles.note}>
-      Love, Career &amp; Magic is all improv, so you’ll want to hear each other. Grab a free voice room on our Discord
-      server, or use any call you like.
-    </p>
-    <DefaultButton href={DISCORD_URL} text="Open our Discord" color="purple" className={styles.wide} />
-  </section>
+// A yes or no, in the site's own dialog
+const Confirm = ({
+  title,
+  text,
+  action,
+  onConfirm,
+  onClose,
+}: {
+  title: string;
+  text: string;
+  action: string;
+  onConfirm: () => void;
+  onClose: () => void;
+}) => (
+  <Modal onClose={onClose} panelClassName={styles.dialog} ariaLabel={title}>
+    <h2 className={styles.dialogTitle}>{title}</h2>
+    <p className={styles.dialogText}>{text}</p>
+    <div className={styles.dialogActions}>
+      <DefaultButton onClick={onClose} text="Cancel" variant="secondary" border="dark" />
+      <DefaultButton onClick={onConfirm} text={action} color="red" />
+    </div>
+  </Modal>
 );
+
+// #endregion
 
 export default PlayPage;

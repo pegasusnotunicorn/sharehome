@@ -39,6 +39,28 @@ const art = {
   token: "/images/pieces/box/token-front.webp",
 };
 
+// the tablecloths to choose from (kept in this browser only: everyone picks their own)
+const CLOTHS = [
+  { id: "blue", name: "Blue gingham" },
+  { id: "pink", name: "Pink gingham" },
+  { id: "dots", name: "Strawberry dots" },
+  { id: "mint", name: "Mint stripes" },
+  { id: "hearts", name: "Hearts" },
+  { id: "stars", name: "Lavender stars" },
+  { id: "picnic", name: "Picnic check" },
+] as const;
+type Cloth = (typeof CLOTHS)[number]["id"];
+const CLOTH_KEY = "lcm-play-cloth";
+const readCloth = (): Cloth => {
+  try {
+    const c = localStorage.getItem(CLOTH_KEY);
+    return CLOTHS.some((x) => x.id === c) ? (c as Cloth) : "blue";
+  } catch {
+    return "blue";
+  }
+};
+const clothClass = (c: Cloth) => (c === "blue" ? "" : ` ${styles[`cloth-${c}`]}`);
+
 const DECK_LABEL: Record<DirectionDeck, string> = { director: "Director", producer: "Producer", showrunner: "Showrunner" };
 
 // each card lies a little askew, always the same way (so nothing shifts when the table changes)
@@ -146,6 +168,17 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   useTableSounds(game);
   const [muted, setMutedState] = useState(isMuted);
   const [ending, setEnding] = useState(false);
+  const [rules, setRules] = useState(false);
+  const [cloth, setCloth] = useState<Cloth>(readCloth);
+  const [picking, setPicking] = useState(false);
+  const pickCloth = (c: Cloth) => {
+    setCloth(c);
+    try {
+      localStorage.setItem(CLOTH_KEY, c);
+    } catch {
+      // (just for this visit)
+    }
+  };
   const [zoom, setZoom] = useState<{ player: Player; character: number } | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
   // the "+2" that rises off a card when someone completes it
@@ -174,14 +207,13 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   const epPoints = ep.completed.reduce((n, c) => n + DIRECTION_POINTS[c.deck] + c.tokens, 0);
   const running = game.phase === "playing" && game.endsAt !== null;
   const paused = game.phase === "playing" && game.pausedLeft !== null;
-  const pickedCard = ep.completed.find((c) => c.id === picked) ?? null;
 
   const seatProps = { game, me, name, send, zoom: (player: Player, character: number) => setZoom({ player, character }) };
 
   if (game.phase === "over") {
     return (
       <div className={styles.room}>
-        <div className={styles.tabletop}>
+        <div className={`${styles.tabletop}${clothClass(cloth)}`}>
           <Finale room={room} game={game} isHost={isHost} send={send} />
         </div>
       </div>
@@ -190,7 +222,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
 
   return (
     <div className={styles.room}>
-      <div className={styles.tabletop}>
+      <div className={`${styles.tabletop}${clothClass(cloth)}`}>
         <Prompt game={game} epPoints={epPoints} />
 
         {others.length > 0 && (
@@ -221,54 +253,47 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
             />
             <div className={styles.pile} aria-label="Completed this episode">
               {ep.completed.length === 0 ? (
-                <span className={styles.pileEmpty}>Completed cards go here</span>
+                <span className={styles.pileEmpty} aria-hidden />
               ) : (
                 ep.completed.map((c, i) => (
-                  <button
-                    key={c.id}
-                    type="button"
-                    className={`${styles.pileCard}${picked === c.id ? ` ${styles.pileCardPicked}` : ""}`}
-                    style={{ "--i": i, "--tilt": tilt(c.i + i) } as CSSProperties}
-                    onClick={() => setPicked((p) => (p === c.id ? null : c.id))}
-                    aria-pressed={picked === c.id}
-                    aria-label={`${name(c.deck, c.i)}, +${DIRECTION_POINTS[c.deck] + c.tokens}, by ${nameOf(c.by)}`}
-                  >
-                    <img src={art.direction(c.deck, c.i)} alt="" width="768" height="497" />
-                    {c.tokens > 0 && (
-                      <span className={styles.pileTokens}>
-                        <img src={art.token} alt="" />
-                        {c.tokens}
-                      </span>
+                  <span key={c.id} className={styles.pileItem} style={{ "--i": i } as CSSProperties}>
+                    <button
+                      type="button"
+                      className={`${styles.pileCard}${picked === c.id ? ` ${styles.pileCardPicked}` : ""}`}
+                      style={{ "--tilt": tilt(c.i + i) } as CSSProperties}
+                      onClick={() => setPicked((p) => (p === c.id ? null : c.id))}
+                      aria-expanded={picked === c.id}
+                      aria-haspopup="menu"
+                      aria-label={`${name(c.deck, c.i)}, +${DIRECTION_POINTS[c.deck] + c.tokens}, by ${nameOf(c.by)}`}
+                    >
+                      <img src={art.direction(c.deck, c.i)} alt="" width="768" height="497" />
+                      {c.tokens > 0 && (
+                        <span className={styles.pileTokens}>
+                          <img src={art.token} alt="" />
+                          {c.tokens}
+                        </span>
+                      )}
+                    </button>
+                    {picked === c.id && (
+                      <CardMenu
+                        title={`+${DIRECTION_POINTS[c.deck] + c.tokens} · ${nameOf(c.by)}`}
+                        close={() => setPicked(null)}
+                        items={[
+                          {
+                            label: "Had something to say too: +1 token",
+                            action: () => send({ t: "token", on: "card", id: c.id, add: true }),
+                          },
+                          ...(c.tokens > 0
+                            ? [{ label: "Take a token back", action: () => send({ t: "token", on: "card", id: c.id, add: false }) }]
+                            : []),
+                          { label: "Undo this card", action: () => send({ t: "undo", id: c.id }), danger: true, closes: true },
+                        ]}
+                      />
                     )}
-                  </button>
+                  </span>
                 ))
               )}
             </div>
-            {pickedCard && (
-              <div className={styles.pickedBar}>
-                <span>
-                  <b>+{DIRECTION_POINTS[pickedCard.deck] + pickedCard.tokens}</b> {nameOf(pickedCard.by)}
-                </span>
-                <button type="button" className={styles.chipButton} onClick={() => send({ t: "token", on: "card", id: pickedCard.id, add: true })}>
-                  <img src={art.token} alt="" /> +1 token
-                </button>
-                {pickedCard.tokens > 0 && (
-                  <button type="button" className={styles.chipButton} onClick={() => send({ t: "token", on: "card", id: pickedCard.id, add: false })}>
-                    −1 token
-                  </button>
-                )}
-                <button
-                  type="button"
-                  className={styles.chipButton}
-                  onClick={() => {
-                    send({ t: "undo", id: pickedCard.id });
-                    setPicked(null);
-                  }}
-                >
-                  Undo
-                </button>
-              </div>
-            )}
           </section>
           {/* #endregion */}
 
@@ -349,6 +374,17 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                 <span>
                   <b>{points.total}</b> pts
                 </span>
+                <button type="button" className={styles.rulesButton} onClick={() => setRules(true)}>
+                  Rules
+                </button>
+                <button type="button" className={styles.clothButton} onClick={() => setPicking(true)} aria-label="Change the tablecloth" title="Tablecloth">
+                  <svg viewBox="0 0 24 24" aria-hidden>
+                    <path d="M12 3a9 9 0 0 0 0 18c1.1 0 1.7-.8 1.7-1.6 0-.5-.2-.8-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.6 1.7-1.6h2A4.6 4.6 0 0 0 21 10.8C21 6.5 17 3 12 3z" />
+                    <circle cx="7.5" cy="11" r="1" />
+                    <circle cx="10.5" cy="7.5" r="1" />
+                    <circle cx="15" cy="7.5" r="1" />
+                  </svg>
+                </button>
                 <button
                   type="button"
                   className={styles.mute}
@@ -372,7 +408,11 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
               </div>
             </div>
 
-            <section className={`${styles.callbacks}${game.episode === 1 ? ` ${styles.callbacksOff}` : ""}`} aria-labelledby="callbacks-title">
+            <section
+              className={`${styles.callbacks}${game.episode === 1 ? ` ${styles.callbacksOff}` : ""}`}
+              aria-labelledby="callbacks-title"
+              aria-disabled={game.episode === 1}
+            >
               <div className={styles.deckHead}>
                 <h3 id="callbacks-title">Callbacks</h3>
                 <span className={styles.points}>+1 each</span>
@@ -426,7 +466,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                 <p>Nothing yet!</p>
               ) : (
                 <ul>
-                  {game.log.slice(0, 5).map((l) => (
+                  {game.log.map((l) => (
                     <li key={l.id}>{l.text.replace(/\{([^}]+)\}/g, (_, id) => nameOf(id))}</li>
                   ))}
                 </ul>
@@ -461,6 +501,24 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
           </div>
         </Modal>
       )}
+      {rules && <RulesDialog close={() => setRules(false)} />}
+      {picking && (
+        <Modal onClose={() => setPicking(false)} ariaLabel="Tablecloth">
+          <h2 className={modalStyles.title}>Pick a tablecloth</h2>
+          <p className={modalStyles.text}>Just for you: everyone else keeps the one they like.</p>
+          <div className={styles.clothGrid}>
+            {CLOTHS.map((c) => (
+              <button key={c.id} type="button" className={styles.clothSwatch} aria-pressed={cloth === c.id} onClick={() => pickCloth(c.id)}>
+                <span className={`${styles.tabletop}${clothClass(c.id)}`} aria-hidden />
+                <span>{c.name}</span>
+              </button>
+            ))}
+          </div>
+          <div className={modalStyles.actions}>
+            <DefaultButton onClick={() => setPicking(false)} text="Done" color="red" />
+          </div>
+        </Modal>
+      )}
       {ending && (
         <Confirm
           title="End the game?"
@@ -476,6 +534,107 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
     </div>
   );
 };
+
+// a little menu that opens over a card, without moving anything on the table
+const CardMenu = ({
+  title,
+  items,
+  close,
+}: {
+  title: string;
+  items: { label: string; action: () => void; danger?: boolean; closes?: boolean }[];
+  close: () => void;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const away = (e: PointerEvent) => !ref.current?.parentElement?.contains(e.target as Node) && close();
+    const key = (e: KeyboardEvent) => e.key === "Escape" && close();
+    document.addEventListener("pointerdown", away);
+    document.addEventListener("keydown", key);
+    ref.current?.querySelector("button")?.focus();
+    return () => {
+      document.removeEventListener("pointerdown", away);
+      document.removeEventListener("keydown", key);
+    };
+  }, [close]);
+  return (
+    <div ref={ref} className={styles.cardMenu} role="menu">
+      <span className={styles.cardMenuTitle}>{title}</span>
+      {items.map((it) => (
+        <button
+          key={it.label}
+          type="button"
+          role="menuitem"
+          className={it.danger ? styles.cardMenuDanger : ""}
+          onClick={() => {
+            it.action();
+            if (it.closes) close();
+          }}
+        >
+          {it.label}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+// the rules, close at hand: how a round goes, what scores, and the two golden rules
+const RulesDialog = ({ close }: { close: () => void }) => (
+  <Modal onClose={close} panelClassName={`${modalStyles.panel} ${styles.rulesPanel}`} ariaLabel="How to play">
+    <h2 className={modalStyles.title}>How to play</h2>
+    <p className={modalStyles.text}>
+      You’re the cast of a reality TV show. Tell the story together, out loud, and score points for the ratings.
+    </p>
+    <div className={styles.rulesBody}>
+      <section>
+        <h3>Each episode</h3>
+        <ul>
+          <li>The episode card is where it takes place. You have 3 minutes, and play 4 episodes.</li>
+          <li>
+            There are no turns: talk over each other, play in real time. Complete a direction card by narrating what your
+            character does, then tap it.
+          </li>
+          <li>Producer cards need two people: someone else answers “What happens?”</li>
+          <li>Between episodes, talk over what happened and swap any direction cards you don’t want.</li>
+        </ul>
+      </section>
+      <section>
+        <h3>Points</h3>
+        <ul>
+          <li>
+            <b>Direction cards:</b> Director 1, Producer 2, Showrunner 3.
+          </li>
+          <li>
+            <b>Had something to say too?</b> Someone beat you to a card: tap the completed card, add a token (+1) and say
+            it anyway.
+          </li>
+          <li>
+            <b>Callbacks</b> (from episode 2): mention something from an earlier episode, tap that episode (+1).
+          </li>
+          <li>
+            <b>Character Arc:</b> play one of your traits per episode (tap it once the table agrees). All three is +10.
+          </li>
+          <li>At the end, the total is divided by the number of players for your season’s ratings.</li>
+        </ul>
+      </section>
+      <section>
+        <h3>The two golden rules</h3>
+        <ul>
+          <li>
+            <b>Everything must make sense,</b> however far-fetched.
+          </li>
+          <li>
+            <b>“Yes, and…”:</b> whatever’s said is true, unless it contradicts something said already.
+          </li>
+        </ul>
+      </section>
+    </div>
+    <div className={modalStyles.actions}>
+      <DefaultButton href="/rulebook" text="Full rulebook" variant="secondary" border="dark" />
+      <DefaultButton onClick={close} text="Back to the game" color="red" />
+    </div>
+  </Modal>
+);
 
 // what to do now: a director's note on the table
 const Prompt = ({ game, epPoints }: { game: GameView; epPoints: number }) => {

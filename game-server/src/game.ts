@@ -162,8 +162,13 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
     }
 
     case "complete": {
-      // (the clock starts as soon as someone says something: a card done first starts it)
+      // (the clock starts as soon as someone says something: a card done first starts it, and a
+      // card done while it's paused starts it again)
       if (game.phase === "ready") startClock(game, now);
+      else if (game.phase === "playing" && game.pausedLeft !== null) {
+        game.endsAt = now + game.pausedLeft;
+        game.pausedLeft = null;
+      }
       if (game.phase !== "playing") return false;
       const cards = game.faceUp[msg.deck];
       const card = cards?.[msg.slot];

@@ -16,9 +16,10 @@ interface CardViewerProps {
   fallback?: ReactNode;
   intro?: boolean; // its slow turn the first time it's on screen (default: yes)
   onReady?: () => void; // the 3D card's showing
+  hold?: boolean; // left alone, it stays as it's left (doesn't turn or zoom back)
 }
 
-const CardViewer = ({ mm, faces, edge, label, still, fallback, intro, onReady }: CardViewerProps) => {
+const CardViewer = ({ mm, faces, edge, label, still, fallback, intro, onReady, hold }: CardViewerProps) => {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const api = useRef<CardViewerApi | null>(null);
   const [failed, setFailed] = useState(false);
@@ -32,7 +33,7 @@ const CardViewer = ({ mm, faces, edge, label, still, fallback, intro, onReady }:
     const start = () => {
       import("./cardViewer3d")
         .then(({ mountCardViewer }) =>
-          mountCardViewer(stage, { mm, faces, edge, intro, onReady: () => !gone && ready.current?.(), onFail: () => !gone && setFailed(true) })
+          mountCardViewer(stage, { mm, faces, edge, intro, hold, onReady: () => !gone && ready.current?.(), onFail: () => !gone && setFailed(true) })
         )
         .then((a) => {
           if (gone) a?.destroy();

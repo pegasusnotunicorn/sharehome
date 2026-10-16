@@ -1,0 +1,168 @@
+/* The 3D card carousel (CardCarousel.tsx): the card on show in the middle; the cards round the deck
+   either side of it, behind (the ring, its canvas across the whole window); Prev / Next under it, out
+   at the sides */
+
+.stage {
+  position: relative;
+  margin-top: 0.75rem;
+}
+
+/* (out to the window's edges, and down into the boxes below for the shadows: the cards stand on the
+   page) */
+.ring {
+  position: absolute;
+  top: 0;
+  bottom: -4rem;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  z-index: 0;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  width: min(560px, 100%);
+  margin: 0 auto;
+}
+
+/* (a turn's under way: the ring's drawing this card) */
+.card.cardAway {
+  opacity: 0;
+}
+
+.steps {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* (up into the room under the card, level with its zoom buttons: 38px tall, 6px off the bottom) */
+  margin-top: -44px;
+  pointer-events: none;
+}
+
+.steps > * {
+  pointer-events: auto;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #323232;
+  text-decoration: none;
+  text-align: left;
+}
+
+.next {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+/* the same small grey square as the card's zoom buttons */
+.stepArrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  box-sizing: border-box;
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
+  background: #fff;
+  color: var(--btn-ink);
+  box-shadow: 0 3px 0 var(--chip-edge);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+/* (a fingertip's worth round it still counts) */
+.stepArrow {
+  position: relative;
+}
+
+.stepArrow::after {
+  content: "";
+  position: absolute;
+  inset: -8px;
+}
+
+.stepArrow svg {
+  width: 16px;
+  height: 16px;
+}
+
+.step:hover .stepArrow {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--chip-edge);
+}
+
+.step:active .stepArrow {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--chip-edge);
+}
+
+.step:focus-visible {
+  outline: none;
+}
+
+.step:focus-visible .stepArrow {
+  outline: 3px solid #5f5aa2;
+  outline-offset: 3px;
+}
+
+.stepName {
+  max-width: 10rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.85rem;
+  line-height: 1.2;
+  color: rgba(50, 50, 50, 0.7);
+}
+
+/* Prev / Next fade out while the cards swing round, and back in for the next card */
+.steps {
+  transition: opacity 0.35s ease;
+}
+
+.steps.hushed {
+  opacity: 0;
+  transition-duration: 0.2s;
+}
+
+.step {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+/* the card's zoom buttons go and come back with the words; back once the card's its own again */
+.card button {
+  /* (the fade, and the zoom chips' own lift and press) */
+  transition:
+    opacity 0.35s ease,
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.card.toolsAway button {
+  opacity: 0;
+  pointer-events: none;
+  transition-duration: 0.2s;
+}
+
+@media only screen and (max-width: 900px) {
+  /* (no room for the names beside the zoom buttons) */
+  .stepName {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .steps {
+    transition: none;
+  }
+}

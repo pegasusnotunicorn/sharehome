@@ -32,7 +32,9 @@ export default function useRoom(code: string | null, name: string) {
         tries = 0;
         setStatus("open");
         clearInterval(ping);
-        ping = setInterval(() => socket.readyState === WebSocket.OPEN && socket.send("ping"), 25_000);
+        // (a keep-alive, answered by the server without waking the room; just often enough that phones
+        // and proxies don't drop a quiet connection)
+        ping = setInterval(() => socket.readyState === WebSocket.OPEN && socket.send("ping"), 45_000);
       };
       socket.onmessage = (e) => {
         if (e.data === "pong") return;
@@ -59,7 +61,9 @@ export default function useRoom(code: string | null, name: string) {
         if (ws.current === socket) ws.current = null;
         if (done) return;
         setStatus("reconnecting");
-        retry = setTimeout(connect, Math.min(10_000, 500 * 2 ** tries++));
+        // (a tab in the background doesn't keep knocking: it tries again once it's looked at)
+        if (document.visibilityState === "hidden") return;
+        retry = setTimeout(connect, Math.min(30_000, 500 * 2 ** tries++));
       };
     };
 
@@ -69,7 +73,19 @@ export default function useRoom(code: string | null, name: string) {
         connect();
       }
     };
-    const onVisible = () => document.visibilityState === "visible" && soon();
+    // a tab left in the background for a long while lets go of the room (so it isn't kept open, and
+    // kept pinging, by a forgotten tab); it's back the moment it's looked at
+    let away: ReturnType<typeof setTimeout> | undefined;
+    const onVisible = () => {
+      clearTimeout(away);
+      if (document.visibilityState === "visible") soon();
+      else
+        away = setTimeout(() => {
+          clearTimeout(retry);
+          ws.current?.close();
+          ws.current = null;
+        }, 10 * 60 * 1000);
+    };
 
     setStatus("connecting");
     setError(null);
@@ -80,6 +96,7 @@ export default function useRoom(code: string | null, name: string) {
     return () => {
       done = true;
       clearTimeout(retry);
+      clearTimeout(away);
       clearInterval(ping);
       window.removeEventListener("online", soon);
       document.removeEventListener("visibilitychange", onVisible);

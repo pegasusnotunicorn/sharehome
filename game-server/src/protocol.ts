@@ -23,6 +23,11 @@ export const DECK_SIZES = {
   chaotic: 30,
 } as const;
 
+// The R.E.M.O.T.E. (from the rulebook, after Script Change by Beau Jágr Sheldon): a safety tool, a tap
+// on one of its buttons that everyone at the table goes along with, no fuss
+export const REMOTE_BUTTONS = ["pause", "play", "rewind", "forward", "replay", "frame"] as const;
+export type RemoteButton = (typeof REMOTE_BUTTONS)[number];
+
 export const DIRECTION_DECKS = ["director", "producer", "showrunner"] as const;
 export type DirectionDeck = (typeof DIRECTION_DECKS)[number];
 export const TRAIT_KINDS = ["good", "bad", "chaotic"] as const;
@@ -64,6 +69,8 @@ export interface Hand {
 export interface CompletedCard {
   id: string;
   deck: DirectionDeck;
+  // where it lay face up
+  slot: number;
   i: number;
   // tokens from players who'd had something to say for it too
   tokens: number;
@@ -90,6 +97,10 @@ export interface LogEntry {
 
 export interface GameView {
   phase: GamePhase;
+  // the game ended early: every direction card has been played
+  outOfCards?: boolean;
+  // the last R.E.M.O.T.E. button pressed (shown to everyone, without who)
+  remote?: { id: string; button: RemoteButton; at: number } | null;
   // the current episode, from 1
   episode: number;
   // when the clock runs out (server time), or how long's left while it's paused
@@ -117,6 +128,9 @@ export interface RoomView {
   hostId: string | null;
   phase: "lobby" | "game";
   players: Player[];
+  // in the waiting room: the character each player picked (by its place in the deck), and who's ready
+  picks: Record<string, number>;
+  ready: Record<string, boolean>;
   game: GameView | null;
   // the server's clock as it sent this, so the page can line its own clock up with it
   now: number;
@@ -135,6 +149,8 @@ export type ClientMessage =
   | { t: "makeHost"; id: string } // host only
   | { t: "leave" }
   | { t: "start" } // host only
+  | { t: "pick"; character: number | null } // in the waiting room: yours, or none
+  | { t: "ready"; ready: boolean } // once you've picked
   | { t: "newCharacter" } // your own, before the first episode starts
   | { t: "startClock" }
   | { t: "pause" }
@@ -146,6 +162,7 @@ export type ClientMessage =
   | { t: "token"; on: "card"; id: string; add: boolean }
   | { t: "trait"; player: string; slot: number }
   | { t: "nextEpisode" }
+  | { t: "remote"; button: RemoteButton }
   | { t: "toLobby" }; // host only
 
 // room → browser
@@ -155,7 +172,8 @@ export type ServerMessage =
   // sent just before the room closes a socket for good (a socket's own close can be slow to arrive)
   | { t: "bye"; reason: ByeReason };
 
-export type ByeReason = "kicked" | "left" | "replaced";
+// ("expired": the room closed, after a long while)
+export type ByeReason = "kicked" | "left" | "replaced" | "expired";
 
 export type RoomError = "not-found" | "full" | "bad-request";
 

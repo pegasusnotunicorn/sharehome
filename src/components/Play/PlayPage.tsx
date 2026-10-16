@@ -1,15 +1,19 @@
-import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { useNavigate, useParams } from "react-router";
-import { MAX_PLAYERS, MIN_PLAYERS, NAME_MAX, cleanName, type Player, type RoomView } from "../../../game-server/src/protocol";
+import { EPISODES, EPISODE_SECONDS, MAX_PLAYERS, MIN_PLAYERS, NAME_MAX, cleanName, type Player, type RoomView } from "../../../game-server/src/protocol";
 import CustomHelmet from "../utils/CustomHelmet";
 import DefaultButton from "../utils/DefaultButton";
 import Modal from "../utils/Modal";
+import modalStyles from "../../css/utils/modal.module.css";
 import PageIntro from "../utils/PageIntro";
 import usePageTitle from "../utils/usePageTitle";
 import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, playerId, roomInfo, saveName, savedName } from "./gameServer";
 import Confirm from "./Confirm";
-import GameTable, { PLAYER_COLORS } from "./GameTable";
+import GameTable, { PLAYER_COLORS, useNames } from "./GameTable";
 import Toast from "./Toast";
+import Rulebook from "./Rulebook";
+import CharacterChooser from "./CharacterChooser";
+import { getAllCharacters } from "../Characters/Characters";
 import useRoom from "./useRoom";
 import styles from "../../css/pages/playPage.module.css";
 
@@ -17,6 +21,8 @@ import styles from "../../css/pages/playPage.module.css";
 // up top, then making or joining a room; in a room, the page's own heading, then the invite (a
 // stage-lit card) beside the start of the show, and the cast's six seats. The table comes next.
 
+// (in the deck's order: a character's face, its emoji, by its place in the deck)
+const CHARACTERS = getAllCharacters();
 const colorOf = (p: Player) => PLAYER_COLORS[p.color % PLAYER_COLORS.length];
 
 const PlayPage = () => {
@@ -26,6 +32,17 @@ const PlayPage = () => {
   const [name, setName] = useState(savedName);
   const [joined, setJoined] = useState(() => !!savedName());
   usePageTitle(code ? `Game ${code} | Play online` : "Play online");
+  // (a game's for tapping, not selecting: no highlighting text on these pages, dialogs included)
+  useEffect(() => {
+    document.body.classList.add("no-select");
+    return () => document.body.classList.remove("no-select");
+  }, []);
+  // (no banner or navbar in a room: the page starts at the top)
+  useEffect(() => {
+    if (!code) return;
+    document.body.classList.add("in-room");
+    return () => document.body.classList.remove("in-room");
+  }, [code]);
 
   return (
     <div className={`content ${styles.playPage}`}>
@@ -33,6 +50,8 @@ const PlayPage = () => {
         title="Play Love, Career & Magic online"
         description="Make a game room, send your friends the link and play Love, Career & Magic together online."
       />
+      {/* (in a room, the rulebook's where the navbar would be) */}
+      {code && GAME_SERVER && <Rulebook />}
       {!GAME_SERVER ? (
         <Stage eyebrow="Play online" title="Coming soon" lead="Online games are almost ready. Check back soon!" art />
       ) : !code ? (
@@ -135,12 +154,9 @@ const Voice = ({ stacked }: { stacked?: boolean }) => (
     </span>
     <div className={styles.voiceText}>
       <h2 className={styles.voiceTitle}>Talk it out on Discord</h2>
-      <p>
-        Love, Career &amp; Magic is all about talking with each other, so you’ll want to be on a call together. Grab
-        a free voice room on our Discord server, or use any call you like.
-      </p>
+      <p>Play on a call: grab a free voice room on our Discord.</p>
     </div>
-    <DefaultButton href={DISCORD_URL} text="Open our Discord" color="purple" className={styles.voiceButton} />
+    <DefaultButton href={DISCORD_URL} text="Open our Discord" icon="discord" color="purple" className={styles.voiceButton} />
   </aside>
 );
 
@@ -167,8 +183,15 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
       setName(clean);
       created();
       navigate(`/play/${room}`);
-    } catch {
-      setProblem("We couldn’t make a room just now. Try again in a moment.");
+    } catch (err) {
+      const why = (err as Error).message;
+      setProblem(
+        why === "slow-down"
+          ? "That’s a lot of new rooms! Wait a minute, then try again."
+          : why === "paused"
+            ? "Online play is taking a short break. Please try again later."
+            : "We couldn’t make a room just now. Try again in a moment."
+      );
       setBusy(false);
     }
   };
@@ -183,23 +206,21 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
       <Stage
         eyebrow={`${MIN_PLAYERS}–${MAX_PLAYERS} players`}
         title="Play online"
-        lead="Make a room and send your friends the link. Every card is on the table for everyone to see."
+        lead="Make a room and send your friends the link."
         art
       />
 
       <div className={styles.doors}>
         <form className={`${styles.door} ${styles.doorHost}`} onSubmit={create}>
           <h2 className={styles.doorTitle}>Host a game</h2>
-          <p className={styles.doorNote}>Make a room and you’re the host: you start the show when everyone’s in.</p>
           <NameField name={name} setName={setName} />
-          <DefaultButton button="submit" text={busy ? "Making a room…" : "Create a game"} color="red" className={`${styles.wide} ${styles.doorButton}`} />
+          <DefaultButton button="submit" text={busy ? "Making a room…" : "Create a game"} icon="plus" loading={busy} color="red" className={`${styles.wide} ${styles.doorButton}`} />
         </form>
 
         <form className={`${styles.door} ${styles.doorJoin}`} onSubmit={join}>
           <h2 className={styles.doorTitle}>Join a game</h2>
-          <p className={styles.doorNote}>Type the four letters your host sent you, or just open their link.</p>
           <CodeInput code={code} setCode={setCode} />
-          <DefaultButton button="submit" text="Join" color="dark" className={`${styles.wide} ${styles.doorButton}${isCode(code) ? "" : ` ${styles.muted}`}`} />
+          <DefaultButton button="submit" text="Join" icon="enter" color="dark" disabled={!isCode(code)} className={`${styles.wide} ${styles.doorButton}`} />
         </form>
       </div>
 
@@ -254,7 +275,7 @@ const Missing = ({ code, full }: { code: string; full?: boolean }) => (
         : "This room doesn’t exist, or it ended a while ago. Check the code with whoever sent it, or start your own game."
     }
   >
-    <DefaultButton navlink="/play" text="Start a game" color="red" />
+    <DefaultButton navlink="/play" text="Start a game" icon="plus" color="red" />
   </Stage>
 );
 
@@ -276,7 +297,7 @@ const JoinByLink = ({ code, name, setName, join }: { code: string; name: string;
 
   return (
     <div className={styles.narrowPage}>
-      <Stage eyebrow="You’re invited" title="Join the game" lead="You’ve been invited to play Love, Career & Magic. Pop your name in to join.">
+      <Stage eyebrow="You’re invited" title="Join the game" lead="Pop your name in to join.">
         <CodeTiles code={code} small />
       </Stage>
       <form
@@ -291,7 +312,7 @@ const JoinByLink = ({ code, name, setName, join }: { code: string; name: string;
       >
         <h2 className={styles.doorTitle}>Who’s playing?</h2>
         <NameField name={name} setName={setName} autoFocus />
-        <DefaultButton button="submit" text="Join the game" color="red" className={styles.wide} />
+        <DefaultButton button="submit" text="Join the game" icon="enter" color="red" className={styles.wide} />
       </form>
       <Voice stacked />
     </div>
@@ -307,6 +328,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
   const { room, status, error, bye, send } = useRoom(code, name);
   const [removing, setRemoving] = useState<Player | null>(null);
   const [leaving, setLeaving] = useState(false);
+  const [startCheck, setStartCheck] = useState(false);
   const me = playerId();
 
   if (status === "refused") return <Missing code={code} full={error === "full"} />;
@@ -320,13 +342,15 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
             ? "The host took you out of this game."
             : bye === "replaced"
               ? "This game is open in another tab or window, so it carries on there."
-              : "You left the game. Thanks for playing!"
+              : bye === "expired"
+                ? "This room has closed. Start a new game to play again."
+                : "You left the game. Thanks for playing!"
         }
       >
         {bye === "replaced" ? (
-          <DefaultButton onClick={() => window.location.reload()} text="Play here instead" color="red" />
+          <DefaultButton onClick={() => window.location.reload()} text="Play here instead" icon="enter" color="red" />
         ) : (
-          <DefaultButton navlink="/play" text="Start a new game" color="red" />
+          <DefaultButton navlink="/play" text="Start a new game" icon="plus" color="red" />
         )}
       </Stage>
     );
@@ -338,6 +362,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
   const isHost = room.hostId === me;
   const seats = Array.from({ length: MAX_PLAYERS }, (_, i) => room.players[i] ?? null);
   const canStart = isHost && room.players.length >= MIN_PLAYERS;
+  const notReady = room.players.filter((p) => !room.ready?.[p.id]);
   const reconnecting = status === "reconnecting" && (
     <p className={styles.reconnecting} role="status">
       <span className={styles.reconnectingDot} /> Reconnecting…
@@ -359,14 +384,14 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
       <PageIntro
         eyebrow="Game room"
         title="Getting ready"
-        lead="Send your friends the link: everyone joins from their own device. Once everyone’s in, the host starts the show."
+        lead="Send your friends the link."
         className={styles.intro}
       />
 
       {reconnecting}
 
       <div className={styles.lobbyTop}>
-        <Invite code={room.code} />
+        <Invite code={room.code} room={room} />
         <section className={styles.showtime}>
           <div className={styles.showtimeText}>
             <span className={styles.onAir}>
@@ -374,16 +399,47 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
             </span>
             <StartNote room={room} isHost={isHost} />
           </div>
-          <img className={styles.showtimeArt} src="/images/illustrations/acting.webp" alt="" width="600" height="600" loading="lazy" />
-          {canStart ? (
-            <DefaultButton onClick={() => send({ t: "start" })} text="Start the show" color="red" className={styles.startButton} />
-          ) : (
-            <button type="button" className={`${styles.startButton} ${styles.startWaiting}`} disabled>
-              Start the show
-            </button>
-          )}
+          <ul className={styles.checklist}>
+            <li className={room.players.length >= MIN_PLAYERS ? styles.checkDone : ""}>
+              <img src="/images/icons/playercount.svg" alt="" width="24" height="24" />
+              <span>
+                <b>
+                  {room.players.length} of {MAX_PLAYERS} players in
+                </b>
+                {room.players.length < MIN_PLAYERS ? `At least ${MIN_PLAYERS} to start` : "Enough to start"}
+              </span>
+            </li>
+            <li>
+              <img src="/images/icons/sandclock.svg" alt="" width="16" height="26" />
+              <span>
+                <b>
+                  {EPISODES} episodes, {EPISODE_SECONDS / 60} minutes each
+                </b>
+                About 15 minutes in all
+              </span>
+            </li>
+            <li>
+              <DiscordIcon />
+              <span>
+                <b>Everyone on a call?</b>
+                <a href={DISCORD_URL} target="_blank" rel="noreferrer">
+                  Grab a voice room on our Discord
+                </a>
+              </span>
+            </li>
+          </ul>
+          <DefaultButton
+            onClick={() => (notReady.length ? setStartCheck(true) : send({ t: "start" }))}
+            disabled={!canStart}
+            text="Start the show"
+            icon="clapper"
+            color="red"
+            className={styles.startButton}
+          />
         </section>
       </div>
+
+      <CharacterPicker room={room} me={me} send={send} />
 
       <section className={styles.cast} aria-labelledby="cast-title">
         <div className={styles.castHead}>
@@ -413,11 +469,25 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
         </button>
       </div>
 
+      {startCheck && (
+        <Confirm
+          title="Start without everyone ready?"
+          text={`${notReady.map((p) => p.name).join(", ")} ${notReady.length === 1 ? "isn’t" : "aren’t"} ready yet. Anyone without a character gets a random one.`}
+          action="Start anyway"
+          icon="clapper"
+          onConfirm={() => {
+            setStartCheck(false);
+            send({ t: "start" });
+          }}
+          onClose={() => setStartCheck(false)}
+        />
+      )}
       {removing && (
         <Confirm
           title={`Remove ${removing.name}?`}
           text="They’ll be taken out of this room. They can come back with the invite link."
           action="Remove"
+          icon="removePerson"
           onConfirm={() => {
             send({ t: "kick", id: removing.id });
             setRemoving(null);
@@ -430,6 +500,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
           title="Leave the game?"
           text={isHost && room.players.length > 1 ? "Someone else will take over as host." : "You can rejoin with the invite link."}
           action="Leave"
+          icon="leave"
           onConfirm={() => {
             send({ t: "leave" });
             navigate("/play");
@@ -438,6 +509,53 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
         />
       )}
     </>
+  );
+};
+
+// the waiting room's characters: pick yours (one player each), then say you're ready
+const CharacterPicker = ({ room, me, send }: { room: RoomView; me: string; send: ReturnType<typeof useRoom>["send"] }) => {
+  const name = useNames();
+  const [open, setOpen] = useState(false);
+  const mine = room.picks?.[me];
+  const ready = !!room.ready?.[me];
+  const meP = room.players.find((p) => p.id === me);
+  const card = (c: number) => `/images/pieces/characters/${String(c + 1).padStart(2, "0")}.webp`;
+  const closePicker = useCallback(() => setOpen(false), []);
+  return (
+    <section className={styles.picker} aria-labelledby="picker-title">
+      <h2 className={styles.sectionTitle} id="picker-title">
+        Your character
+      </h2>
+      <div className={styles.myPick} style={{ "--seat": meP ? colorOf(meP) : undefined } as CSSProperties}>
+        <button type="button" className={`${styles.myPickCard}${mine === undefined ? ` ${styles.myPickEmpty}` : ""}`} onClick={() => setOpen(true)} aria-label={mine === undefined ? "Pick a character" : `Change your character, ${name("character", mine)}`}>
+          {mine === undefined ? <span aria-hidden>?</span> : <img src={card(mine)} alt="" width="768" height="444" />}
+        </button>
+        <div className={styles.myPickText}>
+          <b>{mine === undefined ? "No one yet" : name("character", mine) || `Character ${mine + 1}`}</b>
+          <span>{mine === undefined ? "Pick who you’ll play, then get ready." : ready ? "You’re ready. Tap Ready! to take it back." : "Happy with them? Get ready."}</span>
+        </div>
+        <div className={styles.myPickActions}>
+          <DefaultButton
+            onClick={() => setOpen(true)}
+            text={mine === undefined ? "Pick a character" : "Change"}
+            icon={mine === undefined ? "plus" : "again"}
+            variant={mine === undefined ? "primary" : "secondary"}
+            color={mine === undefined ? "red" : undefined}
+            border={mine === undefined ? undefined : "dark"}
+          />
+          <DefaultButton
+            onClick={() => send({ t: "ready", ready: !ready })}
+            disabled={mine === undefined}
+            text={ready ? "Ready!" : "I’m ready"}
+            icon="check"
+            color={ready ? "green" : "red"}
+            className={styles.readyButton}
+          />
+        </div>
+      </div>
+
+      {open && <CharacterChooser room={room} me={me} pick={(c) => send({ t: "pick", character: c })} close={closePicker} />}
+    </section>
   );
 };
 
@@ -450,7 +568,14 @@ const StartNote = ({ room, isHost }: { room: RoomView; isHost: boolean }) => {
         Waiting for {short} more player{short > 1 ? "s" : ""} to join.
       </p>
     );
-  if (isHost) return <p className={styles.showtimeLine}>Everyone in? You’re the host, so you start the show.</p>;
+  const ready = room.players.filter((p) => room.ready?.[p.id]).length;
+  if (ready < room.players.length)
+    return (
+      <p className={styles.showtimeLine}>
+        {ready} of {room.players.length} ready. {isHost ? "Pick your characters, then start the show." : "Pick your character, then hit Ready."}
+      </p>
+    );
+  if (isHost) return <p className={styles.showtimeLine}>Everyone’s ready. Start the show!</p>;
   return <p className={styles.showtimeLine}>Waiting for {host?.name || "the host"} to start the show.</p>;
 };
 
@@ -493,47 +618,26 @@ const Seat = ({
       className={`${styles.seat}${player.online ? "" : ` ${styles.seatAway}`}${mine ? ` ${styles.seatMine}` : ""}`}
       style={{ "--seat": colorOf(player) } as React.CSSProperties}
     >
-      <span className={styles.seatToken} aria-hidden>
-        {player.name.charAt(0).toUpperCase()}
-      </span>
-
-      {editing ? (
-        <form
-          className={styles.rename}
-          onSubmit={(e) => {
-            e.preventDefault();
-            const clean = cleanName(draft);
-            if (clean) {
-              send({ t: "rename", name: clean });
-              saveName(clean);
-            }
-            setEditing(false);
-          }}
-        >
-          <input
-            className={`${styles.input} ${styles.renameInput}`}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value.slice(0, NAME_MAX))}
-            onKeyDown={(e) => e.key === "Escape" && setEditing(false)}
-            maxLength={NAME_MAX}
-            aria-label="Your name"
-            autoFocus
-          />
-          <button type="submit" className={styles.chip}>
-            Save
-          </button>
-        </form>
+      {room.picks?.[player.id] !== undefined ? (
+        <span className={`${styles.seatToken} ${styles.seatPicked}`} aria-hidden>
+          <img src={`/images/emojis/${CHARACTERS[room.picks[player.id]]?.emoji?.[0]}.webp`} alt="" draggable={false} />
+        </span>
       ) : (
-        <span className={styles.seatName}>{player.name}</span>
+        <span className={styles.seatToken} aria-hidden>
+          {player.name.charAt(0).toUpperCase()}
+        </span>
       )}
+
+      <span className={styles.seatName}>{player.name}</span>
 
       <span className={styles.seatTags}>
         {room.hostId === player.id && <span className={`${styles.tag} ${styles.tagHost}`}>Host</span>}
         {mine && <span className={styles.tag}>You</span>}
+        {room.ready?.[player.id] && <span className={`${styles.tag} ${styles.tagReady}`}>Ready</span>}
         {!player.online && <span className={styles.awayNote}>stepped out</span>}
       </span>
 
-      {mine && !editing && (
+      {mine && (
         <button
           type="button"
           className={styles.seatCorner}
@@ -593,6 +697,29 @@ const Seat = ({
           )}
         </div>
       )}
+
+      {editing && (
+        <Modal onClose={() => setEditing(false)} ariaLabel="Change your name">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const clean = cleanName(draft);
+              if (clean) {
+                send({ t: "rename", name: clean });
+                saveName(clean);
+              }
+              setEditing(false);
+            }}
+          >
+            <h2 className={modalStyles.title}>Change your name</h2>
+            <NameField name={draft} setName={setDraft} autoFocus />
+            <div className={`${modalStyles.actions} ${styles.dialogFoot}`}>
+              <DefaultButton onClick={() => setEditing(false)} text="Cancel" icon="close" variant="secondary" border="dark" />
+              <DefaultButton button="submit" text="Save" icon="check" color="red" />
+            </div>
+          </form>
+        </Modal>
+      )}
     </li>
   );
 };
@@ -631,24 +758,52 @@ const useCopyLink = (code: string) => {
   return { link, copied, failed, setFailed, copy };
 };
 
-// The invite: the room's code and its link, to copy
-const Invite = ({ code }: { code: string }) => {
+// The invite: the room's code (a tap copies it) and its link, to copy, and the faces of the cast so far
+const Invite = ({ code, room }: { code: string; room: RoomView }) => {
   const { link, copied, failed, setFailed, copy } = useCopyLink(code);
+  const [codeCopied, setCodeCopied] = useState(false);
+  const copyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCodeCopied(true);
+      setTimeout(() => setCodeCopied(false), 2000);
+    } catch {
+      setFailed(true);
+    }
+  };
+  const faces = room.players.filter((p) => room.picks?.[p.id] !== undefined);
   return (
     <section className={styles.invite} aria-labelledby="invite-title">
       <h2 className={styles.inviteTitle} id="invite-title">
         Invite your cast
       </h2>
       <div className={styles.inviteCode}>
-        <span className={styles.inviteLabel}>Room code</span>
-        <CodeTiles code={code} />
+        <span className={styles.inviteLabel} aria-live="polite">
+          {codeCopied ? "Code copied!" : "Room code"}
+        </span>
+        <button type="button" className={styles.tilesButton} onClick={copyCode} title="Copy the code">
+          <CodeTiles code={code} />
+        </button>
       </div>
-      <p className={styles.inviteNote}>Send the link, or have friends type the code in at lovecareermagic.com/play.</p>
-      <DefaultButton onClick={copy} text={copied ? "Link copied!" : "Copy invite link"} color="yellow" className={styles.inviteButton} />
+      {faces.length > 0 && (
+        <ul className={styles.inviteFaces} aria-label="Picked so far">
+          {faces.map((p, i) => (
+            <li
+              key={p.id}
+              className={styles.inviteFace}
+              style={{ "--seat": colorOf(p), "--i": i } as CSSProperties}
+              title={p.name}
+            >
+              <img src={`/images/emojis/${CHARACTERS[room.picks[p.id]]?.emoji?.[0]}.webp`} alt={p.name} draggable={false} />
+            </li>
+          ))}
+        </ul>
+      )}
+      <DefaultButton onClick={copy} text={copied ? "Link copied!" : "Copy invite link"} icon={copied ? "check" : "link"} color="yellow" className={styles.inviteButton} />
       {failed && (
-        <Modal onClose={() => setFailed(false)} panelClassName={styles.dialog} ariaLabel="Invite link">
-          <h2 className={styles.dialogTitle}>Your invite link</h2>
-          <p className={styles.dialogText}>Copy it and send it to your friends.</p>
+        <Modal onClose={() => setFailed(false)} ariaLabel="Invite link">
+          <h2 className={modalStyles.title}>Your invite link</h2>
+          <p className={modalStyles.text}>Copy it and send it to your friends.</p>
           <input className={styles.input} value={link} readOnly onFocus={(e) => e.target.select()} autoFocus />
         </Modal>
       )}

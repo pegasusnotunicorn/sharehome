@@ -8,6 +8,7 @@ import {
   EPISODES,
   EPISODE_SECONDS,
   FACE_UP_PER_DECK,
+  REMOTE_BUTTONS,
   TRAIT_KINDS,
   type ClientMessage,
   type DirectionDeck,
@@ -46,7 +47,8 @@ const dealHand = (game: StoredGame): Hand | null => {
   };
 };
 
-export function newGame(playerIds: string[]): StoredGame {
+// (picks: the characters players chose in the waiting room; everyone else is dealt one)
+export function newGame(playerIds: string[], picks: Record<string, number> = {}): StoredGame {
   const game: StoredGame = {
     phase: "ready",
     episode: 1,
@@ -73,7 +75,14 @@ export function newGame(playerIds: string[]): StoredGame {
     for (let s = 0; s < FACE_UP_PER_DECK; s++) game.faceUp[deck].push(game.piles[deck].shift() ?? null);
   }
   game.episodes.push({ card: game.piles.episodes.shift()!, tokens: 0, completed: [] });
-  for (const p of playerIds) addPlayer(game, p);
+  for (const p of playerIds) {
+    const chosen = picks[p];
+    if (chosen !== undefined && game.piles.characters.includes(chosen)) {
+      game.piles.characters.splice(game.piles.characters.indexOf(chosen), 1);
+      game.piles.characters.unshift(chosen);
+    }
+    addPlayer(game, p);
+  }
   countLeft(game);
   return game;
 }
@@ -162,19 +171,32 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
     }
 
     case "complete": {
-      // (the clock starts as soon as someone says something: a card done first starts it)
+      // (the clock starts as soon as someone says something: a card done first starts it, and a
+      // card done while it's paused starts it again)
       if (game.phase === "ready") startClock(game, now);
+      else if (game.phase === "playing" && game.pausedLeft !== null) {
+        game.endsAt = now + game.pausedLeft;
+        game.pausedLeft = null;
+      }
       if (game.phase !== "playing") return false;
       const cards = game.faceUp[msg.deck];
       const card = cards?.[msg.slot];
       if (card === undefined || card === null) return false;
       const drawn = game.piles[msg.deck].shift() ?? null;
       cards[msg.slot] = drawn;
-      const done = { id: id(), deck: msg.deck, i: card, tokens: 0, by };
+      const done = { id: id(), deck: msg.deck, slot: msg.slot, i: card, tokens: 0, by };
       ep.completed.push(done);
       game.drawnFor[done.id] = { deck: msg.deck, slot: msg.slot, drawn };
       countLeft(game);
       log(game, by, `${name} completed a ${msg.deck} card (+${DIRECTION_POINTS[msg.deck]})`);
+      // every direction card played: that's the end of the season
+      if (DIRECTION_DECKS.every((d) => game.faceUp[d].every((c) => c === null))) {
+        game.phase = "over";
+        game.endsAt = null;
+        game.pausedLeft = null;
+        game.outOfCards = true;
+        log(game, by, "Out of direction cards: that’s a wrap on the season!");
+      }
       return true;
     }
 
@@ -247,6 +269,20 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
       }
       const whose = msg.player === by ? "their" : `{${msg.player}}’s`;
       log(game, by, `${name} ${trait.done !== null ? "played" : "took back"} ${whose} ${trait.kind} trait`);
+      return true;
+    }
+
+    case "remote": {
+      if (!REMOTE_BUTTONS.includes(msg.button)) return false;
+      game.remote = { id: id(), button: msg.button, at: now };
+      // (pause stops the clock; play starts it again)
+      if (msg.button === "pause" && game.phase === "playing" && game.endsAt !== null) {
+        game.pausedLeft = Math.max(0, game.endsAt - now);
+        game.endsAt = null;
+      } else if (msg.button === "play" && game.phase === "playing" && game.pausedLeft !== null) {
+        game.endsAt = now + game.pausedLeft;
+        game.pausedLeft = null;
+      }
       return true;
     }
 

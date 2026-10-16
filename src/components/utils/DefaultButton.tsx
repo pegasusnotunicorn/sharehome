@@ -1,6 +1,7 @@
 import { forwardRef, type ReactNode, type CSSProperties } from "react";
 import { NavLink } from "react-router";
 import styles from "../../css/utils/defaultButton.module.css";
+import SiteIcon, { isIconName } from "./Icons";
 
 interface DefaultButtonProps {
   text?: ReactNode;
@@ -18,6 +19,10 @@ interface DefaultButtonProps {
   button?: string;
   download?: string;
   onClick?: () => void;
+  // (greyed out and not pressable)
+  disabled?: boolean;
+  // (waiting on something: a spinner in place of its icon, and pressing it does nothing meanwhile)
+  loading?: boolean;
   id?: string;
   className?: string;
   style?: CSSProperties;
@@ -63,6 +68,8 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
       button,
       download,
       onClick,
+      disabled,
+      loading,
       id,
       className,
       style,
@@ -78,6 +85,7 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
       animated ? styles.animated : "",
       iconPosition === "right" ? styles.reversed : "",
       compact ? styles.compact : "",
+      loading ? styles.loading : "",
       className || "",
     ]
       .filter(Boolean)
@@ -86,7 +94,8 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
     const props: Record<string, unknown> = {
       id,
       className: classes,
-      onClick,
+      onClick: disabled || loading ? undefined : onClick,
+      "aria-busy": loading || undefined,
       ref,
       style,
     };
@@ -94,8 +103,8 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
     const iconTextContent = (
       <IconText
         text={text}
-        icon={icon}
-        emoji={emoji}
+        icon={loading ? "spinner" : icon}
+        emoji={loading ? undefined : emoji}
         reversed={iconPosition === "right"}
       />
     );
@@ -136,7 +145,9 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
         </a>
       );
     } else if (button) {
-      props.type = button;
+      // (a submit button that's loading doesn't send the form again)
+      props.type = loading ? "button" : button;
+      props.disabled = disabled;
       return (
         <button
           aria-label={typeof text === "string" ? text : undefined}
@@ -145,10 +156,10 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
           {iconTextContent}
         </button>
       );
-    } else if (onClick) {
+    } else if (onClick || disabled) {
       // (something to press: a real button, so it can be reached and pressed from the keyboard)
       return (
-        <button type="button" {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}>
+        <button type="button" disabled={disabled} {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}>
           {iconTextContent}
         </button>
       );
@@ -179,15 +190,10 @@ const Icon = ({ icon, emoji }: IconProps): ReactNode => {
         />
       </span>
     );
-  if (icon)
+  if (icon && isIconName(icon))
     return (
       <span>
-        <img
-          loading="lazy"
-          className={styles.btnIcon}
-          src={`/images/icons/${icon}.svg`}
-          alt=""
-        />
+        <SiteIcon name={icon} className={styles.btnIcon} strokeWidth={2.4} />
       </span>
     );
   return null;

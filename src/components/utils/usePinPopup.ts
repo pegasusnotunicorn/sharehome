@@ -4,9 +4,10 @@ import { trackEvent } from "./trackEvent";
 
 // The expansion popup (CharacterPinPopup.tsx): once a visitor has shown some interest (a second
 // page, or ENGAGED_MS on the site), shown once, then not again on this device for SNOOZE_DAYS
-// (FOLLOWED_DAYS after they follow). Never over the cart, checkout, thank-you page or raffle, or another
-// modal.
+// (FOLLOWED_DAYS after they follow). Never over the cart, checkout, thank-you page or raffle, an online
+// game (/play and its rooms), or another modal.
 const BLOCKED_PATHS = ["/cart", "/checkout", "/thankyou", "/raffle"];
+const blocked = (pathname: string) => BLOCKED_PATHS.includes(pathname) || pathname === "/play" || pathname.startsWith("/play/");
 const ENGAGED_MS = 45000;
 const SNOOZE_DAYS = 14;
 const FOLLOWED_DAYS = 180;
@@ -62,16 +63,16 @@ export const usePinPopup = ({ engagedMs = ENGAGED_MS, hold = false }: PinPopupOp
   }, [engagedMs]);
 
   useEffect(() => {
-    if (!due || hold || showPopup || BLOCKED_PATHS.includes(pathname) || snoozed() || isModalOpen()) return;
+    if (!due || hold || showPopup || blocked(pathname) || snoozed() || isModalOpen()) return;
     snoozeFor(SNOOZE_DAYS); // shown once, however it's closed
     setShowPopup(true);
     trackEvent("expansion_popup_shown", { page: pathname });
   }, [due, hold, pathname, showPopup]);
 
-  // gone if a modal opens over it, or they move to the cart or checkout
+  // gone if a modal opens over it, or they move to a page it's kept off
   useEffect(() => {
     if (!showPopup) return;
-    if (BLOCKED_PATHS.includes(pathname)) setShowPopup(false);
+    if (blocked(pathname)) setShowPopup(false);
     const observer = new MutationObserver(() => {
       if (isModalOpen()) setShowPopup(false);
     });

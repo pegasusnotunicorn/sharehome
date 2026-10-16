@@ -22,6 +22,7 @@ import { trackEvent } from "./utils/trackEvent";
 import styles from "../css/pages/buyPage.module.css";
 // (the same list checkout offers and the webhook ships to)
 import { isEuropeCountry } from "../../netlify/lib/regions.js";
+import Icon from "./utils/Icons";
 
 const LCM_PRICE = 34.99;
 const PIN_PRICE = 10.0;
@@ -428,6 +429,7 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
           disabled={loading || shippingSyncing || !checkout?.canConfirm || !termsAgreed || (needsPhone && !phoneValid)}
           className={styles.checkoutButton}
         >
+          {loading && <Icon name="spinner" strokeWidth={2.6} className={styles.checkoutSpinner} />}
           {loading ? "Processing..." : "Pay now"}
         </button>
       </form>
@@ -831,7 +833,7 @@ const CartSummary = ({
 // ── International modal ───────────────────────────────────────────────────────
 
 const InternationalModal = ({ onClose }: { onClose: () => void }) => (
-  <Modal onClose={onClose} panelClassName={styles.internationalPanel}>
+  <Modal onClose={onClose}>
     <h2 className={styles.modalTitle}>Shipping to Europe 🇪🇺</h2>
     <p className={styles.modalBody}>
       Love, Career &amp; Magic is finally available in Europe! I'm working
@@ -932,7 +934,7 @@ const ShippingWaitlistNotice = ({ country }: { country: string }) => {
 };
 
 const MissingCountryModal = ({ europeEnabled, onClose }: { europeEnabled: boolean; onClose: () => void }) => (
-  <Modal onClose={onClose} panelClassName={styles.internationalPanel}>
+  <Modal onClose={onClose}>
     <h2 className={styles.modalTitle}>Don't see your country?</h2>
     <p className={styles.modalBody}>
       Right now I can only ship to the US{europeEnabled ? " and Europe" : ""}.{" "}

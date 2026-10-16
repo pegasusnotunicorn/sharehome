@@ -251,15 +251,6 @@
   color: var(--ink);
 }
 
-.door .doorNote {
-  margin: -0.5rem 0 0.25rem;
-  max-width: 24rem;
-  font-family: "Roboto Light";
-  font-size: 0.98rem;
-  line-height: 1.45;
-  color: var(--ink-soft);
-}
-
 .field {
   display: flex;
   flex-direction: column;
@@ -500,6 +491,103 @@
   gap: 0.6rem;
 }
 
+/* the code's tiles are a button: a tap copies the code */
+.tilesButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tilesButton:hover .tile {
+  animation: tileWiggle 0.5s ease-in-out;
+}
+
+.tilesButton:hover .tile:nth-child(2) {
+  animation-delay: 0.05s;
+}
+.tilesButton:hover .tile:nth-child(3) {
+  animation-delay: 0.1s;
+}
+.tilesButton:hover .tile:nth-child(4) {
+  animation-delay: 0.15s;
+}
+
+.tilesButton:active .tiles {
+  transform: scale(0.96);
+}
+
+.tilesButton:focus-visible {
+  outline: 3px solid #f1db4b;
+  outline-offset: 6px;
+  border-radius: 14px;
+}
+
+@keyframes tileWiggle {
+  30% {
+    translate: 0 -4px;
+    rotate: -3deg;
+  }
+  65% {
+    translate: 0 1px;
+    rotate: 2deg;
+  }
+}
+
+/* the cast's faces as they pick: in the card's middle (around its edges on a phone) */
+.inviteFaces {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: auto 0;
+  padding: 0;
+  list-style: none;
+}
+
+.inviteFace {
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  overflow: hidden;
+  /* (a soft, spotlit backdrop in the player's color, like a portrait; the face's white paper melts into it) */
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% 40%, #fffdf6 0 34%, transparent 72%),
+    linear-gradient(165deg, color-mix(in srgb, var(--seat, #f1db4b) 22%, #fff8e8), color-mix(in srgb, var(--seat, #f1db4b) 48%, #fff8e8));
+  box-shadow:
+    inset 0 -4px 8px rgba(0, 0, 0, 0.18),
+    0 0 0 3px var(--seat, #fff),
+    0 8px 14px -8px rgba(0, 0, 0, 0.7);
+  rotate: calc((var(--i) - 2.5) * 3deg);
+  animation:
+    facePop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) both,
+    faceBob 3.2s ease-in-out calc(0.5s + var(--i) * 0.4s) infinite;
+}
+
+.inviteFace img {
+  width: 100%;
+  height: 100%;
+  padding: 10%;
+  box-sizing: border-box;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+@keyframes facePop {
+  from {
+    scale: 0;
+  }
+}
+
+@keyframes faceBob {
+  50% {
+    translate: 0 -3px;
+  }
+}
+
 .inviteLabel {
   font-family: "Rowdies-Regular";
   font-size: 0.7rem;
@@ -507,16 +595,6 @@
   text-transform: uppercase;
   color: #f1db4b;
 }
-
-.invite .inviteNote {
-  max-width: 22rem;
-  margin: 0;
-  font-family: "Roboto Light";
-  font-size: 0.92rem;
-  line-height: 1.45;
-  color: rgba(244, 239, 227, 0.78);
-}
-
 
 .reconnecting {
   display: flex;
@@ -735,8 +813,7 @@
 .seatCorner:focus-visible,
 .seatMenu button:focus-visible,
 .seatInvite:focus-visible,
-.textButton:focus-visible,
-.chip:focus-visible {
+.textButton:focus-visible {
   outline: 3px solid var(--btn-focus);
   outline-offset: 2px;
 }
@@ -793,29 +870,6 @@
 
 .seatMenu .danger {
   color: #b3160f;
-}
-
-.rename {
-  display: flex;
-  gap: 0.4rem;
-  width: 100%;
-}
-
-.renameInput {
-  height: 40px;
-  text-align: center;
-}
-
-.chip {
-  flex: none;
-  padding: 0 0.85rem;
-  border: 2px solid var(--btn-ink);
-  border-radius: 10px;
-  background: var(--btn-ink);
-  font-family: "Rowdies-Regular";
-  font-size: 0.9rem;
-  color: #fff;
-  cursor: pointer;
 }
 
 /* an open seat: a dashed outline, the first one an invite */
@@ -918,13 +972,64 @@
   color: var(--ink);
 }
 
-/* (the stage, waiting for its cast) */
-.showtimeArt {
-  align-self: center;
-  width: 9.5rem;
-  height: auto;
-  margin: auto 0;
+/* before the show: who's in, how long it takes, the call */
+.checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0.25rem 0 0.5rem;
+  padding: 0;
+  list-style: none;
 }
+
+.checklist li {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 14px;
+  background: #f7f5ef;
+}
+
+.checklist img,
+.checklist svg {
+  justify-self: center;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  color: #5f5aa2;
+}
+
+.checklist span {
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto Light";
+  font-size: 0.88rem;
+  line-height: 1.35;
+  color: var(--ink-soft);
+}
+
+.checklist b {
+  font-family: "Rowdies-Regular";
+  font-size: 0.98rem;
+  font-weight: normal;
+  color: var(--ink);
+}
+
+.checklist a {
+  width: fit-content;
+  color: #5f5aa2;
+}
+
+.checkDone {
+  box-shadow: inset 0 0 0 1.5px rgba(79, 138, 115, 0.45);
+}
+
+.checklist .checkDone {
+  background: #eef6f1;
+}
+
 
 
 
@@ -938,20 +1043,6 @@
   margin-top: auto;
   box-sizing: border-box;
   font-size: 1.05rem;
-}
-
-.startWaiting {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 1.5rem;
-  border: 0;
-  border-radius: var(--btn-radius);
-  background: #e9e6df;
-  box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.08);
-  font-family: "Rowdies-Regular";
-  color: rgba(50, 50, 50, 0.4);
-  cursor: not-allowed;
 }
 
 .leave {
@@ -975,50 +1066,6 @@
 
 .textButton:hover {
   color: var(--ink);
-}
-
-/* #endregion */
-
-/* #region--------------------------------------DIALOGS */
-
-.dialog {
-  position: relative;
-  width: 100%;
-  max-width: 26rem;
-  padding: 2rem 1.75rem 1.6rem;
-  box-sizing: border-box;
-  border-radius: 22px;
-  background: #fff;
-  box-shadow:
-    inset 0 6px 0 #d81e18,
-    0 30px 60px -30px rgba(0, 0, 0, 0.5);
-  text-align: left;
-  animation: pop 0.18s ease-out both;
-}
-
-
-.dialogTitle {
-  margin: 0 2.5rem 0.5rem 0;
-  font-family: "Rowdies-Bold";
-  font-size: 1.5rem;
-  font-weight: normal;
-  line-height: 1.15;
-  color: #323232;
-}
-
-.dialog .dialogText {
-  margin: 0 0 1.4rem;
-  font-family: "Roboto Light";
-  font-size: 1rem;
-  line-height: 1.45;
-  color: rgba(50, 50, 50, 0.8);
-  opacity: 1;
-}
-
-.dialogActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.6rem;
 }
 
 /* #endregion */
@@ -1127,9 +1174,7 @@
     text-align: center;
   }
 
-  .showtimeArt {
-    display: none;
-  }
+
 
   .showtime .showtimeLine {
     font-size: 1.1rem;
@@ -1146,9 +1191,6 @@
     width: 100%;
   }
 
-  .dialogActions > * {
-    flex: 1;
-  }
 }
 
 /* the invite link's page: the opening, the name and the call, one width */
@@ -1229,5 +1271,203 @@
 @media only screen and (max-width: 640px) {
   .toast {
     bottom: 5.5rem;
+  }
+}
+
+/* a dialog's buttons, under a field */
+.dialogFoot {
+  margin-top: 1.4rem;
+}
+
+/* #region--------------------------------------PICKING CHARACTERS */
+
+.picker {
+  margin: 0 0 2.25rem;
+}
+
+/* your pick: the card (a tap changes it), its name, and the buttons */
+.myPick {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 0.85rem;
+  padding: 1rem 1.25rem 1rem 1rem;
+  border-radius: 22px;
+  background: #fff;
+  border: 1px solid rgba(50, 40, 30, 0.1);
+  box-shadow: 0 16px 34px -28px rgba(28, 26, 43, 0.6);
+}
+
+.myPickCard {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 9.5rem;
+  aspect-ratio: 768 / 444;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f4f0e8;
+  box-shadow:
+    0 0 0 3px var(--seat, transparent),
+    0 10px 18px -12px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  rotate: -2deg;
+}
+
+.myPickCard:hover {
+  animation: tileWiggle 0.5s ease-in-out;
+}
+
+.myPickCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.myPickEmpty {
+  border: 2px dashed rgba(50, 40, 30, 0.25);
+  box-shadow: none;
+  font-family: "Rowdies-Bold";
+  font-size: 2rem;
+  color: rgba(50, 40, 30, 0.3);
+}
+
+.myPickText {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+  margin-right: auto;
+}
+
+.myPickText b {
+  font-family: "Rowdies-Bold";
+  font-weight: normal;
+  font-size: 1.2rem;
+  color: var(--ink);
+}
+
+.myPickText span {
+  font-family: "Roboto Light", sans-serif;
+  font-size: 0.95rem;
+  color: rgba(50, 50, 50, 0.65);
+}
+
+.myPickActions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.readyButton {
+  min-width: 11rem;
+}
+@keyframes pickWiggle {
+  25% {
+    transform: rotate(1.6deg);
+  }
+  60% {
+    transform: rotate(-1.2deg);
+  }
+}
+/* a seat with its character picked: the picture in the token */
+.seatPicked {
+  overflow: hidden;
+  padding: 0;
+}
+
+.seatPicked {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% 40%, #fffdf6 0 34%, transparent 72%),
+    linear-gradient(165deg, color-mix(in srgb, var(--seat) 22%, #fff8e8), color-mix(in srgb, var(--seat) 48%, #fff8e8));
+}
+
+/* (the character's face, its paper melting into the backdrop) */
+.seatPicked img {
+  width: 100%;
+  height: 100%;
+  padding: 10%;
+  box-sizing: border-box;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.tagReady {
+  background: #4f8a73;
+  color: #fff;
+}
+
+@media only screen and (max-width: 760px) {
+  /* (on a phone: the card and its name side by side, the buttons below, full width) */
+  .myPick {
+    flex-wrap: wrap;
+    gap: 0.85rem 1rem;
+    padding: 0.9rem;
+  }
+
+  .myPickCard {
+    width: 7.5rem;
+  }
+
+  .myPickText {
+    flex: 1 1 0;
+  }
+
+  .myPickActions {
+    flex: 1 1 100%;
+    flex-wrap: nowrap;
+  }
+
+  .myPickActions > * {
+    flex: 1 1 0;
+    max-width: none;
+  }
+}
+
+/* #endregion */
+
+/* on a phone, the faces sit around the invite card's edges, out of the code's way */
+@media only screen and (max-width: 640px) {
+  .inviteFaces {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .inviteFace {
+    position: absolute;
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  /* (left and right in turn, from the top corners down) */
+  .inviteFace:nth-child(odd) {
+    left: 0.7rem;
+  }
+  .inviteFace:nth-child(even) {
+    right: 0.7rem;
+  }
+  .inviteFace:nth-child(1),
+  .inviteFace:nth-child(2) {
+    top: 0.9rem;
+  }
+  .inviteFace:nth-child(3),
+  .inviteFace:nth-child(4) {
+    top: calc(0.9rem + 3.4rem);
+  }
+  .inviteFace:nth-child(5),
+  .inviteFace:nth-child(6) {
+    top: calc(0.9rem + 6.8rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inviteFace {
+    animation: none;
   }
 }

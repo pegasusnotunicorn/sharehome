@@ -14,6 +14,7 @@ import ScrollToTop from "./ScrollToTop";
 import Footer from "./components/Footer";
 import ExternalRedirect from "./components/ExternalRedirect";
 import useUTMPreservation from "./hooks/useUTMPreservation";
+import { SocialIconDefs } from "./components/utils/SocialIcons";
 
 const LandingPage = lazy(() => import("./components/Home/LandingPage"));
 const AboutPage = lazy(() => import("./components/About/AboutPage"));
@@ -67,6 +68,7 @@ const Router = () => {
   return (
     <BrowserRouter>
       <MetaTags />
+      <SocialIconDefs />
       <ScrollToTop />
       <AppRoutes />
     </BrowserRouter>
@@ -76,6 +78,8 @@ const Router = () => {
 const AppRoutes = () => {
   const location = useLocation();
   const isExternalRedirect = ["/rulebook", "/buy", "/blog"].includes(location.pathname);
+  // (an online game room is played full screen: no banner or navbar over the table)
+  const inRoom = location.pathname.startsWith("/play/");
 
   const [trailerPlaying, setTrailerPlaying] = useState(false);
 
@@ -83,9 +87,9 @@ const AppRoutes = () => {
 
   return (
     <>
-      {!isExternalRedirect && <Banner />}
+      {!isExternalRedirect && !inRoom && <Banner />}
       <Suspense fallback={null}>
-        {!isExternalRedirect && <Navbar trailerPlaying={trailerPlaying} />}
+        {!isExternalRedirect && !inRoom && <Navbar trailerPlaying={trailerPlaying} />}
         <Routes>
           <Route path="/" element={<LandingPage setTrailerPlaying={setTrailerPlaying} />} />
           <Route path="/ttrpg" element={<Navigate to="/" replace />} />

@@ -1,6 +1,7 @@
 import { MouseEvent, useEffect, useRef, useState, type CSSProperties } from "react";
 import DefaultButton from "./utils/DefaultButton";
 import styles from "../css/utils/lazyYoutube.module.css";
+import Icon from "./utils/Icons";
 
 interface CharacterPinPopupProps {
   closePopup: (how: string) => void; // how: "close", "outside", "escape" or "not_now"
@@ -36,7 +37,7 @@ const CharacterPinPopup = ({ closePopup, followed }: CharacterPinPopupProps) => 
       tabIndex={-1}
     >
       <button type="button" className="close-x-btn" aria-label="Close" onClick={() => closePopup("close")}>
-        <img src="/images/icons/cross.svg" alt="" />
+        <Icon name="close" strokeWidth={2.6} />
       </button>
       <div className="modal-content">
         <img className="expansion-image" src="/images/kitchen_chaos.webp" alt="Expansion update" />
@@ -96,11 +97,13 @@ const CharacterPinPopup = ({ closePopup, followed }: CharacterPinPopupProps) => 
           align-items: center;
           justify-content: center;
           text-align: center;
-          padding: 1em;
-          border-radius: 4px;
-          box-shadow: 1px 1px 4px 0px #323232;
+          /* the site's dialog (modal.module.css): a band of red along its top, round corners */
+          padding: 2rem 1.75rem 1.6rem;
+          box-sizing: border-box;
+          border-radius: 22px;
+          box-shadow: inset 0 6px 0 #d81e18, 0 30px 60px -30px rgba(0, 0, 0, 0.5);
           width: calc(100% - 4em);
-          max-width: 420px;
+          max-width: 28rem;
         }
         .modal-popup:focus {
           outline: none;
@@ -115,8 +118,9 @@ const CharacterPinPopup = ({ closePopup, followed }: CharacterPinPopupProps) => 
           max-width: none;
           transform: none;
           z-index: 999997;
-          border-radius: 12px;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+          padding: 1.25rem 1.1rem 1rem;
+          border-radius: 18px;
+          box-shadow: inset 0 5px 0 #d81e18, 0 10px 40px rgba(0, 0, 0, 0.35);
           animation: expansion-sheet-in 0.35s ease-out;
         }
         /* compact: the picture beside the words, the buttons under them */
@@ -136,12 +140,12 @@ const CharacterPinPopup = ({ closePopup, followed }: CharacterPinPopupProps) => 
           object-fit: cover;
           margin: 0;
         }
-        .modal-popup-sheet h2 {
+        .modal-popup-sheet .modal-content h2 {
           grid-area: title;
           font-size: 1.05rem;
           align-self: end;
         }
-        .modal-popup-sheet p {
+        .modal-popup-sheet .modal-content p {
           grid-area: text;
           font-size: 0.8rem;
           line-height: 1.35;
@@ -172,8 +176,8 @@ const CharacterPinPopup = ({ closePopup, followed }: CharacterPinPopupProps) => 
           place-items: center;
           cursor: pointer;
           position: absolute;
-          top: 0.5em;
-          right: 0.5em;
+          top: 0.9rem;
+          right: 0.9rem;
           width: 2.25rem;
           height: 2.25rem;
           padding: 0.5rem;
@@ -185,7 +189,7 @@ const CharacterPinPopup = ({ closePopup, followed }: CharacterPinPopupProps) => 
           box-shadow: 0 3px 0 var(--chip-edge);
           transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.15s ease;
         }
-        .close-x-btn img {
+        .close-x-btn svg {
           width: 100%;
           height: 100%;
         }
@@ -205,13 +209,26 @@ const CharacterPinPopup = ({ closePopup, followed }: CharacterPinPopupProps) => 
           align-items: center;
         }
         .modal-content h2 {
-          margin: 0;
+          margin: 0 0 0.5rem;
+          font-family: "Rowdies-Bold";
+          font-size: 1.5rem;
+          font-weight: normal;
+          line-height: 1.15;
+          color: #323232;
+        }
+        .modal-content p {
+          margin: 0 0 1.4rem;
+          font-family: "Roboto Light";
+          font-size: 1rem;
+          line-height: 1.5;
+          color: rgba(50, 50, 50, 0.8);
+          opacity: 1;
         }
         .expansion-image {
           width: 100%;
           height: auto;
-          border-radius: 5px;
-          margin-bottom: 1em;
+          border-radius: 12px;
+          margin: 1.75rem 0 1.25rem;
         }
         .button-wrapper {
           margin-bottom: 1em;

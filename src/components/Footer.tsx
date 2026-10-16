@@ -9,6 +9,7 @@ import styles from "../css/footer.module.css";
 const SHEET = { fronts: "/images/cards/character-fronts.webp", cols: 5, rows: 5 }; // footerCards3d.ts ATLAS
 
 const EXPLORE: { label: string; to?: string; href?: string }[] = [
+  { label: "Home", to: "/" },
   { label: "How to play", to: "/howtoplay" },
   { label: "Characters", to: "/characters" },
   { label: "Play online", href: "https://screentop.gg/@PegasusGames/lcm" },

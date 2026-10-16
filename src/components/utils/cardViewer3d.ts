@@ -32,12 +32,13 @@ interface MountOptions {
   intro?: boolean; // the slow turn the first time it's on screen (not when it's just been swung in)
   onReady?: () => void; // the card's showing
   onFail: () => void;
+  hold?: boolean; // left alone, it stays as it's left: no turning back to rest, no zooming back
 }
 
 const IDLE_MS = 3000; // left alone this long, zoomed in (or out), it zooms back
 
 // Turns `stage` (a 4:3 box) into a card viewer. Resolves once the card is showing.
-export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "paper", intro = true, onReady, onFail }: MountOptions): Promise<CardViewerApi | null> {
+export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "paper", intro = true, onReady, onFail, hold = false }: MountOptions): Promise<CardViewerApi | null> {
   let T: Three, r: THREE.WebGLRenderer;
   try {
     T = await loadThree();
@@ -199,6 +200,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   // left alone, it turns straight back to rest (the zoom stays)
   const settle = () => {
     cancelAnimationFrame(raf);
+    if (hold) return;
     const q0 = q.clone(), t0 = performance.now(), ms = calm() ? 0 : 600;
     const step = (now: number) => {
       const t = ms ? Math.min(1, (now - t0) / ms) : 1;
@@ -227,6 +229,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   const zoomed = () => Math.abs(z - REST_Z) > 0.01 || tgt.distanceTo(AIM) > 0.001;
   const rest_ = () => {
     clearTimeout(idle);
+    if (hold) return;
     idle = window.setTimeout(() => {
       if (dead) return;
       if (pts.size) return rest_();

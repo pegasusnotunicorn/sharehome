@@ -315,3 +315,24 @@ li {
     font-size: 0.75rem;
   }
 }
+
+/* pages you play rather than read (the online game): nothing to highlight, but fields still type and select */
+body.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+body.no-select input,
+body.no-select textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* an online game room: no banner or navbar, so nothing to leave room for */
+body.in-room {
+  --banner-height: 0px;
+  --banner-height-mobile: 0px;
+  /* (just room for the rulebook, where the navbar would be) */
+  --navbar-height: 68px;
+}

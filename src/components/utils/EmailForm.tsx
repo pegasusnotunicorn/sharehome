@@ -140,6 +140,7 @@ export const EmailForm = (props: EmailFormProps) => {
           button="submit"
           className={`${styles.subscribeButton} ${props.submitButtonClassName ?? ""}`}
           text={submitButtonText}
+          loading={response === "Submitting..."}
         />
       </form>
     </div>

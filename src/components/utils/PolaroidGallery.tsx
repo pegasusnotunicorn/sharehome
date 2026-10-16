@@ -1,5 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import styles from "../../css/utils/polaroidGallery.module.css";
+import Icon from "./Icons";
 
 // The polaroids as a flat grid that opens one large: what PolaroidJourney shows where its 3D ring
 // can't be drawn
@@ -107,7 +108,7 @@ const PolaroidGallery = ({
             aria-label={activeItem.alt}
           >
             <button type="button" className={styles.lightboxClose} onClick={() => setActiveIndex(null)} aria-label="Close">
-              <img src="/images/icons/cross.svg" alt="" style={{ display: "block", width: "100%", height: "100%" }} />
+              <Icon name="close" strokeWidth={2.6} className={styles.lightboxCloseIcon} />
             </button>
             <img
               src={activeItem.src}

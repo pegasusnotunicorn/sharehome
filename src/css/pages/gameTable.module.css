@@ -1,64 +1,39 @@
-/* The table (Play/GameTable.tsx): the clock bar (stuck under the navbar while you scroll), a line on
-   what to do now, the episode with its completed cards beside the six direction cards, callbacks
-   and what's happened, then the cast with their characters and traits. The season's ratings at the
-   end. Its colors are the play pages' (playPage.module.css). */
+/* The table (Play/GameTable.tsx), laid out like a game on a kitchen table: a blue gingham cloth
+   inside a wooden rim (the key art's kitchen), the other players' seats along the far side, the
+   episode with the play area its completed cards land in, the three direction decks with their face-up cards, a
+   phone for the clock beside callbacks and a sticky note, and your own seat along the near side.
+   Cards lie a little askew and never move when they're tapped: a new card flips over in place. */
 
-.table {
+.room {
+  position: relative;
   --ink: #323232;
   --ink-soft: rgba(50, 50, 50, 0.72);
   --night: #1c1a2b;
-  --edge: rgba(50, 50, 50, 0.1);
-  --lift: 0 0 0 1px var(--edge), 0 18px 34px -26px rgba(40, 30, 20, 0.45);
+  /* card stock: a pale edge under each card (its thickness), then its shadow on the cloth; lifted,
+     the shadow spreads */
+  --card-shadow:
+    0 1px 0 #ebe6da, 0 2px 0 #d9d2c3, 0 3px 1px rgba(0, 0, 0, 0.12), 0 10px 16px -8px rgba(30, 40, 70, 0.45);
+  --card-lift:
+    0 1px 0 #ebe6da, 0 2px 0 #d9d2c3, 0 3px 1px rgba(0, 0, 0, 0.1), 0 20px 26px -10px rgba(30, 40, 70, 0.45);
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1rem;
   padding-top: calc(var(--navbar-height) + 0.25rem);
   text-align: left;
 }
 
 /* (the table takes more of the page than the lobby) */
-:global(.content):has(.table) {
-  max-width: calc(1280px + 4rem);
+:global(.content):has(.room) {
+  max-width: calc(1360px + 4rem);
 }
 
-.table p {
+.room p {
   opacity: 1;
 }
 
-.sectionTitle {
-  margin: 0;
-  font-family: "Rowdies-Bold";
-  font-size: 1.35rem;
-  font-weight: normal;
-  color: var(--ink);
-}
-
-.table .sectionNote,
-.sectionNote {
-  margin: 0;
-  font-family: "Roboto Light";
-  font-size: 0.92rem;
-  line-height: 1.45;
-  color: var(--ink-soft);
-}
-
-.table .empty {
-  margin: 0;
-  font-family: "GochiHand";
-  font-size: 1.15rem;
-  color: rgba(50, 50, 50, 0.5);
-}
-
-.kicker {
-  font-family: "Rowdies-Regular";
-  font-size: 0.72rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.6);
-}
-
-.table .kicker {
-  margin: 0;
+.room button:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
 }
 
 .textButton {
@@ -79,312 +54,386 @@
   color: var(--ink);
 }
 
-.table button:focus-visible {
-  outline: 3px solid var(--btn-focus);
-  outline-offset: 2px;
-}
-
-/* #region--------------------------------------THE CLOCK BAR */
-
-.bar {
-  position: sticky;
-  top: calc(var(--banner-height) + var(--navbar-height) + 0.5rem);
-  z-index: 50;
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.9rem 1.4rem;
-  border-radius: 20px;
-  color: #f4efe3;
-  background:
-    radial-gradient(60% 120% at 50% -20%, rgba(255, 236, 170, 0.22), transparent 62%),
-    radial-gradient(120% 80% at 85% 0%, rgba(95, 90, 162, 0.55), transparent 60%),
-    var(--night);
-  box-shadow: 0 18px 34px -22px rgba(28, 26, 43, 0.9);
-}
-
-.barWrapped {
-  background:
-    radial-gradient(60% 120% at 50% -20%, rgba(241, 219, 75, 0.35), transparent 62%),
-    var(--night);
-}
-
-.barEpisode {
+.hostRow {
   display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.barLabel {
-  font-family: "Rowdies-Regular";
-  font-size: 0.7rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #f1db4b;
-}
+/* #region--------------------------------------THE TABLE */
 
-.barValue {
-  font-family: "Rowdies-Bold";
-  font-size: 1.6rem;
-  line-height: 1;
-}
-
-.barValue small {
-  font-family: "Rowdies-Regular";
-  font-size: 0.95rem;
-  color: rgba(244, 239, 227, 0.6);
-}
-
-.dots {
-  display: inline-flex;
-  gap: 5px;
-  align-self: center;
-}
-
-.dots span {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.18);
-}
-
-.dots .dotDone {
-  background: #f1db4b;
-}
-
-.dots .dotNow {
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
-}
-
-.clock {
+.tabletop {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  min-width: 9rem;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border: 14px solid transparent;
+  border-radius: 34px;
+  --wood: repeating-linear-gradient(100deg, #a96d3c 0 7px, #9a612f 7px 15px, #b27848 15px 19px, #9e6433 19px 26px);
+  background:
+    linear-gradient(90deg, rgba(91, 124, 191, 0.13) 50%, transparent 50%) padding-box,
+    linear-gradient(rgba(91, 124, 191, 0.13) 50%, transparent 50%) padding-box,
+    linear-gradient(#f6f8fc, #f6f8fc) padding-box,
+    var(--wood) border-box;
+  background-size:
+    44px 44px,
+    44px 44px,
+    auto,
+    auto;
+  box-shadow:
+    inset 0 0 0 2px rgba(80, 45, 15, 0.35),
+    inset 0 10px 30px -10px rgba(30, 40, 70, 0.25),
+    0 30px 60px -32px rgba(40, 25, 10, 0.7);
 }
 
-.clockTime {
-  font-family: "Rowdies-Bold";
-  font-size: 2.6rem;
-  line-height: 1;
-  letter-spacing: 0.02em;
-  font-variant-numeric: tabular-nums;
+/* the other tablecloths (each player picks their own, on their own device): pink gingham,
+   strawberry polka dots, mint stripes, hearts, lavender stars and a cosy picnic check */
+.cloth-pink {
+  background:
+    linear-gradient(90deg, rgba(216, 30, 24, 0.12) 50%, transparent 50%) padding-box,
+    linear-gradient(rgba(216, 30, 24, 0.12) 50%, transparent 50%) padding-box,
+    linear-gradient(#fdf6f6, #fdf6f6) padding-box,
+    var(--wood) border-box;
+  background-size:
+    40px 40px,
+    40px 40px,
+    auto,
+    auto;
 }
 
-.clockLow {
-  color: #ff7a6b;
-  animation: pulse 1s ease-in-out infinite alternate;
+.cloth-dots {
+  background:
+    radial-gradient(circle, rgba(232, 93, 85, 0.3) 4px, transparent 5px) 0 0 / 36px 36px padding-box,
+    radial-gradient(circle, rgba(232, 93, 85, 0.3) 4px, transparent 5px) 18px 18px / 36px 36px padding-box,
+    linear-gradient(#fff3f1, #fff3f1) padding-box,
+    var(--wood) border-box;
 }
 
-@keyframes pulse {
-  to {
-    opacity: 0.6;
+.cloth-mint {
+  background:
+    repeating-linear-gradient(90deg, rgba(79, 138, 115, 0.13) 0 22px, transparent 22px 44px) padding-box,
+    linear-gradient(#f2faf6, #f2faf6) padding-box,
+    var(--wood) border-box;
+}
+
+.cloth-hearts {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cpath d='M24 34s-9-5.6-9-11.2A4.8 4.8 0 0 1 24 20a4.8 4.8 0 0 1 9 2.8C33 28.4 24 34 24 34z' fill='%23e88aa8' fill-opacity='.35'/%3E%3C/svg%3E")
+      0 0 / 48px 48px padding-box,
+    linear-gradient(#fff6fa, #fff6fa) padding-box,
+    var(--wood) border-box;
+}
+
+.cloth-stars {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Cpath d='M16 10l2 5 5 .5-4 3.5 1.3 5L16 21.3 11.7 24l1.3-5-4-3.5 5-.5zM42 34l1.4 3.4 3.6.4-2.8 2.4.9 3.5L42 41.8 38.9 43.7l.9-3.5L37 37.8l3.6-.4z' fill='%235f5aa2' fill-opacity='.25'/%3E%3C/svg%3E")
+      0 0 / 56px 56px padding-box,
+    linear-gradient(#f5f3fc, #f5f3fc) padding-box,
+    var(--wood) border-box;
+}
+
+.cloth-picnic {
+  background:
+    linear-gradient(90deg, rgba(224, 169, 27, 0.2) 50%, transparent 50%) padding-box,
+    linear-gradient(rgba(79, 138, 115, 0.16) 50%, transparent 50%) padding-box,
+    linear-gradient(#fffbef, #fffbef) padding-box,
+    var(--wood) border-box;
+  background-size:
+    52px 52px,
+    52px 52px,
+    auto,
+    auto;
+}
+
+/* the tablecloth picker: a swatch of each */
+.clothGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.4rem;
+}
+
+.clothSwatch {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: "Rowdies-Regular";
+  font-size: 0.85rem;
+  color: var(--ink, #323232);
+  cursor: pointer;
+}
+
+.clothSwatch > span:first-child {
+  display: block;
+  height: 4.5rem;
+  padding: 0;
+  border: 6px solid transparent;
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px rgba(50, 50, 50, 0.12);
+}
+
+.clothSwatch[aria-pressed="true"] > span:first-child {
+  box-shadow:
+    0 0 0 3px #fff,
+    0 0 0 6px #5f5aa2;
+}
+
+.clothButton {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #f4efe3;
+  cursor: pointer;
+}
+
+.clothButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.clothButton svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* picked up a little: a wiggle where it lies, and its shadow spreads (it never moves off its spot) */
+.card:hover:not(:disabled),
+.past:hover,
+.characterCard:hover,
+.trait:hover:not(:disabled) {
+  box-shadow: var(--card-lift);
+  animation: wiggle 0.45s ease-in-out;
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(var(--tilt, 0deg));
+  }
+  25% {
+    transform: rotate(calc(var(--tilt, 0deg) + 1.8deg));
+  }
+  60% {
+    transform: rotate(calc(var(--tilt, 0deg) - 1.4deg));
+  }
+  85% {
+    transform: rotate(calc(var(--tilt, 0deg) + 0.5deg));
   }
 }
 
-.clockTrack {
-  width: 100%;
-  height: 5px;
-  border-radius: 99px;
-  background: rgba(255, 255, 255, 0.15);
-  overflow: hidden;
+/* pressed down onto the table */
+.card:active:not(:disabled),
+.past:active,
+.characterCard:active,
+.trait:active:not(:disabled) {
+  box-shadow: 0 1px 0 #ebe6da, 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.clockTrack span {
+@media (prefers-reduced-motion: reduce) {
+  .card:hover:not(:disabled),
+  .past:hover,
+  .characterCard:hover,
+    .trait:hover:not(:disabled) {
+    animation: none;
+  }
+}
+
+/* a card on the table: a little askew, and a shadow under it */
+.card,
+.episodeCard,
+.past,
+.characterCard,
+.stack img {
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
+  transform: rotate(var(--tilt, 0deg));
+}
+
+/* a card that's just been dealt: its back first, then it turns over where it lies, once its face has
+   loaded (FlipCard) */
+/* (the card's slide out of its deck runs on this, its turn on the flipper inside) */
+.dealer {
   display: block;
+  width: 100%;
   height: 100%;
   border-radius: inherit;
-  background: #f1db4b;
-  transform-origin: left;
-  transition: transform 0.25s linear;
 }
 
-.barActions {
+.flipper {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: perspective(900px) rotateY(180deg);
+  transition: transform 0.5s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+
+.flipped {
+  transform: perspective(900px) rotateY(0deg);
+}
+
+.face {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.faceBack {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flipper {
+    transition: none;
+  }
+}
+
+/* (a character that's just been drawn fades in) */
+.flipIn {
+  animation: flipIn 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+@keyframes flipIn {
+  from {
+    opacity: 0.2;
+    transform: perspective(800px) rotate(var(--tilt, 0deg)) rotateY(80deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flipIn {
+    animation: none;
+  }
+}
+
+.middle {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 2fr) minmax(0, 0.8fr);
+  grid-template-areas: "episode decks side";
+  gap: 1.75rem;
+  align-items: start;
+}
+
+/* a deck's name, its points right beside it */
+.deckHead {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 0.75rem;
+  justify-content: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.55rem;
 }
 
-.score {
-  padding: 0.35rem 0.8rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
+.deckHead h3 {
+  margin: 0;
   font-family: "Rowdies-Regular";
-  font-size: 0.9rem;
-  white-space: nowrap;
-  color: rgba(244, 239, 227, 0.8);
+  font-size: 1rem;
+  font-weight: normal;
+  color: var(--ink);
 }
 
-.score b {
+.points {
+  flex: none;
+  padding: 0.12rem 0.55rem;
+  border-radius: 999px;
+  background: var(--deck, #323232);
   font-family: "Rowdies-Bold";
-  font-size: 1.15rem;
+  font-size: 0.78rem;
   color: #fff;
 }
 
 .prompt {
-  padding: 0.9rem 1.2rem;
-  border-radius: 16px;
-  background: #fbf3cf;
-  box-shadow: 0 0 0 1px rgba(224, 169, 27, 0.25);
+  padding: 0.85rem 1.15rem;
+  border-radius: 12px;
+  background: #fffdf6;
+  box-shadow: var(--card-shadow);
   font-family: "Roboto Light";
   font-size: 1rem;
-  line-height: 1.45;
+  line-height: 1.6;
   color: var(--ink);
+  animation: fadeIn 0.3s ease-out both;
 }
 
 .prompt b {
+  margin-right: 0.35rem;
   font-family: "Rowdies-Regular";
   font-weight: normal;
-  margin-right: 0.35rem;
 }
 
-.promptWrap {
-  background: #eeedf8;
-  box-shadow: 0 0 0 1px rgba(95, 90, 162, 0.2);
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
 }
 
 /* #endregion */
 
-/* #region--------------------------------------THE EPISODE AND THE DIRECTION CARDS */
+/* #region--------------------------------------THE EPISODE AND ITS PILE */
 
-.stageRow {
-  display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 2.15fr);
-  gap: 1.25rem;
-  align-items: start;
-}
-
-.location,
-.directions,
-.callbacks,
-.activity,
-.cast {
-  padding: 1.25rem;
-  border-radius: 22px;
-  background: #fff;
-  box-shadow: var(--lift);
-}
-
-.location {
+.episodeArea {
+  grid-area: episode;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.9rem;
 }
 
 .episodeCard {
+  display: block;
   width: 100%;
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 10px 22px -14px rgba(0, 0, 0, 0.45);
-  transform: rotate(-1.5deg);
+  aspect-ratio: 768 / 549;
 }
 
-.doneHead {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-top: 0.5rem;
-  font-family: "Rowdies-Regular";
-  font-size: 0.95rem;
-  color: var(--ink);
-}
-
-.doneHead b {
-  font-family: "Rowdies-Bold";
-  font-size: 1.2rem;
-  color: #4f8a73;
-}
-
-.doneList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  max-height: 22rem;
-  margin: 0;
-  padding: 0;
-  overflow-y: auto;
-  list-style: none;
-}
-
-.done {
-  display: grid;
-  grid-template-columns: 4.6rem minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.4rem;
-  border-radius: 12px;
-  background: #f7f5ef;
-  animation: arrive 0.3s ease-out both;
-}
-
-@keyframes arrive {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-}
-
-.done img {
-  width: 100%;
-  height: auto;
-  border-radius: 6px;
-}
-
-.doneInfo {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  font-size: 0.82rem;
-  color: var(--ink-soft);
-}
-
-.doneInfo b {
-  font-family: "Rowdies-Bold";
-  font-size: 1.05rem;
-  color: var(--ink);
-}
-
-.doneInfo span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.doneActions {
-  display: flex;
+.chipButton {
+  display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-}
-
-.undo {
-  padding: 0.3rem 0.55rem;
+  padding: 0.3rem 0.6rem;
   border: 1.5px solid var(--chip-edge);
   border-radius: 9px;
   background: #fff;
+  box-shadow: 0 2px 0 var(--chip-edge);
   font-family: "Roboto Regular", sans-serif;
   font-size: 0.8rem;
   color: var(--ink);
   cursor: pointer;
 }
 
-.undo:hover {
+.chipButton img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.chipButton:hover {
   border-color: var(--ink);
 }
 
-/* the three decks side by side, each with its two cards one above the other */
-.directions {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-}
+/* #endregion */
 
-.deck {
-  --deck: #5f5aa2;
+/* #region--------------------------------------THE DIRECTION DECKS */
+
+.decks {
+  grid-area: decks;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
 }
 
 .director {
@@ -399,449 +448,774 @@
   --deck: #e08a3a;
 }
 
-.deckHead {
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-  min-height: 3.2rem;
-  margin-bottom: 0.5rem;
+.deckHead h3::before {
+  content: "";
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 0.45rem;
+  border-radius: 3px;
+  background: var(--deck);
+  vertical-align: 1px;
 }
 
-.deckHead h3 {
-  margin: 0;
-  padding-left: 0.6rem;
-  border-left: 4px solid var(--deck);
-  font-family: "Rowdies-Regular";
-  font-size: 1.05rem;
-  font-weight: normal;
-  color: var(--ink);
-}
-
-.deckHead span {
-  font-family: "Roboto Light";
-  font-size: 0.85rem;
-  color: var(--ink-soft);
-}
-
-.deckCards {
+.deckRow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 0.75rem;
+  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: center;
 }
 
-.cardWrap {
+/* the deck itself: its back, with the edges of the cards under it */
+.stack {
   position: relative;
+  padding-bottom: 6px;
 }
 
-/* a direction card: tap it once it's done */
+.stack img {
+  display: block;
+  width: 100%;
+  height: auto;
+  --tilt: -2deg;
+  box-shadow:
+    0 2px 0 #fff,
+    0 3px 0 rgba(0, 0, 0, 0.12),
+    0 5px 0 #fff,
+    0 6px 0 rgba(0, 0, 0, 0.12),
+    0 8px 0 #fff,
+    0 9px 0 rgba(0, 0, 0, 0.14),
+    var(--card-shadow);
+}
+
+.stackCount {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 26px;
+  padding: 0.15rem 0.4rem;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: #323232;
+  font-family: "Rowdies-Regular";
+  font-size: 0.72rem;
+  text-align: center;
+  color: #fff;
+}
+
+.slot {
+  position: relative;
+  aspect-ratio: 768 / 497;
+}
+
+/* a face-up direction card: tap it once someone's done it (it never moves: just a ring) */
 .card {
-  position: relative;
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   padding: 0;
   border: 0;
-  border-radius: 12px;
   background: none;
   cursor: pointer;
-  box-shadow: 0 8px 18px -12px rgba(0, 0, 0, 0.45);
   transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
-  animation: deal 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+    box-shadow 0.15s ease,
+    filter 0.1s ease;
 }
 
-@keyframes deal {
-  from {
-    opacity: 0;
-    transform: translateY(8px) rotate(-2deg) scale(0.96);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .card,
-  .done {
-    animation: none;
-  }
-}
-
-.card img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
-}
-
-.cardDone {
-  position: absolute;
-  right: 0.5rem;
-  bottom: 0.5rem;
-  padding: 0.3rem 0.7rem;
-  border-radius: 999px;
-  background: #323232;
-  font-family: "Rowdies-Regular";
-  font-size: 0.85rem;
-  color: #fff;
-  opacity: 0;
-  transform: translateY(4px);
-  transition:
-    opacity 0.15s ease,
-    transform 0.15s ease;
-}
-
-.card:hover:not(:disabled) {
-  transform: translateY(-3px) rotate(-0.5deg);
-  box-shadow: 0 14px 24px -12px rgba(0, 0, 0, 0.5);
-}
-
-.card:hover:not(:disabled) .cardDone,
-.card:focus-visible .cardDone {
-  opacity: 1;
-  transform: none;
+.card img,
+.episodeCard img {
+  border-radius: 10px;
 }
 
 .card:active:not(:disabled) {
-  transform: scale(0.98);
+  filter: brightness(0.92);
 }
 
 .card:disabled {
   cursor: default;
-  filter: saturate(0.6);
-  opacity: 0.75;
+  filter: saturate(0.6) brightness(0.97);
+}
+
+.slotEmpty {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  border: 2px dashed rgba(91, 124, 191, 0.4);
+  border-radius: 10px;
+  font-family: "GochiHand";
+  font-size: 1.1rem;
+  color: rgba(50, 50, 50, 0.45);
 }
 
 .swap {
   position: absolute;
-  top: 0.45rem;
-  right: 0.45rem;
-  padding: 0.25rem 0.6rem;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+  padding: 0.2rem 0.6rem;
   border: 0;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   font-family: "Rowdies-Regular";
   font-size: 0.75rem;
   color: var(--ink);
   cursor: pointer;
 }
 
-.cardEmpty {
-  display: grid;
-  place-items: center;
-  aspect-ratio: 768 / 497;
-  border: 2px dashed rgba(50, 50, 50, 0.15);
-  border-radius: 12px;
-  font-family: "GochiHand";
-  font-size: 1.1rem;
-  color: rgba(50, 50, 50, 0.45);
-}
-
-/* point tokens: the box's own token, with the count on it */
-.tokens {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-}
-
-.token {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  background: none;
-  cursor: pointer;
-  transition: transform 0.12s ease;
-}
-
-.token img {
+/* the points rising off a completed card */
+.floater {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-}
-
-.token b {
-  position: relative;
-  padding: 0 0.3rem;
-  border-radius: 999px;
-  background: #f1db4b;
+  left: 50%;
+  top: 40%;
+  z-index: 3;
   font-family: "Rowdies-Bold";
-  font-size: 0.72rem;
-  line-height: 1.4;
-  color: var(--ink);
-  transform: translate(10px, 12px);
+  font-size: 2.2rem;
+  color: #4f8a73;
+  text-shadow:
+    0 0 0 #fff,
+    2px 2px 0 #fff,
+    -2px -2px 0 #fff,
+    2px -2px 0 #fff,
+    -2px 2px 0 #fff;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: rise 1.1s ease-out both;
 }
 
-.token:hover {
-  transform: rotate(-12deg) scale(1.06);
-}
-
-.tokenMinus {
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: 1.5px solid var(--chip-edge);
-  border-radius: 50%;
-  background: #fff;
-  font-size: 0.95rem;
-  line-height: 1;
-  color: var(--ink);
-  cursor: pointer;
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -30%) scale(0.6);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -130%) scale(1);
+  }
 }
 
 /* #endregion */
 
-/* #region--------------------------------------CALLBACKS AND WHAT'S HAPPENED */
+/* #region--------------------------------------THE PHONE, CALLBACKS AND THE NOTE */
 
-.lowerRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
-  gap: 1.25rem;
-}
-
-.callbacks,
-.activity {
+.side {
+  grid-area: side;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 1.4rem;
 }
 
-.pastList {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin: 0.25rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.past {
+/* the phone lying on the table (as the rulebook has it): its status bar, a screen with two apps
+   (the timer, and what's happened), and a dock to switch between them. The screen is one height,
+   whichever app is open, so nothing around it moves. */
+.phone {
   position: relative;
   display: flex;
   flex-direction: column;
+  padding: 0.55rem 0.55rem 0.5rem;
+  border-radius: 34px;
+  background: linear-gradient(145deg, #3a3848, #22212c);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.12),
+    inset 0 0 0 4px #15141c,
+    0 22px 30px -16px rgba(20, 20, 40, 0.75);
+  color: #f4efe3;
+  transform: rotate(1.5deg);
+}
+
+.phoneIsland {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  z-index: 2;
+  width: 30%;
+  height: 16px;
+  border-radius: 99px;
+  background: #0b0b10;
+  transform: translateX(-50%);
+}
+
+.statusBar {
+  position: absolute;
+  top: 12px;
+  left: 1.5rem;
+  right: 1.5rem;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+
+.statusIcons {
+  display: inline-flex;
   align-items: center;
   gap: 0.35rem;
 }
 
-.past img {
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-  box-shadow: 0 6px 14px -10px rgba(0, 0, 0, 0.45);
+.statusIcons svg {
+  width: 15px;
+  height: 10px;
+  fill: #fff;
 }
 
-.past .tokens {
+.battery {
+  position: relative;
+  width: 20px;
+  height: 10px;
+  padding: 1.5px;
+  box-sizing: border-box;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  border-radius: 3px;
+}
+
+.battery::after {
+  content: "";
   position: absolute;
-  top: 0.35rem;
-  right: 0.35rem;
+  top: 2px;
+  right: -4px;
+  width: 2px;
+  height: 3px;
+  border-radius: 0 1px 1px 0;
+  background: rgba(255, 255, 255, 0.8);
 }
 
-.pastLabel {
+.battery span {
+  display: block;
+  width: 70%;
+  height: 100%;
+  border-radius: 1px;
+  background: #7fdc9a;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  height: 15.5rem;
+  padding: 2.4rem 0.9rem 0.6rem;
+  border-radius: 26px 26px 12px 12px;
+  background:
+    radial-gradient(90% 60% at 50% 0%, rgba(95, 90, 162, 0.55), transparent 70%),
+    #16151f;
+  overflow: hidden;
+}
+
+.phoneUp .screen {
+  background:
+    radial-gradient(90% 60% at 50% 0%, rgba(216, 30, 24, 0.55), transparent 70%),
+    #16151f;
+}
+
+/* the timer app */
+.clockApp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  height: 100%;
+}
+
+.phoneLabel {
   font-family: "Rowdies-Regular";
-  font-size: 0.8rem;
-  color: var(--ink-soft);
+  font-size: 0.7rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #f1db4b;
 }
 
-.log {
+.phoneTime {
+  font-family: "Rowdies-Bold";
+  font-size: 2.9rem;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.phoneLow {
+  color: #ff7a6b;
+}
+
+.phoneTrack {
+  width: 80%;
+  height: 5px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.phoneTrack span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #f1db4b;
+  transform-origin: left;
+  transition: transform 0.25s linear;
+}
+
+.phoneActions {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 0.35rem;
+}
+
+.phoneActions > * {
+  width: 100%;
+}
+
+.phoneFoot {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  margin-top: auto;
+  white-space: nowrap;
+  font-family: "Rowdies-Regular";
+  font-size: 0.85rem;
+  color: rgba(244, 239, 227, 0.75);
+}
+
+.phoneFoot b {
+  font-family: "Rowdies-Bold";
+  font-size: 1.15rem;
+  color: #fff;
+}
+
+/* the "what's happened" app: a feed, scrolling inside the screen */
+.logApp {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  min-height: 0;
+}
+
+.logHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: "Rowdies-Regular";
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+.logClock {
+  font-family: "Rowdies-Regular";
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+  color: #f1db4b;
+}
+
+.logList {
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
   margin: 0;
-  padding: 0;
+  padding: 0 0.25rem 0 0;
   list-style: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
 }
 
-.log li {
-  padding-left: 0.8rem;
-  border-left: 3px solid #eeedf8;
-  font-family: "Roboto Light";
-  font-size: 0.9rem;
+.logList li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: start;
+  gap: 0.45rem;
+  padding: 0.4rem 0.55rem;
+  border-radius: 12px 12px 12px 4px;
+  background: rgba(255, 255, 255, 0.08);
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.8rem;
   line-height: 1.35;
-  color: var(--ink);
+  color: rgba(244, 239, 227, 0.92);
   opacity: 1;
+  animation: fadeIn 0.25s ease-out both;
 }
 
-.log li:first-child {
-  border-left-color: #f1db4b;
+.logDot {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--who);
+  font-family: "Rowdies-Bold";
+  font-size: 0.65rem;
+  color: #fff;
+}
+
+.room .logEmpty {
+  margin: auto 0;
+  font-family: "GochiHand";
+  font-size: 1.1rem;
+  text-align: center;
+  color: rgba(244, 239, 227, 0.6);
+}
+
+/* the dock: the two apps */
+.dock {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.3rem;
+  margin-top: 0.35rem;
+  padding: 0.25rem;
+  border-radius: 12px 12px 26px 26px;
+  background: #1d1c27;
+}
+
+.dock button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.35rem 0.2rem 0.5rem;
+  border: 0;
+  border-radius: 10px 10px 22px 22px;
+  background: none;
+  font-family: "Rowdies-Regular";
+  font-size: 0.66rem;
+  line-height: 1.1;
+  color: rgba(244, 239, 227, 0.55);
+  cursor: pointer;
+}
+
+.dock button:first-child {
+  border-radius: 10px 10px 10px 22px;
+}
+
+.dock button:last-child {
+  border-radius: 10px 10px 22px 10px;
+}
+
+.dock svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dock .dockOn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.unread {
+  position: absolute;
+  top: 5px;
+  right: calc(50% - 18px);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #ff5a4f;
+  box-shadow: 0 0 0 2px #1d1c27;
+}
+
+.homeBar {
+  align-self: center;
+  width: 36%;
+  height: 4px;
+  margin-top: 0.4rem;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.rulesButton {
+  /* (as tall as the round buttons beside it) */
+  height: 32px;
+  margin-left: auto;
+  padding: 0 0.7rem;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  font-family: "Rowdies-Regular";
+  font-size: 0.78rem;
+  color: #f4efe3;
+  cursor: pointer;
+}
+
+.rulesButton:hover,
+.mute:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.mute {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #f4efe3;
+  cursor: pointer;
+}
+
+.mute svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.callbacks {
+  display: flex;
+  flex-direction: column;
+}
+
+/* (callbacks only open in episode 2: until then, faded and out of reach) */
+.callbacksOff {
+  opacity: 0.45;
+  filter: grayscale(0.8);
+  pointer-events: none;
+  user-select: none;
+}
+
+.pastRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.past {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.past img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.pastEmpty {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 768 / 549;
+  border: 2px dashed rgba(91, 124, 191, 0.45);
+  border-radius: 8px;
+  font-family: "GochiHand";
+  font-size: 1rem;
+  color: rgba(50, 50, 50, 0.5);
 }
 
 /* #endregion */
 
-/* #region--------------------------------------THE CAST */
+/* #region--------------------------------------THE SEATS */
 
-.cast {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.castHead {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.4rem 1rem;
-}
-
-.castGrid {
+/* the far side of the table: everyone else, each seat no wider than a placemat */
+.othersRow {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 25rem));
+  justify-content: center;
   gap: 1rem;
 }
 
-.member {
+.mineRow {
   display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+  justify-content: center;
+}
+
+.mineRow > article {
+  flex: 0 1 50rem;
+}
+
+/* a seat: a placemat in the player's color, their character in front of them, then their traits */
+.seat {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: start;
   padding: 0.9rem;
   border-radius: 18px;
-  background: #faf8f3;
-  box-shadow: inset 0 5px 0 var(--seat), 0 0 0 1px var(--edge);
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow:
+    inset 0 5px 0 var(--seat),
+    inset 0 0 0 1.5px color-mix(in srgb, var(--seat) 30%, transparent);
 }
 
-.memberAway {
+.seatBig {
+  width: 100%;
+  max-width: 50rem;
+  padding: 1.1rem 1.25rem;
+  gap: 1.25rem;
+}
+
+.seatAway {
   opacity: 0.6;
 }
 
-.memberHead {
+.seatCharacter {
   display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  min-height: 34px;
-  padding-top: 0.2rem;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
-.memberToken {
-  flex: none;
+.characterCard {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.characterCard img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.zoomHint {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
   display: grid;
   place-items: center;
   width: 30px;
   height: 30px;
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.zoomHint svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.nameplate {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.nameToken {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   background: var(--seat);
   box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
   font-family: "Rowdies-Bold";
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #fff;
 }
 
-.memberName {
-  flex: 1;
+.nameText {
   min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-family: "Rowdies-Regular";
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: var(--ink);
-  overflow-wrap: anywhere;
 }
 
 .you {
+  flex: none;
   padding: 0.05rem 0.45rem;
   border-radius: 999px;
   background: rgba(50, 50, 50, 0.08);
-  font-size: 0.62rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.6rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--ink-soft);
 }
 
 .arc {
-  padding: 0.15rem 0.55rem;
+  flex: none;
+  padding: 0.1rem 0.5rem;
   border-radius: 999px;
   background: #4f8a73;
   font-family: "Rowdies-Regular";
-  font-size: 0.72rem;
-  white-space: nowrap;
-  color: #fff;
-}
-
-.character {
-  position: relative;
-  display: block;
-  width: 100%;
-  padding: 0;
-  border: 0;
-  border-radius: 12px;
-  background: none;
-  cursor: pointer;
-}
-
-.character img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 8px 18px -12px rgba(0, 0, 0, 0.5);
-}
-
-.flipHint {
-  position: absolute;
-  top: 0.45rem;
-  right: 0.45rem;
-  padding: 0.2rem 0.55rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
-  font-family: "Rowdies-Regular";
   font-size: 0.7rem;
-  color: var(--ink);
+  color: #fff;
+  animation: fadeIn 0.3s ease-out both;
 }
 
 .traits {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.45rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .trait {
+  --tilt: 0deg;
   position: relative;
   display: block;
   width: 100%;
   padding: 0;
   border: 0;
-  border-radius: 8px;
+  border-radius: 7px;
   background: none;
+  box-shadow: var(--card-shadow);
   cursor: pointer;
-  transition: transform 0.12s ease;
+  transition: box-shadow 0.15s ease;
 }
 
 .trait img {
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 8px;
-}
-
-.trait:hover:not(:disabled) {
-  transform: translateX(3px);
+  border-radius: 7px;
+  transition:
+    filter 0.25s ease,
+    opacity 0.25s ease;
 }
 
 .trait:disabled {
   cursor: default;
 }
 
-.trait:disabled:not(.traitDone) {
+.trait:disabled:not(.traitDone) img {
   opacity: 0.5;
 }
 
 .traitDone img {
-  filter: grayscale(0.7) brightness(1.05);
-  opacity: 0.6;
+  filter: grayscale(0.8) brightness(1.05);
+  opacity: 0.55;
 }
 
-/* (in the card's corner, clear of its word) */
 .traitStamp {
   position: absolute;
-  top: -6px;
-  right: -4px;
+  top: -7px;
+  right: -5px;
   padding: 0.1rem 0.45rem;
   border-radius: 7px;
   background: #4f8a73;
@@ -850,11 +1224,35 @@
   font-size: 0.72rem;
   color: #fff;
   transform: rotate(4deg);
+  animation: stamp 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.4) both;
 }
 
-.hostRow {
-  display: flex;
-  justify-content: center;
+@keyframes stamp {
+  from {
+    opacity: 0;
+    transform: rotate(4deg) scale(1.8);
+  }
+}
+
+/* the character up close: both sides, one above the other, each as wide as the dialog */
+.zoomPanel {
+  max-width: 50rem;
+  max-height: calc(100svh - 2rem);
+  overflow-y: auto;
+}
+
+.zoomCards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.zoomCards img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow);
 }
 
 /* #endregion */
@@ -867,18 +1265,18 @@
   align-items: center;
   gap: 1rem;
   padding: 3rem 2rem 2.5rem;
-  border-radius: 28px;
+  border-radius: 22px;
   color: #f4efe3;
   text-align: center;
   background:
     radial-gradient(60% 90% at 50% -10%, rgba(255, 236, 170, 0.3), transparent 62%),
     radial-gradient(120% 80% at 80% 0%, rgba(95, 90, 162, 0.6), transparent 60%),
-    radial-gradient(80% 70% at 0% 100%, rgba(221, 115, 115, 0.22), transparent 60%),
     var(--night);
-  box-shadow: 0 24px 50px -34px rgba(28, 26, 43, 0.85);
+  box-shadow: var(--card-shadow);
+  animation: fadeIn 0.4s ease-out both;
 }
 
-.table .finaleKicker {
+.room .finaleKicker {
   margin: 0;
   font-family: "Rowdies-Regular";
   font-size: 0.78rem;
@@ -896,9 +1294,10 @@
   line-height: 1;
   color: #fff;
   text-shadow: 0 0 34px rgba(255, 236, 170, 0.3);
+  animation: stamp 0.5s 0.2s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
 }
 
-.table .finaleScore {
+.room .finaleScore {
   margin: 0;
   font-family: "Roboto Light";
   font-size: 1.15rem;
@@ -940,7 +1339,7 @@
   color: #fff;
 }
 
-.table .finaleNote {
+.room .finaleNote {
   margin: 0;
   font-family: "GochiHand";
   font-size: 1.2rem;
@@ -949,131 +1348,169 @@
 
 /* #endregion */
 
-@media only screen and (max-width: 1000px) {
-  .stageRow,
-  .lowerRow {
-    grid-template-columns: 1fr;
+@media only screen and (max-width: 1100px) {
+  .middle {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+    grid-template-areas:
+      "episode decks"
+      "side side";
   }
 
-  .directions {
-    grid-template-columns: 1fr;
-  }
-
-  .deckHead {
-    min-height: 0;
-  }
-
-  .deckCards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .location {
+  .side {
     display: grid;
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
-    grid-template-rows: auto auto 1fr;
-    column-gap: 1rem;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr) minmax(0, 1fr);
     align-items: start;
-  }
-
-  .location .kicker {
-    grid-column: 1 / -1;
-  }
-
-  .episodeCard {
-    grid-row: span 3;
-  }
-
-  .castGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media only screen and (max-width: 640px) {
-  .table {
-    gap: 1rem;
+@media only screen and (max-width: 760px) {
+  .tabletop {
+    gap: 1.1rem;
+    padding: 0.9rem;
+    border-width: 9px;
+    border-radius: 24px;
   }
 
-  .bar {
-    grid-template-columns: auto 1fr;
+  /* (on a phone, in the order you need them: the clock, the episode, the decks, then the rest) */
+  .tabletop {
+    display: grid;
+  }
+
+  .othersRow {
+    order: 3;
+  }
+
+  .mineRow {
+    order: 2;
+  }
+
+
+  .middle {
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      "episode clock"
-      "actions actions";
-    gap: 0.6rem 1rem;
-    padding: 0.75rem 1rem;
-    border-radius: 16px;
+      "phone"
+      "episode"
+      "decks"
+      "callbacks";
+    gap: 1.25rem;
   }
 
-  .barEpisode {
-    grid-area: episode;
+  .side {
+    display: contents;
   }
 
-  .clock {
-    grid-area: clock;
-    align-items: flex-end;
-    min-width: 0;
+  .phone {
+    grid-area: phone;
   }
 
-  .clockTime {
-    font-size: 2rem;
+  .callbacks {
+    grid-area: callbacks;
   }
 
-  .clockTrack {
-    max-width: 8rem;
+  /* (the phone first, held sideways across the top, and kept in view: the screen on the left, the
+     dock down its right) */
+  .phone {
+    position: sticky;
+    top: calc(var(--banner-height) + var(--navbar-height) + 0.5rem);
+    z-index: 20;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 4.6rem;
+    gap: 0.35rem;
+    padding: 0.45rem;
+    border-radius: 26px;
+    transform: none;
   }
 
-  .barActions {
-    grid-area: actions;
-    justify-content: space-between;
-  }
-
-  .barActions > :first-child {
-    flex: 1;
-  }
-
-  .location {
-    grid-template-columns: 1fr;
-  }
-
-  /* (smaller on a phone, so the direction cards come into view sooner) */
-  .episodeCard {
-    grid-row: auto;
-    justify-self: center;
-    width: min(100%, 15rem);
-  }
-
-  .location,
-  .directions,
-  .callbacks,
-  .activity,
-  .cast {
-    padding: 1rem;
-    border-radius: 18px;
-  }
-
-  .deckCards {
-    gap: 0.5rem;
-  }
-
-
-  .card:disabled .cardDone {
+  .phoneIsland,
+  .statusBar,
+  .homeBar {
     display: none;
   }
 
-  .cardDone {
-    opacity: 1;
-    transform: none;
-    right: 0.35rem;
-    bottom: 0.35rem;
-    padding: 0.15rem 0.5rem;
-    font-size: 0.7rem;
+  .screen {
+    height: 7.6rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: 20px 10px 10px 20px;
   }
 
-  .pastList {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .clockApp {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "label label label"
+      "time . actions"
+      "foot foot foot";
+    align-items: center;
+    gap: 0.3rem 0.75rem;
   }
 
-  .castGrid {
+  .phoneLabel {
+    grid-area: label;
+  }
+
+  .phoneTime {
+    grid-area: time;
+    font-size: 2rem;
+  }
+
+  /* (no room for the bar beside the time and its button) */
+  .phoneTrack {
+    display: none;
+  }
+
+  .phoneActions {
+    grid-area: actions;
+    width: auto;
+    margin: 0;
+  }
+
+  .phoneFoot {
+    grid-area: foot;
+    margin: 0;
+  }
+
+  .dock {
     grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    margin: 0;
+    border-radius: 10px 20px 20px 10px;
+  }
+
+  .dock button,
+  .dock button:first-child,
+  .dock button:last-child {
+    justify-content: center;
+    padding: 0.3rem 0.15rem;
+    border-radius: 8px 16px 16px 8px;
+    font-size: 0.58rem;
+  }
+
+  .episodeArea {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.6rem 0.9rem;
+    align-items: start;
+  }
+
+  .deckRow {
+    grid-template-columns: minmax(0, 0.5fr) minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.6rem;
+  }
+
+  .stackCount {
+    top: -6px;
+    right: -6px;
+  }
+
+  .seat,
+  .seatBig {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 0.7rem;
+    padding: 0.8rem;
+  }
+
+  .othersRow {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .breakdown {
@@ -1082,6 +1519,843 @@
 
   .finale {
     padding: 2.25rem 1.25rem 2rem;
-    border-radius: 22px;
   }
 }
+
+/* tape (half see-through, a little crooked) holding the note to the table */
+.prompt::before {
+  content: "";
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 72px;
+  height: 18px;
+  background: rgba(241, 219, 75, 0.55);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  transform: translateX(-50%) rotate(-3deg);
+}
+
+.prompt {
+  position: relative;
+}
+
+/* the seats: quilted placemats, stitched in the player's color */
+.seat {
+  position: relative;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.82)),
+    repeating-linear-gradient(45deg, color-mix(in srgb, var(--seat) 14%, transparent) 0 2px, transparent 2px 12px);
+  box-shadow:
+    inset 0 0 0 4px color-mix(in srgb, var(--seat) 22%, #fff),
+    0 6px 14px -10px rgba(30, 40, 70, 0.45);
+}
+
+.seat::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 2px dashed color-mix(in srgb, var(--seat) 55%, transparent);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+/* the deck's points: a round chip, like a token */
+.points {
+  box-shadow:
+    inset 0 -2px 0 rgba(0, 0, 0, 0.18),
+    0 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+/* the wooden rim: a bevel catching the light */
+.tabletop {
+  box-shadow:
+    inset 0 0 0 2px rgba(80, 45, 15, 0.35),
+    inset 0 10px 30px -10px rgba(30, 40, 70, 0.25),
+    0 1px 0 14px rgba(255, 255, 255, 0.08),
+    0 30px 60px -32px rgba(40, 25, 10, 0.7);
+}
+
+/* #region--------------------------------------THE PLAY AREA */
+
+/* the cards completed this episode, dropped one over the other in a space that never grows (the
+   newest on top). The whole area is one thing to tap: it opens the list of them all. */
+/* (exactly the episode card's size) */
+.playArea {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 768 / 549;
+  padding: 0;
+  border: 2px dashed rgba(91, 124, 191, 0.35);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.35);
+  overflow: hidden;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.playArea:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.playCards {
+  position: absolute;
+  inset: 0 0 1.4rem;
+}
+
+.playCards img {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 46%;
+  border-radius: 7px;
+  box-shadow: var(--card-shadow);
+  transform: rotate(var(--tilt));
+}
+
+.playLabel {
+  position: absolute;
+  right: 0.45rem;
+  bottom: 0.45rem;
+  z-index: 2;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  font-family: "Rowdies-Regular";
+  font-size: 0.8rem;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.playLabel b {
+  font-family: "Rowdies-Bold";
+  color: #4f8a73;
+}
+
+/* the list of them all, in the site's dialog: a search, a page at a time */
+.playedPanel {
+  max-width: 34rem;
+  max-height: min(42rem, calc(100svh - 2rem));
+  display: flex;
+  flex-direction: column;
+}
+
+.playedSearch {
+  width: 100%;
+  height: 42px;
+  box-sizing: border-box;
+  margin: 0 0 0.8rem;
+  padding: 0 0.9rem;
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--btn-radius);
+  background: #fff;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.95rem;
+  color: #323232;
+}
+
+.playedSearch:focus {
+  border-color: var(--btn-ink);
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 2px;
+}
+
+.playedList {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+}
+
+.playedList li {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.45rem;
+  border-radius: 14px;
+  background: #f7f5ef;
+}
+
+.playedList li > img {
+  width: 100%;
+  height: auto;
+  border-radius: 7px;
+  box-shadow: 0 1px 0 #ebe6da, 0 2px 0 #d9d2c3, 0 4px 8px -4px rgba(0, 0, 0, 0.3);
+}
+
+.playedInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.85rem;
+  color: rgba(50, 50, 50, 0.72);
+}
+
+.playedInfo b {
+  font-family: "Rowdies-Bold";
+  font-size: 1.1rem;
+  color: #4f8a73;
+}
+
+.playedActions {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.tokenCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-right: 0.15rem;
+  font-family: "Rowdies-Bold";
+  font-size: 0.85rem;
+  color: #323232;
+}
+
+.tokenCount img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.chipButton:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.chipDanger {
+  color: #b3160f;
+}
+
+.playedEmpty {
+  margin: 0 0 1rem;
+  font-family: "GochiHand";
+  font-size: 1.2rem;
+  color: rgba(50, 50, 50, 0.55);
+}
+
+.playedFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.85rem;
+  color: rgba(50, 50, 50, 0.72);
+}
+
+.pager .chipButton {
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  font-size: 1.1rem;
+}
+
+@media only screen and (max-width: 640px) {
+  .playedList li {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+  }
+
+  .playedActions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+}
+
+/* #endregion */
+
+/* #region--------------------------------------CALLBACKS */
+
+/* an earlier episode, with its callback tokens and a way to take one back under it */
+.pastSlot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.past {
+  overflow: visible;
+}
+
+/* a callback just made: the card bounces, a token drops onto it, and +1 rises off it */
+.pastBump {
+  animation: callbackBounce 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+@keyframes callbackBounce {
+  0% {
+    transform: rotate(var(--tilt)) scale(1);
+  }
+  30% {
+    transform: rotate(var(--tilt)) scale(1.12);
+  }
+  60% {
+    transform: rotate(var(--tilt)) scale(0.96);
+  }
+  100% {
+    transform: rotate(var(--tilt)) scale(1);
+  }
+}
+
+.past .tokenDrop {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  animation: tokenDrop 0.9s cubic-bezier(0.3, 0.7, 0.4, 1) forwards;
+}
+
+@keyframes tokenDrop {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -160%) scale(1.5) rotate(-40deg);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6) rotate(0deg);
+  }
+}
+
+.callbackPlus {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  z-index: 3;
+  font-family: "Rowdies-Bold";
+  font-size: 1.7rem;
+  color: #e0a91b;
+  text-shadow:
+    2px 2px 0 #fff,
+    -2px -2px 0 #fff,
+    2px -2px 0 #fff,
+    -2px 2px 0 #fff;
+  pointer-events: none;
+  animation: rise 1.1s 0.25s ease-out both;
+}
+
+.pastCount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  align-self: center;
+  padding: 0.15rem 0.2rem 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+  font-family: "Rowdies-Regular";
+  font-size: 0.72rem;
+  color: rgba(50, 50, 50, 0.7);
+}
+
+.pastTokensLine {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  font-family: "Rowdies-Bold";
+  font-size: 0.8rem;
+  color: #323232;
+}
+
+.pastTokensLine img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.countPop {
+  animation: countPop 0.4s 0.3s cubic-bezier(0.3, 1.8, 0.5, 1) both;
+}
+
+@keyframes countPop {
+  50% {
+    transform: scale(1.5);
+  }
+}
+
+.minus {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1.5px solid var(--chip-edge);
+  border-radius: 50%;
+  background: #fff;
+  font-size: 0.95rem;
+  line-height: 1;
+  color: #323232;
+  cursor: pointer;
+}
+
+.minus:hover:not(:disabled) {
+  border-color: #323232;
+}
+
+.minus:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pastBump,
+  .tokenDrop,
+  .callbackPlus,
+  .countPop {
+    animation: none;
+  }
+
+  .tokenDrop {
+    display: none;
+  }
+}
+
+/* #endregion */
+
+.playedTitle b {
+  margin-left: 0.3rem;
+  font-family: "Rowdies-Bold";
+  color: #4f8a73;
+}
+
+/* a played card on its way to the play area, over everything */
+.flight {
+  position: fixed;
+  z-index: 60;
+  border-radius: 9px;
+  box-shadow: 0 18px 28px -10px rgba(30, 40, 70, 0.5);
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* tokens in a little overlapping pile: rainbow for 5, plain for 1 */
+.tokenStack {
+  display: inline-flex;
+  align-items: center;
+}
+
+.tokenStack img {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.tokenStack img + img {
+  margin-left: -9px;
+}
+
+.tokenStack .tokenNone {
+  opacity: 0.3;
+  box-shadow: none;
+}
+
+.pastTokensLine b {
+  font-family: "Rowdies-Bold";
+  font-size: 0.8rem;
+}
+
+/* time's up: across the whole screen, big, then gone (or tap it away) */
+.timeUp {
+  position: fixed;
+  inset: 0;
+  z-index: 200000;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: radial-gradient(circle at 50% 50%, rgba(216, 30, 24, 0.55), rgba(28, 26, 43, 0.82) 70%);
+  backdrop-filter: blur(3px);
+  cursor: pointer;
+  animation: timeUpIn 0.25s ease-out both, timeUpOut 0.4s 2.6s ease-in forwards;
+}
+
+.timeUpCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  text-align: center;
+  animation: timeUpPop 0.7s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+
+.timeUpClock {
+  font-size: clamp(4rem, 14vw, 8rem);
+  line-height: 1;
+  animation: ring 0.12s 0.2s linear 8 alternate;
+}
+
+.timeUpTitle {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(3.2rem, 12vw, 7.5rem);
+  font-weight: normal;
+  line-height: 0.95;
+  color: #fff;
+  text-shadow:
+    0 6px 0 #8f1410,
+    0 14px 30px rgba(0, 0, 0, 0.45);
+  transform: rotate(-3deg);
+}
+
+.timeUpPoints {
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  background: #f1db4b;
+  box-shadow: 0 4px 0 #b39d1b;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  color: #323232;
+  transform: rotate(2deg);
+}
+
+@keyframes timeUpIn {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes timeUpOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes timeUpPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-12deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.12) rotate(3deg);
+  }
+}
+
+@keyframes ring {
+  from {
+    transform: rotate(-14deg);
+  }
+  to {
+    transform: rotate(14deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeUp,
+  .timeUpCard,
+  .timeUpClock {
+    animation: timeUpOut 0.3s 2.6s forwards;
+  }
+}
+
+/* after time's up: your traits, big, to tap the one you played */
+.traitPanel {
+  max-width: 30rem;
+}
+
+.traitPick {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin: 0.4rem 0 1.4rem;
+}
+
+.traitPickCard {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  box-shadow: 0 1px 0 #ebe6da, 0 2px 0 #d9d2c3, 0 8px 14px -8px rgba(30, 40, 70, 0.45);
+  cursor: pointer;
+}
+
+.traitPickCard img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+button.traitPickCard:hover {
+  animation: wiggle 0.45s ease-in-out;
+}
+
+button.traitPickCard:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
+}
+
+.traitPickDone img {
+  filter: grayscale(0.8);
+  opacity: 0.5;
+}
+
+/* the callback counter keeps one width, whatever the count, so its minus never moves */
+.pastTokensLine .tokenStack {
+  width: 54px;
+}
+
+.pastTokensLine b {
+  display: inline-block;
+  min-width: 1.6em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* the phone's settings: the tablecloth, and (for the host) ending the game */
+.settingsPanel {
+  max-width: 34rem;
+}
+
+.settingsHead {
+  margin: 0.4rem 0 0.6rem;
+  font-family: "Rowdies-Regular";
+  font-size: 1rem;
+  font-weight: normal;
+  color: #323232;
+}
+
+.settingsActions {
+  justify-content: space-between;
+}
+
+/* the played cards, as a grid of cards, each with its undo */
+.playedGrid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  padding: 0.2rem;
+  list-style: none;
+  overflow-y: auto;
+}
+
+.playedGrid li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.playedGrid img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 1px 0 #ebe6da, 0 2px 0 #d9d2c3, 0 6px 10px -6px rgba(0, 0, 0, 0.35);
+}
+
+.playedMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.3rem;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.78rem;
+  color: rgba(50, 50, 50, 0.72);
+}
+
+.playedMeta span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.playedMeta b {
+  font-family: "Rowdies-Bold";
+  color: #4f8a73;
+}
+
+.playedPanel {
+  max-width: 40rem;
+}
+
+@media only screen and (max-width: 640px) {
+  .playedGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* (a bigger target for taking a callback back) */
+.pastCount .minus {
+  width: 28px;
+  height: 28px;
+  font-size: 1.1rem;
+}
+
+/* each callback counter stays inside its own column, however many tokens */
+.pastSlot .pastCount {
+  align-self: stretch;
+  justify-content: space-between;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.15rem 0.2rem 0.15rem 0.35rem;
+}
+
+.pastSlot .pastTokensLine {
+  min-width: 0;
+  gap: 0.2rem;
+}
+
+.pastSlot .pastTokensLine .tokenStack {
+  width: auto;
+}
+
+.pastSlot .pastTokensLine b {
+  min-width: 0;
+}
+
+.pastSlot .minus {
+  flex: none;
+}
+
+/* #region--------------------------------------THE R.E.M.O.T.E. */
+
+/* the phone's remote app: six keys */
+.remoteApp {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+}
+
+.remotePad {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+}
+
+.remotePadKey {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.3rem 0.1rem;
+  border: 0;
+  border-radius: 12px;
+  background: var(--c);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+  font-family: "Rowdies-Regular";
+  font-size: 0.56rem;
+  line-height: 1.05;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.remotePadKey:active {
+  transform: translateY(2px);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.remotePadKey svg {
+  width: 20px;
+  height: 20px;
+}
+
+.remoteNote {
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.66rem;
+  text-align: center;
+  color: rgba(244, 239, 227, 0.6);
+}
+
+.remoteKey {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  background: var(--c);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+  color: #fff;
+}
+
+.remoteKey svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* a button pressed: shown to everyone at the top of the screen, for a moment */
+.remoteShown {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  z-index: 150000;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: max-content;
+  max-width: calc(100vw - 2rem);
+  padding: 0.7rem 1.1rem 0.7rem 0.7rem;
+  box-sizing: border-box;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow:
+    inset 0 0 0 3px var(--c),
+    0 18px 36px -14px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transform: translateX(-50%);
+  animation: remoteIn 0.35s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+
+.remoteShown > span:last-child {
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.95rem;
+  color: rgba(50, 50, 50, 0.8);
+}
+
+.remoteShown b {
+  font-family: "Rowdies-Bold";
+  font-size: 1.15rem;
+  font-weight: normal;
+  color: #323232;
+}
+
+@keyframes remoteIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -20px) scale(0.9);
+  }
+}
+
+/* #endregion */

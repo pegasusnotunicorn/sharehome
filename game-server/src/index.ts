@@ -17,6 +17,7 @@ import {
   CODE_PATTERN,
   MAX_PLAYERS,
   MIN_PLAYERS,
+  DECK_SIZES,
   cleanName,
   type ByeReason,
   type ClientMessage,
@@ -32,9 +33,21 @@ export interface Env {
   ALLOWED_ORIGINS: string;
   // the site's Netlify name: its deploy previews (deploy-preview-N--NAME.netlify.app) may use it too
   NETLIFY_SITE: string;
+  // the off switch: "1" turns every request away at the door, before any room is woken (set it in
+  // the Cloudflare dashboard, Worker → Settings → Variables, if the bill ever looks wrong)
+  PAUSED?: string;
+  // how often one address may make a room, and open a room (see wrangler.jsonc)
+  CREATE_LIMIT: RateLimit;
+  JOIN_LIMIT: RateLimit;
 }
 
-const IDLE_TTL = 6 * 60 * 60 * 1000; // a room with nobody in it is deleted after this
+// (every limit below is about the bill: a room woken is paid for, so anything that would wake rooms
+// over and over, a bot or a stuck page, is turned away as early and cheaply as possible)
+const IDLE_TTL = 60 * 60 * 1000; // a room with nobody in it is deleted after this
+const MAX_AGE = 12 * 60 * 60 * 1000; // and any room at all, after this
+// a socket sending more than this many messages in FLOOD_WINDOW is closed (a held button sends ten a second)
+const FLOOD_LIMIT = 200;
+const FLOOD_WINDOW = 10 * 1000;
 const HOST_GRACE = 60 * 1000; // a host offline this long hands the room to the next player online
 const PLAYER_ID = /^[A-Za-z0-9-]{8,64}$/;
 const MAX_MESSAGE = 2048;
@@ -73,6 +86,8 @@ export default {
     // (a browser always sends its page's address: anything else is refused)
     if (!origin) return new Response("Forbidden", { status: 403 });
 
+    if (env.PAUSED === "1") return json({ error: "paused" }, origin, 503);
+
     if (request.method === "OPTIONS") {
       return new Response(null, {
         status: 204,
@@ -85,7 +100,10 @@ export default {
       });
     }
 
+    const ip = request.headers.get("CF-Connecting-IP") || "local";
+
     if (url.pathname === "/rooms" && request.method === "POST") {
+      if (!(await env.CREATE_LIMIT.limit({ key: ip })).success) return json({ error: "slow-down" }, origin, 429);
       // (a code already in use is drawn again: with 160,000 codes a few tries is plenty)
       for (let i = 0; i < 8; i++) {
         const code = randomCode();
@@ -97,6 +115,7 @@ export default {
     const match = url.pathname.match(/^\/rooms\/([A-Za-z]+)(\/socket)?$/);
     const code = match?.[1].toUpperCase();
     if (!match || !code || !CODE_PATTERN.test(code)) return json({ error: "not-found" }, origin, 404);
+    if (!(await env.JOIN_LIMIT.limit({ key: ip })).success) return json({ error: "slow-down" }, origin, 429);
     const room = env.ROOMS.getByName(code);
 
     if (!match[2] && request.method === "GET") return json(await room.info(), origin);
@@ -128,10 +147,15 @@ interface StoredRoom {
   emptySince: number | null;
   // the game on the table (null: in the lobby)
   game?: StoredGame | null;
+  // in the waiting room: who picked which character, and who's ready
+  picks?: Record<string, number>;
+  ready?: Record<string, boolean>;
 }
 
 export class Room extends DurableObject<Env> {
   private room: StoredRoom | null = null;
+  // each socket's messages in the current window (in memory: a room that's slept has had a quiet spell)
+  private traffic = new WeakMap<WebSocket, { since: number; count: number }>();
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
@@ -213,6 +237,13 @@ export class Room extends DurableObject<Env> {
   async webSocketMessage(ws: WebSocket, raw: string | ArrayBuffer) {
     const room = this.room;
     if (!room || typeof raw !== "string" || raw.length > MAX_MESSAGE) return;
+    const now = Date.now();
+    const seen = this.traffic.get(ws);
+    if (!seen || now - seen.since > FLOOD_WINDOW) this.traffic.set(ws, { since: now, count: 1 });
+    else if (++seen.count > FLOOD_LIMIT) {
+      ws.close(1008, "too many messages");
+      return;
+    }
     const { playerId } = ws.deserializeAttachment() as { playerId: string };
     let msg: ClientMessage;
     try {
@@ -247,7 +278,35 @@ export class Room extends DurableObject<Env> {
       }
       case "start": {
         if (!isHost || room.game || room.players.length < MIN_PLAYERS) return;
-        room.game = newGame(room.players.map((p) => p.id));
+        room.game = newGame(
+          room.players.map((p) => p.id),
+          room.picks ?? {}
+        );
+        room.ready = {};
+        break;
+      }
+      case "pick": {
+        if (room.game) return;
+        const picks = (room.picks ??= {});
+        const ready = (room.ready ??= {});
+        if (msg.character === null) {
+          delete picks[playerId];
+          delete ready[playerId];
+          break;
+        }
+        const c = msg.character;
+        if (!Number.isInteger(c) || c < 0 || c >= DECK_SIZES.characters) return;
+        // (one player per character)
+        if (Object.entries(picks).some(([id, pick]) => pick === c && id !== playerId)) return;
+        picks[playerId] = c;
+        break;
+      }
+      case "ready": {
+        if (room.game) return;
+        const ready = (room.ready ??= {});
+        if (msg.ready && room.picks?.[playerId] === undefined) return;
+        if (msg.ready) ready[playerId] = true;
+        else delete ready[playerId];
         break;
       }
       case "toLobby": {
@@ -288,7 +347,8 @@ export class Room extends DurableObject<Env> {
     const room = this.room;
     if (!room) return;
     const now = Date.now();
-    if (room.emptySince !== null && now - room.emptySince >= IDLE_TTL) {
+    if ((room.emptySince !== null && now - room.emptySince >= IDLE_TTL) || now - room.createdAt >= MAX_AGE) {
+      for (const ws of this.ctx.getWebSockets()) this.bye(ws, "expired", CLOSE_LEFT);
       this.room = null;
       await this.ctx.storage.deleteAll();
       return;
@@ -317,6 +377,7 @@ export class Room extends DurableObject<Env> {
     await this.ctx.storage.put("room", room);
     const due = [
       room.emptySince !== null ? room.emptySince + IDLE_TTL : Infinity,
+      room.createdAt + MAX_AGE,
       // (only while there's someone online to hand it to: otherwise, once the grace was up, the clock
       // would come due again and again, a few times a second, until someone came back)
       room.hostAwaySince !== null && room.players.some((p) => p.id !== room.hostId && this.isOnline(p.id))
@@ -335,6 +396,8 @@ export class Room extends DurableObject<Env> {
     if (index < 0) return false;
     room.players.splice(index, 1);
     if (room.game) removeFromGame(room.game, id);
+    if (room.picks) delete room.picks[id];
+    if (room.ready) delete room.ready[id];
     for (const ws of this.ctx.getWebSockets(id)) this.bye(ws, reason, reason === "kicked" ? CLOSE_KICKED : CLOSE_LEFT);
     if (room.hostId === id) {
       const next = room.players.find((p) => this.isOnline(p.id)) ?? room.players[0];
@@ -362,6 +425,8 @@ export class Room extends DurableObject<Env> {
       hostId: room.hostId,
       phase: room.game ? "game" : "lobby",
       players: room.players.map((p) => ({ ...p, online: this.isOnline(p.id, closing) })),
+      picks: room.picks ?? {},
+      ready: room.ready ?? {},
       game: room.game ? gameView(room.game) : null,
       now: Date.now(),
     };

@@ -17,7 +17,7 @@ const ArtbookDownloadPage = () => {
       <CustomHelmet title={title} splashImage={splashImage} description={description} />
 
       <PageIntro eyebrow="Free download" title="Your digital artbook" lead={description}>
-        <DefaultButton variant="primary" icon="rulebookWhite" href="/Artbook%20v2.pdf" text="Download artbook" />
+        <DefaultButton variant="primary" icon="download" href="/Artbook%20v2.pdf" text="Download artbook" />
       </PageIntro>
 
       <div className={styles.mockups}>

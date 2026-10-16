@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import type { MouseEvent } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
+import CardCarousel from "../utils/CardCarousel";
 import CardTurn from "../utils/CardTurn";
-import CardViewer from "../utils/CardViewer";
-import type { CardRingApi } from "../utils/cardRing3d";
 import { CHARACTER_CARD_MM } from "./characterCardFaces";
 import { getAllCharacters } from "./Characters";
 import type { CharacterWithNav } from "../../types/character";
@@ -11,8 +9,6 @@ import styles from "../../css/pages/characterProfile.module.css";
 
 // a character's printed card, by their place in the cast
 const cardFront = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}.webp`;
-// (how long the picture a 3D card shows while it loads takes to fade: cardViewer.module.css .still)
-const STILL_FADE_MS = 450;
 const cardBack = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}-back.webp`;
 
 // The top of a character's page: who they are, over their card in 3D. Either side of it stand the cards
@@ -25,118 +21,10 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
   const [story, setStory] = useState(false);
   const work = (job: string, employer: string | false | undefined) => (employer ? `${job} at ${employer}` : job);
   const jobs = [work(c.job, c.employer), c.job2 && work(c.job2, c.employer2)].filter(Boolean).join(" · ");
-  // (round the cast: the last one's next is the first)
-  const all = getAllCharacters(), at = c.index - 1, n = all.length;
-  const around = (k: number) => (at + k + n * 4) % n;
-  const prev = all[around(-1)], next = all[around(1)];
-
-  // the cards round the cast either side
-  const ring = useRef<CardRingApi | null>(null);
-  const ringEl = useRef<HTMLDivElement>(null);
-  const viewerEl = useRef<HTMLDivElement>(null);
-  // a turn under way, or just made: the viewer waits, hidden, until its card's in; the ring shows it
-  const [swung, setSwung] = useState(false);
-  useEffect(() => () => clearTimeout(handover.current), []);
+  const all = getAllCharacters();
   // the words fade out while the cards swing round, and back in as the next character's
   const [hush, setHush] = useState(false);
-  const turning = useRef(false);
-  useEffect(() => {
-    const el = ringEl.current;
-    if (!el) return;
-    let gone = false;
-    import("../utils/cardRing3d")
-      .then(({ mountCardRing }) =>
-        mountCardRing(el, {
-          mm: CHARACTER_CARD_MM,
-          viewer: () => viewerEl.current?.querySelector<HTMLElement>('[aria-roledescription="3D card"]') ?? null,
-          onPick: (k) => goRef.current(k),
-          onFail: () => {},
-        })
-      )
-      .then((a) => {
-        if (gone) return a?.destroy();
-        ring.current = a;
-        a?.set(fronts.current);
-      })
-      .catch(() => {});
-    return () => {
-      gone = true;
-      ring.current?.destroy();
-      ring.current = null;
-    };
-    // (one ring for the page; the cards on it change with the character)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  const fronts = useRef<string[]>([]);
-  fronts.current = [-4, -3, -2, -1, 0, 1, 2, 3, 4].map((k) => cardFront(around(k)));
-  useEffect(() => {
-    ring.current?.set(fronts.current);
-    turning.current = false; // (the cards are this character's now: the next turn can start)
-    // (the cards change with the character)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [c.urlName]);
-
-  // swing round `k` cards, then go to that character's page
-  const go = async (k: number) => {
-    if (turning.current) return;
-    const to = all[around(k)];
-    const r = ring.current;
-    if (!r) return navigate(`/characters/${to.urlName}`);
-    turning.current = true;
-    const from = window.location.pathname;
-    clearTimeout(handover.current); // (a card that came in just now is already on its way out)
-    setHush(true);
-    const turned = r.turn(k); // (the ring draws the middle card from here, this frame...)
-    if (viewerEl.current) viewerEl.current.style.opacity = "0"; // (...as the viewer goes)
-    setSwung(true);
-    await turned;
-    // (cut short by leaving: another page, or Back to another character. Not this turn's to finish)
-    if (!ring.current || window.location.pathname !== from) {
-      requestAnimationFrame(() => setHush(false));
-      return;
-    }
-    // (still "turning" until the cards are the next character's: a click before then would start a
-    // turn they'd cut short)
-    navigate(`/characters/${to.urlName}`);
-    requestAnimationFrame(() => setHush(false));
-  };
-  const goRef = useRef(go);
-  goRef.current = go;
-  const step = (to: typeof prev, dir: "prev" | "next") => (
-    <Link
-      to={`/characters/${to.urlName}`}
-      onClick={(e: MouseEvent) => {
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
-        e.preventDefault();
-        go(dir === "prev" ? -1 : 1);
-      }}
-      className={`${styles.step} ${styles[dir]}`}
-      aria-label={`${dir === "prev" ? "Previous" : "Next"}: ${to.name}`}
-    >
-      <span className={styles.stepArrow} aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-          <path d={dir === "prev" ? "M15 5l-7 7 7 7" : "M9 5l7 7-7 7"} />
-        </svg>
-      </span>
-      <span className={styles.stepName}>{to.name}</span>
-    </Link>
-  );
-  // the new card's in: once the picture shown while it loaded has faded from under it, the viewer shows
-  // it and the ring stops drawing it, in the same frame (the same printed card, in the same place, lit
-  // the same: no change you can see)
-  const handover = useRef(0);
-  const ready = () => {
-    if (!swung) return;
-    clearTimeout(handover.current);
-    handover.current = window.setTimeout(() => {
-      // (not mid-swing: another click turned the cards on before this one came in; the next one's
-      // card hands over when it's in)
-      if (turning.current) return;
-      if (viewerEl.current) viewerEl.current.style.opacity = "";
-      ring.current?.showMiddle(false);
-      setSwung(false);
-    }, STILL_FADE_MS);
-  };
+  const from = useRef("");
 
   return (
     <article className={styles.profile} aria-labelledby="character-name">
@@ -160,31 +48,31 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
         </p>
       </header>
 
-      <div className={styles.stage}>
-        <div ref={ringEl} className={styles.ring} />
-        <div ref={viewerEl} className={`${styles.card} ${swung ? styles.cardAway : ""} ${hush || swung ? styles.toolsAway : ""}`}>
-          <CardViewer
-            key={c.urlName}
-            mm={CHARACTER_CARD_MM}
-            edge="gold"
-            faces={async () => ({ front: cardFront(at), back: cardBack(at) })}
-            label={`${c.name}'s card from Love, Career & Magic`}
-            still={cardFront(at)}
-            intro={!swung}
-            onReady={ready}
-            fallback={
-              <CardTurn
-                src={`/images/mockups/${c.urlName}.webp?v=2`}
-                alt={`${c.name}'s card from Love, Career & Magic, front and back`}
-              />
-            }
+      <CardCarousel
+        index={c.index - 1}
+        count={all.length}
+        mm={CHARACTER_CARD_MM}
+        front={cardFront}
+        back={cardBack}
+        name={(i) => all[i].name}
+        label={(i) => `${all[i].name}'s card from Love, Career & Magic`}
+        href={(i) => `/characters/${all[i].urlName}`}
+        fallback={(i) => (
+          <CardTurn
+            src={`/images/mockups/${all[i].urlName}.webp?v=2`}
+            alt={`${all[i].name}'s card from Love, Career & Magic, front and back`}
           />
-        </div>
-        <div className={`${styles.steps} ${styles.words} ${hush ? styles.hushed : ""}`}>
-          {step(prev, "prev")}
-          {step(next, "next")}
-        </div>
-      </div>
+        )}
+        onTurnStart={() => {
+          from.current = window.location.pathname;
+          setHush(true);
+        }}
+        onTurn={(i) => {
+          // (cut short by leaving: another page, or Back to another character. Not this turn's to finish)
+          if (window.location.pathname === from.current) navigate(`/characters/${all[i].urlName}`);
+          requestAnimationFrame(() => setHush(false));
+        }}
+      />
 
       <div className={`${styles.details} ${styles.words} ${hush ? styles.hushed : ""}`}>
         <section className={styles.box} aria-labelledby="story-title">

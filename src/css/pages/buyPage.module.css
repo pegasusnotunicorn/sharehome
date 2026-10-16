@@ -5,7 +5,7 @@
 .pinPreviewImage {
   width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-radius: 12px;
   display: block;
 }
 
@@ -837,20 +837,23 @@
 
 /* ── International modal content ───────────────────────────────── */
 
+/* (the site's dialog type, as in modal.module.css) */
 .modalTitle {
-  font-family: "Rowdies-Regular";
-  font-size: 1.3rem;
+  font-family: "Rowdies-Bold";
+  font-size: 1.5rem;
+  font-weight: normal;
+  line-height: 1.15;
   color: #323232;
-  margin: 0 0 1rem;
+  margin: 0 2.5rem 0.75rem 0;
   letter-spacing: 0;
 }
 
 .modalBody {
   font-family: "Roboto Light";
-  font-size: 0.9rem;
-  color: #555;
-  line-height: 1.6;
-  margin: 0 0 1.5rem;
+  font-size: 1rem;
+  color: rgba(50, 50, 50, 0.8);
+  line-height: 1.5;
+  margin: 0 0 1.4rem;
   opacity: 1;
 }
 
@@ -896,15 +899,6 @@
   font-weight: normal;
 }
 
-.internationalPanel {
-  position: relative;
-  background: #fff;
-  border-radius: 10px;
-  padding: 1.25rem;
-  max-width: 480px;
-  width: 100%;
-  text-align: left;
-}
 
 /* ── Box image carousel modal ──────────────────────────────────── */
 
@@ -913,7 +907,7 @@
   width: min(680px, calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
   padding: 1rem 1rem 1.25rem;
-  border-radius: 12px;
+  border-radius: 22px;
   background: #fff;
   box-shadow: 0 28px 60px -36px rgba(0, 0, 0, 0.6);
   display: flex;
@@ -1591,4 +1585,19 @@
 .promoInput:focus-visible {
   outline: 3px solid var(--btn-focus);
   outline-offset: 3px;
+}
+
+/* (paying: a spinner beside the words) */
+.checkoutSpinner {
+  width: 1.1em;
+  height: 1.1em;
+  margin-right: 0.5em;
+  vertical-align: -0.2em;
+  animation: checkoutSpin 0.8s linear infinite;
+}
+
+@keyframes checkoutSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }

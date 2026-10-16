@@ -4,6 +4,7 @@ import { CONTACT_POLAROIDS } from "./contactPolaroids";
 import type { PolaroidRingApi } from "./polaroidRing3d";
 import styles from "../../css/utils/polaroidJourney.module.css";
 import galleryStyles from "../../css/utils/polaroidGallery.module.css";
+import Icon from "./Icons";
 
 // The polaroids from the journey so far, going round in 3D (polaroidRing3d.ts) under a title, the
 // caption of the one in front below it: on the contact and thank-you pages. It goes round by itself
@@ -139,7 +140,7 @@ const PolaroidJourney = ({ label, title, start = 0 }: PolaroidJourneyProps) => {
             aria-label={shownItem.alt}
           >
             <button type="button" className={styles.lightboxClose} onClick={() => setOpen(null)} aria-label="Close">
-              <img src="/images/icons/cross.svg" alt="" />
+              <Icon name="close" strokeWidth={2.6} />
             </button>
             <img src={shownItem.src} alt={shownItem.alt} className={galleryStyles.lightboxPhoto} />
             <div className={galleryStyles.lightboxCaptionWrapper}>

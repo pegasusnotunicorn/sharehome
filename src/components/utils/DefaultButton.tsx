@@ -1,6 +1,7 @@
 import { forwardRef, type ReactNode, type CSSProperties } from "react";
 import { NavLink } from "react-router";
 import styles from "../../css/utils/defaultButton.module.css";
+import SiteIcon, { isIconName } from "./Icons";
 
 interface DefaultButtonProps {
   text?: ReactNode;
@@ -179,15 +180,10 @@ const Icon = ({ icon, emoji }: IconProps): ReactNode => {
         />
       </span>
     );
-  if (icon)
+  if (icon && isIconName(icon))
     return (
       <span>
-        <img
-          loading="lazy"
-          className={styles.btnIcon}
-          src={`/images/icons/${icon}.svg`}
-          alt=""
-        />
+        <SiteIcon name={icon} className={styles.btnIcon} strokeWidth={2.4} />
       </span>
     );
   return null;

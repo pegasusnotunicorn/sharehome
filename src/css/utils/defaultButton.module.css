@@ -161,11 +161,6 @@ a.colorWhite.primary {
   color: var(--btn-ink);
 }
 
-.colorYellow .btnIcon,
-.colorWhite.primary .btnIcon {
-  filter: brightness(0) saturate(100%);
-}
-
 /* white, outlined, over something dark */
 .colorWhite.ghost,
 .colorWhite.secondary {

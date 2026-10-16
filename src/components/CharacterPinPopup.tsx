@@ -1,6 +1,7 @@
 import { MouseEvent, useEffect, useRef, useState, type CSSProperties } from "react";
 import DefaultButton from "./utils/DefaultButton";
 import styles from "../css/utils/lazyYoutube.module.css";
+import Icon from "./utils/Icons";
 
 interface CharacterPinPopupProps {
   closePopup: (how: string) => void; // how: "close", "outside", "escape" or "not_now"
@@ -36,7 +37,7 @@ const CharacterPinPopup = ({ closePopup, followed }: CharacterPinPopupProps) => 
       tabIndex={-1}
     >
       <button type="button" className="close-x-btn" aria-label="Close" onClick={() => closePopup("close")}>
-        <img src="/images/icons/cross.svg" alt="" />
+        <Icon name="close" strokeWidth={2.6} />
       </button>
       <div className="modal-content">
         <img className="expansion-image" src="/images/kitchen_chaos.webp" alt="Expansion update" />
@@ -188,7 +189,7 @@ const CharacterPinPopup = ({ closePopup, followed }: CharacterPinPopupProps) => 
           box-shadow: 0 3px 0 var(--chip-edge);
           transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.15s ease;
         }
-        .close-x-btn img {
+        .close-x-btn svg {
           width: 100%;
           height: 100%;
         }

@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import styles from "../../css/utils/modal.module.css";
+import Icon from "./Icons";
 
 interface ModalProps {
   onClose: () => void;
@@ -51,7 +52,7 @@ const Modal = ({ onClose, children, panelClassName, ariaLabel }: ModalProps) => 
         aria-label={ariaLabel}
       >
         <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Close">
-          <img src="/images/icons/cross.svg" alt="" className={styles.closeIcon} />
+          <Icon name="close" className={styles.closeIcon} strokeWidth={2.6} />
         </button>
         {children}
       </div>

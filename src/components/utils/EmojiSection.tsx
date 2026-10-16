@@ -39,7 +39,7 @@ export const EmojiSection = ({ className = "" }: EmojiSectionProps) => {
             variant="primary"
             href="https://discord.com/invite/nv89cRgEsS"
             className={styles.cta}
-            icon="discordWhite"
+            icon="discord"
             text="Get free emojis"
           />
         </div>

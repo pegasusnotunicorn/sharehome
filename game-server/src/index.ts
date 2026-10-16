@@ -1,5 +1,5 @@
 // The online game's server: a Worker in front, and one Durable Object per game room, which holds the
-// room (its players and, next, the table) and every player's socket. Rooms sleep between messages
+// room (its players and the table, see game.ts) and every player's socket. Rooms sleep between messages
 // (the hibernation API keeps the sockets open meanwhile) and are deleted after IDLE_TTL with nobody in.
 //
 //   POST /rooms               → { code }           a new room
@@ -16,6 +16,7 @@ import {
   CODE_LETTERS,
   CODE_PATTERN,
   MAX_PLAYERS,
+  MIN_PLAYERS,
   cleanName,
   type ByeReason,
   type ClientMessage,
@@ -23,6 +24,7 @@ import {
   type RoomView,
   type ServerMessage,
 } from "./protocol";
+import { addPlayer, gameView, move, newGame, removePlayer as removeFromGame, tick, type StoredGame } from "./game";
 
 export interface Env {
   ROOMS: DurableObjectNamespace<Room>;
@@ -119,6 +121,8 @@ interface StoredRoom {
   hostAwaySince: number | null;
   // when the room's last socket closed (null while anyone's here)
   emptySince: number | null;
+  // the game on the table (null: in the lobby)
+  game?: StoredGame | null;
 }
 
 export class Room extends DurableObject<Env> {
@@ -181,6 +185,8 @@ export class Room extends DurableObject<Env> {
       player = { id: playerId, name, color };
       room.players.push(player);
       if (!room.hostId) room.hostId = playerId;
+      // (someone joining a game under way is dealt in)
+      if (room.game) addPlayer(room.game, playerId);
     }
 
     // the same player in another tab: that one's closed, this one takes over
@@ -234,8 +240,21 @@ export class Room extends DurableObject<Env> {
         this.removePlayer(playerId, "left");
         break;
       }
-      default:
-        return;
+      case "start": {
+        if (!isHost || room.game || room.players.length < MIN_PLAYERS) return;
+        room.game = newGame(room.players.map((p) => p.id));
+        break;
+      }
+      case "toLobby": {
+        if (!isHost || !room.game) return;
+        room.game = null;
+        break;
+      }
+      default: {
+        // a move at the table
+        if (!room.game || !room.players.some((p) => p.id === playerId)) return;
+        if (!move(room.game, playerId, msg, Date.now())) return;
+      }
     }
     await this.save();
     this.broadcast();
@@ -269,6 +288,8 @@ export class Room extends DurableObject<Env> {
       await this.ctx.storage.deleteAll();
       return;
     }
+    // the episode's clock ran out
+    if (room.game && tick(room.game, now)) this.broadcast();
     if (room.hostAwaySince !== null && now - room.hostAwaySince >= HOST_GRACE) {
       const next = room.players.find((p) => p.id !== room.hostId && this.isOnline(p.id));
       if (next) {
@@ -292,10 +313,11 @@ export class Room extends DurableObject<Env> {
     const due = [
       room.emptySince !== null ? room.emptySince + IDLE_TTL : Infinity,
       room.hostAwaySince !== null && room.players.length > 1 ? room.hostAwaySince + HOST_GRACE : Infinity,
+      room.game?.phase === "playing" && room.game.endsAt !== null ? room.game.endsAt : Infinity,
     ];
     const next = Math.min(...due);
     if (next === Infinity) await this.ctx.storage.deleteAlarm();
-    else await this.ctx.storage.setAlarm(Math.max(next, Date.now() + 1000));
+    else await this.ctx.storage.setAlarm(Math.max(next, Date.now() + 250));
   }
 
   private removePlayer(id: string, reason: ByeReason) {
@@ -303,6 +325,7 @@ export class Room extends DurableObject<Env> {
     const index = room.players.findIndex((p) => p.id === id);
     if (index < 0) return false;
     room.players.splice(index, 1);
+    if (room.game) removeFromGame(room.game, id);
     for (const ws of this.ctx.getWebSockets(id)) this.bye(ws, reason, reason === "kicked" ? CLOSE_KICKED : CLOSE_LEFT);
     if (room.hostId === id) {
       const next = room.players.find((p) => this.isOnline(p.id)) ?? room.players[0];
@@ -328,8 +351,10 @@ export class Room extends DurableObject<Env> {
     return {
       code: room.code,
       hostId: room.hostId,
-      phase: "lobby",
+      phase: room.game ? "game" : "lobby",
       players: room.players.map((p) => ({ ...p, online: this.isOnline(p.id, closing) })),
+      game: room.game ? gameView(room.game) : null,
+      now: Date.now(),
     };
   }
 

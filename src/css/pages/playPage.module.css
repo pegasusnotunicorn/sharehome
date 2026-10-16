@@ -575,11 +575,6 @@
   color: rgba(244, 239, 227, 0.78);
 }
 
-.inviteButton {
-  width: 100%;
-  max-width: 20rem;
-  box-sizing: border-box;
-}
 
 .reconnecting {
   display: flex;
@@ -663,18 +658,17 @@
   animation: arrive 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
 }
 
-.seat::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 6px;
-  border-radius: 22px 22px 0 0;
-  background: var(--seat);
+/* (the band of color along the top is an inset shadow, so it follows the card's corners) */
+.seat {
+  box-shadow:
+    inset 0 6px 0 var(--seat),
+    var(--lift);
 }
 
 .seatMine {
   box-shadow:
-    0 0 0 2px var(--seat),
+    inset 0 6px 0 var(--seat),
+    inset 0 0 0 2px var(--seat),
     0 18px 34px -24px rgba(40, 30, 20, 0.5);
 }
 
@@ -937,8 +931,7 @@
 .showtime {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 1.5rem;
+  gap: 1rem;
   padding: 1.75rem;
   border-radius: 22px;
   background: var(--paper);
@@ -988,38 +981,35 @@
   align-self: center;
   width: 9.5rem;
   height: auto;
-  margin: -0.75rem 0;
+  margin: auto 0;
 }
 
-.showtimeAction {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 0.5rem;
-  text-align: center;
-}
+
 
 /* (the start button, until the table is in) */
-.startButton {
-  display: inline-flex;
+/* the two cards' buttons: the same size, on the same line at the cards' feet */
+.startButton,
+.inviteButton {
+  width: 100%;
+  max-width: none;
+  min-height: 52px;
+  margin-top: auto;
+  box-sizing: border-box;
+  font-size: 1.05rem;
+}
+
+.startWaiting {
+  display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 56px;
   padding: 0 1.5rem;
+  border: 0;
   border-radius: var(--btn-radius);
   background: #e9e6df;
   box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.08);
-  font-family: "Rowdies-Bold";
-  font-size: 1.15rem;
+  font-family: "Rowdies-Regular";
   color: rgba(50, 50, 50, 0.4);
   cursor: not-allowed;
-  user-select: none;
-}
-
-.soon {
-  font-family: "GochiHand";
-  font-size: 1.1rem;
-  color: var(--ink-soft);
 }
 
 .leave {
@@ -1057,19 +1047,13 @@
   box-sizing: border-box;
   border-radius: 22px;
   background: #fff;
-  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    inset 0 6px 0 #d81e18,
+    0 30px 60px -30px rgba(0, 0, 0, 0.5);
   text-align: left;
   animation: pop 0.18s ease-out both;
 }
 
-.dialog::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 6px;
-  border-radius: 22px 22px 0 0;
-  background: #d81e18;
-}
 
 .dialogTitle {
   margin: 0 2.5rem 0.5rem 0;
@@ -1162,9 +1146,6 @@
     padding: 1.6rem 1.25rem 1.4rem;
   }
 
-  .inviteButton {
-    max-width: none;
-  }
 
   .tile {
     width: 3rem;
@@ -1233,4 +1214,23 @@
   .dialogActions > * {
     flex: 1;
   }
+}
+
+/* the invite link's page: the opening, the name and the call, one width */
+.narrowPage {
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.narrowPage .doorAlone {
+  max-width: none;
+}
+
+.voiceStacked {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.voiceStacked .voiceButton {
+  grid-column: 1 / -1;
+  width: 100%;
 }

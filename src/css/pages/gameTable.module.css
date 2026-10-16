@@ -1,0 +1,1087 @@
+/* The table (Play/GameTable.tsx): the clock bar (stuck under the navbar while you scroll), a line on
+   what to do now, the episode with its completed cards beside the six direction cards, callbacks
+   and what's happened, then the cast with their characters and traits. The season's ratings at the
+   end. Its colors are the play pages' (playPage.module.css). */
+
+.table {
+  --ink: #323232;
+  --ink-soft: rgba(50, 50, 50, 0.72);
+  --night: #1c1a2b;
+  --edge: rgba(50, 50, 50, 0.1);
+  --lift: 0 0 0 1px var(--edge), 0 18px 34px -26px rgba(40, 30, 20, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: calc(var(--navbar-height) + 0.25rem);
+  text-align: left;
+}
+
+/* (the table takes more of the page than the lobby) */
+:global(.content):has(.table) {
+  max-width: calc(1280px + 4rem);
+}
+
+.table p {
+  opacity: 1;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-size: 1.35rem;
+  font-weight: normal;
+  color: var(--ink);
+}
+
+.table .sectionNote,
+.sectionNote {
+  margin: 0;
+  font-family: "Roboto Light";
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.table .empty {
+  margin: 0;
+  font-family: "GochiHand";
+  font-size: 1.15rem;
+  color: rgba(50, 50, 50, 0.5);
+}
+
+.kicker {
+  font-family: "Rowdies-Regular";
+  font-size: 0.72rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(50, 50, 50, 0.6);
+}
+
+.table .kicker {
+  margin: 0;
+}
+
+.textButton {
+  align-self: center;
+  padding: 0.35rem 0.5rem;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.textButton:hover {
+  color: var(--ink);
+}
+
+.table button:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 2px;
+}
+
+/* #region--------------------------------------THE CLOCK BAR */
+
+.bar {
+  position: sticky;
+  top: calc(var(--banner-height) + var(--navbar-height) + 0.5rem);
+  z-index: 50;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.4rem;
+  border-radius: 20px;
+  color: #f4efe3;
+  background:
+    radial-gradient(60% 120% at 50% -20%, rgba(255, 236, 170, 0.22), transparent 62%),
+    radial-gradient(120% 80% at 85% 0%, rgba(95, 90, 162, 0.55), transparent 60%),
+    var(--night);
+  box-shadow: 0 18px 34px -22px rgba(28, 26, 43, 0.9);
+}
+
+.barWrapped {
+  background:
+    radial-gradient(60% 120% at 50% -20%, rgba(241, 219, 75, 0.35), transparent 62%),
+    var(--night);
+}
+
+.barEpisode {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.barLabel {
+  font-family: "Rowdies-Regular";
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #f1db4b;
+}
+
+.barValue {
+  font-family: "Rowdies-Bold";
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.barValue small {
+  font-family: "Rowdies-Regular";
+  font-size: 0.95rem;
+  color: rgba(244, 239, 227, 0.6);
+}
+
+.dots {
+  display: inline-flex;
+  gap: 5px;
+  align-self: center;
+}
+
+.dots span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.dots .dotDone {
+  background: #f1db4b;
+}
+
+.dots .dotNow {
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 9rem;
+}
+
+.clockTime {
+  font-family: "Rowdies-Bold";
+  font-size: 2.6rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.clockLow {
+  color: #ff7a6b;
+  animation: pulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  to {
+    opacity: 0.6;
+  }
+}
+
+.clockTrack {
+  width: 100%;
+  height: 5px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.clockTrack span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #f1db4b;
+  transform-origin: left;
+  transition: transform 0.25s linear;
+}
+
+.barActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.score {
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  font-family: "Rowdies-Regular";
+  font-size: 0.9rem;
+  white-space: nowrap;
+  color: rgba(244, 239, 227, 0.8);
+}
+
+.score b {
+  font-family: "Rowdies-Bold";
+  font-size: 1.15rem;
+  color: #fff;
+}
+
+.prompt {
+  padding: 0.9rem 1.2rem;
+  border-radius: 16px;
+  background: #fbf3cf;
+  box-shadow: 0 0 0 1px rgba(224, 169, 27, 0.25);
+  font-family: "Roboto Light";
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.prompt b {
+  font-family: "Rowdies-Regular";
+  font-weight: normal;
+  margin-right: 0.35rem;
+}
+
+.promptWrap {
+  background: #eeedf8;
+  box-shadow: 0 0 0 1px rgba(95, 90, 162, 0.2);
+}
+
+/* #endregion */
+
+/* #region--------------------------------------THE EPISODE AND THE DIRECTION CARDS */
+
+.stageRow {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 2.15fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.location,
+.directions,
+.callbacks,
+.activity,
+.cast {
+  padding: 1.25rem;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: var(--lift);
+}
+
+.location {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.episodeCard {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 22px -14px rgba(0, 0, 0, 0.45);
+  transform: rotate(-1.5deg);
+}
+
+.doneHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 0.5rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.doneHead b {
+  font-family: "Rowdies-Bold";
+  font-size: 1.2rem;
+  color: #4f8a73;
+}
+
+.doneList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 22rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.done {
+  display: grid;
+  grid-template-columns: 4.6rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem;
+  border-radius: 12px;
+  background: #f7f5ef;
+  animation: arrive 0.3s ease-out both;
+}
+
+@keyframes arrive {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.done img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.doneInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.doneInfo b {
+  font-family: "Rowdies-Bold";
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.doneInfo span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.doneActions {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.undo {
+  padding: 0.3rem 0.55rem;
+  border: 1.5px solid var(--chip-edge);
+  border-radius: 9px;
+  background: #fff;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.8rem;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.undo:hover {
+  border-color: var(--ink);
+}
+
+/* the three decks side by side, each with its two cards one above the other */
+.directions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.deck {
+  --deck: #5f5aa2;
+}
+
+.director {
+  --deck: #6b78b8;
+}
+
+.producer {
+  --deck: #d9776f;
+}
+
+.showrunner {
+  --deck: #e08a3a;
+}
+
+.deckHead {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-height: 3.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.deckHead h3 {
+  margin: 0;
+  padding-left: 0.6rem;
+  border-left: 4px solid var(--deck);
+  font-family: "Rowdies-Regular";
+  font-size: 1.05rem;
+  font-weight: normal;
+  color: var(--ink);
+}
+
+.deckHead span {
+  font-family: "Roboto Light";
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.deckCards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+}
+
+.cardWrap {
+  position: relative;
+}
+
+/* a direction card: tap it once it's done */
+.card {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  cursor: pointer;
+  box-shadow: 0 8px 18px -12px rgba(0, 0, 0, 0.45);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  animation: deal 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+@keyframes deal {
+  from {
+    opacity: 0;
+    transform: translateY(8px) rotate(-2deg) scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .done {
+    animation: none;
+  }
+}
+
+.card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.cardDone {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  background: #323232;
+  font-family: "Rowdies-Regular";
+  font-size: 0.85rem;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.card:hover:not(:disabled) {
+  transform: translateY(-3px) rotate(-0.5deg);
+  box-shadow: 0 14px 24px -12px rgba(0, 0, 0, 0.5);
+}
+
+.card:hover:not(:disabled) .cardDone,
+.card:focus-visible .cardDone {
+  opacity: 1;
+  transform: none;
+}
+
+.card:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.card:disabled {
+  cursor: default;
+  filter: saturate(0.6);
+  opacity: 0.75;
+}
+
+.swap {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  padding: 0.25rem 0.6rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  font-family: "Rowdies-Regular";
+  font-size: 0.75rem;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.cardEmpty {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 768 / 497;
+  border: 2px dashed rgba(50, 50, 50, 0.15);
+  border-radius: 12px;
+  font-family: "GochiHand";
+  font-size: 1.1rem;
+  color: rgba(50, 50, 50, 0.45);
+}
+
+/* point tokens: the box's own token, with the count on it */
+.tokens {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.token {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.token img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.token b {
+  position: relative;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: #f1db4b;
+  font-family: "Rowdies-Bold";
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: var(--ink);
+  transform: translate(10px, 12px);
+}
+
+.token:hover {
+  transform: rotate(-12deg) scale(1.06);
+}
+
+.tokenMinus {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1.5px solid var(--chip-edge);
+  border-radius: 50%;
+  background: #fff;
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+/* #endregion */
+
+/* #region--------------------------------------CALLBACKS AND WHAT'S HAPPENED */
+
+.lowerRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 1.25rem;
+}
+
+.callbacks,
+.activity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.pastList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.past {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.past img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 6px 14px -10px rgba(0, 0, 0, 0.45);
+}
+
+.past .tokens {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+}
+
+.pastLabel {
+  font-family: "Rowdies-Regular";
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.log {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.log li {
+  padding-left: 0.8rem;
+  border-left: 3px solid #eeedf8;
+  font-family: "Roboto Light";
+  font-size: 0.9rem;
+  line-height: 1.35;
+  color: var(--ink);
+  opacity: 1;
+}
+
+.log li:first-child {
+  border-left-color: #f1db4b;
+}
+
+/* #endregion */
+
+/* #region--------------------------------------THE CAST */
+
+.cast {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.castHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1rem;
+}
+
+.castGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.member {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.9rem;
+  border-radius: 18px;
+  background: #faf8f3;
+  box-shadow: inset 0 5px 0 var(--seat), 0 0 0 1px var(--edge);
+}
+
+.memberAway {
+  opacity: 0.6;
+}
+
+.memberHead {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 34px;
+  padding-top: 0.2rem;
+}
+
+.memberToken {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--seat);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+  font-family: "Rowdies-Bold";
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.memberName {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: "Rowdies-Regular";
+  font-size: 1.05rem;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.you {
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(50, 50, 50, 0.08);
+  font-size: 0.62rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.arc {
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: #4f8a73;
+  font-family: "Rowdies-Regular";
+  font-size: 0.72rem;
+  white-space: nowrap;
+  color: #fff;
+}
+
+.character {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  cursor: pointer;
+}
+
+.character img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 18px -12px rgba(0, 0, 0, 0.5);
+}
+
+.flipHint {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  font-family: "Rowdies-Regular";
+  font-size: 0.7rem;
+  color: var(--ink);
+}
+
+.traits {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trait {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.trait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.trait:hover:not(:disabled) {
+  transform: translateX(3px);
+}
+
+.trait:disabled {
+  cursor: default;
+}
+
+.trait:disabled:not(.traitDone) {
+  opacity: 0.5;
+}
+
+.traitDone img {
+  filter: grayscale(0.7) brightness(1.05);
+  opacity: 0.6;
+}
+
+/* (in the card's corner, clear of its word) */
+.traitStamp {
+  position: absolute;
+  top: -6px;
+  right: -4px;
+  padding: 0.1rem 0.45rem;
+  border-radius: 7px;
+  background: #4f8a73;
+  box-shadow: 0 3px 8px -2px rgba(0, 0, 0, 0.35);
+  font-family: "Rowdies-Bold";
+  font-size: 0.72rem;
+  color: #fff;
+  transform: rotate(4deg);
+}
+
+.hostRow {
+  display: flex;
+  justify-content: center;
+}
+
+/* #endregion */
+
+/* #region--------------------------------------THE RATINGS */
+
+.finale {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 2rem 2.5rem;
+  border-radius: 28px;
+  color: #f4efe3;
+  text-align: center;
+  background:
+    radial-gradient(60% 90% at 50% -10%, rgba(255, 236, 170, 0.3), transparent 62%),
+    radial-gradient(120% 80% at 80% 0%, rgba(95, 90, 162, 0.6), transparent 60%),
+    radial-gradient(80% 70% at 0% 100%, rgba(221, 115, 115, 0.22), transparent 60%),
+    var(--night);
+  box-shadow: 0 24px 50px -34px rgba(28, 26, 43, 0.85);
+}
+
+.table .finaleKicker {
+  margin: 0;
+  font-family: "Rowdies-Regular";
+  font-size: 0.78rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #f1db4b;
+}
+
+.finaleRating {
+  margin: 0;
+  max-width: 40rem;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  font-weight: normal;
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 34px rgba(255, 236, 170, 0.3);
+}
+
+.table .finaleScore {
+  margin: 0;
+  font-family: "Roboto Light";
+  font-size: 1.15rem;
+  color: rgba(244, 239, 227, 0.85);
+}
+
+.finaleScore b {
+  font-family: "Rowdies-Bold";
+  font-size: 1.6rem;
+  color: #f1db4b;
+}
+
+.breakdown {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 44rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.breakdown div {
+  padding: 0.9rem 0.6rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.breakdown dt {
+  font-family: "Roboto Light";
+  font-size: 0.8rem;
+  color: rgba(244, 239, 227, 0.7);
+}
+
+.breakdown dd {
+  margin: 0.2rem 0 0;
+  font-family: "Rowdies-Bold";
+  font-size: 1.4rem;
+  color: #fff;
+}
+
+.table .finaleNote {
+  margin: 0;
+  font-family: "GochiHand";
+  font-size: 1.2rem;
+  color: rgba(244, 239, 227, 0.75);
+}
+
+/* #endregion */
+
+@media only screen and (max-width: 1000px) {
+  .stageRow,
+  .lowerRow {
+    grid-template-columns: 1fr;
+  }
+
+  .directions {
+    grid-template-columns: 1fr;
+  }
+
+  .deckHead {
+    min-height: 0;
+  }
+
+  .deckCards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .location {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+    column-gap: 1rem;
+    align-items: start;
+  }
+
+  .location .kicker {
+    grid-column: 1 / -1;
+  }
+
+  .episodeCard {
+    grid-row: span 3;
+  }
+
+  .castGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .table {
+    gap: 1rem;
+  }
+
+  .bar {
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      "episode clock"
+      "actions actions";
+    gap: 0.6rem 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 16px;
+  }
+
+  .barEpisode {
+    grid-area: episode;
+  }
+
+  .clock {
+    grid-area: clock;
+    align-items: flex-end;
+    min-width: 0;
+  }
+
+  .clockTime {
+    font-size: 2rem;
+  }
+
+  .clockTrack {
+    max-width: 8rem;
+  }
+
+  .barActions {
+    grid-area: actions;
+    justify-content: space-between;
+  }
+
+  .barActions > :first-child {
+    flex: 1;
+  }
+
+  .location {
+    grid-template-columns: 1fr;
+  }
+
+  /* (smaller on a phone, so the direction cards come into view sooner) */
+  .episodeCard {
+    grid-row: auto;
+    justify-self: center;
+    width: min(100%, 15rem);
+  }
+
+  .location,
+  .directions,
+  .callbacks,
+  .activity,
+  .cast {
+    padding: 1rem;
+    border-radius: 18px;
+  }
+
+  .deckCards {
+    gap: 0.5rem;
+  }
+
+
+  .card:disabled .cardDone {
+    display: none;
+  }
+
+  .cardDone {
+    opacity: 1;
+    transform: none;
+    right: 0.35rem;
+    bottom: 0.35rem;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  .pastList {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .castGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .breakdown {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .finale {
+    padding: 2.25rem 1.25rem 2rem;
+    border-radius: 22px;
+  }
+}

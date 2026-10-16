@@ -552,8 +552,13 @@
   height: 3.6rem;
   border-radius: 50%;
   overflow: hidden;
-  background: #fffaf0;
+  /* (a soft, spotlit backdrop in the player's color, like a portrait; the face's white paper melts into it) */
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% 40%, #fffdf6 0 34%, transparent 72%),
+    linear-gradient(165deg, color-mix(in srgb, var(--seat, #f1db4b) 22%, #fff8e8), color-mix(in srgb, var(--seat, #f1db4b) 48%, #fff8e8));
   box-shadow:
+    inset 0 -4px 8px rgba(0, 0, 0, 0.18),
     0 0 0 3px var(--seat, #fff),
     0 8px 14px -8px rgba(0, 0, 0, 0.7);
   rotate: calc((var(--i) - 2.5) * 3deg);
@@ -565,8 +570,10 @@
 .inviteFace img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  scale: 1.08;
+  padding: 10%;
+  box-sizing: border-box;
+  object-fit: contain;
+  mix-blend-mode: multiply;
 }
 
 @keyframes facePop {

@@ -1,0 +1,826 @@
+/* The rulebook in a room: a little book where the navbar would be, and the book itself, which slides in,
+   swings its cover open and turns its pages (see Rulebook.tsx) */
+
+/* #region--------------------------------------THE LITTLE BOOK (top left) */
+
+.launcher {
+  position: fixed;
+  top: 14px;
+  left: 14px;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  height: 44px;
+  padding: 0 0.95rem 0 0.55rem;
+  border: 2px solid #2b2233;
+  border-left-width: 7px;
+  border-left-color: #b8241f;
+  border-radius: 6px 12px 12px 6px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 5px, rgba(80, 60, 40, 0.06) 5px 6px) right / 5px 100% no-repeat,
+    #fffaf0;
+  box-shadow:
+    inset -5px 0 0 -2px rgba(60, 40, 20, 0.12),
+    0 3px 0 #2b2233,
+    0 10px 18px -10px rgba(0, 0, 0, 0.5);
+  color: #2b2233;
+  font-family: "Rowdies-Bold";
+  font-size: 1rem;
+  cursor: pointer;
+  rotate: -2deg;
+  transition:
+    opacity 0.25s ease,
+    translate 0.25s ease,
+    scale 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.launcher:hover {
+  animation: launcherWiggle 0.5s ease-in-out;
+}
+
+.launcher:active {
+  scale: 0.95;
+}
+
+.launcher:focus-visible {
+  outline: 3px solid #f1db4b;
+  outline-offset: 3px;
+}
+
+.launcherBook {
+  display: grid;
+  place-items: center;
+  color: #b8241f;
+}
+
+.launcherBook svg {
+  width: 22px;
+  height: 22px;
+}
+
+.launcherText {
+  line-height: 1;
+}
+
+/* (while the book's out, the little one's gone: it's in your hands) */
+.launcherAway {
+  opacity: 0;
+  translate: -12px 0;
+  pointer-events: none;
+}
+
+@keyframes launcherWiggle {
+  25% {
+    rotate: -6deg;
+  }
+  60% {
+    rotate: 2deg;
+  }
+}
+
+/* #endregion */
+
+/* #region--------------------------------------THE BOOK */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 72px 12px 88px;
+  background: rgba(28, 22, 34, 0.62);
+  backdrop-filter: blur(3px);
+  perspective: 2200px;
+  overflow: hidden;
+  animation: overlayIn 0.35s ease both;
+}
+
+.out {
+  animation: overlayOut 0.45s ease 0.45s both;
+}
+
+@keyframes overlayIn {
+  from {
+    background-color: transparent;
+    backdrop-filter: blur(0);
+  }
+}
+
+@keyframes overlayOut {
+  to {
+    background-color: transparent;
+    backdrop-filter: blur(0);
+  }
+}
+
+/* a page: its width (the height follows, a card's shape) */
+.book {
+  --pw: min(400px, calc(100vw - 24px), calc((100dvh - 170px) * 0.72));
+  --ph: calc(var(--pw) / 0.72);
+  --closed-shift: 0px;
+  position: relative;
+  width: var(--pw);
+  height: var(--ph);
+  transform-style: preserve-3d;
+  outline: none;
+  text-align: left;
+}
+
+.two {
+  --pw: min(440px, calc((100vw - 48px) / 2), calc((100dvh - 170px) * 0.72));
+  /* (shut, only the cover's there, on the right: the book's moved over, to be in the middle) */
+  --closed-shift: calc(var(--pw) / -2);
+  width: calc(var(--pw) * 2);
+}
+
+.in .book {
+  animation: bookIn 0.9s cubic-bezier(0.3, 0.7, 0.3, 1) both;
+}
+
+.out .book {
+  animation: bookOut 0.9s cubic-bezier(0.6, 0, 0.7, 0.4) both;
+}
+
+@keyframes bookIn {
+  0% {
+    transform: translateX(calc(-50vw - 100%)) rotate(-14deg);
+  }
+  45% {
+    transform: translateX(var(--closed-shift)) rotate(-2deg);
+  }
+  60% {
+    transform: translateX(var(--closed-shift)) rotate(0deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes bookOut {
+  0% {
+    transform: none;
+  }
+  45% {
+    transform: translateX(var(--closed-shift));
+  }
+  100% {
+    transform: translateX(calc(-50vw - 100%)) rotate(-12deg);
+  }
+}
+
+/* (until it's open, the pages are hidden under the cover) */
+.in .half,
+.out .half,
+.in .spine,
+.out .spine {
+  animation: pagesShow 0.9s steps(1) both;
+}
+
+.in .halfLeft,
+.in .spine {
+  animation-name: pagesShowLeft;
+}
+
+.out .half,
+.out .spine {
+  animation-name: pagesHide;
+}
+
+@keyframes pagesShow {
+  0% {
+    visibility: hidden;
+  }
+  50% {
+    visibility: visible;
+  }
+}
+
+/* (the left page shows once the cover's past it) */
+@keyframes pagesShowLeft {
+  0% {
+    visibility: hidden;
+  }
+  72% {
+    visibility: visible;
+  }
+}
+
+@keyframes pagesHide {
+  0% {
+    visibility: visible;
+  }
+  50% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: hidden;
+  }
+}
+
+.half {
+  position: absolute;
+  top: 0;
+  width: var(--pw);
+  height: 100%;
+  cursor: pointer;
+}
+
+.halfLeft {
+  left: 0;
+}
+
+.halfRight {
+  left: 0;
+}
+
+.two .halfRight,
+.two .leaf,
+.two .cover {
+  left: var(--pw);
+}
+
+/* the gutter's shadow, down the middle */
+.spine {
+  display: none;
+}
+
+.two .spine {
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--pw) - 3px);
+  width: 6px;
+  z-index: 2;
+  background: linear-gradient(90deg, rgba(60, 40, 20, 0.25), rgba(60, 40, 20, 0.05) 50%, rgba(60, 40, 20, 0.25));
+  pointer-events: none;
+}
+
+/* #endregion */
+
+/* #region--------------------------------------A PAGE */
+
+.page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  box-sizing: border-box;
+  padding: calc(var(--pw) * 0.08) calc(var(--pw) * 0.085) calc(var(--pw) * 0.1);
+  overflow: hidden;
+  background:
+    url("/images/bg_texture.webp") center / 400px,
+    #fffaf0;
+  background-blend-mode: multiply;
+  color: #2b2233;
+  border-radius: 4px 14px 14px 4px;
+  box-shadow:
+    inset 14px 0 18px -14px rgba(60, 40, 20, 0.35),
+    0 18px 40px -18px rgba(0, 0, 0, 0.7);
+}
+
+/* (a left page: the round corners and the gutter's shade the other way round) */
+.leftPage,
+.leafBackFace .page {
+  border-radius: 14px 4px 4px 14px;
+  box-shadow:
+    inset -14px 0 18px -14px rgba(60, 40, 20, 0.35),
+    0 18px 40px -18px rgba(0, 0, 0, 0.7);
+}
+
+/* the book's single page on a phone keeps a cover's edge on its left */
+.book:not(.two) .page {
+  border-radius: 6px 14px 14px 6px;
+  border-left: 6px solid #8f1410;
+  box-shadow:
+    inset 14px 0 18px -14px rgba(60, 40, 20, 0.35),
+    0 18px 40px -18px rgba(0, 0, 0, 0.7);
+}
+
+.blank {
+  background-color: #fbf3e2;
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: "Rowdies-Regular";
+  font-size: 0.68rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #b8241f;
+}
+
+.title {
+  margin: -0.2rem 0 0;
+  font-family: "Rowdies-Bold";
+  font-weight: normal;
+  font-size: clamp(1.25rem, calc(var(--pw) * 0.068), 1.75rem);
+  line-height: 1.12;
+}
+
+.artBox {
+  position: relative;
+  flex: 0 0 auto;
+  height: 40%;
+  margin: 0.15rem 0;
+}
+
+.art {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  translate: -50% -50%;
+  rotate: var(--r);
+  border-radius: 6%;
+  box-shadow: 0 8px 14px -8px rgba(0, 0, 0, 0.55);
+}
+
+.token {
+  border-radius: 50%;
+}
+
+.line {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.body {
+  font-family: "Roboto Light", sans-serif;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  font-size: clamp(0.88rem, calc(var(--pw) * 0.04), 1rem);
+  line-height: 1.45;
+}
+
+.body ul,
+.body ol {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.body ul > li {
+  position: relative;
+  padding-left: 1.15rem;
+}
+
+.body ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0.15rem;
+  top: 0.55em;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #e05a5a;
+}
+
+.golden {
+  counter-reset: rule;
+}
+
+.golden > li {
+  counter-increment: rule;
+  position: relative;
+  padding-left: 2.1rem;
+}
+
+.golden > li::before {
+  content: counter(rule);
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  border-radius: 50%;
+  background: #f1db4b;
+  font-family: "Rowdies-Bold";
+  font-size: 0.85rem;
+}
+
+.body b {
+  font-family: "Roboto Regular", sans-serif;
+  font-weight: normal;
+}
+
+.note {
+  margin: 0 0 0.7rem;
+}
+
+.body ul.remote {
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+
+.body ul.remote > li {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.45rem 0.55rem 0.5rem 0.75rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--c) 14%, #fff);
+  border-left: 4px solid var(--c);
+  font-size: 0.82em;
+  line-height: 1.25;
+}
+
+.body ul.remote > li::before {
+  display: none;
+}
+
+.body ul.remote b {
+  color: color-mix(in srgb, var(--c) 70%, #2b2233);
+}
+
+.body ul.ratings {
+  gap: 0.2rem;
+}
+
+.body ul.ratings > li {
+  display: grid;
+  grid-template-columns: 3.4rem 1fr;
+  align-items: baseline;
+  padding: 0.3rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.9em;
+}
+
+.body ul.ratings > li:nth-child(odd) {
+  background: rgba(241, 219, 75, 0.22);
+}
+
+.body ul.ratings > li::before {
+  display: none;
+}
+
+.body ul.ratings span {
+  font-family: "Rowdies-Bold";
+  color: #b8241f;
+}
+
+.folio {
+  position: absolute;
+  bottom: calc(var(--pw) * 0.035);
+  left: 50%;
+  translate: -50% 0;
+  font-family: "Rowdies-Regular";
+  font-size: 0.75rem;
+  color: rgba(43, 34, 51, 0.5);
+}
+
+/* #endregion */
+
+/* #region--------------------------------------A PAGE TURNING */
+
+.leaf {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  width: var(--pw);
+  height: 100%;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.leafFront,
+.leafBackFace {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.leafBackFace {
+  transform: rotateY(180deg);
+}
+
+/* (the page's shade deepens as it lifts, and lightens as it lands) */
+.leafFront::after,
+.leafBackFace::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: leafShade 0.62s ease-in-out both;
+}
+
+.leafForward {
+  animation: turnForward 0.62s cubic-bezier(0.45, 0.05, 0.35, 1) both;
+}
+
+.leafBack {
+  animation: turnBack 0.62s cubic-bezier(0.45, 0.05, 0.35, 1) both;
+}
+
+@keyframes turnForward {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(-180deg);
+  }
+}
+
+@keyframes turnBack {
+  from {
+    transform: rotateY(-180deg);
+  }
+  to {
+    transform: rotateY(0deg);
+  }
+}
+
+@keyframes leafShade {
+  0%,
+  100% {
+    background: transparent;
+  }
+  50% {
+    background: linear-gradient(90deg, rgba(60, 40, 20, 0.28), rgba(60, 40, 20, 0.05));
+  }
+}
+
+/* on a phone there's no left page: the turned page goes on over, out of sight */
+.book:not(.two) .leafForward {
+  animation-name: turnForwardAway;
+}
+
+.book:not(.two) .leafBack {
+  animation-name: turnBackIn;
+}
+
+@keyframes turnForwardAway {
+  from {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  to {
+    transform: rotateY(-160deg);
+    opacity: 0;
+  }
+}
+
+@keyframes turnBackIn {
+  from {
+    transform: rotateY(-160deg);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+/* #endregion */
+
+/* #region--------------------------------------THE COVER */
+
+.cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  width: var(--pw);
+  height: 100%;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.in .cover {
+  visibility: visible;
+  animation: coverOpen 0.55s cubic-bezier(0.5, 0, 0.3, 1) 0.42s both;
+}
+
+.out .cover {
+  visibility: visible;
+  animation: coverOpen 0.45s cubic-bezier(0.5, 0, 0.3, 1) reverse both;
+}
+
+@keyframes coverOpen {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(-180deg);
+  }
+}
+
+.coverFront,
+.coverInside {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 6px 16px 16px 6px;
+}
+
+.coverFront {
+  overflow: hidden;
+  background: #a51d18;
+  box-shadow: 0 20px 40px -16px rgba(0, 0, 0, 0.75);
+}
+
+/* (the box lid's art, the logo in the middle, in a gold frame) */
+.coverArt {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+}
+
+.coverFront::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 7px #a51d18,
+    inset 0 0 0 9px #f1db4b,
+    inset 0 0 40px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+.coverBand {
+  position: absolute;
+  inset: 0 auto 0 0;
+  z-index: 1;
+  width: 7%;
+  background: linear-gradient(90deg, #6e0e0b, #a51d18 70%, rgba(0, 0, 0, 0.25));
+}
+
+.coverPlate {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  z-index: 1;
+  translate: -46% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.55rem 1.4rem 0.6rem;
+  border-radius: 10px;
+  background: #a51d18;
+  box-shadow:
+    inset 0 0 0 2px #f1db4b,
+    0 8px 16px -6px rgba(0, 0, 0, 0.6);
+  color: #fff6d8;
+  rotate: -2deg;
+}
+
+.coverWord {
+  font-family: "Rowdies-Bold";
+  font-size: clamp(1.2rem, calc(var(--pw) * 0.07), 1.8rem);
+  line-height: 1;
+  letter-spacing: 1px;
+}
+
+.coverEdition {
+  font-family: "Rowdies-Regular";
+  font-size: 0.62rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #f1db4b;
+}
+
+/* (the inside of the cover, seen for a moment as it swings over) */
+.coverInside {
+  transform: rotateY(180deg);
+  border-radius: 16px 6px 6px 16px;
+  background: #8f1410;
+  animation: insideFade 0.55s 0.42s both;
+}
+
+.out .coverInside {
+  animation: insideFade 0.45s reverse both;
+}
+
+@keyframes insideFade {
+  0%,
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* #endregion */
+
+/* #region--------------------------------------THE BAR (turn the page, close) */
+
+.bar {
+  position: absolute;
+  left: 50%;
+  bottom: -64px;
+  translate: -50% 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  white-space: nowrap;
+  transition: opacity 0.25s ease;
+}
+
+.close {
+  position: absolute;
+  top: -54px;
+  right: 0;
+  transition: opacity 0.25s ease;
+}
+
+.in .bar,
+.in .close,
+.out .bar,
+.out .close {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.turn,
+.close {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid #2b2233;
+  border-radius: 50%;
+  background: #fffaf0;
+  box-shadow: 0 3px 0 #2b2233;
+  color: #2b2233;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.turn svg,
+.close svg {
+  width: 20px;
+  height: 20px;
+}
+
+.turn:hover:not(:disabled),
+.close:hover {
+  animation: launcherWiggle 0.5s ease-in-out;
+}
+
+.turn:active:not(:disabled),
+.close:active {
+  translate: 0 2px;
+  box-shadow: 0 1px 0 #2b2233;
+}
+
+.turn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.turn:focus-visible,
+.close:focus-visible {
+  outline: 3px solid #f1db4b;
+  outline-offset: 3px;
+}
+
+.pageCount {
+  min-width: 7.5rem;
+  text-align: center;
+  font-family: "Rowdies-Regular";
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  color: #fff6d8;
+}
+
+/* #endregion */
+
+@media (prefers-reduced-motion: reduce) {
+  .in .book,
+  .out .book,
+  .in .cover,
+  .out .cover,
+  .leafForward,
+  .leafBack {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+  }
+}

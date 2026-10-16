@@ -1522,50 +1522,6 @@
   }
 }
 
-/* the rules, in the site's dialog */
-.rulesPanel {
-  max-width: 36rem;
-  max-height: calc(100svh - 2rem);
-  overflow-y: auto;
-}
-
-.rulesBody {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.4rem;
-}
-
-.rulesBody h3 {
-  margin: 0 0 0.35rem;
-  font-family: "Rowdies-Regular";
-  font-size: 1.05rem;
-  font-weight: normal;
-  color: #323232;
-}
-
-.rulesBody ul {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  margin: 0;
-  padding-left: 1.1rem;
-}
-
-.rulesBody li {
-  font-family: "Roboto Light";
-  font-size: 0.95rem;
-  line-height: 1.45;
-  color: rgba(50, 50, 50, 0.85);
-  opacity: 1;
-}
-
-.rulesBody b {
-  font-family: "Roboto Regular", sans-serif;
-  font-weight: normal;
-  color: #323232;
-}
-
 /* tape (half see-through, a little crooked) holding the note to the table */
 .prompt::before {
   content: "";

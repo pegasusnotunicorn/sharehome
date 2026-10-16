@@ -333,5 +333,6 @@ body.no-select textarea {
 body.in-room {
   --banner-height: 0px;
   --banner-height-mobile: 0px;
-  --navbar-height: 1rem;
+  /* (just room for the rulebook, where the navbar would be) */
+  --navbar-height: 68px;
 }

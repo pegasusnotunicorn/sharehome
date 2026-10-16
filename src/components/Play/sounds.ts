@@ -1,7 +1,7 @@
 // The table's sound effects, made on the spot with Web Audio (no files to load): short, soft and
 // cheerful, like cards and chips on a table. Muting is kept in this browser.
 
-type Sound = "whoosh" | "deal" | "complete" | "undo" | "token" | "trait" | "start" | "tick" | "timeUp" | "wrap" | "finale";
+type Sound = "whoosh" | "deal" | "complete" | "undo" | "token" | "trait" | "start" | "tick" | "timeUp" | "wrap" | "finale" | "page";
 
 let ctx: AudioContext | null = null;
 const MUTE_KEY = "lcm-play-muted";
@@ -101,6 +101,11 @@ export function play(sound: Sound) {
       src.start();
       break;
     }
+    case "page":
+      // a page turning: two soft brushes of paper
+      swish(a, 0, 0.16, 0.07);
+      swish(a, 0.1, 0.12, 0.045);
+      break;
     case "deal":
       swish(a, 0, 0.1, 0.1);
       break;

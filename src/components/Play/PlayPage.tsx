@@ -11,6 +11,7 @@ import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, playerId, 
 import Confirm from "./Confirm";
 import GameTable, { PLAYER_COLORS, useNames } from "./GameTable";
 import Toast from "./Toast";
+import Rulebook from "./Rulebook";
 import { getAllCharacters } from "../Characters/Characters";
 import useRoom from "./useRoom";
 import styles from "../../css/pages/playPage.module.css";
@@ -48,6 +49,8 @@ const PlayPage = () => {
         title="Play Love, Career & Magic online"
         description="Make a game room, send your friends the link and play Love, Career & Magic together online."
       />
+      {/* (in a room, the rulebook's where the navbar would be) */}
+      {code && GAME_SERVER && <Rulebook />}
       {!GAME_SERVER ? (
         <Stage eyebrow="Play online" title="Coming soon" lead="Online games are almost ready. Check back soon!" art />
       ) : !code ? (

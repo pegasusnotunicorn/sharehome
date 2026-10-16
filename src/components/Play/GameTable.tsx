@@ -19,6 +19,7 @@ import DefaultButton from "../utils/DefaultButton";
 import Modal from "../utils/Modal";
 import Confirm from "./Confirm";
 import Finale from "./Finale";
+import { openRulebook } from "./Rulebook";
 import { isMuted, play, setMuted } from "./sounds";
 import modalStyles from "../../css/utils/modal.module.css";
 import styles from "../../css/pages/gameTable.module.css";
@@ -320,7 +321,6 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   useEffect(preloadBacks, []);
   const [muted, setMutedState] = useState(isMuted);
   const [ending, setEnding] = useState(false);
-  const [rules, setRules] = useState(false);
   // a button just pressed on the R.E.M.O.T.E., by anyone: shown to everyone for a moment
   const [remoteShown, setRemoteShown] = useState<RemoteButton | null>(null);
   const lastRemote = useRef(game.remote?.id ?? null);
@@ -582,7 +582,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                       <span>
                         <b>{points.total}</b> pts
                       </span>
-                      <button type="button" className={styles.rulesButton} onClick={() => setRules(true)}>
+                      <button type="button" className={styles.rulesButton} onClick={openRulebook}>
                         Rules
                       </button>
                       <button type="button" className={styles.clothButton} onClick={() => setPicking(true)} aria-label="Settings" title="Settings">
@@ -834,7 +834,6 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
       {flights.map((f) => (
         <Flight key={f.id} plan={f} done={() => setFlights((all) => all.filter((x) => x.id !== f.id))} />
       ))}
-      {rules && <RulesDialog close={() => setRules(false)} />}
       {remoteShown && (
         <div className={styles.remoteShown} role="alert" onClick={() => setRemoteShown(null)} style={{ "--c": REMOTE[remoteShown].color } as CSSProperties}>
           <span className={styles.remoteKey}>
@@ -1112,63 +1111,6 @@ const PlayedDialog = ({
 };
 
 // the rules, close at hand: how a round goes, what scores, and the two golden rules
-const RulesDialog = ({ close }: { close: () => void }) => (
-  <Modal onClose={close} panelClassName={`${modalStyles.panel} ${styles.rulesPanel}`} ariaLabel="How to play">
-    <h2 className={modalStyles.title}>How to play</h2>
-    <p className={modalStyles.text}>
-      You’re the cast of a reality TV show. Tell the story together, out loud, and score points for the ratings.
-    </p>
-    <div className={styles.rulesBody}>
-      <section>
-        <h3>Each episode</h3>
-        <ul>
-          <li>The episode card is where it takes place. You have 3 minutes, and play 4 episodes.</li>
-          <li>
-            There are no turns: talk over each other, play in real time. Complete a direction card by narrating what your
-            character does, then tap it.
-          </li>
-          <li>Producer cards need two people: someone else answers “What happens?”</li>
-          <li>Between episodes, talk over what happened and swap any direction cards you don’t want.</li>
-        </ul>
-      </section>
-      <section>
-        <h3>Points</h3>
-        <ul>
-          <li>
-            <b>Direction cards:</b> Director 1, Producer 2, Showrunner 3.
-          </li>
-          <li>
-            <b>Had something to say too?</b> Someone beat you to a card: tap the completed card, add a token (+1) and say
-            it anyway.
-          </li>
-          <li>
-            <b>Callbacks</b> (from episode 2): mention something from an earlier episode, tap that episode (+1).
-          </li>
-          <li>
-            <b>Character Arc:</b> play one of your traits per episode (tap it once the table agrees). All three is +10.
-          </li>
-          <li>At the end, the total is divided by the number of players for your season’s ratings.</li>
-        </ul>
-      </section>
-      <section>
-        <h3>The two golden rules</h3>
-        <ul>
-          <li>
-            <b>Everything must make sense,</b> however far-fetched.
-          </li>
-          <li>
-            <b>“Yes, and…”:</b> whatever’s said is true, unless it contradicts something said already.
-          </li>
-        </ul>
-      </section>
-    </div>
-    <div className={modalStyles.actions}>
-      <DefaultButton href="/rulebook" text="Full rulebook" variant="secondary" border="dark" />
-      <DefaultButton onClick={close} text="Back to the game" color="red" />
-    </div>
-  </Modal>
-);
-
 // what to do now: a director's note on the table
 const Prompt = ({ game, epPoints }: { game: GameView; epPoints: number }) => {
   let text: React.ReactNode = null;

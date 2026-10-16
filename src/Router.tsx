@@ -27,6 +27,7 @@ const ThankYouPage = lazy(() => import("./components/ThankYouPage"));
 const SignupPage = lazy(() => import("./components/SignupPage"));
 const CheckoutPage = lazy(() => import("./components/CheckoutPage"));
 const RafflePage = lazy(() => import("./components/RafflePage"));
+const PlayPage = lazy(() => import("./components/Play/PlayPage"));
 
 // /buy is handled server-side by netlify/edge-functions/buy.js: the GA4
 // checkout_flow_assigned event and UTM forwarding onto the /checkout redirect.
@@ -96,6 +97,8 @@ const AppRoutes = () => {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/raffle" element={<RafflePage />} />
+          <Route path="/play" element={<PlayPage />} />
+          <Route path="/play/:code" element={<PlayPage />} />
           <Route path="/thankyou" element={<ThankYouPage />} />
           <Route path="/rulebook" element={<ExternalRedirect url="/rulebook.pdf" />} />
           <Route path="/blog" element={<ExternalRedirect url="https://pegasusgames.medium.com" />} />

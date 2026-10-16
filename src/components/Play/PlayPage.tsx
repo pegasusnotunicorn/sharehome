@@ -14,7 +14,6 @@ import GameTable, { PLAYER_COLORS, preloadBacks, useNames } from "./GameTable";
 import Toast from "./Toast";
 import Rulebook from "./Rulebook";
 import CharacterChooser from "./CharacterChooser";
-import DevTools from "./DevTools"; // DEV TOOLS (take out before merging)
 import { getAllCharacters } from "../Characters/Characters";
 import useRoom from "./useRoom";
 import styles from "../../css/pages/playPage.module.css";
@@ -374,7 +373,6 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
       <>
         {reconnecting}
         <GameTable room={room} me={me} isHost={isHost} send={send} />
-        {isHost && <DevTools room={room} send={send} />}{/* DEV TOOLS (take out before merging) */}
       </>
     );
   }
@@ -390,7 +388,6 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
 
       {reconnecting}
 
-      {isHost && <DevTools room={room} send={send} />}{/* DEV TOOLS (take out before merging) */}
       {/* (on a phone, your character comes first: it's the thing to do) */}
       <div className={styles.lobby}>
       <div className={styles.lobbyTop}>

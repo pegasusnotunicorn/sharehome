@@ -24,9 +24,6 @@ import {
   type RoomError,
   type RoomView,
   type ServerMessage,
-  DIRECTION_DECKS, // DEV TOOLS
-  REMOTE_BUTTONS, // DEV TOOLS
-  type DevAction, // DEV TOOLS
 } from "./protocol";
 import { addPlayer, gameView, logPresence, move, newGame, removePlayer as removeFromGame, tick, type StoredGame } from "./game";
 
@@ -137,7 +134,6 @@ interface StoredPlayer {
   id: string;
   name: string;
   color: number;
-  test?: boolean; // DEV TOOLS: a pretend player, added from the dev tools (take out before merging)
 }
 
 interface StoredRoom {
@@ -151,7 +147,6 @@ interface StoredRoom {
   emptySince: number | null;
   // the game on the table (null: in the lobby)
   game?: StoredGame | null;
-  testAway?: boolean; // DEV TOOLS: the pretend players' connections dropped (take out before merging)
   // in the waiting room: who picked which character, and who's ready
   picks?: Record<string, number>;
   ready?: Record<string, boolean>;
@@ -261,12 +256,6 @@ export class Room extends DurableObject<Env> {
     const isHost = room.hostId === playerId;
 
     switch (msg.t) {
-      // ---- DEV TOOLS (take out before merging) ----
-      case "dev": {
-        if (!isHost || !this.dev(msg.action)) return;
-        break;
-      }
-      // ---- END DEV TOOLS ----
       case "rename": {
         const name = cleanName(msg.name);
         const me = room.players.find((p) => p.id === playerId);
@@ -431,79 +420,9 @@ export class Room extends DurableObject<Env> {
   }
 
   private isOnline(id: string, closing?: WebSocket) {
-    // DEV TOOLS: a pretend player's online unless the dev tools have dropped them (take out before merging)
-    if (this.room?.players.find((p) => p.id === id)?.test) return !this.room.testAway;
     return this.openSockets(closing, id).length > 0;
   }
 
-  // ---- DEV TOOLS (for trying the UI out; take out before merging) ----
-  private dev(action: DevAction): boolean {
-    const room = this.room!;
-    const game = room.game;
-    const now = Date.now();
-    const tests = room.players.filter((p) => p.test);
-    const any = <T,>(xs: readonly T[]) => xs[Math.floor(Math.random() * xs.length)];
-    switch (action) {
-      case "addPlayer": {
-        if (room.players.length >= MAX_PLAYERS) return false;
-        const taken = new Set(room.players.map((p) => p.color));
-        let color = 0;
-        while (taken.has(color)) color++;
-        const names = ["Robin", "Sasha", "Jules", "Kit", "Remy", "Noor", "Max", "Ira"];
-        const id = `test-${crypto.randomUUID().slice(0, 8)}`;
-        room.players.push({ id, name: any(names.filter((n) => !room.players.some((p) => p.name === n))) ?? "Tester", color, test: true });
-        if (game) addPlayer(game, id);
-        else {
-          // (picks someone nobody has, and is ready)
-          const picks = (room.picks ??= {});
-          const free = Array.from({ length: DECK_SIZES.characters }, (_, i) => i).filter((c) => !Object.values(picks).includes(c));
-          if (free.length) picks[id] = any(free);
-          (room.ready ??= {})[id] = true;
-        }
-        return true;
-      }
-      case "removePlayer": {
-        const last = tests[tests.length - 1];
-        return !!last && this.removePlayer(last.id, "kicked");
-      }
-      case "playersAway": {
-        if (!tests.length) return false;
-        room.testAway = !room.testAway;
-        if (game) for (const p of tests) logPresence(game, p.id, !room.testAway);
-        return true;
-      }
-      case "botCard": {
-        const who = tests[0];
-        if (!game || !who || game.phase !== "playing") return false;
-        const open = DIRECTION_DECKS.flatMap((deck) => game.faceUp[deck].map((c, slot) => (c === null ? null : { deck, slot }))).filter((x) => x !== null);
-        const pick = any(open);
-        return !!pick && move(game, who.id, { t: "complete", deck: pick.deck, slot: pick.slot }, now);
-      }
-      case "botRemote": {
-        const who = tests[0];
-        if (!game || !who) return false;
-        return move(game, who.id, { t: "remote", button: any(REMOTE_BUTTONS) }, now);
-      }
-      case "tenSeconds": {
-        if (!game || game.phase !== "playing") return false;
-        game.endsAt = now + 10_000;
-        game.pausedLeft = null;
-        return true;
-      }
-      case "endEpisode": {
-        if (!game || game.phase !== "playing") return false;
-        game.endsAt = now;
-        return tick(game, now);
-      }
-      case "finale": {
-        if (!game) return false;
-        game.phase = "over";
-        game.endsAt = null;
-        return true;
-      }
-    }
-  }
-  // ---- END DEV TOOLS ----
 
   private view(closing?: WebSocket): RoomView {
     const room = this.room!;

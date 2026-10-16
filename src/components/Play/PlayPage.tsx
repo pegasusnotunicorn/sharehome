@@ -27,6 +27,11 @@ const PlayPage = () => {
   const [name, setName] = useState(savedName);
   const [joined, setJoined] = useState(() => !!savedName());
   usePageTitle(code ? `Game ${code} | Play online` : "Play online");
+  // (a game's for tapping, not selecting: no highlighting text on these pages, dialogs included)
+  useEffect(() => {
+    document.body.classList.add("no-select");
+    return () => document.body.classList.remove("no-select");
+  }, []);
 
   return (
     <div className={`content ${styles.playPage}`}>

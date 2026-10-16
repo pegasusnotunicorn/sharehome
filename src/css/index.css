@@ -315,3 +315,16 @@ li {
     font-size: 0.75rem;
   }
 }
+
+/* pages you play rather than read (the online game): nothing to highlight, but fields still type and select */
+body.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+body.no-select input,
+body.no-select textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}

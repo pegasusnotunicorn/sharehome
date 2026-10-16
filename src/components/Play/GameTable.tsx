@@ -16,7 +16,6 @@ import {
 import DefaultButton from "../utils/DefaultButton";
 import Modal from "../utils/Modal";
 import Confirm from "./Confirm";
-import Picnic, { PicnicPaint } from "./Picnic";
 import { isMuted, play, setMuted } from "./sounds";
 import modalStyles from "../../css/utils/modal.module.css";
 import styles from "../../css/pages/gameTable.module.css";
@@ -222,10 +221,12 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
     }
   };
   const [zoom, setZoom] = useState<{ player: Player; character: number } | null>(null);
-  const [basketOpen, setBasketOpen] = useState(false);
+  const [playedOpen, setPlayedOpen] = useState(false);
   // the "+2" that rises off a card when someone completes it
   const [floaters, setFloaters] = useState<{ id: string; deck: DirectionDeck; slot: number; points: number }[]>([]);
   const seen = useRef<Set<string> | null>(null);
+  // the face-up cards as they were, to tell which slot a completed card came from
+  const lastFaceUp = useRef(game.faceUp);
 
   const unread = phoneTab !== "log" && game.log.length > 0 && game.log[0].id !== seenLog;
   useEffect(() => {
@@ -237,13 +238,16 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
     if (seen.current) {
       for (const c of ep.completed) {
         if (seen.current.has(c.id)) continue;
-        const f = { id: c.id, deck: c.deck, slot: c.slot ?? 0, points: DIRECTION_POINTS[c.deck] };
+        // (where it lay: the slot that held it a moment ago, else the one the server names)
+        const was = lastFaceUp.current[c.deck]?.indexOf(c.i) ?? -1;
+        const f = { id: c.id, deck: c.deck, slot: was >= 0 ? was : (c.slot ?? 0), points: DIRECTION_POINTS[c.deck] };
         setFloaters((all) => [...all, f]);
         setTimeout(() => setFloaters((all) => all.filter((x) => x.id !== f.id)), 1100);
       }
     }
     seen.current = ids;
-  }, [ep.completed]);
+    lastFaceUp.current = game.faceUp;
+  }, [ep.completed, game.faceUp]);
 
   const players = room.players.filter((p) => game.hands[p.id]);
   const mine = players.find((p) => p.id === me);
@@ -268,38 +272,24 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
 
   return (
     <div className={styles.room}>
-      <PicnicPaint />
       <div className={`${styles.tabletop}${clothClass(cloth)}`}>
         <Prompt game={game} epPoints={epPoints} />
 
         {others.length > 0 && (
-          <div className={styles.seatsRow}>
-            <Picnic spread="left" />
-            <div
-              className={styles.othersRow}
-              style={{ "--seats": others.length } as CSSProperties}
-            >
-              {others.map((p) => (
-                <Seat key={p.id} player={p} {...seatProps} />
-              ))}
-            </div>
-            <Picnic spread="right" />
+          <div className={styles.othersRow}>
+            {others.map((p) => (
+              <Seat key={p.id} player={p} {...seatProps} />
+            ))}
           </div>
         )}
 
         <div className={styles.middle}>
           {/* #region the episode, and the cards completed in it */}
           <section className={styles.episodeArea} aria-label="This episode">
-            <div className={styles.placard}>
-              <span>
-                Episode {game.episode} <small>of {EPISODES}</small>
-              </span>
-              <b>+{epPoints}</b>
-            </div>
             <div className={styles.episodeCard} style={{ "--tilt": tilt(ep.card + 3) } as CSSProperties}>
               <FlipCard key={ep.card} front={art.episode(ep.card)} back={art.episodeBack} alt={name("episode", ep.card)} width={768} height={549} />
             </div>
-            <Basket cards={ep.completed} points={epPoints} open={() => setBasketOpen(true)} />
+            <PlayArea cards={ep.completed} points={epPoints} open={() => setPlayedOpen(true)} />
           </section>
           {/* #endregion */}
 
@@ -550,10 +540,8 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
         </div>
 
         {mine && (
-          <div className={`${styles.seatsRow} ${styles.mineRow}`}>
-            <Picnic spread="nearLeft" />
+          <div className={styles.mineRow}>
             <Seat player={mine} big {...seatProps} />
-            <Picnic spread="nearRight" />
           </div>
         )}
       </div>
@@ -577,52 +565,16 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
         </Modal>
       )}
       {rules && <RulesDialog close={() => setRules(false)} />}
-      {basketOpen && (
-        <Modal onClose={() => setBasketOpen(false)} panelClassName={`${modalStyles.panel} ${styles.basketPanel}`} ariaLabel="In the basket">
-          <h2 className={modalStyles.title}>In the basket</h2>
-          <p className={modalStyles.text}>
-            Episode {game.episode}: {ep.completed.length} card{ep.completed.length === 1 ? "" : "s"}, +{epPoints}. Had something
-            to say too? Add a token to a card.
-          </p>
-          {ep.completed.length === 0 ? (
-            <p className={styles.basketEmpty}>Nothing in the basket yet.</p>
-          ) : (
-            <ul className={styles.basketList}>
-              {[...ep.completed].reverse().map((c) => (
-                <li key={c.id}>
-                  <img src={art.direction(c.deck, c.i)} alt={name(c.deck, c.i)} width="768" height="497" />
-                  <div className={styles.basketInfo}>
-                    <b>+{DIRECTION_POINTS[c.deck] + c.tokens}</b>
-                    <span>{nameOf(c.by)}</span>
-                  </div>
-                  <div className={styles.basketActions}>
-                    <span className={styles.tokenCount} aria-label={`${c.tokens} tokens`}>
-                      <img src={art.token} alt="" />
-                      {c.tokens}
-                    </span>
-                    <button type="button" className={styles.chipButton} onClick={() => send({ t: "token", on: "card", id: c.id, add: true })}>
-                      +1
-                    </button>
-                    <button
-                      type="button"
-                      className={styles.chipButton}
-                      disabled={c.tokens === 0}
-                      onClick={() => send({ t: "token", on: "card", id: c.id, add: false })}
-                    >
-                      −1
-                    </button>
-                    <button type="button" className={`${styles.chipButton} ${styles.chipDanger}`} onClick={() => send({ t: "undo", id: c.id })}>
-                      Undo
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-          <div className={modalStyles.actions}>
-            <DefaultButton onClick={() => setBasketOpen(false)} text="Back to the table" color="red" />
-          </div>
-        </Modal>
+      {playedOpen && (
+        <PlayedDialog
+          episode={game.episode}
+          cards={ep.completed}
+          points={epPoints}
+          name={name}
+          nameOf={nameOf}
+          send={send}
+          close={() => setPlayedOpen(false)}
+        />
       )}
       {picking && (
         <Modal onClose={() => setPicking(false)} ariaLabel="Tablecloth">
@@ -657,44 +609,157 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   );
 };
 
-// The picnic basket: the cards completed this episode go in it (it never grows); the newest few peek
-// over the rim, with the count and the points on a tag. Tap it to see them all.
-const Basket = ({ cards, points, open }: { cards: GameView["episodes"][number]["completed"]; points: number; open: () => void }) => {
-  const [bounce, setBounce] = useState(0);
-  const count = useRef(cards.length);
-  useEffect(() => {
-    if (cards.length > count.current) setBounce((b) => b + 1);
-    count.current = cards.length;
-  }, [cards.length]);
-  const peek = cards.slice(-3);
+type Played = GameView["episodes"][number]["completed"];
+
+// The play area: the cards completed this episode, dropped one over the other in a space that never
+// grows (the newest on top). It's one thing to tap: it opens the list of them all.
+const PlayArea = ({ cards, points, open }: { cards: Played; points: number; open: () => void }) => {
+  const shown = cards.slice(-8);
   return (
     <button
       type="button"
-      className={styles.basket}
+      className={styles.playArea}
       onClick={open}
-      aria-label={`The basket: ${cards.length} card${cards.length === 1 ? "" : "s"} this episode, +${points}. See them all`}
+      aria-label={`Played this episode: ${cards.length} card${cards.length === 1 ? "" : "s"}, +${points}. See them all`}
     >
-      <span key={bounce} className={`${styles.basketBody}${bounce ? ` ${styles.basketBounce}` : ""}`}>
-        <span className={styles.basketHandle} aria-hidden />
-        <span className={styles.basketCards} aria-hidden>
-          {peek.map((c, i) => (
-            <img
-              key={c.id}
-              src={art.direction(c.deck, c.i)}
-              alt=""
-              style={{ "--i": i, "--n": peek.length, "--tilt": tilt(c.i + i * 5) } as CSSProperties}
-            />
-          ))}
-        </span>
-        <span className={styles.basketFront} aria-hidden />
-        <span className={styles.basketTag}>
-          <b>+{points}</b>
-          <small>
-            {cards.length} card{cards.length === 1 ? "" : "s"}
-          </small>
-        </span>
+      <span className={styles.playCards} aria-hidden>
+        {shown.map((c, i) => (
+          <img
+            key={c.id}
+            src={art.direction(c.deck, c.i)}
+            alt=""
+            style={
+              {
+                "--x": `${((c.i * 37 + i * 53) % 46) + 4}%`,
+                "--y": `${((c.i * 29 + i * 17) % 34) + 6}%`,
+                "--tilt": `${((c.i * 13 + i * 7) % 24) - 12}deg`,
+              } as CSSProperties
+            }
+          />
+        ))}
+      </span>
+      <span className={styles.playLabel}>
+        {cards.length === 0 ? (
+          "Played cards land here"
+        ) : (
+          <>
+            <b>+{points}</b> · {cards.length} card{cards.length === 1 ? "" : "s"} · see all
+          </>
+        )}
       </span>
     </button>
+  );
+};
+
+const PAGE = 5;
+
+// everything played this episode: search it, a page at a time; tokens and undo for each card
+const PlayedDialog = ({
+  episode,
+  cards,
+  points,
+  name,
+  nameOf,
+  send,
+  close,
+}: {
+  episode: number;
+  cards: Played;
+  points: number;
+  name: (kind: string, i: number) => string;
+  nameOf: (id: string) => string;
+  send: (msg: ClientMessage) => void;
+  close: () => void;
+}) => {
+  const [query, setQuery] = useState("");
+  const [page, setPage] = useState(0);
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const list = [...cards]
+    .reverse()
+    .filter((c) => {
+      const hay = `${name(c.deck, c.i)} ${c.deck} ${nameOf(c.by)}`.toLowerCase();
+      return words.every((w) => hay.includes(w));
+    });
+  const pages = Math.max(1, Math.ceil(list.length / PAGE));
+  const at = Math.min(page, pages - 1);
+  const shown = list.slice(at * PAGE, at * PAGE + PAGE);
+
+  return (
+    <Modal onClose={close} panelClassName={`${modalStyles.panel} ${styles.playedPanel}`} ariaLabel="Played this episode">
+      <h2 className={modalStyles.title}>Played this episode</h2>
+      <p className={modalStyles.text}>
+        Episode {episode}: {cards.length} card{cards.length === 1 ? "" : "s"}, +{points}. Had something to say too? Add a
+        token to a card.
+      </p>
+      {cards.length > PAGE && (
+        <input
+          className={styles.playedSearch}
+          type="search"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setPage(0);
+          }}
+          placeholder="Search by card or player"
+          aria-label="Search the played cards"
+        />
+      )}
+      {cards.length === 0 ? (
+        <p className={styles.playedEmpty}>Nothing played yet.</p>
+      ) : list.length === 0 ? (
+        <p className={styles.playedEmpty}>No card matches that.</p>
+      ) : (
+        <ul className={styles.playedList}>
+          {shown.map((c) => (
+            <li key={c.id}>
+              <img src={art.direction(c.deck, c.i)} alt={name(c.deck, c.i)} width="768" height="497" />
+              <div className={styles.playedInfo}>
+                <b>+{DIRECTION_POINTS[c.deck] + c.tokens}</b>
+                <span>{nameOf(c.by)}</span>
+              </div>
+              <div className={styles.playedActions}>
+                <span className={styles.tokenCount} aria-label={`${c.tokens} tokens`}>
+                  <img src={art.token} alt="" />
+                  {c.tokens}
+                </span>
+                <button type="button" className={styles.chipButton} onClick={() => send({ t: "token", on: "card", id: c.id, add: true })}>
+                  +1
+                </button>
+                <button
+                  type="button"
+                  className={styles.chipButton}
+                  disabled={c.tokens === 0}
+                  onClick={() => send({ t: "token", on: "card", id: c.id, add: false })}
+                >
+                  −1
+                </button>
+                <button type="button" className={`${styles.chipButton} ${styles.chipDanger}`} onClick={() => send({ t: "undo", id: c.id })}>
+                  Undo
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className={styles.playedFoot}>
+        {pages > 1 ? (
+          <div className={styles.pager}>
+            <button type="button" className={styles.chipButton} disabled={at === 0} onClick={() => setPage(at - 1)} aria-label="Previous page">
+              ‹
+            </button>
+            <span>
+              {at + 1} of {pages}
+            </span>
+            <button type="button" className={styles.chipButton} disabled={at >= pages - 1} onClick={() => setPage(at + 1)} aria-label="Next page">
+              ›
+            </button>
+          </div>
+        ) : (
+          <span />
+        )}
+        <DefaultButton onClick={close} text="Back to the table" color="red" />
+      </div>
+    </Modal>
   );
 };
 

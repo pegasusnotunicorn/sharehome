@@ -11,6 +11,8 @@
     { "name": "CREATE_LIMIT", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } },
     { "name": "JOIN_LIMIT", "namespace_id": "1002", "simple": { "limit": 60, "period": 60 } }
   ],
+  // (a deploy keeps variables set in the dashboard, so the PAUSED off switch survives one)
+  "keep_vars": true,
   "vars": {
     "ALLOWED_ORIGINS": "https://lovecareermagic.com,https://www.lovecareermagic.com",
     "NETLIFY_SITE": "lovecareermagic"

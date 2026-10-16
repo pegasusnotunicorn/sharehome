@@ -132,6 +132,9 @@ export interface RoomView {
   picks: Record<string, number>;
   ready: Record<string, boolean>;
   game: GameView | null;
+  // how many are watching (spectators: no seat; they see the table, and can't touch it). Counted as
+  // the room's sent; a spectator coming or going doesn't send it again on their own
+  watching: number;
   // the server's clock as it sent this, so the page can line its own clock up with it
   now: number;
 }
@@ -174,7 +177,7 @@ export type ServerMessage =
 // ("expired": the room closed, after a long while)
 export type ByeReason = "kicked" | "left" | "replaced" | "expired";
 
-export type RoomError = "not-found" | "full" | "bad-request";
+export type RoomError = "not-found" | "full" | "bad-request" | "watch-full";
 
 // Why the room closed a socket, so the page knows not to reconnect
 export const CLOSE_KICKED = 4003;

@@ -30,6 +30,11 @@ Cloudflare has no spending cap, so the server turns away anything that would wak
 - **Per address, a minute:** 5 new rooms and 60 room visits (the join screen, a socket). Set in
   `wrangler.jsonc`.
 - **A flooding socket** (over 200 messages in 10 seconds) is closed.
+- **Spectators** (anyone on a room's link who isn't playing: they asked to watch, or the room was
+  full, or the show had started) are cheap by design: joining or leaving saves nothing and sends
+  nobody else anything, their messages are dropped unread, and a room with only spectators left is
+  deleted after an hour like an empty one. Each room takes at most 50 at once; set the variable
+  `MAX_SPECTATORS` (same place as `PAUSED`) to change that, or to `0` to turn watching off.
 - **Rooms don't linger:** an empty room is deleted after an hour, and every room after 12 hours.
 - **The page:** a tab left in the background lets go of its room after 10 minutes (and comes back
   when it's looked at), and doesn't retry a dropped connection while it's hidden.

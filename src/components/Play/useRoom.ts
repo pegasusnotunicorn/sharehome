@@ -7,7 +7,7 @@ export type RoomStatus = "connecting" | "open" | "reconnecting" | "refused" | "g
 // A game room's socket: the room as the server last sent it, and a way to send it moves. A dropped
 // socket comes back on its own (sooner when the page is looked at again or the network returns);
 // one the room refused or closed for good doesn't.
-export default function useRoom(code: string | null, name: string) {
+export default function useRoom(code: string | null, name: string, watch = false) {
   const [room, setRoom] = useState<RoomView | null>(null);
   const [status, setStatus] = useState<RoomStatus>("connecting");
   const [error, setError] = useState<RoomError | null>(null);
@@ -26,7 +26,7 @@ export default function useRoom(code: string | null, name: string) {
     const connect = () => {
       clearTimeout(retry);
       if (done || (ws.current && ws.current.readyState <= WebSocket.OPEN)) return;
-      const socket = new WebSocket(socketUrl(code, nameRef.current));
+      const socket = new WebSocket(socketUrl(code, nameRef.current, watch));
       ws.current = socket;
       socket.onopen = () => {
         tries = 0;
@@ -103,7 +103,7 @@ export default function useRoom(code: string | null, name: string) {
       ws.current?.close();
       ws.current = null;
     };
-  }, [code]);
+  }, [code, watch]);
 
   const send = useCallback((msg: ClientMessage) => {
     if (ws.current?.readyState === WebSocket.OPEN) ws.current.send(JSON.stringify(msg));

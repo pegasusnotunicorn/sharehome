@@ -1674,3 +1674,95 @@
 }
 
 /* #endregion */
+
+/* #region--------------------------------------THE AUDIENCE */
+
+/* how many are watching: a little pill, bottom left (for a spectator: that they're watching, a seat to
+   take, a way out) */
+.watchers {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.4rem 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(28, 26, 43, 0.88);
+  box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.6);
+  font-family: "Rowdies-Regular";
+  font-size: 0.85rem;
+  white-space: nowrap;
+  color: #fff;
+}
+
+.watchersCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding-right: 0.35rem;
+}
+
+.watchersCount svg {
+  width: 18px;
+  height: 18px;
+  color: #f1db4b;
+}
+
+.watchersSeat,
+.watchersLeave {
+  padding: 0.35rem 0.8rem;
+  border: 0;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.watchersSeat {
+  background: #d81e18;
+  color: #fff;
+}
+
+.watchersSeat:hover {
+  background: #c01a15;
+}
+
+.watchersLeave {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.watchersLeave:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* (a spectator's pill, bigger, in the middle) */
+.watchersMe {
+  left: 50%;
+  translate: -50% 0;
+  padding: 0.45rem 0.5rem 0.45rem 1rem;
+  font-size: 0.95rem;
+}
+
+/* under Join the game: just watching */
+.justWatch {
+  display: block;
+  margin: 0.9rem auto 0;
+  padding: 0.2rem 0.4rem;
+  border: 0;
+  background: none;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.9rem;
+  color: rgba(50, 50, 50, 0.72);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.justWatch:hover {
+  color: #323232;
+}
+
+/* #endregion */

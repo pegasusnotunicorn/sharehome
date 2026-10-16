@@ -47,12 +47,13 @@ export async function createRoom(): Promise<string> {
   return ((await res.json()) as { code: string }).code;
 }
 
-export async function roomInfo(code: string): Promise<{ exists: boolean; full: boolean }> {
+export async function roomInfo(code: string): Promise<{ exists: boolean; full: boolean; started?: boolean }> {
   const res = await fetch(`${GAME_SERVER}/rooms/${code}`);
   if (res.status === 404) return { exists: false, full: false };
   if (!res.ok) throw new Error(`info ${res.status}`);
   return res.json();
 }
 
-export const socketUrl = (code: string, name: string) =>
-  `${GAME_SERVER.replace(/^http/, "ws")}/rooms/${code}/socket?player=${encodeURIComponent(playerId())}&name=${encodeURIComponent(name)}`;
+// (watch: as a spectator, if they're not playing already)
+export const socketUrl = (code: string, name: string, watch?: boolean) =>
+  `${GAME_SERVER.replace(/^http/, "ws")}/rooms/${code}/socket?player=${encodeURIComponent(playerId())}&name=${encodeURIComponent(name)}${watch ? "&watch=1" : ""}`;

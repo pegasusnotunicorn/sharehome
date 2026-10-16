@@ -32,6 +32,8 @@ const PlayPage = () => {
   // (the name this browser plays as: a room joins straight away once there is one)
   const [name, setName] = useState(savedName);
   const [joined, setJoined] = useState(() => !!savedName());
+  // watching, not playing (asked to, or the room was full, or the show had started)
+  const [watch, setWatch] = useState(false);
   usePageTitle(code ? `Game ${code} | Play online` : "Play online");
   // (a game's for tapping, not selecting: no highlighting text on these pages, dialogs included)
   useEffect(() => {
@@ -59,8 +61,17 @@ const PlayPage = () => {
         <Start name={name} setName={setName} created={() => setJoined(true)} />
       ) : !isCode(code) ? (
         <Missing code={code} />
-      ) : joined && name ? (
-        <Lobby code={code} name={name} />
+      ) : watch || (joined && name) ? (
+        <Lobby
+          code={code}
+          name={name}
+          watch={watch}
+          takeSeat={() => {
+            // (a spectator taking a free seat: in as a player, by name)
+            setWatch(false);
+            if (!name) setJoined(false);
+          }}
+        />
       ) : (
         <JoinByLink
           code={code}
@@ -70,6 +81,7 @@ const PlayPage = () => {
             saveName(name);
             setJoined(true);
           }}
+          watch={() => setWatch(true)}
         />
       )}
     </div>
@@ -273,8 +285,8 @@ const Missing = ({ code, full }: { code: string; full?: boolean }) => (
 );
 
 // someone's link, the first time: their name, then in
-const JoinByLink = ({ code, name, setName, join }: { code: string; name: string; setName: (n: string) => void; join: () => void }) => {
-  const [info, setInfo] = useState<{ exists: boolean; full: boolean } | null>(null);
+const JoinByLink = ({ code, name, setName, join, watch }: { code: string; name: string; setName: (n: string) => void; join: () => void; watch: () => void }) => {
+  const [info, setInfo] = useState<{ exists: boolean; full: boolean; started?: boolean } | null>(null);
   useEffect(() => {
     let live = true;
     roomInfo(code)
@@ -285,8 +297,14 @@ const JoinByLink = ({ code, name, setName, join }: { code: string; name: string;
     };
   }, [code]);
 
+  // (full, or the show's on: in to watch, no name needed)
+  const watchOnly = !!info && info.exists && (info.full || !!info.started);
+  useEffect(() => {
+    if (watchOnly) watch();
+  }, [watchOnly, watch]);
+
   if (info && !info.exists) return <Missing code={code} />;
-  if (info?.full) return <Missing code={code} full />;
+  if (watchOnly) return null;
 
   return (
     <div className={styles.narrowPage}>
@@ -306,6 +324,9 @@ const JoinByLink = ({ code, name, setName, join }: { code: string; name: string;
         <h2 className={styles.doorTitle}>Who’s playing?</h2>
         <NameField name={name} setName={setName} autoFocus />
         <DefaultButton button="submit" text="Join the game" icon="enter" color="red" className={styles.wide} />
+        <button type="button" className={styles.justWatch} onClick={watch}>
+          Just watch
+        </button>
       </form>
       <Voice stacked />
     </div>
@@ -316,9 +337,9 @@ const JoinByLink = ({ code, name, setName, join }: { code: string; name: string;
 
 // #region--------------------------------------THE LOBBY
 
-const Lobby = ({ code, name }: { code: string; name: string }) => {
+const Lobby = ({ code, name, watch, takeSeat }: { code: string; name: string; watch: boolean; takeSeat: () => void }) => {
   const navigate = useNavigate();
-  const { room, status, error, bye, send } = useRoom(code, name);
+  const { room, status, error, bye, send } = useRoom(code, name, watch);
   const [removing, setRemoving] = useState<Player | null>(null);
   const [leaving, setLeaving] = useState(false);
   const [startCheck, setStartCheck] = useState(false);
@@ -329,6 +350,12 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
     return () => clearTimeout(t);
   }, []);
 
+  if (status === "refused" && error === "watch-full")
+    return (
+      <Stage eyebrow={<>Game {code}</>} title="The studio’s packed" lead="This show has all the spectators it can take. Try again in a bit, or start your own game.">
+        <DefaultButton navlink="/play" text="Start a game" icon="plus" color="red" />
+      </Stage>
+    );
   if (status === "refused") return <Missing code={code} full={error === "full"} />;
   if (status === "gone") {
     return (
@@ -358,6 +385,9 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
   }
 
   const isHost = room.hostId === me;
+  // watching: in the room, but not one of its players
+  const spectating = !room.players.some((p) => p.id === me);
+  const watchers = <Watchers room={room} spectating={spectating} takeSeat={takeSeat} leave={() => navigate("/play")} />;
   const seats = Array.from({ length: MAX_PLAYERS }, (_, i) => room.players[i] ?? null);
   const canStart = isHost && room.players.length >= MIN_PLAYERS;
   const notReady = room.players.filter((p) => !room.ready?.[p.id]);
@@ -373,6 +403,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
       <>
         {reconnecting}
         <GameTable room={room} me={me} isHost={isHost} send={send} />
+        {watchers}
       </>
     );
   }
@@ -380,13 +411,14 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
   return (
     <>
       <PageIntro
-        eyebrow="Game room"
-        title="Getting ready"
-        lead="Send your friends the link."
+        eyebrow={spectating ? "Watching" : "Game room"}
+        title={spectating ? "The show’s about to start" : "Getting ready"}
+        lead={spectating ? "You’re in the audience. The cast is getting ready." : "Send your friends the link."}
         className={styles.intro}
       />
 
       {reconnecting}
+      {watchers}
 
       {/* (on a phone, your character comes first: it's the thing to do) */}
       <div className={styles.lobby}>
@@ -440,7 +472,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
         </section>
       </div>
 
-      <CharacterPicker room={room} me={me} send={send} />
+      {!spectating && <CharacterPicker room={room} me={me} send={send} />}
 
       <section className={styles.cast} aria-labelledby="cast-title">
         <div className={styles.castHead}>
@@ -465,11 +497,13 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
       <Voice />
       </div>
 
-      <div className={styles.leave}>
-        <button type="button" className={styles.textButton} onClick={() => setLeaving(true)}>
-          Leave the game
-        </button>
-      </div>
+      {!spectating && (
+        <div className={styles.leave}>
+          <button type="button" className={styles.textButton} onClick={() => setLeaving(true)}>
+            Leave the game
+          </button>
+        </div>
+      )}
 
       {startCheck && (
         <Confirm
@@ -768,6 +802,31 @@ const useCopyLink = (code: string) => {
 };
 
 // The invite: the room's code (a tap copies it) and its link, to copy, and the faces of the cast so far
+// the audience: how many are watching (to everyone), and for a spectator, that they're watching, a
+// way to take a seat while there's one free before the show, and a way out
+const Watchers = ({ room, spectating, takeSeat, leave }: { room: RoomView; spectating: boolean; takeSeat: () => void; leave: () => void }) => {
+  const seat = !room.game && room.players.length < MAX_PLAYERS;
+  if (!spectating && !room.watching) return null;
+  return (
+    <div className={`${styles.watchers}${spectating ? ` ${styles.watchersMe}` : ""}`} role="status">
+      <span className={styles.watchersCount}>
+        <Icon name="eye" />
+        {spectating ? "You’re watching" : `${room.watching} watching`}
+      </span>
+      {spectating && seat && (
+        <button type="button" className={styles.watchersSeat} onClick={takeSeat}>
+          Take a seat
+        </button>
+      )}
+      {spectating && (
+        <button type="button" className={styles.watchersLeave} onClick={leave}>
+          Leave
+        </button>
+      )}
+    </div>
+  );
+};
+
 // a player who's ready: a tick on their face
 const ReadyTick = () => (
   <span className={styles.readyTick} role="img" aria-label="Ready">

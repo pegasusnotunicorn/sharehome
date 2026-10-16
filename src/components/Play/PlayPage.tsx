@@ -11,6 +11,7 @@ import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, playerId, 
 import Confirm from "./Confirm";
 import GameTable, { PLAYER_COLORS, useNames } from "./GameTable";
 import Toast from "./Toast";
+import { getAllCharacters } from "../Characters/Characters";
 import useRoom from "./useRoom";
 import styles from "../../css/pages/playPage.module.css";
 
@@ -18,6 +19,8 @@ import styles from "../../css/pages/playPage.module.css";
 // up top, then making or joining a room; in a room, the page's own heading, then the invite (a
 // stage-lit card) beside the start of the show, and the cast's six seats. The table comes next.
 
+// (in the deck's order: a character's face, its emoji, by its place in the deck)
+const CHARACTERS = getAllCharacters();
 const colorOf = (p: Player) => PLAYER_COLORS[p.color % PLAYER_COLORS.length];
 
 const PlayPage = () => {
@@ -375,7 +378,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
       {reconnecting}
 
       <div className={styles.lobbyTop}>
-        <Invite code={room.code} />
+        <Invite code={room.code} room={room} />
         <section className={styles.showtime}>
           <div className={styles.showtimeText}>
             <span className={styles.onAir}>
@@ -743,18 +746,47 @@ const useCopyLink = (code: string) => {
   return { link, copied, failed, setFailed, copy };
 };
 
-// The invite: the room's code and its link, to copy
-const Invite = ({ code }: { code: string }) => {
+// The invite: the room's code (a tap copies it) and its link, to copy, and the faces of the cast so far
+const Invite = ({ code, room }: { code: string; room: RoomView }) => {
   const { link, copied, failed, setFailed, copy } = useCopyLink(code);
+  const [codeCopied, setCodeCopied] = useState(false);
+  const copyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCodeCopied(true);
+      setTimeout(() => setCodeCopied(false), 2000);
+    } catch {
+      setFailed(true);
+    }
+  };
+  const faces = room.players.filter((p) => room.picks?.[p.id] !== undefined);
   return (
     <section className={styles.invite} aria-labelledby="invite-title">
       <h2 className={styles.inviteTitle} id="invite-title">
         Invite your cast
       </h2>
       <div className={styles.inviteCode}>
-        <span className={styles.inviteLabel}>Room code</span>
-        <CodeTiles code={code} />
+        <span className={styles.inviteLabel} aria-live="polite">
+          {codeCopied ? "Code copied!" : "Room code"}
+        </span>
+        <button type="button" className={styles.tilesButton} onClick={copyCode} title="Copy the code">
+          <CodeTiles code={code} />
+        </button>
       </div>
+      {faces.length > 0 && (
+        <ul className={styles.inviteFaces} aria-label="Picked so far">
+          {faces.map((p, i) => (
+            <li
+              key={p.id}
+              className={styles.inviteFace}
+              style={{ "--seat": colorOf(p), "--i": i } as CSSProperties}
+              title={p.name}
+            >
+              <img src={`/images/emojis/${CHARACTERS[room.picks[p.id]]?.emoji?.[0]}.webp`} alt={p.name} draggable={false} />
+            </li>
+          ))}
+        </ul>
+      )}
       <DefaultButton onClick={copy} text={copied ? "Link copied!" : "Copy invite link"} color="yellow" className={styles.inviteButton} />
       {failed && (
         <Modal onClose={() => setFailed(false)} ariaLabel="Invite link">

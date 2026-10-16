@@ -491,6 +491,96 @@
   gap: 0.6rem;
 }
 
+/* the code's tiles are a button: a tap copies the code */
+.tilesButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tilesButton:hover .tile {
+  animation: tileWiggle 0.5s ease-in-out;
+}
+
+.tilesButton:hover .tile:nth-child(2) {
+  animation-delay: 0.05s;
+}
+.tilesButton:hover .tile:nth-child(3) {
+  animation-delay: 0.1s;
+}
+.tilesButton:hover .tile:nth-child(4) {
+  animation-delay: 0.15s;
+}
+
+.tilesButton:active .tiles {
+  transform: scale(0.96);
+}
+
+.tilesButton:focus-visible {
+  outline: 3px solid #f1db4b;
+  outline-offset: 6px;
+  border-radius: 14px;
+}
+
+@keyframes tileWiggle {
+  30% {
+    translate: 0 -4px;
+    rotate: -3deg;
+  }
+  65% {
+    translate: 0 1px;
+    rotate: 2deg;
+  }
+}
+
+/* the cast's faces as they pick: in the card's middle (around its edges on a phone) */
+.inviteFaces {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: auto 0;
+  padding: 0;
+  list-style: none;
+}
+
+.inviteFace {
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fffaf0;
+  box-shadow:
+    0 0 0 3px var(--seat, #fff),
+    0 8px 14px -8px rgba(0, 0, 0, 0.7);
+  rotate: calc((var(--i) - 2.5) * 3deg);
+  animation:
+    facePop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1) both,
+    faceBob 3.2s ease-in-out calc(0.5s + var(--i) * 0.4s) infinite;
+}
+
+.inviteFace img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  scale: 1.08;
+}
+
+@keyframes facePop {
+  from {
+    scale: 0;
+  }
+}
+
+@keyframes faceBob {
+  50% {
+    translate: 0 -3px;
+  }
+}
+
 .inviteLabel {
   font-family: "Rowdies-Regular";
   font-size: 0.7rem;
@@ -1321,3 +1411,46 @@
 }
 
 /* #endregion */
+
+/* on a phone, the faces sit around the invite card's edges, out of the code's way */
+@media only screen and (max-width: 640px) {
+  .inviteFaces {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .inviteFace {
+    position: absolute;
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  /* (left and right in turn, from the top corners down) */
+  .inviteFace:nth-child(odd) {
+    left: 0.7rem;
+  }
+  .inviteFace:nth-child(even) {
+    right: 0.7rem;
+  }
+  .inviteFace:nth-child(1),
+  .inviteFace:nth-child(2) {
+    top: 0.9rem;
+  }
+  .inviteFace:nth-child(3),
+  .inviteFace:nth-child(4) {
+    top: calc(0.9rem + 3.4rem);
+  }
+  .inviteFace:nth-child(5),
+  .inviteFace:nth-child(6) {
+    top: calc(0.9rem + 6.8rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inviteFace {
+    animation: none;
+  }
+}

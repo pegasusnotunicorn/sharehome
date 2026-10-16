@@ -16,6 +16,7 @@ import {
 import DefaultButton from "../utils/DefaultButton";
 import Modal from "../utils/Modal";
 import Confirm from "./Confirm";
+import Picnic from "./Picnic";
 import { isMuted, play, setMuted } from "./sounds";
 import modalStyles from "../../css/utils/modal.module.css";
 import styles from "../../css/pages/gameTable.module.css";
@@ -221,14 +222,11 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
     }
   };
   const [zoom, setZoom] = useState<{ player: Player; character: number } | null>(null);
-  const [picked, setPicked] = useState<string | null>(null);
-  // where the picked card is on the screen, for its menu (which floats over the page, so the pile can scroll)
-  const [pickedAt, setPickedAt] = useState<DOMRect | null>(null);
+  const [basketOpen, setBasketOpen] = useState(false);
   // the "+2" that rises off a card when someone completes it
   const [floaters, setFloaters] = useState<{ id: string; deck: DirectionDeck; slot: number; points: number }[]>([]);
   const seen = useRef<Set<string> | null>(null);
 
-  const closeMenu = useCallback(() => setPicked(null), []);
   const unread = phoneTab !== "log" && game.log.length > 0 && game.log[0].id !== seenLog;
   useEffect(() => {
     if (phoneTab === "log") setSeenLog(game.log[0]?.id ?? null);
@@ -274,10 +272,17 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
         <Prompt game={game} epPoints={epPoints} />
 
         {others.length > 0 && (
-          <div className={styles.othersRow}>
-            {others.map((p) => (
-              <Seat key={p.id} player={p} {...seatProps} />
-            ))}
+          <div className={styles.seatsRow}>
+            <Picnic spread="left" />
+            <div
+              className={styles.othersRow}
+              style={{ "--seats": others.length } as CSSProperties}
+            >
+              {others.map((p) => (
+                <Seat key={p.id} player={p} {...seatProps} />
+              ))}
+            </div>
+            <Picnic spread="right" />
           </div>
         )}
 
@@ -293,53 +298,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
             <div className={styles.episodeCard} style={{ "--tilt": tilt(ep.card + 3) } as CSSProperties}>
               <FlipCard key={ep.card} front={art.episode(ep.card)} back={art.episodeBack} alt={name("episode", ep.card)} width={768} height={549} />
             </div>
-            <div className={styles.pile} aria-label="Completed this episode">
-              {ep.completed.length === 0 ? (
-                <span className={styles.pileEmpty} aria-hidden />
-              ) : (
-                ep.completed.map((c, i) => (
-                  <span key={c.id} className={styles.pileItem} style={{ "--i": i } as CSSProperties}>
-                    <button
-                      type="button"
-                      className={`${styles.pileCard}${picked === c.id ? ` ${styles.pileCardPicked}` : ""}`}
-                      style={{ "--tilt": tilt(c.i + i) } as CSSProperties}
-                      onClick={(e) => {
-                        setPickedAt(e.currentTarget.getBoundingClientRect());
-                        setPicked((p) => (p === c.id ? null : c.id));
-                      }}
-                      aria-expanded={picked === c.id}
-                      aria-haspopup="menu"
-                      aria-label={`${name(c.deck, c.i)}, +${DIRECTION_POINTS[c.deck] + c.tokens}, by ${nameOf(c.by)}`}
-                    >
-                      <img src={art.direction(c.deck, c.i)} alt="" width="768" height="497" />
-                      {c.tokens > 0 && (
-                        <span className={styles.pileTokens}>
-                          <img src={art.token} alt="" />
-                          {c.tokens}
-                        </span>
-                      )}
-                    </button>
-                    {picked === c.id && pickedAt && (
-                      <CardMenu
-                        at={pickedAt}
-                        title={`+${DIRECTION_POINTS[c.deck] + c.tokens} · ${nameOf(c.by)}`}
-                        close={closeMenu}
-                        items={[
-                          {
-                            label: "Had something to say too: +1 token",
-                            action: () => send({ t: "token", on: "card", id: c.id, add: true }),
-                          },
-                          ...(c.tokens > 0
-                            ? [{ label: "Take a token back", action: () => send({ t: "token", on: "card", id: c.id, add: false }) }]
-                            : []),
-                          { label: "Undo this card", action: () => send({ t: "undo", id: c.id }), danger: true, closes: true },
-                        ]}
-                      />
-                    )}
-                  </span>
-                ))
-              )}
-            </div>
+            <Basket cards={ep.completed} points={epPoints} open={() => setBasketOpen(true)} />
           </section>
           {/* #endregion */}
 
@@ -590,8 +549,10 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
         </div>
 
         {mine && (
-          <div className={styles.mineRow}>
+          <div className={`${styles.seatsRow} ${styles.mineRow}`}>
+            <Picnic spread="nearLeft" />
             <Seat player={mine} big {...seatProps} />
+            <Picnic spread="nearRight" />
           </div>
         )}
       </div>
@@ -615,6 +576,53 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
         </Modal>
       )}
       {rules && <RulesDialog close={() => setRules(false)} />}
+      {basketOpen && (
+        <Modal onClose={() => setBasketOpen(false)} panelClassName={`${modalStyles.panel} ${styles.basketPanel}`} ariaLabel="In the basket">
+          <h2 className={modalStyles.title}>In the basket</h2>
+          <p className={modalStyles.text}>
+            Episode {game.episode}: {ep.completed.length} card{ep.completed.length === 1 ? "" : "s"}, +{epPoints}. Had something
+            to say too? Add a token to a card.
+          </p>
+          {ep.completed.length === 0 ? (
+            <p className={styles.basketEmpty}>Nothing in the basket yet.</p>
+          ) : (
+            <ul className={styles.basketList}>
+              {[...ep.completed].reverse().map((c) => (
+                <li key={c.id}>
+                  <img src={art.direction(c.deck, c.i)} alt={name(c.deck, c.i)} width="768" height="497" />
+                  <div className={styles.basketInfo}>
+                    <b>+{DIRECTION_POINTS[c.deck] + c.tokens}</b>
+                    <span>{nameOf(c.by)}</span>
+                  </div>
+                  <div className={styles.basketActions}>
+                    <span className={styles.tokenCount} aria-label={`${c.tokens} tokens`}>
+                      <img src={art.token} alt="" />
+                      {c.tokens}
+                    </span>
+                    <button type="button" className={styles.chipButton} onClick={() => send({ t: "token", on: "card", id: c.id, add: true })}>
+                      +1
+                    </button>
+                    <button
+                      type="button"
+                      className={styles.chipButton}
+                      disabled={c.tokens === 0}
+                      onClick={() => send({ t: "token", on: "card", id: c.id, add: false })}
+                    >
+                      −1
+                    </button>
+                    <button type="button" className={`${styles.chipButton} ${styles.chipDanger}`} onClick={() => send({ t: "undo", id: c.id })}>
+                      Undo
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div className={modalStyles.actions}>
+            <DefaultButton onClick={() => setBasketOpen(false)} text="Back to the table" color="red" />
+          </div>
+        </Modal>
+      )}
       {picking && (
         <Modal onClose={() => setPicking(false)} ariaLabel="Tablecloth">
           <h2 className={modalStyles.title}>Pick a tablecloth</h2>
@@ -648,56 +656,44 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   );
 };
 
-// a little menu that opens over a card, without moving anything on the table
-const CardMenu = ({
-  at,
-  title,
-  items,
-  close,
-}: {
-  at: DOMRect;
-  title: string;
-  items: { label: string; action: () => void; danger?: boolean; closes?: boolean }[];
-  close: () => void;
-}) => {
-  const ref = useRef<HTMLDivElement>(null);
+// The picnic basket: the cards completed this episode go in it (it never grows); the newest few peek
+// over the rim, with the count and the points on a tag. Tap it to see them all.
+const Basket = ({ cards, points, open }: { cards: GameView["episodes"][number]["completed"]; points: number; open: () => void }) => {
+  const [bounce, setBounce] = useState(0);
+  const count = useRef(cards.length);
   useEffect(() => {
-    const away = (e: PointerEvent) => !ref.current?.parentElement?.contains(e.target as Node) && close();
-    const key = (e: KeyboardEvent) => e.key === "Escape" && close();
-    document.addEventListener("pointerdown", away);
-    document.addEventListener("keydown", key);
-    // (it's pinned to where the card was: scrolling anywhere closes it)
-    addEventListener("scroll", close, { capture: true, passive: true });
-    ref.current?.querySelector("button")?.focus({ preventScroll: true });
-    return () => {
-      document.removeEventListener("pointerdown", away);
-      document.removeEventListener("keydown", key);
-      removeEventListener("scroll", close, { capture: true });
-    };
-  }, [close]);
-  // under the card, kept on the screen (above it, when there's no room below)
-  const width = 240;
-  const left = Math.max(8, Math.min(at.left, innerWidth - width - 8));
-  const below = at.bottom + 6;
-  const style: CSSProperties = below + 170 > innerHeight ? { left, bottom: innerHeight - at.top + 6 } : { left, top: below };
+    if (cards.length > count.current) setBounce((b) => b + 1);
+    count.current = cards.length;
+  }, [cards.length]);
+  const peek = cards.slice(-3);
   return (
-    <div ref={ref} className={styles.cardMenu} role="menu" style={style}>
-      <span className={styles.cardMenuTitle}>{title}</span>
-      {items.map((it) => (
-        <button
-          key={it.label}
-          type="button"
-          role="menuitem"
-          className={it.danger ? styles.cardMenuDanger : ""}
-          onClick={() => {
-            it.action();
-            if (it.closes) close();
-          }}
-        >
-          {it.label}
-        </button>
-      ))}
-    </div>
+    <button
+      type="button"
+      className={styles.basket}
+      onClick={open}
+      aria-label={`The basket: ${cards.length} card${cards.length === 1 ? "" : "s"} this episode, +${points}. See them all`}
+    >
+      <span key={bounce} className={`${styles.basketBody}${bounce ? ` ${styles.basketBounce}` : ""}`}>
+        <span className={styles.basketHandle} aria-hidden />
+        <span className={styles.basketCards} aria-hidden>
+          {peek.map((c, i) => (
+            <img
+              key={c.id}
+              src={art.direction(c.deck, c.i)}
+              alt=""
+              style={{ "--i": i, "--n": peek.length, "--tilt": tilt(c.i + i * 5) } as CSSProperties}
+            />
+          ))}
+        </span>
+        <span className={styles.basketFront} aria-hidden />
+        <span className={styles.basketTag}>
+          <b>+{points}</b>
+          <small>
+            {cards.length} card{cards.length === 1 ? "" : "s"}
+          </small>
+        </span>
+      </span>
+    </button>
   );
 };
 

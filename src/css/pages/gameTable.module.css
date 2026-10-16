@@ -1,6 +1,6 @@
 /* The table (Play/GameTable.tsx), laid out like a game on a kitchen table: a blue gingham cloth
    inside a wooden rim (the key art's kitchen), the other players' seats along the far side, the
-   episode with its pile of completed cards, the three direction decks with their face-up cards, a
+   episode with the picnic basket its completed cards go into, the three direction decks with their face-up cards, a
    phone for the clock beside callbacks and a sticky note, and your own seat along the near side.
    Cards lie a little askew and never move when they're tapped: a new card flips over in place. */
 
@@ -210,7 +210,6 @@
 .card:hover:not(:disabled),
 .past:hover,
 .characterCard:hover,
-.pileCard:hover,
 .trait:hover:not(:disabled) {
   box-shadow: var(--card-lift);
   animation: wiggle 0.45s ease-in-out;
@@ -236,7 +235,6 @@
 .card:active:not(:disabled),
 .past:active,
 .characterCard:active,
-.pileCard:active,
 .trait:active:not(:disabled) {
   box-shadow: 0 1px 0 #ebe6da, 0 1px 2px rgba(0, 0, 0, 0.2);
 }
@@ -245,8 +243,7 @@
   .card:hover:not(:disabled),
   .past:hover,
   .characterCard:hover,
-  .pileCard:hover,
-  .trait:hover:not(:disabled) {
+    .trait:hover:not(:disabled) {
     animation: none;
   }
 }
@@ -254,7 +251,6 @@
 /* a card on the table: a little askew, and a shadow under it */
 .card,
 .episodeCard,
-.pileCard,
 .past,
 .characterCard,
 .stack img {
@@ -434,59 +430,7 @@
   aspect-ratio: 768 / 549;
 }
 
-/* the cards completed this episode, overlapping like a pile on the table */
-/* (a set height that scrolls inside, so a busy episode never makes the table grow) */
-.pile {
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  align-items: flex-start;
-  height: 12rem;
-  padding: 0.5rem 0.4rem 1.5rem 20%;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(91, 124, 191, 0.4) transparent;
-}
-
-.pileEmpty {
-  display: block;
-  width: 100%;
-  min-height: 5rem;
-  margin-left: -20%;
-  border: 2px dashed rgba(91, 124, 191, 0.3);
-  border-radius: 10px;
-}
-
-.pileItem {
-  position: relative;
-  width: 44%;
-  margin: 0 0 -10% -20%;
-}
-
-.pileCard {
-  position: relative;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-
-.pileCard img {
-  display: block;
-  width: 100%;
-  height: auto;
-  border-radius: 10px;
-}
-
-.pileCardPicked {
-  box-shadow: var(--card-lift);
-  z-index: 2;
-}
-
-.pileTokens,
+/* a callback's tokens on an earlier episode: the box's token, with the count on it */
 .pastTokens {
   position: absolute;
   right: -6px;
@@ -495,82 +439,24 @@
   place-items: center;
   width: 30px;
   height: 30px;
+  isolation: isolate;
   font-family: "Rowdies-Bold";
   font-size: 0.78rem;
   color: #323232;
-}
-
-.pileTokens img,
-.pastTokens img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
-}
-
-.pileTokens,
-.pastTokens {
-  isolation: isolate;
-}
-
-.pileTokens::after,
-.pastTokens::after {
-  content: "";
-}
-
-/* (the count on the token, on a yellow dot) */
-.pileTokens,
-.pastTokens {
   text-shadow:
     0 0 3px #f1db4b,
     0 0 3px #f1db4b,
     0 0 3px #f1db4b;
 }
 
-/* the menu over a completed card: it opens over the table, so nothing moves */
-.cardMenu {
-  position: fixed;
-  z-index: 100;
-  width: 240px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  padding: 0.35rem;
-  border-radius: 14px;
-  background: #fff;
-  box-shadow:
-    0 0 0 1px rgba(50, 50, 50, 0.1),
-    0 18px 30px -14px rgba(0, 0, 0, 0.4);
-  animation: fadeIn 0.15s ease-out both;
-}
-
-.cardMenuTitle {
-  padding: 0.35rem 0.7rem 0.3rem;
-  font-family: "Rowdies-Regular";
-  font-size: 0.85rem;
-  color: #4f8a73;
-}
-
-.cardMenu button {
-  padding: 0.55rem 0.7rem;
-  border: 0;
-  border-radius: 10px;
-  background: none;
-  font-family: "Roboto Regular", sans-serif;
-  font-size: 0.9rem;
-  text-align: left;
-  color: var(--ink);
-  cursor: pointer;
-}
-
-.cardMenu button:hover {
-  background: rgba(50, 50, 50, 0.06);
-}
-
-.cardMenu .cardMenuDanger {
-  color: #b3160f;
+.pastTokens img {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
 }
 
 .chipButton {
@@ -1211,17 +1097,64 @@
 
 /* #region--------------------------------------THE SEATS */
 
-/* the far side of the table: everyone else, each seat no wider than a placemat */
+/* a side of the table: the seats in the middle, the picnic in whatever room is left either side */
+.seatsRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* the far side: everyone else, each seat no wider than a placemat (as wide as they need, and no wider,
+   so the picnic gets the rest) */
 .othersRow {
+  flex: 0 1 calc(var(--seats) * 25rem + (var(--seats) - 1) * 1rem);
+  min-width: min(100%, 17rem);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 25rem));
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
   justify-content: center;
   gap: 1rem;
 }
 
-.mineRow {
+.mineRow > article {
+  flex: 0 1 50rem;
+}
+
+/* the picnic: drawings in the free room beside the seats, gone when that room's too small */
+.picnic {
+  flex: 1 1 0;
+  min-width: 0;
+  align-self: stretch;
   display: flex;
+  align-items: center;
   justify-content: center;
+  container-type: inline-size;
+  pointer-events: none;
+}
+
+.picnicItems {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  width: min(100%, 10rem);
+}
+
+.picnicItem {
+  display: block;
+  width: 100%;
+  transform: rotate(var(--r));
+}
+
+.picnicItem svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@container (max-width: 7rem) {
+  .picnicItems {
+    display: none;
+  }
 }
 
 /* a seat: a placemat in the player's color, their character in front of them, then their traits */
@@ -1558,12 +1491,16 @@
     display: grid;
   }
 
-  .othersRow {
+  .seatsRow:not(.mineRow) {
     order: 3;
   }
 
   .mineRow {
     order: 2;
+  }
+
+  .picnic {
+    display: none;
   }
 
   .middle {
@@ -1677,10 +1614,6 @@
     grid-column: 1 / -1;
   }
 
-  .pile {
-    height: 9rem;
-  }
-
   .deckRow {
     grid-template-columns: minmax(0, 0.5fr) minmax(0, 1fr) minmax(0, 1fr);
     gap: 0.6rem;
@@ -1699,6 +1632,7 @@
   }
 
   .othersRow {
+    flex-basis: 100%;
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -1808,3 +1742,257 @@
     0 1px 0 14px rgba(255, 255, 255, 0.08),
     0 30px 60px -32px rgba(40, 25, 10, 0.7);
 }
+
+/* #region--------------------------------------THE PICNIC BASKET */
+
+/* the cards completed this episode go in the basket: it never grows. The newest three peek over the
+   rim; a paper tag says how many and the points. Tap it to see them all. */
+.basket {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.basketBody {
+  position: relative;
+  display: block;
+  width: 78%;
+  height: 9.5rem;
+  margin: 0.6rem auto 0;
+  transition: transform 0.2s ease;
+}
+
+.basket:hover .basketBody {
+  animation: wiggle 0.45s ease-in-out;
+}
+
+.basketBounce {
+  animation: basketIn 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+@keyframes basketIn {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.06, 0.94);
+  }
+  70% {
+    transform: scale(0.98, 1.03);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .basket:hover .basketBody,
+  .basketBounce {
+    animation: none;
+  }
+}
+
+/* the handle: a woven arch */
+.basketHandle {
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  top: 0;
+  height: 62%;
+  border: 9px solid #b4783d;
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.25),
+    0 2px 0 #8a5527;
+}
+
+/* the cards, tucked in behind the front */
+.basketCards {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 22%;
+  height: 45%;
+}
+
+.basketCards img {
+  position: absolute;
+  top: calc((var(--n) - 1 - var(--i)) * 6px);
+  left: calc(8% + var(--i) * 17%);
+  width: 52%;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transform: rotate(calc(var(--tilt) * 3));
+  animation: dropIn 0.35s ease-out both;
+}
+
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) rotate(calc(var(--tilt) * 3));
+  }
+}
+
+/* the front: wicker, with a rim and a red gingham napkin tucked over the top */
+.basketFront {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 56%;
+  background:
+    linear-gradient(90deg, rgba(216, 30, 24, 0.85) 50%, rgba(255, 255, 255, 0.95) 50%) 0 0 / 14px 10px repeat-x,
+    repeating-linear-gradient(0deg, rgba(90, 50, 15, 0.28) 0 2px, transparent 2px 11px),
+    repeating-linear-gradient(90deg, #c88f50 0 9px, #b07436 9px 11px, #d29a5c 11px 18px, #a86d31 18px 20px);
+  clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%);
+  box-shadow: inset 0 10px 0 #8f5a2b;
+  filter: drop-shadow(0 8px 6px rgba(40, 25, 10, 0.35));
+}
+
+.basketFront::before {
+  content: "";
+  position: absolute;
+  inset: 10px 0 auto;
+  height: 6px;
+  background: #8f5a2b;
+}
+
+/* the tag, tied on */
+.basketTag {
+  position: absolute;
+  right: -10%;
+  bottom: 14%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.3rem 0.6rem 0.35rem 0.85rem;
+  border-radius: 4px 10px 10px 4px;
+  background: #fffdf6;
+  box-shadow: var(--card-shadow);
+  transform: rotate(8deg);
+}
+
+.basketTag::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c88f50;
+  transform: translateY(-50%);
+}
+
+.basketTag b {
+  font-family: "Rowdies-Bold";
+  font-size: 1.05rem;
+  color: #4f8a73;
+}
+
+.basketTag small {
+  font-family: "GochiHand";
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+/* everything in the basket, in the site's dialog */
+.basketPanel {
+  max-width: 34rem;
+  max-height: calc(100svh - 2rem);
+  overflow-y: auto;
+}
+
+.basketList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0 0 1.4rem;
+  padding: 0;
+  list-style: none;
+}
+
+.basketList li {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 14px;
+  background: #f7f5ef;
+}
+
+.basketList li > img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 1px 0 #ebe6da, 0 2px 0 #d9d2c3, 0 4px 8px -4px rgba(0, 0, 0, 0.3);
+}
+
+.basketInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.85rem;
+  color: rgba(50, 50, 50, 0.72);
+}
+
+.basketInfo b {
+  font-family: "Rowdies-Bold";
+  font-size: 1.1rem;
+  color: #4f8a73;
+}
+
+.basketActions {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.tokenCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  margin-right: 0.15rem;
+  font-family: "Rowdies-Bold";
+  font-size: 0.85rem;
+  color: #323232;
+}
+
+.tokenCount img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.chipButton:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.chipDanger {
+  color: #b3160f;
+}
+
+.room .basketEmpty,
+.basketEmpty {
+  margin: 0 0 1.4rem;
+  font-family: "GochiHand";
+  font-size: 1.2rem;
+  color: rgba(50, 50, 50, 0.55);
+}
+
+@media only screen and (max-width: 640px) {
+  .basketList li {
+    grid-template-columns: 5rem minmax(0, 1fr);
+  }
+
+  .basketActions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+}
+
+/* #endregion */

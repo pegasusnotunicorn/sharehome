@@ -30,6 +30,8 @@ export interface Env {
   ROOMS: DurableObjectNamespace<Room>;
   // the site's addresses, comma separated, that may use the server (localhost always may)
   ALLOWED_ORIGINS: string;
+  // the site's Netlify name: its deploy previews (deploy-preview-N--NAME.netlify.app) may use it too
+  NETLIFY_SITE: string;
 }
 
 const IDLE_TTL = 6 * 60 * 60 * 1000; // a room with nobody in it is deleted after this
@@ -43,7 +45,10 @@ const allowedOrigin = (origin: string | null, env: Env) => {
   if (!origin) return null;
   if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
   const allowed = env.ALLOWED_ORIGINS.split(",").map((o) => o.trim());
-  return allowed.includes(origin) ? origin : null;
+  if (allowed.includes(origin)) return origin;
+  const site = env.NETLIFY_SITE;
+  if (site && new RegExp(`^https://([a-z0-9-]+--)?${site}\\.netlify\\.app$`).test(origin)) return origin;
+  return null;
 };
 
 const json = (body: unknown, origin: string | null, status = 200) =>

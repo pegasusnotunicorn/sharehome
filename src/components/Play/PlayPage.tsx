@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useNavigate, useParams } from "react-router";
 import { MAX_PLAYERS, MIN_PLAYERS, NAME_MAX, cleanName, type Player, type RoomView } from "../../../game-server/src/protocol";
 import CustomHelmet from "../utils/CustomHelmet";
@@ -9,6 +9,7 @@ import usePageTitle from "../utils/usePageTitle";
 import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, playerId, roomInfo, saveName, savedName } from "./gameServer";
 import Confirm from "./Confirm";
 import GameTable, { PLAYER_COLORS } from "./GameTable";
+import Toast from "./Toast";
 import useRoom from "./useRoom";
 import styles from "../../css/pages/playPage.module.css";
 
@@ -144,6 +145,7 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState("");
+  const clearProblem = useCallback(() => setProblem(""), []);
 
   const create = async (e: FormEvent) => {
     e.preventDefault();
@@ -171,9 +173,9 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
   return (
     <>
       <Stage
-        eyebrow={`${MIN_PLAYERS}–${MAX_PLAYERS} players · on a call`}
+        eyebrow={`${MIN_PLAYERS}–${MAX_PLAYERS} players`}
         title="Play online"
-        lead="Make a room, send your friends the link and hop on a call. Every card is on the table for everyone to see."
+        lead="Make a room and send your friends the link. Every card is on the table for everyone to see."
         art
       />
 
@@ -184,11 +186,6 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
           <p className={styles.doorNote}>Make a room and you’re the host: you start the show when everyone’s in.</p>
           <NameField name={name} setName={setName} />
           <DefaultButton button="submit" text={busy ? "Making a room…" : "Create a game"} color="red" className={styles.wide} />
-          {problem && (
-            <p className={styles.problem} role="alert">
-              {problem}
-            </p>
-          )}
         </form>
 
         <form className={`${styles.door} ${styles.doorJoin}`} onSubmit={join}>
@@ -200,25 +197,9 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
         </form>
       </div>
 
-      <ol className={styles.steps}>
-        <li>
-          <span className={styles.stepNumber}>1</span>
-          <strong>Make a room</strong>
-          <span>It gets a four-letter code.</span>
-        </li>
-        <li>
-          <span className={styles.stepNumber}>2</span>
-          <strong>Send the link</strong>
-          <span>Up to {MAX_PLAYERS} players, each on their own device.</span>
-        </li>
-        <li>
-          <span className={styles.stepNumber}>3</span>
-          <strong>Hop on a call</strong>
-          <span>Then the host starts the show.</span>
-        </li>
-      </ol>
 
       <Voice />
+      {problem && <Toast message={problem} onClose={clearProblem} />}
     </>
   );
 };

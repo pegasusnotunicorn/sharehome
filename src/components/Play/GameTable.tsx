@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import {
   DIRECTION_DECKS,
   DIRECTION_POINTS,
@@ -36,7 +36,32 @@ const art = {
   direction: (deck: DirectionDeck, i: number) => `/images/pieces/${deck}/${nn(i)}.webp`,
   directionBack: (deck: DirectionDeck) => `/images/pieces/${deck}/back.webp`,
   trait: (kind: TraitKind, i: number) => `/images/pieces/${kind}-traits/${nn(i)}.webp`,
+  episodeBack: "/images/pieces/episodes/back.webp",
   token: "/images/pieces/box/token-front.webp",
+};
+
+// the card backs, fetched as the table opens, so a new card can always show its back at once
+const preloadBacks = () => {
+  for (const src of [art.episodeBack, ...["director", "producer", "showrunner"].map((d) => art.directionBack(d as DirectionDeck))]) {
+    const img = new Image();
+    img.src = src;
+  }
+};
+
+// A card dealt onto the table: its back first (always ready), turned over once its face has loaded
+const FlipCard = ({ front, back, alt, width, height }: { front: string; back: string; alt: string; width: number; height: number }) => {
+  const [ready, setReady] = useState(false);
+  const ref = useRef<HTMLImageElement>(null);
+  useEffect(() => {
+    // (a face that's already here, from the cache, turns over at once)
+    if (ref.current?.complete && ref.current.naturalWidth) setReady(true);
+  }, []);
+  return (
+    <span className={`${styles.flipper}${ready ? ` ${styles.flipped}` : ""}`}>
+      <img ref={ref} className={styles.face} src={front} alt={alt} width={width} height={height} onLoad={() => setReady(true)} />
+      <img className={`${styles.face} ${styles.faceBack}`} src={back} alt="" width={width} height={height} aria-hidden />
+    </span>
+  );
 };
 
 // the tablecloths to choose from (kept in this browser only: everyone picks their own)
@@ -166,6 +191,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   const name = useNames();
   const left = useClock(game, room.now);
   useTableSounds(game);
+  useEffect(preloadBacks, []);
   const [muted, setMutedState] = useState(isMuted);
   const [ending, setEnding] = useState(false);
   const [rules, setRules] = useState(false);
@@ -181,10 +207,13 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   };
   const [zoom, setZoom] = useState<{ player: Player; character: number } | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
+  // where the picked card is on the screen, for its menu (which floats over the page, so the pile can scroll)
+  const [pickedAt, setPickedAt] = useState<DOMRect | null>(null);
   // the "+2" that rises off a card when someone completes it
   const [floaters, setFloaters] = useState<{ id: string; deck: DirectionDeck; slot: number; points: number }[]>([]);
   const seen = useRef<Set<string> | null>(null);
 
+  const closeMenu = useCallback(() => setPicked(null), []);
   const ep = game.episodes[game.episode - 1];
   useEffect(() => {
     const ids = new Set(ep.completed.map((c) => c.id));
@@ -242,15 +271,9 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
               </span>
               <b>+{epPoints}</b>
             </div>
-            <img
-              key={ep.card}
-              className={`${styles.episodeCard} ${styles.flipIn}`}
-              src={art.episode(ep.card)}
-              alt={name("episode", ep.card)}
-              width="768"
-              height="549"
-              style={{ "--tilt": tilt(ep.card + 3) } as CSSProperties}
-            />
+            <div className={styles.episodeCard} style={{ "--tilt": tilt(ep.card + 3) } as CSSProperties}>
+              <FlipCard key={ep.card} front={art.episode(ep.card)} back={art.episodeBack} alt={name("episode", ep.card)} width={768} height={549} />
+            </div>
             <div className={styles.pile} aria-label="Completed this episode">
               {ep.completed.length === 0 ? (
                 <span className={styles.pileEmpty} aria-hidden />
@@ -261,7 +284,10 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                       type="button"
                       className={`${styles.pileCard}${picked === c.id ? ` ${styles.pileCardPicked}` : ""}`}
                       style={{ "--tilt": tilt(c.i + i) } as CSSProperties}
-                      onClick={() => setPicked((p) => (p === c.id ? null : c.id))}
+                      onClick={(e) => {
+                        setPickedAt(e.currentTarget.getBoundingClientRect());
+                        setPicked((p) => (p === c.id ? null : c.id));
+                      }}
                       aria-expanded={picked === c.id}
                       aria-haspopup="menu"
                       aria-label={`${name(c.deck, c.i)}, +${DIRECTION_POINTS[c.deck] + c.tokens}, by ${nameOf(c.by)}`}
@@ -274,10 +300,11 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                         </span>
                       )}
                     </button>
-                    {picked === c.id && (
+                    {picked === c.id && pickedAt && (
                       <CardMenu
+                        at={pickedAt}
                         title={`+${DIRECTION_POINTS[c.deck] + c.tokens} · ${nameOf(c.by)}`}
-                        close={() => setPicked(null)}
+                        close={closeMenu}
                         items={[
                           {
                             label: "Had something to say too: +1 token",
@@ -320,13 +347,17 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                         <button
                           key={card}
                           type="button"
-                          className={`${styles.card} ${styles.flipIn}`}
+                          className={styles.card}
                           style={{ "--tilt": tilt(card + slot) } as CSSProperties}
                           disabled={game.phase === "break"}
-                          onClick={() => send({ t: "complete", deck, slot })}
+                          onClick={() => {
+                            // (a card done while the clock's paused starts it again)
+                            if (paused) send({ t: "resume" });
+                            send({ t: "complete", deck, slot });
+                          }}
                           aria-label={`Complete “${name(deck, card)}” (${DIRECTION_POINTS[deck]} points)`}
                         >
-                          <img src={art.direction(deck, card)} alt="" width="768" height="497" />
+                          <FlipCard front={art.direction(deck, card)} back={art.directionBack(deck)} alt="" width={768} height={497} />
                         </button>
                       )}
                       {floaters
@@ -408,11 +439,8 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
               </div>
             </div>
 
-            <section
-              className={`${styles.callbacks}${game.episode === 1 ? ` ${styles.callbacksOff}` : ""}`}
-              aria-labelledby="callbacks-title"
-              aria-disabled={game.episode === 1}
-            >
+            {game.episode > 1 && (
+            <section className={styles.callbacks} aria-labelledby="callbacks-title">
               <div className={styles.deckHead}>
                 <h3 id="callbacks-title">Callbacks</h3>
                 <span className={styles.points}>+1 each</span>
@@ -442,11 +470,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                   );
                 })}
               </div>
-              <p className={styles.callbacksNote}>
-                {game.episode === 1
-                  ? "Open from episode 2: mention something from an earlier episode, tap that episode."
-                  : "Someone mentioned an earlier episode? Tap it for a point."}
-              </p>
+              <p className={styles.callbacksNote}>Someone mentioned an earlier episode? Tap it for a point.</p>
               {game.episodes.slice(0, game.episode - 1).some((e) => e.tokens > 0) && (
                 <div className={styles.takeBack}>
                   {game.episodes.slice(0, game.episode - 1).map((e, i) =>
@@ -459,6 +483,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                 </div>
               )}
             </section>
+            )}
 
             <section className={styles.note} aria-labelledby="note-title">
               <h3 id="note-title">What’s happened</h3>
@@ -537,10 +562,12 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
 
 // a little menu that opens over a card, without moving anything on the table
 const CardMenu = ({
+  at,
   title,
   items,
   close,
 }: {
+  at: DOMRect;
   title: string;
   items: { label: string; action: () => void; danger?: boolean; closes?: boolean }[];
   close: () => void;
@@ -551,14 +578,22 @@ const CardMenu = ({
     const key = (e: KeyboardEvent) => e.key === "Escape" && close();
     document.addEventListener("pointerdown", away);
     document.addEventListener("keydown", key);
-    ref.current?.querySelector("button")?.focus();
+    // (it's pinned to where the card was: scrolling anywhere closes it)
+    addEventListener("scroll", close, { capture: true, passive: true });
+    ref.current?.querySelector("button")?.focus({ preventScroll: true });
     return () => {
       document.removeEventListener("pointerdown", away);
       document.removeEventListener("keydown", key);
+      removeEventListener("scroll", close, { capture: true });
     };
   }, [close]);
+  // under the card, kept on the screen (above it, when there's no room below)
+  const width = 240;
+  const left = Math.max(8, Math.min(at.left, innerWidth - width - 8));
+  const below = at.bottom + 6;
+  const style: CSSProperties = below + 170 > innerHeight ? { left, bottom: innerHeight - at.top + 6 } : { left, top: below };
   return (
-    <div ref={ref} className={styles.cardMenu} role="menu">
+    <div ref={ref} className={styles.cardMenu} role="menu" style={style}>
       <span className={styles.cardMenuTitle}>{title}</span>
       {items.map((it) => (
         <button

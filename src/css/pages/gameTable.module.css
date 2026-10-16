@@ -213,7 +213,44 @@
   transform: rotate(var(--tilt, 0deg));
 }
 
-/* a card that's just been dealt flips over where it lies */
+/* a card that's just been dealt: its back first, then it turns over where it lies, once its face has
+   loaded (FlipCard) */
+.flipper {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: perspective(900px) rotateY(180deg);
+  transition: transform 0.5s cubic-bezier(0.3, 0.7, 0.3, 1);
+}
+
+.flipped {
+  transform: perspective(900px) rotateY(0deg);
+}
+
+.face {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.faceBack {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flipper {
+    transition: none;
+  }
+}
+
+/* (a character that's just been drawn fades in) */
 .flipIn {
   animation: flipIn 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) both;
 }
@@ -338,16 +375,22 @@
 .episodeCard {
   display: block;
   width: 100%;
-  height: auto;
+  aspect-ratio: 768 / 549;
 }
 
 /* the cards completed this episode, overlapping like a pile on the table */
+/* (a set height that scrolls inside, so a busy episode never makes the table grow) */
 .pile {
   display: flex;
   flex-wrap: wrap;
+  align-content: flex-start;
   align-items: flex-start;
-  min-height: 5.5rem;
-  padding: 0.25rem 0 0 20%;
+  height: 12rem;
+  padding: 0.5rem 0.4rem 1.5rem 20%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(91, 124, 191, 0.4) transparent;
 }
 
 .pileEmpty {
@@ -363,10 +406,6 @@
   position: relative;
   width: 44%;
   margin: 0 0 -10% -20%;
-}
-
-.pileItem:has(.cardMenu) {
-  z-index: 5;
 }
 
 .pileCard {
@@ -439,13 +478,12 @@
 
 /* the menu over a completed card: it opens over the table, so nothing moves */
 .cardMenu {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  z-index: 10;
+  position: fixed;
+  z-index: 100;
+  width: 240px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  min-width: 15rem;
   padding: 0.35rem;
   border-radius: 14px;
   background: #fff;
@@ -604,10 +642,8 @@
     filter 0.1s ease;
 }
 
-.card img {
-  display: block;
-  width: 100%;
-  height: 100%;
+.card img,
+.episodeCard img {
   border-radius: 10px;
 }
 
@@ -1420,7 +1456,7 @@
   }
 
   .pile {
-    padding-left: 20%;
+    height: 9rem;
   }
 
   .deckRow {

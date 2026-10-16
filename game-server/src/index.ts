@@ -24,6 +24,9 @@ import {
   type RoomError,
   type RoomView,
   type ServerMessage,
+  CHAT_MAX,
+  cleanChat,
+  type ChatLine,
 } from "./protocol";
 import { gameView, logPresence, move, newGame, removePlayer as removeFromGame, tick, type StoredGame } from "./game";
 
@@ -51,6 +54,13 @@ const MAX_AGE = 12 * 60 * 60 * 1000; // and any room at all, after this
 // a socket sending more than this many messages in FLOOD_WINDOW is closed (a held button sends ten a second)
 const FLOOD_LIMIT = 200;
 const FLOOD_WINDOW = 10 * 1000;
+// the chat: the lines kept (older ones go), and how fast one socket may send them: one at a time at
+// least CHAT_GAP apart, and no more than CHAT_BURST in CHAT_WINDOW (whatever's over is turned back)
+const CHAT_KEEP = 40;
+const CHAT_GAP = 1000;
+const CHAT_BURST = 8;
+const CHAT_WINDOW = 30 * 1000;
+
 // spectators: their sockets' tag, and how many one room takes (unless MAX_SPECTATORS says otherwise)
 const WATCH = "watch";
 const WATCH_MAX = 50;
@@ -166,6 +176,10 @@ export class Room extends DurableObject<Env> {
   private room: StoredRoom | null = null;
   // each socket's messages in the current window (in memory: a room that's slept has had a quiet spell)
   private traffic = new WeakMap<WebSocket, { since: number; count: number }>();
+  // the chat so far (saved with each line, so it's there when the room wakes)
+  private chat: ChatLine[] = [];
+  // each socket's chat lines lately, to hold back a flood
+  private chatting = new WeakMap<WebSocket, number[]>();
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
@@ -173,6 +187,7 @@ export class Room extends DurableObject<Env> {
     ctx.setWebSocketAutoResponse(new WebSocketRequestResponsePair("ping", "pong"));
     ctx.blockConcurrencyWhile(async () => {
       this.room = (await ctx.storage.get<StoredRoom>("room")) ?? null;
+      this.chat = (await ctx.storage.get<ChatLine[]>("chat")) ?? [];
     });
   }
 
@@ -224,8 +239,9 @@ export class Room extends DurableObject<Env> {
     if (!player && (url.searchParams.get("watch") === "1" || room.players.length >= MAX_PLAYERS || room.game)) {
       if (this.ctx.getWebSockets(WATCH).length >= maxWatching(this.env)) return refuse("watch-full");
       this.ctx.acceptWebSocket(server, [WATCH]);
-      server.serializeAttachment({ playerId, watch: true });
+      server.serializeAttachment({ playerId, watch: true, name: cleanName(url.searchParams.get("name")) });
       this.send(server, { t: "state", room: this.view() });
+      if (this.chat.length) this.send(server, { t: "chatLog", lines: this.chat });
       return new Response(null, { status: 101, webSocket: client });
     }
 
@@ -249,6 +265,7 @@ export class Room extends DurableObject<Env> {
     if (room.hostId === playerId) room.hostAwaySince = null;
     await this.save();
     this.broadcast();
+    if (this.chat.length) this.send(server, { t: "chatLog", lines: this.chat });
     return new Response(null, { status: 101, webSocket: client });
   }
 
@@ -266,15 +283,26 @@ export class Room extends DurableObject<Env> {
       ws.close(1008, "too many messages");
       return;
     }
-    const { playerId, watch } = ws.deserializeAttachment() as { playerId: string; watch?: boolean };
-    // (a spectator can't touch the table: whatever they send is dropped, and wakes nothing else)
-    if (watch) return;
+    const { playerId, watch, name: watcherName } = ws.deserializeAttachment() as { playerId: string; watch?: boolean; name?: string };
     let msg: ClientMessage;
     try {
       msg = JSON.parse(raw);
     } catch {
       return;
     }
+    // the chat: players and spectators alike
+    if (msg.t === "chat") {
+      const player = room.players.find((p) => p.id === playerId);
+      if (!watch && !player) return;
+      return this.say(ws, {
+        by: playerId,
+        name: player?.name ?? (watcherName || "Audience"),
+        color: player ? player.color : null,
+        watching: !player,
+      }, msg.text);
+    }
+    // (a spectator can't touch the table: anything else they send is dropped)
+    if (watch) return;
     const isHost = room.hostId === playerId;
 
     switch (msg.t) {
@@ -480,6 +508,32 @@ export class Room extends DurableObject<Env> {
   private bye(ws: WebSocket, reason: ByeReason, code: number) {
     this.send(ws, { t: "bye", reason });
     ws.close(code, reason);
+  }
+
+  // a line in the chat: cleaned, held back if this socket's sending too fast, kept (the last CHAT_KEEP)
+  // and sent to everyone. Nothing else about the room changes, so nothing else is sent
+  private async say(ws: WebSocket, from: Omit<ChatLine, "id" | "text" | "at">, raw: unknown) {
+    const text = cleanChat(raw);
+    if (!text || text.length > CHAT_MAX * 2) return;
+    const now = Date.now();
+    const recent = (this.chatting.get(ws) ?? []).filter((t) => now - t < CHAT_WINDOW);
+    if (recent.length >= CHAT_BURST || (recent.length && now - recent[recent.length - 1] < CHAT_GAP)) {
+      this.chatting.set(ws, recent);
+      return this.send(ws, { t: "chatSlow" });
+    }
+    recent.push(now);
+    this.chatting.set(ws, recent);
+    const line: ChatLine = { ...from, id: crypto.randomUUID().slice(0, 8), text, at: now };
+    this.chat = [...this.chat, line].slice(-CHAT_KEEP);
+    await this.ctx.storage.put("chat", this.chat);
+    const out = JSON.stringify({ t: "chat", line } satisfies ServerMessage);
+    for (const s of this.openSockets()) {
+      try {
+        s.send(out);
+      } catch {
+        // (gone: the close handler tidies up)
+      }
+    }
   }
 
   // (the message is made once, however many are here)

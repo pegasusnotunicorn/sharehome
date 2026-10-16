@@ -14,6 +14,7 @@ import GameTable, { PLAYER_COLORS, preloadBacks, useNames } from "./GameTable";
 import Toast from "./Toast";
 import Rulebook from "./Rulebook";
 import CharacterChooser from "./CharacterChooser";
+import Chat from "./Chat";
 import { getAllCharacters } from "../Characters/Characters";
 import useRoom from "./useRoom";
 import styles from "../../css/pages/playPage.module.css";
@@ -339,7 +340,7 @@ const JoinByLink = ({ code, name, setName, join, watch }: { code: string; name: 
 
 const Lobby = ({ code, name, watch, takeSeat }: { code: string; name: string; watch: boolean; takeSeat: () => void }) => {
   const navigate = useNavigate();
-  const { room, status, error, bye, send } = useRoom(code, name, watch);
+  const { room, status, error, bye, send, chat, chatSlow } = useRoom(code, name, watch);
   const [removing, setRemoving] = useState<Player | null>(null);
   const [leaving, setLeaving] = useState(false);
   const [startCheck, setStartCheck] = useState(false);
@@ -387,7 +388,12 @@ const Lobby = ({ code, name, watch, takeSeat }: { code: string; name: string; wa
   const isHost = room.hostId === me;
   // watching: in the room, but not one of its players
   const spectating = !room.players.some((p) => p.id === me);
-  const watchers = <Watchers room={room} spectating={spectating} takeSeat={takeSeat} leave={() => navigate("/play")} />;
+  const watchers = (
+    <>
+      <Watchers room={room} spectating={spectating} takeSeat={takeSeat} leave={() => navigate("/play")} />
+      <Chat lines={chat} me={me} send={send} slow={chatSlow} />
+    </>
+  );
   const seats = Array.from({ length: MAX_PLAYERS }, (_, i) => room.players[i] ?? null);
   const canStart = isHost && room.players.length >= MIN_PLAYERS;
   const notReady = room.players.filter((p) => !room.ready?.[p.id]);

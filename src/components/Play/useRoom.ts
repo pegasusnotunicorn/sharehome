@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { ByeReason, ClientMessage, RoomError, RoomView, ServerMessage } from "../../../game-server/src/protocol";
+import type { ByeReason, ChatLine, ClientMessage, RoomError, RoomView, ServerMessage } from "../../../game-server/src/protocol";
 import { socketUrl } from "./gameServer";
 
 export type RoomStatus = "connecting" | "open" | "reconnecting" | "refused" | "gone";
@@ -13,6 +13,9 @@ export default function useRoom(code: string | null, name: string, watch = false
   const [error, setError] = useState<RoomError | null>(null);
   const [bye, setBye] = useState<ByeReason | null>(null);
   const ws = useRef<WebSocket | null>(null);
+  // the room's chat, and when a line was last turned back for coming too fast
+  const [chat, setChat] = useState<ChatLine[]>([]);
+  const [chatSlow, setChatSlow] = useState(0);
   // (the name the socket first opens with: changes after that go as a rename)
   const nameRef = useRef(name);
 
@@ -45,6 +48,9 @@ export default function useRoom(code: string | null, name: string, watch = false
           return;
         }
         if (msg.t === "state") setRoom(msg.room);
+        else if (msg.t === "chatLog") setChat(msg.lines);
+        else if (msg.t === "chat") setChat((all) => [...all.filter((l) => l.id !== msg.line.id), msg.line].slice(-60));
+        else if (msg.t === "chatSlow") setChatSlow(Date.now());
         else if (msg.t === "error") {
           done = true;
           setError(msg.error);
@@ -109,5 +115,5 @@ export default function useRoom(code: string | null, name: string, watch = false
     if (ws.current?.readyState === WebSocket.OPEN) ws.current.send(JSON.stringify(msg));
   }, []);
 
-  return { room, status, error, bye, send };
+  return { room, status, error, bye, send, chat, chatSlow };
 }

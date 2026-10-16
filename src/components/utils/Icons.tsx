@@ -38,6 +38,14 @@ const PATHS = {
       <path d="M10 8.8v6.4a.6 .6 0 0 0 .9 .5l5.1-3.2a.6 .6 0 0 0 0-1l-5.1-3.2a.6 .6 0 0 0-.9 .5z" />
     </>
   ),
+  // a speech bubble: the chat
+  chat: (
+    <>
+      <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h-1A.5.5 0 0 1 4 15.5z" />
+      <path d="M8.5 8.5h7" />
+      <path d="M8.5 11.5h4" />
+    </>
+  ),
   // an eye: watching
   eye: (
     <>

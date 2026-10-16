@@ -328,3 +328,10 @@ body.no-select textarea {
   -webkit-user-select: text;
   user-select: text;
 }
+
+/* an online game room: no banner or navbar, so nothing to leave room for */
+body.in-room {
+  --banner-height: 0px;
+  --banner-height-mobile: 0px;
+  --navbar-height: 1rem;
+}

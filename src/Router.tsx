@@ -76,6 +76,8 @@ const Router = () => {
 const AppRoutes = () => {
   const location = useLocation();
   const isExternalRedirect = ["/rulebook", "/buy", "/blog"].includes(location.pathname);
+  // (an online game room is played full screen: no banner or navbar over the table)
+  const inRoom = location.pathname.startsWith("/play/");
 
   const [trailerPlaying, setTrailerPlaying] = useState(false);
 
@@ -83,9 +85,9 @@ const AppRoutes = () => {
 
   return (
     <>
-      {!isExternalRedirect && <Banner />}
+      {!isExternalRedirect && !inRoom && <Banner />}
       <Suspense fallback={null}>
-        {!isExternalRedirect && <Navbar trailerPlaying={trailerPlaying} />}
+        {!isExternalRedirect && !inRoom && <Navbar trailerPlaying={trailerPlaying} />}
         <Routes>
           <Route path="/" element={<LandingPage setTrailerPlaying={setTrailerPlaying} />} />
           <Route path="/ttrpg" element={<Navigate to="/" replace />} />

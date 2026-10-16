@@ -32,6 +32,12 @@ const PlayPage = () => {
     document.body.classList.add("no-select");
     return () => document.body.classList.remove("no-select");
   }, []);
+  // (no banner or navbar in a room: the page starts at the top)
+  useEffect(() => {
+    if (!code) return;
+    document.body.classList.add("in-room");
+    return () => document.body.classList.remove("in-room");
+  }, [code]);
 
   return (
     <div className={`content ${styles.playPage}`}>

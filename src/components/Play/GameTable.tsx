@@ -570,12 +570,10 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                       <button type="button" className={styles.rulesButton} onClick={() => setRules(true)}>
                         Rules
                       </button>
-                      <button type="button" className={styles.clothButton} onClick={() => setPicking(true)} aria-label="Change the tablecloth" title="Tablecloth">
+                      <button type="button" className={styles.clothButton} onClick={() => setPicking(true)} aria-label="Settings" title="Settings">
                         <svg viewBox="0 0 24 24" aria-hidden>
-                          <path d="M12 3a9 9 0 0 0 0 18c1.1 0 1.7-.8 1.7-1.6 0-.5-.2-.8-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.8-1.6 1.7-1.6h2A4.6 4.6 0 0 0 21 10.8C21 6.5 17 3 12 3z" />
-                          <circle cx="7.5" cy="11" r="1" />
-                          <circle cx="10.5" cy="7.5" r="1" />
-                          <circle cx="15" cy="7.5" r="1" />
+                          <circle cx="12" cy="12" r="3" />
+                          <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
                         </svg>
                       </button>
                       <button
@@ -729,13 +727,6 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
         )}
       </div>
 
-      {isHost && (
-        <div className={styles.hostRow}>
-          <button type="button" className={styles.textButton} onClick={() => setEnding(true)}>
-            End the game and go back to the room
-          </button>
-        </div>
-      )}
 
       {zoom && (
         <Modal onClose={() => setZoom(null)} panelClassName={`${modalStyles.panel} ${styles.zoomPanel}`} ariaLabel={name("character", zoom.character)}>
@@ -807,8 +798,9 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
         />
       )}
       {picking && (
-        <Modal onClose={() => setPicking(false)} ariaLabel="Tablecloth">
-          <h2 className={modalStyles.title}>Pick a tablecloth</h2>
+        <Modal onClose={() => setPicking(false)} panelClassName={`${modalStyles.panel} ${styles.settingsPanel}`} ariaLabel="Settings">
+          <h2 className={modalStyles.title}>Settings</h2>
+          <h3 className={styles.settingsHead}>Tablecloth</h3>
 
           <div className={styles.clothGrid}>
             {CLOTHS.map((c) => (
@@ -818,7 +810,18 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
               </button>
             ))}
           </div>
-          <div className={modalStyles.actions}>
+          <div className={`${modalStyles.actions} ${styles.settingsActions}`}>
+            {isHost && (
+              <DefaultButton
+                onClick={() => {
+                  setPicking(false);
+                  setEnding(true);
+                }}
+                text="End the game"
+                variant="secondary"
+                border="dark"
+              />
+            )}
             <DefaultButton onClick={() => setPicking(false)} text="Done" color="red" />
           </div>
         </Modal>
@@ -896,7 +899,7 @@ const PlayArea = ({
 };
 
 
-const PAGE = 5;
+const PAGE = 6;
 
 // everything played this episode: search it, a page at a time; tokens and undo for each card
 const PlayedDialog = ({
@@ -952,30 +955,14 @@ const PlayedDialog = ({
       ) : list.length === 0 ? (
         <p className={styles.playedEmpty}>No card matches that.</p>
       ) : (
-        <ul className={styles.playedList}>
+        <ul className={styles.playedGrid}>
           {shown.map((c) => (
             <li key={c.id}>
               <img src={art.direction(c.deck, c.i)} alt={name(c.deck, c.i)} width="768" height="497" />
-              <div className={styles.playedInfo}>
-                <b>+{DIRECTION_POINTS[c.deck] + c.tokens}</b>
-                <span>{nameOf(c.by)}</span>
-              </div>
-              <div className={styles.playedActions}>
-                <span className={styles.tokenCount} aria-label={`${c.tokens} tokens`}>
-                  <img src={art.token} alt="" />
-                  {c.tokens}
+              <div className={styles.playedMeta}>
+                <span>
+                  <b>+{DIRECTION_POINTS[c.deck] + c.tokens}</b> {nameOf(c.by)}
                 </span>
-                <button type="button" className={styles.chipButton} onClick={() => send({ t: "token", on: "card", id: c.id, add: true })}>
-                  +1
-                </button>
-                <button
-                  type="button"
-                  className={styles.chipButton}
-                  disabled={c.tokens === 0}
-                  onClick={() => send({ t: "token", on: "card", id: c.id, add: false })}
-                >
-                  −1
-                </button>
                 <button type="button" className={`${styles.chipButton} ${styles.chipDanger}`} onClick={() => send({ t: "undo", id: c.id })}>
                   Undo
                 </button>
@@ -1181,7 +1168,7 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
   const host = room.players.find((p) => p.id === room.hostId);
   return (
     <section className={styles.finale}>
-      <p className={styles.finaleKicker}>Season finale · the ratings are in</p>
+      <p className={styles.finaleKicker}>{game.outOfCards ? "Out of direction cards · the ratings are in" : "Season finale · the ratings are in"}</p>
       <h2 className={styles.finaleRating}>{s.rating}</h2>
       <p className={styles.finaleScore}>
         <b>{s.perPlayer}</b> points per player

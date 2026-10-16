@@ -2176,3 +2176,86 @@ button.traitPickCard:focus-visible {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
+
+/* the phone's settings: the tablecloth, and (for the host) ending the game */
+.settingsPanel {
+  max-width: 34rem;
+}
+
+.settingsHead {
+  margin: 0.4rem 0 0.6rem;
+  font-family: "Rowdies-Regular";
+  font-size: 1rem;
+  font-weight: normal;
+  color: #323232;
+}
+
+.settingsActions {
+  justify-content: space-between;
+}
+
+/* the played cards, as a grid of cards, each with its undo */
+.playedGrid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 0 0 1rem;
+  padding: 0.2rem;
+  list-style: none;
+  overflow-y: auto;
+}
+
+.playedGrid li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.playedGrid img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 1px 0 #ebe6da, 0 2px 0 #d9d2c3, 0 6px 10px -6px rgba(0, 0, 0, 0.35);
+}
+
+.playedMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.3rem;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.78rem;
+  color: rgba(50, 50, 50, 0.72);
+}
+
+.playedMeta span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.playedMeta b {
+  font-family: "Rowdies-Bold";
+  color: #4f8a73;
+}
+
+.playedPanel {
+  max-width: 40rem;
+}
+
+@media only screen and (max-width: 640px) {
+  .playedGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* (a bigger target for taking a callback back) */
+.pastCount .minus {
+  width: 28px;
+  height: 28px;
+  font-size: 1.1rem;
+}

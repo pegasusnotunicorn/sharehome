@@ -92,6 +92,8 @@ export interface LogEntry {
 
 export interface GameView {
   phase: GamePhase;
+  // the game ended early: every direction card has been played
+  outOfCards?: boolean;
   // the current episode, from 1
   episode: number;
   // when the clock runs out (server time), or how long's left while it's paused

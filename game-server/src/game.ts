@@ -180,6 +180,14 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
       game.drawnFor[done.id] = { deck: msg.deck, slot: msg.slot, drawn };
       countLeft(game);
       log(game, by, `${name} completed a ${msg.deck} card (+${DIRECTION_POINTS[msg.deck]})`);
+      // every direction card played: that's the end of the season
+      if (DIRECTION_DECKS.every((d) => game.faceUp[d].every((c) => c === null))) {
+        game.phase = "over";
+        game.endsAt = null;
+        game.pausedLeft = null;
+        game.outOfCards = true;
+        log(game, by, "Out of direction cards: that’s a wrap on the season!");
+      }
       return true;
     }
 

@@ -172,7 +172,8 @@ export type ServerMessage =
   // sent just before the room closes a socket for good (a socket's own close can be slow to arrive)
   | { t: "bye"; reason: ByeReason };
 
-export type ByeReason = "kicked" | "left" | "replaced";
+// ("expired": the room closed, after a long while)
+export type ByeReason = "kicked" | "left" | "replaced" | "expired";
 
 export type RoomError = "not-found" | "full" | "bad-request";
 

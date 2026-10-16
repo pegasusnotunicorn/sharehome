@@ -938,7 +938,7 @@ const useHold = (action: () => void) => {
     let delay = 380;
     const again = () => {
       act.current();
-      delay = Math.max(60, delay * 0.75);
+      delay = Math.max(100, delay * 0.75);
       timer.current = setTimeout(again, delay);
     };
     timer.current = setTimeout(again, delay);

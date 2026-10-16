@@ -4,7 +4,13 @@
   "name": "lcm-game",
   "main": "src/index.ts",
   "compatibility_date": "2026-10-01",
-  "observability": { "enabled": true },
+  // (logs for a sample of requests only: plenty to debug with, and never a big log bill)
+  "observability": { "enabled": true, "head_sampling_rate": 0.02 },
+  // per address: 5 new rooms a minute, and 60 room visits (the join screen, a socket) a minute
+  "ratelimits": [
+    { "name": "CREATE_LIMIT", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } },
+    { "name": "JOIN_LIMIT", "namespace_id": "1002", "simple": { "limit": 60, "period": 60 } }
+  ],
   "vars": {
     "ALLOWED_ORIGINS": "https://lovecareermagic.com,https://www.lovecareermagic.com",
     "NETLIFY_SITE": "lovecareermagic"

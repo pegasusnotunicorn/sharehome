@@ -43,7 +43,7 @@ export const isCode = (code: string) => CODE_PATTERN.test(code);
 
 export async function createRoom(): Promise<string> {
   const res = await fetch(`${GAME_SERVER}/rooms`, { method: "POST" });
-  if (!res.ok) throw new Error(`create ${res.status}`);
+  if (!res.ok) throw new Error(res.status === 429 ? "slow-down" : res.status === 503 ? "paused" : `create ${res.status}`);
   return ((await res.json()) as { code: string }).code;
 }
 

@@ -73,7 +73,19 @@ export default function useRoom(code: string | null, name: string) {
         connect();
       }
     };
-    const onVisible = () => document.visibilityState === "visible" && soon();
+    // a tab left in the background for a long while lets go of the room (so it isn't kept open, and
+    // kept pinging, by a forgotten tab); it's back the moment it's looked at
+    let away: ReturnType<typeof setTimeout> | undefined;
+    const onVisible = () => {
+      clearTimeout(away);
+      if (document.visibilityState === "visible") soon();
+      else
+        away = setTimeout(() => {
+          clearTimeout(retry);
+          ws.current?.close();
+          ws.current = null;
+        }, 10 * 60 * 1000);
+    };
 
     setStatus("connecting");
     setError(null);
@@ -84,6 +96,7 @@ export default function useRoom(code: string | null, name: string) {
     return () => {
       done = true;
       clearTimeout(retry);
+      clearTimeout(away);
       clearInterval(ping);
       window.removeEventListener("online", soon);
       document.removeEventListener("visibilitychange", onVisible);

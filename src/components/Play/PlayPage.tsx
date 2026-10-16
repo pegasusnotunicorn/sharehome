@@ -182,8 +182,15 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
       setName(clean);
       created();
       navigate(`/play/${room}`);
-    } catch {
-      setProblem("We couldn’t make a room just now. Try again in a moment.");
+    } catch (err) {
+      const why = (err as Error).message;
+      setProblem(
+        why === "slow-down"
+          ? "That’s a lot of new rooms! Wait a minute, then try again."
+          : why === "paused"
+            ? "Online play is taking a short break. Please try again later."
+            : "We couldn’t make a room just now. Try again in a moment."
+      );
       setBusy(false);
     }
   };
@@ -334,7 +341,9 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
             ? "The host took you out of this game."
             : bye === "replaced"
               ? "This game is open in another tab or window, so it carries on there."
-              : "You left the game. Thanks for playing!"
+              : bye === "expired"
+                ? "This room has closed. Start a new game to play again."
+                : "You left the game. Thanks for playing!"
         }
       >
         {bye === "replaced" ? (

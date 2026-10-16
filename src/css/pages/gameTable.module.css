@@ -1050,14 +1050,6 @@
   color: rgba(50, 50, 50, 0.5);
 }
 
-.room .callbacksNote {
-  margin: 0.6rem 0 0;
-  font-family: "Roboto Light";
-  font-size: 0.82rem;
-  line-height: 1.4;
-  color: var(--ink-soft);
-}
-
 .takeBack {
   display: flex;
   flex-wrap: wrap;

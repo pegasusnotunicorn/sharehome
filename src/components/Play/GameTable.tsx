@@ -520,7 +520,6 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                   );
                 })}
               </div>
-              <p className={styles.callbacksNote}>Someone mentioned an earlier episode? Tap it for a point.</p>
               {game.episodes.slice(0, game.episode - 1).some((e) => e.tokens > 0) && (
                 <div className={styles.takeBack}>
                   {game.episodes.slice(0, game.episode - 1).map((e, i) =>

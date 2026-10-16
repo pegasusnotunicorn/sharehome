@@ -305,17 +305,19 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.6rem;
+  height: 50px;
 }
 
 .codeSlot {
   display: grid;
   place-items: center;
-  height: 64px;
+  /* (the name field's height, so the two cards match) */
+  height: 50px;
   border: 2px dashed rgba(95, 90, 162, 0.35);
-  border-radius: 14px;
+  border-radius: var(--btn-radius);
   background: #f7f6fc;
   font-family: "Rowdies-Bold";
-  font-size: 1.9rem;
+  font-size: 1.5rem;
   color: var(--ink);
   transition:
     border-color 0.15s ease,
@@ -372,7 +374,7 @@
 
 /* #region--------------------------------------BEFORE A ROOM */
 
-/* (the two cards the same height, their buttons at their feet, on one line) */
+/* (the two cards the same height, their buttons on one line) */
 .doors {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1185,12 +1187,15 @@
   padding: 0.85rem 0.85rem 0.85rem 1.2rem;
   box-sizing: border-box;
   border-radius: 14px;
-  background: #1c1a2b;
-  box-shadow: 0 18px 36px -16px rgba(0, 0, 0, 0.55);
+  /* (an error: the site's red, clear of the dark footer behind it) */
+  background: #c4180f;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 18px 36px -16px rgba(0, 0, 0, 0.55);
   font-family: "Roboto Regular", sans-serif;
   font-size: 0.95rem;
   line-height: 1.4;
-  color: #f4efe3;
+  color: #fff;
   text-align: left;
   transform: translateX(-50%);
   animation: toastIn 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
@@ -1212,15 +1217,15 @@
   padding: 0;
   border: 0;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.18);
   font-size: 1.1rem;
   line-height: 1;
-  color: #f4efe3;
+  color: #fff;
   cursor: pointer;
 }
 
 .toastClose:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* (above the floating buy buttons on a phone) */

@@ -35,7 +35,7 @@ Cloudflare has no spending cap, so the server turns away anything that would wak
   when it's looked at), and doesn't retry a dropped connection while it's hidden.
 - **Logs:** 2% of requests.
 
-Set a billing notification too: Cloudflare dashboard → Notifications → Add → "Usage Based Billing".
+Set a budget alert too: Cloudflare dashboard → Manage Account → Billing → Billable Usage → Set Budget Alert.
 
 ## Working on it locally
 

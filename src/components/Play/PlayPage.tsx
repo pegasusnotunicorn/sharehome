@@ -12,6 +12,7 @@ import Confirm from "./Confirm";
 import GameTable, { PLAYER_COLORS, useNames } from "./GameTable";
 import Toast from "./Toast";
 import Rulebook from "./Rulebook";
+import CharacterChooser from "./CharacterChooser";
 import { getAllCharacters } from "../Characters/Characters";
 import useRoom from "./useRoom";
 import styles from "../../css/pages/playPage.module.css";
@@ -517,13 +518,9 @@ const CharacterPicker = ({ room, me, send }: { room: RoomView; me: string; send:
   const [open, setOpen] = useState(false);
   const mine = room.picks?.[me];
   const ready = !!room.ready?.[me];
-  const takenBy = (c: number) => room.players.find((p) => p.id !== me && room.picks?.[p.id] === c);
   const meP = room.players.find((p) => p.id === me);
   const card = (c: number) => `/images/pieces/characters/${String(c + 1).padStart(2, "0")}.webp`;
-  const pick = (c: number) => {
-    send({ t: "pick", character: mine === c ? null : c });
-    if (mine !== c) setTimeout(() => setOpen(false), 220);
-  };
+  const closePicker = useCallback(() => setOpen(false), []);
   return (
     <section className={styles.picker} aria-labelledby="picker-title">
       <h2 className={styles.sectionTitle} id="picker-title">
@@ -557,33 +554,7 @@ const CharacterPicker = ({ room, me, send }: { room: RoomView; me: string; send:
         </div>
       </div>
 
-      {open && (
-        <Modal onClose={() => setOpen(false)} panelClassName={`${modalStyles.panel} ${styles.pickPanel}`} ariaLabel="Pick your character">
-          <h2 className={modalStyles.title}>Pick your character</h2>
-          <ul className={styles.pickGrid}>
-            {Array.from({ length: 25 }, (_, c) => {
-              const other = takenBy(c);
-              const isMine = mine === c;
-              return (
-                <li key={c}>
-                  <button
-                    type="button"
-                    className={`${styles.pickCard}${isMine ? ` ${styles.pickMine}` : ""}${other ? ` ${styles.pickTaken}` : ""}`}
-                    style={{ "--seat": isMine && meP ? colorOf(meP) : other ? colorOf(other) : undefined } as CSSProperties}
-                    disabled={!!other}
-                    onClick={() => pick(c)}
-                    aria-pressed={isMine}
-                    aria-label={`${name("character", c) || `Character ${c + 1}`}${other ? `, taken by ${other.name}` : ""}`}
-                  >
-                    <img src={card(c)} alt="" loading="lazy" width="768" height="444" />
-                    {(isMine || other) && <span className={styles.pickWho}>{isMine ? "You" : other!.name}</span>}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </Modal>
-      )}
+      {open && <CharacterChooser room={room} me={me} pick={(c) => send({ t: "pick", character: c })} close={closePicker} />}
     </section>
   );
 };

@@ -1,0 +1,195 @@
+/* The waiting room's character picker (CharacterChooser.tsx): the whole screen, the cast in 3D */
+
+.chooser {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  padding: 1rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
+  overflow: hidden;
+  background:
+    radial-gradient(60% 50% at 50% 42%, #fffdf6, transparent 75%),
+    #f6f1e6;
+  animation: chooserIn 0.3s ease both;
+}
+
+@keyframes chooserIn {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+
+.head {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+}
+
+.title {
+  margin: 0;
+  font-family: "Rowdies-Bold";
+  font-weight: normal;
+  font-size: clamp(1.3rem, 3vw, 1.9rem);
+  color: var(--ink, #323232);
+}
+
+.close {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid #2b2233;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 3px 0 #2b2233;
+  color: #2b2233;
+  cursor: pointer;
+}
+
+.close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.close:active {
+  translate: 0 calc(-50% + 2px);
+  box-shadow: 0 1px 0 #2b2233;
+}
+
+/* (the carousel, its card in the middle of the space there is) */
+.carousel {
+  width: min(960px, 100%);
+  margin: 0 auto;
+}
+
+/* who's on show, and the button to play them */
+.who {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
+  margin-top: 0.5rem;
+  text-align: center;
+  transition: opacity 0.3s ease;
+}
+
+.hushed {
+  opacity: 0;
+  transition-duration: 0.15s;
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: "Rowdies-Regular";
+  font-size: 0.72rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #b8241f;
+}
+
+.name {
+  margin: 0 0 0.55rem;
+  font-family: "Rowdies-Bold";
+  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  line-height: 1.15;
+  color: var(--ink, #323232);
+}
+
+/* the cast's faces along the bottom: a tap goes straight to one */
+.faces {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 0.45rem;
+  max-width: 100%;
+  margin: 0.9rem auto 0;
+  padding: 0.35rem 0.5rem 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.faces::-webkit-scrollbar {
+  display: none;
+}
+
+.face {
+  flex: 0 0 auto;
+  width: 2.7rem;
+  height: 2.7rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  isolation: isolate;
+  background: #fffdf6;
+  box-shadow:
+    0 0 0 2px var(--seat, rgba(50, 40, 30, 0.12)),
+    0 4px 8px -5px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.face img {
+  width: 100%;
+  height: 100%;
+  padding: 8%;
+  box-sizing: border-box;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.face:hover {
+  transform: translateY(-2px);
+}
+
+.faceOn {
+  transform: translateY(-3px) scale(1.12);
+  box-shadow:
+    0 0 0 3px #f1db4b,
+    0 6px 10px -5px rgba(0, 0, 0, 0.5);
+}
+
+.faceTaken {
+  opacity: 0.45;
+  filter: grayscale(0.6);
+}
+
+.face:focus-visible {
+  outline: 3px solid #5f5aa2;
+  outline-offset: 2px;
+}
+
+@media only screen and (max-width: 640px) {
+  .chooser {
+    padding: 0.75rem 0.75rem calc(0.5rem + env(safe-area-inset-bottom));
+  }
+
+  .head {
+    justify-content: flex-start;
+  }
+
+  .face {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chooser {
+    animation: none;
+  }
+}

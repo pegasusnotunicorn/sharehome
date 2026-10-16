@@ -327,7 +327,9 @@
 .middle {
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(0, 2fr) minmax(0, 0.8fr);
-  grid-template-areas: "episode decks side";
+  grid-template-areas:
+    "episode decks side"
+    "mine mine side";
   gap: 1.75rem;
   align-items: start;
 }
@@ -1064,6 +1066,7 @@
 }
 
 .mineRow {
+  grid-area: mine;
   display: flex;
   justify-content: center;
 }
@@ -1405,7 +1408,8 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
     grid-template-areas:
       "episode decks"
-      "side side";
+      "side side"
+      "mine mine";
   }
 
   .side {
@@ -1443,7 +1447,8 @@
       "phone"
       "episode"
       "decks"
-      "callbacks";
+      "callbacks"
+      "mine";
     gap: 1.25rem;
   }
 
@@ -2884,15 +2889,11 @@ button.traitPickCard:focus-visible {
   }
 }
 
-/* on a wide screen (callbacks under the phone), the earlier episodes two to a row, each with its
-   tokens and minus under it: small, so the column's never taller than the decks beside it */
+/* on a wide screen (callbacks under the phone), the earlier episodes one above the other, each with
+   its tokens and minus under it (the column runs down beside your seat, never pushing it down) */
 @media only screen and (min-width: 1101px) {
   .pastRow {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.6rem 0.5rem;
-  }
-
-  .side {
-    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.8rem;
   }
 }

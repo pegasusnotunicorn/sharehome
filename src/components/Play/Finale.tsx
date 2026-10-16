@@ -299,7 +299,8 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
       {/* #endregion */}
 
       {/* #region the cast */}
-      <div className={styles.cast}>
+      {/* (in even rows: up to four on one, five or six as rows of three) */}
+      <div className={styles.cast} style={{ "--per": cast.length <= 4 ? cast.length : 3 } as CSSProperties}>
         {cast.map((c, i) => (
           <figure key={c.name + i} className={styles.castCard} style={{ "--seat": c.color, "--r": `${(i % 2 ? 1 : -1) * (1.5 + (i % 3))}deg`, "--d": `${0.4 + i * 0.12}s` } as CSSProperties}>
             <img src={characterArt(c.character)} alt="" width="768" height="444" />

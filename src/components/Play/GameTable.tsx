@@ -148,17 +148,27 @@ const FlipCard = ({
   useLayoutEffect(() => {
     const el = dealer.current;
     if (!from || !el || reducedMotion()) return setDealt(true);
-    const a = from.getBoundingClientRect();
+    // (from exactly where the deck's top card lies, at its angle: it lifts off the top of the pile)
+    const top = from.querySelector("img") ?? from;
+    const a = top.getBoundingClientRect();
     const b = el.getBoundingClientRect();
+    const deckTilt = parseFloat(getComputedStyle(top).getPropertyValue("--tilt")) || 0;
+    // (till it goes, it's not there: the deck's own top card is)
+    el.style.visibility = "hidden";
+    const show = setTimeout(() => (el.style.visibility = ""), wait);
     const anim = el.animate(
       [
-        { transform: `translate(${a.left + a.width / 2 - (b.left + b.width / 2)}px, ${a.top + a.height / 2 - (b.top + b.height / 2)}px) rotate(${-tilt}deg) scale(${a.width / b.width})` },
+        { transform: `translate(${a.left + a.width / 2 - (b.left + b.width / 2)}px, ${a.top + a.height / 2 - (b.top + b.height / 2)}px) rotate(${deckTilt - tilt}deg) scale(${a.width / b.width})` },
         { transform: "none" },
       ],
       { duration: 420, delay: wait, easing: "cubic-bezier(0.25, 0.8, 0.3, 1)", fill: "backwards" }
     );
     anim.onfinish = () => setDealt(true);
-    return () => anim.cancel();
+    return () => {
+      clearTimeout(show);
+      el.style.visibility = "";
+      anim.cancel();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
@@ -318,9 +328,12 @@ const useClock = (game: GameView, serverNow: number) => {
     const timer = setInterval(() => setNow(Date.now() + offset), 250);
     return () => clearInterval(timer);
   }, [game.endsAt, offset]);
+  // (the time now, not as it was at the last tick: the clock that's just started reads right at once)
+  void now;
+  const at = Date.now() + offset;
   const left =
     game.endsAt !== null
-      ? Math.max(0, game.endsAt - now)
+      ? Math.max(0, game.endsAt - at)
       : game.pausedLeft !== null
         ? game.pausedLeft
         : game.phase === "ready"
@@ -886,13 +899,15 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
 
           </aside>
           {/* #endregion */}
-        </div>
 
-        {mine && (
-          <div className={styles.mineRow}>
-            <Seat player={mine} big {...seatProps} />
-          </div>
-        )}
+          {/* your own seat: in the same grid, under the episode and the decks (beside the phone's
+              column, however long that gets) */}
+          {mine && (
+            <div className={styles.mineRow}>
+              <Seat player={mine} big {...seatProps} />
+            </div>
+          )}
+        </div>
       </div>
 
 

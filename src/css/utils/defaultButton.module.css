@@ -297,3 +297,22 @@ a.btn.colorWhite.secondary {
 .btn.btn[aria-disabled="true"] .btnIcon {
   animation: none;
 }
+
+/* (loading: its colour stays, it doesn't lift or press, and the spinner in place of its icon turns) */
+.loading,
+.loading:hover,
+.loading:active {
+  cursor: progress;
+  transform: none;
+  box-shadow: 0 var(--btn-depth) 0 var(--edge);
+}
+
+.loading .btnIcon {
+  animation: btnSpin 0.8s linear infinite;
+}
+
+@keyframes btnSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}

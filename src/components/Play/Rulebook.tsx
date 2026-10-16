@@ -265,7 +265,7 @@ const Rulebook = () => {
 
   // (the cover's art is fetched early, so it's there as the book slides in)
   useEffect(() => {
-    const t = setTimeout(() => (new Image().src = "/images/box/lid.webp"), 2500);
+    const t = setTimeout(() => (new Image().src = "/logo512.png"), 2500);
     return () => clearTimeout(t);
   }, []);
 
@@ -408,12 +408,8 @@ const Rulebook = () => {
               {/* the cover: shut while the book slides in, then it swings open */}
               <div className={styles.cover} aria-hidden>
                 <div className={styles.coverFront}>
-                  <img src="/images/box/lid.webp" alt="" className={styles.coverArt} draggable={false} />
-                  <span className={styles.coverBand} />
-                  <span className={styles.coverPlate}>
-                    <span className={styles.coverWord}>Rulebook</span>
-                    <span className={styles.coverEdition}>Online edition</span>
-                  </span>
+                  <img src="/logo512.png" alt="" className={styles.coverLogo} draggable={false} />
+                  <span className={styles.coverWord}>Rulebook</span>
                 </div>
                 <div className={styles.coverInside} />
               </div>

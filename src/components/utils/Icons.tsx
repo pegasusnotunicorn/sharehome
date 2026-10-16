@@ -152,6 +152,14 @@ const PATHS = {
       <path d="M5 21v-7" />
     </>
   ),
+  // waiting: a faint ring, and an arc of it that goes round (the spinning is the button's, see
+  // defaultButton.module.css .loading, or the `spin` class here)
+  spinner: (
+    <>
+      <circle cx="12" cy="12" r="9" opacity="0.25" />
+      <path d="M21 12a9 9 0 0 0-9-9" />
+    </>
+  ),
   close: (
     <>
       <path d="M18 6L6 18" />

@@ -21,6 +21,8 @@ interface DefaultButtonProps {
   onClick?: () => void;
   // (greyed out and not pressable)
   disabled?: boolean;
+  // (waiting on something: a spinner in place of its icon, and pressing it does nothing meanwhile)
+  loading?: boolean;
   id?: string;
   className?: string;
   style?: CSSProperties;
@@ -67,6 +69,7 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
       download,
       onClick,
       disabled,
+      loading,
       id,
       className,
       style,
@@ -82,6 +85,7 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
       animated ? styles.animated : "",
       iconPosition === "right" ? styles.reversed : "",
       compact ? styles.compact : "",
+      loading ? styles.loading : "",
       className || "",
     ]
       .filter(Boolean)
@@ -90,7 +94,8 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
     const props: Record<string, unknown> = {
       id,
       className: classes,
-      onClick: disabled ? undefined : onClick,
+      onClick: disabled || loading ? undefined : onClick,
+      "aria-busy": loading || undefined,
       ref,
       style,
     };
@@ -98,8 +103,8 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
     const iconTextContent = (
       <IconText
         text={text}
-        icon={icon}
-        emoji={emoji}
+        icon={loading ? "spinner" : icon}
+        emoji={loading ? undefined : emoji}
         reversed={iconPosition === "right"}
       />
     );
@@ -140,7 +145,8 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
         </a>
       );
     } else if (button) {
-      props.type = button;
+      // (a submit button that's loading doesn't send the form again)
+      props.type = loading ? "button" : button;
       props.disabled = disabled;
       return (
         <button

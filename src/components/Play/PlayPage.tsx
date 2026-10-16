@@ -214,7 +214,7 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
         <form className={`${styles.door} ${styles.doorHost}`} onSubmit={create}>
           <h2 className={styles.doorTitle}>Host a game</h2>
           <NameField name={name} setName={setName} />
-          <DefaultButton button="submit" text={busy ? "Making a room…" : "Create a game"} icon="plus" color="red" className={`${styles.wide} ${styles.doorButton}`} />
+          <DefaultButton button="submit" text={busy ? "Making a room…" : "Create a game"} icon="plus" loading={busy} color="red" className={`${styles.wide} ${styles.doorButton}`} />
         </form>
 
         <form className={`${styles.door} ${styles.doorJoin}`} onSubmit={join}>

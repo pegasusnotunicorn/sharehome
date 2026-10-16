@@ -373,6 +373,7 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
               }}
               text="Copy picture"
               icon="image"
+              loading={!picture}
               color={canShareFile ? "white" : "red"}
               variant={canShareFile ? "secondary" : "primary"}
               border={canShareFile ? "dark" : undefined}
@@ -387,6 +388,7 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
               }}
               text="Save picture"
               icon="download"
+              loading={!picture}
               variant="secondary"
               border="dark"
             />

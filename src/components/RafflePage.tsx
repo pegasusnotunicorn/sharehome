@@ -130,6 +130,7 @@ const RafflePage = () => {
                     variant="primary"
                     color="dark"
                     icon="forward"
+                    loading={status === "loading"}
                   />
                 </form>
                 {status === "error" && (

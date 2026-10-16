@@ -1586,3 +1586,18 @@
   outline: 3px solid var(--btn-focus);
   outline-offset: 3px;
 }
+
+/* (paying: a spinner beside the words) */
+.checkoutSpinner {
+  width: 1.1em;
+  height: 1.1em;
+  margin-right: 0.5em;
+  vertical-align: -0.2em;
+  animation: checkoutSpin 0.8s linear infinite;
+}
+
+@keyframes checkoutSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}

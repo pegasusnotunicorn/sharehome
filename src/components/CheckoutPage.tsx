@@ -22,6 +22,7 @@ import { trackEvent } from "./utils/trackEvent";
 import styles from "../css/pages/buyPage.module.css";
 // (the same list checkout offers and the webhook ships to)
 import { isEuropeCountry } from "../../netlify/lib/regions.js";
+import Icon from "./utils/Icons";
 
 const LCM_PRICE = 34.99;
 const PIN_PRICE = 10.0;
@@ -428,6 +429,7 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
           disabled={loading || shippingSyncing || !checkout?.canConfirm || !termsAgreed || (needsPhone && !phoneValid)}
           className={styles.checkoutButton}
         >
+          {loading && <Icon name="spinner" strokeWidth={2.6} className={styles.checkoutSpinner} />}
           {loading ? "Processing..." : "Pay now"}
         </button>
       </form>

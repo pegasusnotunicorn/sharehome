@@ -4,8 +4,9 @@ import { trackEvent } from "./trackEvent";
 
 // The expansion popup (CharacterPinPopup.tsx): once a visitor has shown some interest (a second
 // page, or ENGAGED_MS on the site), shown once, then not again on this device for SNOOZE_DAYS
-// (FOLLOWED_DAYS after they follow). Never over the cart, checkout or raffle, or another modal.
-const BLOCKED_PATHS = ["/cart", "/checkout", "/raffle"];
+// (FOLLOWED_DAYS after they follow). Never over the cart, checkout, thank-you page or raffle, or another
+// modal.
+const BLOCKED_PATHS = ["/cart", "/checkout", "/thankyou", "/raffle"];
 const ENGAGED_MS = 45000;
 const SNOOZE_DAYS = 14;
 const FOLLOWED_DAYS = 180;

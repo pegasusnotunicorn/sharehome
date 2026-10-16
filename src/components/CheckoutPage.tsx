@@ -20,6 +20,8 @@ import Stepper from "./utils/Stepper";
 import MagnifierButton from "./utils/MagnifierButton";
 import { trackEvent } from "./utils/trackEvent";
 import styles from "../css/pages/buyPage.module.css";
+// (the same list checkout offers and the webhook ships to)
+import { isEuropeCountry } from "../../netlify/lib/regions.js";
 
 const LCM_PRICE = 34.99;
 const PIN_PRICE = 10.0;
@@ -257,6 +259,8 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
   // (the server limits it to Europe) gets the Europe rate.
   const syncShippingRate = async (country: string | undefined) => {
     if (!checkout || !shippingRates?.europe || !country) return;
+    // (a country we don't ship to, Malta say, keeps the rate it has: Europe's is only for Europe's list)
+    if (country !== "US" && !isEuropeCountry(country)) return;
     const target = country === "US" ? shippingRates.us : shippingRates.europe;
     // Compare against the last rate we asked for, not the session snapshot —
     // a quick US → DE → US flip would otherwise see the stale US rate and
@@ -298,7 +302,7 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
   };
 
   // The address element only offers the US and (when it's open) Europe.
-  const needsPhone = !!shippingRates?.europe && !!shippingCountry && shippingCountry !== "US";
+  const needsPhone = !!shippingRates?.europe && !!shippingCountry && isEuropeCountry(shippingCountry);
   const phoneValid = isValidPhone(phone);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -1077,12 +1081,12 @@ const CheckoutPage = () => {
       />
       <CheckoutIntro
         line={
-          // (a country picked in the form; else the one they seem to be in; a picked country can always be shipped to)
+          // (a country picked in the form; else the one they seem to be in)
           // (until the session's in, where they are isn't known yet: the line's room is kept, empty)
           !clientSecret
             ? "\u00a0"
             : shipCountry
-              ? shippingLine(shipCountry, true, !!shippingRates?.europe)
+              ? shippingLine(shipCountry, shipCountry === "US" || (!!shippingRates?.europe && isEuropeCountry(shipCountry)), !!shippingRates?.europe)
               : shippingLine(visitor?.country ?? null, visitor?.canShip ?? null, !!shippingRates?.europe)
         }
       />

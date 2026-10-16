@@ -90,7 +90,7 @@
   z-index: 1000;
   display: grid;
   place-items: center;
-  padding: 72px 12px 88px;
+  padding: 130px 12px 104px;
   background: rgba(28, 22, 34, 0.62);
   backdrop-filter: blur(3px);
   overflow: hidden;
@@ -117,7 +117,7 @@
 
 /* the book: a landscape page (the printed rulebook's), as big as fits */
 .book {
-  --pw: min(1100px, calc(100vw - 24px), calc((100dvh - 170px) * 1.7826));
+  --pw: min(1100px, calc(100vw - 24px), calc((100dvh - 240px) * 1.7826));
   position: relative;
   width: var(--pw);
   aspect-ratio: 581 / 326;
@@ -162,7 +162,7 @@
   will-change: transform;
 }
 
-.page img {
+.page > img {
   display: block;
   width: 100%;
   height: 100%;
@@ -230,20 +230,17 @@
 }
 
 /* the sections, along the top: a tap goes straight to one */
+/* (in rows when they don't fit on one, growing upward, clear of the close button) */
 .sections {
   position: absolute;
-  top: -54px;
+  bottom: calc(100% + 12px);
   left: 0;
   right: 56px;
   display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
   gap: 0.4rem;
-  overflow-x: auto;
-  scrollbar-width: none;
   transition: opacity 0.25s ease;
-}
-
-.sections::-webkit-scrollbar {
-  display: none;
 }
 
 .section {
@@ -312,7 +309,6 @@
   background: #fffdf6;
   box-shadow: 0 10px 24px -14px rgba(0, 0, 0, 0.45);
   translate: -50% 0;
-  animation: pageIn 0.25s ease both;
 }
 
 .reviewButton {
@@ -368,7 +364,7 @@
 .bar {
   position: absolute;
   left: 50%;
-  bottom: -64px;
+  bottom: -80px;
   translate: -50% 0;
   display: flex;
   align-items: center;
@@ -474,10 +470,6 @@
     height: 32px;
     padding: 0 0.6rem;
     font-size: 0.75rem;
-  }
-
-  .sections {
-    top: -46px;
   }
 
   .review {

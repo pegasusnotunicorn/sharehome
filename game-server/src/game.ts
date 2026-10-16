@@ -111,6 +111,9 @@ const log = (game: StoredGame, by: string, text: string) => {
   game.log.length = Math.min(game.log.length, LOG_MAX);
 };
 
+// someone's connection dropped, or they're back (the page puts their name in)
+export const logPresence = (game: StoredGame, by: string, online: boolean) => log(game, by, `{${by}} ${online ? "is back" : "disconnected"}`);
+
 const current = (game: StoredGame) => game.episodes[game.episode - 1];
 
 const startClock = (game: StoredGame, now: number) => {

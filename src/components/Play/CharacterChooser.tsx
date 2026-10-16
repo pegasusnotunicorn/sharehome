@@ -19,8 +19,8 @@ const CAST = getAllCharacters();
 // the cards to turn through: a "?" card first (someone at random), then the cast (card i is CAST[i - 1])
 const COUNT = CAST.length + 1;
 const RANDOM = 0;
-const front = (i: number) => (i === RANDOM ? "/images/pieces/characters/random.webp" : `/images/pieces/characters/${String(i).padStart(2, "0")}.webp`);
-const back = (i: number) => (i === RANDOM ? "/images/pieces/characters/random-back.webp" : `/images/pieces/characters/${String(i).padStart(2, "0")}-back.webp`);
+const front = (i: number) => (i === RANDOM ? "/images/pieces/characters/random-card.webp" : `/images/pieces/characters/${String(i).padStart(2, "0")}.webp`);
+const back = (i: number) => (i === RANDOM ? "/images/pieces/characters/random-card-back.webp" : `/images/pieces/characters/${String(i).padStart(2, "0")}-back.webp`);
 const nameOf = (i: number) => (i === RANDOM ? "Random" : CAST[i - 1].name);
 // what they're called for short: "Köttr, The Grumpy" → Köttr, "Elias & Maya" stays two
 const short = (name: string) => {
@@ -100,8 +100,6 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
       <div className={`${styles.who}${turning ? ` ${styles.hushed}` : ""}`} aria-live="polite">
         {c === null ? (
           <DefaultButton onClick={pickRandom} text="Play anyone" icon="shuffle" color="red" />
-        ) : mine === c ? (
-          <DefaultButton onClick={close} text="That’s you!" icon="check" color="green" />
         ) : other ? (
           <DefaultButton disabled text={`Taken by ${other.name}`} icon="removePerson" />
         ) : (

@@ -787,6 +787,11 @@
   color: rgba(244, 239, 227, 0.75);
 }
 
+/* (the score on the left, the phone's buttons on the right) */
+.phoneFoot .clothButton {
+  margin-left: auto;
+}
+
 .phoneFoot b {
   font-family: "Rowdies-Bold";
   font-size: 1.15rem;
@@ -872,7 +877,7 @@
 /* the dock: the two apps */
 .dock {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.3rem;
   margin-top: 0.35rem;
   padding: 0.25rem;
@@ -940,21 +945,7 @@
   background: rgba(255, 255, 255, 0.35);
 }
 
-.rulesButton {
-  /* (as tall as the round buttons beside it) */
-  height: 32px;
-  margin-left: auto;
-  padding: 0 0.7rem;
-  border: 0;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  font-family: "Rowdies-Regular";
-  font-size: 0.78rem;
-  color: #f4efe3;
-  cursor: pointer;
-}
 
-.rulesButton:hover,
 .mute:hover {
   background: rgba(255, 255, 255, 0.2);
 }
@@ -1069,8 +1060,10 @@
   gap: 1.25rem;
 }
 
-.seatAway {
-  opacity: 0.6;
+/* (the banner stays bright over the rest, faded) */
+.seatAway > :not(.offlineBanner) {
+  opacity: 0.45;
+  filter: grayscale(0.6);
 }
 
 /* (as tall as the traits beside it: the name sits in the middle of the space under the card) */
@@ -1448,8 +1441,7 @@
 
   .phoneIsland,
   .statusBar,
-  .homeBar,
-  .rulesButton {
+  .homeBar {
     display: none;
   }
 
@@ -1502,11 +1494,14 @@
     padding: 6px 14px;
   }
 
+  /* (the score and the phone's two buttons, tucked into the screen's top right corner) */
   .phoneFoot {
     grid-area: foot;
+    align-self: start;
+    justify-self: end;
     gap: 0.3rem;
     width: auto;
-    margin: 0;
+    margin: -0.35rem -0.5rem 0 0;
     font-size: 0.75rem;
   }
 
@@ -1515,7 +1510,7 @@
   }
 
   .dock {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     margin: 0;
     padding: 0.2rem;
     border-radius: 8px 8px 18px 18px;
@@ -1656,6 +1651,17 @@
   border-radius: 7px;
   box-shadow: var(--card-shadow);
   transform: rotate(var(--tilt));
+}
+
+/* (the oldest, past eight: it fades away) */
+.playCards img.playFading {
+  animation: playFade 0.6s ease 0.3s forwards;
+}
+
+@keyframes playFade {
+  to {
+    opacity: 0;
+  }
 }
 
 .playLabel {
@@ -2293,11 +2299,17 @@ button.traitPickCard:focus-visible {
   gap: 0.2rem;
 }
 
+/* (short of room, the pile of tokens gives way, never the number: the minus never covers it) */
 .pastSlot .pastTokensLine .tokenStack {
+  flex: 0 1 auto;
   width: auto;
+  min-width: 0;
+  overflow: hidden;
+  padding: 2px 0;
 }
 
 .pastSlot .pastTokensLine b {
+  flex: none;
   min-width: 0;
 }
 
@@ -2733,7 +2745,8 @@ button.traitPickCard:focus-visible {
   gap: 0.7rem;
   min-height: 19rem;
   padding: 4rem 1.4rem 1.6rem;
-  overflow-y: auto;
+  /* (a trait card's wiggle never makes it scroll sideways) */
+  overflow: hidden auto;
   border-radius: 36px 36px 30px 30px;
   background:
     radial-gradient(90% 50% at 50% 0%, rgba(95, 90, 162, 0.6), transparent 70%),
@@ -2806,3 +2819,32 @@ button.traitPickCard:focus-visible {
 }
 
 /* #endregion */
+
+/* a player whose connection's dropped: a big stamp across their place */
+.offlineBanner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 5;
+  padding: 0.35rem 1.2rem;
+  border: 3px solid #d81e18;
+  border-radius: 10px;
+  background: rgba(255, 253, 246, 0.94);
+  box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.5);
+  font-family: "Rowdies-Bold";
+  font-size: clamp(1.1rem, 3.2vw, 1.8rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #d81e18;
+  transform: translate(-50%, -50%) rotate(-6deg);
+  pointer-events: none;
+  animation: stampIn 0.35s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+
+@keyframes stampIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-6deg) scale(1.6);
+  }
+}

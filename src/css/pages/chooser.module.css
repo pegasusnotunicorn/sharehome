@@ -224,7 +224,7 @@
 
 /* the "?" tile: anyone, at random */
 .tileRandom {
-  background: linear-gradient(170deg, #6c67b3 30%, #4f4a94);
+  background: #1b1b1f;
 }
 
 .tileQ {
@@ -235,8 +235,7 @@
   font-family: "Rowdies-Bold";
   font-size: 2.3rem;
   line-height: 1;
-  color: #f1db4b;
-  text-shadow: 0 3px 0 #2f2b66;
+  color: #fff;
 }
 
 .tileTaken img {

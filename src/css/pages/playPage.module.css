@@ -1008,6 +1008,9 @@
 }
 
 .checklist a {
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
   color: #5f5aa2;
   text-underline-offset: 3px;
 }

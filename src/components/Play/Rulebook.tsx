@@ -24,10 +24,10 @@ const pageSrc = (n: number) => `/images/rulebook/${String(ORDER[n]).padStart(2, 
 
 // the sections to go straight to: their first page (in the order above)
 const SECTIONS = [
-  { id: "setup", label: "Setup", page: 5 },
-  { id: "rules", label: "Game rules", page: 6 },
-  { id: "scoring", label: "Scoring", page: 7 },
-  { id: "example", label: "Example round", page: 8 },
+  { id: "setup", label: "Setup", page: 6 },
+  { id: "rules", label: "Game rules", page: 7 },
+  { id: "scoring", label: "Scoring", page: 8 },
+  { id: "example", label: "Example round", page: 9 },
   { id: "remote", label: "R.E.M.O.T.E.", page: 11 },
   { id: "advanced", label: "Advanced", page: 12 },
 ] as const;
@@ -246,26 +246,25 @@ const Rulebook = () => {
                 return (
                   <div key={n} className={`${styles.page}${p.cls ? ` ${p.cls}` : ""}`} style={p.style} aria-hidden={n !== view}>
                     <img src={pageSrc(n)} alt={n === view ? `Rulebook, page ${n + 1}` : ""} width="1614" height="906" draggable={false} decoding="async" />
+                    {/* the last page: a review, please (on the page, so it comes and goes with it) */}
+                    {n === PAGES - 1 && (
+                      <div className={styles.review} onPointerDown={(e) => e.stopPropagation()}>
+                        <a className={styles.reviewButton} href={BGG_URL} target="_blank" rel="noreferrer" tabIndex={n === view ? 0 : -1}>
+                          <Icon name="star" strokeWidth={2.2} />
+                          <span className={styles.long}>Review us on BoardGameGeek</span>
+                          <span className={styles.short}>Review on BGG</span>
+                        </a>
+                        <a className={`${styles.reviewButton} ${styles.reviewPlain}`} href={SOCIALS_URL} target="_blank" rel="noreferrer" tabIndex={n === view ? 0 : -1}>
+                          <Icon name="share" strokeWidth={2.2} />
+                          Follow us
+                        </a>
+                      </div>
+                    )}
                   </div>
                 );
               })}
               <button type="button" className={`${styles.edge} ${styles.edgePrev}`} onClick={tap(-1)} disabled={view === 0} aria-hidden tabIndex={-1} />
               <button type="button" className={`${styles.edge} ${styles.edgeNext}`} onClick={tap(1)} disabled={view >= PAGES - 1} aria-hidden tabIndex={-1} />
-
-              {/* the last page: a review, please */}
-              {view === PAGES - 1 && !flying && drag === null && (
-                <div className={styles.review}>
-                  <a className={styles.reviewButton} href={BGG_URL} target="_blank" rel="noreferrer">
-                    <Icon name="star" strokeWidth={2.2} />
-                    <span className={styles.long}>Review us on BoardGameGeek</span>
-                    <span className={styles.short}>Review on BGG</span>
-                  </a>
-                  <a className={`${styles.reviewButton} ${styles.reviewPlain}`} href={SOCIALS_URL} target="_blank" rel="noreferrer">
-                    <Icon name="share" strokeWidth={2.2} />
-                    Follow us
-                  </a>
-                </div>
-              )}
 
               {/* straight to a section */}
               <nav className={styles.sections} aria-label="Sections" onPointerDown={(e) => e.stopPropagation()}>

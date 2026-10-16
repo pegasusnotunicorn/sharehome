@@ -519,7 +519,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
             const b = el.getBoundingClientRect();
             return { left: b.left, top: b.top, width: b.width, height: b.height };
           };
-          const plan = { id: `away-${deck}-${was}-${Date.now()}`, src: art.direction(deck, was), from: r(slotEl), to: r(stack), tilt: 0, away: true };
+          const plan = { id: `away-${deck}-${was}-${Date.now()}`, src: art.direction(deck, was), from: r(slotEl), to: r(stack), tilt: -8, away: true };
           setFlights((all) => [...all, plan]);
         });
       }
@@ -683,9 +683,6 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                       <span>
                         <b>{points.total}</b> pts
                       </span>
-                      <button type="button" className={styles.rulesButton} onClick={() => openRulebook("rules")}>
-                        Rules
-                      </button>
                       <button type="button" className={styles.clothButton} onClick={() => setPicking(true)} aria-label="Settings" title="Settings">
                         <svg viewBox="0 0 24 24" aria-hidden>
                           <circle cx="12" cy="12" r="3" />
@@ -812,6 +809,11 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                     <path d="M10 7h.01M14 7h.01M10 11h.01M14 11h.01M10 15h.01M14 15h.01" strokeWidth="3" />
                   </svg>
                   Remote
+                </button>
+                {/* (not an app on the phone: the rulebook, opened on the rules) */}
+                <button type="button" onClick={() => openRulebook("rules")}>
+                  <Icon name="rulebook" />
+                  Rules
                 </button>
               </div>
               <span className={styles.homeBar} aria-hidden />
@@ -1066,7 +1068,7 @@ const REMOTE: Record<RemoteButton, { label: string; text: string; color: string 
   frame: { label: "Frame by frame", text: "Let’s slow down and go gently here.", color: "#e06a3a" },
 };
 // (each button as it's painted on the card in the box)
-const remoteArt = (b: RemoteButton) => `/images/pieces/remote/${b}.webp`;
+const remoteArt = (b: RemoteButton) => `/images/pieces/remote/keys/${b}.webp`;
 
 // pressing and holding: once at once, then again and again, faster
 const useHold = (action: () => void) => {
@@ -1127,7 +1129,9 @@ const PlayArea = ({
   hidden: Set<string>;
   areaRef: React.RefObject<HTMLSpanElement | null>;
 }) => {
-  const shown = cards.slice(-8);
+  // (the eight newest; the one before them fades away as the next lands)
+  const shown = cards.slice(-9);
+  const fading = cards.length > 8 ? shown[0].id : null;
   return (
     <button
       type="button"
@@ -1145,6 +1149,7 @@ const PlayArea = ({
               key={c.id}
               src={art.direction(c.deck, c.i)}
               alt=""
+              className={c.id === fading ? styles.playFading : undefined}
               style={
                 {
                   "--x": `${at.x}%`,
@@ -1354,8 +1359,13 @@ const Seat = ({
     <article
       className={`${styles.seat}${big ? ` ${styles.seatBig}` : ""}${player.online ? "" : ` ${styles.seatAway}`}`}
       style={{ "--seat": color } as CSSProperties}
-      aria-label={`${player.name}${mine ? " (you)" : ""}`}
+      aria-label={`${player.name}${mine ? " (you)" : ""}${player.online ? "" : ", disconnected"}`}
     >
+      {!player.online && (
+        <span className={styles.offlineBanner} aria-hidden>
+          Disconnected
+        </span>
+      )}
       <div className={styles.seatCharacter}>
         <button
           type="button"
@@ -1388,7 +1398,7 @@ const Seat = ({
               <button
                 type="button"
                 className={`${styles.trait}${done ? ` ${styles.traitDone}` : ""}`}
-                disabled={locked || (done && t.done !== game.episode)}
+                disabled={!mine || locked || (done && t.done !== game.episode)}
                 onClick={() => send({ t: "trait", player: player.id, slot })}
                 aria-pressed={done}
                 aria-label={`${name(t.kind, t.i) || `${t.kind} trait`}${done ? `, played in episode ${t.done}` : ""}`}

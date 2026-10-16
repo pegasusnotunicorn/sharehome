@@ -601,7 +601,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                           type="button"
                           className={styles.card}
                           style={{ "--tilt": tilt(card + slot) } as CSSProperties}
-                          disabled={game.phase === "break"}
+                          disabled={game.phase !== "playing"}
                           onClick={() => {
                             // (a card done while the clock's paused starts it again)
                             if (paused) send({ t: "resume" });
@@ -627,8 +627,9 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                             +{f.points}
                           </span>
                         ))}
-                      {card !== null && game.phase === "ready" && game.left[deck] > 0 && (
-                        <button type="button" className={styles.swap} onClick={() => send({ t: "discard", deck, slot })}>
+                      {card !== null && game.phase === "ready" && game.episode > 1 && game.left[deck] > 0 && (
+                        <button type="button" className={styles.swap} onClick={() => send({ t: "discard", deck, slot })} aria-label={`Swap “${name(deck, card)}”`}>
+                          <Icon name="again" strokeWidth={2.4} />
                           Swap
                         </button>
                       )}
@@ -1397,8 +1398,8 @@ const Seat = ({
             <li key={t.kind}>
               <button
                 type="button"
-                className={`${styles.trait}${done ? ` ${styles.traitDone}` : ""}`}
-                disabled={!mine || locked || (done && t.done !== game.episode)}
+                className={`${styles.trait}${done ? ` ${styles.traitDone}` : ""}${locked ? ` ${styles.traitLocked}` : ""}`}
+                disabled={!mine || game.phase !== "break" || locked || (done && t.done !== game.episode)}
                 onClick={() => send({ t: "trait", player: player.id, slot })}
                 aria-pressed={done}
                 aria-label={`${name(t.kind, t.i) || `${t.kind} trait`}${done ? `, played in episode ${t.done}` : ""}`}

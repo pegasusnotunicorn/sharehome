@@ -337,13 +337,31 @@
   pointer-events: none;
 }
 
+/* The nine socials in one row; on a phone narrow enough to make them smaller than a fingertip there,
+   two even rows instead, five over four, the shorter one centred */
 .menuSocials {
   display: grid;
-  /* (a row of them, wrapping on a small phone rather than shrinking past a fingertip) */
-  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  grid-template-columns: repeat(9, minmax(0, 1fr));
   gap: 0.45rem;
   margin-top: auto;
   padding-top: 1.75rem;
+}
+
+/* (the drawer is the screen's width here: below about 430px, nine in a row come out under 36px) */
+@media only screen and (max-width: 429px) {
+  .menuSocials {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* (five 48px chips and their gaps: the sixth starts the second row) */
+    max-width: calc(5 * 48px + 4 * 0.45rem);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .menuSocials > * {
+    flex: 0 0 48px;
+  }
 }
 
 .navSocialIcon {

@@ -101,8 +101,11 @@
   transition:
     transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
     visibility 0s linear 0.4s;
-  overflow-y: auto;
+  /* It never scrolls: exactly the screen's height (less the banner), whatever's showing of the
+     browser's own bars, and what's in it steps down to fit (the rules at the end of this part) */
+  overflow: hidden;
   overscroll-behavior: contain;
+  container-type: size;
 }
 
 .menu:global(.is-active) {
@@ -121,7 +124,7 @@
 .menuContent {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  height: 100%;
   box-sizing: border-box;
   /* (the links start below the menu button, which stays put as the close button) */
   padding: 4.75rem 2.25rem 2rem;
@@ -364,6 +367,7 @@
   }
 }
 
+
 .navSocialIcon {
   display: flex;
   align-items: center;
@@ -486,3 +490,129 @@
 }
 
 /* #endregion */
+
+/* ===== FITTING THE MENU'S HEIGHT ===== */
+/* (last in the file: these win over the size rules above, the phone's included) */
+/* The menu is as tall as the screen; on a shorter one, its parts step down so it all fits without
+   scrolling: first the spacing, then the newsletter's art, then the notes under the links, then a
+   one-line sign-up and smaller icons, then the socials (they're in the footer too); on a very short
+   screen (a phone on its side) just the links */
+
+@container (max-height: 860px) {
+  .menuContent {
+    padding-top: 4.25rem;
+    padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .navLink {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
+
+  .menuNews {
+    margin-top: 1rem;
+  }
+
+  .menuSocials {
+    padding-top: 1rem;
+  }
+}
+
+@container (max-height: 800px) {
+  .menuNewsArt {
+    display: none;
+  }
+
+  .menuNews {
+    padding: 0.9rem 1rem;
+  }
+
+  .navLinkLabel {
+    font-size: 1.55rem;
+  }
+}
+
+@container (max-height: 760px) {
+  .navLinkNote {
+    display: none;
+  }
+
+  .navLinkList {
+    gap: 0.2rem;
+  }
+}
+
+@container (max-height: 680px) {
+  .menuContent {
+    padding-top: 3.75rem;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .navLink {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+
+  .navLinkLabel {
+    font-size: 1.3rem;
+  }
+
+  .menuNews {
+    margin-top: 0.75rem;
+    padding: 0.75rem 0.85rem;
+  }
+
+  .menuNews .menuNewsTitle {
+    margin-bottom: 0.45rem;
+    font-size: 0.95rem;
+  }
+
+  /* the sign-up on one line: the field and the button side by side */
+  .menuEmailForm {
+    flex-direction: row;
+  }
+
+  .menuEmailInput,
+  .menuEmailButton {
+    height: 38px;
+  }
+
+  .menuEmailButton {
+    width: auto;
+    flex: 0 0 auto;
+  }
+
+  .menuSocials {
+    gap: 0.4rem;
+    padding-top: 0.75rem;
+    max-width: calc(5 * 40px + 4 * 0.4rem);
+  }
+
+  .menuSocials > * {
+    flex-basis: 40px;
+  }
+}
+
+@container (max-height: 530px) {
+  .navLinkLabel {
+    font-size: 1.2rem;
+  }
+}
+
+/* (the socials are in the footer too) */
+@container (max-height: 470px) {
+  .menuSocials {
+    display: none;
+  }
+}
+
+@container (max-height: 420px) {
+  .menuNews,
+  .menuSocials {
+    display: none;
+  }
+
+  .navLinkLabel {
+    font-size: 1.15rem;
+  }
+}

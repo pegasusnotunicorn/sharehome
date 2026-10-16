@@ -233,6 +233,16 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
     if (phoneTab === "log") setSeenLog(game.log[0]?.id ?? null);
   }, [phoneTab, game.log]);
   const ep = game.episodes[game.episode - 1];
+  // a callback just made on an earlier episode: its card bounces, a token drops on, +1 rises
+  const [callbackBumps, setCallbackBumps] = useState<Record<number, number>>({});
+  const lastCallbacks = useRef(game.episodes.map((e) => e.tokens));
+  useEffect(() => {
+    const now = game.episodes.map((e) => e.tokens);
+    now.forEach((n, i) => {
+      if (n > (lastCallbacks.current[i] ?? 0) && i < game.episode - 1) setCallbackBumps((b) => ({ ...b, [i]: (b[i] ?? 0) + 1 }));
+    });
+    lastCallbacks.current = now;
+  }, [game.episodes, game.episode]);
   useEffect(() => {
     const ids = new Set(ep.completed.map((c) => c.id));
     if (seen.current) {
@@ -498,21 +508,42 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
               <div className={styles.pastRow}>
                 {Array.from({ length: EPISODES - 1 }, (_, i) => {
                   const past = i < game.episode - 1 ? game.episodes[i] : null;
+                  const bumped = callbackBumps[i] ?? 0;
                   return past ? (
-                    <button
-                      key={i}
-                      type="button"
-                      className={styles.past}
-                      style={{ "--tilt": tilt(past.card) } as CSSProperties}
-                      onClick={() => send({ t: "token", on: "episode", episode: i + 1, add: true })}
-                      aria-label={`Callback to episode ${i + 1}, ${name("episode", past.card)} (${past.tokens} so far)`}
-                    >
-                      <img src={art.episode(past.card)} alt="" width="768" height="549" />
-                      <span className={styles.pastTokens}>
-                        <img src={art.token} alt="" />
-                        {past.tokens > 0 ? past.tokens : "+1"}
-                      </span>
-                    </button>
+                    <div key={i} className={styles.pastSlot}>
+                      <button
+                        key={bumped}
+                        type="button"
+                        className={`${styles.past}${bumped ? ` ${styles.pastBump}` : ""}`}
+                        style={{ "--tilt": tilt(past.card) } as CSSProperties}
+                        onClick={() => send({ t: "token", on: "episode", episode: i + 1, add: true })}
+                        aria-label={`Callback to episode ${i + 1}, ${name("episode", past.card)}: +1 (${past.tokens} so far)`}
+                      >
+                        <img src={art.episode(past.card)} alt="" width="768" height="549" />
+                        {bumped > 0 && (
+                          <>
+                            <img className={styles.tokenDrop} src={art.token} alt="" aria-hidden />
+                            <span className={styles.callbackPlus} aria-hidden>
+                              +1
+                            </span>
+                          </>
+                        )}
+                      </button>
+                      <div className={styles.pastCount}>
+                        <span key={`n${bumped}`} className={`${styles.pastTokensLine}${bumped ? ` ${styles.countPop}` : ""}`}>
+                          <img src={art.token} alt="" />×{past.tokens}
+                        </span>
+                        <button
+                          type="button"
+                          className={styles.minus}
+                          disabled={past.tokens === 0}
+                          onClick={() => send({ t: "token", on: "episode", episode: i + 1, add: false })}
+                          aria-label={`Take a callback token off episode ${i + 1}`}
+                        >
+                          −
+                        </button>
+                      </div>
+                    </div>
                   ) : (
                     <span key={i} className={styles.pastEmpty}>
                       Ep {i + 1}
@@ -520,17 +551,6 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                   );
                 })}
               </div>
-              {game.episodes.slice(0, game.episode - 1).some((e) => e.tokens > 0) && (
-                <div className={styles.takeBack}>
-                  {game.episodes.slice(0, game.episode - 1).map((e, i) =>
-                    e.tokens > 0 ? (
-                      <button key={i} type="button" className={styles.chipButton} onClick={() => send({ t: "token", on: "episode", episode: i + 1, add: false })}>
-                        −1 on ep {i + 1}
-                      </button>
-                    ) : null
-                  )}
-                </div>
-              )}
             </section>
             )}
 
@@ -556,7 +576,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
       {zoom && (
         <Modal onClose={() => setZoom(null)} panelClassName={`${modalStyles.panel} ${styles.zoomPanel}`} ariaLabel={name("character", zoom.character)}>
           <h2 className={modalStyles.title}>{name("character", zoom.character) || zoom.player.name}</h2>
-          <p className={modalStyles.text}>Played by {zoom.player.name}</p>
+
           <div className={styles.zoomCards}>
             <img src={art.character(zoom.character)} alt="" width="768" height="444" />
             <img src={art.characterBack(zoom.character)} alt={`${name("character", zoom.character)}: details`} width="768" height="444" />
@@ -578,7 +598,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
       {picking && (
         <Modal onClose={() => setPicking(false)} ariaLabel="Tablecloth">
           <h2 className={modalStyles.title}>Pick a tablecloth</h2>
-          <p className={modalStyles.text}>Just for you: everyone else keeps the one they like.</p>
+
           <div className={styles.clothGrid}>
             {CLOTHS.map((c) => (
               <button key={c.id} type="button" className={styles.clothSwatch} aria-pressed={cloth === c.id} onClick={() => pickCloth(c.id)}>
@@ -642,15 +662,11 @@ const PlayArea = ({ cards, points, open }: { cards: Played; points: number; open
           );
         })}
       </span>
-      <span className={styles.playLabel}>
-        {cards.length === 0 ? (
-          "Played cards land here"
-        ) : (
-          <>
-            <b>+{points}</b> · {cards.length} card{cards.length === 1 ? "" : "s"} · see all
-          </>
-        )}
-      </span>
+      {cards.length > 0 && (
+        <span className={styles.playLabel}>
+          <b>+{points}</b> · {cards.length}
+        </span>
+      )}
     </button>
   );
 };
@@ -697,11 +713,9 @@ const PlayedDialog = ({
 
   return (
     <Modal onClose={close} panelClassName={`${modalStyles.panel} ${styles.playedPanel}`} ariaLabel="Played this episode">
-      <h2 className={modalStyles.title}>Played this episode</h2>
-      <p className={modalStyles.text}>
-        Episode {episode}: {cards.length} card{cards.length === 1 ? "" : "s"}, +{points}. Had something to say too? Add a
-        token to a card.
-      </p>
+      <h2 className={`${modalStyles.title} ${styles.playedTitle}`}>
+        Episode {episode} <b>+{points}</b>
+      </h2>
       {cards.length > PAGE && (
         <input
           className={styles.playedSearch}
@@ -838,22 +852,19 @@ const Prompt = ({ game, epPoints }: { game: GameView; epPoints: number }) => {
   if (game.phase === "ready" && game.episode === 1)
     text = (
       <>
-        <b>Introduce yourselves!</b> Oldest character first: who you are, and your Character Arc. Then start the clock, or
-        just complete a card and it starts on its own.
+        <b>Introduce yourselves,</b> oldest character first, then start the clock.
       </>
     );
   else if (game.phase === "ready")
     text = (
       <>
-        <b>Episode {game.episode} is next.</b> Talk over what just happened, swap any direction cards you don’t want,
-        then start the clock.
+        <b>Episode {game.episode} is next.</b> Swap any cards you don’t want, then start the clock.
       </>
     );
   else if (game.phase === "break")
     text = (
       <>
-        <b>That’s a wrap on episode {game.episode}! +{epPoints}</b> Did anyone play one of their traits? Tap it before
-        moving on.
+        <b>That’s a wrap! +{epPoints}</b> Tap any traits you played.
       </>
     );
   if (!text) return null;

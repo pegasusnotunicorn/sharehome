@@ -141,10 +141,7 @@ const Voice = ({ stacked }: { stacked?: boolean }) => (
     </span>
     <div className={styles.voiceText}>
       <h2 className={styles.voiceTitle}>Talk it out on Discord</h2>
-      <p>
-        Love, Career &amp; Magic is all about talking with each other, so you’ll want to be on a call together. Grab
-        a free voice room on our Discord server, or use any call you like.
-      </p>
+      <p>Play on a call: grab a free voice room on our Discord.</p>
     </div>
     <DefaultButton href={DISCORD_URL} text="Open our Discord" color="purple" className={styles.voiceButton} />
   </aside>
@@ -189,21 +186,19 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
       <Stage
         eyebrow={`${MIN_PLAYERS}–${MAX_PLAYERS} players`}
         title="Play online"
-        lead="Make a room and send your friends the link. Every card is on the table for everyone to see."
+        lead="Make a room and send your friends the link."
         art
       />
 
       <div className={styles.doors}>
         <form className={`${styles.door} ${styles.doorHost}`} onSubmit={create}>
           <h2 className={styles.doorTitle}>Host a game</h2>
-          <p className={styles.doorNote}>Make a room and you’re the host: you start the show when everyone’s in.</p>
           <NameField name={name} setName={setName} />
           <DefaultButton button="submit" text={busy ? "Making a room…" : "Create a game"} color="red" className={`${styles.wide} ${styles.doorButton}`} />
         </form>
 
         <form className={`${styles.door} ${styles.doorJoin}`} onSubmit={join}>
           <h2 className={styles.doorTitle}>Join a game</h2>
-          <p className={styles.doorNote}>Type the four letters your host sent you, or just open their link.</p>
           <CodeInput code={code} setCode={setCode} />
           <DefaultButton button="submit" text="Join" color="dark" className={`${styles.wide} ${styles.doorButton}${isCode(code) ? "" : ` ${styles.muted}`}`} />
         </form>
@@ -282,7 +277,7 @@ const JoinByLink = ({ code, name, setName, join }: { code: string; name: string;
 
   return (
     <div className={styles.narrowPage}>
-      <Stage eyebrow="You’re invited" title="Join the game" lead="You’ve been invited to play Love, Career & Magic. Pop your name in to join.">
+      <Stage eyebrow="You’re invited" title="Join the game" lead="Pop your name in to join.">
         <CodeTiles code={code} small />
       </Stage>
       <form
@@ -365,7 +360,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
       <PageIntro
         eyebrow="Game room"
         title="Getting ready"
-        lead="Send your friends the link: everyone joins from their own device. Once everyone’s in, the host starts the show."
+        lead="Send your friends the link."
         className={styles.intro}
       />
 
@@ -614,7 +609,6 @@ const Seat = ({
             }}
           >
             <h2 className={modalStyles.title}>Change your name</h2>
-            <p className={modalStyles.text}>Everyone in the room sees the new one straight away.</p>
             <NameField name={draft} setName={setDraft} autoFocus />
             <div className={`${modalStyles.actions} ${styles.dialogFoot}`}>
               <DefaultButton onClick={() => setEditing(false)} text="Cancel" variant="secondary" border="dark" />
@@ -673,7 +667,6 @@ const Invite = ({ code }: { code: string }) => {
         <span className={styles.inviteLabel}>Room code</span>
         <CodeTiles code={code} />
       </div>
-      <p className={styles.inviteNote}>Send the link, or have friends type the code in at lovecareermagic.com/play.</p>
       <DefaultButton onClick={copy} text={copied ? "Link copied!" : "Copy invite link"} color="yellow" className={styles.inviteButton} />
       {failed && (
         <Modal onClose={() => setFailed(false)} ariaLabel="Invite link">

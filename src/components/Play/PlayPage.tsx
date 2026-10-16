@@ -155,7 +155,7 @@ const Voice = ({ stacked }: { stacked?: boolean }) => (
       <h2 className={styles.voiceTitle}>Talk it out on Discord</h2>
       <p>Play on a call: grab a free voice room on our Discord.</p>
     </div>
-    <DefaultButton href={DISCORD_URL} text="Open our Discord" color="purple" className={styles.voiceButton} />
+    <DefaultButton href={DISCORD_URL} text="Open our Discord" icon="discord" color="purple" className={styles.voiceButton} />
   </aside>
 );
 
@@ -206,13 +206,13 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
         <form className={`${styles.door} ${styles.doorHost}`} onSubmit={create}>
           <h2 className={styles.doorTitle}>Host a game</h2>
           <NameField name={name} setName={setName} />
-          <DefaultButton button="submit" text={busy ? "Making a room…" : "Create a game"} color="red" className={`${styles.wide} ${styles.doorButton}`} />
+          <DefaultButton button="submit" text={busy ? "Making a room…" : "Create a game"} icon="plus" color="red" className={`${styles.wide} ${styles.doorButton}`} />
         </form>
 
         <form className={`${styles.door} ${styles.doorJoin}`} onSubmit={join}>
           <h2 className={styles.doorTitle}>Join a game</h2>
           <CodeInput code={code} setCode={setCode} />
-          <DefaultButton button="submit" text="Join" color="dark" className={`${styles.wide} ${styles.doorButton}${isCode(code) ? "" : ` ${styles.muted}`}`} />
+          <DefaultButton button="submit" text="Join" icon="enter" color="dark" disabled={!isCode(code)} className={`${styles.wide} ${styles.doorButton}`} />
         </form>
       </div>
 
@@ -267,7 +267,7 @@ const Missing = ({ code, full }: { code: string; full?: boolean }) => (
         : "This room doesn’t exist, or it ended a while ago. Check the code with whoever sent it, or start your own game."
     }
   >
-    <DefaultButton navlink="/play" text="Start a game" color="red" />
+    <DefaultButton navlink="/play" text="Start a game" icon="plus" color="red" />
   </Stage>
 );
 
@@ -304,7 +304,7 @@ const JoinByLink = ({ code, name, setName, join }: { code: string; name: string;
       >
         <h2 className={styles.doorTitle}>Who’s playing?</h2>
         <NameField name={name} setName={setName} autoFocus />
-        <DefaultButton button="submit" text="Join the game" color="red" className={styles.wide} />
+        <DefaultButton button="submit" text="Join the game" icon="enter" color="red" className={styles.wide} />
       </form>
       <Voice stacked />
     </div>
@@ -338,9 +338,9 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
         }
       >
         {bye === "replaced" ? (
-          <DefaultButton onClick={() => window.location.reload()} text="Play here instead" color="red" />
+          <DefaultButton onClick={() => window.location.reload()} text="Play here instead" icon="enter" color="red" />
         ) : (
-          <DefaultButton navlink="/play" text="Start a new game" color="red" />
+          <DefaultButton navlink="/play" text="Start a new game" icon="plus" color="red" />
         )}
       </Stage>
     );
@@ -418,18 +418,14 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
               </span>
             </li>
           </ul>
-          {canStart ? (
-            <DefaultButton
-              onClick={() => (notReady.length ? setStartCheck(true) : send({ t: "start" }))}
-              text="Start the show"
-              color="red"
-              className={styles.startButton}
-            />
-          ) : (
-            <button type="button" className={`${styles.startButton} ${styles.startWaiting}`} disabled>
-              Start the show
-            </button>
-          )}
+          <DefaultButton
+            onClick={() => (notReady.length ? setStartCheck(true) : send({ t: "start" }))}
+            disabled={!canStart}
+            text="Start the show"
+            icon="clapper"
+            color="red"
+            className={styles.startButton}
+          />
         </section>
       </div>
 
@@ -468,6 +464,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
           title="Start without everyone ready?"
           text={`${notReady.map((p) => p.name).join(", ")} ${notReady.length === 1 ? "isn’t" : "aren’t"} ready yet. Anyone without a character gets a random one.`}
           action="Start anyway"
+          icon="clapper"
           onConfirm={() => {
             setStartCheck(false);
             send({ t: "start" });
@@ -480,6 +477,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
           title={`Remove ${removing.name}?`}
           text="They’ll be taken out of this room. They can come back with the invite link."
           action="Remove"
+          icon="removePerson"
           onConfirm={() => {
             send({ t: "kick", id: removing.id });
             setRemoving(null);
@@ -492,6 +490,7 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
           title="Leave the game?"
           text={isHost && room.players.length > 1 ? "Someone else will take over as host." : "You can rejoin with the invite link."}
           action="Leave"
+          icon="leave"
           onConfirm={() => {
             send({ t: "leave" });
             navigate("/play");
@@ -506,46 +505,76 @@ const Lobby = ({ code, name }: { code: string; name: string }) => {
 // the waiting room's characters: pick yours (one player each), then say you're ready
 const CharacterPicker = ({ room, me, send }: { room: RoomView; me: string; send: ReturnType<typeof useRoom>["send"] }) => {
   const name = useNames();
+  const [open, setOpen] = useState(false);
   const mine = room.picks?.[me];
   const ready = !!room.ready?.[me];
   const takenBy = (c: number) => room.players.find((p) => p.id !== me && room.picks?.[p.id] === c);
-  const color = (p: Player) => PLAYER_COLORS[p.color % PLAYER_COLORS.length];
   const meP = room.players.find((p) => p.id === me);
+  const card = (c: number) => `/images/pieces/characters/${String(c + 1).padStart(2, "0")}.webp`;
+  const pick = (c: number) => {
+    send({ t: "pick", character: mine === c ? null : c });
+    if (mine !== c) setTimeout(() => setOpen(false), 220);
+  };
   return (
     <section className={styles.picker} aria-labelledby="picker-title">
-      <div className={styles.castHead}>
-        <h2 className={styles.sectionTitle} id="picker-title">
-          Pick your character
-        </h2>
-        <DefaultButton
-          onClick={() => send({ t: "ready", ready: !ready })}
-          text={ready ? "Ready!" : mine === undefined ? "Pick one to get ready" : "I’m ready"}
-          color={ready ? "green" : "red"}
-          className={`${styles.readyButton}${mine === undefined ? ` ${styles.muted}` : ""}`}
-        />
+      <h2 className={styles.sectionTitle} id="picker-title">
+        Your character
+      </h2>
+      <div className={styles.myPick} style={{ "--seat": meP ? colorOf(meP) : undefined } as CSSProperties}>
+        <button type="button" className={`${styles.myPickCard}${mine === undefined ? ` ${styles.myPickEmpty}` : ""}`} onClick={() => setOpen(true)} aria-label={mine === undefined ? "Pick a character" : `Change your character, ${name("character", mine)}`}>
+          {mine === undefined ? <span aria-hidden>?</span> : <img src={card(mine)} alt="" width="768" height="444" />}
+        </button>
+        <div className={styles.myPickText}>
+          <b>{mine === undefined ? "No one yet" : name("character", mine) || `Character ${mine + 1}`}</b>
+          <span>{mine === undefined ? "Pick who you’ll play, then get ready." : ready ? "You’re ready. Tap Ready! to take it back." : "Happy with them? Get ready."}</span>
+        </div>
+        <div className={styles.myPickActions}>
+          <DefaultButton
+            onClick={() => setOpen(true)}
+            text={mine === undefined ? "Pick a character" : "Change"}
+            icon={mine === undefined ? "plus" : "again"}
+            variant={mine === undefined ? "primary" : "secondary"}
+            color={mine === undefined ? "red" : undefined}
+            border={mine === undefined ? undefined : "dark"}
+          />
+          <DefaultButton
+            onClick={() => send({ t: "ready", ready: !ready })}
+            disabled={mine === undefined}
+            text={ready ? "Ready!" : "I’m ready"}
+            icon="check"
+            color={ready ? "green" : "red"}
+            className={styles.readyButton}
+          />
+        </div>
       </div>
-      <ul className={styles.pickGrid}>
-        {Array.from({ length: 25 }, (_, c) => {
-          const other = takenBy(c);
-          const isMine = mine === c;
-          return (
-            <li key={c}>
-              <button
-                type="button"
-                className={`${styles.pickCard}${isMine ? ` ${styles.pickMine}` : ""}${other ? ` ${styles.pickTaken}` : ""}`}
-                style={{ "--seat": isMine && meP ? color(meP) : other ? color(other) : undefined } as CSSProperties}
-                disabled={!!other}
-                onClick={() => send({ t: "pick", character: isMine ? null : c })}
-                aria-pressed={isMine}
-                aria-label={`${name("character", c) || `Character ${c + 1}`}${other ? `, taken by ${other.name}` : ""}`}
-              >
-                <img src={`/images/pieces/characters/${String(c + 1).padStart(2, "0")}.webp`} alt="" loading="lazy" width="768" height="444" />
-                {(isMine || other) && <span className={styles.pickWho}>{isMine ? "You" : other!.name}</span>}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+
+      {open && (
+        <Modal onClose={() => setOpen(false)} panelClassName={`${modalStyles.panel} ${styles.pickPanel}`} ariaLabel="Pick your character">
+          <h2 className={modalStyles.title}>Pick your character</h2>
+          <ul className={styles.pickGrid}>
+            {Array.from({ length: 25 }, (_, c) => {
+              const other = takenBy(c);
+              const isMine = mine === c;
+              return (
+                <li key={c}>
+                  <button
+                    type="button"
+                    className={`${styles.pickCard}${isMine ? ` ${styles.pickMine}` : ""}${other ? ` ${styles.pickTaken}` : ""}`}
+                    style={{ "--seat": isMine && meP ? colorOf(meP) : other ? colorOf(other) : undefined } as CSSProperties}
+                    disabled={!!other}
+                    onClick={() => pick(c)}
+                    aria-pressed={isMine}
+                    aria-label={`${name("character", c) || `Character ${c + 1}`}${other ? `, taken by ${other.name}` : ""}`}
+                  >
+                    <img src={card(c)} alt="" loading="lazy" width="768" height="444" />
+                    {(isMine || other) && <span className={styles.pickWho}>{isMine ? "You" : other!.name}</span>}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </Modal>
+      )}
     </section>
   );
 };
@@ -611,7 +640,7 @@ const Seat = ({
     >
       {room.picks?.[player.id] !== undefined ? (
         <span className={`${styles.seatToken} ${styles.seatPicked}`} aria-hidden>
-          <img src={`/images/pieces/characters/${String(room.picks[player.id] + 1).padStart(2, "0")}.webp`} alt="" />
+          <img src={`/images/emojis/${CHARACTERS[room.picks[player.id]]?.emoji?.[0]}.webp`} alt="" draggable={false} />
         </span>
       ) : (
         <span className={styles.seatToken} aria-hidden>
@@ -705,8 +734,8 @@ const Seat = ({
             <h2 className={modalStyles.title}>Change your name</h2>
             <NameField name={draft} setName={setDraft} autoFocus />
             <div className={`${modalStyles.actions} ${styles.dialogFoot}`}>
-              <DefaultButton onClick={() => setEditing(false)} text="Cancel" variant="secondary" border="dark" />
-              <DefaultButton button="submit" text="Save" color="red" />
+              <DefaultButton onClick={() => setEditing(false)} text="Cancel" icon="close" variant="secondary" border="dark" />
+              <DefaultButton button="submit" text="Save" icon="check" color="red" />
             </div>
           </form>
         </Modal>
@@ -790,7 +819,7 @@ const Invite = ({ code, room }: { code: string; room: RoomView }) => {
           ))}
         </ul>
       )}
-      <DefaultButton onClick={copy} text={copied ? "Link copied!" : "Copy invite link"} color="yellow" className={styles.inviteButton} />
+      <DefaultButton onClick={copy} text={copied ? "Link copied!" : "Copy invite link"} icon={copied ? "check" : "link"} color="yellow" className={styles.inviteButton} />
       {failed && (
         <Modal onClose={() => setFailed(false)} ariaLabel="Invite link">
           <h2 className={modalStyles.title}>Your invite link</h2>

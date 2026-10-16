@@ -7,12 +7,15 @@ const Confirm = ({
   title,
   text,
   action,
+  icon,
   onConfirm,
   onClose,
 }: {
   title: string;
   text: string;
   action: string;
+  // (the action button's icon)
+  icon?: string;
   onConfirm: () => void;
   onClose: () => void;
 }) => (
@@ -20,8 +23,8 @@ const Confirm = ({
     <h2 className={modalStyles.title}>{title}</h2>
     <p className={modalStyles.text}>{text}</p>
     <div className={modalStyles.actions}>
-      <DefaultButton onClick={onClose} text="Cancel" variant="secondary" border="dark" />
-      <DefaultButton onClick={onConfirm} text={action} color="red" />
+      <DefaultButton onClick={onClose} text="Cancel" icon="close" variant="secondary" border="dark" />
+      <DefaultButton onClick={onConfirm} text={action} icon={icon} color="red" />
     </div>
   </Modal>
 );

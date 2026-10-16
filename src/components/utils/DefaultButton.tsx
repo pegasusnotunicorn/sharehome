@@ -19,6 +19,8 @@ interface DefaultButtonProps {
   button?: string;
   download?: string;
   onClick?: () => void;
+  // (greyed out and not pressable)
+  disabled?: boolean;
   id?: string;
   className?: string;
   style?: CSSProperties;
@@ -64,6 +66,7 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
       button,
       download,
       onClick,
+      disabled,
       id,
       className,
       style,
@@ -87,7 +90,7 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
     const props: Record<string, unknown> = {
       id,
       className: classes,
-      onClick,
+      onClick: disabled ? undefined : onClick,
       ref,
       style,
     };
@@ -138,6 +141,7 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
       );
     } else if (button) {
       props.type = button;
+      props.disabled = disabled;
       return (
         <button
           aria-label={typeof text === "string" ? text : undefined}
@@ -146,10 +150,10 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
           {iconTextContent}
         </button>
       );
-    } else if (onClick) {
+    } else if (onClick || disabled) {
       // (something to press: a real button, so it can be reached and pressed from the keyboard)
       return (
-        <button type="button" {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}>
+        <button type="button" disabled={disabled} {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}>
           {iconTextContent}
         </button>
       );

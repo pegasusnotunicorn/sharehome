@@ -568,12 +568,13 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                       <span style={{ transform: `scaleX(${left / (EPISODE_SECONDS * 1000)})` }} />
                     </span>
                     <div className={styles.phoneActions}>
-                      {game.phase === "ready" && <DefaultButton onClick={() => send({ t: "startClock" })} text="Start" color="red" />}
-                      {paused && <DefaultButton onClick={() => send({ t: "resume" })} text="Resume" color="red" />}
+                      {game.phase === "ready" && <DefaultButton onClick={() => send({ t: "startClock" })} text="Start" icon="play" color="red" />}
+                      {paused && <DefaultButton onClick={() => send({ t: "resume" })} text="Resume" icon="play" color="red" />}
                       {game.phase === "break" && (
                         <DefaultButton
                           onClick={() => send({ t: "nextEpisode" })}
                           text={game.episode >= EPISODES ? "Ratings" : `Episode ${game.episode + 1}`}
+                          icon={game.episode >= EPISODES ? "trophy" : "forward"}
                           color="yellow"
                         />
                       )}
@@ -827,7 +828,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
             )}
           </div>
           <div className={modalStyles.actions}>
-            <DefaultButton onClick={() => setTraitPick(false)} text="Not this time" variant="secondary" border="dark" />
+            <DefaultButton onClick={() => setTraitPick(false)} text="Not this time" icon="close" variant="secondary" border="dark" />
           </div>
         </Modal>
       )}
@@ -877,11 +878,12 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                   setEnding(true);
                 }}
                 text="End the game"
+                icon="flag"
                 variant="secondary"
                 border="dark"
               />
             )}
-            <DefaultButton onClick={() => setPicking(false)} text="Done" color="red" />
+            <DefaultButton onClick={() => setPicking(false)} text="Done" icon="check" color="red" />
           </div>
         </Modal>
       )}
@@ -890,6 +892,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
           title="End the game?"
           text="Everyone goes back to the room, and this season’s score is lost."
           action="End the game"
+          icon="flag"
           onConfirm={() => {
             setEnding(false);
             send({ t: "toLobby" });
@@ -1104,7 +1107,7 @@ const PlayedDialog = ({
         ) : (
           <span />
         )}
-        <DefaultButton onClick={close} text="Back to the table" color="red" />
+        <DefaultButton onClick={close} text="Back to the table" icon="prev" color="red" />
       </div>
     </Modal>
   );

@@ -357,6 +357,7 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
               <DefaultButton
                 onClick={() => navigator.share({ files: [file!], text, url: SITE }).catch(() => {})}
                 text="Share…"
+                icon="share"
                 color="red"
               />
             )}
@@ -371,6 +372,7 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
                 }
               }}
               text="Copy picture"
+              icon="image"
               color={canShareFile ? "white" : "red"}
               variant={canShareFile ? "secondary" : "primary"}
               border={canShareFile ? "dark" : undefined}
@@ -384,6 +386,7 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
                 a.click();
               }}
               text="Save picture"
+              icon="download"
               variant="secondary"
               border="dark"
             />
@@ -397,6 +400,7 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
                 }
               }}
               text="Copy text"
+              icon="copy"
               variant="secondary"
               border="dark"
             />
@@ -423,7 +427,7 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
 
       <div className={styles.again}>
         {isHost ? (
-          <DefaultButton onClick={() => send({ t: "toLobby" })} text="Another season!" color="yellow" />
+          <DefaultButton onClick={() => send({ t: "toLobby" })} text="Another season!" icon="again" color="yellow" />
         ) : (
           <p>{host?.name || "The host"} can start another season.</p>
         )}

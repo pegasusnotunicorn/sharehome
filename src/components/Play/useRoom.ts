@@ -32,7 +32,9 @@ export default function useRoom(code: string | null, name: string) {
         tries = 0;
         setStatus("open");
         clearInterval(ping);
-        ping = setInterval(() => socket.readyState === WebSocket.OPEN && socket.send("ping"), 25_000);
+        // (a keep-alive, answered by the server without waking the room; just often enough that phones
+        // and proxies don't drop a quiet connection)
+        ping = setInterval(() => socket.readyState === WebSocket.OPEN && socket.send("ping"), 45_000);
       };
       socket.onmessage = (e) => {
         if (e.data === "pong") return;
@@ -59,7 +61,9 @@ export default function useRoom(code: string | null, name: string) {
         if (ws.current === socket) ws.current = null;
         if (done) return;
         setStatus("reconnecting");
-        retry = setTimeout(connect, Math.min(10_000, 500 * 2 ** tries++));
+        // (a tab in the background doesn't keep knocking: it tries again once it's looked at)
+        if (document.visibilityState === "hidden") return;
+        retry = setTimeout(connect, Math.min(30_000, 500 * 2 ** tries++));
       };
     };
 

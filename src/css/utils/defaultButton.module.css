@@ -48,13 +48,6 @@
   outline-offset: 3px;
 }
 
-.btn:disabled,
-.btn[aria-disabled="true"] {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
 /* #endregion */
 
 /* #region--------------------------------------PRIMARY: a solid colour */
@@ -283,3 +276,24 @@ a.btn.colorWhite.secondary {
 }
 
 /* #endregion */
+
+/* (disabled: flat, grey and quiet, sunk into the page, whatever its colour) */
+.btn.btn:disabled,
+.btn.btn[aria-disabled="true"],
+.btn.btn:disabled:hover,
+.btn.btn[aria-disabled="true"]:hover,
+.btn.btn:disabled:active {
+  background: #ebe7df;
+  border-color: #ebe7df;
+  color: rgba(50, 50, 50, 0.38);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.06);
+  filter: none;
+  transform: none;
+  cursor: not-allowed;
+  animation: none;
+}
+
+.btn.btn:disabled .btnIcon,
+.btn.btn[aria-disabled="true"] .btnIcon {
+  animation: none;
+}

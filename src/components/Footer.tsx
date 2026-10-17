@@ -3,10 +3,13 @@ import { NavLink, useLocation, useNavigate } from "react-router";
 import BuyButton, { hidesBuyButtons } from "./utils/BuyButton";
 import { SOCIAL_LINKS, SocialIcon } from "./utils/SocialIcons";
 import useWindowDimensions from "./utils/useWindowDimensions";
+import useNearViewport from "./utils/useNearViewport";
+import { afterLoad, savingData } from "./utils/later";
 import type { FooterCard, FooterCardsApi } from "./utils/footerCards3d";
 import styles from "../css/footer.module.css";
 
-const SHEET = { fronts: "/images/cards/character-fronts.webp", cols: 5, rows: 5 }; // footerCards3d.ts ATLAS
+// footerCards3d.ts's ATLAS (the smaller sheet for phones)
+const SHEET = { fronts: "/images/cards/character-fronts.webp", phoneFronts: "/images/cards/1000/character-fronts.webp", cols: 5, rows: 5 };
 
 const EXPLORE: { label: string; to?: string; href?: string }[] = [
   { label: "Home", to: "/" },
@@ -45,10 +48,13 @@ const Footer = () => {
   const count = isMobile ? 5 : 9;
   const [cast, setCast] = useState<FooterCard[]>([]);
 
-  // the 3D cards load when the footer is about to scroll into view
+  // The 3D cards load once a good part of their stage is on screen, and the page has loaded and is
+  // idle: they're an extra, so they never hold up the page. On a slow connection, or for a visitor
+  // saving data, the flat fan instead.
+  const near = useNearViewport(stageRef, { rootMargin: "0px", threshold: 0.25 });
   useEffect(() => {
     const stage = stageRef.current;
-    if (!stage) return;
+    if (!stage || !near) return;
     let api: FooterCardsApi | null = null, gone = false;
     const castData = () => import("./Characters/Characters");
     // (the flat fan needs the cast too)
@@ -58,6 +64,12 @@ const Footer = () => {
         .catch(() => {})
         .finally(() => !gone && setFlat(true));
     stage.classList.remove("ready");
+    if (savingData(true)) {
+      fail();
+      return () => {
+        gone = true;
+      };
+    }
     const start = () =>
       Promise.all([import("./utils/footerCards3d"), castData()])
         .then(([{ mountFooterCards }, m]) => {
@@ -65,6 +77,7 @@ const Footer = () => {
           if (!gone) setCast(cards);
           return mountFooterCards(stage, {
             cards,
+            small: isMobile,
             onHover: (c, x, y) => setHover(c ? { name: c.name, x, y } : null),
             onPick: (c) => {
               const to = `/characters/${c.urlName}`;
@@ -76,22 +89,13 @@ const Footer = () => {
         })
         .then((a) => (gone ? a?.destroy() : (api = a)))
         .catch(fail);
-    const io = new IntersectionObserver(
-      (e) => {
-        if (!e.some((x) => x.isIntersecting)) return;
-        io.disconnect();
-        start();
-      },
-      { rootMargin: "400px" }
-    );
-    io.observe(stage);
+    afterLoad().then(() => !gone && start());
     return () => {
       gone = true;
-      io.disconnect();
       api?.destroy();
       setHover(null);
     };
-  }, [count, navigate]);
+  }, [near, count, isMobile, navigate]);
 
   return (
     <footer className={styles.footer}>
@@ -106,7 +110,7 @@ const Footer = () => {
                   className={styles.fanCard}
                   style={{
                     ["--i" as string]: i - 2,
-                    backgroundImage: `url("${SHEET.fronts}")`,
+                    backgroundImage: `url("${isMobile ? SHEET.phoneFronts : SHEET.fronts}")`,
                     backgroundPosition: `${((c.index % SHEET.cols) / (SHEET.cols - 1)) * 100}% ${(Math.floor(c.index / SHEET.cols) / (SHEET.rows - 1)) * 100}%`,
                   }}
                 />

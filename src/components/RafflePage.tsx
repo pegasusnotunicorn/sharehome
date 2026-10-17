@@ -2,6 +2,7 @@ import { lazy, Suspense, useId, useState } from "react";
 import PageIntro from "./utils/PageIntro";
 import MagnifierButton from "./utils/MagnifierButton";
 import DefaultButton from "./utils/DefaultButton";
+import { FETCH_FIRST, srcSet } from "./utils/imageCopies";
 import usePageTitle from "./utils/usePageTitle";
 import { PRICES, formatUsd } from "./utils/prices";
 import styles from "../css/pages/rafflePage.module.css";
@@ -85,6 +86,11 @@ const RafflePage = () => {
           <MagnifierButton onClick={() => setBoxCarouselOpen(true)} ariaLabel="Preview game box">
             <img
               src="/images/box_trimmed.webp"
+              srcSet={srcSet("/images/box_trimmed.webp")}
+              sizes="200px"
+              width={1200}
+              height={848}
+              {...FETCH_FIRST}
               alt="Love, Career & Magic"
               className={styles.prizeImage}
             />

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import type { BoxArt } from "./box3d";
 import type { BoxVideo, BoxViewerApi } from "./boxViewer3d";
+import { savingData } from "./later";
 import styles from "../../css/utils/boxViewer.module.css";
 
 // The game box in 3D (boxViewer3d.ts): turn it, click it to open it and play the trailer inside
@@ -24,16 +25,10 @@ interface BoxViewerProps {
   onSettled?: () => void; // the 3D box is in, or won't be: the page can load what it held back
 }
 
-// a visitor who'd rather not download much
-const savingData = () => {
-  const c = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
-  return !!c?.saveData || /(^|-)2g$/.test(c?.effectiveType ?? "") || !!window.matchMedia?.("(prefers-reduced-data: reduce)").matches;
-};
-
 const BoxViewer = ({ art, video, label, still, fallback, behind, onPeek, onOpen, onStill, onSettled }: BoxViewerProps) => {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const api = useRef<BoxViewerApi | null>(null);
-  const [failed, setFailed] = useState(savingData);
+  const [failed, setFailed] = useState(() => savingData());
   const [ready, setReady] = useState(false);
   const [open, setOpen] = useState(false);
   const [atRest, setAtRest] = useState(false);
@@ -61,8 +56,9 @@ const BoxViewer = ({ art, video, label, still, fallback, behind, onPeek, onOpen,
     const stage = stageRef.current;
     if (!stage || failed) return;
     let gone = false;
-    import("./boxViewer3d")
-      .then(({ mountBoxViewer }) =>
+    // (the box's code and three.js come down together, not one after the other)
+    Promise.all([import("./boxViewer3d"), import("./card3d").then((m) => m.loadThree())])
+      .then(([{ mountBoxViewer }]) =>
         mountBoxViewer(stage, {
           art,
           video,

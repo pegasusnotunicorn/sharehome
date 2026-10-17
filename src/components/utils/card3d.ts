@@ -2,15 +2,36 @@
 // the one WebGL renderer for the whole page (browsers allow only a few contexts), the studio that gold
 // foil reflects, and the card itself.
 import type * as THREE from "three";
+import { afterPaint, whenIdle } from "./later";
 
-export type Three = typeof THREE;
+export type Three = typeof import("./three");
 
+// whether the browser can draw 3D at all (asked once, of a canvas that's then let go)
+let gl: boolean | null = null;
+export const canDraw3d = () => {
+  if (gl === null)
+    try {
+      const c = document.createElement("canvas");
+      const ctx = (c.getContext("webgl2") || c.getContext("webgl")) as WebGLRenderingContext | null;
+      gl = !!ctx;
+      ctx?.getExtension("WEBGL_lose_context")?.loseContext();
+    } catch {
+      gl = false;
+    }
+  return gl;
+};
+
+// three.js, downloaded at once, but handed over only once the page has painted and is idle, so
+// setting up a scene never holds up the first screen. Without 3D it isn't downloaded at all (the
+// scenes show their flat pictures instead).
 let threeP: Promise<Three> | null = null;
 export const loadThree = () =>
-  (threeP ||= import("three").catch((e) => {
-    threeP = null;
-    throw e;
-  }));
+  (threeP ||= (canDraw3d() ? Promise.all([import("./three"), afterPaint()]) : Promise.reject(new Error("no WebGL")))
+    .then(([T]) => T)
+    .catch((e) => {
+      threeP = null;
+      throw e;
+    }));
 
 let shared: THREE.WebGLRenderer | null = null;
 export const renderer = (T: Three) => {
@@ -52,7 +73,6 @@ export function paint(r: THREE.WebGLRenderer, sc: THREE.Scene, cam: THREE.Camera
 // Gets a scene ready to draw without stalling a frame: its shaders compiled in the background, and
 // its pictures sent to the GPU one at a time when the page is idle. (Left to its first frame, both
 // happen at once there and then.) Scenes call it as they load, before they're on screen.
-const idle = (f: () => void) => ("requestIdleCallback" in window ? requestIdleCallback(f, { timeout: 500 }) : setTimeout(f, 16));
 export async function warm(r: THREE.WebGLRenderer, sc: THREE.Scene, cam: THREE.Camera) {
   // (only where the browser compiles in the background; elsewhere it compiles on its first frame,
   // which is drawn as the scene loads, before it's on screen, anyway)
@@ -67,7 +87,7 @@ export async function warm(r: THREE.WebGLRenderer, sc: THREE.Scene, cam: THREE.C
     for (const m of ([] as THREE.Material[]).concat((o as THREE.Mesh).material || []))
       for (const v of Object.values(m)) if ((v as THREE.Texture)?.isTexture && !(v as THREE.CubeTexture).isCubeTexture) maps.add(v as THREE.Texture);
   });
-  for (const t of maps) await new Promise<void>((done) => idle(() => (r.initTexture(t), done())));
+  for (const t of maps) await new Promise<void>((done) => whenIdle(() => (r.initTexture(t), done()), 500));
 }
 
 // A picture as a texture, decoded before it's drawn: left to the GPU upload, the browser decodes it

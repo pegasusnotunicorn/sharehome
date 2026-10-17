@@ -10,6 +10,7 @@ import { useLocation } from "react-router";
 import { characterArtFace } from "../Characters/characterCardFaces";
 import { getAllCharacters } from "../Characters/Characters";
 import { characterArtSmall } from "../utils/characterArt";
+import useNearViewport from "../utils/useNearViewport";
 import type { WallApi } from "../utils/parallaxWall3d";
 import landingPageStyles from "../../css/landingPage.module.css";
 
@@ -18,12 +19,6 @@ interface ParallaxCardsProps {
   evenRow: boolean;
   cardsPerRow: number;
   randomCharacters: any[];
-}
-
-interface ParallaxSectionProps {
-  // hold the cards (and their art) back until this is true, so the hero above loads first; scrolling
-  // brings them in anyway
-  hold?: boolean;
 }
 
 // how far the words the wall parts to show ("A party game where…") reach from the screen's middle
@@ -40,11 +35,8 @@ const wordsHalfWidth = (el: HTMLElement | null) => {
   return half;
 };
 
-// the longest the cards wait for the hero
-const HOLD_MAX_MS = 15000;
-
 //the entire section of three rows moving with scroll
-const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
+const ParallaxSection = () => {
   const location = useLocation();
   gsap.registerPlugin(ScrollTrigger);
 
@@ -72,22 +64,9 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
   const wall = useRef<WallApi | null>(null);
   const scrolled = useRef(0);
   const [flat, setFlat] = useState(false);
-
-
-  const [held, setHeld] = useState(hold);
-  useEffect(() => {
-    if (!hold) setHeld(false);
-  }, [hold]);
-  useEffect(() => {
-    if (!held) return;
-    const go = () => setHeld(false);
-    const t = setTimeout(go, HOLD_MAX_MS);
-    window.addEventListener("scroll", go, { once: true, passive: true });
-    return () => {
-      clearTimeout(t);
-      window.removeEventListener("scroll", go);
-    };
-  }, [held]);
+  // the wall (and its art) loads once it starts coming up the screen: it waits just below the first
+  // screen, so the hero loads first
+  const near = useNearViewport(stageRef, { rootMargin: "0px" });
 
   // the flat cards: pinned to the screen while they part, fading. (The 3D wall stays on screen by
   // itself, sticky, and does its own fading.)
@@ -158,7 +137,10 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
   const wallCards = useMemo(() => {
     const all = getAllCharacters();
     return randomCharacters.map((c) => ({
-      front: () => characterArtFace(c, characterArtSmall(c.image.url), cardsPerRow > 3 ? 640 : 512),
+      front: () => {
+        const px = cardsPerRow > 3 ? 640 : 512;
+        return characterArtFace(c, characterArtSmall(c.image.url, px), px);
+      },
       atlasIndex: all.findIndex((a) => a.urlName === c.urlName),
       urlName: c.urlName,
     }));
@@ -168,7 +150,7 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
 
   useEffect(() => {
     const stage = stageRef.current;
-    if (held || flat || !stage) return;
+    if (!near || flat || !stage) return;
     let gone = false;
     const fail = () => !gone && setFlat(true);
     import("../utils/parallaxWall3d")
@@ -203,7 +185,7 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
       wall.current?.destroy();
       wall.current = null;
     };
-  }, [held, flat, wallCards, cardsPerRow]);
+  }, [near, flat, wallCards, cardsPerRow]);
 
   return (
     <div
@@ -211,7 +193,7 @@ const ParallaxSection = ({ hold = false }: ParallaxSectionProps) => {
       ref={sectionRef}
       className={`${styles.parallaxSection} ${flat ? "" : styles.wallSection}`}
     >
-      {!held && (flat ? parallaxRows : <div ref={stageRef} className={styles.wallStage} />)}
+      {flat ? parallaxRows : <div ref={stageRef} className={styles.wallStage} />}
     </div>
   );
 };

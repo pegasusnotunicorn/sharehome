@@ -85,14 +85,18 @@ export async function mountCastWall(tiles: CastTile[], onFail: () => void): Prom
     baking: boolean;
   }
   const live: Live[] = tiles.map((t) => {
+    // (out of the page's flow, and no size, before they're in it, so nothing moves to make room for
+    // them; size() then places them)
     const cv = document.createElement("canvas");
     cv.setAttribute("aria-hidden", "true");
+    Object.assign(cv.style, { position: "absolute", width: "0", height: "0" });
     t.stage.appendChild(cv);
     const still = document.createElement("img");
     still.alt = "";
     still.setAttribute("aria-hidden", "true");
     still.decoding = "async";
     still.style.display = "none";
+    still.style.position = "absolute";
     t.stage.appendChild(still);
     return {
       ...t, cv, ctx: cv.getContext("2d"), view: null, W: 0, H: 0, CW: 0, CH: 0, tex: null, loading: false,

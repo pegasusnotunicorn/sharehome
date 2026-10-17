@@ -86,6 +86,17 @@
   border: 0;
 }
 
+/* (over the video's picture, until it's played) */
+.videoCaption {
+  position: absolute;
+  left: clamp(14px, 2.5vw, 28px);
+  bottom: clamp(12px, 2.2vw, 24px);
+  color: #fff;
+  font-family: "Rowdies-Regular";
+  font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+  line-height: 1.1;
+}
+
 /* #endregion */
 
 /* #region--------------------------------------THE TABS: a row of pills, the open one dark */
@@ -334,6 +345,7 @@
   left: var(--x);
   top: var(--y);
   width: var(--w);
+  height: auto; /* (its shape from its width and height, before it's in) */
   translate: -50% -50%;
   rotate: var(--r);
   user-select: none;

@@ -350,6 +350,33 @@
   flex-direction: column;
   width: 100%;
   margin-bottom: 2rem;
+  /* (about the carousel's height, a square photo across for every 1.5 to 5.25 of them, as
+     CarouselSection.tsx shows them: its room's kept while it loads, as it comes near) */
+  min-height: calc((100vw - 60px) / 1.5);
+}
+
+@media (min-width: 800px) {
+  .carouselContainer {
+    min-height: calc((100vw - 80px) / 2.25 + 6px);
+  }
+}
+
+@media (min-width: 1200px) {
+  .carouselContainer {
+    min-height: calc((100vw - 128px) / 3.25 + 6px);
+  }
+}
+
+@media (min-width: 1600px) {
+  .carouselContainer {
+    min-height: calc((100vw - 180px) / 4.25 + 6px);
+  }
+}
+
+@media (min-width: 1900px) {
+  .carouselContainer {
+    min-height: calc((100vw - 230px) / 5.25 + 6px);
+  }
 }
 
 .mainpageCarousel {

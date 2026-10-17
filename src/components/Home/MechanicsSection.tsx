@@ -1,5 +1,12 @@
 import { GsapFadeScrub } from "../utils/useGsap";
+import { srcSet } from "../utils/imageCopies";
 import landingPageStyles from "../../css/landingPage.module.css";
+
+// an illustration, at the size it's shown
+const art = (name: string) => {
+  const src = `/images/illustrations/${name}.webp`;
+  return { src, srcSet: srcSet(src), sizes: "(max-width: 900px) 125px, 200px" };
+};
 
 export default function MechanicsSection() {
   return (
@@ -16,7 +23,7 @@ export default function MechanicsSection() {
         <GsapFadeScrub fadeIn>
           <img
             loading="lazy"
-            src="/images/illustrations/improv.webp"
+            {...art("improv")}
             alt="TTRPG icon"
           />
           <span className={landingPageStyles.mechanicsLabelTtrpg}>
@@ -26,7 +33,7 @@ export default function MechanicsSection() {
         <GsapFadeScrub fadeIn>
           <img
             loading="lazy"
-            src="/images/illustrations/laughing.webp"
+            {...art("laughing")}
             alt="Laughing icon"
           />
           <span className={landingPageStyles.mechanicsLabelLaughing}>
@@ -36,7 +43,7 @@ export default function MechanicsSection() {
         <GsapFadeScrub fadeIn>
           <img
             loading="lazy"
-            src="/images/illustrations/stories.webp"
+            {...art("stories")}
             alt="Storytelling icon"
           />
           <span className={landingPageStyles.mechanicsLabelStorytelling}>
@@ -46,7 +53,7 @@ export default function MechanicsSection() {
         <GsapFadeScrub fadeIn>
           <img
             loading="lazy"
-            src="/images/illustrations/party.webp"
+            {...art("party")}
             alt="Party games icon"
           />
           <span className={landingPageStyles.mechanicsLabelPartyGames}>
@@ -56,7 +63,7 @@ export default function MechanicsSection() {
         <GsapFadeScrub fadeIn className="is-hidden-mobile">
           <img
             loading="lazy"
-            src="/images/illustrations/acting.webp"
+            {...art("acting")}
             alt="Improv icon"
           />
           <span className={landingPageStyles.mechanicsLabelImprov}>

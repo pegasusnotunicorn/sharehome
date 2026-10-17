@@ -14,6 +14,7 @@ import type * as THREE from "three";
 import { bleedCanvas, calm, ease, loadTexture, loadThree, makeCard, paint, pointerReaches, renderer, studio, warm } from "./card3d";
 import type { Three } from "./card3d";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
+import { sized } from "./imageCopies";
 import { hoverPose, wallPoses } from "./wallPoses";
 import type { WallCardMotion } from "./wallPoses";
 
@@ -57,8 +58,8 @@ export async function mountWall(stage: HTMLElement, opts: MountOptions): Promise
     return x;
   };
   // each card's printed back, full size (sharp at the size the wall shows it; a card that's on the
-  // wall twice shares it)
-  const backUrl = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}-back.webp`;
+  // wall twice shares it), or its smaller copy where the wall's three across (phones)
+  const backUrl = (i: number) => sized(`/images/pieces/characters/${String(i + 1).padStart(2, "0")}-back.webp`, cols > 3 ? 768 : 560);
   const backOf = new Map<number, Promise<THREE.Texture>>();
   const back = (i: number) => {
     if (!backOf.has(i)) backOf.set(i, loadTexture(T, backUrl(i)).then(tex));

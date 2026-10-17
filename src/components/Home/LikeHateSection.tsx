@@ -105,12 +105,12 @@ const LikeHateSection = (props: LikeHateSectionProps) => {
   const [traits, setTraits] = useState(randomTraits);
 
   // a new character and traits every 5 seconds, only while the picture's on screen and isn't being
-  // looked at closely (pointed at, or tabbed into); and not at all for a visitor who'd rather things
-  // didn't move
+  // looked at closely (a mouse over it, or tabbed into); for a visitor who'd rather things didn't
+  // move, the tiles swap without turning over (traitTiles3d.ts)
   const sectionRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = sectionRef.current;
-    if (!el || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    if (!el) return;
     let onScreen = false, held = false, timer = 0;
     const next = () => {
       setCurrentChar((c) => (c + 1) % characterCoords.length);
@@ -125,7 +125,9 @@ const LikeHateSection = (props: LikeHateSectionProps) => {
       sync();
     });
     io.observe(el);
-    const hold = (h: boolean) => () => {
+    // (a finger on a phone isn't looking closely, and may never send the leave that lets go)
+    const hold = (h: boolean) => (e: Event) => {
+      if (e instanceof PointerEvent && e.pointerType !== "mouse") return;
       held = h;
       sync();
     };

@@ -1380,7 +1380,7 @@
   text-align: center;
   max-width: 46rem;
   margin: 0 auto;
-  padding: 2.5rem 0 2.25rem;
+  padding: var(--intro-top) 0 2.25rem;
 }
 
 .buyPage .eyebrow {

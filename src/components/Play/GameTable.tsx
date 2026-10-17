@@ -645,14 +645,6 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
     if (document.activeElement && document.activeElement !== document.body) return;
     (slotRefs.current[key]?.querySelector<HTMLElement>("button:not(:disabled)") ?? playCardsRef.current?.closest("button"))?.focus();
   }, [game.faceUp]);
-  // on a touch screen a tap shows the card up close first (its words are tiny on a phone, and a stray
-  // tap while scrolling shouldn't score it); done from there
-  const [peek, setPeek] = useState<{ deck: DirectionDeck; slot: number; card: number } | null>(null);
-  const touch = useMemo(() => typeof matchMedia !== "undefined" && matchMedia("(pointer: coarse)").matches, []);
-  // (gone from the table meanwhile, or the clock's stopped: nothing to look at)
-  useEffect(() => {
-    if (peek && (game.phase !== "playing" || game.faceUp[peek.deck][peek.slot] !== peek.card)) setPeek(null);
-  }, [peek, game.phase, game.faceUp]);
   const complete = (deck: DirectionDeck, slot: number) => {
     // (a card done while the clock's paused starts it again)
     if (paused) send({ t: "resume" });
@@ -844,8 +836,6 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                             // (a card still on its way out of the deck, or not turned over yet: not
                             // there to play)
                             if (e.currentTarget.querySelector("[data-dealing]")) return;
-                            // (a tap on a touch screen: up close first; a key or a click: done)
-                            if (touch && e.detail !== 0) return setPeek({ deck, slot, card });
                             if (e.currentTarget === document.activeElement) refocus.current = `${deck}-${slot}`;
                             complete(deck, slot);
                           }}
@@ -1336,27 +1326,6 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
         </Modal>
       )}
       {removing && <RemoveWatcher line={removing} send={send} onClose={() => setRemoving(null)} />}
-      {peek && (
-        <Modal onClose={() => setPeek(null)} panelClassName={`${modalStyles.panel} ${styles.peekPanel}`} ariaLabel={name(peek.deck, peek.card) || DECK_LABEL[peek.deck]}>
-          <h2 className={`${modalStyles.title} ${styles.peekTitle}`}>
-            {DECK_LABEL[peek.deck]} <span className={styles.points}>{pts(DIRECTION_POINTS[peek.deck])}</span>
-          </h2>
-          <img className={styles.peekCard} src={art.direction(peek.deck, peek.card)} alt={name(peek.deck, peek.card)} width="768" height="497" />
-          <div className={modalStyles.actions}>
-            <DefaultButton onClick={() => setPeek(null)} text="Back" icon="prev" variant="secondary" border="dark" />
-            <DefaultButton
-              onClick={() => {
-                complete(peek.deck, peek.slot);
-                setPeek(null);
-              }}
-              disabled={offline}
-              text={`Done! +${DIRECTION_POINTS[peek.deck]}`}
-              icon="check"
-              color="red"
-            />
-          </div>
-        </Modal>
-      )}
       {ending && (
         <Confirm
           title="End the game?"

@@ -1814,30 +1814,6 @@
   color: #4f8a73;
 }
 
-/* a direction card up close (a touch screen's first tap): big enough to read, and done from here */
-.peekPanel {
-  max-width: 30rem;
-}
-
-.peekTitle {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.peekTitle .points {
-  font-size: 0.8rem;
-}
-
-.peekCard {
-  display: block;
-  width: 100%;
-  height: auto;
-  margin: 0.6rem 0 1.4rem;
-  border-radius: 12px;
-  box-shadow: var(--card-shadow, 0 8px 18px -8px rgba(0, 0, 0, 0.4));
-}
-
 /* the list of them all, in the site's dialog: a search, a page at a time */
 .playedPanel {
   max-width: 34rem;

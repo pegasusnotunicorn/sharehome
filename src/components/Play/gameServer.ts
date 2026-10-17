@@ -36,6 +36,13 @@ export const playerId = () => {
 };
 
 export const savedName = () => read("lcm-play-name") || "";
+// the rooms this browser's joined (the last 20): back in one, it goes straight in; a new one's link
+// asks first (play, by name, or just watch)
+const ROOMS_KEY = "lcm-play-rooms";
+const joinedRooms = () => (read(ROOMS_KEY) || "").split(",").filter(Boolean);
+export const wasInRoom = (code: string) => joinedRooms().includes(code);
+export const forgetRoom = (code: string) => write(ROOMS_KEY, joinedRooms().filter((c) => c !== code).join(","));
+export const rememberRoom = (code: string) => write(ROOMS_KEY, [...joinedRooms().filter((c) => c !== code), code].slice(-20).join(","));
 export const saveName = (name: string) => write("lcm-play-name", name);
 
 export const normalizeCode = (code: string) => code.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 4);

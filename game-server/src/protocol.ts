@@ -152,6 +152,7 @@ export type ClientMessage =
   | { t: "chat"; text: string } // a line in the chat (players and spectators)
   | { t: "removeWatcher"; id: string } // host only: a spectator out (and their chat lines), not to come back
   | { t: "watchOpen"; open: boolean } // host only: let more spectators in, or not
+  | { t: "toAudience" } // a player gives up their seat to watch instead (before the show)
   | { t: "rename"; name: string }
   | { t: "kick"; id: string } // host only
   | { t: "makeHost"; id: string } // host only
@@ -224,7 +225,7 @@ export type ServerMessage =
   | { t: "bye"; reason: ByeReason };
 
 // ("expired": the room closed, after a long while)
-export type ByeReason = "kicked" | "left" | "replaced" | "expired";
+export type ByeReason = "kicked" | "left" | "replaced" | "expired" | "toAudience";
 
 export type RoomError = "not-found" | "full" | "bad-request" | "watch-full" | "watch-closed" | "removed";
 

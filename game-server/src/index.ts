@@ -360,6 +360,12 @@ export class Room extends DurableObject<Env> {
         room.hostAwaySince = this.isOnline(msg.id) ? null : Date.now();
         break;
       }
+      case "toAudience": {
+        // (their seat's free again; they come back in as a spectator. Before the show only: once it's
+        // started, a seat holds a hand of cards)
+        if (room.game || !this.removePlayer(playerId, "toAudience")) return;
+        break;
+      }
       case "leave": {
         this.removePlayer(playerId, "left");
         break;

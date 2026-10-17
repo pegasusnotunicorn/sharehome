@@ -8,6 +8,7 @@
   box-shadow: var(--dialog-shadow);
   display: flex;
   flex-direction: column;
+  gap: 0.75rem;
 }
 
 .swiper {
@@ -31,22 +32,27 @@
   display: block;
 }
 
-.swiper :global(.swiper-button-prev),
-.swiper :global(.swiper-button-next) {
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.9);
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 50%;
-  box-shadow: 0 6px 14px -10px rgba(0, 0, 0, 0.4);
+/* Prev, which picture (and what it is), Next */
+.bar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
 }
 
-.swiper :global(.swiper-button-prev::after),
-.swiper :global(.swiper-button-next::after) {
-  font-size: 1rem;
-  font-weight: 700;
+.caption {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  text-align: center;
 }
 
-.swiper :global(.swiper-pagination-bullet-active) {
-  background: var(--purple);
+.count {
+  margin: 0;
+  font-family: var(--font-rowdies-light);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: rgba(50, 50, 50, 0.6);
 }

@@ -9,7 +9,7 @@
 // One WebGL renderer serves the whole page (card3d.ts): the ring renders through it onto its own canvas,
 // and only when something moves.
 import type * as THREE from "three";
-import { calm, loadTexture, loadThree, makeCard, paint, renderer, studio } from "./card3d";
+import { calm, loadTexture, loadThree, makeCard, paint, renderer, studio, warm } from "./card3d";
 import type { Three } from "./card3d";
 
 export interface CardRingApi {
@@ -105,6 +105,9 @@ export async function mountCardRing(el: HTMLElement, { mm, viewer, onPick, onFai
   const backOf = (obj: THREE.Group) => (obj.children[1] as THREE.Mesh).material as THREE.MeshStandardMaterial;
   const edgeOf = (obj: THREE.Group) => ((obj.children[2] as THREE.Mesh).material as THREE.MeshStandardMaterial[])[1];
   const GOLD = edgeOf(cards[0]).color.clone(), GOLD_SHINE = edgeOf(cards[0]).envMapIntensity;
+  // its shaders ready before its first frame, which would otherwise stall the card on show's first turn
+  await warm(r, sc, cam);
+  if (!el.isConnected) return null;
 
   const textures = new Map<string, Promise<THREE.Texture>>();
   const loaded = new Map<string, THREE.Texture>();

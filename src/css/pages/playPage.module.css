@@ -295,18 +295,6 @@
 }
 
 /* (a word under the code: it has no vowels) */
-.codeHint {
-  min-height: 1.2em;
-  margin-top: -0.2rem;
-  font-family: var(--font-roboto-regular);
-  font-size: 0.85rem;
-  color: #b3160f;
-}
-
-.codeHint:empty {
-  display: none;
-}
-
 /* (the second way: under the first, smaller) */
 .doorAlt {
   margin-top: -0.25rem;

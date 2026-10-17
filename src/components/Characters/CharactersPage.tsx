@@ -1,10 +1,5 @@
-import { useEffect, useRef, useCallback, useMemo, useState } from "react";
+import { Suspense, lazy, useEffect, useRef, useCallback, useMemo, useState } from "react";
 import { Link, Navigate, useParams } from "react-router";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, A11y, Keyboard } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
 import {
   getAllCharacters,
   getCharacterShareMeta,
@@ -14,11 +9,13 @@ import CharacterProfile from "./CharacterProfile";
 import { EmojiSection } from "../utils/EmojiSection";
 import { HeadTags } from "../utils/useHeadTags";
 import { CHARACTER_NOT_FOUND_META } from "../../pageMeta";
-import Modal from "../utils/Modal";
 import { sized, srcSet } from "../utils/imageCopies";
 import charStyles from "../../css/pages/characterPage.module.css";
 import type { CharacterWithNav } from "../../types/character";
 import { ILLUSTRATOR_URL } from "../../utils/links";
+
+// (the carousel library comes down only when someone opens a character's sketches)
+const ImageCarouselModal = lazy(() => import("../utils/ImageCarouselModal"));
 
 // a character's printed card front, by their place in the cast
 const cardFront = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}.webp`;
@@ -283,39 +280,20 @@ const ExpansionCharactersSection = () => {
       </ul>
 
       {activeCharacter && activeSketches.length > 0 && (
-        <Modal
-          onClose={closeViewer}
-          panelClassName={charStyles.sketchViewerCard}
-          ariaLabel={`${activeCharacter.name} sketches`}
-        >
-            <Swiper
-              modules={[Navigation, Pagination, A11y, Keyboard]}
-              navigation={activeSketches.length > 1}
-              pagination={activeSketches.length > 1 ? { clickable: true } : false}
-              keyboard={{ enabled: true }}
-              spaceBetween={0}
-              slidesPerView={1}
-              className={charStyles.sketchViewerSwiper}
-            >
-              {activeSketches.map((src, i) => (
-                <SwiperSlide key={src}>
-                  <div className={charStyles.sketchViewerSlide}>
-                    <img
-                      src={src}
-                      alt={`${activeCharacter.name} sketch ${i + 1} of ${activeSketches.length}`}
-                      className={charStyles.sketchViewerImage}
-                    />
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-            <div className={charStyles.sketchViewerMeta}>
-              <p className={charStyles.sketchViewerName}>{activeCharacter.name}</p>
-              <p className={charStyles.sketchViewerCount}>
-                {activeCharacter.race} — {activeCharacter.job}
-              </p>
-            </div>
-        </Modal>
+        <Suspense fallback={null}>
+          <ImageCarouselModal
+            images={activeSketches.map((src, i) => ({ src, alt: `${activeCharacter.name} sketch ${i + 1} of ${activeSketches.length}` }))}
+            ariaLabel={`${activeCharacter.name} sketches`}
+            onClose={closeViewer}
+            panelClassName={charStyles.sketchViewerCard}
+            aspectRatio="16 / 10"
+          >
+            <p className={charStyles.sketchViewerName}>{activeCharacter.name}</p>
+            <p className={charStyles.sketchViewerJob}>
+              {activeCharacter.race} — {activeCharacter.job}
+            </p>
+          </ImageCarouselModal>
+        </Suspense>
       )}
     </section>
   );

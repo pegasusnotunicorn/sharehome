@@ -26,6 +26,7 @@
     "build": "vite build",
     "generate-sitemap": "tsx sitemap-generator.mjs",
     "check-cards": "tsx scripts/card-clipping.mjs",
+    "card-stills": "tsx scripts/card-stills.mjs",
     "lint": "eslint ."
   },
   "devDependencies": {

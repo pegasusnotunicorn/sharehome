@@ -1,4 +1,6 @@
 .stepper {
+  /* (its border inside its width: the large one is the full width of the dialog, not 4px past it) */
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   flex-shrink: 0;

@@ -96,12 +96,9 @@ const useTableLoaded = (game: GameView) => {
         img.onload = img.onerror = () => done();
         img.src = src;
       });
-    const shown = new Promise((r) => setTimeout(r, 900)); // (long enough to see it, not to wait on it)
     const enough = new Promise((r) => setTimeout(r, 6000));
     let live = true;
-    Promise.race([Promise.all([...srcs].map(one)), enough])
-      .then(() => shown)
-      .then(() => live && setLoaded(true));
+    Promise.race([Promise.all([...srcs].map(one)), enough]).then(() => live && setLoaded(true));
     return () => {
       live = false;
     };
@@ -112,6 +109,24 @@ const useTableLoaded = (game: GameView) => {
 };
 
 // the loading screen: the deck's backs shuffling over the tablecloth
+// the curtains: closed for at least one whole shuffle of the deck between them, however quickly
+// what's behind them is `ready`; then they sweep open, all the way, and go
+const CURTAIN_CLOSED_MS = 1500; // (the shuffle's length: gameTable.module.css .loadingCard)
+const CURTAIN_OPEN_MS = 1300; // (the curtains' and the pelmet's sweep, and a beat)
+export const useCurtain = (ready: boolean) => {
+  const [since] = useState(Date.now);
+  const [stage, setStage] = useState<"closed" | "opening" | "gone">("closed");
+  useEffect(() => {
+    if (!ready || stage === "gone") return;
+    const t =
+      stage === "closed"
+        ? setTimeout(() => setStage("opening"), Math.max(0, since + CURTAIN_CLOSED_MS - Date.now()))
+        : setTimeout(() => setStage("gone"), CURTAIN_OPEN_MS);
+    return () => clearTimeout(t);
+  }, [ready, stage, since]);
+  return stage;
+};
+
 // the loading screen: the stage's curtains drawn, the deck's backs shuffling in the spotlight between
 // them; once the table's in, the curtains sweep open on it
 export const Loading = ({ out }: { out: boolean }) => {
@@ -510,14 +525,8 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
     rulebookOpensAt("rules");
     return () => void rulebookOpensAt(null);
   }, []);
-  const loaded = useTableLoaded(game);
-  // (the loading screen fades off, then goes)
-  const [loadingGone, setLoadingGone] = useState(false);
-  useEffect(() => {
-    if (!loaded) return;
-    const t = setTimeout(() => setLoadingGone(true), 1300);
-    return () => clearTimeout(t);
-  }, [loaded]);
+  const curtain = useCurtain(useTableLoaded(game));
+  const loadingGone = curtain === "gone";
   const [muted, setMutedState] = useState(isMuted);
   const [ending, setEnding] = useState(false);
   // a button just pressed on the R.E.M.O.T.E., by anyone: shown to everyone for a moment
@@ -773,7 +782,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
 
   return (
     <div className={`${styles.room}${spectating ? ` ${styles.watchOnly}` : ""}`}>
-      {!loadingGone && <Loading out={loaded} />}
+      {!loadingGone && <Loading out={curtain === "opening"} />}
       <h1 className="visually-hidden">
         Game {room.code}: episode {game.episode} of {EPISODES}
       </h1>

@@ -12,6 +12,8 @@ import styles from "../../css/pages/characterProfile.module.css";
 // a character's printed card, by their place in the cast
 const cardFront = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}.webp`;
 const cardBack = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}-back.webp`;
+// and a render of it in 3D, at rest (scripts/card-stills.mjs)
+const cardStill = (i: number) => `/images/pieces/characters/stills/${String(i + 1).padStart(2, "0")}.webp`;
 
 // The top of a character's page: who they are, over their card in 3D. Either side of it stand the cards
 // of the characters round the cast from them, angled back like a rotary card file on its side
@@ -59,6 +61,7 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
         mm={CHARACTER_CARD_MM}
         front={cardFront}
         back={cardBack}
+        render={cardStill}
         name={(i) => all[i].name}
         label={(i) => `${all[i].name}'s card from Love, Career & Magic`}
         href={(i) => `/characters/${all[i].urlName}`}

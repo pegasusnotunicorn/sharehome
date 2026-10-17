@@ -4,7 +4,8 @@ import { NavLink } from "react-router";
 import { BUY_DESTINATION, recordBuyClick } from "./utils/BuyButton";
 import { trackEvent } from "./utils/trackEvent";
 import PolaroidJourney from "./utils/PolaroidJourney";
-import { SOCIAL_LINKS, SocialIcon } from "./utils/SocialIcons";
+import PageIntro from "./utils/PageIntro";
+import { SocialChips } from "./utils/SocialIcons";
 import { CONTACT_EMAIL, SYSIFUS_URL } from "../utils/links";
 
 const ContactPage = () => {
@@ -12,33 +13,22 @@ const ContactPage = () => {
 
   return (
     <div className={`content ${styles.contactPage}`}>
-      <header className={styles.intro}>
-        <p className={styles.eyebrow}>Say hi</p>
-        <h1 className={styles.title}>Contact us</h1>
-        <p className={styles.lede}>Follow along on my game dev journey 🎮</p>
-        {/* (the address written out, to copy; its link styled as the bio's) */}
-        <p className={`${styles.lede} ${styles.bio}`}>
-          Or email <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-        </p>
-        <div className={styles.socials}>
-          {SOCIAL_LINKS.map(({ href, label, iconId, external = true, brandColor, hoverBackground, hoverIconColor = "#fff" }) => (
-            <a
-              key={label}
-              href={href}
-              target={external ? "_blank" : undefined}
-              rel={external ? "noreferrer" : undefined}
-              aria-label={label}
-              style={{
-                ["--social-brand-color" as string]: brandColor,
-                ["--social-brand-background" as string]: hoverBackground ?? brandColor,
-                ["--social-brand-icon-color" as string]: hoverIconColor,
-              }}
-            >
-              <SocialIcon className={styles.socialIcon} iconId={iconId} />
-            </a>
-          ))}
-        </div>
-      </header>
+      <PageIntro
+        eyebrow="Say hi"
+        title="Contact us"
+        lead={
+          <>
+            Follow along on my game dev journey 🎮
+            <br />
+            {/* (the address written out, to copy; its link styled as the bio's) */}
+            <span className={styles.bio}>
+              Or email <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+            </span>
+          </>
+        }
+      >
+        <SocialChips className={styles.socials} />
+      </PageIntro>
 
       <section className={styles.about}>
         <img src="/images/wonmin.webp" alt="Wonmin, the game designer" className={styles.portrait} />

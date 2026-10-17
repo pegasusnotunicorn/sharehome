@@ -29,18 +29,11 @@
   height: 490px;
   position: relative;
   display: flex;
-  background-color: #222;
+  background-color: var(--ink);
   border-radius: 4px;
 }
 
 .tableSplash,
-.arrowContainer {
-  width: 100%;
-  height: 100%;
-  border-radius: 4px;
-  position: absolute;
-}
-
 .tableSplash {
   width: 100%;
   height: 100%;
@@ -200,7 +193,7 @@
 }
 
 .characterArcText {
-  color: #222;
+  color: var(--ink);
   background-color: #fff;
   border-radius: 0.25rem;
   width: calc(100% - 0.3rem);

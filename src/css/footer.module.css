@@ -3,12 +3,12 @@
 .footer {
   position: relative;
   width: 100%;
-  color: #f4efe3;
+  color: var(--paper-dark);
   text-align: left;
   background:
     radial-gradient(120% 70% at 70% 0%, rgba(95, 90, 162, 0.55), transparent 60%),
     radial-gradient(80% 60% at 0% 100%, rgba(221, 115, 115, 0.18), transparent 60%),
-    #1c1a2b;
+    var(--night);
   overflow: hidden;
 }
 
@@ -31,6 +31,7 @@
 .stage {
   position: absolute;
   inset: 0;
+  z-index: 1;
   user-select: none;
   -webkit-user-select: none;
   touch-action: pan-y;
@@ -58,6 +59,7 @@
   inset: 0;
   background: linear-gradient(90deg, rgba(28, 26, 43, 0.92) 0%, rgba(28, 26, 43, 0.7) 32%, transparent 58%);
   pointer-events: none;
+  z-index: 1;
 }
 
 .headline {
@@ -70,19 +72,6 @@
   pointer-events: none;
 }
 
-.stage,
-.headline {
-  z-index: 1;
-}
-
-.band::after {
-  z-index: 1;
-}
-
-.headline {
-  z-index: 2;
-}
-
 .headline a,
 .headline button {
   pointer-events: auto;
@@ -90,16 +79,16 @@
 
 .kicker {
   margin: 0 0 0.5rem;
-  font-family: "Roboto Regular", sans-serif;
+  font-family: var(--font-roboto-regular);
   font-size: 0.8rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #f1db4b;
+  color: var(--yellow);
 }
 
 .title {
   margin: 0;
-  font-family: "Rowdies-Bold", sans-serif;
+  font-family: var(--font-rowdies-bold);
   font-size: clamp(2.2rem, 4vw, 3.4rem);
   line-height: 1.02;
   color: #fff;
@@ -121,9 +110,9 @@
 }
 
 .castLink {
-  font-family: "Roboto Regular", sans-serif;
+  font-family: var(--font-roboto-regular);
   font-size: 1rem;
-  color: #f4efe3;
+  color: var(--paper-dark);
   text-decoration: none;
   border-bottom: 1px solid rgba(244, 239, 227, 0.35);
   padding-bottom: 2px;
@@ -136,8 +125,8 @@
 }
 
 .castLink:hover {
-  color: #f1db4b;
-  border-color: #f1db4b;
+  color: var(--yellow);
+  border-color: var(--yellow);
 }
 
 .castLink:hover span {
@@ -150,10 +139,10 @@
   z-index: 3;
   transform: translate(14px, -130%);
   padding: 6px 12px;
-  border-radius: 999px;
+  border-radius: var(--pill-radius);
   background: rgba(255, 255, 255, 0.95);
-  color: #323232;
-  font-family: "Roboto Regular", sans-serif;
+  color: var(--ink);
+  font-family: var(--font-roboto-regular);
   font-size: 0.85rem;
   white-space: nowrap;
   pointer-events: none;
@@ -161,7 +150,7 @@
 }
 
 .pill span {
-  color: #dd7373;
+  color: var(--pink);
 }
 
 /* if the 3D cards can't be shown: a fan of flat cards */
@@ -209,7 +198,7 @@
 
 .colTitle {
   margin: 0 0 0.4rem;
-  font-family: "Rowdies-Regular", sans-serif;
+  font-family: var(--font-rowdies-regular);
   font-size: 1rem;
   font-weight: normal;
   color: #fff;
@@ -217,7 +206,7 @@
 
 .link,
 .inline {
-  font-family: "Roboto Light", sans-serif;
+  font-family: var(--font-roboto-light);
   font-size: 0.98rem;
   color: rgba(244, 239, 227, 0.75);
   text-decoration: none;
@@ -225,51 +214,29 @@
 }
 
 .inline {
-  color: #f4efe3;
+  color: var(--paper-dark);
   border-bottom: 1px solid rgba(244, 239, 227, 0.35);
 }
 
 .link:hover,
 .inline:hover {
-  color: #f1db4b;
+  color: var(--yellow);
 }
 
 .blurb {
   margin: 0;
-  font-family: "Roboto Light", sans-serif;
+  font-family: var(--font-roboto-light);
   font-size: 0.98rem;
   line-height: 1.55;
   color: rgba(244, 239, 227, 0.75);
 }
 
+/* (SocialChips: in rows from the left, five to a row at most) */
 .socials {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   max-width: 260px;
-}
-
-.social {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid rgba(244, 239, 227, 0.2);
-  color: #f4efe3;
-  transition: background 0.2s, border-color 0.2s, transform 0.2s;
-}
-
-.social:hover {
-  background: var(--brand);
-  border-color: var(--brand);
-  transform: translateY(-2px);
-}
-
-.socialSvg {
-  width: 17px;
-  height: 17px;
-  fill: currentColor;
 }
 
 .bottom {
@@ -281,7 +248,7 @@
   margin: 0 auto;
   padding: 1.1rem 5vw 1.6rem;
   border-top: 1px solid rgba(244, 239, 227, 0.1);
-  font-family: "Roboto Light", sans-serif;
+  font-family: var(--font-roboto-light);
   font-size: 0.85rem;
   color: rgba(244, 239, 227, 0.55);
 }
@@ -347,44 +314,13 @@
   }
 }
 
-/* #region--------------------------------------BUTTONS: the site's button style (see defaultButton.module.css) */
-
-.social {
-  border-radius: var(--chip-radius);
-  border: 2px solid rgba(244, 239, 227, 0.25);
-  box-shadow: 0 3px 0 rgba(244, 239, 227, 0.18);
-  transition:
-    transform 0.12s ease,
-    box-shadow 0.12s ease,
-    background-color 0.15s ease,
-    border-color 0.15s ease;
-}
-
-/* (on the dark footer its edge is a light one, hovered too: a dark one wouldn't show) */
-.social:hover {
-  background: var(--social-brand-background, var(--brand));
-  color: var(--social-brand-icon-color, #fff);
-  transform: translateY(-1px);
-  border-color: rgba(244, 239, 227, 0.85);
-  box-shadow: 0 4px 0 rgba(244, 239, 227, 0.55);
-}
-
-.social:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 rgba(244, 239, 227, 0.55);
-}
-
-/* #endregion */
-
-.social:focus-visible,
 .footer a:focus-visible {
-  outline: 3px solid #f4efe3;
+  outline: 3px solid var(--paper-dark);
   outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .castLink span,
-  .social {
+  .castLink span {
     transition: none;
   }
 }

@@ -14,49 +14,11 @@
   opacity: 1;
 }
 
-/* #region--------------------------------------THE OPENING */
+/* #region--------------------------------------THE OPENING (PageIntro) */
 
-.intro {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  max-width: 46rem;
-  margin: 0 auto;
-  padding: var(--intro-top) 0 2.5rem;
-}
-
-.thankYouPage .eyebrow {
-  margin: 0 0 0.9rem;
-  font-family: "Rowdies-Regular";
-  font-size: 0.78rem;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: #3e8f6e;
-}
-
-.title {
-  margin: 0;
-  font-family: "Rowdies-Bold";
-  font-size: clamp(3rem, 8.5vw, 6rem);
-  font-weight: normal;
-  line-height: 0.92;
-  letter-spacing: -0.04em;
-  color: #323232;
-}
-
-.thankYouPage .lede {
-  margin: 1.1rem 0 0;
-  font-family: "Roboto Light";
-  font-size: 1.08rem;
-  line-height: 1.5;
-  color: rgba(50, 50, 50, 0.85);
-}
-
-.actions {
-  display: flex;
-  justify-content: center;
-  margin-top: 1.6rem;
+/* (its label in green: done) */
+.confirmed {
+  color: var(--green-dark);
 }
 
 /* #endregion */
@@ -71,12 +33,10 @@
   max-width: 1040px;
   margin: 0 auto;
   padding: 1.75rem;
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   background: #fff;
   text-align: left;
-  box-shadow:
-    0 0 0 1px rgba(50, 50, 50, 0.08),
-    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+  box-shadow: var(--card-shadow);
 }
 
 .louImage {
@@ -86,7 +46,7 @@
   aspect-ratio: 4 / 5;
   object-fit: cover;
   object-position: center 35%;
-  border-radius: 14px;
+  border-radius: var(--box-radius);
 }
 
 .louWords {
@@ -97,26 +57,26 @@
 
 .thankYouPage .label {
   margin: 0 0 0.7rem;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.78rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.6);
+  color: var(--ink-soft);
 }
 
 .louTitle {
   margin: 0 0 1rem;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: clamp(1.9rem, 3.4vw, 2.6rem);
   font-weight: normal;
   line-height: 1.05;
   letter-spacing: -0.02em;
-  color: #323232;
+  color: var(--ink);
 }
 
 .louWords p {
   margin: 0 0 0.85rem;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 1rem;
   line-height: 1.6;
   color: rgba(50, 50, 50, 0.88);
@@ -127,7 +87,7 @@
 }
 
 .louWords a {
-  color: #323232;
+  color: var(--ink);
   text-decoration: underline;
   text-decoration-color: rgba(216, 30, 24, 0.5);
   text-decoration-thickness: 2px;
@@ -135,24 +95,24 @@
 }
 
 .louWords a:hover {
-  text-decoration-color: #d81e18;
+  text-decoration-color: var(--red);
 }
 
 /* "please note": a yellow note, like How to play's */
 .louWords .notice {
   margin: 1.1rem 0;
   padding: 1rem 1.15rem;
-  border-radius: 14px;
-  background: #fbf3c8;
+  border-radius: var(--box-radius);
+  background: var(--note);
   box-shadow: inset 0 0 0 1px rgba(160, 130, 20, 0.18);
-  color: #323232;
+  color: var(--ink);
   font-size: 0.95rem;
 }
 
 .notice strong {
   display: block;
   margin-bottom: 0.3rem;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-weight: normal;
   font-size: 0.75rem;
   letter-spacing: 2px;
@@ -169,11 +129,6 @@
     min-height: calc(100svh - var(--footer-height-mobile));
     padding-left: 1rem;
     padding-right: 1rem;
-  }
-
-  /* (clear of the logo and the menu button, which float over the top of the page here) */
-  .intro {
-    padding: 4.75rem 0 2rem;
   }
 
   .lou {

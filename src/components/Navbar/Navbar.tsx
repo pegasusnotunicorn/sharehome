@@ -10,7 +10,7 @@ import "../../css/utils/hamburger.css";
 import useWindowScroll from "../utils/useWindowScroll";
 import CharacterPinPopup from "../CharacterPinPopup";
 import { usePinPopup } from "../utils/usePinPopup";
-import { SOCIAL_LINKS, SocialIcon } from "../utils/SocialIcons";
+import { SocialChips } from "../utils/SocialIcons";
 import { BLOG_URL } from "../../utils/links";
 
 interface NavbarMainProps {
@@ -166,39 +166,12 @@ const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
                   formClassName={styles.menuEmailForm}
                   inputClassName={styles.menuEmailInput}
                   submitButtonClassName={styles.menuEmailButton}
+                  compactButton
                 />
               </div>
             </div>
 
-            <div className={styles.menuSocials}>
-              {SOCIAL_LINKS.map(
-                ({
-                  href,
-                  label,
-                  iconId,
-                  external = true,
-                  brandColor,
-                  hoverBackground,
-                  hoverIconColor = "#fff",
-                }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target={external ? "_blank" : undefined}
-                  rel={external ? "noreferrer" : undefined}
-                  aria-label={label}
-                  className={styles.navSocialIcon}
-                  style={{
-                    ["--social-brand-color" as string]: brandColor,
-                    ["--social-brand-background" as string]: hoverBackground ?? brandColor,
-                    ["--social-brand-icon-color" as string]: hoverIconColor,
-                  }}
-                >
-                  <SocialIcon className={styles.navSocialSvg} iconId={iconId} />
-                </a>
-                ),
-              )}
-            </div>
+            <SocialChips className={styles.menuSocials} />
           </div>
         </nav>
       </div>

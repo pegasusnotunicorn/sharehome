@@ -37,7 +37,7 @@
   width: clamp(64px, 9vw, 96px);
   aspect-ratio: 1;
   border-radius: 50%;
-  background: #d81e18;
+  background: var(--red);
   display: grid;
   place-items: center;
   transform: translate(-50%, -50%);

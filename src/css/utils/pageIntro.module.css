@@ -16,7 +16,7 @@
   font-size: 0.78rem;
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.72); /* (4.5:1 on the paper, at its small size) */
+  color: var(--ink-soft);
   opacity: 1;
 }
 
@@ -27,7 +27,7 @@
   font-weight: normal;
   line-height: 0.92;
   letter-spacing: -0.04em;
-  color: #323232;
+  color: var(--ink);
 }
 
 .intro .lead {
@@ -57,5 +57,12 @@
 
   .intro .lead {
     font-size: 1rem;
+  }
+
+  /* (its buttons the column's width, one under the other) */
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    align-self: stretch;
   }
 }

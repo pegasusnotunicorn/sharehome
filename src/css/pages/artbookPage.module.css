@@ -12,11 +12,9 @@
   display: block;
   width: 100%;
   height: auto;
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   background: #fff;
-  box-shadow:
-    0 0 0 1px rgba(50, 50, 50, 0.08),
-    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+  box-shadow: var(--card-shadow);
 }
 
 .back {
@@ -26,13 +24,15 @@
 }
 
 @media only screen and (max-width: 900px) {
-  .mockups {
-    gap: 1rem;
-    padding: 0 1rem;
+  /* (the page's sides: its buttons go full width here) */
+  .page {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-sizing: border-box;
   }
 
-  /* (the button goes full width here: kept off the screen's edges) */
-  .back {
-    padding: 0 1rem;
+  .mockups {
+    gap: 1rem;
+    padding: 0;
   }
 }

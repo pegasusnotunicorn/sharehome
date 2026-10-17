@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 
+// The site's phone/desktop line, the same as the CSS's (max-width: 900px): 900px and under is a phone.
+// (The CSS's others: 420, 640 and 1200.)
+export const PHONE_MAX_WIDTH = 900;
+
 interface WindowDimensions {
   width: number;
   height: number;
@@ -33,7 +37,7 @@ export default function useWindowDimensions(): WindowDimensions {
   }, []);
 
   const { width, height } = windowDimensions;
-  const isDesktop = width > 900;
+  const isDesktop = width > PHONE_MAX_WIDTH;
 
   return {
     width,

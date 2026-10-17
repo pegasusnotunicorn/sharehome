@@ -6,4 +6,10 @@
   .errorPage {
     min-height: calc(100svh - var(--footer-height-mobile));
   }
+
+  /* (sides to the opening: its button goes full width here) */
+  .errorPage .intro {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }

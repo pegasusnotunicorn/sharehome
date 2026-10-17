@@ -11,7 +11,7 @@ const ArtbookDownloadPage = () => {
     "Thank you so much for signing up for my newsletter. Here is the free digital artbook!";
 
   return (
-    <div className="content">
+    <div className={`content ${styles.page}`}>
       <PageIntro eyebrow="Free download" title="Your digital artbook" lead={description}>
         <DefaultButton variant="primary" icon="download" href="/Artbook%20v2.pdf" text="Download artbook" />
       </PageIntro>

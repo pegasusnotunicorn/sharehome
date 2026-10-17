@@ -10,15 +10,17 @@ import {
   type StripeCheckoutElementsValue,
 } from "@stripe/react-stripe-js/checkout";
 import Modal from "./utils/Modal";
+import DefaultButton from "./utils/DefaultButton";
 import Stepper from "./utils/Stepper";
 import MagnifierButton from "./utils/MagnifierButton";
 import LoadError from "./utils/LoadError";
+import PageIntro from "./utils/PageIntro";
 import { trackEvent } from "./utils/trackEvent";
 import { PRICES, formatUsd } from "./utils/prices";
 import styles from "../css/pages/buyPage.module.css";
+import modalStyles from "../css/utils/modal.module.css";
 // (the same list checkout offers and the webhook ships to)
 import { isEuropeCountry } from "../../netlify/lib/regions.js";
-import Icon from "./utils/Icons";
 import { storedTrackingTags, trackingTagsIn } from "../utils/tracking";
 
 // (the carousel library comes down only when the box preview opens)
@@ -466,15 +468,15 @@ const CheckoutForm = ({ sessionId, shippingRates, phone, onPhone, termsAgreed, o
             </a>
           </span>
         </label>
-        <button
-          type="submit"
-          disabled={loading || shippingSyncing || !checkout?.canConfirm || (needsPhone && !phoneValid)}
-          className={styles.checkoutButton}
-        >
-          {loading && <Icon name="spinner" strokeWidth={2.6} className={styles.checkoutSpinner} />}
-          {/* (the amount on the button too: on a phone the order summary is far above) */}
-          {loading ? "Processing..." : checkout ? `Pay ${checkout.total.total.amount}` : "Pay now"}
-        </button>
+        {/* (the amount on the button too: on a phone the order summary is far above) */}
+        <DefaultButton
+          button="submit"
+          color="purple"
+          className={styles.payButton}
+          disabled={shippingSyncing || !checkout?.canConfirm || (needsPhone && !phoneValid)}
+          loading={loading}
+          text={loading ? "Processing..." : checkout ? `Pay ${checkout.total.total.amount}` : "Pay now"}
+        />
       </form>
     </div>
   );
@@ -773,15 +775,13 @@ const CartSummary = ({
                 onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
                 autoFocus
               />
-              <button
-                className={styles.promoApplyBtn}
+              <DefaultButton
+                compact
                 onClick={handleApplyPromo}
-                disabled={promoLoading || !promoCode.trim()}
-              >
-                {promoLoading
-                  ? <span className={`${styles.spinner} ${styles.spinnerLight}`} aria-label="Loading" />
-                  : "Apply"}
-              </button>
+                disabled={!promoCode.trim()}
+                loading={promoLoading}
+                text="Apply"
+              />
             </div>
           ) : (
             <button className={styles.promoToggleBtn} onClick={() => setPromoOpen(true)}>
@@ -881,23 +881,11 @@ const CartSummary = ({
             max={CART_ITEMS_META[editItem.slug].max}
             size="lg"
           />
-          <div className={styles.qtyModalButtons}>
+          <div className={`${modalStyles.actions} ${styles.qtyModalButtons}`}>
             {CART_ITEMS_META[editItem.slug].min === 0 && (
-              <button
-                className={styles.qtyModalRemoveBtn}
-                onClick={handleRemoveItem}
-                disabled={updatingSlug !== null}
-              >
-                Remove
-              </button>
+              <DefaultButton onClick={handleRemoveItem} disabled={updatingSlug !== null} text="Remove" variant="secondary" border="dark" />
             )}
-            <button
-              className={`${styles.modalClose} ${styles.qtyModalConfirm}`}
-              onClick={handleEditConfirm}
-              disabled={updatingSlug !== null}
-            >
-              Update
-            </button>
+            <DefaultButton onClick={handleEditConfirm} disabled={updatingSlug !== null} text="Update" />
           </div>
         </Modal>
       )}
@@ -930,9 +918,9 @@ const InternationalModal = ({ onClose }: { onClose: () => void }) => {
         European shipments to arrive. This is my first time trying something
         like this, so please understand.
       </p>
-      <button className={styles.modalClose} onClick={onClose}>
-        Got it
-      </button>
+      <div className={modalStyles.actions}>
+        <DefaultButton onClick={onClose} text="Got it" />
+      </div>
     </Modal>
   );
 };
@@ -981,9 +969,7 @@ const ShippingWaitlistForm = ({ country }: { country: string }) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <button type="submit" className={styles.promoApplyBtn} disabled={status === "sending" || !email.trim()}>
-          {status === "sending" ? "..." : "Notify me"}
-        </button>
+        <DefaultButton button="submit" compact disabled={!email.trim()} loading={status === "sending"} text="Notify me" />
       </div>
       {error && <p className={styles.promoError} role="alert">{error}</p>}
     </form>
@@ -1023,9 +1009,9 @@ const MissingCountryModal = ({ europeEnabled, onClose }: { europeEnabled: boolea
         </a>{" "}
         and I’ll see if I can get your country added.
       </p>
-      <button className={styles.modalClose} onClick={onClose}>
-        Got it
-      </button>
+      <div className={modalStyles.actions}>
+        <DefaultButton onClick={onClose} text="Got it" />
+      </div>
     </Modal>
   );
 };
@@ -1045,11 +1031,7 @@ const shippingLine = (country: string | null, canShip: boolean | null, europe: b
 };
 
 const CheckoutIntro = ({ line = shippingLine(null, null, false) }: { line?: string }) => (
-  <header className={styles.intro}>
-    <p className={styles.eyebrow}>Secure checkout</p>
-    <h1 className={styles.title}>Checkout</h1>
-    <p key={line} className={styles.lede}>{line}</p>
-  </header>
+  <PageIntro eyebrow="Secure checkout" title="Checkout" lead={<span key={line} className={styles.lede}>{line}</span>} />
 );
 
 // ── Page ──────────────────────────────────────────────────────────────────────

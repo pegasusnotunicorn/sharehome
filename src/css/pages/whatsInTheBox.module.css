@@ -1,10 +1,6 @@
 /* "What's in the box" (How to play): the picked piece in 3D on top, the decks and their cards below */
 .box {
-  --ink: #323232;
-  --muted: #6e6563;
-  --paper: #f7f3ea;
-  --accent: #dd7373;
-  font-family: "Rowdies-Light", sans-serif;
+  font-family: var(--font-rowdies-light);
   color: var(--ink);
 }
 
@@ -21,7 +17,7 @@
   aspect-ratio: 3 / 2;
   max-height: clamp(320px, 60vh, 620px);
   width: 100%;
-  border-radius: 14px;
+  border-radius: var(--box-radius);
   background: radial-gradient(ellipse at 50% 40%, #fff 0%, var(--paper) 75%);
   overflow: hidden;
   touch-action: none;
@@ -32,7 +28,8 @@
 }
 
 .stage:focus-visible {
-  box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--accent);
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
 }
 
 .stage:global(.drag) {
@@ -83,20 +80,8 @@
 .tools button {
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
   padding: 0;
-  border-radius: 50%;
-  border: 2px solid var(--ink);
-  background: #fff;
-  color: var(--ink);
   cursor: pointer;
-  transition: transform 0.15s, background-color 0.15s;
-}
-
-.tools button:hover {
-  transform: translateY(-1px);
-  background: var(--paper);
 }
 
 .tools svg,
@@ -126,7 +111,7 @@
   transform: translateX(-50%);
   margin: 0;
   padding: 6px 14px;
-  border-radius: 999px;
+  border-radius: var(--pill-radius);
   background: var(--ink);
   color: #fff;
   font-size: 0.85rem;
@@ -148,7 +133,7 @@
 
 .what h3 {
   margin: 0;
-  font-family: "Rowdies-Regular", sans-serif;
+  font-family: var(--font-rowdies-regular);
   font-size: 1.25rem;
   line-height: 1.25;
   overflow: hidden;
@@ -159,27 +144,15 @@
 
 .what span {
   font-size: 0.85rem;
-  color: var(--muted);
+  color: var(--ink-soft);
 }
 
 .step {
   display: grid;
   place-items: center;
   flex: none;
-  width: 44px;
-  height: 44px;
   padding: 0;
-  border-radius: 50%;
-  border: 2px solid var(--ink);
-  background: #fff;
-  color: var(--ink);
   cursor: pointer;
-  transition: transform 0.15s, background-color 0.15s, color 0.15s;
-}
-
-.step:hover {
-  background: var(--ink);
-  color: #fff;
 }
 
 .step svg {
@@ -209,11 +182,11 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.4rem 0.8rem;
-  border-radius: 999px;
+  border-radius: var(--pill-radius);
   border: 2px solid var(--ink);
   background: #fff;
   color: var(--ink);
-  font-family: "Rowdies-Light", sans-serif;
+  font-family: var(--font-rowdies-light);
   font-size: 0.9rem;
   cursor: pointer;
   white-space: nowrap;
@@ -234,7 +207,7 @@
 }
 
 .n {
-  font-size: 0.75em;
+  font-size: max(0.75em, 0.75rem);
   opacity: 0.7;
 }
 
@@ -242,7 +215,7 @@
   flex: none;
   width: 12rem;
   padding: 0.45rem 0.9rem;
-  border-radius: 999px;
+  border-radius: var(--pill-radius);
   border: 2px solid var(--ink);
   background: #fff;
   font: inherit;
@@ -252,7 +225,8 @@
 }
 
 .search:focus-visible {
-  box-shadow: 0 0 0 3px #fff, 0 0 0 5px var(--accent);
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 2px;
 }
 
 /* ---------------------------------------------------------------- the cards */
@@ -261,7 +235,7 @@
   align-items: baseline;
   gap: 0.4rem;
   margin: 1.25rem 0 0.6rem;
-  font-family: "Rowdies-Regular", sans-serif;
+  font-family: var(--font-rowdies-regular);
   font-size: 1rem;
 }
 
@@ -343,11 +317,11 @@
   min-width: 38px;
   height: 38px;
   padding: 0 0.5rem;
-  border-radius: 999px;
+  border-radius: var(--control-radius);
   border: 2px solid transparent;
   background: none;
   color: var(--ink);
-  font-family: "Rowdies-Light", sans-serif;
+  font-family: var(--font-rowdies-light);
   font-size: 0.95rem;
   cursor: pointer;
   transition: background-color 0.15s, border-color 0.15s;
@@ -361,11 +335,18 @@
   background: var(--ink);
   color: #fff;
   cursor: default;
+  border-color: var(--btn-ink);
+  box-shadow: 0 3px 0 var(--ink-edge);
 }
 
 .gap {
-  color: var(--muted);
+  color: var(--ink-soft);
   padding: 0 0.15rem;
+}
+
+.message b {
+  font-family: var(--font-rowdies-regular);
+  font-weight: normal;
 }
 
 .message {
@@ -377,15 +358,6 @@
   text-align: center;
 }
 
-.retry {
-  padding: 0.45rem 1.1rem;
-  border-radius: 999px;
-  border: 2px solid var(--ink);
-  background: #fff;
-  font-family: "Rowdies-Regular", sans-serif;
-  cursor: pointer;
-}
-
 .loading {
   aspect-ratio: 3 / 2;
   width: min(100%, calc(56vh * 3 / 2));
@@ -395,7 +367,7 @@
 }
 
 /* ---------------------------------------------------------------- phones */
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 640px) {
   .bar {
     flex-direction: column;
     align-items: stretch;
@@ -438,11 +410,6 @@
     min-width: 34px;
     height: 34px;
   }
-
-  .tools button {
-    width: 40px;
-    height: 40px;
-  }
 }
 
 /* #region--------------------------------------BUTTONS: the site's button style (see defaultButton.module.css) */
@@ -465,9 +432,6 @@
     border-color 0.15s ease;
 }
 .tools button:hover {
-  background: #fff;
-  color: var(--btn-ink);
-  border-color: var(--chip-edge);
   transform: translateY(-1px);
   box-shadow: 0 4px 0 var(--chip-edge);
 }
@@ -506,45 +470,5 @@
   box-shadow: 0 1px 0 var(--btn-ink);
 }
 
-.pageNumber {
-  border-radius: 10px;
-}
-
-.pageNumber[aria-current="page"] {
-  border-color: var(--btn-ink);
-  box-shadow: 0 3px 0 #0f0f0f;
-}
-.retry {
-  border: 2px solid var(--btn-ink);
-  border-radius: var(--btn-radius);
-  background: #fff;
-  color: var(--btn-ink);
-  box-shadow: 0 3px 0 var(--btn-ink);
-  transition:
-    transform 0.12s ease,
-    box-shadow 0.12s ease,
-    background-color 0.15s ease,
-    color 0.15s ease;
-}
-
-.retry:hover:not(:disabled) {
-  background: #fffdf6;
-  color: var(--btn-ink);
-  border-color: var(--btn-ink);
-  transform: translateY(-1px);
-  box-shadow: 0 calc(3px + 1px) 0 var(--btn-ink);
-}
-
-.retry:active:not(:disabled) {
-  transform: translateY(calc(3px - 1px));
-  box-shadow: 0 1px 0 var(--btn-ink);
-}
-
-@media only screen and (max-width: 700px) {
-  .tools button {
-    width: 40px;
-    height: 40px;
-  }
-}
 
 /* #endregion */

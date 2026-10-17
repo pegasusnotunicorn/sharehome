@@ -14,94 +14,16 @@
   opacity: 1;
 }
 
-/* #region--------------------------------------THE OPENING */
+/* #region--------------------------------------THE OPENING (PageIntro), with the socials */
 
-.intro {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  max-width: 46rem;
-  margin: 0 auto;
-  padding: var(--intro-top) 0 2.5rem;
-}
-
-.contactPage .eyebrow {
-  margin: 0 0 0.9rem;
-  font-family: "Rowdies-Regular";
-  font-size: 0.78rem;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.6);
-}
-
-.title {
-  margin: 0;
-  font-family: "Rowdies-Bold";
-  font-size: clamp(3rem, 8.5vw, 6rem);
-  font-weight: normal;
-  line-height: 0.92;
-  letter-spacing: -0.04em;
-  color: #323232;
-}
-
-.contactPage .lede {
-  margin: 1.1rem 0 0;
-  font-family: "Roboto Light";
-  font-size: 1.08rem;
-  line-height: 1.5;
-  color: rgba(50, 50, 50, 0.85);
-}
-
-/* the socials: chips like the menu's, in their brand colours when pointed at */
+/* the socials (SocialChips) */
 .socials {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.55rem;
-  margin-top: 1.6rem;
   max-width: 34rem;
-}
-
-.socials a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  box-sizing: border-box;
-  border: 2px solid var(--chip-edge);
-  border-radius: var(--chip-radius);
-  background: #fff;
-  color: var(--btn-ink);
-  box-shadow: 0 3px 0 var(--chip-edge);
-  transition:
-    transform 0.12s ease,
-    box-shadow 0.12s ease,
-    background-color 0.15s ease,
-    color 0.15s ease,
-    border-color 0.15s ease;
-}
-
-.socials a:hover,
-.socials a:focus-visible {
-  background: var(--social-brand-background, var(--social-brand-color, #fff));
-  color: var(--social-brand-icon-color, #fff);
-  border-color: var(--btn-ink);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 0 var(--btn-ink);
-}
-
-.socials a:active {
-  transform: translateY(2px);
-  box-shadow: 0 1px 0 var(--btn-ink);
-}
-
-.socialIcon {
-  width: 20px;
-  height: 20px;
-  display: block;
-  color: inherit;
+  margin: 0 auto;
 }
 
 /* #endregion */
@@ -116,12 +38,10 @@
   max-width: 1040px;
   margin: 0 auto;
   padding: 1.75rem;
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   background: #fff;
   text-align: left;
-  box-shadow:
-    0 0 0 1px rgba(50, 50, 50, 0.08),
-    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+  box-shadow: var(--card-shadow);
 }
 
 .portrait {
@@ -132,7 +52,7 @@
   aspect-ratio: 4 / 5;
   object-fit: cover;
   object-position: center 30%;
-  border-radius: 14px;
+  border-radius: var(--box-radius);
 }
 
 .aboutWords {
@@ -141,33 +61,33 @@
 
 .contactPage .label {
   margin: 0 0 0.7rem;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.78rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.6);
+  color: var(--ink-soft);
 }
 
 .aboutTitle {
   margin: 0 0 1rem;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: clamp(1.9rem, 3.4vw, 2.6rem);
   font-weight: normal;
   line-height: 1.05;
   letter-spacing: -0.02em;
-  color: #323232;
+  color: var(--ink);
 }
 
 .contactPage .bio p {
   margin: 0 0 0.85rem;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 1rem;
   line-height: 1.6;
   color: rgba(50, 50, 50, 0.88);
 }
 
 .bio a {
-  color: #323232;
+  color: var(--ink);
   text-decoration: underline;
   text-decoration-color: rgba(216, 30, 24, 0.5);
   text-decoration-thickness: 2px;
@@ -175,7 +95,7 @@
 }
 
 .bio a:hover {
-  text-decoration-color: #d81e18;
+  text-decoration-color: var(--red);
 }
 
 /* (on a wide screen it's all there) */
@@ -185,15 +105,15 @@
   border: 0;
   border-bottom: 2px solid rgba(50, 50, 50, 0.15);
   background: none;
-  color: #323232;
-  font-family: "Rowdies-Regular";
+  color: var(--ink);
+  font-family: var(--font-rowdies-regular);
   font-size: 0.85rem;
   cursor: pointer;
   transition: border-color 0.15s ease;
 }
 
 .readMore:hover {
-  border-color: #323232;
+  border-color: var(--ink);
 }
 
 .readMore:focus-visible {
@@ -210,11 +130,6 @@
     min-height: calc(100svh - var(--footer-height-mobile));
     padding-left: 1rem;
     padding-right: 1rem;
-  }
-
-  /* (clear of the logo and the menu button, which float over the top of the page here) */
-  .intro {
-    padding: 4.75rem 0 2rem;
   }
 
   .socials {

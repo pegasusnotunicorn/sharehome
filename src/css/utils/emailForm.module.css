@@ -48,9 +48,9 @@
   border: 2px solid var(--chip-edge);
   border-radius: var(--btn-radius);
   background: #fff;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 1rem;
-  color: #323232;
+  color: var(--ink);
   text-align: center;
   transition: border-color 0.2s ease;
 }
@@ -66,8 +66,6 @@
 }
 
 .subscribeButton {
-  padding-left: 4rem;
-  padding-right: 4rem;
   font-size: 1rem;
 }
 
@@ -76,15 +74,15 @@
 /* what came back from signing up: thanks in green, a problem in red */
 .success {
   margin: 0;
-  color: #2f7a3b;
-  font-family: "Rowdies-Regular";
+  color: var(--green-dark);
+  font-family: var(--font-rowdies-regular);
 }
 
 .error {
   margin: 0 0 0.75rem;
-  color: #b54848;
+  color: var(--error);
 }
 
 .emailInput[aria-invalid="true"] {
-  border-color: #b54848;
+  border-color: var(--error);
 }

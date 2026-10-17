@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  border: 2px solid #323232;
+  border: 2px solid var(--ink);
   border-radius: 6px;
   overflow: hidden;
 }
@@ -18,13 +18,13 @@
   font-size: 1.1rem;
   line-height: 1;
   cursor: pointer;
-  color: #323232;
+  color: var(--ink);
   transition: background 0.15s, color 0.15s;
   padding: 0;
 }
 
 .btn:hover:not(:disabled) {
-  background: #323232;
+  background: var(--ink);
   color: #fff;
 }
 
@@ -36,9 +36,9 @@
 .count {
   min-width: 30px;
   text-align: center;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.9rem;
-  color: #323232;
+  color: var(--ink);
   border-left: 1px solid #e0e0e0;
   border-right: 1px solid #e0e0e0;
   border-top: none;
@@ -53,6 +53,11 @@
   -webkit-appearance: none;
   -moz-appearance: textfield;
   appearance: none;
+}
+
+.count:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 2px;
 }
 
 .count::-webkit-outer-spin-button,

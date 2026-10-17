@@ -18,10 +18,10 @@ button:hover > .thumb {
   top: clamp(10px, 2vw, 20px);
   right: clamp(10px, 2vw, 20px);
   padding: 0.35rem 0.8rem;
-  border-radius: 999px;
+  border-radius: var(--pill-radius);
   background: rgba(20, 18, 30, 0.72);
   color: #fff;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: clamp(0.8rem, 1.2vw, 1rem);
   letter-spacing: 0.02em;
 }

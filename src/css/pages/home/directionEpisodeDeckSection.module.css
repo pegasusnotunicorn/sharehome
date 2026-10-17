@@ -24,18 +24,8 @@
 }
 
 .DECardWrapper a {
-  color: #323232;
+  color: var(--ink);
   text-decoration: none;
-}
-
-/* small desktop */
-@media only screen and (min-width: 1200px) and (max-width: 1600px) {
-
-}
-
-/* tablet */
-@media only screen and (min-width: 900px) and (max-width: 1200px) {
-
 }
 
 /* mobile */

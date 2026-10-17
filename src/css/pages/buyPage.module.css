@@ -9,42 +9,6 @@
   display: block;
 }
 
-.checkoutButton {
-  width: 100%;
-  padding: 0.85rem 1.5rem;
-  border: 2px solid #5f5aa2;
-  border-radius: var(--btn-radius);
-  background: #5f5aa2;
-  color: #fff;
-  font-family: "Rowdies-Regular";
-  font-size: 1rem;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  box-shadow: 0 4px 0 #3c3878;
-  transition:
-    transform 0.12s ease,
-    box-shadow 0.12s ease,
-    filter 0.15s ease;
-}
-
-.checkoutButton:hover:not(:disabled) {
-  background: #5f5aa2;
-  border-color: #5f5aa2;
-  filter: brightness(1.06);
-  transform: translateY(-1px);
-  box-shadow: 0 calc(4px + 1px) 0 #3c3878;
-}
-
-.checkoutButton:active:not(:disabled) {
-  transform: translateY(calc(4px - 1px));
-  box-shadow: 0 1px 0 #3c3878;
-}
-
-.checkoutButton:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
 /* ── Checkout skeleton loader ──────────────────────────────────── */
 
 @keyframes shimmer {
@@ -61,15 +25,10 @@
   width: 11px;
   height: 11px;
   border: 2px solid rgba(50, 50, 50, 0.2);
-  border-top-color: #323232;
+  border-top-color: var(--ink);
   border-radius: 50%;
   animation: spin 0.65s linear infinite;
   flex-shrink: 0;
-}
-
-.spinnerLight {
-  border-color: rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
 }
 
 .checkoutFormHiding {
@@ -163,7 +122,7 @@
 }
 
 .cartSummaryEyebrow {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.78rem;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -190,7 +149,7 @@
   object-fit: contain;
   border: 0;
   border-radius: 12px;
-  background: radial-gradient(ellipse at 50% 40%, #fffdf8 0%, #f3eee2 85%);
+  background: radial-gradient(ellipse at 50% 40%, var(--paper-light) 0%, var(--paper-dark) 85%);
   flex-shrink: 0;
 }
 
@@ -200,9 +159,9 @@
 }
 
 .cartItemName {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 1rem;
-  color: #323232;
+  color: var(--ink);
   margin: 0;
   letter-spacing: 0;
   line-height: 1.3;
@@ -214,9 +173,9 @@
   border: 2px solid var(--chip-edge);
   border-radius: 8px;
   background: #fff;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.78rem;
-  color: #555;
+  color: var(--ink-soft);
   cursor: pointer;
   box-shadow: 0 2px 0 var(--chip-edge);
   transition:
@@ -227,8 +186,8 @@
 }
 
 .cartQtyBtn:hover:not(:disabled) {
-  border-color: #323232;
-  color: #323232;
+  border-color: var(--ink);
+  color: var(--ink);
   transform: translateY(-1px);
   box-shadow: 0 3px 0 var(--btn-ink);
 }
@@ -244,9 +203,9 @@
 }
 
 .cartItemPrice {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 1rem;
-  color: #323232;
+  color: var(--ink);
   margin: 0;
   flex-shrink: 0;
 }
@@ -261,9 +220,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.9rem;
-  color: #555;
+  color: var(--ink-soft);
 }
 
 /* ── Promo code ────────────────────────────────────────────────── */
@@ -278,16 +237,16 @@
   background: none;
   border: none;
   padding: 0;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.82rem;
-  color: #6e6563;
+  color: var(--ink-soft);
   cursor: pointer;
   text-align: left;
   text-decoration: underline;
 }
 
 .promoToggleBtn:hover {
-  color: #323232;
+  color: var(--ink);
 }
 
 .promoInputRow {
@@ -297,61 +256,26 @@
 
 .promoInput {
   flex: 1;
-  height: 36px;
+  /* (as tall as the small button beside it) */
+  height: 40px;
   padding: 0 0.75rem;
   border: 1.5px solid #ddd;
   border-radius: 6px;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.85rem;
-  color: #323232;
+  color: var(--ink);
   outline: none;
   transition: border-color 0.15s;
 }
 
 .promoInput:focus {
-  border-color: #5f5aa2;
-}
-
-.promoApplyBtn {
-  height: 36px;
-  padding: 0 1rem;
-  border: 2px solid #323232;
-  border-radius: var(--btn-radius);
-  background: #323232;
-  color: #fff;
-  font-family: "Rowdies-Regular";
-  font-size: 0.8rem;
-  cursor: pointer;
-  flex-shrink: 0;
-  box-shadow: 0 3px 0 #0f0f0f;
-  transition:
-    transform 0.12s ease,
-    box-shadow 0.12s ease,
-    filter 0.15s ease;
-}
-
-.promoApplyBtn:hover:not(:disabled) {
-  background: #323232;
-  border-color: #323232;
-  filter: brightness(1.06);
-  transform: translateY(-1px);
-  box-shadow: 0 calc(3px + 1px) 0 #0f0f0f;
-}
-
-.promoApplyBtn:active:not(:disabled) {
-  transform: translateY(calc(3px - 1px));
-  box-shadow: 0 1px 0 #0f0f0f;
-}
-
-.promoApplyBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  border-color: var(--purple);
 }
 
 .promoError {
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.8rem;
-  color: #b54848;
+  color: var(--error);
   margin: 0;
 }
 
@@ -363,24 +287,24 @@
 }
 
 .promoAppliedCode {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.82rem;
-  color: #5f5aa2;
+  color: var(--purple);
 }
 
 .promoRemoveBtn {
   background: none;
   border: none;
   padding: 0;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.78rem;
-  color: #6e6563;
+  color: var(--ink-soft);
   cursor: pointer;
   text-decoration: underline;
 }
 
 .promoRemoveBtn:hover {
-  color: #555;
+  color: var(--ink-soft);
 }
 
 /* ── Qty edit modal ────────────────────────────────────────────── */
@@ -398,74 +322,30 @@
 }
 
 .qtyModalDesc {
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.85rem;
-  color: #6e6563;
+  color: var(--ink-soft);
   margin: 0 0 1.25rem;
   line-height: 1.4;
 }
 
 .qtyModalDesc a {
-  color: #5f5aa2;
+  color: var(--purple);
 }
 
 .qtyModalButtons {
-  display: flex;
-  gap: 0.75rem;
   margin-top: 1.25rem;
 }
 
-.qtyModalConfirm {
-  flex: 1;
-  width: auto;
-}
-
-.qtyModalRemoveBtn {
-  flex: 1;
-  padding: 0.65rem;
-  border: 2px solid var(--btn-ink);
-  border-radius: var(--btn-radius);
-  background: #fff;
-  color: var(--btn-ink);
-  font-family: "Rowdies-Regular";
-  font-size: 0.9rem;
-  cursor: pointer;
-  box-shadow: 0 4px 0 var(--btn-ink);
-  transition:
-    transform 0.12s ease,
-    box-shadow 0.12s ease,
-    background-color 0.15s ease,
-    color 0.15s ease;
-}
-
-.qtyModalRemoveBtn:hover:not(:disabled) {
-  background: #fffdf6;
-  color: #c0392b;
-  border-color: var(--btn-ink);
-  transform: translateY(-1px);
-  box-shadow: 0 calc(4px + 1px) 0 var(--btn-ink);
-}
-
-.qtyModalRemoveBtn:active:not(:disabled) {
-  transform: translateY(calc(4px - 1px));
-  box-shadow: 0 1px 0 var(--btn-ink);
-}
-
-.qtyModalRemoveBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 .cartDiscount {
-  color: #3d8a4a;
+  color: var(--green-dark);
 }
 
 .cartRowLabel {
-  color: #3a3a3a;
-  font-weight: 500;
+  color: var(--ink);
+  font-family: var(--font-roboto-regular);
 }
 
-.cartShippingLabel,
 .cartTaxLabel {
   display: inline-flex;
   align-items: center;
@@ -479,11 +359,11 @@
   background: none;
   border: none;
   padding: 0;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.82rem;
   letter-spacing: 0;
   text-transform: none;
-  color: #5f5aa2;
+  color: var(--purple);
   text-decoration: underline;
   text-underline-offset: 2px;
   cursor: pointer;
@@ -491,11 +371,11 @@
 }
 
 .shippingLabelBtn:hover {
-  color: #45408a;
+  color: var(--purple-edge);
 }
 
 .cartTaxPending {
-  color: #555;
+  color: var(--ink-soft);
 }
 
 .taxInfoIcon {
@@ -507,7 +387,7 @@
   background: none;
   font: inherit;
   font-style: normal;
-  color: #8a8a8a;
+  color: var(--ink-soft);
   cursor: pointer;
   line-height: 1;
   user-select: none;
@@ -517,10 +397,10 @@
   position: absolute;
   bottom: calc(100% + 6px);
   right: 0;
-  background: #323232;
+  background: var(--ink);
   color: #fff;
-  font-family: "Roboto Light";
-  font-size: 0.7rem;
+  font-family: var(--font-roboto-light);
+  font-size: 0.75rem;
   font-style: normal;
   padding: 0.3rem 0.55rem;
   border-radius: 5px;
@@ -537,7 +417,7 @@
   top: 100%;
   right: 3px;
   border: 4px solid transparent;
-  border-top-color: #323232;
+  border-top-color: var(--ink);
 }
 
 .taxInfoIcon .taxInfoBubble {
@@ -580,9 +460,9 @@
 }
 
 .cartTotalRow {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 1.1rem;
-  color: #323232;
+  color: var(--ink);
 }
 
 /* ── Checkout upsell ───────────────────────────────────────────── */
@@ -594,7 +474,7 @@
 }
 
 .cartUpsellLabel {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.78rem;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -619,7 +499,7 @@
   object-fit: contain;
   border: 0;
   border-radius: 12px;
-  background: radial-gradient(ellipse at 50% 40%, #fffdf8 0%, #f3eee2 85%);
+  background: radial-gradient(ellipse at 50% 40%, var(--paper-light) 0%, var(--paper-dark) 85%);
   transition: opacity 0.15s;
 }
 
@@ -630,17 +510,17 @@
 }
 
 .cartUpsellName {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.85rem;
-  color: #323232;
+  color: var(--ink);
   margin: 0;
   letter-spacing: 0;
 }
 
 .cartUpsellDesc {
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.75rem;
-  color: #666;
+  color: var(--ink-soft);
   margin: 0.1rem 0 0;
 }
 
@@ -653,9 +533,9 @@
 }
 
 .cartUpsellPrice {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.85rem;
-  color: #323232;
+  color: var(--ink);
 }
 
 .cartUpsellBtn {
@@ -667,7 +547,7 @@
   border-radius: var(--btn-radius);
   background: #fff;
   color: var(--btn-ink);
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.78rem;
   cursor: pointer;
   white-space: nowrap;
@@ -680,7 +560,7 @@
 }
 
 .cartUpsellBtn:hover:not(:disabled) {
-  background: #fffdf6;
+  background: var(--paper-light);
   color: var(--btn-ink);
   border-color: var(--btn-ink);
   transform: translateY(-1px);
@@ -712,7 +592,7 @@
   height: 2.1rem;
   box-sizing: border-box;
   border: 2px solid var(--chip-edge);
-  border-radius: 10px;
+  border-radius: var(--control-radius);
   background: #fff;
   color: var(--btn-ink);
   display: flex;
@@ -771,9 +651,9 @@
   background: none;
   border: none;
   padding: 0;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.82rem;
-  color: #6e6563;
+  color: var(--ink-soft);
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
@@ -782,7 +662,7 @@
 }
 
 .cartDetailsToggle:hover {
-  color: #323232;
+  color: var(--ink);
 }
 
 .cartDetailsCollapse {
@@ -812,7 +692,7 @@
 }
 
 .formSectionLabel {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.78rem;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -851,8 +731,8 @@
 }
 
 .checkoutError {
-  color: #b54848;
-  font-family: "Roboto Light";
+  color: var(--error);
+  font-family: var(--font-roboto-light);
   font-size: 0.875rem;
   margin: 0;
   padding-top: 0.15rem;
@@ -862,9 +742,9 @@
   display: flex;
   align-items: flex-start;
   gap: 0.6rem;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.85rem;
-  color: #555;
+  color: var(--ink-soft);
   cursor: pointer;
   line-height: 1.4;
 }
@@ -874,12 +754,12 @@
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  accent-color: #5f5aa2;
+  accent-color: var(--purple);
   cursor: pointer;
 }
 
 .termsLink {
-  color: #5f5aa2;
+  color: var(--purple);
 }
 
 .termsShort {
@@ -899,7 +779,7 @@
   max-width: 980px;
   margin: 1.5rem auto 3rem;
   text-align: center;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.8rem;
   color: rgba(50, 50, 50, 0.72);
   letter-spacing: 0.2px;
@@ -920,17 +800,17 @@
 
 /* (the site's dialog type, as in modal.module.css) */
 .modalTitle {
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 1.5rem;
   font-weight: normal;
   line-height: 1.15;
-  color: #323232;
+  color: var(--ink);
   margin: 0 2.5rem 0.75rem 0;
   letter-spacing: 0;
 }
 
 .modalBody {
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 1rem;
   color: rgba(50, 50, 50, 0.8);
   line-height: 1.5;
@@ -939,56 +819,26 @@
 }
 
 .modalLink {
-  color: #5f5aa2;
-  font-family: "Roboto Light";
-}
-
-.modalClose {
-  width: 100%;
-  padding: 0.65rem;
-  border: 2px solid #323232;
-  border-radius: var(--btn-radius);
-  background: #323232;
-  color: #fff;
-  font-family: "Rowdies-Regular";
-  font-size: 0.9rem;
-  cursor: pointer;
-  box-shadow: 0 4px 0 #0f0f0f;
-  transition:
-    transform 0.12s ease,
-    box-shadow 0.12s ease,
-    filter 0.15s ease;
-}
-
-.modalClose:hover:not(:disabled) {
-  background: #323232;
-  border-color: #323232;
-  filter: brightness(1.06);
-  transform: translateY(-1px);
-  box-shadow: 0 calc(4px + 1px) 0 #0f0f0f;
-}
-
-.modalClose:active:not(:disabled) {
-  transform: translateY(calc(4px - 1px));
-  box-shadow: 0 1px 0 #0f0f0f;
+  color: var(--purple);
+  font-family: var(--font-roboto-light);
 }
 
 /* ── International shipping modal ─────────────────────────────── */
 
 .modalNotice {
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.9rem;
-  color: #323232;
+  color: var(--ink);
   line-height: 1.6;
   margin: 0 0 1.5rem;
   padding: 0.75rem 1rem;
   background: rgba(95, 90, 162, 0.08);
-  border-left: 3px solid #5f5aa2;
+  border-left: 3px solid var(--purple);
   border-radius: 6px;
 }
 
 .modalNotice strong {
-  font-family: "Roboto Regular";
+  font-family: var(--font-roboto-regular);
   font-weight: normal;
 }
 
@@ -1056,16 +906,16 @@
   background: none;
   border: none;
   padding: 0;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.82rem;
-  color: #5f5aa2;
+  color: var(--purple);
   text-decoration: underline;
   text-underline-offset: 2px;
   cursor: pointer;
 }
 
 .missingCountryLink:hover {
-  color: #45408a;
+  color: var(--purple-edge);
 }
 
 /* "we don't ship there yet": a yellow note, like How to play's */
@@ -1074,24 +924,24 @@
   margin: 0 auto 1.5rem;
   padding: 1rem 1.25rem;
   border-left: 0;
-  border-radius: 14px;
-  background: #fbf3c8;
+  border-radius: var(--box-radius);
+  background: var(--note);
   box-shadow: inset 0 0 0 1px rgba(160, 130, 20, 0.18);
   text-align: left;
   box-sizing: border-box;
 }
 
 .waitlistNoticeTitle {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 1rem;
-  color: #323232;
+  color: var(--ink);
   margin: 0 0 0.25rem;
 }
 
 .waitlistNoticeBody {
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.9rem;
-  color: #555;
+  color: var(--ink-soft);
   line-height: 1.5;
   margin: 0 0 0.75rem;
   opacity: 1;
@@ -1104,9 +954,9 @@
 }
 
 .waitlistDone {
-  font-family: "Roboto Regular";
+  font-family: var(--font-roboto-regular);
   font-size: 0.9rem;
-  color: #323232;
+  color: var(--ink);
   margin: 0;
 }
 
@@ -1131,7 +981,7 @@
 }
 
 .phoneBox:focus-within {
-  border-color: #5f5aa2;
+  border-color: var(--purple);
   box-shadow: 0 0 0 3px rgba(95, 90, 162, 0.25);
 }
 
@@ -1186,11 +1036,9 @@
 .checkoutFailed {
   max-width: 560px;
   margin: 0 auto;
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   background: #fff;
-  box-shadow:
-    0 0 0 1px rgba(50, 50, 50, 0.08),
-    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+  box-shadow: var(--card-shadow);
 }
 
 /* small controls get a 44px tap area without growing: an invisible ring around them */
@@ -1238,42 +1086,9 @@
   opacity: 1;
 }
 
-.intro {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  max-width: 46rem;
-  margin: 0 auto;
-  padding: var(--intro-top) 0 2.25rem;
-}
-
-.buyPage .eyebrow {
-  margin: 0 0 0.9rem;
-  font-family: "Rowdies-Regular";
-  font-size: 0.78rem;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.75);
-}
-
-.title {
-  margin: 0;
-  font-family: "Rowdies-Bold";
-  font-size: clamp(3rem, 8.5vw, 6rem);
-  font-weight: normal;
-  line-height: 0.92;
-  letter-spacing: -0.04em;
-  color: #323232;
-}
-
-.buyPage .lede {
-  margin: 1.1rem 0 0;
-  font-family: "Roboto Light";
-  font-size: 1.08rem;
-  line-height: 1.5;
-  color: rgba(50, 50, 50, 0.85);
-  /* (a new line, for another country, fades in) */
+/* (the opening is PageIntro: a new line, for another country, fades in) */
+.lede {
+  display: block;
   animation: ledeIn 0.4s ease both;
 }
 
@@ -1284,7 +1099,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .buyPage .lede {
+  .lede {
     animation: none;
   }
 }
@@ -1295,11 +1110,9 @@
 .checkoutFormWrapper {
   padding: 1.5rem;
   border: 0;
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   background: #fff;
-  box-shadow:
-    0 0 0 1px rgba(50, 50, 50, 0.08),
-    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+  box-shadow: var(--card-shadow);
 }
 
 .checkoutFormWrapper {
@@ -1313,11 +1126,6 @@
   .buyPage {
     padding-left: 1rem;
     padding-right: 1rem;
-  }
-
-  /* (clear of the logo and the menu button, which float over the top of the page here) */
-  .intro {
-    padding: 4.75rem 0 1.75rem;
   }
 
   .checkoutSection {
@@ -1352,13 +1160,14 @@
 
 /* #endregion */
 
+/* Pay: the form's width, like its fields, on every screen */
+.checkoutForm > .payButton {
+  width: 100%;
+}
+
 /* every checkout button: the site's focus ring */
-.checkoutButton:focus-visible,
-.promoApplyBtn:focus-visible,
 .promoToggleBtn:focus-visible,
 .promoRemoveBtn:focus-visible,
-.modalClose:focus-visible,
-.qtyModalRemoveBtn:focus-visible,
 .cartUpsellBtn:focus-visible,
 .upsellNavBtn:focus-visible,
 .cartQtyBtn:focus-visible,
@@ -1368,19 +1177,4 @@
 .promoInput:focus-visible {
   outline: 3px solid var(--btn-focus);
   outline-offset: 3px;
-}
-
-/* (paying: a spinner beside the words) */
-.checkoutSpinner {
-  width: 1.1em;
-  height: 1.1em;
-  margin-right: 0.5em;
-  vertical-align: -0.2em;
-  animation: checkoutSpin 0.8s linear infinite;
-}
-
-@keyframes checkoutSpin {
-  to {
-    transform: rotate(360deg);
-  }
 }

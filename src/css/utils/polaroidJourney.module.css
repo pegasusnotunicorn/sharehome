@@ -14,12 +14,12 @@
 
 .journeyTitle {
   margin: 0;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: clamp(2.2rem, 5vw, 3.4rem);
   font-weight: normal;
   line-height: 1;
   letter-spacing: -0.03em;
-  color: #323232;
+  color: var(--ink);
 }
 
 /* out to the window's edges */
@@ -46,7 +46,7 @@
   box-sizing: border-box;
   padding: 2.4% 2.4% 13%;
   object-fit: cover;
-  background: #fbfaf6;
+  background: var(--paper-light);
   border-radius: 4px;
   box-shadow: 0 14px 24px -18px rgba(35, 28, 40, 0.3);
   animation: stillIn 0.4s ease both;
@@ -114,10 +114,10 @@
 
 .journey .captionText {
   margin: 0;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 1.05rem;
   line-height: 1.45;
-  color: #323232;
+  color: var(--ink);
   animation: captionIn 0.5s ease both;
 }
 
@@ -145,11 +145,11 @@
 
 .journey .label {
   margin: 0 0 0.7rem;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.78rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.6);
+  color: var(--ink-soft);
 }
 
 .journey p {

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router";
 import BuyButton, { hidesBuyButtons } from "./utils/BuyButton";
-import { SOCIAL_LINKS, SocialIcon } from "./utils/SocialIcons";
+import { SocialChips } from "./utils/SocialIcons";
 import useWindowDimensions from "./utils/useWindowDimensions";
 import useNearViewport from "./utils/useNearViewport";
 import { afterLoad, savingData } from "./utils/later";
@@ -33,7 +33,7 @@ const pickCast = ({ getAllCharacters }: CastData, count: number): FooterCard[] =
     .map(({ index, name, urlName }) => ({ index, name, urlName }));
 
 const Footer = () => {
-  const { width } = useWindowDimensions();
+  const { isMobile } = useWindowDimensions();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   // a link to the page you're already on goes back to its top (the router does nothing otherwise)
@@ -45,7 +45,6 @@ const Footer = () => {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const [hover, setHover] = useState<{ name: string; x: number; y: number } | null>(null);
   const [flat, setFlat] = useState(false); // the 3D cards can't be shown: a fan of flat cards instead
-  const isMobile = width <= 900;
   const count = isMobile ? 5 : 9;
   const [cast, setCast] = useState<FooterCard[]>([]);
 
@@ -157,27 +156,7 @@ const Footer = () => {
         </nav>
         <div className={styles.col}>
           <h3 className={styles.colTitle}>Follow along</h3>
-          <div className={styles.socials}>
-            {SOCIAL_LINKS.map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target={s.external === false ? undefined : "_blank"}
-                rel={s.external === false ? undefined : "noreferrer"}
-                aria-label={s.label}
-                title={s.label}
-                className={styles.social}
-                style={{
-                  ["--brand" as string]: s.brandColor,
-                  // (hovered, as in the menu: the brand's own background and icon colour)
-                  ["--social-brand-background" as string]: s.hoverBackground ?? s.brandColor,
-                  ["--social-brand-icon-color" as string]: s.hoverIconColor ?? "#fff",
-                }}
-              >
-                <SocialIcon iconId={s.iconId} className={styles.socialSvg} />
-              </a>
-            ))}
-          </div>
+          <SocialChips onDark className={styles.socials} />
         </div>
         <div className={styles.col}>
           <h3 className={styles.colTitle}>Made by</h3>

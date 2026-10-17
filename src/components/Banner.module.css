@@ -5,7 +5,7 @@
   right: 0;
   width: 100%;
   color: #fff;
-  z-index: 99999;
+  z-index: var(--z-banner);
   /* (no side padding: the scrolling text runs off both edges of the screen) */
   padding: 0;
   box-sizing: border-box;
@@ -19,7 +19,7 @@
 }
 
 .top-banner.is-blue {
-  background-color: #5f5aa2;
+  background-color: var(--purple);
 }
 
 .top-banner-marquee-link {
@@ -70,17 +70,13 @@
   padding-right: 2.5rem;
   text-decoration: none;
   color: #fff;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.95em;
   transition: opacity 0.2s ease;
 }
 
 .top-banner-link:hover {
   opacity: 0.85;
-}
-
-.top-banner-text {
-  font-weight: 500;
 }
 
 @keyframes bannerMarquee {

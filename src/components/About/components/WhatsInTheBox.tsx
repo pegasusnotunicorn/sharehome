@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import useWindowDimensions from "../../utils/useWindowDimensions";
 import type { Piece, PiecesViewerApi } from "../../utils/piecesViewer3d";
+import DefaultButton from "../../utils/DefaultButton";
 import styles from "../../../css/pages/whatsInTheBox.module.css";
 
 // "What's in the box" on the How to play page: every piece in the game in 3D (piecesViewer3d.ts), the
@@ -214,9 +215,7 @@ const WhatsInTheBox = () => {
     return (
       <div className={styles.message}>
         <b>Couldn’t load the pieces.</b>
-        <button type="button" className={styles.retry} onClick={fetchList}>
-          Try again
-        </button>
+        <DefaultButton onClick={fetchList} text="Try again" icon="again" variant="secondary" border="dark" />
       </div>
     );
   if (!decks || !at) return <div className={styles.loading} aria-busy="true" />;
@@ -335,9 +334,7 @@ const WhatsInTheBox = () => {
       ) : (
         <div className={styles.message}>
           <b>Nothing matches “{query.trim()}”</b>
-          <button type="button" className={styles.retry} onClick={() => setQuery("")}>
-            Clear search
-          </button>
+          <DefaultButton onClick={() => setQuery("")} text="Clear search" icon="close" variant="secondary" border="dark" />
         </div>
       )}
 

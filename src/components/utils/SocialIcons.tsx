@@ -1,6 +1,7 @@
+import styles from "../../css/utils/socialChips.module.css";
 import { CONTACT_EMAIL, DISCORD_URL } from "../../utils/links";
 
-interface SocialLink {
+export interface SocialLink {
   href: string;
   label: string;
   iconId: string;
@@ -66,9 +67,9 @@ export const SOCIAL_LINKS: SocialLink[] = [
     label: "Email",
     iconId: "social-icon-email",
     external: false,
-    brandColor: "#649a85",
+    brandColor: "var(--green)",
     hoverBackground:
-      "linear-gradient(to right, #dd7373 0 50%, #5f5aa2 50% 100%) top / 100% 50.5% no-repeat, linear-gradient(to right, #649a85 0 50%, #f1db4b 50% 100%) bottom / 100% 50.5% no-repeat",
+      "linear-gradient(to right, var(--pink) 0 50%, var(--purple) 50% 100%) top / 100% 50.5% no-repeat, linear-gradient(to right, var(--green) 0 50%, var(--yellow) 50% 100%) bottom / 100% 50.5% no-repeat",
   },
 ];
 
@@ -205,4 +206,30 @@ export const SocialIcon = ({
   <svg className={className} aria-hidden="true" viewBox="0 0 24 24">
     <use href={`#${iconId}`} />
   </svg>
+);
+
+// The socials as the site's small square chips, in each one's brand colours when pointed at: the
+// menu's, the contact page's and (on the dark, "onDark") the footer's. (A className lays them out its
+// own way, in place of a centred row.)
+export const SocialChips = ({ className, onDark }: { className?: string; onDark?: boolean }) => (
+  <div className={className ?? styles.chips}>
+    {SOCIAL_LINKS.map(({ href, label, iconId, external = true, brandColor, hoverBackground, hoverIconColor = "#fff" }) => (
+      <a
+        key={label}
+        href={href}
+        target={external ? "_blank" : undefined}
+        rel={external ? "noreferrer" : undefined}
+        aria-label={label}
+        title={label}
+        className={`${styles.chip}${onDark ? ` ${styles.onDark}` : ""}`}
+        style={{
+          ["--brand" as string]: brandColor,
+          ["--brand-background" as string]: hoverBackground ?? brandColor,
+          ["--brand-icon" as string]: hoverIconColor,
+        }}
+      >
+        <SocialIcon className={styles.icon} iconId={iconId} />
+      </a>
+    ))}
+  </div>
 );

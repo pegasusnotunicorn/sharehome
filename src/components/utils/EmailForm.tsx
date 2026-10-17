@@ -12,6 +12,7 @@ interface EmailFormProps {
   responseClassName?: string;
   inputClassName?: string;
   submitButtonClassName?: string;
+  compactButton?: boolean; // (a small button that keeps its own width, e.g. in the menu)
   submitButtonColor?: "dark" | "red" | "green" | "purple" | "yellow" | "white";
 }
 
@@ -123,7 +124,7 @@ export const EmailForm = (props: EmailFormProps) => {
           />
           <DefaultButton
             variant="primary"
-            compact
+            compact={props.compactButton}
             icon="forward"
             color={props.submitButtonColor ?? "dark"}
             button="submit"

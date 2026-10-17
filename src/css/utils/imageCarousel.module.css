@@ -3,9 +3,9 @@
   width: min(680px, calc(100vw - 2rem));
   max-height: calc(100vh - 2rem);
   padding: 1rem 1rem 1.25rem;
-  border-radius: 22px;
+  border-radius: var(--dialog-radius);
   background: #fff;
-  box-shadow: 0 28px 60px -36px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--dialog-shadow);
   display: flex;
   flex-direction: column;
 }
@@ -33,7 +33,7 @@
 
 .swiper :global(.swiper-button-prev),
 .swiper :global(.swiper-button-next) {
-  color: #323232;
+  color: var(--ink);
   background: rgba(255, 255, 255, 0.9);
   width: 2.25rem;
   height: 2.25rem;
@@ -48,5 +48,5 @@
 }
 
 .swiper :global(.swiper-pagination-bullet-active) {
-  background: #5f5aa2;
+  background: var(--purple);
 }

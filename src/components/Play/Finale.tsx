@@ -240,7 +240,7 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
     .map((p) => ({ name: p.name, character: game.hands[p.id].character, color: PLAYER_COLORS[p.color % PLAYER_COLORS.length], arc: arcDone(game.hands[p.id]), traits: game.hands[p.id].traits.filter((t) => t.done !== null).length }));
   const episodes = game.episodes.map((e) => ({
     card: e.card,
-    points: e.tokens + e.completed.reduce((n, c) => n + DIRECTION_POINTS[c.deck] + c.tokens, 0),
+    points: e.tokens + e.completed.reduce((n, c) => n + DIRECTION_POINTS[c.deck], 0),
   }));
 
   // the picture, made once

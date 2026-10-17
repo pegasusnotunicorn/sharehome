@@ -1,30 +1,30 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useId, lazy, Suspense } from "react";
 import useWindowDimensions from "./utils/useWindowDimensions";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe, type Stripe, type StripeCheckoutContact } from "@stripe/stripe-js";
 import {
   CheckoutElementsProvider,
   useCheckoutElements,
   ContactDetailsElement,
   ShippingAddressElement,
   PaymentElement,
+  type StripeCheckoutElementsValue,
 } from "@stripe/react-stripe-js/checkout";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, A11y, Keyboard } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
 import usePageTitle from "./utils/usePageTitle";
 import Modal from "./utils/Modal";
 import Stepper from "./utils/Stepper";
 import MagnifierButton from "./utils/MagnifierButton";
+import LoadError from "./utils/LoadError";
 import { trackEvent } from "./utils/trackEvent";
+import { PRICES, formatUsd } from "./utils/prices";
 import styles from "../css/pages/buyPage.module.css";
 // (the same list checkout offers and the webhook ships to)
 import { isEuropeCountry } from "../../netlify/lib/regions.js";
 import Icon from "./utils/Icons";
+import { session } from "../utils/safeStorage";
 
-const LCM_PRICE = 34.99;
-const PIN_PRICE = 10.0;
+// (the carousel library comes down only when the box preview opens)
+const ImageCarouselModal = lazy(() => import("./utils/ImageCarouselModal"));
+
 const LCM_MAX_QTY = 12;
 const PIN_MAX_QTY = 99;
 
@@ -68,9 +68,9 @@ function countryName(code: string | null): string | null {
 }
 
 const CART_ITEMS_META: Record<ItemSlug, { name: string; desc: string; img: string; price: number; min: number; max: number }> = {
-  lcm: { name: "Love, Career & Magic", desc: "", img: "/images/box_transparent.webp", price: LCM_PRICE, min: 1, max: LCM_MAX_QTY },
-  urg_pin: { name: "Urg pin", desc: "An enamel pin of Urg, the Hacker.", img: "/images/members/urg-pin.webp", price: PIN_PRICE, min: 0, max: PIN_MAX_QTY },
-  bizz_pin: { name: "Bizz pin", desc: "An enamel pin of Bizz Hagglefeet.", img: "/images/members/bizz-pin.webp", price: PIN_PRICE, min: 0, max: PIN_MAX_QTY },
+  lcm: { name: "Love, Career & Magic", desc: "", img: "/images/box_transparent_300.webp", price: PRICES.game, min: 1, max: LCM_MAX_QTY },
+  urg_pin: { name: "Urg pin", desc: "An enamel pin of Urg, the Hacker.", img: "/images/members/urg-pin.webp", price: PRICES.pin, min: 0, max: PIN_MAX_QTY },
+  bizz_pin: { name: "Bizz pin", desc: "An enamel pin of Bizz Hagglefeet.", img: "/images/members/bizz-pin.webp", price: PRICES.pin, min: 0, max: PIN_MAX_QTY },
 };
 
 const BOX_IMAGES = [
@@ -111,7 +111,7 @@ function getStoredUtms(): Record<string, string> {
 
   // sessionStorage overrides URL — more authoritative when present.
   try {
-    const raw = sessionStorage.getItem("utm_params");
+    const raw = session.get("utm_params");
     if (raw) {
       const data = JSON.parse(raw) as Record<string, string>;
       if (data.utm_source) out.utmSource = data.utm_source;
@@ -124,11 +124,21 @@ function getStoredUtms(): Record<string, string> {
   return out;
 }
 
-const stripePromise = loadStripe(
-  import.meta.env.DEV
-    ? import.meta.env.VITE_STRIPE_PUBLIC_KEY_TEST
-    : import.meta.env.VITE_STRIPE_PUBLIC_KEY_LIVE
-);
+// Stripe.js starts loading with this page's code. If it fails (an ad blocker, a network that blocks
+// js.stripe.com), "Try again" asks for it afresh.
+const startStripe = (): Promise<Stripe | null> => {
+  const key = import.meta.env.DEV ? import.meta.env.VITE_STRIPE_PUBLIC_KEY_TEST : import.meta.env.VITE_STRIPE_PUBLIC_KEY_LIVE;
+  try {
+    return loadStripe(key);
+  } catch (err) {
+    return Promise.reject(err);
+  }
+};
+let stripePromise = startStripe();
+stripePromise.catch(() => {}); // (the page shows the failure; this keeps it out of the console's uncaught errors)
+
+// How long the payment form gets to appear before the page says it couldn't load it.
+const LOAD_TIMEOUT_MS = 20000;
 
 const appearanceBase = {
   inputs: "condensed" as const,
@@ -162,6 +172,23 @@ const isValidPhone = (s: string) => {
   return /^\+?[\d\s().-]+$/.test(s.trim()) && digits >= 6 && digits <= 15;
 };
 
+// An error that slides open under a form (and closes again, with its words still there as it goes).
+// Screen readers hear it through a hidden live region of its own: the sliding copy is just to see.
+const ErrorSlide = ({ message, compact, className = styles.checkoutError }: { message: string | null; compact?: boolean; className?: string }) => {
+  const last = useRef("");
+  if (message) last.current = message;
+  return (
+    <>
+      <div className={`${styles.errorSlide} ${compact ? styles.errorSlideCompact : ""} ${message ? styles.errorSlideVisible : ""}`} aria-hidden="true">
+        <div className={styles.errorSlideInner}>
+          <p className={className}>{last.current}</p>
+        </div>
+      </div>
+      <p className="visually-hidden" role="alert">{message ?? ""}</p>
+    </>
+  );
+};
+
 const CheckoutFormSkeleton = () => (
   <div className={styles.skeletonForm}>
     <div className={styles.skeletonFormSection}>
@@ -182,7 +209,22 @@ const CheckoutFormSkeleton = () => (
 
 // ── Checkout form ─────────────────────────────────────────────────────────────
 
-const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInternational, onOpenMissingCountry, onCountry }: { sessionId: string | null; shippingRates: ShippingRates | null; onEmailCaptured: (email: string) => void; onOpenInternational: () => void; onOpenMissingCountry: () => void; onCountry: (country: string) => void }) => {
+interface CheckoutFormProps {
+  sessionId: string | null;
+  shippingRates: ShippingRates | null;
+  // (kept by the page, so a cart change that has to start a new session doesn't lose them)
+  phone: string;
+  onPhone: (phone: string) => void;
+  termsAgreed: boolean;
+  onTermsAgreed: (agreed: boolean) => void;
+  onEmailCaptured: (email: string) => void;
+  onOpenInternational: () => void;
+  onOpenMissingCountry: () => void;
+  onCountry: (country: string) => void;
+  onLoadFailed: (why: string) => void;
+}
+
+const CheckoutForm = ({ sessionId, shippingRates, phone, onPhone, termsAgreed, onTermsAgreed, onEmailCaptured, onOpenInternational, onOpenMissingCountry, onCountry, onLoadFailed }: CheckoutFormProps) => {
   const checkoutState = useCheckoutElements();
   const [readyCount, setReadyCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -190,9 +232,6 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
   const requestedRateRef = useRef<string | null>(null);
   const pendingRateUpdates = useRef(0);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const lastError = useRef("");
-  if (errorMessage) lastError.current = errorMessage;
-  const [termsAgreed, setTermsAgreed] = useState(false);
   // Europe deliveries need a phone number for the carrier; US ones don't.
   const [shippingCountry, setShippingCountry] = useState<string | undefined>(undefined);
   // (the page's opening line follows the country they ship to)
@@ -201,15 +240,32 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
   useEffect(() => {
     if (shippingCountry) onCountryRef.current(shippingCountry);
   }, [shippingCountry]);
-  const [phone, setPhone] = useState("");
   const [phoneTouched, setPhoneTouched] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastCapturedEmailRef = useRef("");
+  const termsRef = useRef<HTMLInputElement>(null);
+  const phoneErrorId = useId();
 
   useEffect(() => () => { if (debounceRef.current) clearTimeout(debounceRef.current); }, []);
 
   const onReady = () => setReadyCount((n) => n + 1);
   const allReady = readyCount >= TOTAL_ELEMENTS;
+
+  // The form never arriving (Stripe.js blocked or stuck, an element that failed, a session Stripe
+  // won't open) is said out loud, rather than leaving the skeleton shimmering.
+  const onLoadFailedRef = useRef(onLoadFailed);
+  onLoadFailedRef.current = onLoadFailed;
+  useEffect(() => {
+    if (allReady) return;
+    const t = setTimeout(() => onLoadFailedRef.current("timeout"), LOAD_TIMEOUT_MS);
+    return () => clearTimeout(t);
+  }, [allReady]);
+  const stateError = checkoutState.type === "error" ? checkoutState.error.message : null;
+  useEffect(() => {
+    if (stateError) onLoadFailedRef.current(`session: ${stateError}`);
+  }, [stateError]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const onLoadError = (e: any) => onLoadFailed(`element: ${e?.error?.message ?? "unknown"}`);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleContactChange = (e: any) => {
@@ -219,9 +275,8 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
       if (!email || email === lastCapturedEmailRef.current) return;
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
       lastCapturedEmailRef.current = email;
-      // Hand the address up before the session check — changing the cart
-      // mints a replacement session, and the parent needs the email to carry
-      // it over so the customer doesn't have to retype it.
+      // Hand the address up before the session check: if a cart change has
+      // to start a new session, the parent prefills it there.
       onEmailCaptured(email);
       if (!sessionId) return;
       fetch("/.netlify/functions/save-checkout-email", {
@@ -248,9 +303,7 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
     if (sessionCountry) setShippingCountry(sessionCountry);
   }, [sessionCountry]);
 
-  if (checkoutState.type === "error") {
-    return <p className={styles.checkoutError}>{checkoutState.error.message}</p>;
-  }
+  if (checkoutState.type === "error") return null; // (the page shows the failure)
 
   const checkout = checkoutState.type !== "loading" ? checkoutState.checkout : null;
 
@@ -312,6 +365,12 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
       setPhoneTouched(true);
       return;
     }
+    // (said, rather than a Pay button that just won't press)
+    if (!termsAgreed) {
+      setErrorMessage("Please agree to the terms of service and privacy policy.");
+      termsRef.current?.focus();
+      return;
+    }
     setLoading(true);
     setErrorMessage(null);
     trackEvent("checkout_submitted");
@@ -361,7 +420,7 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
       >
         <div className={styles.formSection}>
           <p className={styles.formSectionLabel}>Contact</p>
-          <ContactDetailsElement onReady={onReady} onChange={handleContactChange} />
+          <ContactDetailsElement onReady={onReady} onLoadError={onLoadError} onChange={handleContactChange} />
         </div>
         <div className={styles.formSection}>
           <p className={styles.formSectionLabel}>
@@ -376,7 +435,7 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
               </button>
             )}
           </p>
-          <ShippingAddressElement onReady={onReady} onChange={handleShippingChange} />
+          <ShippingAddressElement onReady={onReady} onLoadError={onLoadError} onChange={handleShippingChange} />
           {needsPhone && (
             <div className={styles.phoneField}>
               <label className={`${styles.phoneBox} ${phone ? styles.phoneBoxFilled : ""} ${phoneTouched && !phoneValid ? styles.phoneBoxInvalid : ""}`.trim()}>
@@ -385,14 +444,15 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
                   autoComplete="tel"
                   inputMode="tel"
                   aria-invalid={phoneTouched && !phoneValid}
+                  aria-describedby={phoneTouched && !phoneValid ? phoneErrorId : undefined}
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => onPhone(e.target.value)}
                   onBlur={() => setPhoneTouched(true)}
                   className={styles.phoneInput}
                 />
                 <span className={styles.phoneLabel}>Phone number</span>
               </label>
-              {phoneTouched && !phoneValid && <p className={styles.phoneError}>Please enter a valid phone number.</p>}
+              {phoneTouched && !phoneValid && <p id={phoneErrorId} className={styles.phoneError}>Please enter a valid phone number.</p>}
             </div>
           )}
           <button className={styles.missingCountryLink} onClick={onOpenMissingCountry} type="button">
@@ -401,18 +461,18 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
         </div>
         <div className={styles.formSection}>
           <p className={styles.formSectionLabel}>Payment</p>
-          <PaymentElement onReady={onReady} />
+          <PaymentElement onReady={onReady} onLoadError={onLoadError} />
         </div>
-        <div className={`${styles.errorSlide} ${errorMessage ? styles.errorSlideVisible : ""}`}>
-          <div className={styles.errorSlideInner}>
-            <p className={styles.checkoutError}>{lastError.current}</p>
-          </div>
-        </div>
+        <ErrorSlide message={errorMessage} />
         <label className={styles.termsLabel}>
           <input
+            ref={termsRef}
             type="checkbox"
             checked={termsAgreed}
-            onChange={(e) => setTermsAgreed(e.target.checked)}
+            onChange={(e) => {
+              onTermsAgreed(e.target.checked);
+              if (e.target.checked) setErrorMessage(null);
+            }}
             className={styles.termsCheckbox}
           />
           <span>
@@ -425,11 +485,12 @@ const CheckoutForm = ({ sessionId, shippingRates, onEmailCaptured, onOpenInterna
         </label>
         <button
           type="submit"
-          disabled={loading || shippingSyncing || !checkout?.canConfirm || !termsAgreed || (needsPhone && !phoneValid)}
+          disabled={loading || shippingSyncing || !checkout?.canConfirm || (needsPhone && !phoneValid)}
           className={styles.checkoutButton}
         >
           {loading && <Icon name="spinner" strokeWidth={2.6} className={styles.checkoutSpinner} />}
-          {loading ? "Processing..." : "Pay now"}
+          {/* (the amount on the button too: on a phone the order summary is far above) */}
+          {loading ? "Processing..." : checkout ? `Pay ${checkout.total.total.amount}` : "Pay now"}
         </button>
       </form>
     </div>
@@ -475,7 +536,7 @@ const CartUpsell = ({
         <p className={styles.cartUpsellDesc}>{pin.desc}</p>
       </div>
       <div className={styles.cartUpsellActions}>
-        <span className={styles.cartUpsellPrice}>$10.00</span>
+        <span className={styles.cartUpsellPrice}>{formatUsd(PRICES.pin)}</span>
         <button
           className={styles.cartUpsellBtn}
           onClick={() => onUpdateItem(pin.slug, 1)}
@@ -504,7 +565,7 @@ const CartUpsell = ({
             <div className={styles.upsellCarouselHeader}>
               <p className={styles.cartUpsellLabel}>Add to your order</p>
               <div className={styles.upsellNavButtons}>
-<button
+              <button
                   className={styles.upsellNavBtn}
                   onClick={() => setCurrentIndex((i) => Math.max(0, i - 1))}
                   disabled={safeIndex === 0}
@@ -523,8 +584,13 @@ const CartUpsell = ({
                 className={styles.upsellCarouselTrack}
                 style={{ transform: `translateX(-${safeIndex * 100}%)` }}
               >
-                {upsells.map((pin) => (
-                  <div key={pin.slug} className={styles.upsellCarouselSlide}>
+                {upsells.map((pin, i) => (
+                  <div
+                    key={pin.slug}
+                    className={styles.upsellCarouselSlide}
+                    // (the slides scrolled out of view can't be tabbed to. React 18 doesn't pass `inert` on.)
+                    ref={(el) => { el?.toggleAttribute("inert", i !== safeIndex); }}
+                  >
                     {upsellItem(pin)}
                   </div>
                 ))}
@@ -551,11 +617,16 @@ const CartSummary = ({
   onUpdateItem,
   updatingSlug,
   shippingRates,
+  appliedPromo,
+  onPromo,
 }: {
   cart: CartState;
   onUpdateItem: (slug: ItemSlug, qty: number) => Promise<void>;
   updatingSlug: ItemSlug | null;
   shippingRates: ShippingRates | null;
+  // the code the buyer applied, kept by the page so it outlives a session
+  appliedPromo: string | null;
+  onPromo: (code: string | null) => void;
 }) => {
   const checkoutState = useCheckoutElements();
   const checkout = checkoutState.type === "success" ? checkoutState.checkout : null;
@@ -573,21 +644,42 @@ const CartSummary = ({
   const [promoCode, setPromoCode] = useState("");
   const [promoLoading, setPromoLoading] = useState(false);
   const [promoError, setPromoError] = useState<string | null>(null);
-  const lastPromoError = useRef("");
-  if (promoError) lastPromoError.current = promoError;
-  const [appliedCode, setAppliedCode] = useState<string | null>(null);
+  const [taxInfoOpen, setTaxInfoOpen] = useState(false);
+  const detailsId = useId();
+  const taxInfoId = useId();
+
+  // What the session says, not what was typed: a code Stripe has dropped doesn't show as applied.
+  const hasDiscount = !!checkout?.discountAmounts?.length;
+  const shownCode = hasDiscount ? appliedPromo ?? checkout?.discountAmounts?.[0]?.promotionCode ?? checkout?.discountAmounts?.[0]?.displayName ?? null : null;
+
+  // A cart change can leave the session without the buyer's code (when it had to start a new one):
+  // it's put back, and if it no longer applies they're told so, rather than paying full price unawares.
+  const reapplying = useRef(false);
+  useEffect(() => {
+    if (!checkout || hasDiscount || !appliedPromo || reapplying.current) return;
+    reapplying.current = true;
+    const lost = (why?: string) => {
+      onPromo(null);
+      setPromoError(`${appliedPromo} couldn't be kept on your order${why ? `: ${why}` : "."}`);
+      trackEvent("checkout_error", { error_message: `promo_reapply: ${why ?? "threw"}` });
+    };
+    checkout
+      .applyPromotionCode(appliedPromo)
+      .then((result) => result.type === "error" && lost(result.error.message), () => lost())
+      .finally(() => { reapplying.current = false; });
+  }, [checkout, hasDiscount, appliedPromo, onPromo]);
 
   const handleApplyPromo = async () => {
     if (!checkout || !promoCode.trim()) return;
     setPromoLoading(true);
     setPromoError(null);
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await (checkout as any).applyPromotionCode(promoCode.trim());
-      if (result?.type === "error") {
-        setPromoError(result.error?.message ?? "Invalid promo code.");
+      const code = promoCode.trim().toUpperCase();
+      const result = await checkout.applyPromotionCode(code);
+      if (result.type === "error") {
+        setPromoError(result.error.message || "Invalid promo code.");
       } else {
-        setAppliedCode(promoCode.trim().toUpperCase());
+        onPromo(code);
         setPromoCode("");
         setPromoOpen(false);
       }
@@ -598,13 +690,13 @@ const CartSummary = ({
   };
 
   const handleRemovePromo = async () => {
+    // (forgotten first, so it isn't put back as it goes)
+    onPromo(null);
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await (checkout as any).removePromotionCode?.();
+      await checkout?.removePromotionCode();
     } catch {
       // ignore
     }
-    setAppliedCode(null);
   };
 
   const activeItems = (["lcm", "urg_pin", "bizz_pin"] as ItemSlug[])
@@ -613,6 +705,15 @@ const CartSummary = ({
       return { slug, qty, ...CART_ITEMS_META[slug] };
     })
     .filter((item) => item.qty > 0);
+
+  // The session's own line amounts once it's loaded (its lines come in the cart's order); the
+  // page's prices only until then, or if the two don't line up.
+  const sessionLines =
+    checkout &&
+    checkout.lineItems.length === activeItems.length &&
+    checkout.lineItems.every((li, i) => li.quantity === activeItems[i].qty)
+      ? checkout.lineItems
+      : null;
 
   const handleEditConfirm = async () => {
     if (!editItem) return;
@@ -635,12 +736,14 @@ const CartSummary = ({
         <button
           className={styles.cartDetailsToggle}
           onClick={() => setDetailsOpen((o) => !o)}
+          aria-expanded={detailsOpen}
+          aria-controls={detailsId}
         >
           {detailsOpen ? "Hide ▴" : "See details ▾"}
         </button>
       </div>
       <div className={styles.cartItems}>
-        {activeItems.map((item) => (
+        {activeItems.map((item, i) => (
           <div key={item.slug} className={styles.cartItem}>
             {item.slug === "lcm" ? (
               <MagnifierButton size="sm" onClick={() => setBoxCarouselOpen(true)} ariaLabel="Preview game box">
@@ -661,16 +764,16 @@ const CartSummary = ({
                 Qty {item.qty} ▾
               </button>
             </div>
-            <p className={styles.cartItemPrice}>${(item.price * item.qty).toFixed(2)}</p>
+            <p className={styles.cartItemPrice}>{sessionLines?.[i].subtotal.amount ?? formatUsd(item.price * item.qty)}</p>
           </div>
         ))}
       </div>
 
       <hr className={styles.cartDivider} />
 
-      {appliedCode ? (
+      {shownCode ? (
         <div className={styles.promoApplied}>
-          <span className={styles.promoAppliedCode}>{appliedCode} applied</span>
+          <span className={styles.promoAppliedCode}>{shownCode} applied</span>
           <button className={styles.promoRemoveBtn} onClick={handleRemovePromo}>Remove</button>
         </div>
       ) : (
@@ -681,6 +784,7 @@ const CartSummary = ({
                 className={styles.promoInput}
                 type="text"
                 placeholder="Promo code"
+                aria-label="Promo code"
                 value={promoCode}
                 onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
                 onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
@@ -701,15 +805,11 @@ const CartSummary = ({
               + Add promotion code
             </button>
           )}
-          <div className={`${styles.errorSlide} ${styles.errorSlideCompact} ${promoError ? styles.errorSlideVisible : ""}`}>
-            <div className={styles.errorSlideInner}>
-              <p className={styles.promoError}>{lastPromoError.current}</p>
-            </div>
-          </div>
+          <ErrorSlide message={promoError} compact className={styles.promoError} />
         </div>
       )}
 
-      <div className={`${styles.cartDetailsCollapse} ${detailsOpen ? styles.cartDetailsOpen : ""}`}>
+      <div id={detailsId} className={`${styles.cartDetailsCollapse} ${detailsOpen ? styles.cartDetailsOpen : ""}`}>
         <div className={styles.cartDetailsInner}>
           <div className={styles.cartRow}>
             <span className={styles.cartRowLabel}>Subtotal</span>
@@ -730,12 +830,20 @@ const CartSummary = ({
           <div className={styles.cartRow}>
             <span className={`${styles.cartTaxLabel} ${styles.cartRowLabel}`}>
               Tax
-              <span className={styles.taxInfoIcon}>
+              <button
+                type="button"
+                className={`${styles.taxInfoIcon} ${taxInfoOpen ? styles.taxInfoOpen : ""}`}
+                aria-label="About tax"
+                aria-describedby={taxInfoId}
+                aria-expanded={taxInfoOpen}
+                onClick={() => setTaxInfoOpen((o) => !o)}
+                onBlur={() => setTaxInfoOpen(false)}
+              >
                 <InfoIcon />
-                <span className={styles.taxInfoBubble}>
+                <span id={taxInfoId} role="tooltip" className={styles.taxInfoBubble}>
                   Tax is determined by shipping information.
                 </span>
-              </span>
+              </button>
             </span>
             {!checkout ? (
               <span className={styles.cartAmountSkeleton} />
@@ -745,14 +853,15 @@ const CartSummary = ({
               <span className={styles.cartTaxPending}>Enter address to calculate</span>
             )}
           </div>
-          <hr className={styles.cartTotalDivider} />
-          <div className={`${styles.cartRow} ${styles.cartTotalRow}`}>
-            <span>Total</span>
-            {checkout
-              ? <span>{checkout.total.total.amount}</span>
-              : <span className={`${styles.cartAmountSkeleton} ${styles.cartTotalSkeleton}`} />}
-          </div>
         </div>
+      </div>
+      {/* (the total stays in view on a phone, with only the breakdown folded away) */}
+      <hr className={styles.cartTotalDivider} />
+      <div className={`${styles.cartRow} ${styles.cartTotalRow}`}>
+        <span>Total</span>
+        {checkout
+          ? <span>{checkout.total.total.amount}</span>
+          : <span className={`${styles.cartAmountSkeleton} ${styles.cartTotalSkeleton}`} />}
       </div>
 
       {previewPin && (
@@ -762,25 +871,9 @@ const CartSummary = ({
       )}
 
       {boxCarouselOpen && (
-        <Modal onClose={() => setBoxCarouselOpen(false)} ariaLabel="Game contents preview" panelClassName={styles.carouselPanel}>
-          <Swiper
-            modules={[Navigation, Pagination, A11y, Keyboard]}
-            navigation
-            pagination={{ clickable: true }}
-            keyboard={{ enabled: true }}
-            spaceBetween={0}
-            slidesPerView={1}
-            className={styles.carouselSwiper}
-          >
-            {BOX_IMAGES.map((img, i) => (
-              <SwiperSlide key={i}>
-                <div className={styles.carouselSlide}>
-                  <img src={img.src} alt={img.alt} className={styles.carouselImage} />
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </Modal>
+        <Suspense fallback={null}>
+          <ImageCarouselModal images={BOX_IMAGES} ariaLabel="Game contents preview" onClose={() => setBoxCarouselOpen(false)} />
+        </Suspense>
       )}
 
       {editItem && (
@@ -831,32 +924,35 @@ const CartSummary = ({
 
 // ── International modal ───────────────────────────────────────────────────────
 
-const InternationalModal = ({ onClose }: { onClose: () => void }) => (
-  <Modal onClose={onClose}>
-    <h2 className={styles.modalTitle}>Shipping to Europe 🇪🇺</h2>
-    <p className={styles.modalBody}>
-      Love, Career &amp; Magic is finally available in Europe! I'm working
-      with a Europe-based logistics company so I can get the game to you
-      without the shipping costing a fortune.{" "}
-      <a
-        href="https://pegasusgames.medium.com/love-career-magic-is-now-available-in-europe-6f69a8c529f0"
-        target="_blank"
-        rel="noreferrer"
-        className={styles.modalLink}
-      >
-        Read more about shipping to Europe here.
-      </a>
-    </p>
-    <p className={styles.modalNotice}>
-      <strong>Please note:</strong> it may take up to a month or two for
-      European shipments to arrive. This is my first time trying something
-      like this, so please understand.
-    </p>
-    <button className={styles.modalClose} onClick={onClose}>
-      Got it
-    </button>
-  </Modal>
-);
+const InternationalModal = ({ onClose }: { onClose: () => void }) => {
+  const titleId = useId();
+  return (
+    <Modal onClose={onClose} ariaLabelledBy={titleId}>
+      <h2 id={titleId} className={styles.modalTitle}>Shipping to Europe 🇪🇺</h2>
+      <p className={styles.modalBody}>
+        Love, Career &amp; Magic is finally available in Europe! I'm working
+        with a Europe-based logistics company so I can get the game to you
+        without the shipping costing a fortune.{" "}
+        <a
+          href="https://pegasusgames.medium.com/love-career-magic-is-now-available-in-europe-6f69a8c529f0"
+          target="_blank"
+          rel="noreferrer"
+          className={styles.modalLink}
+        >
+          Read more about shipping to Europe here.
+        </a>
+      </p>
+      <p className={styles.modalNotice}>
+        <strong>Please note:</strong> it may take up to a month or two for
+        European shipments to arrive. This is my first time trying something
+        like this, so please understand.
+      </p>
+      <button className={styles.modalClose} onClick={onClose}>
+        Got it
+      </button>
+    </Modal>
+  );
+};
 
 // ── Shipping waitlist ─────────────────────────────────────────────────────────
 
@@ -887,7 +983,7 @@ const ShippingWaitlistForm = ({ country }: { country: string }) => {
   };
 
   if (status === "done") {
-    return <p className={styles.waitlistDone}>Thanks! You're on the list.</p>;
+    return <p className={styles.waitlistDone} role="status">Thanks! You're on the list.</p>;
   }
 
   return (
@@ -906,7 +1002,7 @@ const ShippingWaitlistForm = ({ country }: { country: string }) => {
           {status === "sending" ? "..." : "Notify me"}
         </button>
       </div>
-      {error && <p className={styles.promoError}>{error}</p>}
+      {error && <p className={styles.promoError} role="alert">{error}</p>}
     </form>
   );
 };
@@ -932,21 +1028,24 @@ const ShippingWaitlistNotice = ({ country }: { country: string }) => {
   );
 };
 
-const MissingCountryModal = ({ europeEnabled, onClose }: { europeEnabled: boolean; onClose: () => void }) => (
-  <Modal onClose={onClose}>
-    <h2 className={styles.modalTitle}>Don't see your country?</h2>
-    <p className={styles.modalBody}>
-      Right now I can only ship to the US{europeEnabled ? " and Europe" : ""}.{" "}
-      <a href="/contact" target="_blank" rel="noreferrer" className={styles.modalLink}>
-        Contact me
-      </a>{" "}
-      and I'll see if I can get your country added.
-    </p>
-    <button className={styles.modalClose} onClick={onClose}>
-      Got it
-    </button>
-  </Modal>
-);
+const MissingCountryModal = ({ europeEnabled, onClose }: { europeEnabled: boolean; onClose: () => void }) => {
+  const titleId = useId();
+  return (
+    <Modal onClose={onClose} ariaLabelledBy={titleId}>
+      <h2 id={titleId} className={styles.modalTitle}>Don't see your country?</h2>
+      <p className={styles.modalBody}>
+        Right now I can only ship to the US{europeEnabled ? " and Europe" : ""}.{" "}
+        <a href="/contact" target="_blank" rel="noreferrer" className={styles.modalLink}>
+          Contact me
+        </a>{" "}
+        and I'll see if I can get your country added.
+      </p>
+      <button className={styles.modalClose} onClick={onClose}>
+        Got it
+      </button>
+    </Modal>
+  );
+};
 
 // a country's flag, from its two-letter code
 const flagOf = (code: string) =>
@@ -972,6 +1071,39 @@ const CheckoutIntro = ({ line = shippingLine(null, null, false) }: { line?: stri
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
+const returnUrl = () => `${window.location.origin}/thankyou?checkout_flow=custom_checkout&checkout_session_id={CHECKOUT_SESSION_ID}`;
+
+const itemsOf = (cart: CartState): Record<string, number> => ({
+  lcm: cart.lcmQty,
+  ...(cart.urgPinQty > 0 && { urg_pin: cart.urgPinQty }),
+  ...(cart.bizzPinQty > 0 && { bizz_pin: cart.bizzPinQty }),
+});
+
+// A recovery email's link carries the buyer's address as ?prefilled_email=. It's read once and taken
+// out of the address bar straight away, so it isn't passed on to analytics with the page's address.
+let prefilledEmail: string | null | undefined;
+const takePrefilledEmail = () => {
+  if (prefilledEmail !== undefined) return prefilledEmail;
+  const url = new URL(window.location.href);
+  prefilledEmail = url.searchParams.get("prefilled_email");
+  if (prefilledEmail) {
+    url.searchParams.delete("prefilled_email");
+    window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+  }
+  return prefilledEmail;
+};
+
+// Hands the page the live checkout (it sits inside the provider; the page doesn't), so a cart change
+// can update the session in place.
+const CheckoutHandle = ({ handle }: { handle: React.MutableRefObject<StripeCheckoutElementsValue | null> }) => {
+  const state = useCheckoutElements();
+  useEffect(() => {
+    handle.current = state.type === "success" ? state.checkout : null;
+    return () => { handle.current = null; };
+  }, [state, handle]);
+  return null;
+};
+
 const CheckoutPage = () => {
   usePageTitle("Checkout");
   const { isDesktop } = useWindowDimensions();
@@ -982,75 +1114,153 @@ const CheckoutPage = () => {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [shippingRates, setShippingRates] = useState<ShippingRates | null>(null);
-  const [initError, setInitError] = useState<string | null>(null);
+  const [initError, setInitError] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0); // (bumped by "Try again")
+  const [stripe, setStripe] = useState(() => stripePromise);
+  const stripeFailed = useRef(false);
   const [internationalModalOpen, setInternationalModalOpen] = useState(false);
   const [visitor, setVisitor] = useState<VisitorShipping | null>(null);
   const [missingCountryModalOpen, setMissingCountryModalOpen] = useState(false);
   const [updatingSlug, setUpdatingSlug] = useState<ItemSlug | null>(null);
   const [shipCountry, setShipCountry] = useState<string | null>(null); // picked in the address form
   const [cartError, setCartError] = useState(false);
-  // Survives the remount that a cart change forces, so the replacement
-  // session can be created with the email already filled in. A ref, not
-  // state — nothing renders from it and it shouldn't trigger a re-render.
+  // What the buyer has entered that has to outlive a session, should a cart change need a new one:
+  // the session is prefilled with the email and address, the promo code is put back, and the phone
+  // and terms tick live here rather than in the form.
+  const [prefill, setPrefill] = useState<{ email?: string; shippingAddress?: StripeCheckoutContact }>({});
+  const [phone, setPhone] = useState("");
+  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [appliedPromo, setAppliedPromo] = useState<string | null>(null);
+  // A ref, not state: nothing renders from it.
   const capturedEmailRef = useRef("");
+  const checkoutRef = useRef<StripeCheckoutElementsValue | null>(null);
+
+  const failedRef = useRef(false); // (several things can notice the same failure: it's counted once)
+  const failLoad = (why: string) => {
+    if (failedRef.current) return;
+    failedRef.current = true;
+    trackEvent("checkout_error", { error_message: `load_failed: ${why}` });
+    setLoadFailed(true);
+  };
 
   useEffect(() => {
-    const prefillEmail = new URLSearchParams(window.location.search).get("prefilled_email");
-    // Someone arriving from a recovery email already gave us their address —
-    // keep it if they change the cart before touching the contact field.
-    if (prefillEmail) capturedEmailRef.current = prefillEmail;
+    let live = true;
+    stripe.catch(() => {
+      stripeFailed.current = true;
+      if (live) failLoad("stripe_js");
+    });
+    return () => { live = false; };
+  }, [stripe]);
+
+  useEffect(() => {
+    // Someone arriving from a recovery email already gave us their address.
+    const recovered = takePrefilledEmail();
+    if (recovered && !capturedEmailRef.current) capturedEmailRef.current = recovered;
+    const email = capturedEmailRef.current;
+    let live = true;
     fetch("/.netlify/functions/create-checkout-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: { lcm: 1 }, returnUrl: `${window.location.origin}/thankyou?checkout_flow=custom_checkout&checkout_session_id={CHECKOUT_SESSION_ID}`, ...getStoredUtms(), ...(prefillEmail && { email: prefillEmail }) }),
+      body: JSON.stringify({ items: itemsOf({ lcmQty, urgPinQty, bizzPinQty }), returnUrl: returnUrl(), ...getStoredUtms(), ...(email && { email }) }),
     })
       .then((res) => {
         if (!res.ok) throw new Error("Failed");
         return res.json();
       })
       .then(({ clientSecret: secret, sessionId: sid, shippingRates: rates, visitor: visitorInfo }) => {
+        if (!live) return;
+        setPrefill(email ? { email } : {});
         setClientSecret(secret);
         setSessionId(sid);
         setShippingRates(rates ?? null);
         setVisitor(visitorInfo ?? null);
         trackEvent("checkout_started");
       })
-      .catch(() => setInitError("Something went wrong. Please refresh to try again."));
-  }, []);
+      .catch(() => {
+        if (!live) return;
+        trackEvent("checkout_error", { error_message: "session_create_failed" });
+        setInitError(true);
+      });
+    return () => { live = false; };
+    // (once, and again on "Try again"; the cart it starts with is whatever it is then)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [attempt]);
+
+  const retry = () => {
+    setInitError(false);
+    failedRef.current = false;
+    setLoadFailed(false);
+    setClientSecret(null);
+    setSessionId(null);
+    // (a Stripe.js that failed to load is asked for again)
+    if (stripeFailed.current) {
+      stripeFailed.current = false;
+      stripePromise = startStripe();
+      setStripe(stripePromise);
+    }
+    setAttempt((n) => n + 1);
+  };
 
   const cart: CartState = { lcmQty, urgPinQty, bizzPinQty };
 
   const handleUpdateItem = async (slug: ItemSlug, newQty: number) => {
-    const newLcmQty = slug === "lcm" ? newQty : lcmQty;
-    const newUrgQty = slug === "urg_pin" ? newQty : urgPinQty;
-    const newBizzQty = slug === "bizz_pin" ? newQty : bizzPinQty;
-
-    if (newLcmQty < 1) return;
+    const next: CartState = {
+      lcmQty: slug === "lcm" ? newQty : lcmQty,
+      urgPinQty: slug === "urg_pin" ? newQty : urgPinQty,
+      bizzPinQty: slug === "bizz_pin" ? newQty : bizzPinQty,
+    };
+    if (next.lcmQty < 1) return;
+    // (nothing changed, nothing to do)
+    if (next.lcmQty === lcmQty && next.urgPinQty === urgPinQty && next.bizzPinQty === bizzPinQty) return;
 
     setUpdatingSlug(slug);
     setCartError(false);
+    const items = itemsOf(next);
     try {
-      const items: Record<string, number> = {
-        lcm: newLcmQty,
-        ...(newUrgQty > 0 && { urg_pin: newUrgQty }),
-        ...(newBizzQty > 0 && { bizz_pin: newBizzQty }),
-      };
-      const res = await fetch("/.netlify/functions/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ items, returnUrl: `${window.location.origin}/thankyou?checkout_session_id={CHECKOUT_SESSION_ID}&checkout_flow=custom_checkout`, ...getStoredUtms(), ...(capturedEmailRef.current && { email: capturedEmailRef.current }) }),
-      });
-      if (!res.ok) throw new Error("Failed to update");
-      const { clientSecret: newSecret, sessionId: newSid, shippingRates: newRates } = await res.json();
+      // First choice: change the open session's line items in place, so the promo code, address
+      // and card the buyer has entered all stay as they are.
+      const checkout = checkoutRef.current;
+      let inPlace = false;
+      if (checkout && sessionId) {
+        try {
+          const result = await checkout.runServerUpdate(() =>
+            fetch("/.netlify/functions/update-checkout-session", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ sessionId, items }),
+            }).then((res) => {
+              if (!res.ok) throw new Error(`update failed (${res.status})`);
+            })
+          );
+          inPlace = result.type === "success";
+        } catch {
+          // (a new session, below)
+        }
+      }
+      if (!inPlace) {
+        // Else a new session, carrying what can be carried: the email and shipping address are
+        // prefilled, and the promo code is put back once it loads (CartSummary). Card details can't be.
+        const email = capturedEmailRef.current || checkout?.email || "";
+        const shippingAddress = checkout?.shippingAddress ?? undefined;
+        const res = await fetch("/.netlify/functions/create-checkout-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ items, returnUrl: returnUrl(), ...getStoredUtms(), ...(email && { email }) }),
+        });
+        if (!res.ok) throw new Error("Failed to update");
+        const { clientSecret: newSecret, sessionId: newSid, shippingRates: newRates } = await res.json();
+        setPrefill({ ...(email && { email }), ...(shippingAddress && { shippingAddress }) });
+        setClientSecret(newSecret);
+        setSessionId(newSid);
+        setShippingRates(newRates ?? null);
+      }
       const prevQty = slug === "lcm" ? lcmQty : slug === "urg_pin" ? urgPinQty : bizzPinQty;
       const trigger = newQty === 0 ? "remove_item" : prevQty === 0 ? "add_item" : "change_qty";
-      trackEvent("checkout_cart_reset", { trigger, item_slug: slug, new_qty: newQty });
-      setLcmQty(newLcmQty);
-      setUrgPinQty(newUrgQty);
-      setBizzPinQty(newBizzQty);
-      setClientSecret(newSecret);
-      setSessionId(newSid);
-      setShippingRates(newRates ?? null);
+      trackEvent("checkout_cart_reset", { trigger, item_slug: slug, new_qty: newQty, method: inPlace ? "in_place" : "new_session" });
+      setLcmQty(next.lcmQty);
+      setUrgPinQty(next.urgPinQty);
+      setBizzPinQty(next.bizzPinQty);
     } catch {
       // (the order stays as it was: say so, and they can try again)
       setCartError(true);
@@ -1059,16 +1269,16 @@ const CheckoutPage = () => {
     }
   };
 
-  if (initError) {
-    return (
-      <div className={`content ${styles.buyPage}`}>
-        <CheckoutIntro />
-        <p style={{ textAlign: "center", fontFamily: "Roboto Light", color: "#b54848", marginTop: "2rem" }}>
-          {initError}
-        </p>
-      </div>
-    );
-  }
+  const failure = initError ? (
+    <LoadError title="Checkout couldn't start" onRetry={retry} className={styles.checkoutFailed}>
+      Something went wrong setting up your order. Please try again, and if it keeps happening, let me know.
+    </LoadError>
+  ) : loadFailed ? (
+    <LoadError title="The payment form couldn't load" onRetry={retry} className={styles.checkoutFailed}>
+      Check your connection, or turn off any ad or tracker blocker for this page (some block Stripe, who
+      handles the payment), then try again.
+    </LoadError>
+  ) : null;
 
   return (
     <div className={`content ${styles.buyPage}`}>
@@ -1077,7 +1287,7 @@ const CheckoutPage = () => {
           // (a country picked in the form; else the one they seem to be in)
           // (until the session's in, where they are isn't known yet: the line's room is kept, empty)
           !clientSecret
-            ? "\u00a0"
+            ? " "
             : shipCountry
               ? shippingLine(shipCountry, shipCountry === "US" || (!!shippingRates?.europe && isEuropeCountry(shipCountry)), !!shippingRates?.europe)
               : shippingLine(visitor?.country ?? null, visitor?.canShip ?? null, !!shippingRates?.europe)
@@ -1087,12 +1297,13 @@ const CheckoutPage = () => {
         <ShippingWaitlistNotice country={visitor.country} />
       )}
       <div className={styles.checkoutSection}>
-        {clientSecret ? (
+        {failure ?? (clientSecret ? (
           <CheckoutElementsProvider
             key={clientSecret}
-            stripe={stripePromise}
-            options={{ clientSecret, elementsOptions: { appearance } }}
+            stripe={stripe}
+            options={{ clientSecret, elementsOptions: { appearance }, defaultValues: prefill }}
           >
+            <CheckoutHandle handle={checkoutRef} />
             <div className={styles.checkoutLayout}>
               <div className={styles.checkoutLeft}>
                 <CartSummary
@@ -1100,6 +1311,8 @@ const CheckoutPage = () => {
                   onUpdateItem={handleUpdateItem}
                   updatingSlug={updatingSlug}
                   shippingRates={shippingRates}
+                  appliedPromo={appliedPromo}
+                  onPromo={setAppliedPromo}
                 />
                 {cartError && (
                   <p className={styles.checkoutError} role="alert">
@@ -1115,10 +1328,15 @@ const CheckoutPage = () => {
               <CheckoutForm
                 sessionId={sessionId}
                 shippingRates={shippingRates}
+                phone={phone}
+                onPhone={setPhone}
+                termsAgreed={termsAgreed}
+                onTermsAgreed={setTermsAgreed}
                 onEmailCaptured={(email) => { capturedEmailRef.current = email; }}
                 onOpenInternational={() => setInternationalModalOpen(true)}
                 onOpenMissingCountry={() => setMissingCountryModalOpen(true)}
                 onCountry={setShipCountry}
+                onLoadFailed={failLoad}
               />
             </div>
           </CheckoutElementsProvider>
@@ -1142,7 +1360,7 @@ const CheckoutPage = () => {
               <CheckoutFormSkeleton />
             </div>
           </div>
-        )}
+        ))}
       </div>
       <p className={styles.stripeAttr}>
         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

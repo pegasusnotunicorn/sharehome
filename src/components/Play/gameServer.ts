@@ -1,4 +1,5 @@
-import { CODE_PATTERN } from "../../../game-server/src/protocol";
+import { CODE_PATTERN, PROTOCOL_VERSION } from "../../../game-server/src/protocol";
+import { local } from "../../utils/safeStorage";
 
 // Where the online game's room server is (game-server/): set on Netlify as VITE_GAME_SERVER_URL;
 // `npm run dev` in game-server/ runs it at localhost:8787 for local work
@@ -8,23 +9,10 @@ export const GAME_SERVER: string =
 export const DISCORD_URL = "https://discord.com/invite/nv89cRgEsS";
 
 // This browser's player id and name, kept so a dropped or reloaded page comes back as the same
-// player (in memory only when storage is blocked)
-const memory: Record<string, string> = {};
-const read = (key: string) => {
-  try {
-    return localStorage.getItem(key) ?? memory[key] ?? null;
-  } catch {
-    return memory[key] ?? null;
-  }
-};
-const write = (key: string, value: string) => {
-  memory[key] = value;
-  try {
-    localStorage.setItem(key, value);
-  } catch {
-    // (kept in memory)
-  }
-};
+// player (in memory only when storage is blocked). The id's a secret, sent only to the room, which
+// shows everyone (this page too: see useRoom's `me`) a public id made from it
+const read = local.get;
+const write = local.set;
 
 export const playerId = () => {
   let id = read("lcm-play-id");
@@ -63,4 +51,4 @@ export async function roomInfo(code: string): Promise<{ exists: boolean; full: b
 
 // (watch: as a spectator, if they're not playing already)
 export const socketUrl = (code: string, name: string, watch?: boolean) =>
-  `${GAME_SERVER.replace(/^http/, "ws")}/rooms/${code}/socket?player=${encodeURIComponent(playerId())}&name=${encodeURIComponent(name)}${watch ? "&watch=1" : ""}`;
+  `${GAME_SERVER.replace(/^http/, "ws")}/rooms/${code}/socket?player=${encodeURIComponent(playerId())}&name=${encodeURIComponent(name)}${watch ? "&watch=1" : ""}&v=${PROTOCOL_VERSION}`;

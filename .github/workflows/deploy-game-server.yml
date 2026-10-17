@@ -11,6 +11,10 @@ on:
       - ".github/workflows/deploy-game-server.yml"
   workflow_dispatch:
 
+# (it only needs to read the code)
+permissions:
+  contents: read
+
 concurrency:
   group: deploy-game-server
   cancel-in-progress: false

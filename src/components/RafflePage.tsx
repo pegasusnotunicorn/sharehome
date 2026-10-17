@@ -1,16 +1,14 @@
-import { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, A11y, Keyboard } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import { lazy, Suspense, useId, useState } from "react";
 import PageIntro from "./utils/PageIntro";
-import Modal from "./utils/Modal";
 import MagnifierButton from "./utils/MagnifierButton";
 import DefaultButton from "./utils/DefaultButton";
 import { FETCH_FIRST, srcSet } from "./utils/imageCopies";
+import usePageTitle from "./utils/usePageTitle";
+import { PRICES, formatUsd } from "./utils/prices";
 import styles from "../css/pages/rafflePage.module.css";
-import buyStyles from "../css/pages/buyPage.module.css";
+
+// (the carousel library comes down only when the box preview opens)
+const ImageCarouselModal = lazy(() => import("./utils/ImageCarouselModal"));
 
 const BOX_IMAGES = [
   { src: "/images/box_trimmed.webp", alt: "Love, Career & Magic box" },
@@ -45,10 +43,8 @@ const RafflePage = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [kickstarterClicked, setKickstarterClicked] = useState(false);
   const [boxCarouselOpen, setBoxCarouselOpen] = useState(false);
-
-  useEffect(() => {
-    document.title = "Enter the raffle!";
-  }, []);
+  const emailId = useId();
+  usePageTitle("Win a free copy");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -99,7 +95,7 @@ const RafflePage = () => {
               className={styles.prizeImage}
             />
           </MagnifierButton>
-          <p className={styles.prizeSubtitle}>1 free copy of Love, Career &amp; Magic. Retails for $34.99.</p>
+          <p className={styles.prizeSubtitle}>1 free copy of Love, Career &amp; Magic. Retails for {formatUsd(PRICES.game)}.</p>
         </div>
 
         {/* Steps */}
@@ -111,16 +107,21 @@ const RafflePage = () => {
               <span className={`${styles.stepBadge} ${done ? styles.stepBadgeDone : ""}`}>
                 {done ? <CheckCircleIcon /> : "1"}
               </span>
-              <h3 className={styles.stepTitle}>Sign up for updates</h3>
+              <h2 className={styles.stepTitle}>Sign up for updates</h2>
             </div>
 
             {!done ? (
               <>
                 <p className={styles.stepDesc}>
-                  Respond to the confirmation email with your raffle ticket number and shipping address.
+                  Enter your email. You'll get a confirmation email with your raffle ticket number: reply to it with
+                  your shipping address.
                 </p>
-                <form onSubmit={handleSubmit} className={styles.emailFormRow} noValidate>
+                <form onSubmit={handleSubmit} className={styles.emailFormRow}>
+                  <label htmlFor={emailId} className="visually-hidden">
+                    Email address
+                  </label>
                   <input
+                    id={emailId}
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -129,6 +130,7 @@ const RafflePage = () => {
                     className={styles.emailInput}
                     disabled={status === "loading"}
                     autoComplete="email"
+                    aria-invalid={status === "error"}
                   />
                   <DefaultButton
                     button="submit"
@@ -140,11 +142,11 @@ const RafflePage = () => {
                   />
                 </form>
                 {status === "error" && (
-                  <p className={styles.errorMsg}>{errorMsg}</p>
+                  <p className={styles.errorMsg} role="alert">{errorMsg}</p>
                 )}
               </>
             ) : (
-              <div className={styles.successMsg}>
+              <div className={styles.successMsg} role="status">
                 <span className={styles.successIcon}><MailIcon /></span>
                 <div>
                   <strong>Done!</strong>
@@ -160,14 +162,14 @@ const RafflePage = () => {
               <span className={`${styles.stepBadge} ${kickstarterClicked ? styles.stepBadgeDone : ""}`}>
                 {kickstarterClicked ? <CheckCircleIcon /> : "2"}
               </span>
-              <h3 className={styles.stepTitle}>Follow the expansion on Kickstarter</h3>
+              <h2 className={styles.stepTitle}>Follow the expansion on Kickstarter</h2>
             </div>
             {kickstarterClicked ? (
               <div className={styles.successMsg}>
-                <span className={styles.successIcon}><MailIcon /></span>
+                <span className={styles.successIcon}><CheckCircleIcon /></span>
                 <div>
-                  <strong>Following!</strong>
-                  <p>Now show your Kickstarter screen to a staff member.</p>
+                  <strong>Kickstarter's open</strong>
+                  <p>Press Follow there, then show that screen to a staff member.</p>
                 </div>
               </div>
             ) : (
@@ -176,7 +178,8 @@ const RafflePage = () => {
                 <DefaultButton
                   href={KICKSTARTER_URL}
                   onClick={() => setKickstarterClicked(true)}
-                  text="Follow on Kickstarter →"
+                  text="Follow on Kickstarter"
+                  icon="forward"
                   variant="primary"
                   color="kickstarter"
                   className={styles.kickstarterBtnInner}
@@ -189,7 +192,7 @@ const RafflePage = () => {
           <div className={styles.stepCard}>
             <div className={styles.stepHeader}>
               <span className={styles.stepBadge}>3</span>
-              <h3 className={styles.stepTitle}>Show a staff member your screen</h3>
+              <h2 className={styles.stepTitle}>Show a staff member your screen</h2>
             </div>
             <p className={styles.stepDesc}>
               Show your follow screen to any staff member at the booth to get your ticket!
@@ -204,29 +207,9 @@ const RafflePage = () => {
       </div>
 
       {boxCarouselOpen && (
-        <Modal
-          onClose={() => setBoxCarouselOpen(false)}
-          ariaLabel="Game contents preview"
-          panelClassName={buyStyles.carouselPanel}
-        >
-          <Swiper
-            modules={[Navigation, Pagination, A11y, Keyboard]}
-            navigation
-            pagination={{ clickable: true }}
-            keyboard={{ enabled: true }}
-            spaceBetween={0}
-            slidesPerView={1}
-            className={buyStyles.carouselSwiper}
-          >
-            {BOX_IMAGES.map((img, i) => (
-              <SwiperSlide key={i}>
-                <div className={buyStyles.carouselSlide}>
-                  <img src={img.src} alt={img.alt} className={buyStyles.carouselImage} />
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </Modal>
+        <Suspense fallback={null}>
+          <ImageCarouselModal images={BOX_IMAGES} ariaLabel="Game contents preview" onClose={() => setBoxCarouselOpen(false)} />
+        </Suspense>
       )}
     </div>
   );

@@ -1,11 +1,14 @@
 import EmailForm from "./utils/EmailForm";
 import PageIntro from "./utils/PageIntro";
 import usePageTitle from "./utils/usePageTitle";
+import useWindowDimensions from "./utils/useWindowDimensions";
 import styles from "../css/pages/signupPage.module.css";
 
 const SignupPage = () => {
   const title = "Sign up for updates";
   usePageTitle(title);
+  // (the field's focused for typing straight away on desktop; on a phone that would pop the keyboard up)
+  const { isDesktop } = useWindowDimensions();
 
   return (
     <div className="content">
@@ -16,7 +19,7 @@ const SignupPage = () => {
       />
 
       <div className={styles.card}>
-        <EmailForm hideTitle isActiveAndDesktop />
+        <EmailForm hideTitle isActiveAndDesktop={isDesktop} />
       </div>
     </div>
   );

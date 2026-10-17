@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
 import { trackEvent } from "./trackEvent";
+import { local, session } from "../../utils/safeStorage";
 
 // The expansion popup (CharacterPinPopup.tsx): once a visitor has shown some interest (a second
 // page, or ENGAGED_MS on the site), shown once, then not again on this device for SNOOZE_DAYS
@@ -14,24 +15,13 @@ const FOLLOWED_DAYS = 180;
 const KEY = "expansionPopupUntil";
 const DAY = 24 * 60 * 60 * 1000;
 
-const isModalOpen = () => document.querySelector(".modal-overlay") !== null;
-const read = (store: () => Storage, key: string) => {
-  try {
-    return store().getItem(key);
-  } catch {
-    return null;
-  }
-};
-const write = (store: () => Storage, key: string, value: string) => {
-  try {
-    store().setItem(key, value);
-  } catch {
-    // (storage blocked: it may show again next visit)
-  }
-};
-const snoozeFor = (days: number) => write(() => localStorage, KEY, String(Date.now() + days * DAY));
+// the popup's own title (so its own overlay isn't taken for another modal's)
+export const POPUP_TITLE_ID = "expansion-popup-title";
+const isModalOpen = () =>
+  [...document.querySelectorAll(".modal-overlay")].some((o) => !o.querySelector(`[aria-labelledby="${POPUP_TITLE_ID}"]`));
+const snoozeFor = (days: number) => local.set(KEY, String(Date.now() + days * DAY));
 // snoozed on this device, or dismissed in this tab (the site's tests set that too)
-const snoozed = () => Number(read(() => localStorage, KEY) || 0) > Date.now() || !!read(() => sessionStorage, "pinPopupDismissed");
+const snoozed = () => Number(local.get(KEY) || 0) > Date.now() || !!session.get("pinPopupDismissed");
 
 // pages seen and time on the site, this visit
 const visit = { pages: new Set<string>(), start: Date.now() };
@@ -43,6 +33,7 @@ interface PinPopupOptions {
 
 interface PinPopupResult {
   showPopup: boolean;
+  shown: () => void;
   closePopup: (how: string) => void;
   followed: () => void;
 }
@@ -64,9 +55,7 @@ export const usePinPopup = ({ engagedMs = ENGAGED_MS, hold = false }: PinPopupOp
 
   useEffect(() => {
     if (!due || hold || showPopup || blocked(pathname) || snoozed() || isModalOpen()) return;
-    snoozeFor(SNOOZE_DAYS); // shown once, however it's closed
     setShowPopup(true);
-    trackEvent("expansion_popup_shown", { page: pathname });
   }, [due, hold, pathname, showPopup]);
 
   // gone if a modal opens over it, or they move to a page it's kept off
@@ -82,6 +71,11 @@ export const usePinPopup = ({ engagedMs = ENGAGED_MS, hold = false }: PinPopupOp
 
   return {
     showPopup,
+    // (on the screen at last: shown once, however it's closed)
+    shown: () => {
+      snoozeFor(SNOOZE_DAYS);
+      trackEvent("expansion_popup_shown", { page: pathname });
+    },
     closePopup: (how) => {
       setShowPopup(false);
       trackEvent("expansion_popup_dismiss", { how });

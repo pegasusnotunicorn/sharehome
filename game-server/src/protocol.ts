@@ -1,5 +1,10 @@
-// What the room server and the site's /play page say to each other over the room's socket. Types,
-// limits and the game's numbers only, so the site can import this file as is.
+// What the room server and the site's /play page say to each other over the room's socket: types,
+// limits, the game's numbers, and the checks and sums both sides share, so the site can import this
+// file as is.
+
+// bumped whenever a message changes shape: a page from before is turned away ("outdated") and asks
+// to be reloaded, rather than talking past the room
+export const PROTOCOL_VERSION = 2;
 
 export const MAX_PLAYERS = 6;
 export const MIN_PLAYERS = 2;
@@ -72,8 +77,6 @@ export interface CompletedCard {
   // where it lay face up
   slot: number;
   i: number;
-  // tokens from players who'd had something to say for it too
-  tokens: number;
   by: string;
 }
 
@@ -116,6 +119,7 @@ export interface GameView {
 // #endregion
 
 export interface Player {
+  // (a public id, made from the secret one the player's browser keeps: see "you")
   id: string;
   name: string;
   // which of the player colors they wear (0 to MAX_PLAYERS - 1), kept for the whole game
@@ -133,7 +137,7 @@ export interface RoomView {
   ready: Record<string, boolean>;
   game: GameView | null;
   // how many are watching (spectators: no seat; they see the table, and can't touch it). Counted as
-  // the room's sent; a spectator coming or going doesn't send it again on their own
+  // the room's sent; a spectator coming or going sends the players just the new count ("watching")
   watching: number;
   // whether more spectators may come in (the host can close the doors)
   watchOpen: boolean;
@@ -167,11 +171,68 @@ export type ClientMessage =
   | { t: "undo"; id: string }
   | ({ t: "discard" } & Slot) // between episodes
   | { t: "token"; on: "episode"; episode: number; add: boolean }
-  | { t: "token"; on: "card"; id: string; add: boolean }
   | { t: "trait"; player: string; slot: number }
   | { t: "nextEpisode" }
   | { t: "remote"; button: RemoteButton }
   | { t: "toLobby" }; // host only
+
+// A message as it comes in, checked at the door: its type known, every field there and of the right
+// kind (a deck that's one of the decks, a slot that's a slot), and nothing else kept. null: dropped
+export function parseClientMessage(raw: string): ClientMessage | null {
+  let m: unknown;
+  try {
+    m = JSON.parse(raw);
+  } catch {
+    return null;
+  }
+  if (!m || typeof m !== "object" || Array.isArray(m)) return null;
+  const f = m as Record<string, unknown>;
+  // (an id: 64 characters at most; text is cleaned and cut later)
+  const str = (v: unknown, max = 64): v is string => typeof v === "string" && v.length <= max;
+  const int = (v: unknown, min: number, max: number): v is number => Number.isInteger(v) && (v as number) >= min && (v as number) <= max;
+  const bool = (v: unknown): v is boolean => typeof v === "boolean";
+  const one = <T extends string>(list: readonly T[], v: unknown): v is T => typeof v === "string" && (list as readonly string[]).includes(v);
+  const slot = (): Slot | null => (one(DIRECTION_DECKS, f.deck) && int(f.slot, 0, FACE_UP_PER_DECK - 1) ? { deck: f.deck, slot: f.slot } : null);
+  switch (f.t) {
+    case "toAudience":
+    case "leave":
+    case "start":
+    case "startClock":
+    case "pause":
+    case "resume":
+    case "nextEpisode":
+    case "toLobby":
+      return { t: f.t };
+    case "chat":
+      return str(f.text, 2000) ? { t: "chat", text: f.text } : null;
+    case "rename":
+      return str(f.name, 500) ? { t: "rename", name: f.name } : null;
+    case "removeWatcher":
+    case "kick":
+    case "makeHost":
+    case "undo":
+      return str(f.id) ? { t: f.t, id: f.id } : null;
+    case "watchOpen":
+      return bool(f.open) ? { t: "watchOpen", open: f.open } : null;
+    case "ready":
+      return bool(f.ready) ? { t: "ready", ready: f.ready } : null;
+    case "pick":
+      return f.character === null || int(f.character, 0, DECK_SIZES.characters - 1) ? { t: "pick", character: f.character } : null;
+    case "complete":
+    case "discard": {
+      const at = slot();
+      return at ? { t: f.t, ...at } : null;
+    }
+    case "token":
+      return f.on === "episode" && int(f.episode, 1, EPISODES) && bool(f.add) ? { t: "token", on: "episode", episode: f.episode, add: f.add } : null;
+    case "trait":
+      return str(f.player) && int(f.slot, 0, TRAIT_KINDS.length - 1) ? { t: "trait", player: f.player, slot: f.slot } : null;
+    case "remote":
+      return one(REMOTE_BUTTONS, f.button) ? { t: "remote", button: f.button } : null;
+    default:
+      return null;
+  }
+}
 
 // room → browser
 // #region--------------------------------------CHAT
@@ -179,7 +240,7 @@ export type ClientMessage =
 // a line in the room's chat, from a player (their name and color) or a spectator (watching)
 export interface ChatLine {
   id: string;
-  by: string; // who sent it (a player's id, or a spectator's device)
+  by: string; // who sent it (a player's public id, or a spectator's)
   name: string;
   color: number | null; // a player's color; null for a spectator
   watching: boolean;
@@ -215,6 +276,7 @@ export const cleanChat = (text: unknown) => {
 // #endregion
 
 export type ServerMessage =
+  | { t: "you"; id: string } // this socket's own public id, first thing (to tell "me" apart in the room)
   | { t: "state"; room: RoomView }
   | { t: "chat"; line: ChatLine } // a new line
   | { t: "chatLog"; lines: ChatLine[] } // the chat so far, as a socket opens
@@ -227,7 +289,8 @@ export type ServerMessage =
 // ("expired": the room closed, after a long while)
 export type ByeReason = "kicked" | "left" | "replaced" | "expired" | "toAudience";
 
-export type RoomError = "not-found" | "full" | "bad-request" | "watch-full" | "watch-closed" | "removed";
+// ("outdated": the page is older than the server, see PROTOCOL_VERSION)
+export type RoomError = "not-found" | "full" | "bad-request" | "watch-full" | "watch-closed" | "removed" | "outdated";
 
 // Why the room closed a socket, so the page knows not to reconnect
 export const CLOSE_KICKED = 4003;
@@ -263,10 +326,7 @@ export function score(game: GameView) {
   let tokens = 0;
   for (const ep of game.episodes) {
     tokens += ep.tokens;
-    for (const c of ep.completed) {
-      cards += DIRECTION_POINTS[c.deck];
-      tokens += c.tokens;
-    }
+    for (const c of ep.completed) cards += DIRECTION_POINTS[c.deck];
   }
   const arcs = Object.values(game.hands).filter(arcDone).length * ARC_POINTS;
   const total = cards + tokens + arcs;

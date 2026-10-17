@@ -1,3 +1,7 @@
+import crypto from "node:crypto";
+import { fetchSubscriber } from "../lib/mailerlite.js";
+import { nextCount } from "../lib/counter.js";
+
 const MAILER_LITE_KEY = process.env.MAILER_LITE_KEY;
 const RAFFLE_GROUP_ID = process.env.MAILERLITE_RAFFLE_GROUP_ID;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -34,9 +38,21 @@ export default async function raffleSubscribe(req) {
     });
   }
 
-  const ticketNumber = Math.floor(10000 + Math.random() * 90000);
+  const cleanEmail = email.toLowerCase().trim();
 
   try {
+    // Someone entering again keeps the ticket they were given, and someone who'd unsubscribed
+    // isn't signed back up. (Not knowing which, nothing is changed: try again.)
+    const existing = await fetchSubscriber(cleanEmail);
+    if (existing.status === "error") {
+      return new Response(JSON.stringify({ error: "Something went wrong. Please try again." }), {
+        status: 502,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+    const found = existing.status === "found";
+    const ticketNumber = found && existing.fields?.raffle_ticket ? null : await nextTicket();
+
     const mlRes = await fetch("https://connect.mailerlite.com/api/subscribers", {
       method: "POST",
       headers: {
@@ -45,16 +61,16 @@ export default async function raffleSubscribe(req) {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        email: email.toLowerCase().trim(),
-        fields: { raffle_ticket: ticketNumber },
+        email: cleanEmail,
+        ...(ticketNumber && { fields: { raffle_ticket: ticketNumber } }),
         groups: [RAFFLE_GROUP_ID],
-        status: "active",
+        ...(!found && { status: "active" }),
       }),
     });
 
     if (!mlRes.ok) {
       const data = await mlRes.json().catch(() => ({}));
-      console.error("raffle-subscribe: MailerLite error", mlRes.status, data);
+      console.error("raffle-subscribe: MailerLite error", mlRes.status, data?.message ?? "");
 
       if (mlRes.status === 422) {
         return new Response(JSON.stringify({ error: "Please enter a valid email address." }), {
@@ -79,5 +95,16 @@ export default async function raffleSubscribe(req) {
       status: 502,
       headers: { "Content-Type": "application/json" },
     });
+  }
+}
+
+// Tickets are numbered in order from 10001, so no two are the same. (If the count can't be reached,
+// a random 6-digit one: a different range, so it can't land on a counted one.)
+async function nextTicket() {
+  try {
+    return 10000 + (await nextCount("raffle-tickets", "count"));
+  } catch (err) {
+    console.warn("raffle-subscribe: ticket counter unavailable, using a random ticket:", err.message);
+    return crypto.randomInt(100000, 1000000);
   }
 }

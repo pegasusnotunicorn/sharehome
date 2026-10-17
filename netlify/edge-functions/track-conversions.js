@@ -6,6 +6,7 @@ import {
   formatSourceLine,
 } from "../lib/attribution.js";
 import { shippingRegionFor } from "../lib/regions.js";
+import { isCheckoutSessionId } from "../lib/session-id.js";
 
 const IS_DEV = Deno.env.get("NETLIFY_DEV") === "true";
 const STRIPE_SECRET_KEY = IS_DEV
@@ -185,7 +186,7 @@ export default async function trackConversions(request, context) {
     } else {
       try {
         utmData = JSON.parse(atob(encodedUtmData));
-        console.log("✅ UTM Data Found:", JSON.stringify(utmData, null, 2));
+        console.log("✅ UTM data found");
       } catch (error) {
         console.error("❌ Error parsing UTM data:", error);
         utmData = {
@@ -204,6 +205,11 @@ export default async function trackConversions(request, context) {
 
     if (!checkoutSessionId) {
       console.log("⚠️ No Stripe session ID found, skipping tracking.");
+      return context.rewrite(new URL("/index.html", request.url));
+    }
+    // (it goes into a Stripe API path: only a real session id does)
+    if (!isCheckoutSessionId(checkoutSessionId)) {
+      console.log("⚠️ Not a Stripe session ID, skipping tracking.");
       return context.rewrite(new URL("/index.html", request.url));
     }
 
@@ -262,14 +268,25 @@ export default async function trackConversions(request, context) {
 
     const checkoutFlow = await context.cookies.get("checkout_flow");
 
-    // Discord, GA4, and Facebook are independent — run them in parallel so the
-    // buyer waits for the slowest round-trip, not the sum of three. Each
-    // function catches its own errors, so Promise.all can't reject.
+    context.cookies.set({
+      name: "purchase_fired",
+      value: checkoutSessionId,
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30,
+      sameSite: "Lax",
+      secure: true,
+      httpOnly: true,
+    });
+
+    // Discord, GA4, and Facebook are independent — run them in parallel. Each
+    // function catches its own errors, so Promise.all can't reject. The buyer
+    // doesn't wait on them: the page goes out now, and they finish after
+    // (waitUntil keeps the function alive for them).
     // Europe orders skip the Sale post: with no Shippo label, the webhook's
     // Europe order notice is their one Discord message. US orders keep both
     // (this one for the sale, the webhook's for the label).
     const isEuropeOrder = shippingRegionFor(shippingCountryOf(stripeData)) === "europe";
-    await Promise.all([
+    const sends = Promise.all([
       isEuropeOrder
         ? Promise.resolve()
         : postSaleToDiscord(request, stripeData, clientId, attribution, checkoutSessionId),
@@ -283,18 +300,10 @@ export default async function trackConversions(request, context) {
         request,
         checkoutFlow
       ),
-      sendToFacebook(clientId, attribution, utmData, stripeData, request, context),
+      sendToFacebook(clientId, attribution, utmData, stripeData, request, context, checkoutSessionId),
     ]);
-
-    context.cookies.set({
-      name: "purchase_fired",
-      value: checkoutSessionId,
-      path: "/",
-      maxAge: 60 * 60 * 24 * 30,
-      sameSite: "Lax",
-      secure: true,
-      httpOnly: true,
-    });
+    if (typeof context.waitUntil === "function") context.waitUntil(sends);
+    else await sends;
 
     return context.rewrite(new URL("/index.html", request.url));
   } catch (error) {
@@ -411,7 +420,7 @@ async function getStripeCheckoutDetails(sessionId) {
     if (IS_DEV) console.log("🔍 Fetching Stripe session:", sessionId);
 
     const response = await fetch(
-      `https://api.stripe.com/v1/checkout/sessions/${sessionId}?expand[]=line_items`,
+      `https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(sessionId)}?expand[]=line_items`,
       {
         headers: { Authorization: `Bearer ${STRIPE_SECRET_KEY}` },
       }
@@ -491,7 +500,7 @@ async function sendToGA4(
     ],
   };
 
-  console.log("📡 Sending GA4 event", JSON.stringify(ga4Data, null, 2));
+  console.log("📡 Sending GA4 event");
 
   try {
     const res = await fetch(
@@ -515,15 +524,16 @@ async function sendToGA4(
   }
 }
 
-async function sendToFacebook(clientId, attribution, utmData, stripeData, request, context) {
+async function sendToFacebook(clientId, attribution, utmData, stripeData, request, context, checkoutSessionId) {
   console.log(`📡 Sending FB event`);
 
   const fbClientId = await context.cookies.get("_fbp");
   const fbClickId = await context.cookies.get("_fbc");
 
   const customerEmail = stripeData.customer_details?.email;
-  const [customerFirstName, customerLastName] =
-    stripeData.customer_details?.name?.split(" ") || [];
+  // (first word, then the rest: "Mary Ann Smith" is Mary / Ann Smith)
+  const [customerFirstName, ...restOfName] = stripeData.customer_details?.name?.trim().split(/\s+/) || [];
+  const customerLastName = restOfName.join(" ") || undefined;
   const customerPhone = stripeData.customer_details?.phone;
   const customerId = stripeData.customer;
   const revenue = stripeData.amount_total / 100;
@@ -544,7 +554,9 @@ async function sendToFacebook(clientId, attribution, utmData, stripeData, reques
     event_time: Math.floor(Date.now() / 1000),
     action_source: "website",
     event_source_url: request.url,
-    event_id: fbClientId || crypto.randomUUID(), // Helps with deduplication
+    // The order, not the browser: a second purchase from the same browser isn't dropped as a
+    // duplicate of the first.
+    event_id: checkoutSessionId,
 
     user_data: {
       client_ip_address: request.headers.get("x-forwarded-for") || "0.0.0.0",
@@ -554,7 +566,7 @@ async function sendToFacebook(clientId, attribution, utmData, stripeData, reques
       ln: hashString(customerLastName), // Hashed last name
       ph: hashString(customerPhone), // Hashed phone number
       external_id: hashString(customerId), // Optional if you have a user ID
-      fbc: client_reference_id ?? fbClickId, // Facebook Click ID (if available)
+      fbc: fbClickParam(fbClickId, client_reference_id, stripeData.created), // Facebook Click ID (if available)
       fbp: fbClientId, // Facebook Pixel ID (if available)
     },
 
@@ -568,10 +580,7 @@ async function sendToFacebook(clientId, attribution, utmData, stripeData, reques
     },
   };
 
-  console.log(
-    "📡 Sending FB Conversion Event:",
-    JSON.stringify(fbData, null, 2)
-  );
+  console.log("📡 Sending FB Conversion Event:", fbData.event_id);
 
   try {
     const res = await fetch(
@@ -593,6 +602,14 @@ async function sendToFacebook(clientId, attribution, utmData, stripeData, reques
   } catch (error) {
     console.error("❌ Error Sending to Facebook:", error);
   }
+}
+
+// Facebook's fbc is "fb.1.<ms timestamp>.<fbclid>": the _fbc cookie already is; a bare click id
+// (a client_reference_id passed through a payment link) is put in that form.
+function fbClickParam(fbcCookie, clickId, createdSeconds) {
+  if (fbcCookie && /^fb\.\d\.\d+\./.test(fbcCookie)) return fbcCookie;
+  if (clickId) return `fb.1.${(createdSeconds || Math.floor(Date.now() / 1000)) * 1000}.${clickId}`;
+  return undefined;
 }
 
 // Netlify Edge Function Config

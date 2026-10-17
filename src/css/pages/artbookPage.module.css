@@ -30,4 +30,9 @@
     gap: 1rem;
     padding: 0 1rem;
   }
+
+  /* (the button goes full width here: kept off the screen's edges) */
+  .back {
+    padding: 0 1rem;
+  }
 }

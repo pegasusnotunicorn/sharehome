@@ -4,6 +4,8 @@
 // The country comes from Netlify's geolocation of the request rather than the
 // client, and is stored in MailerLite's built-in `country` field (as an
 // ISO code) so the group can later be segmented by destination.
+import { fetchSubscriber } from "../lib/mailerlite.js";
+
 const MAILER_LITE_KEY = process.env.MAILER_LITE_KEY;
 const WAITLIST_GROUP_ID = process.env.MAILERLITE_SHIPPING_WAITLIST_GROUP_ID;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -38,7 +40,13 @@ export default async function shippingWaitlist(req, context) {
 
   const country = context?.geo?.country?.code || null;
 
+  const cleanEmail = email.toLowerCase().trim();
+
   try {
+    // (someone already on file keeps their subscription status: one who'd unsubscribed isn't signed back up)
+    const existing = await fetchSubscriber(cleanEmail);
+    if (existing.status === "error") return json({ error: "Something went wrong. Please try again." }, 502);
+
     const mlRes = await fetch("https://connect.mailerlite.com/api/subscribers", {
       method: "POST",
       headers: {
@@ -47,16 +55,16 @@ export default async function shippingWaitlist(req, context) {
         Accept: "application/json",
       },
       body: JSON.stringify({
-        email: email.toLowerCase().trim(),
+        email: cleanEmail,
         ...(country && { fields: { country } }),
         groups: [WAITLIST_GROUP_ID],
-        status: "active",
+        ...(existing.status === "absent" && { status: "active" }),
       }),
     });
 
     if (!mlRes.ok) {
       const data = await mlRes.json().catch(() => ({}));
-      console.error("shipping-waitlist: MailerLite error", mlRes.status, data);
+      console.error("shipping-waitlist: MailerLite error", mlRes.status, data?.message ?? "");
       if (mlRes.status === 422) {
         return json({ error: "Please enter a valid email address." }, 400);
       }

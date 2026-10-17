@@ -1,5 +1,6 @@
 import stripeModule from "stripe";
 import { shippingRegionFor } from "../lib/regions.js";
+import { isCheckoutSessionId } from "../lib/session-id.js";
 
 const IS_DEV = process.env.NETLIFY_DEV === "true";
 
@@ -17,7 +18,7 @@ export default async function orderRegion(req) {
   }
 
   const sessionId = new URL(req.url).searchParams.get("checkout_session_id");
-  if (!sessionId || !/^cs_(test|live)_[A-Za-z0-9]+$/.test(sessionId)) {
+  if (!isCheckoutSessionId(sessionId)) {
     return Response.json({ region: null }, { status: 400 });
   }
 

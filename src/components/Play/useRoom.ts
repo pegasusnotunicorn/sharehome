@@ -16,6 +16,9 @@ export default function useRoom(code: string | null, name: string, watch = false
   // the room's chat, and when a line was last turned back for coming too fast
   const [chat, setChat] = useState<ChatLine[]>([]);
   const [chatSlow, setChatSlow] = useState(0);
+  // this player's public id, as the room tells it (what the room's players, picks, hands and chat
+  // lines are keyed by)
+  const [me, setMe] = useState("");
   // (the name the socket first opens with: changes after that go as a rename)
   const nameRef = useRef(name);
 
@@ -47,7 +50,8 @@ export default function useRoom(code: string | null, name: string, watch = false
         } catch {
           return;
         }
-        if (msg.t === "state") setRoom(msg.room);
+        if (msg.t === "you") setMe(msg.id);
+        else if (msg.t === "state") setRoom(msg.room);
         else if (msg.t === "chatLog") setChat(msg.lines);
         else if (msg.t === "chat") setChat((all) => [...all.filter((l) => l.id !== msg.line.id), msg.line].slice(-60));
         else if (msg.t === "chatSlow") setChatSlow(Date.now());
@@ -116,5 +120,5 @@ export default function useRoom(code: string | null, name: string, watch = false
     if (ws.current?.readyState === WebSocket.OPEN) ws.current.send(JSON.stringify(msg));
   }, []);
 
-  return { room, status, error, bye, send, chat, chatSlow };
+  return { room, status, error, bye, send, chat, chatSlow, me };
 }

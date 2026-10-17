@@ -2,6 +2,8 @@
 // cheerful, like cards and chips on a table, a studio audience, a TV remote. Muting is kept in this
 // browser (the waiting room and the table share it).
 
+import { local } from "../../utils/safeStorage";
+
 type Sound =
   | "whoosh"
   | "deal"
@@ -40,20 +42,10 @@ type Sound =
 let ctx: AudioContext | null = null;
 const MUTE_KEY = "lcm-play-muted";
 
-export const isMuted = () => {
-  try {
-    return localStorage.getItem(MUTE_KEY) === "1";
-  } catch {
-    return false;
-  }
-};
+export const isMuted = () => local.get(MUTE_KEY) === "1";
 
 export const setMuted = (muted: boolean) => {
-  try {
-    localStorage.setItem(MUTE_KEY, muted ? "1" : "0");
-  } catch {
-    // (just for this visit)
-  }
+  local.set(MUTE_KEY, muted ? "1" : "0");
 };
 
 const audio = () => {

@@ -7,7 +7,7 @@ import Modal from "../utils/Modal";
 import modalStyles from "../../css/utils/modal.module.css";
 import PageIntro from "../utils/PageIntro";
 import usePageTitle from "../utils/usePageTitle";
-import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, forgetRoom, playerId, rememberRoom, roomInfo, saveName, savedName, wasInRoom } from "./gameServer";
+import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, forgetRoom, rememberRoom, roomInfo, saveName, savedName, wasInRoom } from "./gameServer";
 import Confirm from "./Confirm";
 import GameTable, { Loading, PLAYER_COLORS, preloadBacks, useNames } from "./GameTable";
 import Toast from "./Toast";
@@ -375,7 +375,7 @@ const JoinByLink = ({ code, name, setName, join, watch }: { code: string; name: 
 
 const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name: string; watch: boolean; takeSeat: () => void; toAudience: () => void }) => {
   const navigate = useNavigate();
-  const { room, status, error, bye, send, chat, chatSlow } = useRoom(code, name, watch);
+  const { room, status, error, bye, send, chat, chatSlow, me } = useRoom(code, name, watch);
   // (out of their seat, into the audience: back in as a spectator)
   useEffect(() => {
     if (bye === "toAudience") toAudience();
@@ -383,7 +383,6 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
   const [removing, setRemoving] = useState<Player | null>(null);
   const [leaving, setLeaving] = useState(false);
   const [startCheck, setStartCheck] = useState(false);
-  const me = playerId();
   useLobbySounds(room, me);
   // the curtains, from the first moment: drawn while the room connects, then they open on the waiting
   // room (or, for a show under way, the table's own curtains take over, drawn the same)
@@ -419,6 +418,12 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
     return (
       <Stage eyebrow={<>Game {code}</>} title="You’ve been written out" lead="The host took you out of this show.">
         <DefaultButton navlink="/play" text="Start a game" icon="plus" color="red" />
+      </Stage>
+    );
+  if (status === "refused" && error === "outdated")
+    return (
+      <Stage eyebrow={<>Game {code}</>} title="A new version is out" lead="Online play has just been updated. Reload the page to get the new version, and you’ll be right back in your game.">
+        <DefaultButton onClick={() => window.location.reload()} text="Reload" icon="again" color="red" />
       </Stage>
     );
   if (status === "refused") return <Missing code={code} full={error === "full"} />;

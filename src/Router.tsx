@@ -15,6 +15,8 @@ import Footer from "./components/Footer";
 import ExternalRedirect from "./components/ExternalRedirect";
 import useUTMPreservation from "./hooks/useUTMPreservation";
 import { SocialIconDefs } from "./components/utils/SocialIcons";
+import ErrorBoundary from "./components/utils/ErrorBoundary";
+import { session } from "./utils/safeStorage";
 
 const LandingPage = lazy(() => import("./components/Home/LandingPage"));
 const AboutPage = lazy(() => import("./components/About/AboutPage"));
@@ -36,6 +38,12 @@ const PlayPage = lazy(() => import("./components/Play/PlayPage"));
 // this route only mounts if an in-app link to /buy is added — those never send
 // a request to /buy, so force a full-page load and let the edge function take
 // over.
+// /cart is an old name for /checkout: the query (UTMs, a recovery email's address) goes along.
+const CartRedirect = () => {
+  const { search } = useLocation();
+  return <Navigate to={{ pathname: "/checkout", search }} replace />;
+};
+
 const BUY_EDGE_ATTEMPT_KEY = "buy_edge_attempt_at";
 
 const BuyGate = () => {
@@ -46,12 +54,12 @@ const BuyGate = () => {
     // server), the full-page load lands right back here — a second mount within
     // 10s means reloading would loop, so degrade to the custom checkout, which
     // works without the edge function.
-    const lastAttempt = Number(sessionStorage.getItem(BUY_EDGE_ATTEMPT_KEY) || 0);
+    const lastAttempt = Number(session.get(BUY_EDGE_ATTEMPT_KEY) || 0);
     if (Date.now() - lastAttempt < 10_000) {
       navigate("/checkout", { replace: true });
       return;
     }
-    sessionStorage.setItem(BUY_EDGE_ATTEMPT_KEY, String(Date.now()));
+    session.set(BUY_EDGE_ATTEMPT_KEY, String(Date.now()));
     window.location.replace(window.location.pathname + window.location.search);
     // Empty deps: this must run exactly once per mount — a re-run would trip
     // the 10s guard and hijack the in-flight redirect to /checkout.
@@ -88,33 +96,36 @@ const AppRoutes = () => {
   return (
     <>
       {!isExternalRedirect && !inRoom && <Banner />}
-      <Suspense fallback={null}>
-        {!isExternalRedirect && !inRoom && <Navbar trailerPlaying={trailerPlaying} />}
-        <Routes>
-          <Route path="/" element={<LandingPage setTrailerPlaying={setTrailerPlaying} />} />
-          <Route path="/ttrpg" element={<Navigate to="/" replace />} />
-          <Route path="/about" element={<Navigate to="/howtoplay" replace />} />
-          <Route path="/howtoplay" element={<AboutPage />} />
-          <Route path="/digitalartbook" element={<ArtbookDownloadPage />} />
-          <Route path="/characters" element={<CharactersPage />} />
-          <Route path="/characters/:name" element={<CharactersPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/raffle" element={<RafflePage />} />
-          <Route path="/play" element={<PlayPage />} />
-          <Route path="/play/:code" element={<PlayPage />} />
-          <Route path="/thankyou" element={<ThankYouPage />} />
-          <Route path="/rulebook" element={<ExternalRedirect url="/rulebook.pdf" />} />
-          <Route path="/blog" element={<ExternalRedirect url="https://pegasusgames.medium.com" />} />
-          <Route path="/buy" element={<BuyGate />} />
-          <Route path="/cart" element={<Navigate to="/checkout" replace />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="*" element={<ErrorPage />} />
-        </Routes>
-        {!isExternalRedirect && !inRoom && <Footer />}
-      </Suspense>
+      {/* (a page that crashes, or whose code can't be loaded: a "reload" page, not a blank one) */}
+      <ErrorBoundary resetKey={location.pathname}>
+        <Suspense fallback={null}>
+          {!isExternalRedirect && !inRoom && <Navbar trailerPlaying={trailerPlaying} />}
+          <Routes>
+            <Route path="/" element={<LandingPage setTrailerPlaying={setTrailerPlaying} />} />
+            <Route path="/ttrpg" element={<Navigate to="/" replace />} />
+            <Route path="/about" element={<Navigate to="/howtoplay" replace />} />
+            <Route path="/howtoplay" element={<AboutPage />} />
+            <Route path="/digitalartbook" element={<ArtbookDownloadPage />} />
+            <Route path="/characters" element={<CharactersPage />} />
+            <Route path="/characters/:name" element={<CharactersPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/raffle" element={<RafflePage />} />
+            <Route path="/play" element={<PlayPage />} />
+            <Route path="/play/:code" element={<PlayPage />} />
+            <Route path="/thankyou" element={<ThankYouPage />} />
+            <Route path="/rulebook" element={<ExternalRedirect url="/rulebook.pdf" />} />
+            <Route path="/blog" element={<ExternalRedirect url="https://pegasusgames.medium.com" />} />
+            <Route path="/buy" element={<BuyGate />} />
+            <Route path="/cart" element={<CartRedirect />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+          {!isExternalRedirect && !inRoom && <Footer />}
+        </Suspense>
+      </ErrorBoundary>
     </>
   );
 };

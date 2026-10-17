@@ -84,6 +84,22 @@
   background: radial-gradient(closest-side, rgba(0, 0, 0, 0.07), transparent);
 }
 
+/* Or a render of the 3D card at rest: the canvas's own picture (the stage, and the room below it for the
+   shadow), in its place. Swapped out in one frame, not faded: the 3D card's first frame is this same
+   picture, so a fade would only show the two at once as the card starts its turn. */
+.render {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+}
+
+.stage:global(.ready) .render {
+  visibility: hidden;
+}
+
 @keyframes stillShimmer {
   to {
     background-position: 150% 0;

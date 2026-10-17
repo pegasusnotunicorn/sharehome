@@ -10,6 +10,7 @@ const COPIES: { match: RegExp; width: number; copies: number[]; at?: (url: strin
   { match: /^\/images\/members\/characters\d+\.webp$/, width: 2000, copies: [600, 1000] },
   { match: /^\/images\/members\/expansion-[a-z]+-\d\.webp$/, width: 1600, copies: [560] },
   { match: /^\/images\/pieces\/characters\/\d\d(-back)?\.webp$/, width: 768, copies: [560] },
+  { match: /^\/images\/pieces\/characters\/stills\/\d\d\.webp$/, width: 1120, copies: [720] },
   { match: /^\/images\/pieces\/(episodes|director|producer|showrunner)\/(\d\d|back)\.webp$/, width: 768, copies: [480] },
   { match: /^\/images\/photoshoot\/playtest\/playtest\d+\.webp$/, width: 900, copies: [480] },
   { match: /^\/images\/illustrations\/(improv|laughing|stories|party|acting)\.webp$/, width: 600, copies: [400] },

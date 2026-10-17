@@ -10,7 +10,7 @@ import PageIntro from "../utils/PageIntro";
 import usePageTitle from "../utils/usePageTitle";
 import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, forgetRoom, playerId, rememberRoom, roomInfo, saveName, savedName, wasInRoom } from "./gameServer";
 import Confirm from "./Confirm";
-import GameTable, { PLAYER_COLORS, preloadBacks, useNames } from "./GameTable";
+import GameTable, { Loading, PLAYER_COLORS, preloadBacks, useNames } from "./GameTable";
 import Toast from "./Toast";
 import Rulebook from "./Rulebook";
 import CharacterChooser from "./CharacterChooser";
@@ -366,6 +366,18 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
   const [startCheck, setStartCheck] = useState(false);
   const me = playerId();
   useLobbySounds(room, me);
+  // the curtains, from the first moment: drawn while the room connects, then they open on the waiting
+  // room (or, for a show under way, the table's own curtains take over, drawn the same)
+  const [curtain, setCurtain] = useState<"closed" | "opening" | "gone">("closed");
+  useEffect(() => {
+    if (!room || curtain !== "closed") return;
+    if (room.phase === "game") return setCurtain("gone");
+    setCurtain("opening");
+    const t = setTimeout(() => setCurtain("gone"), 1300);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [room]);
+  const curtains = curtain !== "gone" && <Loading out={curtain === "opening"} />;
   // (the loading screen's cards, fetched while everyone's still in the waiting room)
   useEffect(() => {
     const t = setTimeout(preloadBacks, 1500);
@@ -415,9 +427,7 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
       </Stage>
     );
   }
-  if (!room) {
-    return <PageIntro eyebrow="Game room" title="Getting ready" lead="Finding your seat…" className={styles.intro} />;
-  }
+  if (!room) return <Loading out={false} />;
 
   const isHost = room.hostId === me;
   // watching: in the room, but not one of its players
@@ -457,6 +467,7 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
         className={styles.intro}
       />
 
+      {curtains}
       {reconnecting}
       {watchers}
       <SoundToggle />

@@ -102,7 +102,7 @@ const useTableLoaded = (game: GameView) => {
 // the loading screen: the deck's backs shuffling over the tablecloth
 // the loading screen: the stage's curtains drawn, the deck's backs shuffling in the spotlight between
 // them; once the table's in, the curtains sweep open on it
-const Loading = ({ out }: { out: boolean }) => {
+export const Loading = ({ out }: { out: boolean }) => {
   useEffect(() => {
     if (out) play("curtain");
   }, [out]);

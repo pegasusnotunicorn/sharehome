@@ -683,7 +683,7 @@
   top: 14px;
   left: 50%;
   z-index: 2;
-  width: 30%;
+  width: 24%;
   height: 16px;
   border-radius: 99px;
   background: #0b0b10;
@@ -3266,4 +3266,43 @@ button.traitPickCard:focus-visible {
 
 .phone.phoneHeld .phoneActions > * {
   width: 100%;
+}
+
+/* (no sideways scrolling in the chat: the emoji names' tooltips sit past its edge until hovered) */
+.logList {
+  overflow-x: hidden;
+}
+
+/* (held: the R.E.M.O.T.E.'s six buttons big, two by three, square as ever, the slate filling the
+   screen) */
+.phone.phoneHeld .remoteApp .logHead {
+  position: static;
+}
+
+.phone.phoneHeld .remoteApp .logHead > span {
+  display: inline;
+}
+
+.phone.phoneHeld .remotePad {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: space-evenly;
+  gap: 1rem;
+  margin: 0;
+  padding: 1rem;
+  border-radius: 18px;
+  background-size: cover;
+}
+
+.phone.phoneHeld .remotePadKey {
+  gap: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.phone.phoneHeld .remotePadKey img {
+  width: min(7.5rem, 100%);
+}
+
+.phone.phoneHeld .remoteApp .logHead .headHold {
+  margin-left: auto;
+  margin-right: 0.4rem;
 }

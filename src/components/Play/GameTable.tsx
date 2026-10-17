@@ -844,6 +844,13 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                   <div className={styles.remoteApp} id="phone-remote">
                     <div className={styles.logHead}>
                       <span>R.E.M.O.T.E.</span>
+                      {held && (
+                        <button type="button" className={`${styles.clothButton} ${styles.headHold}`} onClick={() => setHeld(false)} aria-label="Set the phone back down" title="Put down">
+                          <svg viewBox="0 0 24 24" aria-hidden>
+                            <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />
+                          </svg>
+                        </button>
+                      )}
                       <button type="button" className={styles.remoteInfo} onClick={() => openRulebook("remote")} aria-label="What's the R.E.M.O.T.E.? (the rulebook)" title="What's this?">
                         <Icon name="info" strokeWidth={2.4} />
                       </button>

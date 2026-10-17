@@ -61,7 +61,7 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
   const isAtTop = scrollPosition === 0;
   const isLandingPageAtTop = isLandingPage && isAtTop;
 
-  const { showPopup, closePopup, followed } = usePinPopup({ hold: trailerPlaying });
+  const { showPopup, shown, closePopup, followed } = usePinPopup({ hold: trailerPlaying });
   const getNavLinkClassName = ({ isActive }: { isActive: boolean }) =>
     `${styles.navLink} noselect ${isActive ? styles.navLinkActive : ""}`;
   const linkBody = (label: string, note: string, external?: boolean) => (
@@ -81,7 +81,7 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
   return (
     <>
       {!trailerPlaying && showPopup && (
-        <CharacterPinPopup closePopup={closePopup} followed={followed} />
+        <CharacterPinPopup shown={shown} closePopup={closePopup} followed={followed} />
       )}
 
       <div className={`${styles.navbar} ${isVisibleClass}`}>

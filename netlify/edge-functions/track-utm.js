@@ -7,11 +7,12 @@ import { SITE, pageMeta } from "../../src/pageMeta.ts";
 const escapeAttr = (value) =>
   String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-// Replaces the content="" of <meta property|name="key" content="..."> tags
+// Replaces the content="" of <meta property|name="key" content="..."> tags. (A function, so a "$" in
+// the value is written as it is, not read as a replace pattern.)
 const setMeta = (html, key, value) =>
   html.replace(
     new RegExp(`(<meta\\s+(?:property|name)="${key.replace(/[.:]/g, "\\$&")}"\\s+content=")[^"]*(")`, "g"),
-    `$1${escapeAttr(value)}$2`
+    (_, open, close) => open + escapeAttr(value) + close
   );
 
 // the page's share tags: a character's own, or the page's from the list
@@ -31,7 +32,7 @@ const withMeta = async (response, pathname) => {
   const imageUrl = SITE + image.url;
   const ext = image.url.split(".").pop().toLowerCase();
   let html = await response.text();
-  html = html.replace(/<title>[^<]*<\/title>/, `<title>${escapeAttr(title)}</title>`);
+  html = html.replace(/<title>[^<]*<\/title>/, () => `<title>${escapeAttr(title)}</title>`);
   html = setMeta(html, "description", description);
   html = setMeta(html, "og:url", url);
   html = setMeta(html, "og:title", title);
@@ -57,6 +58,22 @@ const encodeUtm = (data) =>
 
 const IS_DEV = Deno.env.get("NETLIFY_DEV") === "true";
 
+// (a campaign tag or referrer can be any length: kept short enough that the cookie always fits)
+const MAX_UTM = 200;
+const clip = (value) => (value ? String(value).slice(0, MAX_UTM) : value);
+
+// the cookies this sets: on every path, for 30 days, never read by the page's own scripts
+const setCookie = (context, name, value) =>
+  context.cookies.set({
+    name,
+    value,
+    path: "/",
+    maxAge: 86400 * 30, // 30-day expiration
+    httpOnly: true,
+    secure: true,
+    sameSite: "Lax",
+  });
+
 const trackUtm = async (request, context) => {
   const url = new URL(request.url);
   // /characters/ (and /characters/<name>/) is the same page without the slash. (Netlify's
@@ -75,12 +92,7 @@ const trackUtm = async (request, context) => {
 
   if (!clientId) {
     clientId = crypto.randomUUID();
-    await context.cookies.set("client_id", clientId, {
-      secure: true,
-      httpOnly: true,
-      sameSite: "Lax",
-      maxAge: 86400 * 30, // 30-day expiration
-    });
+    await setCookie(context, "client_id", clientId);
     if (IS_DEV) console.log("🆕 Generated new client_id:", clientId);
   } else if (IS_DEV) {
     console.log("🔄 Existing client_id found:", clientId);
@@ -106,23 +118,18 @@ const trackUtm = async (request, context) => {
   if (hasSourceUTMs || !existingUtmData) {
     const utmData = {
       client_id: clientId,
-      utm_source: searchParams.get("utm_source") || "direct",
-      utm_medium: searchParams.get("utm_medium") || "none",
-      utm_campaign: searchParams.get("utm_campaign") || "none",
-      utm_term: searchParams.get("utm_term") || "none",
-      utm_content: searchParams.get("utm_content") || "none",
-      referrer: request.headers.get("referer") || "none",
-      fbclid: searchParams.get("fbclid") || fbClickId || "none",
-      fb_client_id: fbClientId || "none",
+      utm_source: clip(searchParams.get("utm_source")) || "direct",
+      utm_medium: clip(searchParams.get("utm_medium")) || "none",
+      utm_campaign: clip(searchParams.get("utm_campaign")) || "none",
+      utm_term: clip(searchParams.get("utm_term")) || "none",
+      utm_content: clip(searchParams.get("utm_content")) || "none",
+      referrer: clip(request.headers.get("referer")) || "none",
+      fbclid: clip(searchParams.get("fbclid") || fbClickId) || "none",
+      fb_client_id: clip(fbClientId) || "none",
     };
 
     try {
-      await context.cookies.set("utm_data", encodeUtm(utmData), {
-        secure: true,
-        httpOnly: true,
-        sameSite: "Lax",
-        maxAge: 86400 * 30, // 30-day expiration
-      });
+      await setCookie(context, "utm_data", encodeUtm(utmData));
     } catch (err) {
       // (never worth an error page in place of the site)
       console.warn("⚠️ Couldn't store UTM data:", err.message);
@@ -134,14 +141,9 @@ const trackUtm = async (request, context) => {
     // click-tracking stays fresh without clobbering the existing attribution.
     try {
       const existing = JSON.parse(atob(existingUtmData));
-      existing.fbclid = searchParams.get("fbclid");
-      existing.fb_client_id = fbClientId || existing.fb_client_id || "none";
-      await context.cookies.set("utm_data", encodeUtm(existing), {
-        secure: true,
-        httpOnly: true,
-        sameSite: "Lax",
-        maxAge: 86400 * 30,
-      });
+      existing.fbclid = clip(searchParams.get("fbclid"));
+      existing.fb_client_id = clip(fbClientId) || existing.fb_client_id || "none";
+      await setCookie(context, "utm_data", encodeUtm(existing));
       if (IS_DEV) console.log("🔄 Updated fbclid in existing UTM cookie");
     } catch {
       // corrupt cookie — leave as-is

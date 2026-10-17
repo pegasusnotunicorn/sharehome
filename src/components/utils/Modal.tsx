@@ -8,11 +8,12 @@ interface ModalProps {
   children: ReactNode;
   panelClassName?: string;
   ariaLabel?: string;
+  ariaLabelledBy?: string; // (or the id of its own title)
 }
 
 // A dialog over the page: Escape or a click outside closes it. Focus moves into it as it opens, stays in
 // it while it's open, and goes back where it was when it closes.
-const Modal = ({ onClose, children, panelClassName, ariaLabel }: ModalProps) => {
+const Modal = ({ onClose, children, panelClassName, ariaLabel, ariaLabelledBy }: ModalProps) => {
   const panel = useRef<HTMLDivElement>(null);
   const close = useRef(onClose);
   close.current = onClose;
@@ -49,7 +50,8 @@ const Modal = ({ onClose, children, panelClassName, ariaLabel }: ModalProps) => 
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-label={ariaLabel}
+        aria-label={ariaLabelledBy ? undefined : ariaLabel}
+        aria-labelledby={ariaLabelledBy}
       >
         <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Close">
           <Icon name="close" className={styles.closeIcon} strokeWidth={2.6} />

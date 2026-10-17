@@ -14,7 +14,8 @@ const KICKSTARTER_URL = "https://www.kickstarter.com/projects/pegasusgamesnyc/lo
 
 // The expansion news, once (usePinPopup.ts says when): the site's dialog, its band in Kickstarter green.
 const CharacterPinPopup = ({ shown, closePopup, followed }: CharacterPinPopupProps) => {
-  useEffect(shown, []); // (once, as it opens)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => shown(), []); // (once, as it opens)
 
   return (
     <Modal onClose={() => closePopup("close")} panelClassName={`${modalStyles.panel} ${modalStyles.kickstarter}`} ariaLabelledBy={POPUP_TITLE_ID}>

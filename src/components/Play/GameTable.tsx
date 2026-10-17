@@ -1316,7 +1316,7 @@ const PlayArea = ({
   points: number;
   open: () => void;
   hidden: Set<string>;
-  areaRef: React.RefObject<HTMLSpanElement | null>;
+  areaRef: React.RefObject<HTMLSpanElement>;
 }) => {
   // (the eight newest; the one before them fades away as the next lands)
   const shown = cards.slice(-9);

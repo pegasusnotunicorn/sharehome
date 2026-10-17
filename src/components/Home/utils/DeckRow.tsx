@@ -9,8 +9,8 @@ interface DeckRowProps {
 //a single row with stuff in it
 export const DeckRow = (props: DeckRowProps) => {
   //create timeline for the row
-  let rowRef = useRef<HTMLDivElement>(null);
-  let [rowTl, setRowTl] = useState<gsap.core.Timeline | null>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const [rowTl, setRowTl] = useState<gsap.core.Timeline | null>(null);
   useLayoutEffect(() => {
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -31,7 +31,7 @@ export const DeckRow = (props: DeckRowProps) => {
 
   return (
     <div ref={rowRef} className={props.className}>
-      {React.cloneElement(props.children as React.ReactElement<any>, { tl: rowTl, ...props })}
+      {React.cloneElement(props.children as React.ReactElement<Record<string, unknown>>, { tl: rowTl, ...props })}
     </div>
   );
 };

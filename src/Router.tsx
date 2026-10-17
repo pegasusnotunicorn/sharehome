@@ -13,7 +13,7 @@ import Banner from "./components/Banner";
 import ScrollToTop from "./ScrollToTop";
 import Footer from "./components/Footer";
 import ExternalRedirect from "./components/ExternalRedirect";
-import useUTMPreservation from "./hooks/useUTMPreservation";
+import useTrackingTags from "./hooks/useTrackingTags";
 import { SocialIconDefs } from "./components/utils/SocialIcons";
 import ErrorBoundary from "./components/utils/ErrorBoundary";
 import { session } from "./utils/safeStorage";
@@ -63,6 +63,7 @@ const BuyGate = () => {
     window.location.replace(window.location.pathname + window.location.search);
     // Empty deps: this must run exactly once per mount — a re-run would trip
     // the 10s guard and hijack the in-flight redirect to /checkout.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -91,7 +92,7 @@ const AppRoutes = () => {
 
   const [trailerPlaying, setTrailerPlaying] = useState(false);
 
-  useUTMPreservation();
+  useTrackingTags();
 
   return (
     <>

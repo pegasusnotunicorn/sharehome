@@ -28,7 +28,7 @@ const TermsPage = () => {
             </li>
             <li>
               If anything goes wrong with your order,{" "}
-              <a href="/contact">reach out</a> and I'll do my best to fix it!
+              <a href="/contact">reach out</a> and I’ll do my best to fix it!
               Just keep in mind, I’m a one-person team, so it might take a
               little time to get back to you.
             </li>
@@ -40,14 +40,14 @@ const TermsPage = () => {
           <p>
             I am a one-person team. I handle everything from the initial game
             design to hand-packaging every box and driving them to the local
-            post office myself. Because I don't have the scale or budget of a
+            post office myself. Because I don’t have the scale or budget of a
             large corporation, I have to be very careful with my return policy.
           </p>
           <p>
             Since games that have been opened and played cannot be resold to
             another player, I unfortunately cannot accept them as returns. Every
             copy is a significant investment of my time and resources, and I
-            simply don't have the overhead to absorb the cost of "open box"
+            simply don’t have the overhead to absorb the cost of “open box”
             returns.
           </p>
           <p>
@@ -59,7 +59,7 @@ const TermsPage = () => {
           <h2 className="subtitle">Privacy policy</h2>
           <p>
             I only collect what I need to ship your order, send the updates you
-            signed up for, and find more people who'll love the game. I never
+            signed up for, and find more people who’ll love the game. I never
             sell your personal information. Payments go through Stripe, and you
             can unsubscribe from emails at any time.
           </p>

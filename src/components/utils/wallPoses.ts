@@ -83,7 +83,7 @@ export function wallPoses(p: number, t: number, size: WallSize, cards: WallCardM
     const s = standing(c.row, c.col);
     const pn = panel(c.row, c.col);
     const [dx, dz] = turn(s.x - pn.hinge.x, s.z - pn.hinge.z, pn.angle);
-    let x = pn.hinge.x + dx + pn.shift, z = pn.hinge.z + dz, ry = s.ry + pn.angle;
+    const x = pn.hinge.x + dx + pn.shift, z = pn.hinge.z + dz, ry = s.ry + pn.angle;
     let y = -(c.row - (rows - 1) / 2) * (ch + WALL_GAP);
     let rx = 0;
     const rz = 0, scale = 1;

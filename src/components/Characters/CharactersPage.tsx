@@ -68,10 +68,10 @@ const expansionPlaceholders: ExpansionCharacter[] = [
 
 //render all characters or a specific one depending on URL
 const CharactersPage = () => {
-  let { name } = useParams();
+  const { name } = useParams();
 
   //if there is a specifc character name, render that character page
-  let chosenCharacter = name ? getSpecificPersonByURL(name) : false;
+  const chosenCharacter = name ? getSpecificPersonByURL(name) : false;
   usePageTitle(chosenCharacter ? chosenCharacter.name : "Characters");
 
   //redirect to just /characters if typo a non-existant character
@@ -244,7 +244,7 @@ const ExpansionCharactersSection = () => {
           The new arrivals
         </h2>
         <p className={charStyles.castLede}>
-          {expansionPlaceholders.length} new contestants are on their way in the expansion. Here's a peek at the
+          {expansionPlaceholders.length} new contestants are on their way in the expansion. Here’s a peek at the
           sketches so far.
         </p>
       </header>

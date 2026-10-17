@@ -109,7 +109,6 @@ const trackUtm = async (request, context) => {
   const SOURCE_UTM_PARAMS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"];
   const hasSourceUTMs = SOURCE_UTM_PARAMS.some((p) => searchParams.get(p));
   const hasFbclid = !!searchParams.get("fbclid");
-  const hasUTMsInUrl = hasSourceUTMs || hasFbclid;
   const existingUtmData = await context.cookies.get("utm_data");
 
   // Overwrite when source UTMs are in the URL (fresh attribution), or when no

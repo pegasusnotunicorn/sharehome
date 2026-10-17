@@ -51,6 +51,8 @@ function ScrollToTop() {
         window.clearTimeout(timeoutId);
       }
     };
+    // (only for a new page or part: how it was reached is read, not watched)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname, location.hash]);
 
   return null;

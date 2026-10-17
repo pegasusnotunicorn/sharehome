@@ -6,7 +6,12 @@
 // Only the label fields (carrier, tracking, label URL) are mocked, since
 // previewing shouldn't actually buy a label.
 
-import "dotenv/config";
+// (the keys, from .env)
+try {
+  process.loadEnvFile();
+} catch {
+  // (no .env: the environment's own)
+}
 process.env.NETLIFY_DEV = "true";
 
 import stripeModule from "stripe";

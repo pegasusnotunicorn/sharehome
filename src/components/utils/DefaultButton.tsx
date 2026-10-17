@@ -172,6 +172,7 @@ const DefaultButton = forwardRef<HTMLElement, DefaultButtonProps>(
     }
   }
 );
+DefaultButton.displayName = "DefaultButton"; // (forwardRef hides the name from React's dev tools)
 
 interface IconProps {
   icon?: string;

@@ -113,7 +113,7 @@ const RafflePage = () => {
             {!done ? (
               <>
                 <p className={styles.stepDesc}>
-                  Enter your email. You'll get a confirmation email with your raffle ticket number: reply to it with
+                  Enter your email. You’ll get a confirmation email with your raffle ticket number: reply to it with
                   your shipping address.
                 </p>
                 <form onSubmit={handleSubmit} className={styles.emailFormRow}>
@@ -168,13 +168,13 @@ const RafflePage = () => {
               <div className={styles.successMsg}>
                 <span className={styles.successIcon}><CheckCircleIcon /></span>
                 <div>
-                  <strong>Kickstarter's open</strong>
+                  <strong>Kickstarter’s open</strong>
                   <p>Press Follow there, then show that screen to a staff member.</p>
                 </div>
               </div>
             ) : (
               <>
-                <p className={styles.stepDesc}>We're making a Season 2. Follow along and be the first to know!</p>
+                <p className={styles.stepDesc}>We’re making a Season 2. Follow along and be the first to know!</p>
                 <DefaultButton
                   href={KICKSTARTER_URL}
                   onClick={() => setKickstarterClicked(true)}

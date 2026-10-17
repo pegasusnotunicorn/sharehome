@@ -102,14 +102,14 @@ const LikeHateSection = (props: LikeHateSectionProps) => {
   ];
 
   const arrowsContainerRef = useRef<HTMLDivElement>(null);
-  let [currentChar, setCurrentChar] = useState(0);
-  let [traits, setTraits] = useState(randomTraits);
+  const [currentChar, setCurrentChar] = useState(0);
+  const [traits, setTraits] = useState(randomTraits);
 
   //fade in and out character traits
   useLayoutEffect(() => {
     const delay = 1;
     const duration = 2;
-    let tl = gsap
+    const tl = gsap
       .timeline({
         repeat: -1,
         onRepeat: () => {

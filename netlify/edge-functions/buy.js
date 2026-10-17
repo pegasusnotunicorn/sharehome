@@ -1,9 +1,6 @@
-const IS_DEV = Deno.env.get("NETLIFY_DEV") === "true";
+import { TRACKING_KEYS } from "../../src/utils/tracking.ts";
 
-const TRACKING_KEYS = [
-  "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
-  "gclid", "fbclid", "client_reference_id",
-];
+const IS_DEV = Deno.env.get("NETLIFY_DEV") === "true";
 
 const GA_MEASUREMENT_ID = IS_DEV
   ? Deno.env.get("GA4_MEASUREMENT_ID_DEV")

@@ -20,7 +20,7 @@ import styles from "../css/pages/buyPage.module.css";
 // (the same list checkout offers and the webhook ships to)
 import { isEuropeCountry } from "../../netlify/lib/regions.js";
 import Icon from "./utils/Icons";
-import { session } from "../utils/safeStorage";
+import { storedTrackingTags, trackingTagsIn } from "../utils/tracking";
 
 // (the carousel library comes down only when the box preview opens)
 const ImageCarouselModal = lazy(() => import("./utils/ImageCarouselModal"));
@@ -96,31 +96,15 @@ const InfoIcon = () => (
 );
 
 
+// where this visit came from (a campaign's tags), sent with the order: the address's own, or the ones
+// an earlier page of the visit kept (src/utils/tracking.ts)
 function getStoredUtms(): Record<string, string> {
+  const tags = { ...storedTrackingTags(), ...trackingTagsIn(new URLSearchParams(window.location.search)) };
   const out: Record<string, string> = {};
-
-  // Read URL params first — handles the iOS tab-reload race condition where
-  // sessionStorage is empty but useUTMPreservation already wrote UTMs to the
-  // URL via replaceState in the previous session (child effects like ours run
-  // before the parent AppRoutes useUTMPreservation effect on first render).
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get("utm_source")) out.utmSource = urlParams.get("utm_source")!;
-  if (urlParams.get("utm_medium")) out.utmMedium = urlParams.get("utm_medium")!;
-  if (urlParams.get("utm_campaign")) out.utmCampaign = urlParams.get("utm_campaign")!;
-  if (urlParams.get("utm_content")) out.utmContent = urlParams.get("utm_content")!;
-
-  // sessionStorage overrides URL — more authoritative when present.
-  try {
-    const raw = session.get("utm_params");
-    if (raw) {
-      const data = JSON.parse(raw) as Record<string, string>;
-      if (data.utm_source) out.utmSource = data.utm_source;
-      if (data.utm_medium) out.utmMedium = data.utm_medium;
-      if (data.utm_campaign) out.utmCampaign = data.utm_campaign;
-      if (data.utm_content) out.utmContent = data.utm_content;
-    }
-  } catch {}
-
+  if (tags.utm_source) out.utmSource = tags.utm_source;
+  if (tags.utm_medium) out.utmMedium = tags.utm_medium;
+  if (tags.utm_campaign) out.utmCampaign = tags.utm_campaign;
+  if (tags.utm_content) out.utmContent = tags.utm_content;
   return out;
 }
 
@@ -456,7 +440,7 @@ const CheckoutForm = ({ sessionId, shippingRates, phone, onPhone, termsAgreed, o
             </div>
           )}
           <button className={styles.missingCountryLink} onClick={onOpenMissingCountry} type="button">
-            Don't see your country?
+            Don’t see your country?
           </button>
         </div>
         <div className={styles.formSection}>
@@ -930,7 +914,7 @@ const InternationalModal = ({ onClose }: { onClose: () => void }) => {
     <Modal onClose={onClose} ariaLabelledBy={titleId}>
       <h2 id={titleId} className={styles.modalTitle}>Shipping to Europe 🇪🇺</h2>
       <p className={styles.modalBody}>
-        Love, Career &amp; Magic is finally available in Europe! I'm working
+        Love, Career &amp; Magic is finally available in Europe! I’m working
         with a Europe-based logistics company so I can get the game to you
         without the shipping costing a fortune.{" "}
         <a
@@ -983,7 +967,7 @@ const ShippingWaitlistForm = ({ country }: { country: string }) => {
   };
 
   if (status === "done") {
-    return <p className={styles.waitlistDone} role="status">Thanks! You're on the list.</p>;
+    return <p className={styles.waitlistDone} role="status">Thanks! You’re on the list.</p>;
   }
 
   return (
@@ -1021,7 +1005,7 @@ const ShippingWaitlistNotice = ({ country }: { country: string }) => {
         {name ? `We don't ship to ${name} yet` : "We don't ship to your country yet"}
       </p>
       <p className={styles.waitlistNoticeBody}>
-        Leave your email and I'll let you know when we do.
+        Leave your email and I’ll let you know when we do.
       </p>
       <ShippingWaitlistForm country={country} />
     </div>
@@ -1032,13 +1016,13 @@ const MissingCountryModal = ({ europeEnabled, onClose }: { europeEnabled: boolea
   const titleId = useId();
   return (
     <Modal onClose={onClose} ariaLabelledBy={titleId}>
-      <h2 id={titleId} className={styles.modalTitle}>Don't see your country?</h2>
+      <h2 id={titleId} className={styles.modalTitle}>Don’t see your country?</h2>
       <p className={styles.modalBody}>
         Right now I can only ship to the US{europeEnabled ? " and Europe" : ""}.{" "}
         <a href="/contact" target="_blank" rel="noreferrer" className={styles.modalLink}>
           Contact me
         </a>{" "}
-        and I'll see if I can get your country added.
+        and I’ll see if I can get your country added.
       </p>
       <button className={styles.modalClose} onClick={onClose}>
         Got it
@@ -1316,7 +1300,7 @@ const CheckoutPage = () => {
                 />
                 {cartError && (
                   <p className={styles.checkoutError} role="alert">
-                    Couldn't update your order. Please try again.
+                    Couldn’t update your order. Please try again.
                   </p>
                 )}
                 <CartUpsell

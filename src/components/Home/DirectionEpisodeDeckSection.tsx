@@ -10,6 +10,7 @@ import { randomDeg, randomNum } from "../utils/useMath";
 import Deck3D from "./utils/Deck3D";
 import { DIRECTION_MM, EPISODE_MM, randomDirectionFaces, randomEpisodeFaces } from "../Card/directionEpisodeFaces";
 import type { DeckCard } from "../utils/deckCards3d";
+import type { DirectionEpisodeData } from "../../types/card";
 import { directionEpisodeLayout } from "./utils/deckLayouts";
 import styles from "../../css/pages/home/directionEpisodeDeckSection.module.css";
 
@@ -18,14 +19,14 @@ interface DeckSectionProps {
 }
 
 interface DirectionEpisodeDeckRowProps {
-  card: any;
+  card: DirectionEpisodeData;
   rowIndex: number;
   rowTl?: gsap.core.Timeline | null;
   directionOrEpisode: string;
 }
 
 interface AnimatedCardProps {
-  card: any;
+  card: DirectionEpisodeData;
   rowIndex: number;
   tl?: gsap.core.Timeline | null;
   directionOrEpisode: string;
@@ -67,7 +68,7 @@ const DeckSection = ({ directionOrEpisode }: DeckSectionProps) => {
   const splitIntoSections = getRandomDirectionsEpisodes(directionOrEpisode as "direction" | "episode", 3);
   return (
     <div className={styles.directionEpisodeDecksContainer}>
-      {splitIntoSections.map((curr: any, index: number) => {
+      {splitIntoSections.map((curr, index) => {
         return (
           <DirectionEpisodeDeckRow
             key={`directionEpisodeDecksRow${index}`}

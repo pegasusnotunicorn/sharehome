@@ -1051,6 +1051,8 @@
 .leave {
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
   margin-top: 1.75rem;
 }
 
@@ -1766,3 +1768,8 @@
 }
 
 /* #endregion */
+
+/* (the waiting room's foot: just watch, or leave) */
+.leaveDot {
+  color: rgba(50, 50, 50, 0.4);
+}

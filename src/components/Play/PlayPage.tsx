@@ -8,7 +8,7 @@ import Modal from "../utils/Modal";
 import modalStyles from "../../css/utils/modal.module.css";
 import PageIntro from "../utils/PageIntro";
 import usePageTitle from "../utils/usePageTitle";
-import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, playerId, roomInfo, saveName, savedName } from "./gameServer";
+import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, forgetRoom, playerId, rememberRoom, roomInfo, saveName, savedName, wasInRoom } from "./gameServer";
 import Confirm from "./Confirm";
 import GameTable, { PLAYER_COLORS, preloadBacks, useNames } from "./GameTable";
 import Toast from "./Toast";
@@ -32,7 +32,11 @@ const PlayPage = () => {
   const code = rawCode ? normalizeCode(rawCode) : null;
   // (the name this browser plays as: a room joins straight away once there is one)
   const [name, setName] = useState(savedName);
-  const [joined, setJoined] = useState(() => !!savedName());
+  // (joined this room just now, or before: in it goes; a new room's link asks first)
+  const [joinedNow, setJoined] = useState(false);
+  const joined = joinedNow || (!!code && wasInRoom(code));
+  // (another room's link: it asks again)
+  useEffect(() => setJoined(false), [code]);
   // watching, not playing (asked to, or the room was full, or the show had started)
   const [watch, setWatch] = useState(false);
   usePageTitle(code ? `Game ${code} | Play online` : "Play online");
@@ -70,7 +74,16 @@ const PlayPage = () => {
           takeSeat={() => {
             // (a spectator taking a free seat: in as a player, by name)
             setWatch(false);
-            if (!name) setJoined(false);
+            if (name) {
+              rememberRoom(code);
+              setJoined(true);
+            } else setJoined(false);
+          }}
+          toAudience={() => {
+            // (a player giving up their seat to watch: back on the link, it asks again)
+            forgetRoom(code);
+            setJoined(false);
+            setWatch(true);
           }}
         />
       ) : (
@@ -80,6 +93,7 @@ const PlayPage = () => {
           setName={setName}
           join={() => {
             saveName(name);
+            rememberRoom(code);
             setJoined(true);
           }}
           watch={() => setWatch(true)}
@@ -187,6 +201,7 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
       const room = await createRoom();
       saveName(clean);
       setName(clean);
+      rememberRoom(room);
       created();
       navigate(`/play/${room}`);
     } catch (err) {
@@ -338,9 +353,13 @@ const JoinByLink = ({ code, name, setName, join, watch }: { code: string; name: 
 
 // #region--------------------------------------THE LOBBY
 
-const Lobby = ({ code, name, watch, takeSeat }: { code: string; name: string; watch: boolean; takeSeat: () => void }) => {
+const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name: string; watch: boolean; takeSeat: () => void; toAudience: () => void }) => {
   const navigate = useNavigate();
   const { room, status, error, bye, send, chat, chatSlow } = useRoom(code, name, watch);
+  // (out of their seat, into the audience: back in as a spectator)
+  useEffect(() => {
+    if (bye === "toAudience") toAudience();
+  }, [bye, toAudience]);
   const [removing, setRemoving] = useState<Player | null>(null);
   const [leaving, setLeaving] = useState(false);
   const [startCheck, setStartCheck] = useState(false);
@@ -370,6 +389,7 @@ const Lobby = ({ code, name, watch, takeSeat }: { code: string; name: string; wa
       </Stage>
     );
   if (status === "refused") return <Missing code={code} full={error === "full"} />;
+  if (status === "gone" && bye === "toAudience") return <PageIntro eyebrow="Watching" title="To the audience" lead="Finding you a spot…" className={styles.intro} />;
   if (status === "gone") {
     return (
       <Stage
@@ -517,6 +537,12 @@ const Lobby = ({ code, name, watch, takeSeat }: { code: string; name: string; wa
 
       {!spectating && (
         <div className={styles.leave}>
+          <button type="button" className={styles.textButton} onClick={() => send({ t: "toAudience" })}>
+            Just watch instead
+          </button>
+          <span className={styles.leaveDot} aria-hidden>
+            ·
+          </span>
           <button type="button" className={styles.textButton} onClick={() => setLeaving(true)}>
             Leave the game
           </button>

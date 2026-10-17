@@ -895,7 +895,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
             <section className={styles.callbacks} aria-labelledby="callbacks-title">
               <div className={styles.deckHead}>
                 <h3 id="callbacks-title">Callbacks</h3>
-                <span className={styles.points}>+1 each</span>
+                <span className={styles.points}>1 pt</span>
               </div>
               <div className={styles.pastRow}>
                 {Array.from({ length: EPISODES - 1 }, (_, i) => {

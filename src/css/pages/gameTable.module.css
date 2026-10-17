@@ -2999,26 +2999,43 @@ button.traitPickCard:focus-visible {
     align-self: stretch;
   }
 
+  /* (the whole column's the measure: its title, then three cards and their counters) */
   .callbacks {
+    --gap: 0.8rem;
+    --count: 2.3rem;
+    --head: 2.1rem;
     flex: 1;
-    min-height: 0;
+    min-height: 14rem;
+    container-type: size;
+    align-items: center;
   }
 
   .pastRow {
-    --gap: 0.8rem;
-    --count: 2.3rem;
     flex: 1;
-    min-height: 12rem;
-    container-type: size;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: var(--gap);
   }
 
-  /* (a third of the room, less the counter: the card's height; its width follows) */
-  .pastSlot {
-    width: min(100cqw, calc(((100cqh - 2 * var(--gap)) / 3 - var(--count) - 0.4rem) * 768 / 549));
+  /* (a third of the room under the title, less the counter: the card's height; its width follows.
+     The title's as wide, so it lines up with the cards' left edge) */
+  .pastSlot,
+  .callbacks > .deckHead {
+    width: min(100cqw, calc(((100cqh - var(--head) - 2 * var(--gap)) / 3 - var(--count) - 0.4rem) * 768 / 549));
+  }
+
+  .callbacks > .deckHead {
+    box-sizing: border-box;
+    height: calc(var(--head) - 0.55rem);
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+
+  /* (no deck's colour square: the title starts at the cards' edge) */
+  .callbacks > .deckHead h3::before {
+    display: none;
   }
 
   .pastSlot > .past {

@@ -13,7 +13,6 @@ import { Navigation, Pagination, A11y, Keyboard } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import CustomHelmet from "./utils/CustomHelmet";
 import usePageTitle from "./utils/usePageTitle";
 import Modal from "./utils/Modal";
 import Stepper from "./utils/Stepper";
@@ -1063,10 +1062,6 @@ const CheckoutPage = () => {
   if (initError) {
     return (
       <div className={`content ${styles.buyPage}`}>
-        <CustomHelmet
-          title="Checkout — Love, Career & Magic"
-          description="Complete your purchase of Love, Career & Magic."
-        />
         <CheckoutIntro />
         <p style={{ textAlign: "center", fontFamily: "Roboto Light", color: "#b54848", marginTop: "2rem" }}>
           {initError}
@@ -1077,10 +1072,6 @@ const CheckoutPage = () => {
 
   return (
     <div className={`content ${styles.buyPage}`}>
-      <CustomHelmet
-        title="Checkout — Love, Career & Magic"
-        description="Complete your purchase of Love, Career & Magic."
-      />
       <CheckoutIntro
         line={
           // (a country picked in the form; else the one they seem to be in)

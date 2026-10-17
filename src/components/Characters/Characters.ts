@@ -825,7 +825,7 @@ export function getAllCharacters(random?: boolean): Character[] {
 }
 
 //title, description and image used for a character page's share (og/twitter) tags
-//shared by CharactersPage and the character-meta edge function
+//shared by CharactersPage and the track-utm edge function (a character's link preview)
 export function getCharacterShareMeta(character: Character) {
   let description = "Introducing ";
   description += character.title
@@ -836,7 +836,7 @@ export function getCharacterShareMeta(character: Character) {
   description += ` and member of SHAREHOME—A reality TV show about 6 mythical strangers living together in the same house.`;
 
   return {
-    title: `Love, Career & Magic — ${character.name}`,
+    title: `${character.name} — Love, Career & Magic`,
     description,
     image: character.image,
   };

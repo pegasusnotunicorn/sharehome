@@ -1,4 +1,3 @@
-import CustomHelmet from "./utils/CustomHelmet";
 import usePageTitle from "./utils/usePageTitle";
 import PageIntro from "./utils/PageIntro";
 import DefaultButton from "./utils/DefaultButton";
@@ -8,11 +7,6 @@ const TermsPage = () => {
   usePageTitle("Terms");
   return (
     <div className="content max-width">
-      <CustomHelmet
-        title="Terms & privacy policy"
-        description="Terms, return policy and privacy summary for Love, Career & Magic."
-      />
-
       <PageIntro eyebrow="The fine print" title="Terms" lead="Returns, and how your information is used." />
 
       <div className="subcontentWrapper legalWrapper">

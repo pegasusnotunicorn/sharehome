@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { useNavigate, useParams } from "react-router";
 import { EPISODES, EPISODE_SECONDS, MAX_PLAYERS, MIN_PLAYERS, NAME_MAX, cleanName, type Player, type RoomView } from "../../../game-server/src/protocol";
-import CustomHelmet from "../utils/CustomHelmet";
 import DefaultButton from "../utils/DefaultButton";
 import Icon from "../utils/Icons";
 import Modal from "../utils/Modal";
@@ -55,10 +54,6 @@ const PlayPage = () => {
 
   return (
     <div className={`content ${styles.playPage}`}>
-      <CustomHelmet
-        title="Play Love, Career & Magic online"
-        description="Make a game room, send your friends the link and play Love, Career & Magic together online."
-      />
       {/* (in a room, the rulebook's where the navbar would be) */}
       {code && GAME_SERVER && <Rulebook />}
       {!GAME_SERVER ? (

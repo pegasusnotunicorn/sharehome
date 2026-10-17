@@ -80,26 +80,18 @@ const CharactersPage = () => {
   ) {
     return <Navigate to="/characters" replace />;
   } else {
-    //custom meta tags for this page
-    let title = "All playable characters";
-    let splashImage =
-      "https://lovecareermagic.com/images/photoshoot/game/pictures8.webp";
-    let description = "All playable characters from the game.";
-
-    if (chosenCharacter) {
-      const shareMeta = getCharacterShareMeta(chosenCharacter);
-      title = shareMeta.title;
-      splashImage = `https://lovecareermagic.com${shareMeta.image.url}`;
-      description = shareMeta.description;
-    }
+    // (a character's own share tags; the cast's are the site's, from src/pageMeta.ts)
+    const shareMeta = chosenCharacter && getCharacterShareMeta(chosenCharacter);
 
     return (
       <div className="content flushBottom">
-        <CustomHelmet
-          title={title}
-          splashImage={splashImage}
-          description={description}
-        />
+        {shareMeta && (
+          <CustomHelmet
+            title={shareMeta.title}
+            splashImage={`https://lovecareermagic.com${shareMeta.image.url}`}
+            description={shareMeta.description}
+          />
+        )}
 
         {chosenCharacter ? (
           <>

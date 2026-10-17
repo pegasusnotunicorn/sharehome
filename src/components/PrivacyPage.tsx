@@ -1,4 +1,3 @@
-import CustomHelmet from "./utils/CustomHelmet";
 import usePageTitle from "./utils/usePageTitle";
 import PageIntro from "./utils/PageIntro";
 import DefaultButton from "./utils/DefaultButton";
@@ -20,11 +19,6 @@ const PrivacyPage = () => {
   usePageTitle("Privacy policy");
   return (
     <div className="content max-width">
-      <CustomHelmet
-        title="Privacy policy"
-        description="How Pegasus Games collects, uses and protects your information on lovecareermagic.com and our social media accounts."
-      />
-
       <PageIntro eyebrow="The fine print" title="Privacy policy" lead={`Effective ${EFFECTIVE_DATE}`} />
 
       <div className="subcontentWrapper legalWrapper">

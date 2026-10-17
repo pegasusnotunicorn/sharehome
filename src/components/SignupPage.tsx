@@ -1,5 +1,4 @@
 import EmailForm from "./utils/EmailForm";
-import CustomHelmet from "./utils/CustomHelmet";
 import PageIntro from "./utils/PageIntro";
 import usePageTitle from "./utils/usePageTitle";
 import styles from "../css/pages/signupPage.module.css";
@@ -10,11 +9,6 @@ const SignupPage = () => {
 
   return (
     <div className="content">
-      <CustomHelmet
-        title={title}
-        description="Sign up to receive updates related to Love, Career & Magic."
-      />
-
       <PageIntro
         eyebrow="Newsletter"
         title="Don’t miss a thing"

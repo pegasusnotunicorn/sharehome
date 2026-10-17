@@ -1,0 +1,49 @@
+/* A carousel's Prev / Next (ArrowChip.tsx): the site's small square chip, like the card viewer's zoom
+   buttons and a dialog's close button */
+.chip {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  box-sizing: border-box;
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
+  background: #fff;
+  color: var(--btn-ink);
+  box-shadow: 0 3px 0 var(--chip-edge);
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    opacity 0.15s ease;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+}
+
+@media (hover: hover) {
+  .chip:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 0 var(--chip-edge);
+  }
+}
+
+.chip:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--chip-edge);
+}
+
+.chip:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
+}
+
+/* (at the end: nothing further that way) */
+.chip:disabled {
+  opacity: 0.35;
+  cursor: default;
+}

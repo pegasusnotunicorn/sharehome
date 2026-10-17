@@ -1487,13 +1487,14 @@ const Coach = ({
   useLayoutEffect(() => {
     const t = fromPhone();
     if (t) panel.current!.animate([{ transform: t, opacity: 0.6 }, { transform: "none", opacity: 1 }], { duration: 420, easing: "cubic-bezier(0.2, 1, 0.3, 1)" });
-    play("whoosh");
+    play("pickUp");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // put down (then, whatever was pressed to put it down happens)
   const close = (then?: () => void) => {
     if (leaving) return;
     setLeaving(true);
+    play("putDown");
     const done = () => {
       onClose();
       then?.();

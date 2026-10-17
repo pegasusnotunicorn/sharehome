@@ -395,3 +395,110 @@
     margin-top: 3px;
   }
 }
+
+/* #region at the table: the same lines and box, small, on the phone's dark screen */
+.compact .bubble {
+  max-width: 88%;
+  padding: 0.35rem 0.55rem;
+  border-radius: 12px 12px 12px 4px;
+  font-size: 0.8rem;
+}
+
+.compact .bubble.mine {
+  border-radius: 12px 12px 4px 12px;
+}
+
+.compact .name {
+  font-size: 0.7rem;
+}
+
+/* (the host's remove button: inside the bubble, in its corner, as the screen has no room beside it) */
+.compact .bubble:has(.remove) {
+  padding-right: 2rem;
+}
+
+.compact .remove {
+  top: 4px;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+}
+
+.compact .remove svg {
+  width: 14px;
+  height: 14px;
+}
+
+.compact .bigEmoji .emoji {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+.compact .picker {
+  flex: none;
+  grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+  max-height: 40%;
+  margin: 0 -0.25rem;
+  padding: 0.4rem;
+  border: 0;
+  border-radius: 12px;
+  background: #f4f1ea;
+}
+
+.compact .slow {
+  border-radius: 8px;
+  font-size: 0.75rem;
+}
+
+.compact .form {
+  flex: none;
+  gap: 0.35rem;
+  padding: 0;
+  border: 0;
+}
+
+.compact .form input {
+  height: 34px;
+  padding: 0 0.65rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.compact .form input::placeholder {
+  color: rgba(244, 239, 227, 0.5);
+}
+
+.compact .form input:focus {
+  border-color: #f1db4b;
+}
+
+.compact .faceButton,
+.compact .sendButton {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+}
+
+.compact .faceButton {
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  background: #f4f1ea;
+}
+
+.compact .faceButton img {
+  width: 24px;
+  height: 24px;
+}
+
+.compact .sendButton:disabled {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(244, 239, 227, 0.35);
+}
+
+.compact .sendButton svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* #endregion */

@@ -19,7 +19,7 @@ export interface TraitTilesApi {
   destroy: () => void;
 }
 
-export const TRAIT_MM: [number, number] = [88.9, 25.4];
+const TRAIT_MM: [number, number] = [88.9, 25.4];
 const PER_KIND = 10;
 const FLIP_S = 0.75;
 const STAGGER_S = 0.12;

@@ -1,50 +1,23 @@
 import { useEffect } from "react";
-import { session } from "../utils/safeStorage";
+import { TRACKING_KEYS, storedTrackingTags } from "../utils/tracking";
 
 interface ExternalRedirectProps {
   url: string;
 }
 
+// Off to another address, with this one's query, and the visit's tracking tags if it has none of its own
 const ExternalRedirect = ({ url }: ExternalRedirectProps) => {
   useEffect(() => {
-    const currentUrl = new URL(window.location.href);
-    const currentParams = currentUrl.searchParams;
-
+    const currentParams = new URL(window.location.href).searchParams;
     const targetUrl = new URL(url, window.location.origin);
-
-    currentParams.forEach((value, key) => {
-      targetUrl.searchParams.set(key, value);
-    });
-
-    const trackingParams = [
-      "utm_source",
-      "utm_medium",
-      "utm_campaign",
-      "utm_term",
-      "utm_content",
-      "gclid",
-      "fbclid",
-    ];
-    const hasUTMParams = trackingParams.some((param) => currentParams.has(param));
-
-    if (!hasUTMParams) {
-      const storedUTM = session.get("utm_params");
-      if (storedUTM) {
-        try {
-          const utmData = JSON.parse(storedUTM);
-          Object.entries(utmData).forEach(([key, value]) => {
-            targetUrl.searchParams.set(key, value as string);
-          });
-        } catch (error) {
-          console.error("Error parsing stored UTM data:", error);
-        }
-      }
+    currentParams.forEach((value, key) => targetUrl.searchParams.set(key, value));
+    if (!TRACKING_KEYS.some((key) => currentParams.has(key))) {
+      Object.entries(storedTrackingTags()).forEach(([key, value]) => targetUrl.searchParams.set(key, value));
     }
-
     window.location.replace(targetUrl.toString());
   }, [url]);
 
-  return null; // No UI needed
+  return null;
 };
 
 export default ExternalRedirect;

@@ -1,6 +1,5 @@
 import DefaultButton from "./utils/DefaultButton";
 import PageIntro from "./utils/PageIntro";
-import usePageTitle from "./utils/usePageTitle";
 import { FETCH_FIRST, srcSet } from "./utils/imageCopies";
 import styles from "../css/pages/artbookPage.module.css";
 
@@ -8,10 +7,8 @@ import styles from "../css/pages/artbookPage.module.css";
 const MOCKUP_SIZES = "(max-width: 900px) calc(100vw - 2rem), 836px";
 
 const ArtbookDownloadPage = () => {
-  const title = "Digital artbook download";
   const description =
     "Thank you so much for signing up for my newsletter. Here is the free digital artbook!";
-  usePageTitle(title);
 
   return (
     <div className="content">

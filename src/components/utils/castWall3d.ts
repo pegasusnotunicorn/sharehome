@@ -11,14 +11,14 @@ import { calm, cardShadow, loadTexture, loadThree, makeCard, paint, renderer, st
 import type { Three } from "./card3d";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
 
-export interface CastTile {
+interface CastTile {
   link: HTMLElement; // hovering or focusing it lifts the card
   stage: HTMLElement; // the card's place on the page (the canvas reaches a little past it)
   src: string; // its printed front
   onReady: () => void; // drawn: the flat picture under it can go
 }
 
-export interface CastWallApi {
+interface CastWallApi {
   destroy: () => void;
 }
 
@@ -213,7 +213,11 @@ export async function mountCastWall(tiles: CastTile[], onFail: () => void): Prom
       l.ry += (l.try - l.ry) * k;
       l.lift += (l.tlift - l.lift) * k;
       if (Math.abs(l.trx - l.rx) + Math.abs(l.try - l.ry) + Math.abs(l.tlift - l.lift) > 0.0015) moving = true;
-      else (l.rx = l.trx), (l.ry = l.try), (l.lift = l.tlift);
+      else {
+        l.rx = l.trx;
+        l.ry = l.try;
+        l.lift = l.tlift;
+      }
       const pose = `${l.rx.toFixed(4)} ${l.ry.toFixed(4)} ${l.lift.toFixed(4)}`;
       if (pose !== l.drawn) {
         l.drawn = pose;

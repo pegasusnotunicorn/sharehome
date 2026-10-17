@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { getAllFinishedPeople } from "../Characters/Characters";
 import styles from "../../css/utils/emojisection.module.css";
 import DefaultButton from "../utils/DefaultButton";
+import { DISCORD_URL } from "../../utils/links";
 
 interface EmojiSectionProps {
   className?: string;
@@ -37,7 +38,7 @@ export const EmojiSection = ({ className = "" }: EmojiSectionProps) => {
           </ul>
           <DefaultButton
             variant="primary"
-            href="https://discord.com/invite/nv89cRgEsS"
+            href={DISCORD_URL}
             className={styles.cta}
             icon="discord"
             text="Get free emojis"

@@ -2,7 +2,8 @@ import { GsapFadeScrub } from "../utils/useGsap";
 import { srcSet } from "../utils/imageCopies";
 import landingPageStyles from "../../css/landingPage.module.css";
 
-// an illustration, at the size it's shown
+// an illustration, at the size it's shown (each one's label is under it, so they've no alt text of
+// their own; "improv" is the roleplaying friends, for TTRPGs, and "acting" the stage, for improv)
 const art = (name: string) => {
   const src = `/images/illustrations/${name}.webp`;
   return { src, srcSet: srcSet(src), sizes: "(max-width: 900px) 125px, 200px" };
@@ -24,7 +25,7 @@ export default function MechanicsSection() {
           <img
             loading="lazy"
             {...art("improv")}
-            alt="TTRPG icon"
+            alt=""
           />
           <span className={landingPageStyles.mechanicsLabelTtrpg}>
             TTRPGs
@@ -34,7 +35,7 @@ export default function MechanicsSection() {
           <img
             loading="lazy"
             {...art("laughing")}
-            alt="Laughing icon"
+            alt=""
           />
           <span className={landingPageStyles.mechanicsLabelLaughing}>
             Laughing
@@ -44,7 +45,7 @@ export default function MechanicsSection() {
           <img
             loading="lazy"
             {...art("stories")}
-            alt="Storytelling icon"
+            alt=""
           />
           <span className={landingPageStyles.mechanicsLabelStorytelling}>
             Storytelling
@@ -54,7 +55,7 @@ export default function MechanicsSection() {
           <img
             loading="lazy"
             {...art("party")}
-            alt="Party games icon"
+            alt=""
           />
           <span className={landingPageStyles.mechanicsLabelPartyGames}>
             Party games
@@ -64,7 +65,7 @@ export default function MechanicsSection() {
           <img
             loading="lazy"
             {...art("acting")}
-            alt="Improv icon"
+            alt=""
           />
           <span className={landingPageStyles.mechanicsLabelImprov}>
             Improv

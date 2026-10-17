@@ -1,5 +1,4 @@
 import stripeModule from "stripe";
-import fetch from "node-fetch";
 import { getStore } from "@netlify/blobs";
 import { createLabel, createOrder, parcelForGameCount } from "./lib/shippo.js";
 import { STAMPED_LABEL_STORE, stampGroundSaverNote } from "./lib/label-note.js";
@@ -17,7 +16,6 @@ import {
 const IS_DEV = process.env.NETLIFY_DEV === "true";
 
 const ALERT_WEBHOOK_URL = process.env.ALERT_WEBHOOK_URL;
-const VERBOSE_LOGGING = process.env.VERBOSE_LOGGING === "true";
 const STRIPE_LCM_PRODUCT_ID = IS_DEV
   ? process.env.STRIPE_LCM_PRODUCT_ID_TEST
   : process.env.STRIPE_LCM_PRODUCT_ID_LIVE;
@@ -283,7 +281,9 @@ async function claimSessionForLabel(sessionId, eventId) {
     let prior = null;
     try {
       prior = JSON.parse(existing?.data);
-    } catch {}
+    } catch {
+      // (an older claim, not JSON: never taken over)
+    }
     const ageMs = prior?.at ? Date.now() - Date.parse(prior.at) : NaN;
     if (prior?.v === CLAIM_VERSION && !prior.done && ageMs > STALE_CLAIM_MS && existing?.etag) {
       const { modified: took } = await store.set(sessionId, claimRecord(eventId), { onlyIfMatch: existing.etag });
@@ -407,7 +407,9 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
       let claimedBy = claim.by;
       try {
         claimedBy = JSON.parse(claim.by).eventId || claim.by;
-      } catch {}
+      } catch {
+        // (an older claim, not JSON: shown as it is)
+      }
       console.log(
         `📦 Another delivery already claimed this session (by ${claimedBy}); skipping`
       );
@@ -711,11 +713,6 @@ async function postToDiscord(payload) {
   }
 }
 
-function mailerLiteGroupUrl(groupId) {
-  const rules = JSON.stringify([[{ operator: "in_any", condition: "groups", args: ["groups", [groupId]] }]]);
-  return `https://dashboard.mailerlite.com/subscribers?rules=${Buffer.from(rules).toString("base64")}&group=${groupId}`;
-}
-
 function stripeSessionUrl(sessionId) {
   const accountId = process.env.STRIPE_ACCOUNT_ID;
   if (!accountId) return "https://dashboard.stripe.com";
@@ -798,8 +795,6 @@ async function alert(message, context = {}) {
     ],
   });
 }
-
-const GA4_PROPERTY_ID = "274391575";
 
 function parseUserAgent(ua) {
   if (!ua) return null;
@@ -1124,77 +1119,6 @@ async function notifyEuropeOrder({ session, to, mailerStatus }) {
   });
 }
 
-async function notifySubscriberAdded({
-  subscriber,
-  email,
-  name,
-  groupId,
-  groupKind,
-  groupLabel,
-  sessionId,
-  alreadyExisted,
-  flow,
-}) {
-  if (!VERBOSE_LOGGING) return;
-
-  const subscriberId = subscriber?.id;
-  const subscriberLink = subscriberId
-    ? `https://dashboard.mailerlite.com/subscribers/${subscriberId}`
-    : null;
-
-  // Already-on-list: terse one-liner. Skips the full embed because nothing
-  // new happened — they just paid/abandoned again with the same email.
-  if (alreadyExisted) {
-    await postToDiscord({
-      embeds: [
-        {
-          title: `📧 ${email} already on the ${groupKind || "subscriber"} list`,
-          color: 0x99aab5,
-          description: [
-            subscriberLink ? `[View subscriber](${subscriberLink})` : null,
-            flow ? `Flow: ${flow}` : null,
-          ].filter(Boolean).join(" • ") || undefined,
-          timestamp: new Date().toISOString(),
-        },
-      ],
-    });
-    return;
-  }
-
-  const status = subscriber?.status || "active";
-  const subscriberLinkMd = subscriberId
-    ? `[\`${subscriberId}\`](${subscriberLink})`
-    : "—";
-
-  const links = [];
-  if (sessionId) links.push(`[Stripe session](${stripeSessionUrl(sessionId)})`);
-  if (subscriberLink)
-    links.push(`[MailerLite subscriber](${subscriberLink})`);
-  links.push(`[MailerLite group](${mailerLiteGroupUrl(groupId)})`);
-
-  await postToDiscord({
-    embeds: [
-      {
-        title: `📧 Subscriber added to MailerLite (${groupKind || "subscriber"})`,
-        color: 0x57f287,
-        fields: [
-          {
-            name: "Customer",
-            value: [name ? `**${name}**` : null, email].filter(Boolean).join("\n"),
-            inline: true,
-          },
-          { name: "Group", value: groupLabel, inline: true },
-          { name: "Status", value: status, inline: true },
-          ...(flow ? [{ name: "Flow", value: flow, inline: true }] : []),
-          { name: "Subscriber", value: subscriberLinkMd, inline: false },
-          { name: "Quick links", value: links.join(" • "), inline: false },
-        ],
-        timestamp: new Date().toISOString(),
-      },
-    ],
-  });
-}
-
 // Unassigns a subscriber from a group. Used only to make a re-add register as
 // a fresh join so the automation fires again. Returns true on success.
 async function removeSubscriberFromGroup(subscriberId, groupId) {
@@ -1216,7 +1140,7 @@ async function removeSubscriberFromGroup(subscriberId, groupId) {
 }
 
 async function addEmailToMailerLite(email, fields, group_id, alertContext = {}) {
-  const { groupKind = "subscriber", flow, ...restCtx } = alertContext;
+  const { groupKind = "subscriber", flow: _flow, ...restCtx } = alertContext; // (flow: not part of the alert)
   const groupLabel =
     groupKind === "purchase"
       ? "purchase (post-checkout) email group"

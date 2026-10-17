@@ -7,7 +7,7 @@ interface DirectionEpisodeCardProps {
   randomNumber?: string | number;
 }
 
-export const DirectionEpisodeCard = (props: DirectionEpisodeCardProps) => {
+const DirectionEpisodeCard = (props: DirectionEpisodeCardProps) => {
   const type = props.type as "direction" | "episode";
   const [cardDetails] = useState(getRandomDirectionEpisode(type));
 

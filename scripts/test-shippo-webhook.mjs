@@ -8,7 +8,12 @@
 //  - createLabel() succeeds with realistic Stripe-shaped input
 //  - idempotency short-circuit when shippo_transaction_id is already on metadata
 
-import "dotenv/config";
+// (the keys, from .env)
+try {
+  process.loadEnvFile();
+} catch {
+  // (no .env: the environment's own)
+}
 process.env.NETLIFY_DEV = "true";
 
 const { createLabel, parcelForGameCount } = await import(

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import BoxViewer from "../utils/BoxViewer";
 import BuyButton from "../utils/BuyButton";
-import DefaultButton from "../utils/DefaultButton";
+import ExpansionButton from "../utils/ExpansionButton";
 import ShoutBubble from "../utils/ShoutBubble";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import { trackEvent } from "../utils/trackEvent";
@@ -124,14 +124,7 @@ export default function BoxHero({ onOpen }: BoxHeroProps) {
           <div className={`${spoken ? styles.spoken : ""} ${open ? styles.open : ""}`.trim() || undefined}>
             <div className={`${styles.ctas} ${styles.ctasBottom}`}>
               <BuyButton from="home_hero" animated compact icon="forward" variant="primary" color="red" text="Buy now!" />
-              <DefaultButton
-                compact
-                icon="star"
-                variant="primary"
-                color="yellow"
-                href="https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season"
-                text="Expansion!"
-              />
+              <ExpansionButton />
             </div>
           </div>,
           document.body

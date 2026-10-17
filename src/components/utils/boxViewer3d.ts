@@ -120,12 +120,11 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
       });
     return { x, load };
   };
-  let io: IntersectionObserver | null = null, ro: ResizeObserver | null = null, settle = 0, idle = 0;
+  let io: IntersectionObserver | null = null, ro: ResizeObserver | null = null, idle = 0;
   let player: HTMLIFrameElement | null = null, unlisten = () => {}, unlistenYt = () => {};
   const cleanup = () => {
     dead = true;
     [raf, pending, lraf, oraf, sraf].forEach(cancelAnimationFrame);
-    clearTimeout(settle);
     clearTimeout(idle);
     ro?.disconnect();
     io?.disconnect();

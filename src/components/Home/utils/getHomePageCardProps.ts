@@ -25,10 +25,10 @@ const getHomePageCardProps = (cardType: string, width: number): HomePageCardProp
       ? 2.2
       : 1.7;
   if (cardType !== "member") cardDividerByScreenWidth += 0.75;
-  let cardWidth = Math.floor(width / cardDividerByScreenWidth);
-  let cardTypeRatio = cardType === "member" ? 1.72 : 1.4;
-  let cardHeight = cardWidth / cardTypeRatio;
-  let fontSize = width >= 1400 ? 10 : width >= 1200 ? 9 : width >= 900 ? 7.5 : width >= 700 ? 6.5 : 5.5;
+  const cardWidth = Math.floor(width / cardDividerByScreenWidth);
+  const cardTypeRatio = cardType === "member" ? 1.72 : 1.4;
+  const cardHeight = cardWidth / cardTypeRatio;
+  const fontSize = width >= 1400 ? 10 : width >= 1200 ? 9 : width >= 900 ? 7.5 : width >= 700 ? 6.5 : 5.5;
   return {
     showFront: true,
     type: cardType,

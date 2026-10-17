@@ -13,10 +13,11 @@ import Banner from "./components/Banner";
 import ScrollToTop from "./ScrollToTop";
 import Footer from "./components/Footer";
 import ExternalRedirect from "./components/ExternalRedirect";
-import useUTMPreservation from "./hooks/useUTMPreservation";
+import useTrackingTags from "./hooks/useTrackingTags";
 import { SocialIconDefs } from "./components/utils/SocialIcons";
 import ErrorBoundary from "./components/utils/ErrorBoundary";
 import { session } from "./utils/safeStorage";
+import { BLOG_URL } from "./utils/links";
 
 const LandingPage = lazy(() => import("./components/Home/LandingPage"));
 const AboutPage = lazy(() => import("./components/About/AboutPage"));
@@ -63,6 +64,7 @@ const BuyGate = () => {
     window.location.replace(window.location.pathname + window.location.search);
     // Empty deps: this must run exactly once per mount — a re-run would trip
     // the 10s guard and hijack the in-flight redirect to /checkout.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -91,7 +93,7 @@ const AppRoutes = () => {
 
   const [trailerPlaying, setTrailerPlaying] = useState(false);
 
-  useUTMPreservation();
+  useTrackingTags();
 
   return (
     <>
@@ -115,7 +117,7 @@ const AppRoutes = () => {
             <Route path="/play/:code" element={<PlayPage />} />
             <Route path="/thankyou" element={<ThankYouPage />} />
             <Route path="/rulebook" element={<ExternalRedirect url="/rulebook.pdf" />} />
-            <Route path="/blog" element={<ExternalRedirect url="https://pegasusgames.medium.com" />} />
+            <Route path="/blog" element={<ExternalRedirect url={BLOG_URL} />} />
             <Route path="/buy" element={<BuyGate />} />
             <Route path="/cart" element={<CartRedirect />} />
             <Route path="/checkout" element={<CheckoutPage />} />

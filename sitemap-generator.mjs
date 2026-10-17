@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import { execSync } from "child_process";
 
 // Dynamically import character data
 import { getAllCharacters } from "./src/components/Characters/Characters.ts";
@@ -19,13 +20,15 @@ const routes = [
   "/howtoplay",
   "/digitalartbook",
   "/characters",
+  "/play",
+  "/signup",
   "/contact",
   "/terms",
   "/privacy",
   "/rulebook",
 ];
-// (not listed: /thankyou, which robots.txt keeps out; /buy, a redirect that records a checkout event
-// each time it's fetched, crawlers included)
+// (not listed: /thankyou, /checkout and the game rooms, which robots.txt keeps out; /buy, a redirect
+// that records a checkout event each time it's fetched, crawlers included)
 
 // Get character names dynamically
 const allCharacters = getAllCharacters();
@@ -40,10 +43,18 @@ if (Array.isArray(allCharacters)) {
   console.error("❌ Error: getAllCharacters did not return an array");
 }
 
+// when the site last changed: the last commit's date (or today, outside a git checkout)
+let lastmod = new Date().toISOString().slice(0, 10);
+try {
+  lastmod = execSync("git log -1 --format=%cs", { encoding: "utf8" }).trim() || lastmod;
+} catch {
+  // (not a git checkout)
+}
+
 const sitemap = new SitemapStream({ hostname });
 
 // Add each route to the sitemap
-routes.forEach((route) => sitemap.write(route));
+routes.forEach((url) => sitemap.write({ url, lastmod }));
 sitemap.end();
 
 // Convert stream to XML file

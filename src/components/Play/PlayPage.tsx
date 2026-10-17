@@ -92,7 +92,11 @@ const PlayPage = () => {
             rememberRoom(code);
             setJoined(true);
           }}
-          watch={() => setWatch(true)}
+          watch={(as) => {
+            // (watching by name: this browser's name from now on)
+            if (as) saveName(as);
+            setWatch(true);
+          }}
         />
       )}
     </div>
@@ -297,7 +301,7 @@ const Missing = ({ code, full }: { code: string; full?: boolean }) => (
 );
 
 // someone's link, the first time: their name, then in
-const JoinByLink = ({ code, name, setName, join, watch }: { code: string; name: string; setName: (n: string) => void; join: () => void; watch: () => void }) => {
+const JoinByLink = ({ code, name, setName, join, watch }: { code: string; name: string; setName: (n: string) => void; join: () => void; watch: (as?: string) => void }) => {
   const [info, setInfo] = useState<{ exists: boolean; full: boolean; started?: boolean } | null>(null);
   useEffect(() => {
     let live = true;
@@ -309,14 +313,34 @@ const JoinByLink = ({ code, name, setName, join, watch }: { code: string; name: 
     };
   }, [code]);
 
-  // (full, or the show's on: in to watch, no name needed)
+  // (full, or the show's on: in to watch, by name, so the chat knows who's talking)
   const watchOnly = !!info && info.exists && (info.full || !!info.started);
-  useEffect(() => {
-    if (watchOnly) watch();
-  }, [watchOnly, watch]);
 
   if (info && !info.exists) return <Missing code={code} />;
-  if (watchOnly) return null;
+  if (watchOnly)
+    return (
+      <div className={styles.narrowPage}>
+        <Stage
+          eyebrow={<>Game {code}</>}
+          title={info.started ? "The show’s on!" : "This show is full"}
+          lead={info.started ? "Pop your name in to watch, and chat with the audience." : "Every seat’s taken, but you can watch. Pop your name in."}
+        />
+        <form
+          className={`${styles.door} ${styles.doorHost} ${styles.doorAlone}`}
+          onSubmit={(e) => {
+            e.preventDefault();
+            const clean = cleanName(name);
+            if (!clean) return;
+            setName(clean);
+            watch(clean);
+          }}
+        >
+          <h2 className={styles.doorTitle}>Who’s watching?</h2>
+          <NameField name={name} setName={setName} autoFocus />
+          <DefaultButton button="submit" text="Watch the show" icon="eye" color="red" className={styles.wide} />
+        </form>
+      </div>
+    );
 
   return (
     <div className={styles.narrowPage}>
@@ -336,7 +360,7 @@ const JoinByLink = ({ code, name, setName, join, watch }: { code: string; name: 
         <h2 className={styles.doorTitle}>Who’s playing?</h2>
         <NameField name={name} setName={setName} autoFocus />
         <DefaultButton button="submit" text="Join the game" icon="enter" color="red" className={styles.wide} />
-        <button type="button" className={styles.justWatch} onClick={watch}>
+        <button type="button" className={styles.justWatch} onClick={() => watch()}>
           Just watch
         </button>
       </form>

@@ -11,16 +11,16 @@
          vite.config.js fills in their built names) -->
     <script>
       if (location.pathname === "/") {
-        var homePreload = function (rel, href, as) {
+        var homePreload = function (rel, href, as, first) {
           var link = document.createElement("link");
           link.rel = rel;
           link.href = href;
           if (as) link.as = as;
+          if (first) link.setAttribute("fetchpriority", "high");
           if (as === "font" || as === "style") link.crossOrigin = "";
           document.head.appendChild(link);
-          return link;
         };
-        homePreload("preload", "/images/box/still.webp", "image").setAttribute("fetchpriority", "high");
+        homePreload("preload", "/images/box/still.webp", "image", true);
         [].concat("__HOME_JS__").forEach(function (f) { if (f.charAt(0) === "/") homePreload("modulepreload", f); });
         [].concat("__HOME_CSS__").forEach(function (f) { if (f.charAt(0) === "/") homePreload("preload", f, "style"); });
         if ("__HOME_FONT__".charAt(0) === "/") homePreload("preload", "__HOME_FONT__", "font");

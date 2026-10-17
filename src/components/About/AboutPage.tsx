@@ -40,6 +40,7 @@ const AboutPage = () => {
             poster={sized("/images/illustrations/splash.webp", 1000)}
             posterWidth={1000}
             posterHeight={600}
+            first
           >
             <span className={aboutStyles.videoCaption} aria-hidden="true">
               Watch how to play

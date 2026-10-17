@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { useNavigate, useParams } from "react-router";
 import { EPISODES, EPISODE_SECONDS, MAX_PLAYERS, MIN_PLAYERS, NAME_MAX, cleanName, type Player, type RoomView } from "../../../game-server/src/protocol";
 import DefaultButton from "../utils/DefaultButton";
@@ -45,8 +45,8 @@ const PlayPage = () => {
     document.body.classList.add("no-select");
     return () => document.body.classList.remove("no-select");
   }, []);
-  // (no banner or navbar in a room: the page starts at the top)
-  useEffect(() => {
+  // (no banner or navbar in a room: the page starts at the top, from its first frame)
+  useLayoutEffect(() => {
     if (!code) return;
     document.body.classList.add("in-room");
     return () => document.body.classList.remove("in-room");

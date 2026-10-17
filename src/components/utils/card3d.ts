@@ -8,7 +8,7 @@ export type Three = typeof import("./three");
 
 // whether the browser can draw 3D at all (asked once, of a canvas that's then let go)
 let gl: boolean | null = null;
-export const canDraw3d = () => {
+const canDraw3d = () => {
   if (gl === null)
     try {
       const c = document.createElement("canvas");

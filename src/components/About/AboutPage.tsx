@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import Roleplay from "./components/Roleplay";
 import DefaultButton from "../utils/DefaultButton";
 import PageIntro from "../utils/PageIntro";
@@ -7,10 +6,6 @@ import { sized } from "../utils/imageCopies";
 import aboutStyles from "../../css/pages/aboutPage.module.css";
 
 const AboutPage = () => {
-  useEffect(() => {
-    document.title = "How to play";
-  }, []);
-
   return (
     <div className={`content ${aboutStyles.page}`}>
       <PageIntro

@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router";
 import EmailForm from "../utils/EmailForm";
 import useWindowDimensions from "../utils/useWindowDimensions";
-import DefaultButton from "../utils/DefaultButton";
+import ExpansionButton from "../utils/ExpansionButton";
 import BuyButton from "../utils/BuyButton";
 import { hidesBuyButtons } from "../utils/BuyButton";
 import styles from "../../css/navbar.module.css";
@@ -11,12 +11,13 @@ import useWindowScroll from "../utils/useWindowScroll";
 import CharacterPinPopup from "../CharacterPinPopup";
 import { usePinPopup } from "../utils/usePinPopup";
 import { SocialChips } from "../utils/SocialIcons";
+import { BLOG_URL } from "../../utils/links";
 
 interface NavbarMainProps {
   trailerPlaying?: boolean; // the home page's trailer is playing: the pin popup waits
 }
 
-export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
+const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
   const location = useLocation();
   const isLandingPage = location.pathname === "/";
   const hideBuyButtons = hidesBuyButtons(location.pathname);
@@ -39,12 +40,13 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
     addEventListener("keydown", onKey);
     // (keyboard focus goes into the menu as it opens, and back to the menu button as it closes)
     const opener = document.activeElement as HTMLElement | null;
-    requestAnimationFrame(() => menuRef.current?.querySelector<HTMLElement>("a, button, input")?.focus({ preventScroll: true }));
+    const menu = menuRef.current;
+    requestAnimationFrame(() => menu?.querySelector<HTMLElement>("a, button, input")?.focus({ preventScroll: true }));
     return () => {
       root.style.overflow = was;
       root.style.scrollbarGutter = gutter;
       removeEventListener("keydown", onKey);
-      if (menuRef.current?.contains(document.activeElement)) opener?.focus({ preventScroll: true });
+      if (menu?.contains(document.activeElement)) opener?.focus({ preventScroll: true });
     };
   }, [visible]);
   // closed, nothing in it can be reached (by Tab, or a screen reader). (React 18 doesn't pass `inert` on.)
@@ -100,15 +102,7 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
               />
             )}
             {!hideBuyButtons && ((!isLandingPage || isDesktop) && (!isLandingPage || !isAtTop)) && (
-              <DefaultButton
-                compact
-                icon="star"
-                variant="primary"
-                color="yellow"
-                className={styles.expansionButton}
-                href="https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season"
-                text={<span>Expansion<span className={styles.hideOnSmallPhone}> update</span>!</span>}
-              />
+              <ExpansionButton className={styles.expansionButton} />
             )}
             <button
               className={`hamburger noselect ${styles.navToggle} ${isVisibleClass}`}
@@ -152,7 +146,7 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
               </NavLink>
               <a
                 onClick={closeNav}
-                href="https://pegasusgames.medium.com/"
+                href={BLOG_URL}
                 rel="noopener noreferrer"
                 target="_blank"
                 className={`${styles.navLink} noselect`}

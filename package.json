@@ -1,27 +1,21 @@
 {
   "name": "sharehome",
-  "homepage": "https://lovecareermagic.com",
   "version": "1.0.0",
   "type": "module",
   "private": true,
   "engines": {
-    "npm": ">=8.3.0",
-    "node": ">=20.0.0"
+    "npm": ">=10",
+    "node": ">=22"
   },
   "dependencies": {
     "@netlify/blobs": "^10.7.4",
     "@stripe/react-stripe-js": "^6.4.0",
     "@stripe/stripe-js": "^9.6.0",
-    "crypto": "^1.0.1",
-    "dotenv": "^16.4.7",
     "gsap": "^3.9.1",
-    "node-fetch": "^3.3.2",
     "pdf-lib": "^1.17.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-helmet": "^6.1.0",
-    "react-router": "^7.15.1",
-    "sitemap": "^8.0.0",
+    "react-router": "^7.18.4",
     "stripe": "^17.7.0",
     "swiper": "^12.2.0",
     "three": "0.160.0"
@@ -31,30 +25,23 @@
     "start": "vite",
     "build": "vite build",
     "generate-sitemap": "tsx sitemap-generator.mjs",
-    "check-cards": "tsx scripts/card-clipping.mjs"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "check-cards": "tsx scripts/card-clipping.mjs",
+    "lint": "eslint ."
   },
   "devDependencies": {
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "@types/react-helmet": "^6.1.11",
+    "@eslint/js": "^9.39.5",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
     "@types/three": "0.160.0",
-    "eslint": "^8.24.0",
-    "eslint-plugin-react": "^7.32.0",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
     "playwright-core": "^1.60.0",
+    "sitemap": "^8.0.3",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2",
+    "typescript-eslint": "^8.71.2",
     "vite": "^5.4.0"
   }
 }

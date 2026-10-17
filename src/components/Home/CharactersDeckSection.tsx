@@ -12,18 +12,19 @@ import Deck3D from "./utils/Deck3D";
 import { CHARACTER_CARD_MM, characterCardFaces } from "../Characters/characterCardFaces";
 import { characterArtSmall } from "../utils/characterArt";
 import type { DeckCard } from "../utils/deckCards3d";
+import type { Character } from "../../types/character";
 import { characterLayout } from "./utils/deckLayouts";
 import styles from "../../css/pages/home/charactersDeckSection.module.css";
 
 interface CharactersDeckRowProps {
-  cards: any[];
+  cards: Character[];
   rowIndex: number;
   numSections: number;
   rowTl?: gsap.core.Timeline | null;
 }
 
 interface DecksProps {
-  cards: any[];
+  cards: Character[];
   rowIndex: number;
   tl?: gsap.core.Timeline | null;
 }
@@ -58,12 +59,12 @@ const FlatCharactersDeck = () => {
   gsap.registerPlugin(ScrollTrigger);
 
   //all people (randomized)
-  let allCharacters = getAllFinishedPeople(true);
-  let numSections = 3;
+  const allCharacters = getAllFinishedPeople(true);
+  const numSections = 3;
   // let charactersPerRow = Math.floor(allCharacters.length / numSections);
-  let charactersPerRow = 1;
-  let splitIntoSections = [];
-  for (var x = 0; x < numSections; x++) {
+  const charactersPerRow = 1;
+  const splitIntoSections: Character[][] = [];
+  for (let x = 0; x < numSections; x++) {
     splitIntoSections.push(
       allCharacters.slice(
         x * charactersPerRow,
@@ -107,12 +108,12 @@ const Decks = (props: DecksProps) => {
   const { width } = useWindowDimensions();
   useLayoutEffect(() => {
     //current values for references
-    let cards = cardsRef.current;
-    let rowIndex = rowIndexRef.current;
+    const cards = cardsRef.current;
+    const rowIndex = rowIndexRef.current;
 
     //figure out the final X & Y depending on screenwidth
     let distanceRanges = [6, 14];
-    let isEvenMult = rowIndex % 2 === 0 ? -1 : 1;
+    const isEvenMult = rowIndex % 2 === 0 ? -1 : 1;
     let isEvenMultTemp = isEvenMult;
     let finalY: number | string =
       rowIndex === 0 ? randomNumFromNeg(10) - 35 : rowIndex === 2 ? randomNumFromNeg(10) + 35 : randomNumFromNeg(10);
@@ -141,13 +142,13 @@ const Decks = (props: DecksProps) => {
     }
 
     //final X and Y coordinates
-    let finalX = `${
+    const finalX = `${
       isEvenMultTemp * randomNum(distanceRanges[0], distanceRanges[1])
     }vw`;
     finalY = `${finalY}%`;
 
     if (tl) {
-      cards.forEach((curr, index) => {
+      cards.forEach((_, index) => {
         tl.killTweensOf(cardRefs.current[index]);
         tl.fromTo(
           cardRefs.current[index],

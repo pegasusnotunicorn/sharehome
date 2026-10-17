@@ -12,12 +12,13 @@ import {
 } from "../Characters/Characters";
 import CharacterProfile from "./CharacterProfile";
 import { EmojiSection } from "../utils/EmojiSection";
-import CustomHelmet from "../utils/CustomHelmet";
-import usePageTitle from "../utils/usePageTitle";
+import { HeadTags } from "../utils/useHeadTags";
+import { CHARACTER_NOT_FOUND_META } from "../../pageMeta";
 import Modal from "../utils/Modal";
 import { sized, srcSet } from "../utils/imageCopies";
 import charStyles from "../../css/pages/characterPage.module.css";
 import type { CharacterWithNav } from "../../types/character";
+import { ILLUSTRATOR_URL } from "../../utils/links";
 
 // a character's printed card front, by their place in the cast
 const cardFront = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}.webp`;
@@ -58,61 +59,45 @@ const expansionPlaceholders: ExpansionCharacter[] = [
   { id: 2, name: "Trinity Melange", race: "Chimera", job: "Bartender", sketches: ["/images/members/expansion-trinity-1.webp", "/images/members/expansion-trinity-2.webp"] },
   { id: 3, name: "Asty Monolithos", race: "Minotaur", job: "Architect", sketches: ["/images/members/expansion-asty-1.webp"] },
   { id: 4, name: "Sierra Colt", race: "Centaur", job: "Personal Trainer", sketches: ["/images/members/expansion-sierra-1.webp"] },
-  { id: 5, name: "Bellerophon \"Belly\" Skybound", race: "Pegasus", job: "Entertainer / Performer", sketches: ["/images/members/expansion-belly-1.webp"] },
+  { id: 5, name: "Bellerophon “Belly” Skybound", race: "Pegasus", job: "Entertainer / Performer", sketches: ["/images/members/expansion-belly-1.webp"] },
   { id: 7, name: "Aquila Leonis", race: "Griffin", job: "Investigative Journalist", sketches: ["/images/members/expansion-aquila-1.webp"] },
-  { id: 6, name: "Vex \"PAN-IQ!\" Hoofprint", race: "Satyr", job: "Rock Star" },
+  { id: 6, name: "Vex “PAN-IQ!” Hoofprint", race: "Satyr", job: "Rock Star" },
   { id: 8, name: "Vespera Skryre", race: "Harpy", job: "Paparazzo" },
   { id: 9, name: "Xylia Aenigmata", race: "Sphinx", job: "Curator" },
   { id: 10, name: "Phido", race: "Cerberus", job: "Body Guard" },
 ];
 
-//render all characters or a specific one depending on URL
+// a character's page (found whatever the case of its address), or the whole cast: also for an
+// address that isn't a character's, saying so
 const CharactersPage = () => {
-  let { name } = useParams();
+  const { name } = useParams();
+  const chosenCharacter = name ? getSpecificPersonByURL(name) : false;
 
-  //if there is a specifc character name, render that character page
-  let chosenCharacter = name ? getSpecificPersonByURL(name) : false;
-  usePageTitle(chosenCharacter ? chosenCharacter.name : "Characters");
+  // (the character's own address, in the case it's written)
+  if (chosenCharacter && name !== chosenCharacter.urlName)
+    return <Navigate to={`/characters/${chosenCharacter.urlName}`} replace />;
 
-  //redirect to just /characters if typo a non-existant character
-  if (
-    window.location.pathname !== "/characters" &&
-    (typeof name === "undefined" ||
-      !chosenCharacter ||
-      chosenCharacter.ignoreInRandom)
-  ) {
-    return <Navigate to="/characters" replace />;
-  } else {
-    // (a character's own share tags; the cast's are the site's, from src/pageMeta.ts)
-    const shareMeta = chosenCharacter && getCharacterShareMeta(chosenCharacter);
-
-    return (
-      <div className="content flushBottom">
-        {shareMeta && (
-          <CustomHelmet
-            title={shareMeta.title}
-            splashImage={`https://lovecareermagic.com${shareMeta.image.url}`}
-            description={shareMeta.description}
-          />
-        )}
-
-        {chosenCharacter ? (
-          <>
-            {/* (not in a fade-in: that starts over on every page, and from one character to the
-                next the page stays, the cards swinging round) */}
-            <IndividualCharacter character={chosenCharacter} />
-          </>
-        ) : (
-          <>
-            <CastIntro />
-            <CastWall />
-          </>
-        )}
-        {!chosenCharacter && <ExpansionCharactersSection />}
-        <EmojiSection />
-      </div>
-    );
-  }
+  return (
+    <div className="content flushBottom">
+      {chosenCharacter ? (
+        <>
+          {/* (a character's own title and share tags; the cast's are the site's, from src/pageMeta.ts) */}
+          <HeadTags meta={getCharacterShareMeta(chosenCharacter)} path={`/characters/${chosenCharacter.urlName}`} />
+          {/* (not in a fade-in: that starts over on every page, and from one character to the
+              next the page stays, the cards swinging round) */}
+          <IndividualCharacter character={chosenCharacter} />
+        </>
+      ) : (
+        <>
+          {name && <HeadTags meta={CHARACTER_NOT_FOUND_META} />}
+          <CastIntro missing={!!name} />
+          <CastWall />
+          <ExpansionCharactersSection />
+        </>
+      )}
+      <EmojiSection />
+    </div>
+  );
 };
 
 const IndividualCharacter = ({ character }: IndividualCharacterProps) => (
@@ -121,18 +106,20 @@ const IndividualCharacter = ({ character }: IndividualCharacterProps) => (
   </div>
 );
 
-// The cast page's opening
-const CastIntro = () => {
+// The cast page's opening (missing: the address was a character's that isn't one)
+const CastIntro = ({ missing }: { missing: boolean }) => {
   return (
     <header className={`${charStyles.castIntro} ${charStyles.castHero}`}>
       <p className={charStyles.castEyebrow}>Season one · 25 contestants</p>
       <h1 className={charStyles.castTitle}>Meet the cast</h1>
-      <p className={charStyles.castLede}>Say hello to the cast of the reality show ✨</p>
+      <p className={charStyles.castLede} role={missing ? "status" : undefined}>
+        {missing ? "Character not found! Here’s the whole cast instead ✨" : "Say hello to the cast of the reality show ✨"}
+      </p>
       <div className={charStyles.castActions}>
         <a
           target="_blank"
           rel="noreferrer"
-          href="https://www.instagram.com/carofranklyn/?hl=en"
+          href={ILLUSTRATOR_URL}
           className={charStyles.illustrationLink}
         >
           Illustrations by Carolyn Frank
@@ -189,7 +176,8 @@ const CastWall = () => {
               }}
               to={`/characters/${c.urlName}`}
               className={charStyles.castTile}
-              aria-label={`${c.name}, the ${c.race}`}
+              // (as their card reads: "Köttr, The Grumpy Dragon", "Urg the Hacker, the Orc")
+              aria-label={c.title ? `${c.name.split(",")[0]}, ${c.title}` : `${c.name}, the ${c.race}`}
             >
               <span className={`${charStyles.castStage} ${ready[i] ? charStyles.castLive : ""}`}>
                 <img
@@ -222,15 +210,6 @@ const ExpansionCharactersSection = () => {
 
   const closeViewer = useCallback(() => setActiveCharacterId(null), []);
 
-  useEffect(() => {
-    if (!activeCharacter) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") closeViewer();
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activeCharacter, closeViewer]);
-
   const openViewer = (character: ExpansionCharacter) => {
     if (!character.sketches || character.sketches.length === 0) return;
     setActiveCharacterId(character.id);
@@ -244,7 +223,7 @@ const ExpansionCharactersSection = () => {
           The new arrivals
         </h2>
         <p className={charStyles.castLede}>
-          {expansionPlaceholders.length} new contestants are on their way in the expansion. Here's a peek at the
+          {expansionPlaceholders.length} new contestants are on their way in the expansion. Here’s a peek at the
           sketches so far.
         </p>
       </header>

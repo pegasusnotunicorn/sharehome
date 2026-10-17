@@ -5,7 +5,7 @@ interface CardBackProps {
   personName?: string;
 }
 
-export const CardBack = (props: CardBackProps) => {
+const CardBack = (props: CardBackProps) => {
   const character = getSpecificPerson(props.personName || "");
 
   if (!character) return null;

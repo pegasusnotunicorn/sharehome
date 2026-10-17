@@ -1,11 +1,13 @@
 import { Splash } from "./utils/Splash";
 import PageIntro from "./utils/PageIntro";
 import DefaultButton from "./utils/DefaultButton";
-import usePageTitle from "./utils/usePageTitle";
+import useHeadTags from "./utils/useHeadTags";
+import { NOT_FOUND_META } from "../pageMeta";
 import errorStyles from "../css/pages/errorPage.module.css";
 
+// (an address with no page: titled as such, and kept out of search results)
 const ErrorPage = () => {
-  usePageTitle("Page not found");
+  useHeadTags(NOT_FOUND_META);
 
   return (
     <div className={`content max-width ${errorStyles.errorPage}`}>

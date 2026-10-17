@@ -36,7 +36,7 @@ const DEG = Math.PI / 180;
 
 const swayReach = (w: number, h: number) => depthReach(w / 2, h / 2, SWAY_RX, SWAY_RY, 0);
 // how far apart the layers are: more than two cards' sway, plus the cards' thickness and room to spare
-export const deckLayer = (cards: DeckCardMotion[], aspect: number) =>
+const deckLayer = (cards: DeckCardMotion[], aspect: number) =>
   Math.ceil(2 * Math.max(...cards.map((c) => swayReach(c.rest.w, c.rest.w / aspect))) + 10);
 
 // the share of the deal at which card i sets off (they go one after another)
@@ -60,7 +60,7 @@ const overlap = (A: number[][], B: number[][]) => {
   return true;
 };
 // whether card i has another resting on it (so it can't lift straight up without passing through it)
-export const covered = (cards: DeckCardMotion[], i: number, aspect: number) =>
+const covered = (cards: DeckCardMotion[], i: number, aspect: number) =>
   cards.some((c, j) => j > i && overlap(footprint(cards[i].rest, aspect, 1.08), footprint(c.rest, aspect, 1.08)));
 
 // how far a covered card slides out, in its own layer (so it passes under the cards above it and over

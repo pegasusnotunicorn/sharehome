@@ -7,6 +7,7 @@ import useNearViewport from "./utils/useNearViewport";
 import { afterLoad, savingData } from "./utils/later";
 import type { FooterCard, FooterCardsApi } from "./utils/footerCards3d";
 import styles from "../css/footer.module.css";
+import { BLOG_URL, ILLUSTRATOR_URL } from "../utils/links";
 
 // footerCards3d.ts's ATLAS (the smaller sheet for phones)
 const SHEET = { fronts: "/images/cards/character-fronts.webp", phoneFronts: "/images/cards/1000/character-fronts.webp", cols: 5, rows: 5 };
@@ -16,7 +17,7 @@ const EXPLORE: { label: string; to?: string; href?: string }[] = [
   { label: "How to play", to: "/howtoplay" },
   { label: "Characters", to: "/characters" },
   { label: "Play online", to: "/play" },
-  { label: "Blog", href: "https://pegasusgames.medium.com/" },
+  { label: "Blog", href: BLOG_URL },
   { label: "Contact us", to: "/contact" },
 ];
 
@@ -128,9 +129,12 @@ const Footer = () => {
           <img className={styles.tagline} src="/images/title.webp" alt="A game where fantasy meets reality TV" loading="lazy" />
           <div className={styles.ctas}>
             {!hidesBuyButtons(pathname) && <BuyButton from="footer" animated icon="forward" variant="primary" color="red" text="Buy now!" />}
-            <NavLink to="/characters" className={styles.castLink} onClick={toTopIfHere("/characters")}>
-              Meet the cast <span aria-hidden="true">→</span>
-            </NavLink>
+            {/* (not on the cast's own page) */}
+            {pathname !== "/characters" && (
+              <NavLink to="/characters" className={styles.castLink}>
+                Meet the cast <span aria-hidden="true">→</span>
+              </NavLink>
+            )}
           </div>
         </div>
       </div>
@@ -164,7 +168,7 @@ const Footer = () => {
           </p>
           <p className={styles.blurb}>
             Illustrations by{" "}
-            <a href="https://www.instagram.com/carofranklyn/?hl=en" className={styles.inline} target="_blank" rel="noreferrer">
+            <a href={ILLUSTRATOR_URL} className={styles.inline} target="_blank" rel="noreferrer">
               Carolyn Frank
             </a>
             .

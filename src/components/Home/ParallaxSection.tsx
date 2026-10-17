@@ -12,13 +12,14 @@ import { getAllCharacters } from "../Characters/Characters";
 import { characterArtSmall } from "../utils/characterArt";
 import useNearViewport from "../utils/useNearViewport";
 import type { WallApi } from "../utils/parallaxWall3d";
+import type { Character } from "../../types/character";
 import landingPageStyles from "../../css/landingPage.module.css";
 
 interface ParallaxCardsProps {
   sectionRef: React.RefObject<HTMLDivElement | null>;
   evenRow: boolean;
   cardsPerRow: number;
-  randomCharacters: any[];
+  randomCharacters: Character[];
 }
 
 // how far the words the wall parts to show ("A party game where…") reach from the screen's middle
@@ -112,7 +113,7 @@ const ParallaxSection = () => {
   }
 
   //split array into numRows rows
-  const splitRowCharacters: any[][] = [];
+  const splitRowCharacters: Character[][] = [];
   for (let x = 0; x < numRows; x++) {
     splitRowCharacters.push(
       randomCharacters.slice(x * cardsPerRow, x * cardsPerRow + cardsPerRow)
@@ -228,7 +229,7 @@ const ParallaxCards = ({
       },
     });
 
-    randomCharacters.forEach((curr: any, index: number) => {
+    randomCharacters.forEach((_, index) => {
       const card = cardRefs[index];
       if (!card) return;
 
@@ -243,7 +244,7 @@ const ParallaxCards = ({
       };
 
       //left of middle card go left, others go right
-      let offscreenEnd = evenRow
+      const offscreenEnd = evenRow
         ? index < middleCard
           ? -50
           : 150 //even row
@@ -282,7 +283,7 @@ const ParallaxCards = ({
   ]);
 
   //create cards for each character
-  return randomCharacters.map((curr: any, index: number) => {
+  return randomCharacters.map((curr, index) => {
     const cardProps = getHomePageCardProps(curr.type, width);
     cardProps.personName = curr.name;
     cardProps.disableFlip = true;

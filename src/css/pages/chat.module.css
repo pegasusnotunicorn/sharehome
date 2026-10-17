@@ -31,6 +31,11 @@
   box-shadow: 0 1px 0 #8f1410;
 }
 
+.toggle:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
+}
+
 .toggle svg {
   width: 26px;
   height: 26px;
@@ -75,7 +80,7 @@
   overflow: hidden;
   background: #fff;
   box-shadow:
-    inset 0 6px 0 #d81e18,
+    inset 0 6px 0 var(--dialog-band, #d81e18),
     0 30px 60px -24px rgba(0, 0, 0, 0.55);
   animation: panelIn 0.2s ease-out both;
 }

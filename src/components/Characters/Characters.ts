@@ -1,4 +1,5 @@
 import type { Character, CharacterWithNav } from "../../types/character";
+import { withBrand } from "../../pageMeta.ts"; // (with its .ts: the edge function runs this as it is)
 
 const allCharacters: Character[] = [
   {
@@ -6,12 +7,12 @@ const allCharacters: Character[] = [
     urlName: "urg",
     age: 30,
     job: "Web Designer",
-    employer: "Amazin' E-Commerce",
+    employer: "Amazin’ E-Commerce",
     race: "Orc",
     emoji: ["urgSmile"],
     description: [
       "Urg was bullied a lot as a kid for his scrawny stature. He was not your typical brutish orc. As a child, he turned to the dark web for comfort and found his home there amongst the other outcasts of society. He enjoys using his technological skills to punish the strong who bully the weak.",
-      "Rejecting the orc status quo, he wants to change the public perception of his people. His desire to show his race in a better light brought him on the show. He hopes that his illegal dark web activities won't be discovered by the public.",
+      "Rejecting the orc status quo, he wants to change the public perception of his people. His desire to show his race in a better light brought him on the show. He hopes that his illegal dark web activities won’t be discovered by the public.",
     ],
     hobbies: [
       "Manages a NFT marketplace based on funny orc pictures of the orcs that used to bully him as a child.",
@@ -39,7 +40,7 @@ const allCharacters: Character[] = [
     emoji: ["beatriceStare"],
     description: [
       "Cockatrices can kill people with just one look according to folk legend. Afraid of testing out that theory, Beatrice wears special designer sunglasses all of the time. Beatrice also designs special lenses for other Cockatrices to let them look in the mirror without harm.",
-      "Born and raised in England, Beatrice has no arms but has a very dexterous beak and legs. Has no knowledge of parents but legend says Cockatrices are born when a rooster's egg is incubated by a snake.",
+      "Born and raised in England, Beatrice has no arms but has a very dexterous beak and legs. Has no knowledge of parents but legend says Cockatrices are born when a rooster’s egg is incubated by a snake.",
     ],
     hobbies: [
       "Veganism but still eats meat on rare occasion.",
@@ -257,7 +258,7 @@ const allCharacters: Character[] = [
     ],
     image: {
       url: "/images/members/characters9.webp",
-      name: "characters11.webp",
+      name: "characters9.webp",
       width: 2000,
       height: 1200,
       credit: "https://www.fiverr.com/carolynfrank",
@@ -417,7 +418,7 @@ const allCharacters: Character[] = [
     title: "The Hungry Wyvern",
     age: 65,
     job: "Chef",
-    employer: "L'oeuf Restaurant",
+    employer: "L’oeuf Restaurant",
     race: "Wyvern",
     emoji: ["grodrotPanic"],
     description: [
@@ -445,7 +446,7 @@ const allCharacters: Character[] = [
     urlName: "nycolas",
     age: 21,
     job: "Jockey",
-    employer: "O'Sullivan Farms",
+    employer: "O’Sullivan Farms",
     race: "Dullahan",
     emoji: ["nycolasPanic", "horseWhat"],
     description: [
@@ -454,7 +455,7 @@ const allCharacters: Character[] = [
     ],
     hobbies: [
       "Taking care of animals. Particularly larger ones like horses or cows.",
-      "A relaxing hot shower and a good skin care regimen after a day's hard work.",
+      "A relaxing hot shower and a good skin care regimen after a day’s hard work.",
       "Playing darts, shooting arrows, throwing axes. Anything that requires good accuracy.",
       "Harvesting edible berries and nuts from nature.",
     ],
@@ -564,8 +565,8 @@ const allCharacters: Character[] = [
     race: "Unicorn",
     emoji: ["sohFocus"],
     description: [
-      "Soh is the youngest in a large family of 7 children. He is 19 years apart from the eldest sibling so he grew up relatively isolated and lonely. He is very entrepreneurial in spirit but doesn't enjoy working with others or for others. Always had a very headstrong vibe to him since birth.",
-      "He recently inherited the family business of printing and is trying his best to revitalize the dying industry by creating unique ways to print on magical materials. He doesn't want his family legacy to die in his hooves. Came onto the show in hopes of revitalizing his family business.",
+      "Soh is the youngest in a large family of 7 children. He is 19 years apart from the eldest sibling so he grew up relatively isolated and lonely. He is very entrepreneurial in spirit but doesn’t enjoy working with others or for others. Always had a very headstrong vibe to him since birth.",
+      "He recently inherited the family business of printing and is trying his best to revitalize the dying industry by creating unique ways to print on magical materials. He doesn’t want his family legacy to die in his hooves. Came onto the show in hopes of revitalizing his family business.",
     ],
     hobbies: [
       "Collecting wooden typefaces that are used for the printing press.",
@@ -590,9 +591,9 @@ const allCharacters: Character[] = [
     age: 22,
     job: "Bank Teller",
     job2: "Model",
-    employer: "Bank O'Rainbows",
+    employer: "Bank O’Rainbows",
     employer2: "Clover Modeling Agency",
-    race: "Leprechan",
+    race: "Leprechaun",
     emoji: ["brigitCute"],
     description: [
       "Female leprechauns are extremely rare to the point of basically not existing. Therefore Brigit is extremely popular and is often surrounded by male peers trying to woo her. Growing up with that much attention has certainly gone to her head, but she is quickly learning that not everyone cares about the rarity of female leprechauns, particularly outside of the leprechaun community.",
@@ -679,7 +680,7 @@ const allCharacters: Character[] = [
     urlName: "dimakostwins",
     age: 25,
     job: "Freelance Artist",
-    employer: "Self-employed",
+    employer: false, // (self-employed)
     job2: "Accountant",
     employer2: "Better Calculations Business",
     race: "Gemini",
@@ -713,8 +714,8 @@ const allCharacters: Character[] = [
     race: "Giant",
     emoji: ["susomNervous"],
     description: [
-      "Giants reach adulthood around age 50. Giants rarely have surnames because they often travel solo and are so big they don't need a surname to further specify who they are.",
-      "Susom is very shy despite her stature and size. She always wanted a surname to fit in with the rest of the world. She doesn't like standing out in a crowd or being picked for anything. She is a people pleaser and wants to be accepted by a group. She prefers to wear very simple loose-fitting clothing without any intricate designs or patterns.",
+      "Giants reach adulthood around age 50. Giants rarely have surnames because they often travel solo and are so big they don’t need a surname to further specify who they are.",
+      "Susom is very shy despite her stature and size. She always wanted a surname to fit in with the rest of the world. She doesn’t like standing out in a crowd or being picked for anything. She is a people pleaser and wants to be accepted by a group. She prefers to wear very simple loose-fitting clothing without any intricate designs or patterns.",
     ],
     hobbies: [
       "People watching. Particularly from an angle or location where nobody can look back.",
@@ -776,31 +777,12 @@ export function getSpecificPerson(personName: string): Character | false {
   return false;
 }
 
-//return details of a specific person by url name
+//return details of a specific person by url name (in any case), with their place in the cast; one
+//who isn't on the site yet (ignoreInRandom) isn't found
 export function getSpecificPersonByURL(urlName: string): CharacterWithNav | false {
-  //search for them
-  for (let i = 0; i < allCharacters.length; i++) {
-    if (allCharacters[i].urlName === urlName) {
-      const prevIndex = i - 1 < 0 ? 0 : i - 1;
-      const nextIndex =
-        i + 1 >= allCharacters.length ? allCharacters.length - 1 : i + 1;
-      return {
-        ...allCharacters[i],
-        index: i + 1,
-        total: allCharacters.length,
-        prevCharURL:
-          allCharacters[prevIndex].ignoreInRandom || i === prevIndex
-            ? false
-            : allCharacters[prevIndex].urlName,
-        nextCharURL:
-          allCharacters[nextIndex].ignoreInRandom || i === nextIndex
-            ? false
-            : allCharacters[nextIndex].urlName,
-      };
-    }
-  }
-
-  return false;
+  const slug = urlName.toLowerCase();
+  const i = allCharacters.findIndex((c) => c.urlName.toLowerCase() === slug && !c.ignoreInRandom);
+  return i < 0 ? false : { ...allCharacters[i], index: i + 1, total: allCharacters.length };
 }
 
 //returns details of all characters except the ones who need to be ignored
@@ -824,6 +806,9 @@ export function getAllCharacters(random?: boolean): Character[] {
   }
 }
 
+// what a character's card calls them ("The Grumpy Dragon", or "The Orc")
+export const characterTitle = (c: Character) => c.title || `The ${c.race}`;
+
 //title, description and image used for a character page's share (og/twitter) tags
 //shared by CharactersPage and the track-utm edge function (a character's link preview)
 export function getCharacterShareMeta(character: Character) {
@@ -833,10 +818,10 @@ export function getCharacterShareMeta(character: Character) {
     : `${character.name}, the ${character.race}`;
   description += `. A ${character.age} year old ${character.job}`;
   description += character.employer ? ` at ${character.employer}` : ``;
-  description += ` and member of SHAREHOME—A reality TV show about 6 mythical strangers living together in the same house.`;
+  description += ` and contestant on SHAREHOME, a reality TV show about mythical strangers living together in the same house.`;
 
   return {
-    title: `${character.name} — Love, Career & Magic`,
+    title: withBrand(character.name),
     description,
     image: character.image,
   };

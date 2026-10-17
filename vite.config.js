@@ -46,7 +46,6 @@ const preloadFonts = () => ({
 });
 
 export default defineConfig({
-  envPrefix: ["VITE_", "REACT_APP_"],
   plugins: [preloadFonts()],
   resolve: {
     dedupe: ["react", "react-dom"],

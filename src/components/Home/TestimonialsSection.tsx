@@ -21,7 +21,8 @@ const PLAYTHROUGHS = [
   { id: "HOGt-U67PKc", start: 120, length: 745 },
 ].map((v, i) => ({ ...v, game: i + 1, thumb: `/images/testimonials/playthrough${i + 1}.webp` }));
 
-const minutes = (s: number) => `${Math.round(s / 60)} min`;
+// how long a game plays for, from where it starts (the character introductions) to its end
+const minutes = ({ start, length }: { start: number; length: number }) => `${Math.round((length - start) / 60)} min`;
 
 // "Real players, real stories": one game on the big screen (it plays right there), and every game
 // in a strip below to pick from.
@@ -100,7 +101,7 @@ export default function TestimonialsSection() {
         >
           <span className={styles.caption} aria-hidden="true">
             <span className={styles.tableNo}>Game {shown.game}</span>
-            <span>From the character introductions · {minutes(shown.length - shown.start)}</span>
+            <span>From the character introductions · {minutes(shown)}</span>
           </span>
         </VideoPoster>
       </div>
@@ -140,7 +141,7 @@ export default function TestimonialsSection() {
                   {p.game}
                 </span>
                 <span className={styles.thumbTime} aria-hidden="true">
-                  {minutes(p.length)}
+                  {minutes(p)}
                 </span>
               </button>
             </li>

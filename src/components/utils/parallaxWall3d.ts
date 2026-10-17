@@ -18,7 +18,7 @@ import { sized } from "./imageCopies";
 import { hoverPose, wallPoses } from "./wallPoses";
 import type { WallCardMotion } from "./wallPoses";
 
-export interface WallCard {
+interface WallCard {
   front: () => Promise<HTMLCanvasElement>;
   atlasIndex: number; // its place in the cast: its printed back is images/pieces/characters/<place>-back.webp
   urlName: string;

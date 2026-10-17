@@ -4,7 +4,12 @@
 // Uses your SHIPPO_API_KEY_DEV (test token) — does NOT charge.
 // Prints a working label URL and tracking number on success.
 
-import "dotenv/config";
+// (the keys, from .env)
+try {
+  process.loadEnvFile();
+} catch {
+  // (no .env: the environment's own)
+}
 
 // Force the helper to use the dev key path even when run outside `netlify dev`.
 process.env.NETLIFY_DEV = "true";

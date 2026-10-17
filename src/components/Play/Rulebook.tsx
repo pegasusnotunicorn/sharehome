@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import Icon from "../utils/Icons";
+import useDialogFocus from "../utils/useDialogFocus";
 import { play } from "./sounds";
 import styles from "../../css/pages/rulebook.module.css";
 
@@ -84,7 +85,6 @@ const Rulebook = () => {
     return () => window.removeEventListener(MODE_EVENT, on);
   }, []);
   const bookRef = useRef<HTMLDivElement>(null);
-  const opener = useRef<HTMLElement | null>(null);
 
   const later = (fn: () => void, ms: number) => timers.current.push(setTimeout(fn, ms));
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
@@ -94,7 +94,6 @@ const Rulebook = () => {
   const open = useCallback((section?: Section | null) => {
     if (stageRef.current !== "closed") return;
     setView(pageOf(section ?? opensAt));
-    opener.current = document.activeElement as HTMLElement | null;
     stageRef.current = "in";
     setStage("in");
     play("whoosh");
@@ -109,7 +108,6 @@ const Rulebook = () => {
       setStage("closed");
       setView(0);
       unzoom();
-      opener.current?.focus({ preventScroll: true });
     }, OPEN_MS);
   }, []);
 
@@ -158,12 +156,14 @@ const Rulebook = () => {
     [flying, view]
   );
 
-  // the keys: Escape shuts it, the arrows turn the pages; and the page behind doesn't scroll
+  // a dialog while it's up: focus in it, Tab kept in it, Escape shuts it, and focus back where it was
+  // once it's gone
+  useDialogFocus(bookRef, close, { open: stage !== "closed" });
+  // the arrows turn the pages; and the page behind doesn't scroll
   useEffect(() => {
     if (stage === "closed") return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-      else if (e.key === "ArrowRight") go(1);
+      if (e.key === "ArrowRight") go(1);
       else if (e.key === "ArrowLeft") go(-1);
     };
     addEventListener("keydown", onKey);
@@ -367,6 +367,9 @@ const Rulebook = () => {
                   <Icon name="next" strokeWidth={2.6} />
                 </button>
                 <span className={styles.barGap} aria-hidden />
+                <a className={styles.turn} href="/rulebook.pdf" target="_blank" rel="noreferrer" aria-label="The rulebook as a PDF (opens in a new tab)" title="Rulebook PDF">
+                  <Icon name="download" strokeWidth={2.4} />
+                </a>
                 <button type="button" className={styles.turn} onClick={() => zoomBy(zoom - 0.5)} disabled={zoom <= 1} aria-label="Zoom out">
                   <Icon name="minus" strokeWidth={2.6} />
                 </button>

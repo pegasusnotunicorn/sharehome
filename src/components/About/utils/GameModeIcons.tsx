@@ -6,8 +6,8 @@ interface GameModeIconsProps {
 
 //the player count and the total play time icons
 const GameModeIcons = (props: GameModeIconsProps) => {
-  let extraClasses = props.className ? props.className : "";
-  let classes = `timePlayerInfoWrapper ${extraClasses}`;
+  const extraClasses = props.className ? props.className : "";
+  const classes = `timePlayerInfoWrapper ${extraClasses}`;
 
   return (
     <div className={classes}>

@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import usePageTitle from "./utils/usePageTitle";
 import DefaultButton from "./utils/DefaultButton";
 import PageIntro from "./utils/PageIntro";
 import PolaroidJourney from "./utils/PolaroidJourney";
@@ -42,8 +41,6 @@ const useShippingRegion = (): ShippingRegion => {
 };
 
 const ThankYouPage = () => {
-  const title = "Thank you for your order!";
-  usePageTitle(title);
 
   const [start] = useState(() => Math.floor(Math.random() * CONTACT_POLAROIDS.length));
   const region = useShippingRegion();
@@ -79,7 +76,7 @@ const ThankYouPage = () => {
             <>
               {isEurope ? (
                 <p>
-                  I have received your order! You're part of the first wave of
+                  I have received your order! You’re part of the first wave of
                   European orders, which will ship out in the coming month through
                   a Europe-based logistics company.
                 </p>
@@ -103,7 +100,7 @@ const ThankYouPage = () => {
                 <p className={styles.notice}>
                   <strong>Please note</strong>
                   European shipments may take up to a month or two to arrive.
-                  It's the only way to keep costs down and make sure you don't pay
+                  It’s the only way to keep costs down and make sure you don’t pay
                   any VAT. This is my first time trying something like this, so I
                   truly appreciate your patience and understanding. Thank you for
                   supporting indie game devs! 😊

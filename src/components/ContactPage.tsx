@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "../css/pages/contactPage.module.css";
 import { NavLink } from "react-router";
 import { BUY_DESTINATION, recordBuyClick } from "./utils/BuyButton";
@@ -6,17 +6,27 @@ import { trackEvent } from "./utils/trackEvent";
 import PolaroidJourney from "./utils/PolaroidJourney";
 import PageIntro from "./utils/PageIntro";
 import { SocialChips } from "./utils/SocialIcons";
+import { CONTACT_EMAIL, SYSIFUS_URL } from "../utils/links";
 
 const ContactPage = () => {
   const [isBioExpanded, setIsBioExpanded] = useState(false);
 
-  useEffect(() => {
-    document.title = "Contact us";
-  }, []);
-
   return (
     <div className={`content ${styles.contactPage}`}>
-      <PageIntro eyebrow="Say hi" title="Contact us" lead="Follow along on my game dev journey 🎮">
+      <PageIntro
+        eyebrow="Say hi"
+        title="Contact us"
+        lead={
+          <>
+            Follow along on my game dev journey 🎮
+            <br />
+            {/* (the address written out, to copy; its link styled as the bio's) */}
+            <span className={styles.bio}>
+              Or email <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+            </span>
+          </>
+        }
+      >
         <SocialChips className={styles.socials} />
       </PageIntro>
 
@@ -29,7 +39,7 @@ const ContactPage = () => {
             <p>
               I quit my cushy corporate job in 2016 to pursue my dreams of becoming a game developer. And in March of
               2021, that dream became a reality when my first game,{" "}
-              <a href="http://sysifuscorp.com/" target="_blank" rel="noreferrer">
+              <a href={SYSIFUS_URL} target="_blank" rel="noreferrer">
                 Welcome to Sysifus Corp
               </a>
               , was successfully funded on Kickstarter.

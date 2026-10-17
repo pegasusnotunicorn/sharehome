@@ -10,6 +10,7 @@
 // for phones in public/images/cards/1000/. Run it again when a
 // character's art or text changes, or a character is added (then update the cols/rows in footerCards3d.ts's
 // ATLAS and Footer.tsx's SHEET to match).
+/* global document */ // (the sheets are drawn in the browser, in page.evaluate)
 import { chromium } from "playwright-core";
 import fs from "fs";
 

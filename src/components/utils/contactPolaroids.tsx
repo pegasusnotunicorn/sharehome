@@ -1,4 +1,5 @@
 import { type PolaroidGalleryItem } from "./PolaroidGallery";
+import { SYSIFUS_URL } from "../../utils/links";
 
 export const CONTACT_POLAROIDS: PolaroidGalleryItem[] = [
   {
@@ -21,7 +22,7 @@ export const CONTACT_POLAROIDS: PolaroidGalleryItem[] = [
     caption: (
       <>
         First game{" "}
-        <a href="http://sysifuscorp.com/" target="_blank" rel="noreferrer">
+        <a href={SYSIFUS_URL} target="_blank" rel="noreferrer">
           Welcome to Sysifus Corp
         </a>{" "}
         Kickstarter successfully funded

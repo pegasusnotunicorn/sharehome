@@ -226,7 +226,7 @@ const PATHS = {
   ),
 } satisfies Record<string, ReactNode>;
 
-export type IconName = keyof typeof PATHS;
+type IconName = keyof typeof PATHS;
 
 export const isIconName = (name: string): name is IconName => name in PATHS;
 

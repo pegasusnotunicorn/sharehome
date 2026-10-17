@@ -42,6 +42,9 @@ export interface Env {
   // the most spectators one room takes at once (a cap on what one popular game can cost; "0" turns
   // watching off). Unset: WATCH_MAX
   MAX_SPECTATORS?: string;
+  // a Discord webhook (a secret: Worker → Settings → Variables): a word there whenever a show starts,
+  // with the link to come and watch. Unset: no word
+  DISCORD_WEBHOOK_URL?: string;
   // how often one address may make a room, and open a room (see wrangler.jsonc)
   CREATE_LIMIT: RateLimit;
   JOIN_LIMIT: RateLimit;
@@ -54,6 +57,9 @@ const MAX_AGE = 12 * 60 * 60 * 1000; // and any room at all, after this
 // a socket sending more than this many messages in FLOOD_WINDOW is closed (a held button sends ten a second)
 const FLOOD_LIMIT = 200;
 const FLOOD_WINDOW = 10 * 1000;
+// a show's start is told to Discord at most once per room in this long (a host starting and ending
+// over and over can't flood the channel)
+const ANNOUNCE_GAP = 10 * 60 * 1000;
 // the chat: the lines kept (older ones go), and how fast one socket may send them: one at a time at
 // least CHAT_GAP apart, and no more than CHAT_BURST in CHAT_WINDOW (whatever's over is turned back)
 const CHAT_KEEP = 40;
@@ -174,6 +180,8 @@ interface StoredRoom {
   // in the waiting room: who picked which character, and who's ready
   picks?: Record<string, number>;
   ready?: Record<string, boolean>;
+  // when a show's start in this room was last told to Discord
+  announcedAt?: number;
 }
 
 export class Room extends DurableObject<Env> {
@@ -377,6 +385,7 @@ export class Room extends DurableObject<Env> {
           room.picks ?? {}
         );
         room.ready = {};
+        this.announceShow(room);
         break;
       }
       case "pick": {
@@ -545,6 +554,28 @@ export class Room extends DurableObject<Env> {
     } catch {
       // (a socket that's just gone: the close handler tidies up)
     }
+  }
+
+  // a show's started: a word in Discord, who's in it and the link to watch (a plain room link: once
+  // the show's on, it opens as a spectator). Sent alongside, never held up for, and nothing if it fails
+  private announceShow(room: StoredRoom) {
+    const hook = this.env.DISCORD_WEBHOOK_URL;
+    if (!hook || !/^https:\/\/(?:canary\.|ptb\.)?discord(?:app)?\.com\/api\/webhooks\//.test(hook)) return;
+    if (room.announcedAt && Date.now() - room.announcedAt < ANNOUNCE_GAP) return;
+    room.announcedAt = Date.now();
+    // (names as typed, with Discord's markdown taken as plain text and no links)
+    const plain = (t: string) => t.replace(/[\\*_~`|>#\[\]()-]/g, "\\$&").replace(/:\/\//g, ":\u200b//");
+    const site = this.env.ALLOWED_ORIGINS.split(",")[0].trim();
+    const names = room.players.map((p) => `**${plain(p.name)}**`).join(", ");
+    const content = `🎬 A show just started: ${room.players.length} players (${names}).\nCome watch: ${site}/play/${room.code}`;
+    this.ctx.waitUntil(
+      fetch(hook, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        // (no one's pinged, whatever a name says)
+        body: JSON.stringify({ content, allowed_mentions: { parse: [] } }),
+      }).catch(() => {})
+    );
   }
 
   // how many are watching, to the players alone (a handful of tiny messages, however big the audience)

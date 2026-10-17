@@ -20,6 +20,14 @@ Netlify as `VITE_GAME_SERVER_URL` and redeploy the site; until then /play says "
 
 The site addresses allowed to use the server are `ALLOWED_ORIGINS` in `wrangler.jsonc`.
 
+## A word in Discord when a show starts
+
+Add a secret `DISCORD_WEBHOOK_URL` (Cloudflare dashboard → Workers → lcm-game → Settings → Variables
+and Secrets → Add → type Secret) holding a channel's webhook URL (Discord: the channel's settings →
+Integrations → Webhooks → New Webhook → Copy Webhook URL). Each time a host starts a show, the channel
+gets who's playing and the room's link, which opens as a spectator. At most once per room in 10
+minutes, and no one is ever pinged. Delete the secret to stop.
+
 ## Keeping the bill small
 
 Cloudflare has no spending cap, so the server turns away anything that would wake rooms over and over:

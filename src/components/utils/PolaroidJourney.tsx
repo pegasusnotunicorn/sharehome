@@ -2,16 +2,20 @@ import { useEffect, useRef, useState } from "react";
 import PolaroidGallery, { PolaroidLightbox, formatDate } from "./PolaroidGallery";
 import { CONTACT_POLAROIDS } from "./contactPolaroids";
 import type { PolaroidRingApi } from "./polaroidRing3d";
+import { sized } from "./imageCopies";
+import useNearViewport from "./useNearViewport";
 import styles from "../../css/utils/polaroidJourney.module.css";
 
 // The polaroids from the journey so far, going round in 3D (polaroidRing3d.ts) under a title, the
 // caption of the one in front below it: on the contact and thank-you pages. It goes round by itself
 // while it's on screen and left alone; Prev / Next, a swipe, or a click on a photo turns it, and a click on
-// the one in front opens it large. Where 3D can't be drawn, the polaroids lie flat instead.
+// the one in front opens it large. Where 3D can't be drawn, the polaroids lie flat instead. It loads as
+// it comes near the screen, with copies of the photos the size the ring draws them (the full ones open large).
 
 const AUTO_MS = 3600;
 const AFTER_TOUCH_MS = 8000; // after someone's turned it themselves, it waits longer before going on
-const PHOTOS = CONTACT_POLAROIDS.map((p) => ({ src: p.src, date: formatDate(p.date) }));
+const RING_PX = 640;
+const PHOTOS = CONTACT_POLAROIDS.map((p) => ({ src: sized(p.src, RING_PX), date: formatDate(p.date) }));
 
 interface PolaroidJourneyProps {
   label: string;
@@ -35,9 +39,10 @@ const PolaroidJourney = ({ label, title, start = 0 }: PolaroidJourneyProps) => {
     api.current?.turn(n);
   };
 
+  const near = useNearViewport(stage);
   useEffect(() => {
     const el = stage.current;
-    if (!el) return;
+    if (!el || !near) return;
     let gone = false;
     import("./polaroidRing3d")
       .then(({ mountPolaroidRing }) =>
@@ -63,7 +68,7 @@ const PolaroidJourney = ({ label, title, start = 0 }: PolaroidJourneyProps) => {
     };
     // (the photo it starts on is only read the first time)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [near]);
 
   useEffect(() => {
     const el = stage.current;
@@ -103,7 +108,7 @@ const PolaroidJourney = ({ label, title, start = 0 }: PolaroidJourneyProps) => {
       ) : (
         <div onPointerEnter={() => setHeld(true)} onPointerLeave={() => setHeld(false)}>
           <div ref={stage} className={styles.ring}>
-            {!live && <img className={styles.ringStill} src={CONTACT_POLAROIDS[start].src} alt="" />}
+            {!live && <img className={styles.ringStill} src={PHOTOS[start].src} alt="" loading="lazy" />}
           </div>
           <div className={styles.journeyBar} onFocus={() => setHeld(true)} onBlur={() => setHeld(false)}>
             <button type="button" className={styles.chip} onClick={() => nudge(-1)} aria-label="Previous photo">

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { GsapFadeScrub } from "../utils/useGsap";
 import { trackEvent } from "../utils/trackEvent";
+import VideoPoster from "../utils/VideoPoster";
 import landingPageStyles from "../../css/landingPage.module.css";
 import styles from "../../css/pages/home/playthroughs.module.css";
 
@@ -85,30 +86,23 @@ export default function TestimonialsSection() {
       </div>
 
       <div className={styles.screen} ref={screenRef}>
-        {playing ? (
-          <iframe
-            key={shown.id}
-            className={styles.video}
-            src={`https://www.youtube-nocookie.com/embed/${shown.id}?start=${shown.start}&autoplay=1&rel=0&modestbranding=1&playsinline=1`}
-            title={`Love, Career & Magic playthrough, game ${shown.game}`}
-            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-            allowFullScreen
-          />
-        ) : (
-          <button type="button" className={styles.poster} onClick={play} aria-label={`Play game ${shown.game}, from the character introductions`}>
-            <img className={styles.crop} src={shown.thumb} alt="" />
-            <span className={styles.shade} aria-hidden="true" />
-            <span className={styles.play} aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M8 5.5v13l11-6.5z" />
-              </svg>
-            </span>
-            <span className={styles.caption} aria-hidden="true">
-              <span className={styles.tableNo}>Game {shown.game}</span>
-              <span>From the character introductions · {minutes(shown.length - shown.start)}</span>
-            </span>
-          </button>
-        )}
+        <VideoPoster
+          id={shown.id}
+          start={shown.start}
+          title={`Love, Career & Magic playthrough, game ${shown.game}`}
+          label={`Play game ${shown.game}, from the character introductions`}
+          poster={shown.thumb}
+          posterWidth={1600}
+          posterHeight={900}
+          posterClassName={styles.crop}
+          playing={playing}
+          onPlay={play}
+        >
+          <span className={styles.caption} aria-hidden="true">
+            <span className={styles.tableNo}>Game {shown.game}</span>
+            <span>From the character introductions · {minutes(shown.length - shown.start)}</span>
+          </span>
+        </VideoPoster>
       </div>
 
       <div className={styles.carousel}>
@@ -141,7 +135,7 @@ export default function TestimonialsSection() {
                 onClick={() => pick(i)}
               >
                 {/* (a small copy for the strip; the full one's only for the big screen) */}
-                <img className={styles.crop} src={p.thumb.replace("/testimonials/", "/testimonials/thumbs/")} alt="" loading="lazy" />
+                <img className={styles.crop} src={p.thumb.replace("/testimonials/", "/testimonials/thumbs/")} alt="" loading="lazy" width={400} height={225} />
                 <span className={styles.thumbNo} aria-hidden="true">
                   {p.game}
                 </span>

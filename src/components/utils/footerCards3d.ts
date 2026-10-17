@@ -4,11 +4,14 @@
 // visitors who ask for less motion. The art comes from two sprite sheets (scripts/card-atlas.mjs).
 import type * as THREE from "three";
 import { calm, loadTexture, loadThree, makeCard, paint, renderer, studio, warm } from "./card3d";
+import type { Three } from "./card3d";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
 
 export const ATLAS = {
   fronts: "/images/cards/character-fronts.webp",
   backs: "/images/cards/character-backs.webp",
+  // (half the size, for phones: the cards are small there)
+  phone: { fronts: "/images/cards/1000/character-fronts.webp", backs: "/images/cards/1000/character-backs.webp" },
   cols: 5,
   rows: 5,
   cellW: 400,
@@ -24,6 +27,7 @@ export interface FooterCard {
 
 interface MountOptions {
   cards: FooterCard[];
+  small?: boolean; // the smaller sheets
   onHover: (card: FooterCard | null, x: number, y: number) => void;
   onPick: (card: FooterCard) => void;
   onFail: () => void;
@@ -35,8 +39,8 @@ export interface FooterCardsApi {
 
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 
-export async function mountFooterCards(stage: HTMLElement, { cards, onHover, onPick, onFail }: MountOptions): Promise<FooterCardsApi | null> {
-  let T: typeof THREE, r: THREE.WebGLRenderer;
+export async function mountFooterCards(stage: HTMLElement, { cards, small, onHover, onPick, onFail }: MountOptions): Promise<FooterCardsApi | null> {
+  let T: Three, r: THREE.WebGLRenderer;
   try {
     T = await loadThree();
     r = renderer(T);
@@ -48,7 +52,8 @@ export async function mountFooterCards(stage: HTMLElement, { cards, onHover, onP
 
   let fronts: THREE.Texture, backs: THREE.Texture, gold: THREE.Texture;
   try {
-    [fronts, backs, gold] = await Promise.all([loadTexture(T, ATLAS.fronts), loadTexture(T, ATLAS.backs), studio(T, r)]);
+    const sheets = small ? ATLAS.phone : ATLAS;
+    [fronts, backs, gold] = await Promise.all([loadTexture(T, sheets.fronts), loadTexture(T, sheets.backs), studio(T, r)]);
   } catch {
     onFail();
     return null;

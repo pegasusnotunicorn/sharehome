@@ -19,6 +19,7 @@ import {
 } from "../../../game-server/src/protocol";
 import DefaultButton from "../utils/DefaultButton";
 import Icon from "../utils/Icons";
+import { sized } from "../utils/imageCopies";
 import Modal from "../utils/Modal";
 import CardViewer from "../utils/CardViewer";
 import CharacterDetails from "../Characters/CharacterDetails";
@@ -51,7 +52,8 @@ const art = {
   characterBack: (i: number) => `/images/pieces/characters/${nn(i)}-back.webp`,
   episode: (i: number) => `/images/pieces/episodes/${nn(i)}.webp`,
   direction: (deck: DirectionDeck, i: number) => `/images/pieces/${deck}/${nn(i)}.webp`,
-  directionBack: (deck: DirectionDeck) => `/images/pieces/${deck}/back.webp`,
+  // (the backs only ever show at a deck's size on the table: the 480px copy)
+  directionBack: (deck: DirectionDeck) => sized(`/images/pieces/${deck}/back.webp`, 480),
   trait: (kind: TraitKind, i: number) => `/images/pieces/${kind}-traits/${nn(i)}.webp`,
   episodeBack: "/images/pieces/episodes/back.webp",
   // the point tokens: one side's worth 1, the other (the rainbow) 5

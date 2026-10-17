@@ -1,6 +1,7 @@
 import { useState, type CSSProperties, type ReactNode } from "react";
 import WhatsInTheBox from "./WhatsInTheBox";
 import DefaultButton from "../../utils/DefaultButton";
+import { srcSet } from "../../utils/imageCopies";
 import aboutStyles from "../../../css/pages/aboutPage.module.css";
 
 // The How to play page's three parts (the setup, the rules, every piece in 3D), one at a time. Each step's
@@ -91,6 +92,21 @@ const TOKEN = "/images/pieces/box/token-front.webp";
 const TOKEN_BACK = "/images/pieces/box/token-back.webp";
 const EPISODE_BACK = "/images/pieces/episodes/back.webp";
 
+// each piece's picture's size, so it's laid out right before it's in
+const PICTURE_SIZES: [RegExp, number, number][] = [
+  [/\/characters\//, 768, 444],
+  [/-traits\//, 768, 219],
+  [/\/episodes\//, 768, 549],
+  [/\/(director|producer|showrunner)\//, 768, 497],
+  [/\/token-/, 512, 512],
+  [/membertalk\.svg$/, 325, 109],
+  [/commentatortalk\.svg$/, 297, 127],
+];
+const pictureSize = (src: string) => {
+  const [, width, height] = PICTURE_SIZES.find(([m]) => m.test(src)) ?? [];
+  return { width, height };
+};
+
 // a piece on the table: where its middle is (of the scene's width and height), how wide (of the scene's
 // width), and its turn
 interface Piece {
@@ -109,6 +125,10 @@ const Scene = ({ pieces, label }: { pieces: Piece[]; label: string }) => (
       <img
         key={i}
         src={p.src}
+        srcSet={srcSet(p.src)}
+        // (its share of the scene, which is about the screen's width on phones, and about 520px wider up)
+        sizes={`(max-width: 900px) ${Math.ceil(p.w * 0.92)}vw, ${Math.ceil(p.w * 5.2)}px`}
+        {...pictureSize(p.src)}
         alt=""
         loading="lazy"
         draggable={false}

@@ -45,3 +45,69 @@
   font-style: normal;
   font-display: swap;
 }
+
+/* Until a font is in (and if it never comes), a system font sized and spaced like it, so the words
+   neither flash up in Times nor jump as it arrives. Each family's whole list is a variable: use it
+   (font-family: var(--font-rowdies-bold)) rather than the font's name on its own. */
+@font-face {
+  font-family: "Rowdies-Bold fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Helvetica Bold"), local("Roboto Bold"), local("Roboto-Bold"), local("Liberation Sans Bold");
+  size-adjust: 106.1%;
+  ascent-override: 94%;
+  descent-override: 23.1%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Rowdies-Regular fallback";
+  src: local("Arial"), local("ArialMT"), local("Helvetica"), local("Roboto"), local("Liberation Sans");
+  size-adjust: 108.6%;
+  ascent-override: 91.8%;
+  descent-override: 22.6%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Rowdies-Light fallback";
+  src: local("Arial"), local("ArialMT"), local("Helvetica"), local("Roboto"), local("Liberation Sans");
+  size-adjust: 100.8%;
+  ascent-override: 98.9%;
+  descent-override: 24.3%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Roboto Light fallback";
+  src: local("Roboto Light"), local("Roboto-Light"), local("Arial"), local("ArialMT"), local("Helvetica"), local("Liberation Sans");
+  size-adjust: 97.9%;
+  ascent-override: 94.7%;
+  descent-override: 24.9%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "Roboto Regular fallback";
+  src: local("Roboto"), local("Roboto-Regular"), local("Arial"), local("ArialMT"), local("Helvetica"), local("Liberation Sans");
+  size-adjust: 99.5%;
+  ascent-override: 93.3%;
+  descent-override: 24.5%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: "GochiHand fallback";
+  src: local("Comic Sans MS"), local("ComicSansMS"), local("Chalkboard SE"), local("Arial");
+  size-adjust: 93.2%;
+  ascent-override: 82.7%;
+  descent-override: 43.7%;
+  line-gap-override: 0%;
+}
+
+:root {
+  --font-rowdies-bold: "Rowdies-Bold", "Rowdies-Bold fallback", sans-serif;
+  --font-rowdies-regular: "Rowdies-Regular", "Rowdies-Regular fallback", sans-serif;
+  --font-rowdies-light: "Rowdies-Light", "Rowdies-Light fallback", sans-serif;
+  --font-roboto-light: "Roboto Light", "Roboto Light fallback", sans-serif;
+  --font-roboto-regular: "Roboto Regular", "Roboto Regular fallback", sans-serif;
+  --font-gochi: "GochiHand", "GochiHand fallback", cursive;
+}

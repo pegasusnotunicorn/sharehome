@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import { Link } from "react-router";
 import { GsapFadeScrub } from "../utils/useGsap";
 import ParallaxSection from "./ParallaxSection";
@@ -15,8 +15,9 @@ import BoxHero from "./BoxHero";
 import landingPageStyles from "../../css/landingPage.module.css";
 import DescriptionContainer from "./DescriptionContainer";
 import StepText from "./utils/StepText";
+import useNearViewport from "../utils/useNearViewport";
 
-// (the photo carousel at the bottom, and the carousel library with it, load after the page is up)
+// (the photo carousel at the bottom, and the carousel library with it, load as it comes near the screen)
 const CarouselSection = lazy(() => import("../utils/CarouselSection"));
 
 interface LandingPageProps {
@@ -25,8 +26,8 @@ interface LandingPageProps {
 
 const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
   useEffect(() => () => setTrailerPlaying(false), [setTrailerPlaying]);
-  // the card parallax waits for the hero's 3D box, so they don't share a slow connection
-  const [heroSettled, setHeroSettled] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const carouselNear = useNearViewport(carouselRef);
 
   useEffect(() => {
     document.title = "Love, Career & Magic - 12m game for 2-6 players";
@@ -34,9 +35,9 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
 
   return (
     <div className="content">
-      <ParallaxSection hold={!heroSettled} />
+      <ParallaxSection />
 
-      <BoxHero onOpen={setTrailerPlaying} onSettled={() => setHeroSettled(true)} />
+      <BoxHero onOpen={setTrailerPlaying} />
 
       <DescriptionContainer
         title={
@@ -166,8 +167,10 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
       <TestimonialsSection />
 
       <div
+        ref={carouselRef}
         className={`${landingPageStyles.mainpageContainer} ${landingPageStyles.carouselContainer}`}
       >
+        {carouselNear && (
         <Suspense fallback={null}>
         <CarouselSection
           className={landingPageStyles.mainpageCarousel}
@@ -181,6 +184,7 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
           showNavigation={false}
         />
         </Suspense>
+        )}
       </div>
     </div>
   );

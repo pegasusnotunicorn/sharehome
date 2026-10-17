@@ -127,6 +127,9 @@
   width: 100%;
   max-width: 1040px;
   margin: 0 auto 3rem;
+  /* (the loading skeleton's height, kept while the order and the payment form come in, so what's
+     below doesn't jump up and back) */
+  min-height: 620px;
 }
 
 .checkoutLayout {
@@ -1320,6 +1323,7 @@
   .checkoutSection {
     margin-left: 0;
     margin-right: 0;
+    min-height: 1100px; /* (one column: the order, then the form) */
   }
 
   .checkoutLayout {

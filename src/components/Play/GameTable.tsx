@@ -8,6 +8,7 @@ import {
   REMOTE_BUTTONS,
   arcDone,
   score,
+  type ChatLine,
   type ClientMessage,
   type DirectionDeck,
   type GameView,
@@ -23,6 +24,7 @@ import CardViewer from "../utils/CardViewer";
 import CharacterDetails from "../Characters/CharacterDetails";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
 import { getAllCharacters } from "../Characters/Characters";
+import { ChatBubble, ChatInput, ChatTips, RemoveWatcher, useChatPops } from "./Chat";
 import Confirm from "./Confirm";
 import Finale from "./Finale";
 import { DISCORD_URL } from "./gameServer";
@@ -30,6 +32,7 @@ import { openRulebook, rulebookOpensAt } from "./Rulebook";
 import { isMuted, play, setMuted } from "./sounds";
 import modalStyles from "../../css/utils/modal.module.css";
 import styles from "../../css/pages/gameTable.module.css";
+import chatStyles from "../../css/pages/chat.module.css";
 
 // The table (once the host starts the show), laid out like the real thing on a kitchen table: the
 // three direction decks with their face-up cards, the episode card with the cards completed in it,
@@ -100,8 +103,17 @@ const useTableLoaded = (game: GameView) => {
 };
 
 // the loading screen: the deck's backs shuffling over the tablecloth
-const Loading = ({ out }: { out: boolean }) => (
+// the loading screen: the stage's curtains drawn, the deck's backs shuffling in the spotlight between
+// them; once the table's in, the curtains sweep open on it
+export const Loading = ({ out }: { out: boolean }) => {
+  useEffect(() => {
+    if (out) play("curtain");
+  }, [out]);
+  return (
   <div className={`${styles.loading}${out ? ` ${styles.loadingOut}` : ""}`} role="status" aria-label="Setting the table">
+    <span className={`${styles.curtain} ${styles.curtainLeft}`} aria-hidden />
+    <span className={`${styles.curtain} ${styles.curtainRight}`} aria-hidden />
+    <span className={styles.valance} aria-hidden />
     <div className={styles.loadingDeck} aria-hidden>
       {(["director", "producer", "showrunner"] as DirectionDeck[]).map((d, i) => (
         // (a plain back in the deck's colour, until its picture's in: it never shows half-loaded)
@@ -112,7 +124,36 @@ const Loading = ({ out }: { out: boolean }) => (
     </div>
     <span className={styles.loadingWord}>Setting the table</span>
   </div>
-);
+  );
+};
+
+// a number that counts its way up (or down) to where it's going, and pops as it gets there
+const CountUp = ({ value, className }: { value: number; className?: string }) => {
+  const [shown, setShown] = useState(value);
+  const [pop, setPop] = useState(0);
+  const from = useRef(value);
+  useEffect(() => {
+    const start = from.current;
+    if (start === value) return;
+    from.current = value;
+    if (reducedMotion()) return setShown(value);
+    const t0 = performance.now(), ms = Math.min(700, 120 * Math.abs(value - start) + 200);
+    let raf = 0;
+    const step = (now: number) => {
+      const k = Math.min(1, (now - t0) / ms);
+      setShown(Math.round(start + (value - start) * (1 - Math.pow(1 - k, 3))));
+      if (k < 1) raf = requestAnimationFrame(step);
+      else setPop((p) => p + 1);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [value]);
+  return (
+    <b key={pop} className={`${className ?? ""}${pop ? ` ${styles.scorePop}` : ""}`}>
+      {shown}
+    </b>
+  );
+};
 
 const reducedMotion = () => typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -342,7 +383,7 @@ const useClock = (game: GameView, serverNow: number) => {
   const seconds = Math.ceil(left / 1000);
   const lastTick = useRef(seconds);
   useEffect(() => {
-    if (game.endsAt !== null && seconds !== lastTick.current && seconds > 0 && seconds <= 10) play("tick");
+    if (game.endsAt !== null && seconds !== lastTick.current && seconds > 0 && seconds <= 10) play(seconds <= 3 ? "countdown" : "tick");
     lastTick.current = seconds;
   }, [seconds, game.endsAt]);
   return left;
@@ -350,7 +391,7 @@ const useClock = (game: GameView, serverNow: number) => {
 
 // the time of day, for the phone's status bar
 const useWallClock = () => {
-  const fmt = () => new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }).replace(/\s?[AP]M$/i, "");
+  const fmt = () => new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
   const [t, setT] = useState(fmt);
   useEffect(() => {
     const timer = setInterval(() => setT(fmt()), 15_000);
@@ -384,7 +425,8 @@ const useTableSounds = (game: GameView) => {
     if (tokens(game) < tokens(was)) return play("undo");
     if (traits(game) > traits(was)) return play("trait");
     if (traits(game) < traits(was)) return play("undo");
-    if (JSON.stringify(game.faceUp) !== JSON.stringify(was.faceUp)) play("deal");
+    // (a card changed with none completed: before an episode, that's a swap)
+    if (JSON.stringify(game.faceUp) !== JSON.stringify(was.faceUp)) play(game.phase === "ready" ? "swap" : "deal");
   }, [game]);
 };
 
@@ -393,9 +435,12 @@ interface TableProps {
   me: string;
   isHost: boolean;
   send: (msg: ClientMessage) => void;
+  chat: ChatLine[];
+  chatSlow: number; // (when a line was last turned back for coming too fast)
+  leave: () => void; // (a spectator, out of the show)
 }
 
-const GameTable = ({ room, me, isHost, send }: TableProps) => {
+const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps) => {
   const game = room.game!;
   const name = useNames();
   const left = useClock(game, room.now);
@@ -411,7 +456,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   const [loadingGone, setLoadingGone] = useState(false);
   useEffect(() => {
     if (!loaded) return;
-    const t = setTimeout(() => setLoadingGone(true), 500);
+    const t = setTimeout(() => setLoadingGone(true), 1300);
     return () => clearTimeout(t);
   }, [loaded]);
   const [muted, setMutedState] = useState(isMuted);
@@ -424,15 +469,41 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
     if (!r || r.id === lastRemote.current) return;
     lastRemote.current = r.id;
     setRemoteShown(r.button);
-    play("deal");
+    play("remote");
     const t = setTimeout(() => setRemoteShown(null), 5000);
     return () => clearTimeout(t);
   }, [game.remote]);
   const [cloth, setCloth] = useState<Cloth>(readCloth);
   const [picking, setPicking] = useState(false);
   const [phoneTab, setPhoneTab] = useState<"clock" | "log" | "remote">("clock");
-  // the newest log entry seen on the phone (a dot on the tab when there's something newer)
-  const [seenLog, setSeenLog] = useState<string | null>(null);
+  // the phone picked up off the table: big, in the middle of the screen, for reading the chat
+  const [held, setHeld] = useState(false);
+  // (picked up, put down: a sound for each)
+  const wasHeld = useRef(held);
+  useEffect(() => {
+    if (held !== wasHeld.current) play(held ? "pickUp" : "putDown");
+    wasHeld.current = held;
+  }, [held]);
+  useEffect(() => {
+    if (!held) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setHeld(false);
+    addEventListener("keydown", onKey);
+    return () => removeEventListener("keydown", onKey);
+  }, [held]);
+  // the chat and what's happened, one feed on the phone, oldest first
+  const feed = useMemo(
+    () =>
+      [...game.log.map((entry) => ({ kind: "log" as const, at: entry.at, id: entry.id, entry })), ...chat.map((line) => ({ kind: "chat" as const, at: line.at, id: line.id, line }))].sort(
+        (a, b) => a.at - b.at,
+      ),
+    [game.log, chat],
+  );
+  useChatPops(chat, me);
+  const [removing, setRemoving] = useState<ChatLine | null>(null);
+  // the newest thing seen on the phone (a dot on the tab when there's something newer, not your own)
+  const [seenAt, setSeenAt] = useState(() => room.now);
+  const latestAt = feed.length ? feed[feed.length - 1].at : 0;
+  const feedList = useRef<HTMLOListElement>(null);
   const clockTime = useWallClock();
   const pickCloth = (c: Cloth) => {
     if (c !== cloth) play("whoosh");
@@ -487,10 +558,15 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   // the face-up cards as they were, to tell which slot a completed card came from
   const lastFaceUp = useRef(game.faceUp);
 
-  const unread = phoneTab !== "log" && game.log.length > 0 && game.log[0].id !== seenLog;
+  const unread = phoneTab !== "log" && feed.some((i) => i.at > seenAt && !(i.kind === "chat" && i.line.by === me));
   useEffect(() => {
-    if (phoneTab === "log") setSeenLog(game.log[0]?.id ?? null);
-  }, [phoneTab, game.log]);
+    if (phoneTab === "log") setSeenAt((s) => Math.max(s, latestAt));
+  }, [phoneTab, latestAt]);
+  // (the newest in view)
+  useLayoutEffect(() => {
+    const l = feedList.current;
+    if (l) l.scrollTop = l.scrollHeight;
+  }, [phoneTab, feed.length, held]);
   const ep = game.episodes[game.episode - 1];
   // a callback just made on an earlier episode: its card bounces, a token drops on, +1 rises
   const [callbackBumps, setCallbackBumps] = useState<Record<number, number>>({});
@@ -674,18 +750,29 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
 
           {/* #region the phone (the clock, and what's happened), and callbacks */}
           <aside className={styles.side}>
-            <div ref={phoneRef} className={`${styles.phone}${game.phase === "break" ? ` ${styles.phoneUp}` : ""}${coachOpen ? ` ${styles.phoneAway}` : ""}`}>
+            {held && <div className={styles.phoneBackdrop} onClick={() => setHeld(false)} aria-hidden />}
+            <div
+              ref={phoneRef}
+              className={`${styles.phone}${game.phase === "break" ? ` ${styles.phoneUp}` : ""}${coachOpen ? ` ${styles.phoneAway}` : ""}${held ? ` ${styles.phoneHeld}` : ""}`}
+              role={held ? "dialog" : undefined}
+              aria-modal={held || undefined}
+              aria-label={held ? "Phone" : undefined}
+            >
               <span className={styles.phoneIsland} aria-hidden />
-              <div className={styles.statusBar} aria-hidden>
-                <span>{clockTime}</span>
+              <div className={styles.statusBar}>
+                <span aria-hidden>{clockTime}</span>
                 <span className={styles.statusIcons}>
-                  <svg viewBox="0 0 18 12">
+                  {(room.watching > 0 || !room.watchOpen) && <Watching room={room} />}
+                  <svg viewBox="0 0 18 12" aria-hidden>
                     <rect x="0" y="8" width="3" height="4" rx="1" />
                     <rect x="5" y="5" width="3" height="7" rx="1" />
                     <rect x="10" y="2" width="3" height="10" rx="1" />
                     <rect x="15" y="0" width="3" height="12" rx="1" />
                   </svg>
-                  <span className={styles.battery}>
+                  <span className={styles.batteryLevel} aria-hidden>
+                    67%
+                  </span>
+                  <span className={styles.battery} aria-hidden>
                     <span />
                   </span>
                 </span>
@@ -699,6 +786,11 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                     <span className={styles.phoneTrack}>
                       <span style={{ transform: `scaleX(${left / (EPISODE_SECONDS * 1000)})` }} />
                     </span>
+                    {spectating && (
+                      <span className={styles.phoneWatching}>
+                        <Icon name="eye" strokeWidth={2.2} /> You’re watching
+                      </span>
+                    )}
                     <div className={styles.phoneActions}>
                       {game.phase === "ready" && <DefaultButton onClick={() => send({ t: "startClock" })} text="Start" icon="play" color="red" />}
                       {paused && <DefaultButton onClick={() => send({ t: "resume" })} text="Resume" icon="play" color="red" />}
@@ -713,8 +805,19 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                     </div>
                     <div className={styles.phoneFoot}>
                       <span>
-                        <b>{points.total}</b> pts
+                        <CountUp value={points.total} className={styles.score} /> pts
                       </span>
+                      <button type="button" className={styles.clothButton} onClick={() => setHeld((h) => !h)} aria-pressed={held} aria-label={held ? "Set the phone back down" : "Hold the phone up"} title={held ? "Put down" : "Hold"}>
+                        {held ? (
+                          <svg viewBox="0 0 24 24" aria-hidden>
+                            <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />
+                          </svg>
+                        ) : (
+                          <svg viewBox="0 0 24 24" aria-hidden>
+                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                          </svg>
+                        )}
+                      </button>
                       <button type="button" className={styles.clothButton} onClick={() => setPicking(true)} aria-label="Settings" title="Settings">
                         <svg viewBox="0 0 24 24" aria-hidden>
                           <circle cx="12" cy="12" r="3" />
@@ -747,6 +850,13 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                   <div className={styles.remoteApp} id="phone-remote">
                     <div className={styles.logHead}>
                       <span>R.E.M.O.T.E.</span>
+                      {held && (
+                        <button type="button" className={`${styles.clothButton} ${styles.headHold}`} onClick={() => setHeld(false)} aria-label="Set the phone back down" title="Put down">
+                          <svg viewBox="0 0 24 24" aria-hidden>
+                            <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />
+                          </svg>
+                        </button>
+                      )}
                       <button type="button" className={styles.remoteInfo} onClick={() => openRulebook("remote")} aria-label="What's the R.E.M.O.T.E.? (the rulebook)" title="What's this?">
                         <Icon name="info" strokeWidth={2.4} />
                       </button>
@@ -769,28 +879,40 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                     </div>
                   </div>
                 ) : (
-                  <div className={styles.logApp} id="phone-log">
+                  <div className={`${styles.logApp} ${chatStyles.compact}`} id="phone-log">
                     <div className={styles.logHead}>
-                      <span>Log</span>
-                      <span className={styles.logClock}>{mmss(left)}</span>
+                      <span>Chat</span>
+                      <Watching room={room} always />
+                      <button type="button" className={`${styles.clothButton} ${styles.headHold}`} onClick={() => setHeld((h) => !h)} aria-pressed={held} aria-label={held ? "Set the phone back down" : "Hold the phone up"} title={held ? "Put down" : "Hold"}>
+                        {held ? (
+                          <svg viewBox="0 0 24 24" aria-hidden>
+                            <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />
+                          </svg>
+                        ) : (
+                          <svg viewBox="0 0 24 24" aria-hidden>
+                            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                          </svg>
+                        )}
+                      </button>
+
                     </div>
-                    {game.log.length === 0 ? (
-                      <p className={styles.logEmpty}>Nothing yet!</p>
-                    ) : (
-                      <ul className={styles.logList}>
-                        {game.log.map((l) => {
-                          const who = l.by && room.players.find((p) => p.id === l.by);
-                          return (
-                            <li key={l.id} style={{ "--who": who ? PLAYER_COLORS[who.color % PLAYER_COLORS.length] : "#8a86c9" } as CSSProperties}>
-                              <span className={styles.logDot} aria-hidden>
-                                {who ? who.name.charAt(0).toUpperCase() : "★"}
-                              </span>
-                              <span>{l.text.replace(/\{([^}]+)\}/g, (_, id) => nameOf(id))}</span>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    )}
+                    <ol ref={feedList} className={styles.logList} aria-live="polite">
+                      {feed.length === 0 && <li className={styles.logEmpty}>Say hi! 👋</li>}
+                      {feed.map((i) => {
+                        if (i.kind === "chat") return <ChatBubble key={i.id} line={i.line} me={me} onRemove={isHost ? setRemoving : undefined} />;
+                        const who = i.entry.by && room.players.find((p) => p.id === i.entry.by);
+                        return (
+                          <li key={i.id} className={styles.logEntry} style={{ "--who": who ? PLAYER_COLORS[who.color % PLAYER_COLORS.length] : "#8a86c9" } as CSSProperties}>
+                            <span className={styles.logDot} aria-hidden>
+                              {who ? who.name.charAt(0).toUpperCase() : "★"}
+                            </span>
+                            <span>{i.entry.text.replace(/\{([^}]+)\}/g, (_, id) => nameOf(id))}</span>
+                          </li>
+                        );
+                      })}
+                    </ol>
+                    <ChatInput send={send} slow={chatSlow} />
+                    <ChatTips />
                   </div>
                 )}
               </div>
@@ -816,16 +938,13 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                   aria-selected={phoneTab === "log"}
                   aria-controls="phone-log"
                   className={phoneTab === "log" ? styles.dockOn : ""}
-                  onClick={() => {
-                    setPhoneTab("log");
-                    setSeenLog(game.log[0]?.id ?? null);
-                  }}
+                  onClick={() => setPhoneTab("log")}
                 >
                   <svg viewBox="0 0 24 24" aria-hidden>
                     <path d="M4 5h16v11H8l-4 4z" />
                     <path d="M8 9h8M8 12h5" />
                   </svg>
-                  Log
+                  Chat
                   {unread && <span className={styles.unread} aria-label="new" />}
                 </button>
                 <button
@@ -855,7 +974,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
             <section className={styles.callbacks} aria-labelledby="callbacks-title">
               <div className={styles.deckHead}>
                 <h3 id="callbacks-title">Callbacks</h3>
-                <span className={styles.points}>+1 each</span>
+                <span className={styles.points}>1 pt</span>
               </div>
               <div className={styles.pastRow}>
                 {Array.from({ length: EPISODES - 1 }, (_, i) => {
@@ -1055,7 +1174,30 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
               </button>
             ))}
           </div>
+          {isHost && (
+            <>
+              <h3 className={styles.settingsHead}>Spectators</h3>
+              <div className={styles.doors}>
+                <span>
+                  <Icon name="eye" strokeWidth={2.2} />
+                  {room.watching} watching{room.watchOpen ? "" : " · doors closed"}
+                </span>
+                <DefaultButton
+                  onClick={() => {
+                    send({ t: "watchOpen", open: !room.watchOpen });
+                    play(room.watchOpen ? "doorsClose" : "doorsOpen");
+                  }}
+                  text={room.watchOpen ? "Close the doors" : "Open the doors"}
+                  icon={room.watchOpen ? "close" : "enter"}
+                  variant="secondary"
+                  border="dark"
+                />
+              </div>
+              <p className={styles.doorsNote}>{room.watchOpen ? "Anyone with the link can come in to watch." : "No more spectators can come in."}</p>
+            </>
+          )}
           <div className={`${modalStyles.actions} ${styles.settingsActions}`}>
+            {spectating && <DefaultButton onClick={leave} text="Leave the show" icon="leave" variant="secondary" border="dark" />}
             {isHost && (
               <DefaultButton
                 onClick={() => {
@@ -1072,6 +1214,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
           </div>
         </Modal>
       )}
+      {removing && <RemoveWatcher line={removing} send={send} onClose={() => setRemoving(null)} />}
       {ending && (
         <Confirm
           title="End the game?"
@@ -1088,6 +1231,21 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
     </div>
   );
 };
+
+// how many are watching, on the phone (with a lock when the host's closed the doors)
+const Watching = ({ room, always }: { room: RoomView; always?: boolean }) => (
+  <span className={styles.watchCount} title={`${room.watching} watching${room.watchOpen ? "" : " · doors closed"}`}>
+    <Icon name="eye" strokeWidth={2.4} />
+    {room.watching}
+    {always && " watching"}
+    {!room.watchOpen && (
+      <svg viewBox="0 0 24 24" aria-label="doors closed">
+        <rect x="5" y="11" width="14" height="10" rx="2" />
+        <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+      </svg>
+    )}
+  </span>
+);
 
 // The R.E.M.O.T.E. (the rulebook's safety tool, after Script Change by Beau Jágr Sheldon): a tap on a
 // button, shown to everyone without who pressed it, and everyone goes along with it, no fuss
@@ -1329,13 +1487,14 @@ const Coach = ({
   useLayoutEffect(() => {
     const t = fromPhone();
     if (t) panel.current!.animate([{ transform: t, opacity: 0.6 }, { transform: "none", opacity: 1 }], { duration: 420, easing: "cubic-bezier(0.2, 1, 0.3, 1)" });
-    play("whoosh");
+    play("pickUp");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // put down (then, whatever was pressed to put it down happens)
   const close = (then?: () => void) => {
     if (leaving) return;
     setLeaving(true);
+    play("putDown");
     const done = () => {
       onClose();
       then?.();

@@ -213,6 +213,21 @@ const Rulebook = () => {
     else if (dx > SWIPE) go(-1);
     else setDrag(null);
   };
+  // the scroll wheel (or a trackpad's pinch, which comes as a wheel with ctrl) zooms in and out, about the
+  // pointer: the point under it stays put
+  const onWheel = (e: React.WheelEvent) => {
+    if (flying) return;
+    const b = bookRef.current?.getBoundingClientRect();
+    if (!b) return;
+    const z = Math.max(1, Math.min(3, zoom * Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0025))));
+    if (z === zoom) return;
+    // (where the pointer is, from the book's middle)
+    const px = e.clientX - (b.left + b.width / 2), py = e.clientY - (b.top + b.height / 2);
+    const k = z / zoom;
+    setZoom(z);
+    setPan((p) => (z === 1 ? { x: 0, y: 0 } : clampPan({ x: px - (px - p.x) * k, y: py - (py - p.y) * k }, z)));
+  };
+
   // (a drag isn't a tap on the page's edge too)
   const tap = (dir: 1 | -1) => () => {
     if (dragged.current) return (dragged.current = false);
@@ -281,6 +296,7 @@ const Rulebook = () => {
               onPointerMove={onPointerMove}
               onPointerUp={onPointerUp}
               onPointerCancel={onPointerUp}
+              onWheel={onWheel}
             >
               {[view + 2, view + 1, view, view - 1].map((n) => {
                 if (n < 0 || n >= PAGES) return null;

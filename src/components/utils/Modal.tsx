@@ -1,7 +1,8 @@
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useRef } from "react";
 import { createPortal } from "react-dom";
 import styles from "../../css/utils/modal.module.css";
 import Icon from "./Icons";
+import useDialogFocus from "./useDialogFocus";
 
 interface ModalProps {
   onClose: () => void;
@@ -12,36 +13,13 @@ interface ModalProps {
   ariaLabel?: string;
 }
 
-// A dialog over the page: Escape or a click outside closes it. Focus moves into it as it opens, stays in
-// it while it's open, and goes back where it was when it closes.
+// A dialog over the page: Escape or a click outside closes it. Focus moves into it as it opens (to a field
+// that focuses itself, else its first button), stays in it while it's open, and goes back where it was
+// when it closes (useDialogFocus).
 const Modal = ({ onClose, children, panelClassName, ariaLabel, ariaLabelledBy }: ModalProps) => {
   const panel = useRef<HTMLDivElement>(null);
-  const close = useRef(onClose);
-  close.current = onClose;
 
-  useEffect(() => {
-    const before = document.activeElement as HTMLElement | null;
-    panel.current?.querySelector<HTMLElement>("button")?.focus();
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") return close.current();
-      if (e.key !== "Tab" || !panel.current) return;
-      const all = [...panel.current.querySelectorAll<HTMLElement>("button, a[href], input, select, textarea, [tabindex]:not([tabindex='-1'])")].filter((x) => !x.hasAttribute("disabled"));
-      if (!all.length) return;
-      const first = all[0], last = all[all.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      before?.focus?.();
-    };
-  }, []);
+  useDialogFocus(panel, onClose);
 
   return createPortal(
     <div className={`${styles.overlay} modal-overlay`} onClick={onClose}>

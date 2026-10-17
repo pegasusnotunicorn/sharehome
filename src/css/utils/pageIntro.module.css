@@ -16,7 +16,7 @@
   font-size: 0.78rem;
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.6);
+  color: rgba(50, 50, 50, 0.72); /* (4.5:1 on the paper, at its small size) */
   opacity: 1;
 }
 

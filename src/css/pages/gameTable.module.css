@@ -983,11 +983,11 @@
   cursor: pointer;
 }
 
-.dock button:first-child {
+.dockTabs > button:first-child {
   border-radius: 10px 10px 10px 22px;
 }
 
-.dock button:last-child {
+.dock > button:last-child {
   border-radius: 10px 10px 22px 10px;
 }
 
@@ -999,6 +999,11 @@
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+/* (the apps' tabs, a group of their own for screen readers; laid out with the rest of the dock) */
+.dockTabs {
+  display: contents;
 }
 
 .dock .dockOn {
@@ -1096,9 +1101,16 @@
 /* the far side of the table: everyone else, each seat no wider than a placemat */
 .othersRow {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 25rem));
+  grid-template-columns: repeat(auto-fit, minmax(14.5rem, 19rem));
   justify-content: center;
-  gap: 1rem;
+  gap: 0.9rem;
+}
+
+/* (everyone else's seats smaller than your own, so the decks and the clock are up in the first
+   screen of a laptop) */
+.othersRow .seat {
+  gap: 0.65rem;
+  padding: 0.7rem;
 }
 
 .mineRow {
@@ -1163,22 +1175,29 @@
   border-radius: 10px;
 }
 
+/* (top right, small and see-through: the character's name is printed along the card's foot) */
 .zoomHint {
   position: absolute;
+  top: 6px;
   right: 6px;
-  bottom: 6px;
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: background 0.15s ease;
+}
+
+.characterCard:hover .zoomHint,
+.characterCard:focus-visible .zoomHint {
+  background: #fff;
 }
 
 .zoomHint svg {
-  width: 18px;
-  height: 18px;
+  width: 15px;
+  height: 15px;
   fill: none;
   stroke: var(--ink);
   stroke-width: 2;
@@ -1439,23 +1458,10 @@
 
 /* #endregion */
 
-@media only screen and (max-width: 1100px) {
-  .middle {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
-    grid-template-areas:
-      "episode decks"
-      "side side"
-      "mine mine";
-  }
-
-  .side {
-    display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr) minmax(0, 1fr);
-    align-items: start;
-  }
-}
-
-@media only screen and (max-width: 760px) {
+/* a phone, a tablet, or a phone on its side (short): the table in the order it's needed, the phone a
+   strip along the top kept in view, then the episode, the decks, your seat, and everyone else's (as
+   PHONE_LAYOUT in GameTable.tsx) */
+@media only screen and (max-width: 1100px), only screen and (max-height: 500px) {
   .tabletop {
     gap: 1.1rem;
     padding: 0.9rem;
@@ -1592,8 +1598,8 @@
   }
 
   .dock button,
-  .dock button:first-child,
-  .dock button:last-child {
+  .dockTabs > button:first-child,
+  .dock > button:last-child {
     flex-direction: row;
     justify-content: center;
     gap: 0.35rem;
@@ -1602,11 +1608,11 @@
     font-size: 0.72rem;
   }
 
-  .dock button:first-child {
+  .dockTabs > button:first-child {
     border-bottom-left-radius: 16px;
   }
 
-  .dock button:last-child {
+  .dock > button:last-child {
     border-bottom-right-radius: 16px;
   }
 
@@ -1648,6 +1654,21 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
+  /* (the strip's words never broken over two lines) */
+  .phoneLabel {
+    white-space: nowrap;
+  }
+
+  /* (the new-message dot after the word, not over it) */
+  .unread {
+    position: static;
+    align-self: flex-start;
+    flex: none;
+    width: 7px;
+    height: 7px;
+    margin-left: -0.15rem;
+  }
+
   .breakdown {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1657,6 +1678,40 @@
   }
 }
 
+
+/* (wide enough for two seats a row: a tablet, a phone on its side) */
+@media only screen and (min-width: 761px) and (max-width: 1100px), only screen and (min-width: 761px) and (max-height: 500px) {
+  .othersRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* a phone on its side: the episode beside the decks (it's wide, not tall), and the strip slimmer, so
+   there's room under it */
+@media only screen and (min-width: 761px) and (max-height: 500px) {
+  .middle {
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 2fr);
+    grid-template-areas:
+      "phone phone"
+      "episode decks"
+      "callbacks callbacks"
+      "mine mine";
+  }
+
+  .episodeArea {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media only screen and (max-height: 500px) {
+  .screen {
+    height: 5.2rem;
+  }
+
+  .dock button {
+    padding-block: 0.25rem;
+  }
+}
 
 /* the seats: quilted placemats, stitched in the player's color */
 .seat {
@@ -1757,6 +1812,30 @@
 .playLabel b {
   font-family: "Rowdies-Bold";
   color: #4f8a73;
+}
+
+/* a direction card up close (a touch screen's first tap): big enough to read, and done from here */
+.peekPanel {
+  max-width: 30rem;
+}
+
+.peekTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.peekTitle .points {
+  font-size: 0.8rem;
+}
+
+.peekCard {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0.6rem 0 1.4rem;
+  border-radius: 12px;
+  box-shadow: var(--card-shadow, 0 8px 18px -8px rgba(0, 0, 0, 0.4));
 }
 
 /* the list of them all, in the site's dialog: a search, a page at a time */
@@ -1893,6 +1972,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  white-space: nowrap;
   font-family: "Rowdies-Regular";
   font-size: 0.85rem;
   color: rgba(50, 50, 50, 0.72);
@@ -2351,6 +2431,16 @@ button.traitPickCard:focus-visible {
   .playedGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  /* (the pages, then the way back, the dialog's width) */
+  .playedFoot {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .playedBack {
+    flex: 1 1 100%;
+  }
 }
 
 /* (a bigger target for taking a callback back) */
@@ -2750,8 +2840,9 @@ button.traitPickCard:focus-visible {
 
 /* #endregion */
 
-/* (on a phone: the remote's six buttons in a row, the phone's buttons a little smaller) */
-@media only screen and (max-width: 760px) {
+/* (the phone as a strip: the remote's six buttons in a row, the phone's buttons a little smaller, but
+   each still a fingertip's worth to tap) */
+@media only screen and (max-width: 1100px), only screen and (max-height: 500px) {
   /* the remote: its six buttons in a row */
   /* (no title: just the (i), in the corner) */
   .remoteApp {
@@ -2786,8 +2877,23 @@ button.traitPickCard:focus-visible {
 
   .phoneFoot .clothButton,
   .phoneFoot .mute {
-    width: 28px;
-    height: 28px;
+    position: relative;
+    width: 30px;
+    height: 30px;
+  }
+
+  .phoneFoot .clothButton::after,
+  .phoneFoot .mute::after,
+  .logHead .headHold::after {
+    content: "";
+    position: absolute;
+    inset: -7px -3px;
+  }
+
+  .dock button::after {
+    content: "";
+    position: absolute;
+    inset: -7px 0;
   }
 }
 
@@ -2885,7 +2991,9 @@ button.traitPickCard:focus-visible {
   flex-direction: column;
   align-items: center;
   gap: 0.7rem;
-  min-height: 19rem;
+  /* (as tall as it likes, but never taller than the phone: it scrolls inside it, its button with it) */
+  flex: 1 1 auto;
+  min-height: min(19rem, 100%);
   padding: 4rem 1.4rem 1.6rem;
   /* (a trait card's wiggle never makes it scroll sideways) */
   overflow: hidden auto;
@@ -2954,6 +3062,65 @@ button.traitPickCard:focus-visible {
   margin-top: 0.5rem;
   border-radius: 99px;
   background: rgba(255, 255, 255, 0.35);
+}
+
+/* a phone on its side (a short screen): the phone held up sideways too, wide and short, the traits in
+   a row, and its button kept at the foot of the screen, in reach */
+@media only screen and (max-height: 500px) {
+  .coach {
+    padding: 0.5rem;
+  }
+
+  .coachPhone {
+    width: min(40rem, 100%);
+    max-height: calc(100dvh - 1rem);
+    padding: 0.45rem;
+    border-radius: 30px;
+  }
+
+  .coachIsland {
+    display: none;
+  }
+
+  .coachClose {
+    top: 0.9rem;
+    right: 0.9rem;
+  }
+
+  .coachScreen {
+    min-height: 0;
+    gap: 0.45rem;
+    padding: 1rem 3.4rem 0.7rem;
+    border-radius: 24px;
+  }
+
+  .coachTitle,
+  .room .coachTitle {
+    font-size: 1.5rem;
+  }
+
+  .coachText {
+    font-size: 0.92rem;
+  }
+
+  .traitPick {
+    flex-direction: row;
+  }
+
+  .traitPick > * {
+    flex: 1 1 0;
+  }
+
+  .coachCta {
+    position: sticky;
+    bottom: 0.3rem;
+    flex: none;
+    margin: auto 0 0;
+  }
+
+  .coachHome {
+    display: none;
+  }
 }
 
 /* (the phone on the table, while it's held up) */

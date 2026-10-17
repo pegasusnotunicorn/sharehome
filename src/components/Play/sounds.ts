@@ -57,9 +57,12 @@ const audio = () => {
   return ctx;
 };
 
-// browsers only let a page make sound after a tap: the first one wakes the audio up
+// browsers only let a page make sound after a tap: the first one wakes the audio up (and till then,
+// nothing's played: no audio made too early for the browser to complain about)
+let woken = false;
 if (typeof window !== "undefined") {
   const wake = () => {
+    woken = true;
     audio();
     window.removeEventListener("pointerdown", wake);
     window.removeEventListener("keydown", wake);
@@ -143,7 +146,7 @@ const swish = (a: AudioContext, at = 0, dur = 0.12, vol = 0.12) => {
 };
 
 export function play(sound: Sound) {
-  if (isMuted()) return;
+  if (isMuted() || !woken) return;
   const a = audio();
   if (!a || a.state !== "running") return;
   switch (sound) {

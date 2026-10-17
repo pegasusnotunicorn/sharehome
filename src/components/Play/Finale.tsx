@@ -228,7 +228,25 @@ async function drawShare(rating: string, perPlayer: number, cast: { name: string
 
 // #endregion
 
-const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; isHost: boolean; send: (msg: ClientMessage) => void }) => {
+// (the two without a mark of ours in the site's icons: drawn here, in the same line)
+const RedditIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden>
+    <ellipse cx="12" cy="14.5" rx="8.5" ry="5.5" />
+    <circle cx="18.5" cy="4.5" r="1.6" />
+    <path d="M12 9 13.6 3.6l3.3 0.8M9 17c1.9 1.2 4.1 1.2 6 0" />
+    <circle cx="9" cy="13.5" r="0.6" />
+    <circle cx="15" cy="13.5" r="0.6" />
+  </svg>
+);
+const WhatsAppIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden>
+    <path d="M3.5 20.5 4.9 16A8.5 8.5 0 1 1 8.2 19.3z" />
+    <path d="M9 8.3c-.2 3.6 3 6.9 6.7 6.7l.8-1.5-2-1-1 .8a4.2 4.2 0 0 1-2.3-2.3l.8-1-1-2z" />
+  </svg>
+);
+
+// (leave: out of the room, back to Play)
+const Finale = ({ room, game, me, isHost, send, leave }: { room: RoomView; game: GameView; me: string; isHost: boolean; send: (msg: ClientMessage) => void; leave: () => void }) => {
   const s = score(game);
   const host = room.players.find((p) => p.id === room.hostId);
   const cast = room.players
@@ -236,7 +254,9 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
     .map((p) => ({ name: p.name, character: game.hands[p.id].character, color: PLAYER_COLORS[p.color % PLAYER_COLORS.length], arc: arcDone(game.hands[p.id]), traits: game.hands[p.id].traits.filter((t) => t.done !== null).length }));
   const episodes = game.episodes.map((e) => ({
     card: e.card,
-    points: e.tokens + e.completed.reduce((n, c) => n + DIRECTION_POINTS[c.deck], 0),
+    // (its own cards, and the callbacks made to it in the episodes after)
+    cards: e.completed.reduce((n, c) => n + DIRECTION_POINTS[c.deck], 0),
+    callbacks: e.tokens,
   }));
 
   // the picture, made once
@@ -270,8 +290,8 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
     { name: "Bluesky", href: `https://bsky.app/intent/compose?text=${enc(`${text} ${SITE}`)}`, icon: "social-icon-bluesky" },
     { name: "Threads", href: `https://www.threads.net/intent/post?text=${enc(`${text} ${SITE}`)}`, icon: "social-icon-threads" },
     { name: "Facebook", href: `https://www.facebook.com/sharer/sharer.php?u=${enc(SITE)}&quote=${enc(text)}`, icon: "social-icon-facebook" },
-    { name: "Reddit", href: `https://www.reddit.com/submit?url=${enc(SITE)}&title=${enc(text)}`, icon: null },
-    { name: "WhatsApp", href: `https://wa.me/?text=${enc(`${text} ${SITE}`)}`, icon: null },
+    { name: "Reddit", href: `https://www.reddit.com/submit?url=${enc(SITE)}&title=${enc(text)}`, icon: <RedditIcon /> },
+    { name: "WhatsApp", href: `https://wa.me/?text=${enc(`${text} ${SITE}`)}`, icon: <WhatsAppIcon /> },
   ];
   const file = picture && new File([picture.blob], "love-career-magic-season.png", { type: "image/png" });
   const canShareFile = !!file && typeof navigator.canShare === "function" && navigator.canShare({ files: [file] });
@@ -306,7 +326,7 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
             <img src={characterArt(c.character)} alt="" width="768" height="444" />
             <figcaption>
               <b>{c.name}</b>
-              <span>{c.arc ? "Character Arc +10 ★" : `${c.traits} of 3 traits`}</span>
+              <span>{c.arc ? "Character Arc +10\u00a0★" : `${c.traits} of 3 traits`}</span>
             </figcaption>
           </figure>
         ))}
@@ -320,7 +340,12 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
             <figure key={i} className={styles.episode} style={{ "--r": `${(i % 2 ? 1 : -1) * 2}deg` } as CSSProperties}>
               <img src={episodeArt(e.card)} alt="" width="768" height="549" />
               <figcaption>
-                Ep {i + 1} <b>+{e.points}</b>
+                Ep {i + 1} <b>+{e.cards + e.callbacks}</b>
+                {e.callbacks > 0 && (
+                  <small>
+                    {e.cards} + {e.callbacks} callback{e.callbacks === 1 ? "" : "s"}
+                  </small>
+                )}
               </figcaption>
             </figure>
           ))}
@@ -339,7 +364,9 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
             <dd>{s.arcs}</dd>
           </div>
           <div className={styles.sumTotal}>
-            <dt>Total ÷ {s.players}</dt>
+            <dt>
+              {s.total} ÷ {s.players} players
+            </dt>
             <dd>{s.perPlayer}</dd>
           </div>
         </dl>
@@ -411,12 +438,12 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
           <div className={styles.socials}>
             {links.map((l) => (
               <a key={l.name} href={l.href} target="_blank" rel="noreferrer" className={styles.social} aria-label={`Share on ${l.name}`} title={l.name}>
-                {l.icon ? (
+                {typeof l.icon === "string" ? (
                   <svg aria-hidden>
                     <use href={`#${l.icon}`} />
                   </svg>
                 ) : (
-                  <span>{l.name === "Reddit" ? "r/" : "W"}</span>
+                  l.icon
                 )}
               </a>
             ))}
@@ -434,6 +461,17 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
         ) : (
           <p>{host?.name || "The host"} can start another season.</p>
         )}
+        {/* (a way out: a player gives up their seat, a spectator just goes) */}
+        <DefaultButton
+          onClick={() => {
+            if (game.hands[me]) send({ t: "leave" });
+            leave();
+          }}
+          text={isHost ? "Leave the game" : "Leave the show"}
+          icon="leave"
+          variant="secondary"
+          border="dark"
+        />
       </div>
     </section>
   );

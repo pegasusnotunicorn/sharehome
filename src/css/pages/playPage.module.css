@@ -23,6 +23,12 @@
   opacity: 1;
 }
 
+/* (in a room: room at the foot for the chat button in the corner, so it never covers the last of the
+   page) */
+:global(body.in-room) .playPage {
+  padding-bottom: 6rem;
+}
+
 .wide {
   width: 100%;
   box-sizing: border-box;
@@ -288,6 +294,24 @@
   border-color: var(--btn-ink);
   outline: 3px solid var(--btn-focus);
   outline-offset: 2px;
+}
+
+/* (a word under the code: it has no vowels) */
+.codeHint {
+  min-height: 1.2em;
+  margin-top: -0.2rem;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.85rem;
+  color: #b3160f;
+}
+
+.codeHint:empty {
+  display: none;
+}
+
+/* (the second way: under the first, smaller) */
+.doorAlt {
+  margin-top: -0.25rem;
 }
 
 /* the room code: four tiles, with the real field laid over them */
@@ -596,17 +620,41 @@
   color: #f1db4b;
 }
 
+/* the connection's dropped: a pill at the foot of the screen, in view however far down it's scrolled
+   (and clear of the table's phone, kept along the top) */
 .reconnecting {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  z-index: 100002;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  width: fit-content;
-  margin: -0.5rem auto 1.25rem;
-  padding: 0.45rem 1rem;
+  width: max-content;
+  max-width: calc(100vw - 2rem);
+  margin: 0;
+  padding: 0.55rem 1.1rem;
   border-radius: 999px;
   background: #fbe9a6;
-  font-size: 0.9rem;
+  box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.5);
+  font-family: "Rowdies-Regular";
+  font-size: 0.95rem;
   color: var(--ink);
+  translate: -50% 0;
+}
+
+/* the part of a room that talks to it (Live): a fieldset with no look of its own; while the
+   connection's down its controls are off, and dimmed */
+.live {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.live:disabled :is(button, input, a) {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .reconnectingDot {
@@ -819,7 +867,25 @@
 }
 
 .seatMenuWrap .seatCorner {
-  position: static;
+  position: relative;
+}
+
+.seatMenuWrap .seatCorner,
+.seatMenuWrap .seatCorner:hover {
+  inset: auto;
+  translate: none;
+}
+
+/* (a fingertip's worth round the little corner buttons still counts) */
+.seatCorner::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+}
+
+/* (its menu open: the seat's over the ones after it, so nothing covers the menu) */
+.seatMenuOpen {
+  z-index: 5;
 }
 
 .seatMenuWrap {
@@ -853,6 +919,7 @@
 }
 
 .seatMenu button {
+  min-height: 44px;
   padding: 0.6rem 0.75rem;
   border: 0;
   border-radius: 10px;
@@ -883,7 +950,7 @@
 .seatEmptyText {
   font-family: "GochiHand";
   font-size: 1.3rem;
-  color: rgba(50, 50, 50, 0.45);
+  color: rgba(50, 50, 50, 0.68);
 }
 
 .seatInvite {
@@ -1008,11 +1075,22 @@
 }
 
 .checklist a {
+  /* (a fingertip tall, without making its line taller) */
+  margin: -0.7rem 0;
+  padding: 0.7rem 0;
+  border-radius: 6px;
   font-family: inherit;
   font-size: inherit;
   letter-spacing: inherit;
   color: #5f5aa2;
   text-underline-offset: 3px;
+}
+
+.checklist a:focus-visible,
+.soundToggle:focus-visible,
+.watchersDoors:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
 }
 
 .checklist .checkTick {
@@ -1048,6 +1126,21 @@
   font-size: 1.05rem;
 }
 
+/* (copy on a computer; share, on a phone) */
+.inviteShare {
+  display: none;
+}
+
+@media only screen and (max-width: 640px) {
+  .inviteCopy {
+    display: none;
+  }
+
+  .inviteShare {
+    display: flex;
+  }
+}
+
 .leave {
   display: flex;
   justify-content: center;
@@ -1057,6 +1150,7 @@
 }
 
 .textButton {
+  min-height: 44px;
   padding: 0.4rem 0.6rem;
   border: 0;
   border-radius: 8px;
@@ -1111,6 +1205,14 @@
 
   .stage {
     margin: calc(var(--navbar-height) - 0.5rem) 0 1.25rem;
+  }
+
+  /* (in a room, the Rules tab's in the corner: the stage starts below it) */
+  :global(body.in-room) .stage {
+    margin-top: 4.5rem;
+  }
+
+  .stage {
     padding: 2.25rem 1.25rem 2rem;
     border-radius: 22px;
   }
@@ -1586,15 +1688,48 @@
 }
 
 @media only screen and (max-width: 640px) {
-  /* your character first (the thing to do); the invite card's gone (Invite a friend, in the cast,
-     copies the link) */
+  /* the invite a slim card up top (the code to read out, and Share), then your character (the
+     thing to do), then the start of the show */
+  .lobbyTop {
+    display: contents;
+  }
+
+  .lobby .invite {
+    order: -2;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 1.15rem 1rem 1rem;
+  }
+
   .lobby .picker {
     order: -1;
     margin-bottom: 1.25rem;
   }
 
-  .lobby .invite {
+  .lobby .showtime {
+    margin-bottom: 1.75rem;
+  }
+
+  .inviteTitle,
+  .inviteFaces {
     display: none;
+  }
+
+  .inviteCode {
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.9rem;
+  }
+
+  .invite .tile {
+    width: 2.4rem;
+    height: 2.8rem;
+    border-radius: 9px;
+    font-size: 1.4rem;
+  }
+
+  .inviteButton {
+    min-height: 46px;
   }
 
   .intro {
@@ -1679,79 +1814,83 @@
 
 /* #region--------------------------------------THE AUDIENCE */
 
-/* how many are watching: a little pill, bottom left (for a spectator: that they're watching, a seat to
-   take, a way out) */
-.watchers {
-  position: fixed;
-  left: 12px;
-  bottom: 12px;
-  z-index: 900;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0.4rem 0.35rem 0.75rem;
-  border-radius: 999px;
-  background: rgba(28, 26, 43, 0.88);
-  box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.6);
+/* how many are watching: a line in the start of the show's checklist (for the host, with the doors
+   to open or close) */
+.checklist .watchers {
+  flex-wrap: wrap;
+}
+
+.watchersDoors {
+  min-height: 44px;
+  margin: -0.45rem -0.4rem -0.45rem auto;
+  padding: 0.35rem 0.9rem;
+  border: 1.5px solid var(--chip-edge);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 0 var(--chip-edge);
   font-family: "Rowdies-Regular";
   font-size: 0.85rem;
-  white-space: nowrap;
-  color: #fff;
-}
-
-.watchersCount {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding-right: 0.35rem;
-}
-
-.watchersCount svg {
-  width: 18px;
-  height: 18px;
-  color: #f1db4b;
-}
-
-.watchersSeat,
-.watchersLeave {
-  padding: 0.35rem 0.8rem;
-  border: 0;
-  border-radius: 999px;
-  font-family: inherit;
-  font-size: 0.8rem;
+  color: var(--ink);
   cursor: pointer;
 }
 
-.watchersSeat {
-  background: #d81e18;
+.watchersDoors:hover {
+  border-color: var(--btn-ink);
+}
+
+/* a spectator's bar, under the heading: watching, a seat to take, a way out */
+.audience {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem 0.75rem;
+  margin: 0 auto 1.75rem;
+  padding: 0.75rem 0.9rem 0.75rem 1.25rem;
+  width: fit-content;
+  max-width: 100%;
+  box-sizing: border-box;
+  border-radius: 22px;
+  background: var(--night);
   color: #fff;
 }
 
-.watchersSeat:hover {
-  background: #c01a15;
+.audienceText {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: auto;
+  font-family: "Rowdies-Regular";
+  font-size: 1rem;
 }
 
-.watchersLeave {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+.audienceText svg {
+  width: 20px;
+  height: 20px;
+  color: #f1db4b;
 }
 
-.watchersLeave:hover {
-  background: rgba(255, 255, 255, 0.22);
-}
+@media only screen and (max-width: 640px) {
+  /* (a phone: the words, then the buttons, one under the other, the bar's width) */
+  .audience {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    padding: 0.9rem;
+  }
 
-/* (a spectator's pill, bigger, in the middle) */
-.watchersMe {
-  left: 50%;
-  translate: -50% 0;
-  padding: 0.45rem 0.5rem 0.45rem 1rem;
-  font-size: 0.95rem;
+  .audienceText {
+    justify-content: center;
+    margin: 0;
+  }
 }
 
 /* under Join the game: just watching */
 .justWatch {
   display: block;
-  margin: 0.9rem auto 0;
+  min-height: 44px;
+  margin: 0.6rem auto 0;
   padding: 0.2rem 0.4rem;
   border: 0;
   background: none;

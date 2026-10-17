@@ -1,9 +1,12 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import type { Player, RoomView } from "../../../game-server/src/protocol";
 import CardCarousel from "../utils/CardCarousel";
 import DefaultButton from "../utils/DefaultButton";
 import Icon from "../utils/Icons";
+import useDialogFocus from "../utils/useDialogFocus";
+import announce from "../../utils/announce";
+import { useOffline } from "./useRoom";
 import { play } from "./sounds";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
 import { getAllCharacters } from "../Characters/Characters";
@@ -44,18 +47,42 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
   // (it opens on yours, or on the "?" card)
   const [at, setAt] = useState(() => (mine === undefined ? RANDOM : mine + 1));
   const [turning, setTurning] = useState(false);
-
-  // Escape closes it, and the page behind doesn't scroll
+  const panel = useRef<HTMLDivElement>(null);
+  const offline = useOffline();
+  // focus in it, Tab kept in it, Escape closes it, focus back after
+  useDialogFocus(panel, close);
+  // the page behind doesn't scroll
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
-    addEventListener("keydown", onKey);
     const root = document.documentElement, was = root.style.overflow;
     root.style.overflow = "hidden";
-    return () => {
-      removeEventListener("keydown", onKey);
-      root.style.overflow = was;
-    };
-  }, [close]);
+    return () => void (root.style.overflow = was);
+  }, []);
+
+  // a pick sent, waiting on the room: it closes once it's yours; if someone else got there first, it
+  // stays open and says so
+  const [asked, setAsked] = useState<number | null>(null);
+  const [beaten, setBeaten] = useState<string | null>(null);
+  useEffect(() => {
+    if (asked === null) return;
+    if (mine === asked) return close();
+    const winner = room.players.find((p) => p.id !== me && room.picks?.[p.id] === asked);
+    if (!winner) return;
+    const text = `${winner.name} just took ${short(CAST[asked].name)}. Pick someone else!`;
+    setBeaten(text);
+    announce(text);
+    setAsked(null);
+  }, [asked, mine, room, me, close]);
+  // (no word back at all, the connection gone, say: the button's free again)
+  useEffect(() => {
+    if (asked === null) return;
+    const t = setTimeout(() => setAsked(null), 6000);
+    return () => clearTimeout(t);
+  }, [asked]);
+  const choose = (c: number) => {
+    setBeaten(null);
+    setAsked(c);
+    pick(c);
+  };
 
   const c = at === RANDOM ? null : at - 1;
   const other = c === null ? undefined : takenBy(c);
@@ -65,13 +92,13 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
     const free = CAST.map((_, i) => i).filter((i) => !takenBy(i));
     const fresh = free.filter((i) => i !== mine);
     const pool = fresh.length ? fresh : free;
-    if (pool.length) pick(pool[Math.floor(Math.random() * pool.length)]);
-    close();
+    if (pool.length) choose(pool[Math.floor(Math.random() * pool.length)]);
+    else close();
   };
 
   return createPortal(
     <div className={styles.backdrop} onClick={close}>
-    <div className={styles.chooser} role="dialog" aria-modal="true" aria-label="Pick your character" onClick={(e) => e.stopPropagation()}>
+    <div ref={panel} className={styles.chooser} role="dialog" aria-modal="true" aria-label="Pick your character" onClick={(e) => e.stopPropagation()}>
       <header className={styles.head}>
         <h2 className={styles.title}>Pick your character</h2>
         <button type="button" className={`${modalStyles.closeBtn} ${styles.close}`} onClick={close} aria-label="Close">
@@ -102,20 +129,13 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
       />
 
       <div className={`${styles.who}${turning ? ` ${styles.hushed}` : ""}`} aria-live="polite">
+        {beaten && <p className={styles.beaten}>{beaten}</p>}
         {c === null ? (
-          <DefaultButton onClick={pickRandom} text="Play anyone" icon="shuffle" color="red" />
+          <DefaultButton onClick={pickRandom} text="Play anyone" icon="shuffle" color="red" disabled={offline} loading={asked !== null} />
         ) : other ? (
           <DefaultButton disabled text={`Taken by ${other.name}`} icon="removePerson" />
         ) : (
-          <DefaultButton
-            onClick={() => {
-              pick(c);
-              close();
-            }}
-            text={`Play ${short(CAST[c].name)}`}
-            icon="check"
-            color="red"
-          />
+          <DefaultButton onClick={() => choose(c)} text={`Play ${short(CAST[c].name)}`} icon="check" color="red" disabled={offline} loading={asked === c} />
         )}
       </div>
 

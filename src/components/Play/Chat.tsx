@@ -2,6 +2,8 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type 
 import { createPortal } from "react-dom";
 import { CHAT_EMOJI, CHAT_MAX, type ChatLine, type ClientMessage } from "../../../game-server/src/protocol";
 import Icon from "../utils/Icons";
+import useDialogFocus from "../utils/useDialogFocus";
+import { useOffline } from "./useRoom";
 import Confirm from "./Confirm";
 import { play } from "./sounds";
 import { PLAYER_COLORS } from "./GameTable";
@@ -108,10 +110,15 @@ export const ChatInput = ({ send, slow, autoFocus }: { send: (msg: ClientMessage
   const [picking, setPicking] = useState(false);
   const input = useRef<HTMLInputElement>(null);
   const [warn, setWarn] = useState(false);
+  // (the connection's down: nothing to send it down)
+  const offline = useOffline();
+  // the last line sent: turned back for coming too fast, it's put back in the box to send again
+  const sent = useRef("");
   // (too fast: a word, for a moment)
   useEffect(() => {
     if (!slow) return;
     setWarn(true);
+    setDraft((d) => d || sent.current);
     const t = setTimeout(() => setWarn(false), 2500);
     return () => clearTimeout(t);
   }, [slow]);
@@ -130,8 +137,9 @@ export const ChatInput = ({ send, slow, autoFocus }: { send: (msg: ClientMessage
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const text = draft.trim();
-    if (!text) return;
+    if (!text || offline) return;
     send({ t: "chat", text });
+    sent.current = text;
     setDraft("");
     setPicking(false);
   };
@@ -165,8 +173,9 @@ export const ChatInput = ({ send, slow, autoFocus }: { send: (msg: ClientMessage
           aria-label="Your message"
           maxLength={CHAT_MAX * 2}
           autoFocus={autoFocus}
+          disabled={offline}
         />
-        <button type="submit" className={styles.sendButton} disabled={!draft.trim()} aria-label="Send">
+        <button type="submit" className={styles.sendButton} disabled={!draft.trim() || offline} aria-label="Send">
           <Icon name="forward" strokeWidth={2.6} />
         </button>
       </form>
@@ -203,7 +212,11 @@ const Chat = ({ lines, me, send, slow, isHost }: ChatProps) => {
   const [open, setOpen] = useState(false);
   const [seen, setSeen] = useState(() => lines[lines.length - 1]?.id ?? null);
   const list = useRef<HTMLOListElement>(null);
+  const panel = useRef<HTMLElement>(null);
   useChatPops(lines, me);
+  // (beside the page, not over it: focus goes into it, Tab goes round in it once there, Escape closes
+  // it and focus goes back to the chat button)
+  useDialogFocus(panel, () => setOpen(false), { open, modal: false });
 
   // what's not been seen (lines from others since the panel was last open)
   const lastSeen = lines.findIndex((l) => l.id === seen);
@@ -215,12 +228,6 @@ const Chat = ({ lines, me, send, slow, isHost }: ChatProps) => {
   useEffect(() => {
     if (open) list.current?.scrollTo({ top: list.current.scrollHeight });
   }, [open, lines]);
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    addEventListener("keydown", onKey);
-    return () => removeEventListener("keydown", onKey);
-  }, [open]);
 
   return (
     <>
@@ -230,7 +237,7 @@ const Chat = ({ lines, me, send, slow, isHost }: ChatProps) => {
       </button>
 
       {open && (
-        <section className={styles.panel} aria-label="Chat">
+        <section ref={panel} className={styles.panel} role="dialog" aria-label="Chat">
           <header className={styles.head}>
             <b>Chat</b>
           </header>

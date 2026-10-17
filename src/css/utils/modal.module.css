@@ -71,9 +71,11 @@
   gap: 0.6rem;
 }
 
+/* (on a phone: one under the other, the dialog's width, its main action (last) on top, so no
+   button's words ever wrap) */
 @media only screen and (max-width: 640px) {
-  .actions > * {
-    flex: 1;
+  .actions {
+    flex-direction: column-reverse;
   }
 }
 

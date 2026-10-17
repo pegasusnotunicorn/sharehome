@@ -278,6 +278,14 @@
   color: #4f8a73;
 }
 
+/* (where an episode's points came from: its cards, and callbacks made to it later) */
+.episode small {
+  display: block;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.75rem;
+  color: rgba(50, 50, 50, 0.72);
+}
+
 .sums {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -404,8 +412,16 @@
 
 .again {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
+  gap: 0.75rem 1.25rem;
   padding-bottom: 1rem;
+}
+
+.again p {
+  flex-basis: 100%;
+  text-align: center;
 }
 
 .again p {

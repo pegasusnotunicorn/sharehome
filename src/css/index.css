@@ -7,6 +7,10 @@
   --navbar-height: 82px;
   --footer-height: 340px;
   --footer-height-mobile: 220px;
+  /* a page's opening starts below the top bar (the logo and the menu button) */
+  --intro-top: calc(var(--navbar-height) + 0.75rem);
+  /* phones: room at the foot of the page for the buttons fixed along the bottom of the screen */
+  --fixed-bar-room: calc(5rem + env(safe-area-inset-bottom, 0px));
 
   /* Buttons, all over the site: chunky, like a game piece. A solid face with a hard edge under it
      (its "depth") that it lifts off when hovered and presses into when clicked. */
@@ -68,6 +72,30 @@ li {
 p,
 li {
   opacity: 0.85;
+}
+
+/* a link to a part of a page (#…) lands it below the banner and the top bar */
+[id] {
+  scroll-margin-top: calc(var(--banner-height) + var(--navbar-height));
+}
+
+@media only screen and (max-width: 900px) {
+  [id] {
+    scroll-margin-top: calc(var(--banner-height-mobile) + var(--navbar-height));
+  }
+}
+
+/* read out, but not shown */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .noselect {

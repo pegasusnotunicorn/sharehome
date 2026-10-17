@@ -22,6 +22,7 @@ import styles from "../css/pages/buyPage.module.css";
 // (the same list checkout offers and the webhook ships to)
 import { isEuropeCountry } from "../../netlify/lib/regions.js";
 import Icon from "./utils/Icons";
+import { session } from "../utils/safeStorage";
 
 const LCM_PRICE = 34.99;
 const PIN_PRICE = 10.0;
@@ -111,7 +112,7 @@ function getStoredUtms(): Record<string, string> {
 
   // sessionStorage overrides URL — more authoritative when present.
   try {
-    const raw = sessionStorage.getItem("utm_params");
+    const raw = session.get("utm_params");
     if (raw) {
       const data = JSON.parse(raw) as Record<string, string>;
       if (data.utm_source) out.utmSource = data.utm_source;

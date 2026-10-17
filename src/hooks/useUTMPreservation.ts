@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router";
+import { session } from "../utils/safeStorage";
 
 const useUTMPreservation = (): void => {
   const location = useLocation();
@@ -43,12 +44,12 @@ const useUTMPreservation = (): void => {
       });
 
       // Store in sessionStorage
-      sessionStorage.setItem("utm_params", JSON.stringify(utmData));
+      session.set("utm_params", JSON.stringify(utmData));
     }
 
     // If we don't have UTM params in URL but have them in sessionStorage
     if (!hasUTMParams) {
-      const storedUTM = sessionStorage.getItem("utm_params");
+      const storedUTM = session.get("utm_params");
       if (storedUTM) {
         try {
           const utmData = JSON.parse(storedUTM);

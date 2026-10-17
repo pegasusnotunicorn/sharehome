@@ -12,18 +12,8 @@ import styles from "../../css/pages/chat.module.css";
 
 const emojiSrc = (name: string) => `/images/emojis/${name}.webp`;
 const KNOWN = new Set<string>(CHAT_EMOJI);
-// each emoji's name, as its tooltip
-const EMOJI_NAMES: Record<string, string> = {
-  urgSmile: "Urg, smiling", beatriceStare: "Beatrice, staring", tsukasaSmile: "Tsukasa, smiling", kottrSleepy: "Köttr, sleepy",
-  lydiaSolemn: "Lydia, solemn", ahxiEyeroll: "Ahxi, eye roll", ogarkYell: "Ogark, yelling", annaPhone: "Anna, on her phone",
-  korelinProud: "Korelin, proud", rosamundHappy: "Rosamund, happy", robinSurprised: "Robin, surprised", dorpipSweat: "Dorpip, sweating",
-  gingernutsCreep: "Gingernuts, creeping", bizzHappy: "Bizz, happy", grodrotPanic: "Grodrot, panicking", nycolasPanic: "Nycolas, panicking",
-  aryaIrritated: "Arya, irritated", sejiAngry: "Seji, angry", dommyStare: "Dommy, staring", sohFocus: "Soh, focused",
-  brigitCute: "Brigit, cute", hansanSmoke: "Hansan, smoking", sysifeThink: "Sysife, thinking", eliasAndMaya: "Elias & Maya",
-  susomNervous: "Susom, nervous", magicFingers: "Magic fingers", magicFist: "Magic fist", magicOkay: "Magic okay",
-  birdSurprised: "Surprised bird", horseWhat: "Horse, what?", seagullMad: "Mad seagull", sysifusLogo: "Sysifus Corp",
-};
-const emojiName = (name: string) => EMOJI_NAMES[name] ?? name;
+// each emoji's name, as its tooltip: the way it's written in a line (:bizzHappy:)
+const emojiName = (name: string) => `:${name}:`;
 
 // a line's text, its :emoji: as pictures (a line of nothing but emoji, bigger)
 const Text = ({ text }: { text: string }) => {

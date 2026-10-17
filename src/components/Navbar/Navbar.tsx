@@ -86,7 +86,7 @@ export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
 
       <div className={`${styles.navbar} ${isVisibleClass}`}>
         {/* Top bar: logo + action buttons + hamburger */}
-        <div className={`${styles.topBar}${isAtTop ? "" : ` ${styles.scrolled}`} noselect`}>
+        <div className={`${styles.topBar} noselect`}>
           <NavLink to="/" className={styles.logo} aria-label="Love, Career & Magic home" />
           <div className={styles.topBarActions}>
             {!hideBuyButtons && (!isLandingPage || isDesktop) && !isLandingPageAtTop && (

@@ -12,31 +12,6 @@
   align-items: center;
 }
 
-/* scrolled: a cream bar behind it, so the logo and the menu button never sit on the page. (On a
-   layer of its own: a blur on the bar itself would pin the phone's fixed buttons to it.) */
-.topBar::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: rgba(251, 248, 241, 0.88);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 1px 0 rgba(50, 50, 50, 0.08);
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
-}
-
-.topBar.scrolled::before {
-  opacity: 1;
-}
-
-/* (not over the open menu) */
-.navbar:global(.is-active) .topBar::before {
-  opacity: 0;
-}
-
 .logo {
   display: block;
   width: 50px;

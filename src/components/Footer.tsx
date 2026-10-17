@@ -124,8 +124,7 @@ const Footer = () => {
           <h2 className={styles.title}>Love, Career &amp; Magic</h2>
           <img className={styles.tagline} src="/images/title.webp" alt="A game where fantasy meets reality TV" loading="lazy" />
           <div className={styles.ctas}>
-            {/* (not on the online game's pages) */}
-            {!(pathname === "/play" || pathname.startsWith("/play/")) && <BuyButton from="footer" animated icon="forward" variant="primary" color="red" text="Buy now!" />}
+            <BuyButton from="footer" animated icon="forward" variant="primary" color="red" text="Buy now!" />
             <NavLink to="/characters" className={styles.castLink} onClick={toTopIfHere("/characters")}>
               Meet the cast <span aria-hidden="true">→</span>
             </NavLink>

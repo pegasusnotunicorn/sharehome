@@ -4,6 +4,7 @@ import type { Player, RoomView } from "../../../game-server/src/protocol";
 import CardCarousel from "../utils/CardCarousel";
 import DefaultButton from "../utils/DefaultButton";
 import Icon from "../utils/Icons";
+import { play } from "./sounds";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
 import { getAllCharacters } from "../Characters/Characters";
 import { PLAYER_COLORS } from "./GameTable";
@@ -86,7 +87,10 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
         back={back}
         name={nameOf}
         label={(i) => (i === RANDOM ? "A random character" : `${nameOf(i)}'s card`)}
-        onTurnStart={() => setTurning(true)}
+        onTurnStart={() => {
+          setTurning(true);
+          play("turn");
+        }}
         onTurn={(i) => {
           setAt(i);
           requestAnimationFrame(() => setTurning(false));

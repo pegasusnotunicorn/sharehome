@@ -15,6 +15,7 @@ import Toast from "./Toast";
 import Rulebook from "./Rulebook";
 import CharacterChooser from "./CharacterChooser";
 import Chat from "./Chat";
+import { isMuted, play, setMuted } from "./sounds";
 import { getAllCharacters } from "../Characters/Characters";
 import useRoom from "./useRoom";
 import styles from "../../css/pages/playPage.module.css";
@@ -364,6 +365,7 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
   const [leaving, setLeaving] = useState(false);
   const [startCheck, setStartCheck] = useState(false);
   const me = playerId();
+  useLobbySounds(room, me);
   // (the loading screen's cards, fetched while everyone's still in the waiting room)
   useEffect(() => {
     const t = setTimeout(preloadBacks, 1500);
@@ -457,6 +459,7 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
 
       {reconnecting}
       {watchers}
+      <SoundToggle />
 
       {/* (on a phone, your character comes first: it's the thing to do) */}
       <div className={styles.lobby}>
@@ -504,7 +507,7 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
               text="Start the show"
               icon="clapper"
               color="red"
-              className={styles.startButton}
+              className={`${styles.startButton}${canStart && !notReady.length ? ` ${styles.startGlow}` : ""}`}
             />
           )}
         </section>
@@ -837,6 +840,7 @@ const useCopyLink = (code: string) => {
     try {
       await navigator.clipboard.writeText(link);
       setCopied(true);
+      play("copy");
       setTimeout(() => setCopied(false), 2000);
     } catch {
       setFailed(true);
@@ -846,6 +850,51 @@ const useCopyLink = (code: string) => {
 };
 
 // The invite: the room's code (a tap copies it) and its link, to copy, and the faces of the cast so far
+// the waiting room's sounds, for whatever just changed, whoever did it: someone in or out, a character
+// picked, someone ready (or not), and the show starting
+const useLobbySounds = (room: RoomView | null, me: string) => {
+  const was = useRef<RoomView | null>(null);
+  useEffect(() => {
+    const before = was.current;
+    was.current = room;
+    if (!room || !before) return;
+    if (room.phase === "game" && before.phase === "lobby") return play("showtime");
+    if (room.phase !== "lobby") return;
+    const ids = (r: RoomView) => new Set(r.players.map((p) => p.id));
+    const now = ids(room), then = ids(before);
+    if ([...now].some((id) => !then.has(id))) return play("join");
+    if ([...then].some((id) => !now.has(id))) return play("leave");
+    const readyNow = Object.keys(room.ready ?? {}).filter((id) => room.ready[id]).length;
+    const readyThen = Object.keys(before.ready ?? {}).filter((id) => before.ready[id]).length;
+    if (readyNow > readyThen) return play("ready");
+    if (readyNow < readyThen) return play("unready");
+    if (JSON.stringify(room.picks) !== JSON.stringify(before.picks)) return play("pick");
+  }, [room, me]);
+};
+
+// sound on or off, in the waiting room's corner (the table has it on the phone)
+const SoundToggle = () => {
+  const [muted, setMutedState] = useState(isMuted);
+  return (
+    <button
+      type="button"
+      className={styles.soundToggle}
+      onClick={() => {
+        setMuted(!muted);
+        setMutedState(!muted);
+        if (muted) play("copy");
+      }}
+      aria-label={muted ? "Turn sound on" : "Turn sound off"}
+      aria-pressed={!muted}
+      title={muted ? "Sound off" : "Sound on"}
+    >
+      <svg viewBox="0 0 24 24" aria-hidden>
+        {muted ? <path d="M11 5 6 9H3v6h3l5 4zM17 9l4 6M21 9l-4 6" /> : <path d="M11 5 6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" />}
+      </svg>
+    </button>
+  );
+};
+
 // the audience: how many are watching (to everyone), and for a spectator, that they're watching, a
 // way to take a seat while there's one free before the show, and a way out
 const Watchers = ({
@@ -910,6 +959,7 @@ const Invite = ({ code, room }: { code: string; room: RoomView }) => {
     try {
       await navigator.clipboard.writeText(code);
       setCodeCopied(true);
+      play("copy");
       setTimeout(() => setCodeCopied(false), 2000);
     } catch {
       setFailed(true);

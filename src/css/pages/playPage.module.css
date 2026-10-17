@@ -1773,3 +1773,75 @@
 .leaveDot {
   color: rgba(50, 50, 50, 0.4);
 }
+
+/* everyone's ready: the start button glows, and a shine runs across it */
+.startGlow {
+  overflow: hidden;
+  animation: startGlow 1.6s ease-in-out infinite;
+}
+
+.startGlow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.45) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat;
+  animation: startShine 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes startGlow {
+  50% {
+    box-shadow:
+      0 var(--btn-depth, 4px) 0 #8f1410,
+      0 0 0 6px rgba(216, 30, 24, 0.18),
+      0 0 30px rgba(216, 30, 24, 0.45);
+  }
+}
+
+@keyframes startShine {
+  60%,
+  100% {
+    background-position: 150% 0;
+  }
+}
+
+/* sound on or off, top right of the waiting room */
+.soundToggle {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 900;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid var(--chip-edge, rgba(50, 50, 50, 0.18));
+  border-radius: var(--chip-radius, 12px);
+  background: #fff;
+  box-shadow: 0 3px 0 var(--chip-edge, rgba(50, 50, 50, 0.18));
+  color: #323232;
+  cursor: pointer;
+}
+
+.soundToggle:hover {
+  border-color: #323232;
+  box-shadow: 0 4px 0 #323232;
+}
+
+.soundToggle svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .startGlow,
+  .startGlow::after {
+    animation: none;
+  }
+}

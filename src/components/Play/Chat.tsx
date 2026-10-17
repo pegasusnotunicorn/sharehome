@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 
 import { CHAT_EMOJI, CHAT_MAX, type ChatLine, type ClientMessage } from "../../../game-server/src/protocol";
 import Icon from "../utils/Icons";
 import Confirm from "./Confirm";
+import { play } from "./sounds";
 import { PLAYER_COLORS } from "./GameTable";
 import styles from "../../css/pages/chat.module.css";
 
@@ -50,6 +51,14 @@ const Chat = ({ lines, me, send, slow, isHost }: ChatProps) => {
   useEffect(() => {
     if (open) setSeen(lines[lines.length - 1]?.id ?? null);
   }, [open, lines]);
+  // a pop for each new line (yours a lighter one), once the chat's history is in
+  const heard = useRef<string | null>(null);
+  useEffect(() => {
+    const last = lines[lines.length - 1];
+    if (!last) return;
+    if (heard.current !== null && last.id !== heard.current) play(last.by === me ? "send" : "chat");
+    heard.current = last.id;
+  }, [lines, me]);
   // (the newest line in view)
   useEffect(() => {
     if (open) list.current?.scrollTo({ top: list.current.scrollHeight });

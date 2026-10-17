@@ -100,8 +100,17 @@ const useTableLoaded = (game: GameView) => {
 };
 
 // the loading screen: the deck's backs shuffling over the tablecloth
-const Loading = ({ out }: { out: boolean }) => (
+// the loading screen: the stage's curtains drawn, the deck's backs shuffling in the spotlight between
+// them; once the table's in, the curtains sweep open on it
+const Loading = ({ out }: { out: boolean }) => {
+  useEffect(() => {
+    if (out) play("curtain");
+  }, [out]);
+  return (
   <div className={`${styles.loading}${out ? ` ${styles.loadingOut}` : ""}`} role="status" aria-label="Setting the table">
+    <span className={`${styles.curtain} ${styles.curtainLeft}`} aria-hidden />
+    <span className={`${styles.curtain} ${styles.curtainRight}`} aria-hidden />
+    <span className={styles.valance} aria-hidden />
     <div className={styles.loadingDeck} aria-hidden>
       {(["director", "producer", "showrunner"] as DirectionDeck[]).map((d, i) => (
         // (a plain back in the deck's colour, until its picture's in: it never shows half-loaded)
@@ -112,7 +121,36 @@ const Loading = ({ out }: { out: boolean }) => (
     </div>
     <span className={styles.loadingWord}>Setting the table</span>
   </div>
-);
+  );
+};
+
+// a number that counts its way up (or down) to where it's going, and pops as it gets there
+const CountUp = ({ value, className }: { value: number; className?: string }) => {
+  const [shown, setShown] = useState(value);
+  const [pop, setPop] = useState(0);
+  const from = useRef(value);
+  useEffect(() => {
+    const start = from.current;
+    if (start === value) return;
+    from.current = value;
+    if (reducedMotion()) return setShown(value);
+    const t0 = performance.now(), ms = Math.min(700, 120 * Math.abs(value - start) + 200);
+    let raf = 0;
+    const step = (now: number) => {
+      const k = Math.min(1, (now - t0) / ms);
+      setShown(Math.round(start + (value - start) * (1 - Math.pow(1 - k, 3))));
+      if (k < 1) raf = requestAnimationFrame(step);
+      else setPop((p) => p + 1);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [value]);
+  return (
+    <b key={pop} className={`${className ?? ""}${pop ? ` ${styles.scorePop}` : ""}`}>
+      {shown}
+    </b>
+  );
+};
 
 const reducedMotion = () => typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -342,7 +380,7 @@ const useClock = (game: GameView, serverNow: number) => {
   const seconds = Math.ceil(left / 1000);
   const lastTick = useRef(seconds);
   useEffect(() => {
-    if (game.endsAt !== null && seconds !== lastTick.current && seconds > 0 && seconds <= 10) play("tick");
+    if (game.endsAt !== null && seconds !== lastTick.current && seconds > 0 && seconds <= 10) play(seconds <= 3 ? "countdown" : "tick");
     lastTick.current = seconds;
   }, [seconds, game.endsAt]);
   return left;
@@ -384,7 +422,8 @@ const useTableSounds = (game: GameView) => {
     if (tokens(game) < tokens(was)) return play("undo");
     if (traits(game) > traits(was)) return play("trait");
     if (traits(game) < traits(was)) return play("undo");
-    if (JSON.stringify(game.faceUp) !== JSON.stringify(was.faceUp)) play("deal");
+    // (a card changed with none completed: before an episode, that's a swap)
+    if (JSON.stringify(game.faceUp) !== JSON.stringify(was.faceUp)) play(game.phase === "ready" ? "swap" : "deal");
   }, [game]);
 };
 
@@ -411,7 +450,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   const [loadingGone, setLoadingGone] = useState(false);
   useEffect(() => {
     if (!loaded) return;
-    const t = setTimeout(() => setLoadingGone(true), 500);
+    const t = setTimeout(() => setLoadingGone(true), 1300);
     return () => clearTimeout(t);
   }, [loaded]);
   const [muted, setMutedState] = useState(isMuted);
@@ -424,7 +463,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
     if (!r || r.id === lastRemote.current) return;
     lastRemote.current = r.id;
     setRemoteShown(r.button);
-    play("deal");
+    play("remote");
     const t = setTimeout(() => setRemoteShown(null), 5000);
     return () => clearTimeout(t);
   }, [game.remote]);
@@ -713,7 +752,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                     </div>
                     <div className={styles.phoneFoot}>
                       <span>
-                        <b>{points.total}</b> pts
+                        <CountUp value={points.total} className={styles.score} /> pts
                       </span>
                       <button type="button" className={styles.clothButton} onClick={() => setPicking(true)} aria-label="Settings" title="Settings">
                         <svg viewBox="0 0 24 24" aria-hidden>

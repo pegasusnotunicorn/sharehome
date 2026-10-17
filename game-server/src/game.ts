@@ -8,7 +8,6 @@ import {
   EPISODES,
   EPISODE_SECONDS,
   FACE_UP_PER_DECK,
-  REMOTE_BUTTONS,
   TRAIT_KINDS,
   type ClientMessage,
   type DirectionDeck,
@@ -24,6 +23,8 @@ export interface StoredGame extends GameView {
 }
 
 const LOG_MAX = 12;
+// the same R.E.M.O.T.E. button again this soon, while it's still up on everyone's screen, changes nothing
+const REMOTE_AGAIN = 3000;
 
 const shuffled = (n: number) => {
   const cards = Array.from({ length: n }, (_, i) => i);
@@ -132,8 +133,9 @@ export function tick(game: StoredGame, now: number) {
   return false;
 }
 
-// One player's move. It returns false when it changes nothing (a move that doesn't fit the moment,
-// or an out-of-date one from a slow connection), so the room needn't save or tell anyone.
+// One player's move (checked at the door: see parseClientMessage). It returns false when it changes
+// nothing (a move that doesn't fit the moment, or an out-of-date one from a slow connection), so the
+// room needn't save or tell anyone.
 export function move(game: StoredGame, by: string, msg: ClientMessage, now: number): boolean {
   tick(game, now);
   const ep = current(game);
@@ -176,7 +178,7 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
       if (card === undefined || card === null) return false;
       const drawn = game.piles[msg.deck].shift() ?? null;
       cards[msg.slot] = drawn;
-      const done = { id: id(), deck: msg.deck, slot: msg.slot, i: card, tokens: 0, by };
+      const done = { id: id(), deck: msg.deck, slot: msg.slot, i: card, by };
       ep.completed.push(done);
       game.drawnFor[done.id] = { deck: msg.deck, slot: msg.slot, drawn };
       countLeft(game);
@@ -211,7 +213,7 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
         else game.piles[card.deck].unshift(card.i);
       }
       countLeft(game);
-      log(game, by, `${name} undid a ${card.deck} card (−${DIRECTION_POINTS[card.deck] + card.tokens})`);
+      log(game, by, `${name} undid a ${card.deck} card (−${DIRECTION_POINTS[card.deck]})`);
       return true;
     }
 
@@ -229,21 +231,13 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
     }
 
     case "token": {
+      // callbacks: from episode two, onto an earlier episode's card
       if (game.phase === "over") return false;
-      if (msg.on === "episode") {
-        // callbacks: from episode two, onto an earlier episode's card
-        const target = game.episodes[msg.episode - 1];
-        if (!target || msg.episode >= game.episode) return false;
-        if (!msg.add && target.tokens === 0) return false;
-        target.tokens += msg.add ? 1 : -1;
-        log(game, by, `${name} ${msg.add ? "made a callback to" : "took a token off"} episode ${msg.episode} (${msg.add ? "+1" : "−1"})`);
-      } else {
-        const target = ep.completed.find((c) => c.id === msg.id);
-        if (!target) return false;
-        if (!msg.add && target.tokens === 0) return false;
-        target.tokens += msg.add ? 1 : -1;
-        log(game, by, `${name} ${msg.add ? "added a token to" : "took a token off"} a ${target.deck} card (${msg.add ? "+1" : "−1"})`);
-      }
+      const target = game.episodes[msg.episode - 1];
+      if (!target || msg.episode >= game.episode) return false;
+      if (!msg.add && target.tokens === 0) return false;
+      target.tokens += msg.add ? 1 : -1;
+      log(game, by, `${name} ${msg.add ? "made a callback to" : "took a token off"} episode ${msg.episode} (${msg.add ? "+1" : "−1"})`);
       return true;
     }
 
@@ -261,13 +255,12 @@ export function move(game: StoredGame, by: string, msg: ClientMessage, now: numb
         if (hand.traits.some((t) => t.done === game.episode)) return false;
         trait.done = game.episode;
       }
-      const whose = msg.player === by ? "their" : `{${msg.player}}’s`;
-      log(game, by, `${name} ${trait.done !== null ? "played" : "took back"} ${whose} ${trait.kind} trait`);
+      log(game, by, `${name} ${trait.done !== null ? "played" : "took back"} their ${trait.kind} trait`);
       return true;
     }
 
     case "remote": {
-      if (!REMOTE_BUTTONS.includes(msg.button)) return false;
+      if (game.remote?.button === msg.button && now - game.remote.at < REMOTE_AGAIN) return false;
       game.remote = { id: id(), button: msg.button, at: now };
       // (pause stops the clock; play starts it again)
       if (msg.button === "pause" && game.phase === "playing" && game.endsAt !== null) {

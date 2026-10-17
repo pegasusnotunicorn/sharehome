@@ -4,7 +4,10 @@
 //
 //   POST /rooms               → { code }           a new room
 //   GET  /rooms/:code         → { exists, full }   for the join screen
-//   GET  /rooms/:code/socket?player=…&name=…      the room's socket (see protocol.ts)
+//   GET  /rooms/:code/socket?player=…&name=…&v=…  the room's socket (see protocol.ts; &watch=1 to watch)
+//
+// `player` is a secret the browser keeps: it's how the room knows a player again. Everyone else only
+// ever sees a public id made from it (see publicId), so nobody can take over another's seat.
 
 import { DurableObject } from "cloudflare:workers";
 import {
@@ -17,10 +20,10 @@ import {
   CODE_PATTERN,
   MAX_PLAYERS,
   MIN_PLAYERS,
-  DECK_SIZES,
+  PROTOCOL_VERSION,
   cleanName,
+  parseClientMessage,
   type ByeReason,
-  type ClientMessage,
   type RoomError,
   type RoomView,
   type ServerMessage,
@@ -45,18 +48,24 @@ export interface Env {
   // a Discord webhook (a secret: Worker → Settings → Variables): a word there whenever a show starts,
   // with the link to come and watch. Unset: no word
   DISCORD_WEBHOOK_URL?: string;
-  // how often one address may make a room, and open a room (see wrangler.jsonc)
+  // how often one address may make a room, and open a room; and how often Discord's told of a show,
+  // from all the rooms together (see wrangler.jsonc)
   CREATE_LIMIT: RateLimit;
   JOIN_LIMIT: RateLimit;
+  ANNOUNCE_LIMIT: RateLimit;
 }
 
 // (every limit below is about the bill: a room woken is paid for, so anything that would wake rooms
 // over and over, a bot or a stuck page, is turned away as early and cheaply as possible)
 const IDLE_TTL = 60 * 60 * 1000; // a room with nobody in it is deleted after this
 const MAX_AGE = 12 * 60 * 60 * 1000; // and any room at all, after this
-// a socket sending more than this many messages in FLOOD_WINDOW is closed (a held button sends ten a second)
-const FLOOD_LIMIT = 200;
+// a socket sending more than this many messages in FLOOD_WINDOW is closed (a held button sends at
+// most ten a second, and only for as long as there's something to take off)
+const FLOOD_LIMIT = 40;
 const FLOOD_WINDOW = 10 * 1000;
+// a room saving more than this often in FLOOD_WINDOW (many sockets each just under their limit)
+// closes whichever socket's sending the most
+const WRITE_BUDGET = 80;
 // a show's start is told to Discord at most once per room in this long (a host starting and ending
 // over and over can't flood the channel)
 const ANNOUNCE_GAP = 10 * 60 * 1000;
@@ -77,6 +86,24 @@ const maxWatching = (env: Env) => {
 const HOST_GRACE = 60 * 1000; // a host offline this long hands the room to the next player online
 const PLAYER_ID = /^[A-Za-z0-9-]{8,64}$/;
 const MAX_MESSAGE = 2048;
+
+// a player's public id: the start of a hash of the secret one their browser sends. The room knows
+// players by it, and it's all anyone else is ever sent (the secret alone proves who's who)
+const publicId = async (secret: string) => {
+  const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(secret));
+  return Array.from(new Uint8Array(hash).slice(0, 6), (b) => b.toString(16).padStart(2, "0")).join("");
+};
+
+// what an address is counted as by the rate limits: an IPv6 one by its /64 (a home or a phone has a
+// whole /64 to itself, so counting each address would let one device be a crowd)
+const rateKey = (ip: string) => {
+  if (!ip.includes(":")) return ip;
+  const [head, tail = ""] = ip.split("::");
+  const left = head ? head.split(":") : [];
+  const right = tail ? tail.split(":") : [];
+  const groups = [...left, ...Array(Math.max(0, 8 - left.length - right.length)).fill("0"), ...right];
+  return `${groups.slice(0, 4).map((g) => (parseInt(g, 16) || 0).toString(16)).join(":")}::/64`;
+};
 
 // #region--------------------------------------THE WORKER
 
@@ -126,7 +153,7 @@ export default {
       });
     }
 
-    const ip = request.headers.get("CF-Connecting-IP") || "local";
+    const ip = rateKey(request.headers.get("CF-Connecting-IP") || "local");
 
     if (url.pathname === "/rooms" && request.method === "POST") {
       if (!(await env.CREATE_LIMIT.limit({ key: ip })).success) return json({ error: "slow-down" }, origin, 429);
@@ -186,8 +213,12 @@ interface StoredRoom {
 
 export class Room extends DurableObject<Env> {
   private room: StoredRoom | null = null;
-  // each socket's messages in the current window (in memory: a room that's slept has had a quiet spell)
+  // each socket's messages in the current window, and the room's saves in its own (in memory: a room
+  // that's slept has had a quiet spell)
   private traffic = new WeakMap<WebSocket, { since: number; count: number }>();
+  private writes = { since: 0, count: 0 };
+  // when the clock's set for, as last set (undefined: not known yet, since the room woke)
+  private alarmDue: number | null | undefined;
   // the chat so far (saved with each line, so it's there when the room wakes)
   private chat: ChatLine[] = [];
   // each socket's chat lines lately, to hold back a flood
@@ -228,7 +259,7 @@ export class Room extends DurableObject<Env> {
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
     const [client, server] = Object.values(new WebSocketPair());
-    const playerId = url.searchParams.get("player") || "";
+    const secret = url.searchParams.get("player") || "";
     const name = cleanName(url.searchParams.get("name")) || "Player";
 
     const refuse = (error: RoomError) => {
@@ -239,21 +270,24 @@ export class Room extends DurableObject<Env> {
       return new Response(null, { status: 101, webSocket: client });
     };
 
+    if (url.searchParams.get("v") !== String(PROTOCOL_VERSION)) return refuse("outdated");
+    if (!PLAYER_ID.test(secret)) return refuse("bad-request");
+    const playerId = await publicId(secret);
     const room = this.room;
     if (!room) return refuse("not-found");
-    if (!PLAYER_ID.test(playerId)) return refuse("bad-request");
 
     let player = room.players.find((p) => p.id === playerId);
     if (!player && room.removed?.includes(playerId)) return refuse("removed");
 
     // a spectator: anyone not already playing who asks to watch, or arrives once the room's full or
-    // the show's started. Cheap by design: nothing's saved and nobody else is sent anything (they see
-    // the count of watchers with the room's next change); the room sends them the table as it is
+    // the show's started. Cheap by design: nothing's saved, and the players are sent just the new
+    // count of watchers; the room sends the spectator the table as it is, and the chat
     if (!player && (url.searchParams.get("watch") === "1" || room.players.length >= MAX_PLAYERS || room.game)) {
       if (room.watchClosed) return refuse("watch-closed");
-      if (this.ctx.getWebSockets(WATCH).length >= maxWatching(this.env)) return refuse("watch-full");
+      if (this.openSockets(undefined, WATCH).length >= maxWatching(this.env)) return refuse("watch-full");
       this.ctx.acceptWebSocket(server, [WATCH]);
       server.serializeAttachment({ playerId, watch: true, name: cleanName(url.searchParams.get("name")) });
+      this.send(server, { t: "you", id: playerId });
       this.send(server, { t: "state", room: this.view() });
       if (this.chat.length) this.send(server, { t: "chatLog", lines: this.chat });
       this.tellPlayersWatching();
@@ -276,6 +310,7 @@ export class Room extends DurableObject<Env> {
 
     this.ctx.acceptWebSocket(server, [playerId]);
     server.serializeAttachment({ playerId });
+    this.send(server, { t: "you", id: playerId });
     room.emptySince = null;
     if (room.hostId === playerId) room.hostAwaySince = null;
     await this.save();
@@ -290,7 +325,8 @@ export class Room extends DurableObject<Env> {
 
   async webSocketMessage(ws: WebSocket, raw: string | ArrayBuffer) {
     const room = this.room;
-    if (!room || typeof raw !== "string" || raw.length > MAX_MESSAGE) return;
+    // (a socket on its way out, closed for flooding, say: whatever it had sent after is dropped)
+    if (!room || typeof raw !== "string" || raw.length > MAX_MESSAGE || ws.readyState !== WebSocket.OPEN) return;
     const now = Date.now();
     const seen = this.traffic.get(ws);
     if (!seen || now - seen.since > FLOOD_WINDOW) this.traffic.set(ws, { since: now, count: 1 });
@@ -299,12 +335,8 @@ export class Room extends DurableObject<Env> {
       return;
     }
     const { playerId, watch, name: watcherName } = ws.deserializeAttachment() as { playerId: string; watch?: boolean; name?: string };
-    let msg: ClientMessage;
-    try {
-      msg = JSON.parse(raw);
-    } catch {
-      return;
-    }
+    const msg = parseClientMessage(raw);
+    if (!msg) return;
     // the chat: players and spectators alike
     if (msg.t === "chat") {
       const player = room.players.find((p) => p.id === playerId);
@@ -320,11 +352,12 @@ export class Room extends DurableObject<Env> {
     if (watch) return;
     const isHost = room.hostId === playerId;
 
+    // (each case returns when it changes nothing: nothing's saved, and nobody's sent anything)
     switch (msg.t) {
       case "rename": {
         const name = cleanName(msg.name);
         const me = room.players.find((p) => p.id === playerId);
-        if (!name || !me) return;
+        if (!name || !me || me.name === name) return;
         me.name = name;
         break;
       }
@@ -335,7 +368,7 @@ export class Room extends DurableObject<Env> {
         break;
       }
       case "removeWatcher": {
-        if (!isHost || typeof msg.id !== "string" || msg.id === playerId || room.players.some((p) => p.id === msg.id)) return;
+        if (!isHost || msg.id === playerId || room.players.some((p) => p.id === msg.id)) return;
         const theirs = this.ctx.getWebSockets(WATCH).filter((ws) => (ws.deserializeAttachment() as { playerId?: string } | null)?.playerId === msg.id);
         const said = this.chat.some((l) => l.by === msg.id);
         if (!theirs.length && !said) return;
@@ -345,6 +378,7 @@ export class Room extends DurableObject<Env> {
         if (said) {
           this.chat = this.chat.filter((l) => l.by !== msg.id);
           await this.ctx.storage.put("chat", this.chat);
+          this.spend();
           const log = JSON.stringify({ t: "chatLog", lines: this.chat } satisfies ServerMessage);
           for (const ws of this.openSockets()) {
             try {
@@ -357,15 +391,15 @@ export class Room extends DurableObject<Env> {
         break;
       }
       case "watchOpen": {
-        if (!isHost) return;
+        if (!isHost || !room.watchClosed === msg.open) return;
         room.watchClosed = !msg.open;
         break;
       }
       case "makeHost": {
         // (only to someone who's here: a host who's gone can't run the room)
-        if (!isHost || !room.players.some((p) => p.id === msg.id) || !this.isOnline(msg.id)) return;
+        if (!isHost || msg.id === playerId || !room.players.some((p) => p.id === msg.id) || !this.isOnline(msg.id)) return;
         room.hostId = msg.id;
-        room.hostAwaySince = this.isOnline(msg.id) ? null : Date.now();
+        room.hostAwaySince = null;
         break;
       }
       case "toAudience": {
@@ -375,7 +409,7 @@ export class Room extends DurableObject<Env> {
         break;
       }
       case "leave": {
-        this.removePlayer(playerId, "left");
+        if (!this.removePlayer(playerId, "left")) return;
         break;
       }
       case "start": {
@@ -393,12 +427,13 @@ export class Room extends DurableObject<Env> {
         const picks = (room.picks ??= {});
         const ready = (room.ready ??= {});
         if (msg.character === null) {
+          if (picks[playerId] === undefined && !ready[playerId]) return;
           delete picks[playerId];
           delete ready[playerId];
           break;
         }
         const c = msg.character;
-        if (!Number.isInteger(c) || c < 0 || c >= DECK_SIZES.characters) return;
+        if (picks[playerId] === c) return;
         // (one player per character)
         if (Object.entries(picks).some(([id, pick]) => pick === c && id !== playerId)) return;
         picks[playerId] = c;
@@ -408,6 +443,7 @@ export class Room extends DurableObject<Env> {
         if (room.game) return;
         const ready = (room.ready ??= {});
         if (msg.ready && room.picks?.[playerId] === undefined) return;
+        if (!!ready[playerId] === msg.ready) return;
         if (msg.ready) ready[playerId] = true;
         else delete ready[playerId];
         break;
@@ -434,13 +470,25 @@ export class Room extends DurableObject<Env> {
     // (a spectator going: nothing to save; the players see the count go down)
     if (watch) return this.tellPlayersWatching(ws);
     const now = Date.now();
-    if (playerId && room.hostId === playerId && !this.isOnline(playerId, ws)) room.hostAwaySince = now;
-    // (gone from a game, with no other tab still open: everyone's told)
-    if (playerId && room.game && room.players.some((p) => p.id === playerId) && !this.isOnline(playerId, ws)) logPresence(room.game, playerId, false);
+    // (a tab closed while another's still open, like one that's been replaced, changes nothing)
+    const gone = !!playerId && !this.isOnline(playerId, ws);
+    let changed = false;
+    if (gone && room.hostId === playerId) {
+      room.hostAwaySince = now;
+      changed = true;
+    }
+    // (gone from a game: everyone's told)
+    if (gone && room.game && room.players.some((p) => p.id === playerId)) {
+      logPresence(room.game, playerId, false);
+      changed = true;
+    }
     // (empty: no player here. Spectators alone don't keep a room going: it's deleted an hour on, as ever)
-    if (this.playerSockets(ws).length === 0) room.emptySince = now;
-    await this.save();
-    this.broadcast(ws);
+    if (room.emptySince === null && this.playerSockets(ws).length === 0) {
+      room.emptySince = now;
+      changed = true;
+    }
+    if (changed) await this.save();
+    if (gone) this.broadcast(ws);
   }
 
   async webSocketError(ws: WebSocket) {
@@ -452,6 +500,8 @@ export class Room extends DurableObject<Env> {
   // #region the clock: handing over the room from an absent host, and deleting an empty room
 
   async alarm() {
+    // (it's gone off, so it's set for nothing now)
+    this.alarmDue = null;
     const room = this.room;
     if (!room) return;
     const now = Date.now();
@@ -461,17 +511,20 @@ export class Room extends DurableObject<Env> {
       await this.ctx.storage.deleteAll();
       return;
     }
+    let changed = false;
     // the episode's clock ran out
-    if (room.game && tick(room.game, now)) this.broadcast();
+    if (room.game && tick(room.game, now)) changed = true;
     if (room.hostAwaySince !== null && now - room.hostAwaySince >= HOST_GRACE) {
       const next = room.players.find((p) => p.id !== room.hostId && this.isOnline(p.id));
       if (next) {
         room.hostId = next.id;
         room.hostAwaySince = null;
-        this.broadcast();
+        changed = true;
       }
     }
+    if (!changed) return this.setClock();
     await this.save();
+    this.broadcast();
   }
 
   // #endregion
@@ -483,6 +536,14 @@ export class Room extends DurableObject<Env> {
     const room = this.room;
     if (!room) return;
     await this.ctx.storage.put("room", room);
+    this.spend();
+    await this.setClock();
+  }
+
+  // the clock, set for whatever's next due (and left alone when that hasn't changed)
+  private async setClock() {
+    const room = this.room;
+    if (!room) return;
     const due = [
       room.emptySince !== null ? room.emptySince + IDLE_TTL : Infinity,
       room.createdAt + MAX_AGE,
@@ -494,8 +555,28 @@ export class Room extends DurableObject<Env> {
       room.game?.phase === "playing" && room.game.endsAt !== null ? room.game.endsAt : Infinity,
     ];
     const next = Math.min(...due);
+    if (this.alarmDue === undefined) this.alarmDue = await this.ctx.storage.getAlarm();
+    if (next === (this.alarmDue ?? Infinity)) return;
     if (next === Infinity) await this.ctx.storage.deleteAlarm();
     else await this.ctx.storage.setAlarm(Math.max(next, Date.now() + 250));
+    this.alarmDue = next === Infinity ? null : next;
+  }
+
+  // one save more in the room's window: past WRITE_BUDGET, the socket sending the most is closed
+  private spend() {
+    const now = Date.now();
+    if (now - this.writes.since > FLOOD_WINDOW) this.writes = { since: now, count: 0 };
+    if (++this.writes.count <= WRITE_BUDGET) return;
+    let noisiest: WebSocket | null = null;
+    let most = 10; // (a socket that's sent less than this isn't the trouble)
+    for (const ws of this.openSockets()) {
+      const seen = this.traffic.get(ws);
+      if (seen && now - seen.since <= FLOOD_WINDOW && seen.count > most) [noisiest, most] = [ws, seen.count];
+    }
+    if (!noisiest) return;
+    noisiest.close(1008, "too many messages");
+    // (and the room starts counting again: one socket at a time goes, not everyone who's busy)
+    this.writes = { since: now, count: 0 };
   }
 
   private removePlayer(id: string, reason: ByeReason) {
@@ -531,7 +612,6 @@ export class Room extends DurableObject<Env> {
     return this.openSockets(closing, id).length > 0;
   }
 
-
   private view(closing?: WebSocket): RoomView {
     const room = this.room!;
     return {
@@ -542,7 +622,7 @@ export class Room extends DurableObject<Env> {
       picks: room.picks ?? {},
       ready: room.ready ?? {},
       game: room.game ? gameView(room.game) : null,
-      watching: this.ctx.getWebSockets(WATCH).filter((ws) => ws !== closing && ws.readyState === WebSocket.OPEN).length,
+      watching: this.openSockets(closing, WATCH).length,
       watchOpen: !room.watchClosed,
       now: Date.now(),
     };
@@ -558,6 +638,7 @@ export class Room extends DurableObject<Env> {
 
   // a show's started: a word in Discord, who's in it and the link to watch (a plain room link: once
   // the show's on, it opens as a spectator). Sent alongside, never held up for, and nothing if it fails
+  // or if the rooms together have told Discord enough lately (ANNOUNCE_LIMIT)
   private announceShow(room: StoredRoom) {
     const hook = this.env.DISCORD_WEBHOOK_URL;
     if (!hook || !/^https:\/\/(?:canary\.|ptb\.)?discord(?:app)?\.com\/api\/webhooks\//.test(hook)) return;
@@ -568,20 +649,22 @@ export class Room extends DurableObject<Env> {
     const site = this.env.ALLOWED_ORIGINS.split(",")[0].trim();
     const names = room.players.map((p) => `**${plain(p.name)}**`).join(", ");
     const content = `🎬 A show just started: ${room.players.length} players (${names}).\nCome watch: ${site}/play/${room.code}`;
-    this.ctx.waitUntil(
-      fetch(hook, {
+    const tell = async () => {
+      if (!(await this.env.ANNOUNCE_LIMIT.limit({ key: "discord" })).success) return;
+      await fetch(hook, {
         method: "POST",
         headers: { "content-type": "application/json" },
         // (no one's pinged, whatever a name says)
         body: JSON.stringify({ content, allowed_mentions: { parse: [] } }),
-      }).catch(() => {})
-    );
+      });
+    };
+    this.ctx.waitUntil(tell().catch(() => {}));
   }
 
   // how many are watching, to the players alone (a handful of tiny messages, however big the audience)
   private tellPlayersWatching(closing?: WebSocket) {
     if (!this.room) return;
-    const n = this.ctx.getWebSockets(WATCH).filter((ws) => ws !== closing && ws.readyState === WebSocket.OPEN).length;
+    const n = this.openSockets(closing, WATCH).length;
     const msg = JSON.stringify({ t: "watching", n, open: !this.room.watchClosed } satisfies ServerMessage);
     for (const ws of this.playerSockets()) {
       try {
@@ -619,6 +702,7 @@ export class Room extends DurableObject<Env> {
     const line: ChatLine = { ...from, id: crypto.randomUUID().slice(0, 8), text, at: now };
     this.chat = [...this.chat, line].slice(-CHAT_KEEP);
     await this.ctx.storage.put("chat", this.chat);
+    this.spend();
     const out = JSON.stringify({ t: "chat", line } satisfies ServerMessage);
     for (const s of this.openSockets()) {
       try {

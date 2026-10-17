@@ -410,7 +410,7 @@ const useTableSounds = (game: GameView) => {
     before.current = game;
     if (!was) return;
     const done = (g: GameView) => g.episodes.reduce((n, e) => n + e.completed.length, 0);
-    const tokens = (g: GameView) => g.episodes.reduce((n, e) => n + e.tokens + e.completed.reduce((m, c) => m + c.tokens, 0), 0);
+    const tokens = (g: GameView) => g.episodes.reduce((n, e) => n + e.tokens, 0);
     const traits = (g: GameView) => Object.values(g.hands).reduce((n, h) => n + h.traits.filter((t) => t.done !== null).length, 0);
     if (game.phase === "over" && was.phase !== "over") return play("finale");
     if (game.phase === "break" && was.phase === "playing") return play("timeUp");
@@ -537,7 +537,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
   useEffect(() => {
     if (game.phase === "break" && lastPhase.current === "playing") {
       const e = game.episodes[game.episode - 1];
-      setTimeUp({ episode: game.episode, points: e.completed.reduce((n, c) => n + DIRECTION_POINTS[c.deck] + c.tokens, 0) });
+      setTimeUp({ episode: game.episode, points: e.completed.reduce((n, c) => n + DIRECTION_POINTS[c.deck], 0) });
     }
     lastPhase.current = game.phase;
   }, [game.phase, game.episode, game.episodes]);
@@ -629,7 +629,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
   const others = players.filter((p) => p.id !== me);
   const nameOf = (id: string) => room.players.find((p) => p.id === id)?.name ?? "Someone";
   const points = score(game);
-  const epPoints = ep.completed.reduce((n, c) => n + DIRECTION_POINTS[c.deck] + c.tokens, 0);
+  const epPoints = ep.completed.reduce((n, c) => n + DIRECTION_POINTS[c.deck], 0);
   const running = game.phase === "playing" && game.endsAt !== null;
   const paused = game.phase === "playing" && game.pausedLeft !== null;
 
@@ -1253,8 +1253,9 @@ const REMOTE: Record<RemoteButton, { label: string; text: string; color: string 
 // (each button as it's painted on the card in the box)
 const remoteArt = (b: RemoteButton) => `/images/pieces/remote/keys/${b}.webp`;
 
-// pressing and holding: once at once, then again and again, faster
-const useHold = (action: () => void) => {
+// pressing and holding: once at once, then again and again, faster (until it's let go, or there's
+// nothing left to do: `disabled`)
+const useHold = (action: () => void, disabled = false) => {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const act = useRef(action);
   act.current = action;
@@ -1263,6 +1264,9 @@ const useHold = (action: () => void) => {
     timer.current = null;
   }, []);
   useEffect(() => stop, [stop]);
+  useEffect(() => {
+    if (disabled) stop();
+  }, [disabled, stop]);
   const start = (e: React.PointerEvent) => {
     if (e.button !== 0) return;
     stop();
@@ -1286,7 +1290,7 @@ const useHold = (action: () => void) => {
 };
 
 const MinusButton = ({ disabled, onMinus, label }: { disabled: boolean; onMinus: () => void; label: string }) => {
-  const hold = useHold(onMinus);
+  const hold = useHold(onMinus, disabled);
   return (
     <button type="button" className={styles.minus} disabled={disabled} aria-label={label} {...hold}>
       −
@@ -1357,7 +1361,7 @@ const PlayArea = ({
 
 const PAGE = 6;
 
-// everything played this episode: search it, a page at a time; tokens and undo for each card
+// everything played this episode: search it, a page at a time; undo for each card
 const PlayedDialog = ({
   episode,
   cards,
@@ -1417,7 +1421,7 @@ const PlayedDialog = ({
               <img src={art.direction(c.deck, c.i)} alt={name(c.deck, c.i)} width="768" height="497" />
               <div className={styles.playedMeta}>
                 <span>
-                  <b>+{DIRECTION_POINTS[c.deck] + c.tokens}</b> {nameOf(c.by)}
+                  <b>+{DIRECTION_POINTS[c.deck]}</b> {nameOf(c.by)}
                 </span>
                 <button
                   type="button"

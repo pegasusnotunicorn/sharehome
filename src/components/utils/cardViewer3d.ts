@@ -6,7 +6,7 @@
 // page (browsers allow only a few contexts): each viewer renders through it and copies the picture
 // onto its own 2D canvas. Nothing renders unless something changed.
 import type * as THREE from "three";
-import { calm, ease, loadTexture, loadThree, makeCard, paint, renderer, studio } from "./card3d";
+import { calm, ease, loadTexture, loadThree, makeCard, paint, renderer, studio, warm } from "./card3d";
 import type { Three } from "./card3d";
 
 type CardFace = string | HTMLCanvasElement;
@@ -77,7 +77,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   const spin = new T.Group();
   sc.add(spin);
 
-  let z = REST_Z, raf = 0, pending = 0, dead = false;
+  let z = REST_Z, raf = 0, pending = 0, dead = false, live = false; // live: the card's in, and drawn
   const tgt = AIM.clone(), q = new T.Quaternion(), v: [number, number] = [0, 0];
   const place = () => {
     cam.position.copy(CAM).divideScalar(z).add(tgt);
@@ -93,7 +93,7 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   stage.prepend(cv);
   let W = 0, H = 0, B = 0; // the stage; B: how far the canvas reaches below it
   const draw = () => {
-    if (dead || !W || !H || !ctx) return;
+    if (dead || !live || !W || !H || !ctx) return;
     // the stage's view, carried on down past its bottom edge
     cam.aspect = W / H;
     cam.setViewOffset(W, H, 0, 0, W, H + B);
@@ -166,6 +166,14 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   const rest = new T.Quaternion().setFromEuler(new T.Euler(REST[1], REST[0], 0, "YXZ"));
   q.copy(rest);
   spin.quaternion.copy(rest);
+  // shaders and pictures ready before its first frame, so that frame isn't held up (nor the turn after it)
+  await warm(r, sc, cam);
+  if (!stage.isConnected) {
+    cleanup();
+    return null;
+  }
+  // its first frame drawn, then shown in place of the picture it had till now, in the same frame
+  live = true;
   draw();
   stage.classList.add("ready");
   onReady?.();

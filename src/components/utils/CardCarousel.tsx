@@ -14,6 +14,8 @@ import styles from "../../css/utils/cardCarousel.module.css";
 
 // (how long the picture a 3D card shows while it loads takes to fade: cardViewer.module.css .still)
 const STILL_FADE_MS = 450;
+// (how wide the card on show is, by default: for its render's smaller copies)
+const CARD_SIZES = "(max-width: 592px) 100vw, 560px";
 
 interface CardCarouselProps {
   index: number;
@@ -21,6 +23,9 @@ interface CardCarouselProps {
   mm: [number, number]; // the cards' real size: width x height
   front: (i: number) => string;
   back: (i: number) => string;
+  // a render of the card at rest (CardViewer `render`), shown until the 3D card is in: for the card the
+  // page opens on (a card turned to is brought in by the ring, so needs none)
+  render?: (i: number) => string;
   name: (i: number) => string; // for Prev / Next
   label: (i: number) => string; // the card on show, for screen readers
   href?: (i: number) => string; // Prev / Next as links (a page per card)
@@ -36,7 +41,7 @@ interface CardCarouselProps {
   className?: string;
 }
 
-const CardCarousel = ({ index, count, mm, front, back, name, label, href, fallback, onTurnStart, onTurn, keys, hold, cardWidth, className }: CardCarouselProps) => {
+const CardCarousel = ({ index, count, mm, front, back, render, name, label, href, fallback, onTurnStart, onTurn, keys, hold, cardWidth, className }: CardCarouselProps) => {
   const around = (k: number) => (index + k + count * 4) % count;
 
   const ring = useRef<CardRingApi | null>(null);
@@ -47,6 +52,7 @@ const CardCarousel = ({ index, count, mm, front, back, name, label, href, fallba
   // Prev / Next fade out while the cards swing round, and back in for the next card
   const [hush, setHush] = useState(false);
   const turning = useRef(false);
+  const opened = useRef(index);
   const handover = useRef(0);
   useEffect(() => () => clearTimeout(handover.current), []);
 
@@ -182,6 +188,8 @@ const CardCarousel = ({ index, count, mm, front, back, name, label, href, fallba
           faces={async () => ({ front: front(index), back: back(index) })}
           label={label(index)}
           still={front(index)}
+          render={index === opened.current ? render?.(index) : undefined}
+          renderSizes={cardWidth ? undefined : CARD_SIZES}
           intro={!swung}
           onReady={ready}
           hold={hold}

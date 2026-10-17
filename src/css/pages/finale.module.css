@@ -3,8 +3,8 @@
    falls over all of it. */
 
 .finale {
-  --ink: #323232;
-  --night: #1c1a2b;
+  --ink: var(--ink);
+  --night: var(--night);
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
@@ -18,7 +18,7 @@
 .confetti {
   position: fixed;
   inset: 0;
-  z-index: 120000;
+  z-index: var(--z-room);
   width: 100vw;
   height: 100vh;
   pointer-events: none;
@@ -84,25 +84,25 @@
 .finale .kicker {
   margin: 0;
   padding: 0.35rem 1rem;
-  border-radius: 999px;
+  border-radius: var(--pill-radius);
   background: rgba(28, 26, 43, 0.6);
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.8rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: #f1db4b;
+  color: var(--yellow);
 }
 
 .rating {
   max-width: 48rem;
   margin: 0;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: clamp(2.6rem, 7vw, 5.4rem);
   font-weight: normal;
   line-height: 0.98;
   color: #fff;
   text-shadow:
-    0 6px 0 #8f1410,
+    0 6px 0 var(--red-edge),
     0 18px 40px rgba(0, 0, 0, 0.55);
   transform: rotate(-2deg);
   animation: stampIn 0.6s 0.3s cubic-bezier(0.2, 1.5, 0.4, 1) both;
@@ -137,7 +137,7 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: repeating-conic-gradient(#d81e18 0 10deg, #f1db4b 10deg 20deg);
+  background: repeating-conic-gradient(var(--red) 0 10deg, var(--yellow) 10deg 20deg);
   clip-path: polygon(50% 0%, 61% 8%, 75% 5%, 81% 18%, 95% 25%, 92% 39%, 100% 50%, 92% 61%, 95% 75%, 81% 82%, 75% 95%, 61% 92%, 50% 100%, 39% 92%, 25% 95%, 19% 82%, 5% 75%, 8% 61%, 0% 50%, 8% 39%, 5% 25%, 19% 18%, 25% 5%, 39% 8%);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
   animation: spin 30s linear infinite;
@@ -165,7 +165,7 @@
 }
 
 .rosetteFace b {
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 2.6rem;
   font-weight: normal;
   line-height: 1;
@@ -174,7 +174,7 @@
 
 .rosetteFace small {
   max-width: 5.5rem;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.68rem;
   line-height: 1.1;
   color: rgba(50, 50, 50, 0.75);
@@ -225,14 +225,14 @@
 }
 
 .castCard b {
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 1.1rem;
   font-weight: normal;
   color: var(--seat);
 }
 
 .castCard span {
-  font-family: "GochiHand";
+  font-family: var(--font-gochi);
   font-size: 1.05rem;
   color: rgba(50, 50, 50, 0.75);
 }
@@ -243,7 +243,7 @@
   gap: 1.5rem;
   align-items: center;
   padding: 1.5rem;
-  border-radius: 22px;
+  border-radius: var(--card-radius);
   background: #fff;
   box-shadow: 0 0 0 1px rgba(50, 50, 50, 0.08), 0 18px 34px -26px rgba(40, 30, 20, 0.45);
 }
@@ -269,7 +269,7 @@
 
 .episode figcaption {
   margin-top: 0.5rem;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.85rem;
   color: rgba(50, 50, 50, 0.75);
 }
@@ -281,7 +281,7 @@
 /* (where an episode's points came from: its cards, and callbacks made to it later) */
 .episode small {
   display: block;
-  font-family: "Roboto Regular", sans-serif;
+  font-family: var(--font-roboto-regular);
   font-size: 0.75rem;
   color: rgba(50, 50, 50, 0.72);
 }
@@ -295,25 +295,25 @@
 
 .sums div {
   padding: 0.6rem;
-  border-radius: 12px;
+  border-radius: var(--control-radius);
   background: #f7f5ef;
 }
 
 .sums dt {
-  font-family: "Roboto Regular", sans-serif;
+  font-family: var(--font-roboto-regular);
   font-size: 0.75rem;
   color: rgba(50, 50, 50, 0.7);
 }
 
 .sums dd {
   margin: 0.1rem 0 0;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 1.35rem;
   color: var(--ink);
 }
 
 .sums .sumTotal {
-  background: #fbf3cf;
+  background: var(--note);
 }
 
 /* #endregion */
@@ -326,11 +326,11 @@
   gap: 1.75rem;
   align-items: center;
   padding: 1.5rem;
-  border-radius: 22px;
+  border-radius: var(--card-radius);
   background:
     radial-gradient(90% 80% at 85% 0%, rgba(95, 90, 162, 0.55), transparent 65%),
     var(--night);
-  color: #f4efe3;
+  color: var(--paper-dark);
   text-align: left;
 }
 
@@ -339,7 +339,7 @@
   display: block;
   width: 100%;
   aspect-ratio: 1080 / 1350;
-  border-radius: 12px;
+  border-radius: var(--control-radius);
   box-shadow: 0 18px 30px -14px rgba(0, 0, 0, 0.6);
   transform: rotate(-2deg);
 }
@@ -350,7 +350,7 @@
 
 .shareSide h3 {
   margin: 0 0 1rem;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 1.8rem;
   font-weight: normal;
   color: #fff;
@@ -374,10 +374,10 @@
   place-items: center;
   width: 46px;
   height: 46px;
-  border-radius: 14px;
+  border-radius: var(--box-radius);
   background: rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 1rem;
   color: #fff;
   text-decoration: none;
@@ -405,9 +405,9 @@
   display: block;
   min-height: 1.4rem;
   margin-top: 0.8rem;
-  font-family: "GochiHand";
+  font-family: var(--font-gochi);
   font-size: 1.15rem;
-  color: #f1db4b;
+  color: var(--yellow);
 }
 
 .again {
@@ -426,7 +426,7 @@
 
 .again p {
   margin: 0;
-  font-family: "GochiHand";
+  font-family: var(--font-gochi);
   font-size: 1.25rem;
   color: rgba(50, 50, 50, 0.7);
 }

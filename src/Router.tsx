@@ -74,6 +74,15 @@ const BuyGate = () => {
   );
 };
 
+// (to the page's content, without a #main left in the address)
+const skipToMain = (e: React.MouseEvent) => {
+  const main = document.getElementById("main");
+  if (!main) return;
+  e.preventDefault();
+  main.focus();
+  main.scrollIntoView();
+};
+
 const Router = () => {
   return (
     <BrowserRouter>
@@ -97,34 +106,40 @@ const AppRoutes = () => {
 
   return (
     <>
+      {/* (the first thing Tab reaches: straight past the banner and the top bar to the page itself) */}
+      <a className="skip-link" href="#main" onClick={skipToMain}>
+        Skip to content
+      </a>
       {!isExternalRedirect && !inRoom && <Banner />}
       {/* (a page that crashes, or whose code can't be loaded: a "reload" page, not a blank one) */}
       <ErrorBoundary resetKey={location.pathname}>
         <Suspense fallback={null}>
           {!isExternalRedirect && !inRoom && <Navbar trailerPlaying={trailerPlaying} />}
-          <Routes>
-            <Route path="/" element={<LandingPage setTrailerPlaying={setTrailerPlaying} />} />
-            <Route path="/ttrpg" element={<Navigate to="/" replace />} />
-            <Route path="/about" element={<Navigate to="/howtoplay" replace />} />
-            <Route path="/howtoplay" element={<AboutPage />} />
-            <Route path="/digitalartbook" element={<ArtbookDownloadPage />} />
-            <Route path="/characters" element={<CharactersPage />} />
-            <Route path="/characters/:name" element={<CharactersPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/raffle" element={<RafflePage />} />
-            <Route path="/play" element={<PlayPage />} />
-            <Route path="/play/:code" element={<PlayPage />} />
-            <Route path="/thankyou" element={<ThankYouPage />} />
-            <Route path="/rulebook" element={<ExternalRedirect url="/rulebook.pdf" />} />
-            <Route path="/blog" element={<ExternalRedirect url={BLOG_URL} />} />
-            <Route path="/buy" element={<BuyGate />} />
-            <Route path="/cart" element={<CartRedirect />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/terms" element={<TermsPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="*" element={<ErrorPage />} />
-          </Routes>
+          <main id="main" tabIndex={-1}>
+            <Routes>
+              <Route path="/" element={<LandingPage setTrailerPlaying={setTrailerPlaying} />} />
+              <Route path="/ttrpg" element={<Navigate to="/" replace />} />
+              <Route path="/about" element={<Navigate to="/howtoplay" replace />} />
+              <Route path="/howtoplay" element={<AboutPage />} />
+              <Route path="/digitalartbook" element={<ArtbookDownloadPage />} />
+              <Route path="/characters" element={<CharactersPage />} />
+              <Route path="/characters/:name" element={<CharactersPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/raffle" element={<RafflePage />} />
+              <Route path="/play" element={<PlayPage />} />
+              <Route path="/play/:code" element={<PlayPage />} />
+              <Route path="/thankyou" element={<ThankYouPage />} />
+              <Route path="/rulebook" element={<ExternalRedirect url="/rulebook.pdf" />} />
+              <Route path="/blog" element={<ExternalRedirect url={BLOG_URL} />} />
+              <Route path="/buy" element={<BuyGate />} />
+              <Route path="/cart" element={<CartRedirect />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/terms" element={<TermsPage />} />
+              <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="*" element={<ErrorPage />} />
+            </Routes>
+          </main>
           {!isExternalRedirect && <Footer />}
         </Suspense>
       </ErrorBoundary>

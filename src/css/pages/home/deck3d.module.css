@@ -24,3 +24,37 @@ div.stage {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* (tabbed to: they show, as a row of pills along the foot of the cards) */
+.links:focus-within {
+  left: 50%;
+  bottom: 0.5rem;
+  translate: -50% 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  width: max-content;
+  max-width: 100%;
+  height: auto;
+  overflow: visible;
+  clip-path: none;
+  list-style: none;
+  pointer-events: auto;
+}
+
+.links:focus-within a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-size);
+  padding: 0 1rem;
+  box-sizing: border-box;
+  border-radius: var(--pill-radius);
+  background: #fff;
+  box-shadow: var(--card-shadow);
+  color: var(--ink);
+  font-family: var(--font-rowdies-regular);
+  font-size: 0.9rem;
+  text-decoration: none;
+}

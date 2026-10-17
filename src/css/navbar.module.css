@@ -112,8 +112,8 @@
 /* the logo and the buttons step aside; the menu button stays, as its close button */
 .navbar:global(.is-active) .logo,
 .navbar:global(.is-active) .topBarActions > :not(.navToggle) {
-  opacity: 0;
-  pointer-events: none;
+  /* (gone for Tab too, so it goes round the menu and its close button) */
+  visibility: hidden;
 }
 
 .menuContent {
@@ -382,7 +382,12 @@
     gap: 0.5rem;
   }
 
-  /* (side by side along the foot of the screen, half its width each) */
+  /* (side by side along the foot of the screen, half its width each, a fingertip tall) */
+  .topBarActions > .buyButton,
+  .topBarActions > .expansionButton {
+    height: var(--tap-size);
+  }
+
   .topBarActions > .buyButton {
     position: fixed;
     width: calc((100% - 2.5rem) / 2);

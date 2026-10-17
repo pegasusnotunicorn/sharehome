@@ -41,24 +41,6 @@ const ParallaxSection = () => {
   const location = useLocation();
   gsap.registerPlugin(ScrollTrigger);
 
-  useEffect(() => {
-    const scrollbarWidth =
-      window.innerWidth - document.documentElement.clientWidth;
-    document.body.style.overflow = "hidden"; // Prevent scrolling
-    document.body.style.paddingRight = `${scrollbarWidth}px`; // Keep space for scrollbar
-
-    const restore = () => {
-      document.body.style.overflow = ""; // Restore scrolling
-      document.body.style.paddingRight = ""; // Remove scrollbar space simulation
-    };
-    const t = setTimeout(restore, 500);
-    // (left before then: the page can still scroll)
-    return () => {
-      clearTimeout(t);
-      restore();
-    };
-  }, []);
-
   const sectionRef = useRef<HTMLDivElement>(null);
   // the cards as a 3D wall (parallaxWall3d.ts), following the scroll; the flat cards below if it can't
   const stageRef = useRef<HTMLDivElement>(null);

@@ -145,7 +145,7 @@ const CardCarousel = ({ index, count, mm, front, back, name, label, href, fallba
         <span className={styles.stepName}>{name(to)}</span>
       </>
     );
-    const cls = `${styles.step}${dir > 0 ? ` ${styles.next}` : ""}`;
+    const cls = `${styles.step}${dir > 0 ? ` ${styles.next}` : ""} tap-area`;
     const aria = `${dir < 0 ? "Previous" : "Next"}: ${name(to)}`;
     return href ? (
       <Link

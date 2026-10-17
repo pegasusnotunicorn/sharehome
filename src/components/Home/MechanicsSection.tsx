@@ -16,9 +16,9 @@ export default function MechanicsSection() {
       className={`${landingPageStyles.mainpageContainer}`}
     >
       <GsapFadeScrub fadeIn>
-        <h1>
+        <h2>
           If you like any of these things, then you&apos;ll love this game!
-        </h1>
+        </h2>
       </GsapFadeScrub>
       <div className={`${landingPageStyles.mechanicsWrapper}`}>
         <GsapFadeScrub fadeIn>

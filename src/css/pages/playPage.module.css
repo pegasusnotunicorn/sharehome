@@ -4,12 +4,7 @@
    the cast's six seats, and the call on Discord. */
 
 .playPage {
-  --ink: #323232;
-  --ink-soft: rgba(50, 50, 50, 0.72);
-  --night: #1c1a2b;
-  --paper: #fff;
   --edge: rgba(50, 50, 50, 0.1);
-  --lift: 0 0 0 1px var(--edge), 0 18px 34px -26px rgba(40, 30, 20, 0.45);
   min-height: calc(100svh - var(--footer-height));
   max-width: calc(1040px + 4rem);
   padding-left: 2rem;
@@ -54,7 +49,7 @@
   border-radius: 28px;
   overflow: hidden;
   isolation: isolate;
-  color: #f4efe3;
+  color: var(--paper-dark);
   text-align: center;
   background:
     radial-gradient(60% 90% at 50% -10%, rgba(255, 236, 170, 0.28), transparent 62%),
@@ -71,7 +66,7 @@
   inset: 0 0 auto 0;
   height: 14px;
   z-index: -1;
-  background: repeating-linear-gradient(90deg, #b8241f 0 22px, #8f1410 22px 26px);
+  background: repeating-linear-gradient(90deg, #b8241f 0 22px, var(--red-edge) 22px 26px);
   -webkit-mask: radial-gradient(14px 10px at 13px 0, #000 98%, transparent) 0 0 / 26px 14px repeat-x;
   mask: radial-gradient(14px 10px at 13px 0, #000 98%, transparent) 0 0 / 26px 14px repeat-x;
   opacity: 0.9;
@@ -108,16 +103,16 @@
 
 .stage .eyebrow {
   margin: 0 0 0.9rem;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.78rem;
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: #f1db4b;
+  color: var(--yellow);
 }
 
 .title {
   margin: 0;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: clamp(2.6rem, 6.5vw, 4.6rem);
   font-weight: normal;
   line-height: 0.95;
@@ -129,7 +124,7 @@
 .stage .lead {
   max-width: 34rem;
   margin: 1.3rem 0 0;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 1.08rem;
   line-height: 1.5;
   color: rgba(244, 239, 227, 0.85);
@@ -181,12 +176,12 @@
   place-items: center;
   width: 3.4rem;
   height: 4rem;
-  border-radius: 12px;
+  border-radius: var(--control-radius);
   background: #fffaf0;
   box-shadow:
     inset 0 -5px 0 rgba(50, 40, 30, 0.14),
     0 10px 18px -10px rgba(0, 0, 0, 0.6);
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 2.1rem;
   line-height: 1;
   color: var(--ink);
@@ -223,9 +218,9 @@
   gap: 1rem;
   padding: 1.75rem;
   box-sizing: border-box;
-  border-radius: 22px;
-  background: var(--paper);
-  box-shadow: var(--lift);
+  border-radius: var(--card-radius);
+  background: #fff;
+  box-shadow: var(--card-shadow);
   overflow: hidden;
 }
 
@@ -235,15 +230,15 @@
   position: absolute;
   inset: 0 0 auto 0;
   height: 6px;
-  background: var(--door, #d81e18);
+  background: var(--door, var(--red));
 }
 
 .doorHost {
-  --door: #d81e18;
+  --door: var(--red);
 }
 
 .doorJoin {
-  --door: #5f5aa2;
+  --door: var(--purple);
 }
 
 .doorAlone {
@@ -253,7 +248,7 @@
 
 .doorTitle {
   margin: 0;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 1.6rem;
   font-weight: normal;
   line-height: 1.1;
@@ -267,11 +262,11 @@
 }
 
 .fieldLabel {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.72rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.6);
+  color: var(--ink-soft);
 }
 
 .input {
@@ -282,14 +277,14 @@
   border: 2px solid var(--chip-edge);
   border-radius: var(--btn-radius);
   background: #fff;
-  font-family: "Roboto Regular", sans-serif;
+  font-family: var(--font-roboto-regular);
   font-size: 1rem;
   color: var(--ink);
   transition: border-color 0.2s ease;
 }
 
 .input::placeholder {
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   color: rgba(50, 50, 50, 0.45);
 }
 
@@ -303,7 +298,7 @@
 .codeHint {
   min-height: 1.2em;
   margin-top: -0.2rem;
-  font-family: "Roboto Regular", sans-serif;
+  font-family: var(--font-roboto-regular);
   font-size: 0.85rem;
   color: #b3160f;
 }
@@ -334,7 +329,7 @@
   border: 2px dashed rgba(95, 90, 162, 0.35);
   border-radius: var(--btn-radius);
   background: #f7f6fc;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 1.5rem;
   color: var(--ink);
   transition:
@@ -412,7 +407,7 @@
   gap: 1.25rem;
   margin-top: 2rem;
   padding: 1.4rem 1.6rem;
-  border-radius: 22px;
+  border-radius: var(--card-radius);
   background: #eeedf8;
   box-shadow: 0 0 0 1px rgba(95, 90, 162, 0.16);
 }
@@ -423,7 +418,7 @@
   width: 3.4rem;
   height: 3.4rem;
   border-radius: 16px;
-  background: #5f5aa2;
+  background: var(--purple);
   box-shadow: inset 0 -4px 0 #3c3878;
   color: #fff;
   transform: rotate(-6deg);
@@ -436,7 +431,7 @@
 
 .voiceTitle {
   margin: 0 0 0.25rem;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 1.2rem;
   font-weight: normal;
   color: var(--ink);
@@ -444,7 +439,7 @@
 
 .voice .voiceText p {
   margin: 0;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.95rem;
   line-height: 1.45;
   color: var(--ink-soft);
@@ -478,10 +473,10 @@
   align-items: center;
   gap: 1rem;
   padding: 2.1rem 1.75rem 1.75rem;
-  border-radius: 22px;
+  border-radius: var(--card-radius);
   overflow: hidden;
   isolation: isolate;
-  color: #f4efe3;
+  color: var(--paper-dark);
   text-align: center;
   background:
     radial-gradient(70% 90% at 50% -10%, rgba(255, 236, 170, 0.26), transparent 62%),
@@ -498,14 +493,14 @@
   inset: 0 0 auto 0;
   height: 12px;
   z-index: -1;
-  background: repeating-linear-gradient(90deg, #b8241f 0 18px, #8f1410 18px 22px);
+  background: repeating-linear-gradient(90deg, #b8241f 0 18px, var(--red-edge) 18px 22px);
   -webkit-mask: radial-gradient(12px 9px at 11px 0, #000 98%, transparent) 0 0 / 22px 12px repeat-x;
   mask: radial-gradient(12px 9px at 11px 0, #000 98%, transparent) 0 0 / 22px 12px repeat-x;
 }
 
 .inviteTitle {
   margin: 0;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 1.5rem;
   font-weight: normal;
   color: #fff;
@@ -547,9 +542,9 @@
 }
 
 .tilesButton:focus-visible {
-  outline: 3px solid #f1db4b;
+  outline: 3px solid var(--yellow);
   outline-offset: 6px;
-  border-radius: 14px;
+  border-radius: var(--box-radius);
 }
 
 @keyframes tileWiggle {
@@ -582,8 +577,8 @@
   /* (a soft, spotlit backdrop in the player's color, like a portrait; the face's white paper melts into it) */
   isolation: isolate;
   background:
-    radial-gradient(circle at 50% 40%, #fffdf6 0 34%, transparent 72%),
-    linear-gradient(165deg, color-mix(in srgb, var(--seat, #f1db4b) 22%, #fff8e8), color-mix(in srgb, var(--seat, #f1db4b) 48%, #fff8e8));
+    radial-gradient(circle at 50% 40%, var(--paper-light) 0 34%, transparent 72%),
+    linear-gradient(165deg, color-mix(in srgb, var(--seat, var(--yellow)) 22%, #fff8e8), color-mix(in srgb, var(--seat, var(--yellow)) 48%, #fff8e8));
   box-shadow:
     inset 0 -4px 8px rgba(0, 0, 0, 0.18),
     0 0 0 3px var(--seat, #fff),
@@ -616,11 +611,11 @@
 }
 
 .inviteLabel {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.7rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: #f1db4b;
+  color: var(--yellow);
 }
 
 /* the connection's dropped: a pill at the foot of the screen, in view however far down it's scrolled
@@ -629,7 +624,7 @@
   position: fixed;
   bottom: 1rem;
   left: 50%;
-  z-index: 100002;
+  z-index: calc(var(--z-toast) + 1);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -637,10 +632,10 @@
   max-width: calc(100vw - 2rem);
   margin: 0;
   padding: 0.55rem 1.1rem;
-  border-radius: 999px;
+  border-radius: var(--pill-radius);
   background: #fbe9a6;
   box-shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.5);
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.95rem;
   color: var(--ink);
   translate: -50% 0;
@@ -684,14 +679,14 @@
 
 .sectionTitle {
   margin: 0;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 1.7rem;
   font-weight: normal;
   color: var(--ink);
 }
 
 .castCount {
-  font-family: "GochiHand";
+  font-family: var(--font-gochi);
   font-size: 1.3rem;
   color: var(--ink-soft);
 }
@@ -710,7 +705,7 @@
 .seatEmpty {
   position: relative;
   min-height: 11.5rem;
-  border-radius: 22px;
+  border-radius: var(--card-radius);
   box-sizing: border-box;
 }
 
@@ -723,8 +718,8 @@
   padding: 1.5rem 1rem 1.25rem;
   background:
     radial-gradient(90% 55% at 50% 0%, color-mix(in srgb, var(--seat) 16%, transparent), transparent 70%),
-    var(--paper);
-  box-shadow: var(--lift);
+    #fff;
+  box-shadow: var(--card-shadow);
   text-align: center;
   animation: arrive 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
 }
@@ -733,7 +728,7 @@
 .seat {
   box-shadow:
     inset 0 6px 0 var(--seat),
-    var(--lift);
+    var(--card-shadow);
 }
 
 .seatMine {
@@ -768,14 +763,14 @@
     0 0 0 5px #fff,
     0 0 0 6px var(--edge),
     0 12px 18px -10px rgba(0, 0, 0, 0.45);
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 1.8rem;
   color: #fff;
 }
 
 .seatName {
   max-width: 100%;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 1.2rem;
   line-height: 1.2;
   color: var(--ink);
@@ -792,9 +787,9 @@
 
 .tag {
   padding: 0.15rem 0.55rem;
-  border-radius: 999px;
+  border-radius: var(--pill-radius);
   background: rgba(50, 50, 50, 0.07);
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.66rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -802,12 +797,12 @@
 }
 
 .tagHost {
-  background: #f1db4b;
+  background: var(--yellow);
   color: var(--ink);
 }
 
 .awayNote {
-  font-family: "GochiHand";
+  font-family: var(--font-gochi);
   font-size: 1.05rem;
   color: var(--ink-soft);
 }
@@ -906,7 +901,7 @@
   flex-direction: column;
   min-width: 11rem;
   padding: 0.35rem;
-  border-radius: 14px;
+  border-radius: var(--box-radius);
   background: #fff;
   box-shadow:
     0 0 0 1px var(--edge),
@@ -922,12 +917,12 @@
 }
 
 .seatMenu button {
-  min-height: 44px;
+  min-height: var(--tap-size);
   padding: 0.6rem 0.75rem;
   border: 0;
   border-radius: 10px;
   background: none;
-  font-family: "Roboto Regular", sans-serif;
+  font-family: var(--font-roboto-regular);
   font-size: 0.95rem;
   color: var(--ink);
   text-align: left;
@@ -951,7 +946,7 @@
 }
 
 .seatEmptyText {
-  font-family: "GochiHand";
+  font-family: var(--font-gochi);
   font-size: 1.3rem;
   color: rgba(50, 50, 50, 0.68);
 }
@@ -966,13 +961,13 @@
   height: 100%;
   padding: 1rem;
   border: 0;
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   background: none;
   cursor: pointer;
 }
 
 .seatInvite .seatEmptyText {
-  color: #5f5aa2;
+  color: var(--purple);
 }
 
 .seatPlus {
@@ -982,10 +977,10 @@
   height: 3.4rem;
   border-radius: 50%;
   background: #eeedf8;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 1.8rem;
   line-height: 1;
-  color: #5f5aa2;
+  color: var(--purple);
   transition: transform 0.15s ease;
 }
 
@@ -999,9 +994,9 @@
   flex-direction: column;
   gap: 1rem;
   padding: 1.75rem;
-  border-radius: 22px;
-  background: var(--paper);
-  box-shadow: var(--lift);
+  border-radius: var(--card-radius);
+  background: #fff;
+  box-shadow: var(--card-shadow);
 }
 
 .showtimeText {
@@ -1016,27 +1011,27 @@
   gap: 0.5rem;
   margin-bottom: 0.5rem;
   padding: 0.3rem 0.75rem;
-  border: 2px solid #d81e18;
+  border: 2px solid var(--red);
   border-radius: 8px;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 0.75rem;
   letter-spacing: 2.5px;
   text-transform: uppercase;
-  color: #d81e18;
+  color: var(--red);
 }
 
 .onAirLight {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: #d81e18;
-  box-shadow: 0 0 10px #d81e18;
+  background: var(--red);
+  box-shadow: 0 0 10px var(--red);
   animation: blink 1.2s ease-in-out infinite alternate;
 }
 
 .showtime .showtimeLine {
   margin: 0;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 1.25rem;
   line-height: 1.3;
   color: var(--ink);
@@ -1057,9 +1052,9 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.55rem 0.8rem;
-  border-radius: 12px;
+  border-radius: var(--control-radius);
   background: #f7f5ef;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.95rem;
   color: var(--ink-soft);
 }
@@ -1068,11 +1063,11 @@
   flex: none;
   width: 22px;
   height: 22px;
-  color: #5f5aa2;
+  color: var(--purple);
 }
 
 .checklist b {
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-weight: normal;
   color: var(--ink);
 }
@@ -1085,7 +1080,7 @@
   font-family: inherit;
   font-size: inherit;
   letter-spacing: inherit;
-  color: #5f5aa2;
+  color: var(--purple);
   text-underline-offset: 3px;
 }
 
@@ -1105,9 +1100,9 @@
 
 .checkNeed {
   margin-left: auto;
-  font-family: "GochiHand";
+  font-family: var(--font-gochi);
   font-size: 1.05rem;
-  color: #d81e18;
+  color: var(--red);
 }
 
 .checklist .checkDone {
@@ -1153,12 +1148,12 @@
 }
 
 .textButton {
-  min-height: 44px;
+  min-height: var(--tap-size);
   padding: 0.4rem 0.6rem;
   border: 0;
   border-radius: 8px;
   background: none;
-  font-family: "Roboto Regular", sans-serif;
+  font-family: var(--font-roboto-regular);
   font-size: 0.95rem;
   color: var(--ink-soft);
   text-decoration: underline;
@@ -1327,7 +1322,7 @@
   position: fixed;
   left: 50%;
   bottom: 1.5rem;
-  z-index: 100001;
+  z-index: var(--z-toast);
   display: flex;
   align-items: center;
   gap: 0.9rem;
@@ -1335,13 +1330,13 @@
   max-width: calc(100vw - 2rem);
   padding: 0.85rem 0.85rem 0.85rem 1.2rem;
   box-sizing: border-box;
-  border-radius: 14px;
+  border-radius: var(--box-radius);
   /* (an error: the site's red, clear of the dark footer behind it) */
   background: #c4180f;
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.18),
     0 18px 36px -16px rgba(0, 0, 0, 0.55);
-  font-family: "Roboto Regular", sans-serif;
+  font-family: var(--font-roboto-regular);
   font-size: 0.95rem;
   line-height: 1.4;
   color: #fff;
@@ -1402,7 +1397,7 @@
   gap: 1.25rem;
   margin-top: 0.85rem;
   padding: 1rem 1.25rem 1rem 1rem;
-  border-radius: 22px;
+  border-radius: var(--card-radius);
   background: #fff;
   border: 1px solid rgba(50, 40, 30, 0.1);
   box-shadow: 0 16px 34px -28px rgba(28, 26, 43, 0.6);
@@ -1416,7 +1411,7 @@
   aspect-ratio: 768 / 444;
   padding: 0;
   border: 0;
-  border-radius: 12px;
+  border-radius: var(--control-radius);
   overflow: hidden;
   background: #f4f0e8;
   box-shadow:
@@ -1439,7 +1434,7 @@
 .myPickEmpty {
   border: 2px dashed rgba(50, 40, 30, 0.25);
   box-shadow: none;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 2rem;
   color: rgba(50, 40, 30, 0.3);
 }
@@ -1447,7 +1442,7 @@
 .myPickName {
   min-width: 0;
   margin-right: auto;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-weight: normal;
   font-size: 1.2rem;
   color: var(--ink);
@@ -1466,16 +1461,16 @@
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  min-height: 44px;
+  min-height: var(--tap-size);
   padding: 8px 18px 8px 12px;
-  border: 2px solid var(--ink, #323232);
-  border-radius: var(--btn-radius, 12px);
+  border: 2px solid var(--ink);
+  border-radius: var(--btn-radius);
   background: #fff;
-  box-shadow: 0 var(--btn-depth, 4px) 0 var(--ink, #323232);
-  font-family: "Rowdies-Regular";
+  box-shadow: 0 var(--btn-depth) 0 var(--ink);
+  font-family: var(--font-rowdies-regular);
   font-size: inherit;
   line-height: 1.2;
-  color: var(--ink, #323232);
+  color: var(--ink);
   white-space: nowrap;
   cursor: pointer;
   transition:
@@ -1486,16 +1481,16 @@
 
 .readyToggle:hover {
   transform: translateY(-2px);
-  box-shadow: 0 calc(var(--btn-depth, 4px) + 2px) 0 var(--ink, #323232);
+  box-shadow: 0 calc(var(--btn-depth) + 2px) 0 var(--ink);
 }
 
 .readyToggle:active {
-  transform: translateY(calc(var(--btn-depth, 4px) - 1px));
-  box-shadow: 0 1px 0 var(--ink, #323232);
+  transform: translateY(calc(var(--btn-depth) - 1px));
+  box-shadow: 0 1px 0 var(--ink);
 }
 
 .readyToggle:focus-visible {
-  outline: 3px solid #f1db4b;
+  outline: 3px solid var(--yellow);
   outline-offset: 3px;
 }
 
@@ -1597,7 +1592,7 @@
 .seatPicked {
   isolation: isolate;
   background:
-    radial-gradient(circle at 50% 40%, #fffdf6 0 34%, transparent 72%),
+    radial-gradient(circle at 50% 40%, var(--paper-light) 0 34%, transparent 72%),
     linear-gradient(165deg, color-mix(in srgb, var(--seat) 22%, #fff8e8), color-mix(in srgb, var(--seat) 48%, #fff8e8));
 }
 
@@ -1824,14 +1819,14 @@
 }
 
 .watchersDoors {
-  min-height: 44px;
+  min-height: var(--tap-size);
   margin: -0.45rem -0.4rem -0.45rem auto;
   padding: 0.35rem 0.9rem;
   border: 1.5px solid var(--chip-edge);
   border-radius: 10px;
   background: #fff;
   box-shadow: 0 2px 0 var(--chip-edge);
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.85rem;
   color: var(--ink);
   cursor: pointer;
@@ -1853,7 +1848,7 @@
   width: fit-content;
   max-width: 100%;
   box-sizing: border-box;
-  border-radius: 22px;
+  border-radius: var(--card-radius);
   background: var(--night);
   color: #fff;
 }
@@ -1863,14 +1858,14 @@
   align-items: center;
   gap: 0.5rem;
   margin-right: auto;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 1rem;
 }
 
 .audienceText svg {
   width: 20px;
   height: 20px;
-  color: #f1db4b;
+  color: var(--yellow);
 }
 
 @media only screen and (max-width: 640px) {
@@ -1892,12 +1887,12 @@
 /* under Join the game: just watching */
 .justWatch {
   display: block;
-  min-height: 44px;
+  min-height: var(--tap-size);
   margin: 0.6rem auto 0;
   padding: 0.2rem 0.4rem;
   border: 0;
   background: none;
-  font-family: "Roboto Regular", sans-serif;
+  font-family: var(--font-roboto-regular);
   font-size: 0.9rem;
   color: rgba(50, 50, 50, 0.72);
   text-decoration: underline;
@@ -1906,7 +1901,7 @@
 }
 
 .justWatch:hover {
-  color: #323232;
+  color: var(--ink);
 }
 
 /* #endregion */
@@ -1934,7 +1929,7 @@
 @keyframes startGlow {
   50% {
     box-shadow:
-      0 var(--btn-depth, 4px) 0 #8f1410,
+      0 var(--btn-depth) 0 var(--red-edge),
       0 0 0 6px rgba(216, 30, 24, 0.18),
       0 0 30px rgba(216, 30, 24, 0.45);
   }
@@ -1955,20 +1950,20 @@
   z-index: 900;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: var(--tap-size);
+  height: var(--tap-size);
   padding: 0;
-  border: 2px solid var(--chip-edge, rgba(50, 50, 50, 0.18));
-  border-radius: var(--chip-radius, 12px);
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
   background: #fff;
-  box-shadow: 0 3px 0 var(--chip-edge, rgba(50, 50, 50, 0.18));
-  color: #323232;
+  box-shadow: 0 3px 0 var(--chip-edge);
+  color: var(--ink);
   cursor: pointer;
 }
 
 .soundToggle:hover {
-  border-color: #323232;
-  box-shadow: 0 4px 0 #323232;
+  border-color: var(--ink);
+  box-shadow: 0 4px 0 var(--ink);
 }
 
 .soundToggle svg {

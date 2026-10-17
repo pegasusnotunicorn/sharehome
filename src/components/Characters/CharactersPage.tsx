@@ -120,7 +120,7 @@ const CastIntro = ({ missing }: { missing: boolean }) => {
           target="_blank"
           rel="noreferrer"
           href={ILLUSTRATOR_URL}
-          className={charStyles.illustrationLink}
+          className={`${charStyles.illustrationLink} tap-area`}
         >
           Illustrations by Carolyn Frank
         </a>

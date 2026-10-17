@@ -82,7 +82,7 @@ export default function TestimonialsSection() {
     <GsapFadeScrub fadeIn className={`${landingPageStyles.mainpageContainer} ${styles.section}`}>
       <div className={styles.heading}>
         <p className={landingPageStyles.stepEyebrow}>Recorded at real tables</p>
-        <h1 className={styles.title}>Real players, real stories</h1>
+        <h2 className={styles.title}>Real players, real stories</h2>
         <p className={styles.lede}>Nine games at real tables. Pick one and watch it play out, from the character introductions.</p>
       </div>
 
@@ -109,7 +109,7 @@ export default function TestimonialsSection() {
       <div className={styles.carousel}>
         <button
           type="button"
-          className={`${styles.arrow} ${styles.prev}`}
+          className={`${styles.arrow} ${styles.prev} tap-area`}
           onClick={() => page(-1)}
           disabled={ends.start}
           aria-label="Earlier games"
@@ -149,7 +149,7 @@ export default function TestimonialsSection() {
         </ul>
         <button
           type="button"
-          className={`${styles.arrow} ${styles.next}`}
+          className={`${styles.arrow} ${styles.next} tap-area`}
           onClick={() => page(1)}
           disabled={ends.end}
           aria-label="More games"
@@ -158,7 +158,7 @@ export default function TestimonialsSection() {
         </button>
       </div>
 
-      <a className={styles.more} href={`https://www.youtube.com/watch?v=${shown.id}&t=${shown.start}s`} target="_blank" rel="noreferrer">
+      <a className={`${styles.more} tap-area`} href={`https://www.youtube.com/watch?v=${shown.id}&t=${shown.start}s`} target="_blank" rel="noreferrer">
         Open on YouTube <span aria-hidden="true">↗</span>
       </a>
     </GsapFadeScrub>

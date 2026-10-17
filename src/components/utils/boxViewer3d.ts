@@ -19,6 +19,7 @@ export interface BoxVideo {
 }
 export interface BoxViewerApi {
   destroy: () => void;
+  close: () => void; // open: it closes, as a click off it does
 }
 interface MountOptions {
   art: BoxArt;
@@ -35,6 +36,7 @@ const REST: [number, number] = [0.42, 0.61];
 const DIST = 3.085, AIM_Y = -0.105, FLOOR = -0.61;
 const OPEN_MS = 950;
 const IDLE_MS = 0; // left this long after being turned, it goes back
+const KEY_IDLE_MS = 4000; // (turned with the keys: long enough to see it turned)
 
 export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, onOpen, onFail }: MountOptions): Promise<BoxViewerApi | null> {
   let T: Three, r: THREE.WebGLRenderer;
@@ -327,9 +329,9 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     raf = requestAnimationFrame(step);
   };
   // after a turn, as soon as it's let go of (and has stopped coasting), it goes back to rest
-  const idleReset = () => {
+  const idleReset = (ms = IDLE_MS) => {
     clearTimeout(idle);
-    idle = window.setTimeout(() => !drag && !openTo && moved && reset(), IDLE_MS);
+    idle = window.setTimeout(() => !drag && !openTo && moved && reset(), ms);
   };
   const coast = () => {
     cancelAnimationFrame(raf);
@@ -489,17 +491,26 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     player.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
     player.allowFullscreen = true;
     player.dataset.boxVideo = "";
+    hidePlayer(true);
     stage.append(player);
     placePlayer();
+  };
+  // (loaded ahead, out of sight: out of Tab's way and a screen reader's too, until it's shown)
+  const hidePlayer = (hide: boolean) => {
+    if (!player) return;
+    player.classList.toggle("shown", !hide);
+    player.toggleAttribute("inert", hide);
+    if (hide) player.setAttribute("aria-hidden", "true");
+    else player.removeAttribute("aria-hidden");
   };
   const startPlayer = () => {
     warmPlayer();
     seeked = false;
-    player?.classList.add("shown");
+    hidePlayer(false);
     startDriving("show", 6000);
   };
   const stopPlayer = () => {
-    player?.classList.remove("shown");
+    hidePlayer(true);
     phase = "idle";
     stopDriving();
     yt("pauseVideo");
@@ -578,6 +589,8 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     }
   };
   stage.onkeydown = (e) => {
+    // (Escape from anywhere on it, its close button too)
+    if (e.key === "Escape" && openTo) return openBox(false);
     if ((e.target as Element) !== stage) return;
     const a = Math.PI / 12;
     const m = ({ ArrowRight: [a, 0], ArrowLeft: [-a, 0], ArrowUp: [0, -a], ArrowDown: [0, a] } as Record<string, [number, number]>)[e.key];
@@ -588,12 +601,10 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
       slideIn(500);
       turn(...m);
       schedule();
-      idleReset();
+      idleReset(KEY_IDLE_MS);
     } else if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       openBox(!openTo);
-    } else if (e.key === "Escape" && openTo) {
-      openBox(false);
     } else if ((e.key === "Home" || e.key === "0") && !still()) {
       e.preventDefault();
       reset();
@@ -620,5 +631,5 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     io.observe(stage);
   }
 
-  return { destroy: cleanup };
+  return { destroy: cleanup, close: () => openBox(false) };
 }

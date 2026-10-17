@@ -10,10 +10,10 @@
   width: 54px;
   height: 54px;
   padding: 0;
-  border: 2px solid #8f1410;
+  border: 2px solid var(--red-edge);
   border-radius: 16px;
-  background: #d81e18;
-  box-shadow: 0 4px 0 #8f1410, 0 14px 28px -12px rgba(0, 0, 0, 0.55);
+  background: var(--red);
+  box-shadow: 0 4px 0 var(--red-edge), 0 14px 28px -12px rgba(0, 0, 0, 0.55);
   color: #fff;
   cursor: pointer;
   transition:
@@ -23,12 +23,12 @@
 
 .toggle:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 0 #8f1410, 0 16px 30px -12px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 6px 0 var(--red-edge), 0 16px 30px -12px rgba(0, 0, 0, 0.55);
 }
 
 .toggle:active {
   transform: translateY(3px);
-  box-shadow: 0 1px 0 #8f1410;
+  box-shadow: 0 1px 0 var(--red-edge);
 }
 
 .toggle:focus-visible {
@@ -42,10 +42,10 @@
 }
 
 .toggleOn {
-  border-color: #323232;
+  border-color: var(--ink);
   background: #fff;
-  box-shadow: 0 4px 0 #323232, 0 14px 28px -12px rgba(0, 0, 0, 0.55);
-  color: #323232;
+  box-shadow: 0 4px 0 var(--ink), 0 14px 28px -12px rgba(0, 0, 0, 0.55);
+  color: var(--ink);
 }
 
 .badge {
@@ -57,13 +57,13 @@
   height: 22px;
   padding: 0 6px;
   box-sizing: border-box;
-  border-radius: 999px;
-  background: #f1db4b;
+  border-radius: var(--pill-radius);
+  background: var(--yellow);
   box-shadow: 0 0 0 2px #fff;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 0.75rem;
   line-height: 22px;
-  color: #323232;
+  color: var(--ink);
 }
 
 /* the panel: the site's dialog look (white, a red band along its top) */
@@ -76,12 +76,12 @@
   flex-direction: column;
   width: min(360px, calc(100vw - 32px));
   height: min(480px, calc(100dvh - 120px));
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   overflow: hidden;
   background: #fff;
   box-shadow:
-    inset 0 6px 0 var(--dialog-band, #d81e18),
-    0 30px 60px -24px rgba(0, 0, 0, 0.55);
+    inset 0 6px 0 var(--dialog-band, var(--red)),
+    var(--dialog-shadow);
   animation: panelIn 0.2s ease-out both;
 }
 
@@ -94,9 +94,9 @@
 
 .head {
   padding: 1rem 1.1rem 0.5rem;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 1.1rem;
-  color: #323232;
+  color: var(--ink);
 }
 
 .head b {
@@ -125,10 +125,10 @@
   padding: 0.45rem 0.7rem;
   border-radius: 14px 14px 14px 4px;
   background: #f4f1ea;
-  font-family: "Roboto Regular", sans-serif;
+  font-family: var(--font-roboto-regular);
   font-size: 0.92rem;
   line-height: 1.35;
-  color: #323232;
+  color: var(--ink);
   overflow-wrap: anywhere;
   animation: bubbleIn 0.3s cubic-bezier(0.3, 1.5, 0.5, 1) both;
   transform-origin: bottom left;
@@ -162,12 +162,12 @@
   border: 1.5px solid rgba(50, 50, 50, 0.15);
   border-radius: 8px;
   background: #fff;
-  color: #b3261e;
+  color: var(--error);
   cursor: pointer;
 }
 
 .remove:hover {
-  border-color: #b3261e;
+  border-color: var(--error);
 }
 
 .remove svg {
@@ -185,7 +185,7 @@
   display: flex;
   align-items: baseline;
   gap: 0.35rem;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.78rem;
   color: var(--who);
 }
@@ -205,7 +205,7 @@
   align-self: center !important;
   margin: auto;
   background: none !important;
-  font-family: "GochiHand" !important;
+  font-family: var(--font-gochi) !important;
   font-size: 1.2rem !important;
   color: rgba(50, 50, 50, 0.5) !important;
 }
@@ -237,7 +237,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   border-top: 1px solid rgba(50, 50, 50, 0.08);
-  background: #faf8f3;
+  background: var(--paper);
 }
 
 .picker button {
@@ -265,7 +265,7 @@
   margin: 0;
   padding: 0.35rem 1rem;
   background: #fff4d6;
-  font-family: "Roboto Regular", sans-serif;
+  font-family: var(--font-roboto-regular);
   font-size: 0.82rem;
   color: #8a6400;
 }
@@ -285,15 +285,15 @@
   padding: 0 0.8rem;
   box-sizing: border-box;
   border: 2px solid rgba(50, 50, 50, 0.15);
-  border-radius: 12px;
-  font-family: "Roboto Regular", sans-serif;
+  border-radius: var(--control-radius);
+  font-family: var(--font-roboto-regular);
   font-size: 16px;
-  color: #323232;
+  color: var(--ink);
   outline: none;
 }
 
 .form input:focus {
-  border-color: #5f5aa2;
+  border-color: var(--purple);
 }
 
 .faceButton,
@@ -304,7 +304,7 @@
   width: 40px;
   height: 40px;
   padding: 0;
-  border-radius: 12px;
+  border-radius: var(--control-radius);
   cursor: pointer;
 }
 
@@ -321,13 +321,13 @@
 }
 
 .faceOn {
-  border-color: #f1db4b;
+  border-color: var(--yellow);
   background: #fffbe6;
 }
 
 .sendButton {
   border: 0;
-  background: #d81e18;
+  background: var(--red);
   color: #fff;
 }
 
@@ -380,11 +380,11 @@
 
 .tip {
   position: fixed;
-  z-index: 200000;
+  z-index: calc(var(--z-room) + 4);
   padding: 0.25rem 0.5rem;
   border-radius: 6px;
   background: #2b2233;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.72rem;
   line-height: 1.2;
   white-space: nowrap;
@@ -446,7 +446,7 @@
   margin: 0 -0.25rem;
   padding: 0.4rem;
   border: 0;
-  border-radius: 12px;
+  border-radius: var(--control-radius);
   background: #f4f1ea;
 }
 
@@ -476,7 +476,7 @@
 }
 
 .compact .form input:focus {
-  border-color: #f1db4b;
+  border-color: var(--yellow);
 }
 
 .compact .faceButton,

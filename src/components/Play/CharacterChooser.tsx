@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import type { Player, RoomView } from "../../../game-server/src/protocol";
 import CardCarousel from "../utils/CardCarousel";
 import DefaultButton from "../utils/DefaultButton";
-import Icon from "../utils/Icons";
+import { CloseButton } from "../utils/Modal";
 import useDialogFocus from "../utils/useDialogFocus";
 import announce from "../../utils/announce";
 import { useOffline } from "./useRoom";
@@ -11,7 +11,6 @@ import { play } from "./sounds";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
 import { getAllCharacters } from "../Characters/Characters";
 import { PLAYER_COLORS } from "./GameTable";
-import modalStyles from "../../css/utils/modal.module.css";
 import styles from "../../css/pages/chooser.module.css";
 
 // The waiting room's character picker, a big dialog: the cast's cards in 3D like on the character pages
@@ -101,9 +100,7 @@ const CharacterChooser = ({ room, me, pick, close }: Props) => {
     <div ref={panel} className={styles.chooser} role="dialog" aria-modal="true" aria-label="Pick your character" onClick={(e) => e.stopPropagation()}>
       <header className={styles.head}>
         <h2 className={styles.title}>Pick your character</h2>
-        <button type="button" className={`${modalStyles.closeBtn} ${styles.close}`} onClick={close} aria-label="Close">
-          <Icon name="close" strokeWidth={2.6} className={modalStyles.closeIcon} />
-        </button>
+        <CloseButton className={styles.close} onClick={close} />
       </header>
 
       <CardCarousel

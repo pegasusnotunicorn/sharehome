@@ -123,6 +123,7 @@
 
 .memberCommCardQuestionMark {
   color: #fff;
+  font-weight: bold;
   font-size: 40em;
   position: absolute;
   margin: 0;

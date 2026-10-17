@@ -146,9 +146,11 @@ a.btn.secondary {
   --btn-color-dark: var(--kickstarter-edge);
 }
 
-/* dark text on the light faces */
+/* dark text on the light faces (Kickstarter's green too: white on it is 2:1) */
 .colorYellow.primary,
 a.colorYellow.primary,
+.colorKickstarter.primary,
+a.colorKickstarter.primary,
 .colorWhite.primary,
 a.colorWhite.primary {
   color: var(--btn-ink);

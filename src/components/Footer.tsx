@@ -131,7 +131,7 @@ const Footer = () => {
             {!hidesBuyButtons(pathname) && <BuyButton from="footer" animated icon="forward" variant="primary" color="red" text="Buy now!" />}
             {/* (not on the cast's own page) */}
             {pathname !== "/characters" && (
-              <NavLink to="/characters" className={styles.castLink}>
+              <NavLink to="/characters" className={`${styles.castLink} tap-area`}>
                 Meet the cast <span aria-hidden="true">→</span>
               </NavLink>
             )}

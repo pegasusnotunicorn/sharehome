@@ -8,7 +8,11 @@ const FOCUSABLE = "button, a[href], input, select, textarea, [tabindex]:not([tab
 // (what Tab can reach in it now: nothing disabled, hidden or out of play)
 const reachable = (el: HTMLElement) =>
   [...el.querySelectorAll<HTMLElement>(FOCUSABLE)].filter(
-    (x) => !(x as HTMLButtonElement).disabled && !x.closest("[inert], [aria-hidden='true']") && x.getClientRects().length > 0
+    (x) =>
+      !(x as HTMLButtonElement).disabled &&
+      !x.closest("[inert], [aria-hidden='true']") &&
+      x.getClientRects().length > 0 &&
+      getComputedStyle(x).visibility !== "hidden"
   );
 
 // A dialog's focus, the same for every dialog on the site: as it opens, focus moves into it (to a

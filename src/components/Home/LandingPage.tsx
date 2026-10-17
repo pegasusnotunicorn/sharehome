@@ -37,10 +37,11 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
 
       <DescriptionContainer
         title={
-          <h1 className={`${landingPageStyles.subtitle}`}>
+          // (the hero's line again, as the wall parts: the page's one h1 is the hero's)
+          <p className={`${landingPageStyles.subtitle}`}>
             A party game where <br />{" "}
             <span className="fantasyEmphasis">fantasy</span> meets reality TV.
-          </h1>
+          </p>
         }
         description={
           <p className={landingPageStyles.heroDescription}>
@@ -61,7 +62,7 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
         id={`${landingPageStyles.howToPlay}`}
         className={`${landingPageStyles.mainpageContainer}`}
       >
-        <h1>How to play</h1>
+        <h2>How to play</h2>
         <p>(in 4 easy steps)</p>
       </GsapFadeScrub>
 
@@ -74,7 +75,7 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
           <GsapFadeScrub fadeIn>
             <StepText doodles={[{ src: "/images/icons/pointer.svg", at: "aboveStart" }]}>
               <p className={landingPageStyles.stepEyebrow}>Step 1.</p>
-              <h1>Choose from 25 unique characters!</h1>
+              <h3>Choose from 25 unique characters!</h3>
               <p>
                 Mythological creatures with modern day jobs just like us humans.
                 <br />
@@ -103,7 +104,7 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
             ]}
           >
             <p className={landingPageStyles.stepEyebrow}>Step 2.</p>
-            <h1>Follow chaotic stage directions</h1>
+            <h3>Follow chaotic stage directions</h3>
             <p>
               The executives of the show are trying to instill chaos into the
               narrative.
@@ -122,7 +123,7 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
         title={
           <>
             <p className={landingPageStyles.stepEyebrow}>Step 3.</p>
-            <h1>Complete character arcs for extra points!</h1>
+            <h3>Complete character arcs for extra points!</h3>
           </>
         }
         description={
@@ -151,7 +152,7 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
             ]}
           >
             <p className={landingPageStyles.stepEyebrow}>Step 4.</p>
-            <h1>Crazy locations never before seen on TV</h1>
+            <h3>Crazy locations never before seen on TV</h3>
             <p>
               Every episode of the reality TV show occurs in a random exotic
               location carefully hand-picked for maximum excitement!

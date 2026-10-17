@@ -8,6 +8,7 @@ import { hidesBuyButtons } from "../utils/BuyButton";
 import styles from "../../css/navbar.module.css";
 import "../../css/utils/hamburger.css";
 import useWindowScroll from "../utils/useWindowScroll";
+import useDialogFocus from "../utils/useDialogFocus";
 import CharacterPinPopup from "../CharacterPinPopup";
 import { usePinPopup } from "../utils/usePinPopup";
 import { SocialChips } from "../utils/SocialIcons";
@@ -29,28 +30,26 @@ const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
   const toggleNav = useCallback(() => setVisibility((v) => !v), []);
   const closeNav = useCallback(() => setVisibility(false), []);
 
-  // while it's open: the page behind doesn't scroll, and Escape closes it
+  const menuRef = useRef<HTMLElement>(null);
+  // while it's open: the page behind doesn't scroll
   useEffect(() => {
     if (!visible) return;
     // (the scrollbar's room is kept, so nothing on the page shifts sideways as it goes)
     const root = document.documentElement, was = root.style.overflow, gutter = root.style.scrollbarGutter;
     if (innerWidth > root.clientWidth) root.style.scrollbarGutter = "stable"; // (only if there's a scrollbar)
     root.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setVisibility(false);
-    addEventListener("keydown", onKey);
-    // (keyboard focus goes into the menu as it opens, and back to the menu button as it closes)
-    const opener = document.activeElement as HTMLElement | null;
-    const menu = menuRef.current;
-    requestAnimationFrame(() => menu?.querySelector<HTMLElement>("a, button, input")?.focus({ preventScroll: true }));
+    // (keyboard focus goes into the menu as it opens, past its close button)
+    requestAnimationFrame(() => menuRef.current?.querySelector<HTMLElement>("a, button, input")?.focus({ preventScroll: true }));
     return () => {
       root.style.overflow = was;
       root.style.scrollbarGutter = gutter;
-      removeEventListener("keydown", onKey);
-      if (menu?.contains(document.activeElement)) opener?.focus({ preventScroll: true });
     };
   }, [visible]);
+  // open, it's a dialog like the rest: Tab goes round the menu and its close button, Escape closes it,
+  // and focus goes back to the menu button
+  const navbarRef = useRef<HTMLDivElement>(null);
+  useDialogFocus(navbarRef, closeNav, { open: visible });
   // closed, nothing in it can be reached (by Tab, or a screen reader). (React 18 doesn't pass `inert` on.)
-  const menuRef = useRef<HTMLElement>(null);
   useEffect(() => {
     menuRef.current?.toggleAttribute("inert", !visible);
   }, [visible]);
@@ -84,9 +83,9 @@ const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
         <CharacterPinPopup shown={shown} closePopup={closePopup} followed={followed} />
       )}
 
-      <div className={`${styles.navbar} ${isVisibleClass}`}>
+      <div ref={navbarRef} className={`${styles.navbar} ${isVisibleClass}`}>
         {/* Top bar: logo + action buttons + hamburger */}
-        <div className={`${styles.topBar} noselect`}>
+        <header className={`${styles.topBar} noselect`}>
           <NavLink to="/" className={styles.logo} aria-label="Love, Career & Magic home" />
           <div className={styles.topBarActions}>
             {!hideBuyButtons && (!isLandingPage || isDesktop) && !isLandingPageAtTop && (
@@ -105,7 +104,7 @@ const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
               <ExpansionButton className={styles.expansionButton} />
             )}
             <button
-              className={`hamburger noselect ${styles.navToggle} ${isVisibleClass}`}
+              className={`hamburger noselect tap-area ${styles.navToggle} ${isVisibleClass}`}
               onClick={toggleNav}
               type="button"
               aria-label={visible ? "Close menu" : "Open menu"}
@@ -117,7 +116,7 @@ const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
               </span>
             </button>
           </div>
-        </div>
+        </header>
 
         {/* The menu: a drawer from the right, over the dimmed page */}
         <div className={`${styles.backdrop} ${isVisibleClass}`} onClick={closeNav} aria-hidden="true" />

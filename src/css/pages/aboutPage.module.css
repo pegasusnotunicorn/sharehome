@@ -124,7 +124,7 @@
   font-family: var(--font-rowdies-light);
   font-size: 0.75rem;
   line-height: 1.2;
-  opacity: 0.65;
+  opacity: 0.75; /* (4.5:1 or more, small as it is) */
 }
 
 .short {
@@ -187,7 +187,7 @@
   height: 1.8rem;
   border-radius: 50%;
   background: rgba(216, 30, 24, 0.1);
-  color: var(--red);
+  color: var(--red-edge); /* (the red itself is too faint on its tint, this small) */
   font-family: var(--font-rowdies-regular);
   font-size: 0.85rem;
   letter-spacing: 0;

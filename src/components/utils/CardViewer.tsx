@@ -73,7 +73,7 @@ const CardViewer = ({ mm, faces, edge, label, still, fallback, intro, onReady, h
         tabIndex={0}
         role="group"
         aria-roledescription="3D card"
-        aria-label={`${label}. Drag to turn it any way. Plus and minus zoom.`}
+        aria-label={`${label}. Drag it, or use the arrow keys, to turn it any way; F turns it over. Plus and minus zoom.`}
       >
         <span className={styles.still} aria-hidden="true">
           <span className={styles.stillShadow} />
@@ -83,18 +83,18 @@ const CardViewer = ({ mm, faces, edge, label, still, fallback, intro, onReady, h
           />
         </span>
         <span className={styles.tools}>
-          <button className={styles.tool} type="button" title="Zoom in (+, scroll or pinch)" aria-label="Zoom in" onClick={() => api.current?.zoom(1.4)}>
+          <button className={`${styles.tool} tap-area`} type="button" title="Zoom in (+, scroll or pinch)" aria-label="Zoom in" onClick={() => api.current?.zoom(1.4)}>
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
               <path d="M8 3.5v9M3.5 8h9" />
             </svg>
           </button>
-          <button className={styles.tool} type="button" title="Zoom out (-)" aria-label="Zoom out" onClick={() => api.current?.zoom(0.714)}>
+          <button className={`${styles.tool} tap-area`} type="button" title="Zoom out (-)" aria-label="Zoom out" onClick={() => api.current?.zoom(0.714)}>
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
               <path d="M3.5 8h9" />
             </svg>
           </button>
           <button
-            className={`${styles.tool} ${styles.straighten}`}
+            className={`${styles.tool} ${styles.straighten} tap-area`}
             type="button"
             title="Zoom back out (or double-click the card)"
             aria-label="Zoom back out"

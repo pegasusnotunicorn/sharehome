@@ -245,7 +245,7 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
 
         <form className={`${styles.door} ${styles.doorJoin}`} onSubmit={join}>
           <h2 className={styles.doorTitle}>Join a game</h2>
-          <CodeInput code={code} setCode={setCode} />
+          <CodeInput code={code} setCode={setCode} onDropped={() => setProblem("Room codes have no vowels: check the letters.")} />
           <DefaultButton button="submit" text="Join" icon="enter" color="dark" disabled={!isCode(code)} className={`${styles.wide} ${styles.doorButton}`} />
         </form>
       </div>
@@ -266,10 +266,10 @@ const typedCode = (text: string) => {
   return { code: kept.slice(0, CODE_LENGTH), dropped: kept.length < letters.length };
 };
 
-// Four letter tiles over a real text field (so typing, pasting and the keyboard all just work)
-const CodeInput = ({ code, setCode }: { code: string; setCode: (c: string) => void }) => {
+// Four letter tiles over a real text field (so typing, pasting and the keyboard all just work).
+// `onDropped`: letters a code never has were left out (said in a toast, so the form doesn't move)
+const CodeInput = ({ code, setCode, onDropped }: { code: string; setCode: (c: string) => void; onDropped: () => void }) => {
   const [focused, setFocused] = useState(false);
-  const [dropped, setDropped] = useState(false);
   return (
     <label className={styles.field}>
       <span className={styles.fieldLabel}>Room code</span>
@@ -289,7 +289,7 @@ const CodeInput = ({ code, setCode }: { code: string; setCode: (c: string) => vo
           onChange={(e) => {
             const typed = typedCode(e.target.value);
             setCode(typed.code);
-            setDropped(typed.dropped);
+            if (typed.dropped) onDropped();
           }}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
@@ -297,12 +297,8 @@ const CodeInput = ({ code, setCode }: { code: string; setCode: (c: string) => vo
           autoCapitalize="characters"
           spellCheck={false}
           aria-label="Room code"
-          aria-describedby="code-hint"
           required
         />
-      </span>
-      <span className={styles.codeHint} id="code-hint" role="status">
-        {dropped ? "Room codes have no vowels: check the letters." : ""}
       </span>
     </label>
   );

@@ -39,7 +39,7 @@ const PAGES: Record<string, Partial<PageMeta>> = {
   "/howtoplay": {
     title: withBrand("How to play"),
     description:
-      "Four episodes, three minutes each. Improvise your way through a reality TV show as a mythical creature and keep the ratings up. 2–6 players, 12 minutes.",
+      "Four episodes, three minutes each. Act your way through a reality TV show as a mythical creature and keep the ratings up. 2–6 players, 12 minutes.",
     image: card("howtoplay"),
   },
   "/characters": {

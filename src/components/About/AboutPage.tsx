@@ -11,7 +11,7 @@ const AboutPage = () => {
       <PageIntro
         eyebrow="2–6 players · 12 minutes"
         title="How to play"
-        lead="Four episodes, three minutes each. Improvise your way through a reality show and keep the ratings up ✨"
+        lead="Four episodes, three minutes each. Act your way through a reality show and keep the ratings up ✨"
       >
         <DefaultButton
           href="/rulebook.pdf"

@@ -387,7 +387,7 @@ const Rules = ({ back, next }: { back: () => void; next: () => void }) => {
           </article>
           <article className={aboutStyles.goldenRule}>
             <img loading="lazy" src="/images/illustrations/rules/reveal2.svg" alt="" />
-            <h3>The golden improv rule of &quot;Yes, and...&quot;</h3>
+            <h3>The golden rule of &quot;Yes, and...&quot;</h3>
             <p>If something is said, it is true unless it directly contradicts something else that was already said.</p>
           </article>
         </div>

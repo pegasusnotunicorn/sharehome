@@ -10,6 +10,8 @@ import {
   score,
   type ChatLine,
   type ClientMessage,
+  type CompletedCard,
+  type LogEntry,
   type DirectionDeck,
   type GameView,
   type RemoteButton,
@@ -21,6 +23,9 @@ import DefaultButton from "../utils/DefaultButton";
 import Icon from "../utils/Icons";
 import { sized } from "../utils/imageCopies";
 import Modal from "../utils/Modal";
+import useDialogFocus from "../utils/useDialogFocus";
+import initial from "../../utils/initial";
+import announce from "../../utils/announce";
 import CardViewer from "../utils/CardViewer";
 import CharacterDetails from "../Characters/CharacterDetails";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
@@ -31,6 +36,7 @@ import Finale from "./Finale";
 import { DISCORD_URL } from "./gameServer";
 import { openRulebook, rulebookOpensAt } from "./Rulebook";
 import { isMuted, play, setMuted } from "./sounds";
+import { useOffline } from "./useRoom";
 import modalStyles from "../../css/utils/modal.module.css";
 import styles from "../../css/pages/gameTable.module.css";
 import chatStyles from "../../css/pages/chat.module.css";
@@ -321,6 +327,44 @@ const readCloth = (): Cloth => {
 const clothClass = (c: Cloth) => (c === "blue" ? "" : ` ${styles[`cloth-${c}`]}`);
 
 const DECK_LABEL: Record<DirectionDeck, string> = { director: "Director", producer: "Producer", showrunner: "Showrunner" };
+const pts = (n: number) => `${n} point${n === 1 ? "" : "s"}`;
+
+// the phone's apps, along its dock
+type PhoneApp = "clock" | "log" | "remote";
+const PHONE_APPS: { id: PhoneApp; label: string; icon: React.ReactNode }[] = [
+  {
+    id: "clock",
+    label: "Timer",
+    icon: (
+      <svg viewBox="0 0 24 24" aria-hidden>
+        <circle cx="12" cy="13" r="8" />
+        <path d="M12 9v4l2.5 2.5M9.5 2.5h5" />
+      </svg>
+    ),
+  },
+  {
+    id: "log",
+    label: "Chat",
+    icon: (
+      <svg viewBox="0 0 24 24" aria-hidden>
+        <path d="M4 5h16v11H8l-4 4z" />
+        <path d="M8 9h8M8 12h5" />
+      </svg>
+    ),
+  },
+  {
+    id: "remote",
+    label: "Remote",
+    icon: (
+      <svg viewBox="0 0 24 24" aria-hidden>
+        <rect x="7" y="2.5" width="10" height="19" rx="3" />
+        <path d="M10 7h.01M14 7h.01M10 11h.01M14 11h.01M10 15h.01M14 15h.01" strokeWidth="3" />
+      </svg>
+    ),
+  },
+];
+// (where the table's laid out as on a phone: the phone a strip along the top; as in gameTable.module.css)
+const PHONE_LAYOUT = "(max-width: 1100px), (max-height: 500px)";
 
 // each card lies a little askew, always the same way (so nothing shifts when the table changes)
 const tiltDeg = (seed: number) => (((seed * 37) % 7) - 3) * 0.6;
@@ -404,6 +448,23 @@ const mmss = (ms: number) => {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 };
 
+// the phone's clock: the episode (or time's up, or paused), the time left, and its bar. The only part
+// of the table that ticks (four times a second while the clock runs): nothing else is redrawn for it
+const PhoneClock = ({ game, serverNow }: { game: GameView; serverNow: number }) => {
+  const left = useClock(game, serverNow);
+  const ticking = game.phase === "playing" && game.endsAt !== null;
+  const paused = game.phase === "playing" && game.pausedLeft !== null;
+  return (
+    <>
+      <span className={styles.phoneLabel}>{game.phase === "break" ? "Time’s up!" : paused ? "Paused" : `Episode ${game.episode} of ${EPISODES}`}</span>
+      <span className={`${styles.phoneTime}${ticking && left < 10_000 ? ` ${styles.phoneLow}` : ""}`}>{mmss(left)}</span>
+      <span className={styles.phoneTrack}>
+        <span style={{ transform: `scaleX(${left / (EPISODE_SECONDS * 1000)})` }} />
+      </span>
+    </>
+  );
+};
+
 // the sounds for whatever just changed at the table, whoever did it
 const useTableSounds = (game: GameView) => {
   const before = useRef<GameView | null>(null);
@@ -436,13 +497,12 @@ interface TableProps {
   send: (msg: ClientMessage) => void;
   chat: ChatLine[];
   chatSlow: number; // (when a line was last turned back for coming too fast)
-  leave: () => void; // (a spectator, out of the show)
+  leave: () => void; // (out of the show: a spectator, or anyone once the ratings are in)
 }
 
 const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps) => {
   const game = room.game!;
   const name = useNames();
-  const left = useClock(game, room.now);
   useTableSounds(game);
   useEffect(preloadBacks, []);
   // (while the game's on, the rulebook opens on the game's rules)
@@ -474,7 +534,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
   }, [game.remote]);
   const [cloth, setCloth] = useState<Cloth>(readCloth);
   const [picking, setPicking] = useState(false);
-  const [phoneTab, setPhoneTab] = useState<"clock" | "log" | "remote">("clock");
+  const [phoneTab, setPhoneTab] = useState<PhoneApp>("clock");
   // the phone picked up off the table: big, in the middle of the screen, for reading the chat
   const [held, setHeld] = useState(false);
   // (picked up, put down: a sound for each)
@@ -483,12 +543,21 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
     if (held !== wasHeld.current) play(held ? "pickUp" : "putDown");
     wasHeld.current = held;
   }, [held]);
-  useEffect(() => {
-    if (!held) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setHeld(false);
-    addEventListener("keydown", onKey);
-    return () => removeEventListener("keydown", onKey);
-  }, [held]);
+  // an app on the phone; on a phone-sized screen, where the phone's a slim strip, the chat holds the
+  // phone up (so there's room to read it)
+  const openApp = (app: PhoneApp) => {
+    setPhoneTab(app);
+    if (app === "log" && matchMedia(PHONE_LAYOUT).matches) setHeld(true);
+  };
+  const onTabKey = (e: React.KeyboardEvent) => {
+    const at = PHONE_APPS.findIndex((a) => a.id === phoneTab);
+    const to = e.key === "ArrowRight" ? at + 1 : e.key === "ArrowLeft" ? at - 1 : e.key === "Home" ? 0 : e.key === "End" ? PHONE_APPS.length - 1 : null;
+    if (to === null) return;
+    e.preventDefault();
+    const app = PHONE_APPS[(to + PHONE_APPS.length) % PHONE_APPS.length].id;
+    setPhoneTab(app);
+    document.getElementById(`phone-tab-${app}`)?.focus();
+  };
   // the chat and what's happened, one feed on the phone, oldest first
   const feed = useMemo(
     () =>
@@ -514,6 +583,16 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
   // the "+2" that rises off a card when someone completes it
   const [floaters, setFloaters] = useState<{ id: string; deck: DirectionDeck; slot: number; points: number }[]>([]);
   const seen = useRef<Set<string> | null>(null);
+  const lastCompleted = useRef<CompletedCard[]>([]);
+  // (the cards the log's lines are about, by the line's id)
+  const logCards = useRef<Record<string, CompletedCard>>({});
+  // a log line as it reads on the phone: whoever's id in it as their name, and the card named
+  const logText = (entry: LogEntry) => {
+    const text = entry.text.replace(/\{([^}]+)\}/g, (_, id) => nameOf(id));
+    const c = logCards.current[entry.id];
+    const card = c && name(c.deck, c.i);
+    return card ? text.replace(` a ${c.deck} card`, ` “${card}”`) : text;
+  };
   // the decks, the face-up slots and the play area on the screen, for cards moving between them
   const stackRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const slotRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -526,6 +605,10 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
   // itself at each step (before the first episode, before each one after, and once time's up),
   // once each; put down, it goes back to the table.
   const phoneRef = useRef<HTMLDivElement>(null);
+  // (held up, it's a dialog: focus in it, Tab kept in it, Escape puts it down, focus back after)
+  useDialogFocus(phoneRef, () => setHeld(false), { open: held });
+  // (the connection's down: what's in a dialog over the table, off the table itself, is off too)
+  const offline = useOffline();
   const step = `${game.phase}-${game.episode}`;
   const [coachSeen, setCoachSeen] = useState<string | null>(null);
   // (a spectator has nothing to do: no phone held up for them)
@@ -552,6 +635,21 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
   }, []);
   // the face-up cards as they were, to tell which slot a completed card came from
   const lastFaceUp = useRef(game.faceUp);
+  // a card done from the keyboard: once it's gone, focus goes to whatever's dealt into its slot (or
+  // the play area, if nothing is), rather than off the page
+  const refocus = useRef<string | null>(null);
+  useLayoutEffect(() => {
+    const key = refocus.current;
+    if (!key) return;
+    refocus.current = null;
+    if (document.activeElement && document.activeElement !== document.body) return;
+    (slotRefs.current[key]?.querySelector<HTMLElement>("button:not(:disabled)") ?? playCardsRef.current?.closest("button"))?.focus();
+  }, [game.faceUp]);
+  const complete = (deck: DirectionDeck, slot: number) => {
+    // (a card done while the clock's paused starts it again)
+    if (paused) send({ t: "resume" });
+    send({ t: "complete", deck, slot });
+  };
 
   const unread = phoneTab !== "log" && feed.some((i) => i.at > seenAt && !(i.kind === "chat" && i.line.by === me));
   useEffect(() => {
@@ -615,9 +713,36 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
         });
       }
     }
+    // which card each new "completed a card" (or "undid") line in the log is about: the log only says
+    // which deck, the page knows which card
+    if (seen.current) {
+      const named = (c: CompletedCard, did: string) => {
+        const line = game.log.find((l) => l.by === c.by && !logCards.current[l.id] && l.text.includes(`${did} a ${c.deck} card`));
+        if (line) logCards.current[line.id] = c;
+      };
+      for (const c of ep.completed) if (!seen.current.has(c.id)) named(c, "completed");
+      for (const c of lastCompleted.current) if (!ids.has(c.id)) named(c, "undid");
+    }
     seen.current = ids;
+    lastCompleted.current = ep.completed;
     lastFaceUp.current = game.faceUp;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ep.completed, game.faceUp]);
+
+  // what's happened, and what's said, read out as it happens, whichever app the phone's on (the
+  // log's own list is only on the page on the Chat app)
+  const heard = useRef<Set<string> | null>(null);
+  useEffect(() => {
+    const ids = feed.map((i) => i.id);
+    if (heard.current)
+      for (const i of feed) {
+        if (heard.current.has(i.id)) continue;
+        if (i.kind === "log") announce(logText(i.entry));
+        else if (i.line.by !== me) announce(`${i.line.name}: ${i.line.text.replace(/:([A-Za-z]+):/g, "$1")}`);
+      }
+    heard.current = new Set(ids);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [feed]);
 
   // a card just swapped out of this slot (not completed): the new one waits on the deck till the old
   // one's back in it, then it's dealt (else the old one, flying in over the deck, hides it leaving)
@@ -632,7 +757,6 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
   const nameOf = (id: string) => room.players.find((p) => p.id === id)?.name ?? "Someone";
   const points = score(game);
   const epPoints = ep.completed.reduce((n, c) => n + DIRECTION_POINTS[c.deck], 0);
-  const running = game.phase === "playing" && game.endsAt !== null;
   const paused = game.phase === "playing" && game.pausedLeft !== null;
 
   const seatProps = { game, me, name, send, zoom: (player: Player, character: number) => setZoom({ player, character }) };
@@ -641,7 +765,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
     return (
       <div className={styles.room}>
         <div className={`${styles.tabletop}${clothClass(cloth)}`}>
-          <Finale room={room} game={game} isHost={isHost} send={send} />
+          <Finale room={room} game={game} me={me} isHost={isHost} send={send} leave={leave} />
         </div>
       </div>
     );
@@ -650,6 +774,9 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
   return (
     <div className={`${styles.room}${spectating ? ` ${styles.watchOnly}` : ""}`}>
       {!loadingGone && <Loading out={loaded} />}
+      <h1 className="visually-hidden">
+        Game {room.code}: episode {game.episode} of {EPISODES}
+      </h1>
       <div className={`${styles.tabletop}${clothClass(cloth)}`}>
 
         {others.length > 0 && (
@@ -683,9 +810,14 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                 <div className={styles.deckRow}>
                   <div ref={(el) => {
                       stackRefs.current[deck] = el;
-                    }} className={styles.stack} aria-label={`${game.left[deck]} cards left`}>
+                    }} className={styles.stack}>
                     <img src={art.directionBack(deck)} alt="" width="768" height="497" />
-                    <span className={styles.stackCount}>{game.left[deck]}</span>
+                    <span className={styles.stackCount} aria-hidden>
+                      {game.left[deck]}
+                    </span>
+                    <span className="visually-hidden">
+                      {game.left[deck]} {DECK_LABEL[deck]} card{game.left[deck] === 1 ? "" : "s"} left
+                    </span>
                   </div>
                   {game.faceUp[deck].map((card, slot) => (
                     <div key={slot} ref={(el) => {
@@ -699,16 +831,15 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                           type="button"
                           className={styles.card}
                           style={{ "--tilt": tilt(card + slot) } as CSSProperties}
-                          disabled={game.phase !== "playing"}
+                          disabled={spectating || game.phase !== "playing"}
                           onClick={(e) => {
                             // (a card still on its way out of the deck, or not turned over yet: not
                             // there to play)
                             if (e.currentTarget.querySelector("[data-dealing]")) return;
-                            // (a card done while the clock's paused starts it again)
-                            if (paused) send({ t: "resume" });
-                            send({ t: "complete", deck, slot });
+                            if (e.currentTarget === document.activeElement) refocus.current = `${deck}-${slot}`;
+                            complete(deck, slot);
                           }}
-                          aria-label={`Complete “${name(deck, card)}” (${DIRECTION_POINTS[deck]} points)`}
+                          aria-label={spectating ? `“${name(deck, card)}” (${pts(DIRECTION_POINTS[deck])})` : `Complete “${name(deck, card)}” (${pts(DIRECTION_POINTS[deck])})`}
                         >
                           <FlipCard
                             front={art.direction(deck, card)}
@@ -729,7 +860,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                             +{f.points}
                           </span>
                         ))}
-                      {card !== null && game.phase === "ready" && game.episode > 1 && game.left[deck] > 0 && (
+                      {!spectating && card !== null && game.phase === "ready" && game.episode > 1 && game.left[deck] > 0 && (
                         <button type="button" className={styles.swap} onClick={() => send({ t: "discard", deck, slot })} aria-label={`Swap “${name(deck, card)}”`}>
                           <Icon name="again" strokeWidth={2.4} />
                           Swap
@@ -773,14 +904,10 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                 </span>
               </div>
 
-              <div className={styles.screen}>
+              <div className={styles.screen} role="tabpanel" id="phone-screen" aria-labelledby={`phone-tab-${phoneTab}`}>
                 {phoneTab === "clock" ? (
-                  <div className={styles.clockApp} role="timer" aria-live="off" id="phone-clock">
-                    <span className={styles.phoneLabel}>{game.phase === "break" ? "Time’s up!" : paused ? "Paused" : `Episode ${game.episode} of ${EPISODES}`}</span>
-                    <span className={`${styles.phoneTime}${running && left < 10_000 ? ` ${styles.phoneLow}` : ""}`}>{mmss(left)}</span>
-                    <span className={styles.phoneTrack}>
-                      <span style={{ transform: `scaleX(${left / (EPISODE_SECONDS * 1000)})` }} />
-                    </span>
+                  <div className={styles.clockApp} role="timer" aria-live="off">
+                    <PhoneClock game={game} serverNow={room.now} />
                     {spectating && (
                       <span className={styles.phoneWatching}>
                         <Icon name="eye" strokeWidth={2.2} /> You’re watching
@@ -802,7 +929,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                       <span>
                         <CountUp value={points.total} className={styles.score} /> pts
                       </span>
-                      <button type="button" className={styles.clothButton} onClick={() => setHeld((h) => !h)} aria-pressed={held} aria-label={held ? "Set the phone back down" : "Hold the phone up"} title={held ? "Put down" : "Hold"}>
+                      <button type="button" className={styles.clothButton} onClick={() => setHeld((h) => !h)} aria-pressed={held} aria-label="Hold the phone up" title={held ? "Put down" : "Hold"}>
                         {held ? (
                           <svg viewBox="0 0 24 24" aria-hidden>
                             <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />
@@ -814,10 +941,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                         )}
                       </button>
                       <button type="button" className={styles.clothButton} onClick={() => setPicking(true)} aria-label="Settings" title="Settings">
-                        <svg viewBox="0 0 24 24" aria-hidden>
-                          <circle cx="12" cy="12" r="3" />
-                          <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
-                        </svg>
+                        <SettingsIcon />
                       </button>
                       <button
                         type="button"
@@ -826,8 +950,9 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                           setMuted(!muted);
                           setMutedState(!muted);
                         }}
-                        aria-label={muted ? "Turn sound on" : "Turn sound off"}
+                        aria-label="Sound"
                         aria-pressed={!muted}
+                        title={muted ? "Sound off" : "Sound on"}
                       >
                         {muted ? (
                           <svg viewBox="0 0 24 24" aria-hidden>
@@ -842,7 +967,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                     </div>
                   </div>
                 ) : phoneTab === "remote" ? (
-                  <div className={styles.remoteApp} id="phone-remote">
+                  <div className={styles.remoteApp}>
                     <div className={styles.logHead}>
                       <span>R.E.M.O.T.E.</span>
                       {held && (
@@ -862,6 +987,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                         <button
                           key={b}
                           type="button"
+                          disabled={spectating}
                           className={styles.remotePadKey}
                           onClick={() => send({ t: "remote", button: b })}
                           aria-label={`${REMOTE[b].label}: ${REMOTE[b].text}`}
@@ -874,11 +1000,14 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                     </div>
                   </div>
                 ) : (
-                  <div className={`${styles.logApp} ${chatStyles.compact}`} id="phone-log">
+                  <div className={`${styles.logApp} ${chatStyles.compact}`}>
                     <div className={styles.logHead}>
                       <span>Chat</span>
                       <Watching room={room} always />
-                      <button type="button" className={`${styles.clothButton} ${styles.headHold}`} onClick={() => setHeld((h) => !h)} aria-pressed={held} aria-label={held ? "Set the phone back down" : "Hold the phone up"} title={held ? "Put down" : "Hold"}>
+                      <button type="button" className={`${styles.clothButton} ${styles.headHold}`} onClick={() => setPicking(true)} aria-label="Settings" title="Settings">
+                        <SettingsIcon />
+                      </button>
+                      <button type="button" className={`${styles.clothButton} ${styles.headHold}`} onClick={() => setHeld((h) => !h)} aria-pressed={held} aria-label="Hold the phone up" title={held ? "Put down" : "Hold"}>
                         {held ? (
                           <svg viewBox="0 0 24 24" aria-hidden>
                             <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />
@@ -891,7 +1020,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                       </button>
 
                     </div>
-                    <ol ref={feedList} className={styles.logList} aria-live="polite">
+                    <ol ref={feedList} className={styles.logList}>
                       {feed.length === 0 && <li className={styles.logEmpty}>Say hi! 👋</li>}
                       {feed.map((i) => {
                         if (i.kind === "chat") return <ChatBubble key={i.id} line={i.line} me={me} onRemove={isHost ? setRemoving : undefined} />;
@@ -899,9 +1028,9 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                         return (
                           <li key={i.id} className={styles.logEntry} style={{ "--who": who ? PLAYER_COLORS[who.color % PLAYER_COLORS.length] : "#8a86c9" } as CSSProperties}>
                             <span className={styles.logDot} aria-hidden>
-                              {who ? who.name.charAt(0).toUpperCase() : "★"}
+                              {who ? initial(who.name) : "★"}
                             </span>
-                            <span>{i.entry.text.replace(/\{([^}]+)\}/g, (_, id) => nameOf(id))}</span>
+                            <span>{logText(i.entry)}</span>
                           </li>
                         );
                       })}
@@ -912,50 +1041,32 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                 )}
               </div>
 
-              <div className={styles.dock} role="tablist" aria-label="Phone">
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={phoneTab === "clock"}
-                  aria-controls="phone-clock"
-                  className={phoneTab === "clock" ? styles.dockOn : ""}
-                  onClick={() => setPhoneTab("clock")}
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden>
-                    <circle cx="12" cy="13" r="8" />
-                    <path d="M12 9v4l2.5 2.5M9.5 2.5h5" />
-                  </svg>
-                  Timer
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={phoneTab === "log"}
-                  aria-controls="phone-log"
-                  className={phoneTab === "log" ? styles.dockOn : ""}
-                  onClick={() => setPhoneTab("log")}
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden>
-                    <path d="M4 5h16v11H8l-4 4z" />
-                    <path d="M8 9h8M8 12h5" />
-                  </svg>
-                  Chat
-                  {unread && <span className={styles.unread} aria-label="new" />}
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={phoneTab === "remote"}
-                  aria-controls="phone-remote"
-                  className={phoneTab === "remote" ? styles.dockOn : ""}
-                  onClick={() => setPhoneTab("remote")}
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden>
-                    <rect x="7" y="2.5" width="10" height="19" rx="3" />
-                    <path d="M10 7h.01M14 7h.01M10 11h.01M14 11h.01M10 15h.01M14 15h.01" strokeWidth="3" />
-                  </svg>
-                  Remote
-                </button>
+              <div className={styles.dock}>
+                {/* the phone's apps, as tabs (the arrow keys go between them) */}
+                <div className={styles.dockTabs} role="tablist" aria-label="Phone" onKeyDown={onTabKey}>
+                  {PHONE_APPS.map((app) => (
+                    <button
+                      key={app.id}
+                      type="button"
+                      role="tab"
+                      id={`phone-tab-${app.id}`}
+                      aria-selected={phoneTab === app.id}
+                      aria-controls="phone-screen"
+                      tabIndex={phoneTab === app.id ? 0 : -1}
+                      className={phoneTab === app.id ? styles.dockOn : ""}
+                      onClick={() => openApp(app.id)}
+                    >
+                      {app.icon}
+                      {app.label}
+                      {app.id === "log" && unread && (
+                        <>
+                          <span className={styles.unread} aria-hidden />
+                          <span className="visually-hidden">, new messages</span>
+                        </>
+                      )}
+                    </button>
+                  ))}
+                </div>
                 {/* (not an app on the phone: the rulebook, opened on the rules) */}
                 <button type="button" onClick={() => openRulebook("rules")}>
                   <Icon name="rulebook" />
@@ -982,6 +1093,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                         type="button"
                         className={`${styles.past}${bumped ? ` ${styles.pastBump}` : ""}`}
                         style={{ "--tilt": tilt(past.card) } as CSSProperties}
+                        disabled={spectating}
                         onClick={() => send({ t: "token", on: "episode", episode: i + 1, add: true })}
                         aria-label={`Callback to episode ${i + 1}, ${name("episode", past.card)}: +1 (${past.tokens} so far)`}
                       >
@@ -1001,7 +1113,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                           <b>{past.tokens > 0 ? past.tokens : ""}</b>
                         </span>
                         <MinusButton
-                          disabled={past.tokens === 0}
+                          disabled={spectating || past.tokens === 0}
                           onMinus={() => send({ t: "token", on: "episode", episode: i + 1, add: false })}
                           label={`Take a callback token off episode ${i + 1}`}
                         />
@@ -1074,7 +1186,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                 </h2>
                 {game.hands[me] && game.hands[me].traits.some((t) => t.done === null || t.done === game.episode) && (
                   <>
-                    <p className={styles.coachText}>Did you play one of your traits? Tap it.</p>
+                    <p className={styles.coachText}>Did you play one of your traits? Tap&nbsp;it.</p>
                     <div className={styles.traitPick}>
                       {game.hands[me].traits.map((t, slot) =>
                         t.done === null || t.done === game.episode ? (
@@ -1082,7 +1194,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                             key={t.kind}
                             type="button"
                             className={`${styles.traitPickCard}${t.done === game.episode ? ` ${styles.traitPickOn}` : ""}`}
-                            disabled={t.done === null && game.hands[me].traits.some((x) => x.done === game.episode)}
+                            disabled={offline || (t.done === null && game.hands[me].traits.some((x) => x.done === game.episode))}
                             onClick={() => send({ t: "trait", player: me, slot })}
                             aria-pressed={t.done === game.episode}
                             aria-label={name(t.kind, t.i) || `${t.kind} trait`}
@@ -1098,6 +1210,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                 {/* (the phone stays up: the next episode's on it) */}
                 <DefaultButton
                   onClick={() => send({ t: "nextEpisode" })}
+                  disabled={offline}
                   text={game.episode >= EPISODES ? "See the ratings" : `On to episode ${game.episode + 1}`}
                   icon={game.episode >= EPISODES ? "trophy" : "forward"}
                   color="red"
@@ -1111,6 +1224,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                 <p className={styles.coachText}>Oldest character first: who you are, and what you’re after. Then start the clock.</p>
                 <DefaultButton
                   onClick={() => close(() => send({ t: "startClock" }))}
+                  disabled={offline}
                   text="Start episode 1"
                   icon="play"
                   color="red"
@@ -1152,7 +1266,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
           points={epPoints}
           name={name}
           nameOf={nameOf}
-          send={send}
+          undo={spectating || offline ? undefined : (id) => send({ t: "undo", id })}
           close={() => setPlayedOpen(false)}
         />
       )}
@@ -1182,6 +1296,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                     send({ t: "watchOpen", open: !room.watchOpen });
                     play(room.watchOpen ? "doorsClose" : "doorsOpen");
                   }}
+                  disabled={offline}
                   text={room.watchOpen ? "Close the doors" : "Open the doors"}
                   icon={room.watchOpen ? "close" : "enter"}
                   variant="secondary"
@@ -1203,6 +1318,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                 icon="flag"
                 variant="secondary"
                 border="dark"
+                disabled={offline}
               />
             )}
             <DefaultButton onClick={() => setPicking(false)} text="Done" icon="check" color="red" />
@@ -1226,6 +1342,14 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
     </div>
   );
 };
+
+// the settings cog
+const SettingsIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden>
+    <circle cx="12" cy="12" r="3" />
+    <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
+  </svg>
+);
 
 // how many are watching, on the phone (with a lock when the host's closed the doors)
 const Watching = ({ room, always }: { room: RoomView; always?: boolean }) => (
@@ -1363,14 +1487,15 @@ const PlayArea = ({
 
 const PAGE = 6;
 
-// everything played this episode: search it, a page at a time; undo for each card
+// everything played this episode: search it, a page at a time; undo for each card (for the players:
+// `undo`)
 const PlayedDialog = ({
   episode,
   cards,
   points,
   name,
   nameOf,
-  send,
+  undo,
   close,
 }: {
   episode: number;
@@ -1378,11 +1503,23 @@ const PlayedDialog = ({
   points: number;
   name: (kind: string, i: number) => string;
   nameOf: (id: string) => string;
-  send: (msg: ClientMessage) => void;
+  undo?: (id: string) => void;
   close: () => void;
 }) => {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
+  // a card undone: once it's gone from the list, focus goes to the undo where it was (or the one
+  // before, or back to the table), not off the page
+  const grid = useRef<HTMLUListElement>(null);
+  const back = useRef<HTMLSpanElement>(null);
+  const undone = useRef<number | null>(null);
+  useLayoutEffect(() => {
+    const at = undone.current;
+    if (at === null) return;
+    undone.current = null;
+    const undos = grid.current?.querySelectorAll<HTMLElement>("[data-undo]") ?? [];
+    (undos[Math.min(at, undos.length - 1)] ?? back.current?.querySelector("button"))?.focus();
+  }, [cards]);
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   const list = [...cards]
     .reverse()
@@ -1417,23 +1554,29 @@ const PlayedDialog = ({
       ) : list.length === 0 ? (
         <p className={styles.playedEmpty}>No card matches that.</p>
       ) : (
-        <ul className={styles.playedGrid}>
-          {shown.map((c) => (
+        <ul ref={grid} className={styles.playedGrid}>
+          {shown.map((c, index) => (
             <li key={c.id}>
               <img src={art.direction(c.deck, c.i)} alt={name(c.deck, c.i)} width="768" height="497" />
               <div className={styles.playedMeta}>
                 <span>
                   <b>+{DIRECTION_POINTS[c.deck]}</b> {nameOf(c.by)}
                 </span>
-                <button
-                  type="button"
-                  className={`${styles.chipButton} ${styles.chipDanger} ${styles.chipIcon}`}
-                  onClick={() => send({ t: "undo", id: c.id })}
-                  aria-label={`Undo “${name(c.deck, c.i)}”`}
-                  title="Undo"
-                >
-                  <Icon name="undo" strokeWidth={2.4} />
-                </button>
+                {undo && (
+                  <button
+                    type="button"
+                    data-undo
+                    className={`${styles.chipButton} ${styles.chipDanger} ${styles.chipIcon}`}
+                    onClick={() => {
+                      undone.current = index;
+                      undo(c.id);
+                    }}
+                    aria-label={`Undo “${name(c.deck, c.i)}”`}
+                    title="Undo"
+                  >
+                    <Icon name="undo" strokeWidth={2.4} />
+                  </button>
+                )}
               </div>
             </li>
           ))}
@@ -1455,7 +1598,9 @@ const PlayedDialog = ({
         ) : (
           <span />
         )}
-        <DefaultButton onClick={close} text="Back to the table" icon="prev" color="red" />
+        <span ref={back} className={styles.playedBack}>
+          <DefaultButton onClick={close} text="Back to the table" icon="prev" color="red" />
+        </span>
       </div>
     </Modal>
   );
@@ -1502,11 +1647,8 @@ const Coach = ({
     if (!t) return done();
     panel.current!.animate([{ transform: "none" }, { transform: t, opacity: 0.4 }], { duration: 340, easing: "cubic-bezier(0.5, 0, 0.75, 0)", fill: "forwards" }).onfinish = done;
   };
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
-    addEventListener("keydown", onKey);
-    return () => removeEventListener("keydown", onKey);
-  });
+  // (focus in it, Tab kept in it, Escape puts it down, focus back after)
+  useDialogFocus(panel, () => close());
   return createPortal(
     <div className={`${styles.coach}${leaving ? ` ${styles.coachLeaving}` : ""}`} onClick={() => close()}>
       <div ref={panel} className={styles.coachPhone} role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.stopPropagation()}>
@@ -1514,7 +1656,10 @@ const Coach = ({
         <button type="button" className={styles.coachClose} onClick={() => close()} aria-label="Put the phone down">
           <Icon name="close" strokeWidth={2.6} />
         </button>
-        <div className={styles.coachScreen}>{children(close)}</div>
+        {/* (focus starts on what to do, not on putting it down) */}
+        <div className={styles.coachScreen} data-autofocus>
+          {children(close)}
+        </div>
         <span className={styles.coachHome} aria-hidden />
       </div>
     </div>,
@@ -1573,7 +1718,9 @@ const Seat = ({
           </span>
         </button>
         <div className={styles.nameplate}>
-          <span className={styles.nameToken}>{player.name.charAt(0).toUpperCase()}</span>
+          <span className={styles.nameToken} aria-hidden>
+            {initial(player.name)}
+          </span>
           <span className={styles.nameText}>{player.name}</span>
           {mine && <span className={styles.you}>You</span>}
           {arcDone(hand) && <span className={styles.arc}>Arc +10</span>}

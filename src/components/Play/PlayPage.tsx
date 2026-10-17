@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
 import { useNavigate, useParams } from "react-router";
-import { EPISODES, EPISODE_SECONDS, MAX_PLAYERS, MIN_PLAYERS, NAME_MAX, cleanName, type Player, type RoomView } from "../../../game-server/src/protocol";
+import { CODE_LENGTH, CODE_LETTERS, EPISODES, EPISODE_SECONDS, MAX_PLAYERS, MIN_PLAYERS, NAME_MAX, cleanName, type Player, type RoomView } from "../../../game-server/src/protocol";
 import DefaultButton from "../utils/DefaultButton";
 import Icon from "../utils/Icons";
 import Modal from "../utils/Modal";
@@ -16,7 +16,10 @@ import CharacterChooser from "./CharacterChooser";
 import Chat from "./Chat";
 import { isMuted, play, setMuted } from "./sounds";
 import { getAllCharacters } from "../Characters/Characters";
-import useRoom from "./useRoom";
+import useRoom, { RoomOffline, useOffline } from "./useRoom";
+import Live from "./Live";
+import initial from "../../utils/initial";
+import announce from "../../utils/announce";
 import styles from "../../css/pages/playPage.module.css";
 
 // Play online (/play, and a room at /play/CODE), dressed as the show's backstage: a stage-lit panel
@@ -67,6 +70,7 @@ const PlayPage = () => {
           code={code}
           name={name}
           watch={watch}
+          rename={setName}
           takeSeat={() => {
             // (a spectator taking a free seat: in as a player, by name)
             setWatch(false);
@@ -151,9 +155,10 @@ const CodeTiles = ({ code, small }: { code: string; small?: boolean }) => (
 
 const DiscordIcon = () => <Icon name="discord" className={styles.discordIcon} />;
 
-const NameField = ({ name, setName, autoFocus }: { name: string; setName: (n: string) => void; autoFocus?: boolean }) => (
+// (optional: for watching, where a name's only for the chat)
+const NameField = ({ name, setName, autoFocus, optional }: { name: string; setName: (n: string) => void; autoFocus?: boolean; optional?: boolean }) => (
   <label className={styles.field}>
-    <span className={styles.fieldLabel}>Your name</span>
+    <span className={styles.fieldLabel}>{optional ? "Your name, for the chat (if you like)" : "Your name"}</span>
     <input
       className={styles.input}
       value={name}
@@ -162,7 +167,7 @@ const NameField = ({ name, setName, autoFocus }: { name: string; setName: (n: st
       autoComplete="nickname"
       maxLength={NAME_MAX}
       autoFocus={autoFocus}
-      required
+      required={!optional}
     />
   </label>
 );
@@ -175,6 +180,7 @@ const Voice = ({ stacked }: { stacked?: boolean }) => (
     </span>
     <div className={styles.voiceText}>
       <h2 className={styles.voiceTitle}>Talk it out on Discord</h2>
+      <p>The game’s played out loud, so get everyone on a voice call.</p>
     </div>
     <DefaultButton href={DISCORD_URL} text="Open our Discord" icon="discord" color="purple" className={styles.voiceButton} />
   </aside>
@@ -194,7 +200,8 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
   const create = async (e: FormEvent) => {
     e.preventDefault();
     const clean = cleanName(name);
-    if (!clean || busy) return;
+    if (busy) return;
+    if (!clean) return setProblem("Pop your name in first: it’s how the others will know you.");
     setBusy(true);
     setProblem("");
     try {
@@ -252,9 +259,19 @@ const Start = ({ name, setName, created }: { name: string; setName: (n: string) 
   );
 };
 
+// what's typed or pasted into the room code, as a code: an invite link gives its code; letters a
+// code never has (vowels, look-alikes) are left out, and said so
+const typedCode = (text: string) => {
+  const link = text.match(/\/play\/([a-z]{4})\b/i);
+  const letters = (link ? link[1] : text).toUpperCase().replace(/[^A-Z]/g, "");
+  const kept = [...letters].filter((c) => CODE_LETTERS.includes(c)).join("");
+  return { code: kept.slice(0, CODE_LENGTH), dropped: kept.length < letters.length };
+};
+
 // Four letter tiles over a real text field (so typing, pasting and the keyboard all just work)
 const CodeInput = ({ code, setCode }: { code: string; setCode: (c: string) => void }) => {
   const [focused, setFocused] = useState(false);
+  const [dropped, setDropped] = useState(false);
   return (
     <label className={styles.field}>
       <span className={styles.fieldLabel}>Room code</span>
@@ -271,16 +288,23 @@ const CodeInput = ({ code, setCode }: { code: string; setCode: (c: string) => vo
         <input
           className={styles.codeField}
           value={code}
-          onChange={(e) => setCode(normalizeCode(e.target.value))}
+          onChange={(e) => {
+            const typed = typedCode(e.target.value);
+            setCode(typed.code);
+            setDropped(typed.dropped);
+          }}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           autoComplete="off"
           autoCapitalize="characters"
           spellCheck={false}
-          maxLength={8}
           aria-label="Room code"
+          aria-describedby="code-hint"
           required
         />
+      </span>
+      <span className={styles.codeHint} id="code-hint" role="status">
+        {dropped ? "Room codes have no vowels: check the letters." : ""}
       </span>
     </label>
   );
@@ -323,21 +347,21 @@ const JoinByLink = ({ code, name, setName, join, watch }: { code: string; name: 
         <Stage
           eyebrow={<>Game {code}</>}
           title={info.started ? "The show’s on!" : "This show is full"}
-          lead={info.started ? "Pop your name in to watch, and chat with the audience." : "Every seat’s taken, but you can watch. Pop your name in."}
+          lead={info.started ? "Come and watch, and chat with the audience." : "Every seat’s taken, but you can watch, or start a game of your own."}
         />
         <form
           className={`${styles.door} ${styles.doorHost} ${styles.doorAlone}`}
           onSubmit={(e) => {
             e.preventDefault();
             const clean = cleanName(name);
-            if (!clean) return;
-            setName(clean);
-            watch(clean);
+            if (clean) setName(clean);
+            watch(clean || undefined);
           }}
         >
           <h2 className={styles.doorTitle}>Who’s watching?</h2>
-          <NameField name={name} setName={setName} autoFocus />
+          <NameField name={name} setName={setName} autoFocus optional />
           <DefaultButton button="submit" text="Watch the show" icon="eye" color="red" className={styles.wide} />
+          <DefaultButton navlink="/play" text="Start your own game" icon="plus" variant="secondary" border="dark" className={`${styles.wide} ${styles.doorAlt}`} />
         </form>
       </div>
     );
@@ -373,9 +397,23 @@ const JoinByLink = ({ code, name, setName, join, watch }: { code: string; name: 
 
 // #region--------------------------------------THE LOBBY
 
-const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name: string; watch: boolean; takeSeat: () => void; toAudience: () => void }) => {
+const Lobby = ({
+  code,
+  name,
+  watch,
+  rename,
+  takeSeat,
+  toAudience,
+}: {
+  code: string;
+  name: string;
+  watch: boolean;
+  rename: (name: string) => void;
+  takeSeat: () => void;
+  toAudience: () => void;
+}) => {
   const navigate = useNavigate();
-  const { room, status, error, bye, send, chat, chatSlow, me } = useRoom(code, name, watch);
+  const { room, status, connected, unreachable, retry, error, bye, send, chat, chatSlow, me } = useRoom(code, name, watch);
   // (out of their seat, into the audience: back in as a spectator)
   useEffect(() => {
     if (bye === "toAudience") toAudience();
@@ -383,7 +421,7 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
   const [removing, setRemoving] = useState<Player | null>(null);
   const [leaving, setLeaving] = useState(false);
   const [startCheck, setStartCheck] = useState(false);
-  useLobbySounds(room, me);
+  useLobbyNews(room, me);
   // the curtains, from the first moment: drawn while the room connects, then they open on the waiting
   // room (or, for a show under way, the table's own curtains take over, drawn the same)
   const [curtain, setCurtain] = useState<"closed" | "opening" | "gone">("closed");
@@ -451,21 +489,29 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
       </Stage>
     );
   }
-  if (!room) return <Loading out={false} />;
+  // (no room yet: the curtains, while it connects; a while with no answer, and the page says so)
+  if (!room)
+    return unreachable ? (
+      <Stage eyebrow={<>Game {code}</>} title="Can’t reach the game" lead="We can’t get through to the game right now. Check your connection, then try again.">
+        <DefaultButton onClick={retry} text="Try again" icon="again" color="red" />
+        <DefaultButton navlink="/play" text="Back to Play" icon="prev" variant="secondary" border="dark" />
+      </Stage>
+    ) : (
+      <Loading out={false} />
+    );
 
   const isHost = room.hostId === me;
   // watching: in the room, but not one of its players
   const spectating = !room.players.some((p) => p.id === me);
-  const watchers = (
-    <>
-      <Watchers room={room} spectating={spectating} isHost={isHost} send={send} takeSeat={takeSeat} leave={() => navigate("/play")} />
-      <Chat lines={chat} me={me} send={send} slow={chatSlow} isHost={isHost} />
-    </>
-  );
   const seats = Array.from({ length: MAX_PLAYERS }, (_, i) => room.players[i] ?? null);
   const canStart = isHost && room.players.length >= MIN_PLAYERS;
   const notReady = room.players.filter((p) => !room.ready?.[p.id]);
-  const reconnecting = status === "reconnecting" && (
+  // (the host's starting it: they're ready by doing so)
+  const othersNotReady = notReady.filter((p) => p.id !== me);
+  const chatCorner = <Chat lines={chat} me={me} send={send} slow={chatSlow} isHost={isHost} />;
+  // (the connection's dropped: said at the top of the screen, wherever it's scrolled to, and every
+  // control's off till it's back)
+  const reconnecting = !connected && (
     <p className={styles.reconnecting} role="status">
       <span className={styles.reconnectingDot} /> Reconnecting…
     </p>
@@ -474,16 +520,18 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
   // the show's started: the table
   if (room.phase === "game" && room.game) {
     return (
-      <>
+      <RoomOffline.Provider value={!connected}>
         {reconnecting}
         {/* (the chat, how many are watching and the doors: all on the table's phone) */}
-        <GameTable room={room} me={me} isHost={isHost} send={send} chat={chat} chatSlow={chatSlow} leave={() => navigate("/play")} />
-      </>
+        <Live>
+          <GameTable room={room} me={me} isHost={isHost} send={send} chat={chat} chatSlow={chatSlow} leave={() => navigate("/play")} />
+        </Live>
+      </RoomOffline.Provider>
     );
   }
 
   return (
-    <>
+    <RoomOffline.Provider value={!connected}>
       <PageIntro
         eyebrow={spectating ? "Watching" : "Game room"}
         title={spectating ? "The show’s about to start" : "Getting ready"}
@@ -493,104 +541,109 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
 
       {curtains}
       {reconnecting}
-      {watchers}
+      {chatCorner}
       <SoundToggle />
+      {/* (taking a seat or leaving is this page's own doing: never off) */}
+      {spectating && <Audience room={room} takeSeat={takeSeat} leave={() => navigate("/play")} />}
 
-      {/* (on a phone, your character comes first: it's the thing to do) */}
-      <div className={styles.lobby}>
-      <div className={styles.lobbyTop}>
-        <Invite code={room.code} room={room} />
-        <section className={styles.showtime}>
-          <div className={styles.showtimeText}>
-            <span className={styles.onAir}>
-              <span className={styles.onAirLight} /> {canStart ? "Ready when you are" : "On air soon"}
-            </span>
-            <StartNote room={room} isHost={isHost} />
-          </div>
-          <ul className={styles.checklist}>
-            <li className={room.players.length >= MIN_PLAYERS ? styles.checkDone : ""}>
-              <Icon name="players" />
-              <b>
-                {room.players.length}/{MAX_PLAYERS}
-              </b>
-              <span>players</span>
-              {room.players.length >= MIN_PLAYERS ? (
-                <Icon name="check" strokeWidth={2.8} className={styles.checkTick} />
-              ) : (
-                <span className={styles.checkNeed}>need {MIN_PLAYERS - room.players.length} more</span>
+      <Live>
+        {/* (on a phone, the invite's a slim row up top, then your character: it's the thing to do) */}
+        <div className={styles.lobby}>
+          <div className={styles.lobbyTop}>
+            <Invite code={room.code} room={room} />
+            <section className={styles.showtime}>
+              <div className={styles.showtimeText}>
+                <span className={styles.onAir}>
+                  <span className={styles.onAirLight} /> {canStart ? "Ready when you are" : "On air soon"}
+                </span>
+                <StartNote room={room} isHost={isHost} />
+              </div>
+              <ul className={styles.checklist}>
+                <li className={room.players.length >= MIN_PLAYERS ? styles.checkDone : ""}>
+                  <Icon name="players" />
+                  <b>
+                    {room.players.length}/{MAX_PLAYERS}
+                  </b>
+                  <span>players</span>
+                  {room.players.length >= MIN_PLAYERS ? (
+                    <Icon name="check" strokeWidth={2.8} className={styles.checkTick} />
+                  ) : (
+                    <span className={styles.checkNeed}>need {MIN_PLAYERS - room.players.length} more</span>
+                  )}
+                </li>
+                <li>
+                  <Icon name="timer" />
+                  <b>
+                    {EPISODES} × {EPISODE_SECONDS / 60} min
+                  </b>
+                  <span>episodes</span>
+                </li>
+                <li>
+                  <Icon name="discord" />
+                  <a href={DISCORD_URL} target="_blank" rel="noreferrer">
+                    Voice chat on Discord
+                  </a>
+                </li>
+                {(isHost || room.watching > 0) && <Watchers room={room} isHost={isHost} send={send} />}
+              </ul>
+              {/* (the host's to press: the others wait for it) */}
+              {isHost && (
+                <DefaultButton
+                  onClick={() => (othersNotReady.length ? setStartCheck(true) : send({ t: "start" }))}
+                  disabled={!canStart}
+                  text="Start the show"
+                  icon="clapper"
+                  color="red"
+                  className={`${styles.startButton}${canStart && !othersNotReady.length ? ` ${styles.startGlow}` : ""}`}
+                />
               )}
-            </li>
-            <li>
-              <Icon name="timer" />
-              <b>
-                {EPISODES} × {EPISODE_SECONDS / 60} min
-              </b>
-              <span>episodes</span>
-            </li>
-            <li>
-              <Icon name="discord" />
-              <a href={DISCORD_URL} target="_blank" rel="noreferrer">
-                Voice chat on Discord
-              </a>
-            </li>
-          </ul>
-          {/* (the host's to press: the others wait for it) */}
-          {isHost && (
-            <DefaultButton
-              onClick={() => (notReady.length ? setStartCheck(true) : send({ t: "start" }))}
-              disabled={!canStart}
-              text="Start the show"
-              icon="clapper"
-              color="red"
-              className={`${styles.startButton}${canStart && !notReady.length ? ` ${styles.startGlow}` : ""}`}
-            />
-          )}
-        </section>
-      </div>
+            </section>
+          </div>
 
-      {!spectating && <CharacterPicker room={room} me={me} send={send} />}
+          {!spectating && <CharacterPicker room={room} me={me} send={send} />}
 
-      <section className={styles.cast} aria-labelledby="cast-title">
-        <div className={styles.castHead}>
-          <h2 className={styles.sectionTitle} id="cast-title">
-            The cast
-          </h2>
-          <span className={styles.castCount}>
-            {room.players.length} of {MAX_PLAYERS} seats
-          </span>
+          <section className={styles.cast} aria-labelledby="cast-title">
+            <div className={styles.castHead}>
+              <h2 className={styles.sectionTitle} id="cast-title">
+                The cast
+              </h2>
+              <span className={styles.castCount}>
+                {room.players.length} of {MAX_PLAYERS} seats
+              </span>
+            </div>
+            <ul className={styles.seats}>
+              {seats.map((p, i) =>
+                p ? (
+                  <Seat key={p.id} player={p} room={room} me={me} isHost={isHost} send={send} rename={rename} remove={() => setRemoving(p)} />
+                ) : (
+                  <EmptySeat key={`empty-${i}`} code={room.code} first={i === room.players.length} />
+                )
+              )}
+            </ul>
+          </section>
+
+          <Voice />
         </div>
-        <ul className={styles.seats}>
-          {seats.map((p, i) =>
-            p ? (
-              <Seat key={p.id} player={p} room={room} me={me} isHost={isHost} send={send} remove={() => setRemoving(p)} />
-            ) : (
-              <EmptySeat key={`empty-${i}`} code={room.code} first={i === room.players.length} />
-            )
-          )}
-        </ul>
-      </section>
 
-      <Voice />
-      </div>
-
-      {!spectating && (
-        <div className={styles.leave}>
-          <button type="button" className={styles.textButton} onClick={() => send({ t: "toAudience" })}>
-            Just watch instead
-          </button>
-          <span className={styles.leaveDot} aria-hidden>
-            ·
-          </span>
-          <button type="button" className={styles.textButton} onClick={() => setLeaving(true)}>
-            Leave the game
-          </button>
-        </div>
-      )}
+        {!spectating && (
+          <div className={styles.leave}>
+            <button type="button" className={styles.textButton} onClick={() => send({ t: "toAudience" })}>
+              Just watch instead
+            </button>
+            <span className={styles.leaveDot} aria-hidden>
+              ·
+            </span>
+            <button type="button" className={styles.textButton} onClick={() => setLeaving(true)}>
+              Leave the game
+            </button>
+          </div>
+        )}
+      </Live>
 
       {startCheck && (
         <Confirm
           title="Start without everyone ready?"
-          text={`${notReady.map((p) => p.name).join(", ")} ${notReady.length === 1 ? "isn’t" : "aren’t"} ready yet. Anyone without a character gets a random one.`}
+          text={`${othersNotReady.map((p) => p.name).join(", ")} ${othersNotReady.length === 1 ? "isn’t" : "aren’t"} ready yet. Anyone without a character gets a random one.`}
           action="Start anyway"
           icon="clapper"
           onConfirm={() => {
@@ -603,7 +656,7 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
       {removing && (
         <Confirm
           title={`Remove ${removing.name}?`}
-          text="They’ll be taken out of this room. They can come back with the invite link."
+          text="They’ll be taken out of this game, and they won’t be able to come back to it."
           action="Remove"
           icon="removePerson"
           onConfirm={() => {
@@ -626,7 +679,7 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
           onClose={() => setLeaving(false)}
         />
       )}
-    </>
+    </RoomOffline.Provider>
   );
 };
 
@@ -706,6 +759,7 @@ const Seat = ({
   me,
   isHost,
   send,
+  rename,
   remove,
 }: {
   player: Player;
@@ -713,6 +767,7 @@ const Seat = ({
   me: string;
   isHost: boolean;
   send: ReturnType<typeof useRoom>["send"];
+  rename: (name: string) => void;
   remove: () => void;
 }) => {
   const mine = player.id === me;
@@ -720,23 +775,33 @@ const Seat = ({
   const [draft, setDraft] = useState(player.name);
   const [menu, setMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const toggle = useRef<HTMLButtonElement>(null);
+  const menuId = `seat-menu-${player.id}`;
+  const offline = useOffline();
 
-  // (the host's menu closes on a click or tap anywhere else, or Escape)
+  // (the host's options: a little list of buttons under the ⋯. It closes on a click or tap anywhere
+  // else, or Escape, which puts focus back on the ⋯)
   useEffect(() => {
     if (!menu) return;
+    menuRef.current?.querySelector<HTMLElement>(`[id="${menuId}"] button`)?.focus();
     const away = (e: PointerEvent) => !menuRef.current?.contains(e.target as Node) && setMenu(false);
-    const key = (e: KeyboardEvent) => e.key === "Escape" && setMenu(false);
+    const key = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || e.defaultPrevented) return;
+      e.preventDefault();
+      setMenu(false);
+      toggle.current?.focus();
+    };
     document.addEventListener("pointerdown", away);
     document.addEventListener("keydown", key);
     return () => {
       document.removeEventListener("pointerdown", away);
       document.removeEventListener("keydown", key);
     };
-  }, [menu]);
+  }, [menu, menuId]);
 
   return (
     <li
-      className={`${styles.seat}${player.online ? "" : ` ${styles.seatAway}`}${mine ? ` ${styles.seatMine}` : ""}`}
+      className={`${styles.seat}${player.online ? "" : ` ${styles.seatAway}`}${mine ? ` ${styles.seatMine}` : ""}${menu ? ` ${styles.seatMenuOpen}` : ""}`}
       style={{ "--seat": colorOf(player) } as React.CSSProperties}
     >
       <span className={styles.seatTokenWrap}>
@@ -746,7 +811,7 @@ const Seat = ({
           </span>
         ) : (
           <span className={styles.seatToken} aria-hidden>
-            {player.name.charAt(0).toUpperCase()}
+            {initial(player.name)}
           </span>
         )}
         {room.ready?.[player.id] && <ReadyTick />}
@@ -780,12 +845,13 @@ const Seat = ({
       {isHost && !mine && (
         <div className={styles.seatMenuWrap} ref={menuRef}>
           <button
+            ref={toggle}
             type="button"
             className={styles.seatCorner}
             onClick={() => setMenu((m) => !m)}
             aria-label={`Options for ${player.name}`}
             aria-expanded={menu}
-            aria-haspopup="menu"
+            aria-controls={menu ? menuId : undefined}
           >
             <svg viewBox="0 0 24 24" aria-hidden>
               <circle cx="5" cy="12" r="1.4" />
@@ -794,11 +860,10 @@ const Seat = ({
             </svg>
           </button>
           {menu && (
-            <div className={styles.seatMenu} role="menu">
+            <div className={styles.seatMenu} id={menuId}>
               {player.online && (
                 <button
                   type="button"
-                  role="menuitem"
                   onClick={() => {
                     setMenu(false);
                     send({ t: "makeHost", id: player.id });
@@ -809,7 +874,6 @@ const Seat = ({
               )}
               <button
                 type="button"
-                role="menuitem"
                 className={styles.danger}
                 onClick={() => {
                   setMenu(false);
@@ -832,6 +896,7 @@ const Seat = ({
               if (clean) {
                 send({ t: "rename", name: clean });
                 saveName(clean);
+                rename(clean);
               }
               setEditing(false);
             }}
@@ -840,7 +905,7 @@ const Seat = ({
             <NameField name={draft} setName={setDraft} autoFocus />
             <div className={`${modalStyles.actions} ${styles.dialogFoot}`}>
               <DefaultButton onClick={() => setEditing(false)} text="Cancel" icon="close" variant="secondary" border="dark" />
-              <DefaultButton button="submit" text="Save" icon="check" color="red" />
+              <DefaultButton button="submit" text="Save" icon="check" color="red" disabled={offline} />
             </div>
           </form>
         </Modal>
@@ -850,60 +915,103 @@ const Seat = ({
 };
 
 const EmptySeat = ({ code, first }: { code: string; first: boolean }) => {
-  const copy = useCopyLink(code);
+  const invite = useCopyLink(code);
   return (
     <li className={`${styles.seatEmpty}${first ? "" : ` ${styles.seatOpen}`}`}>
       {first ? (
-        <button type="button" className={styles.seatInvite} onClick={copy.copy}>
+        <button type="button" className={styles.seatInvite} onClick={invite.share}>
           <span className={styles.seatPlus} aria-hidden>
             +
           </span>
-          <span className={styles.seatEmptyText}>{copy.copied ? "Link copied!" : "Invite a friend"}</span>
+          <span className={styles.seatEmptyText} aria-live="polite">
+            {invite.copied ? "Link copied!" : "Invite a friend"}
+          </span>
         </button>
       ) : (
         <span className={styles.seatEmptyText}>Open seat</span>
       )}
+      {invite.fallback}
     </li>
   );
 };
 
-const useCopyLink = (code: string) => {
-  const [copied, setCopied] = useState(false);
-  const [failed, setFailed] = useState(false);
-  const link = `${window.location.origin}/play/${code}`;
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(link);
-      setCopied(true);
-      play("copy");
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setFailed(true);
-    }
-  };
-  return { link, copied, failed, setFailed, copy };
+// a word that shows for a moment ("copied!"), then goes
+const useFlash = (ms = 2000) => {
+  const [on, setOn] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
+  const flash = useCallback(() => {
+    setOn(true);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setOn(false), ms);
+  }, [ms]);
+  return [on, flash] as const;
 };
 
-// The invite: the room's code (a tap copies it) and its link, to copy, and the faces of the cast so far
-// the waiting room's sounds, for whatever just changed, whoever did it: someone in or out, a character
-// picked, someone ready (or not), and the show starting
-const useLobbySounds = (room: RoomView | null, me: string) => {
+// the room's invite link: copied, or on a phone, handed to its share sheet (and if the clipboard's
+// out of reach, shown in a dialog to copy by hand)
+const useCopyLink = (code: string) => {
+  const [copied, flash] = useFlash();
+  const [failed, setFailed] = useState(false);
+  const link = `${window.location.origin}/play/${code}`;
+  const copyText = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      flash();
+      play("copy");
+      return true;
+    } catch {
+      setFailed(true);
+      return false;
+    }
+  };
+  const copy = () => void copyText(link);
+  const share = () => {
+    if (typeof navigator.share === "function" && matchMedia("(pointer: coarse)").matches)
+      navigator.share({ title: "Love, Career & Magic", text: "Come and play Love, Career & Magic with us!", url: link }).catch(() => {});
+    else copy();
+  };
+  const fallback = failed && (
+    <Modal onClose={() => setFailed(false)} ariaLabel="Invite link">
+      <h2 className={modalStyles.title}>Your invite link</h2>
+      <p className={modalStyles.text}>Copy it and send it to your friends.</p>
+      <input className={styles.input} value={link} readOnly onFocus={(e) => e.target.select()} autoFocus aria-label="Invite link" />
+    </Modal>
+  );
+  return { link, copied, copy, copyText, share, fallback };
+};
+
+// the waiting room's news, whoever made it: someone in or out, a character picked, someone ready (or
+// not), and the show starting. A sound for each, and a word for screen readers
+const useLobbyNews = (room: RoomView | null, me: string) => {
   const was = useRef<RoomView | null>(null);
   useEffect(() => {
     const before = was.current;
     was.current = room;
     if (!room || !before) return;
-    if (room.phase === "game" && before.phase === "lobby") return play("showtime");
+    if (room.phase === "game" && before.phase === "lobby") {
+      announce("The show’s starting!");
+      return play("showtime");
+    }
     if (room.phase !== "lobby") return;
-    const ids = (r: RoomView) => new Set(r.players.map((p) => p.id));
-    const now = ids(room), then = ids(before);
-    if ([...now].some((id) => !then.has(id))) return play("join");
-    if ([...then].some((id) => !now.has(id))) return play("leave");
-    const readyNow = Object.keys(room.ready ?? {}).filter((id) => room.ready[id]).length;
-    const readyThen = Object.keys(before.ready ?? {}).filter((id) => before.ready[id]).length;
-    if (readyNow > readyThen) return play("ready");
-    if (readyNow < readyThen) return play("unready");
-    if (JSON.stringify(room.picks) !== JSON.stringify(before.picks)) return play("pick");
+    const who = (id: string) => (id === me ? "You" : (room.players.find((p) => p.id === id) ?? before.players.find((p) => p.id === id))?.name ?? "Someone");
+    const then = new Set(before.players.map((p) => p.id));
+    const now = new Set(room.players.map((p) => p.id));
+    const came = room.players.filter((p) => !then.has(p.id));
+    const went = before.players.filter((p) => !now.has(p.id));
+    const readied = room.players.filter((p) => room.ready?.[p.id] && !before.ready?.[p.id]);
+    const unreadied = room.players.filter((p) => !room.ready?.[p.id] && before.ready?.[p.id] && room.picks?.[p.id] !== undefined);
+    const picked = room.players.filter((p) => room.picks?.[p.id] !== undefined && room.picks[p.id] !== before.picks?.[p.id]);
+    for (const p of came) announce(`${who(p.id)} joined.`);
+    for (const p of went) announce(`${p.name} left.`);
+    for (const p of picked) announce(`${who(p.id)} picked ${CHARACTERS[room.picks[p.id]]?.name ?? "a character"}.`);
+    for (const p of readied) announce(`${who(p.id)} ${p.id === me ? "are" : "is"} ready.`);
+    for (const p of unreadied) announce(`${who(p.id)} ${p.id === me ? "aren’t" : "isn’t"} ready.`);
+    if (came.length) return play("join");
+    if (went.length) return play("leave");
+    if (readied.length) return play("ready");
+    if (unreadied.length) return play("unready");
+    if (picked.length) return play("pick");
   }, [room, me]);
 };
 
@@ -919,7 +1027,7 @@ const SoundToggle = () => {
         setMutedState(!muted);
         if (muted) play("copy");
       }}
-      aria-label={muted ? "Turn sound on" : "Turn sound off"}
+      aria-label="Sound"
       aria-pressed={!muted}
       title={muted ? "Sound off" : "Sound on"}
     >
@@ -930,58 +1038,41 @@ const SoundToggle = () => {
   );
 };
 
-// the audience: how many are watching (to everyone), and for a spectator, that they're watching, a
-// way to take a seat while there's one free before the show, and a way out
-const Watchers = ({
-  room,
-  spectating,
-  isHost,
-  send,
-  takeSeat,
-  leave,
-}: {
-  room: RoomView;
-  spectating: boolean;
-  isHost: boolean;
-  send: ReturnType<typeof useRoom>["send"];
-  takeSeat: () => void;
-  leave: () => void;
-}) => {
-  const seat = !room.game && room.players.length < MAX_PLAYERS;
-  // (the host always has it: the doors to open or close)
-  if (!spectating && !room.watching && !isHost) return null;
-  return (
-    <div className={`${styles.watchers}${spectating ? ` ${styles.watchersMe}` : ""}`} role="status">
-      <span className={styles.watchersCount}>
-        <Icon name="eye" />
-        {spectating ? "You’re watching" : `${room.watching} watching${room.watchOpen ? "" : " · doors closed"}`}
-      </span>
-      {isHost && (
-        <button
-          type="button"
-          className={room.watchOpen ? styles.watchersLeave : styles.watchersSeat}
-          onClick={() => {
-            send({ t: "watchOpen", open: !room.watchOpen });
-            play(room.watchOpen ? "doorsClose" : "doorsOpen");
-          }}
-          title={room.watchOpen ? "Stop any more spectators coming in" : "Let spectators in again"}
-        >
-          {room.watchOpen ? "Close the doors" : "Open the doors"}
-        </button>
-      )}
-      {spectating && seat && (
-        <button type="button" className={styles.watchersSeat} onClick={takeSeat}>
-          Take a seat
-        </button>
-      )}
-      {spectating && (
-        <button type="button" className={styles.watchersLeave} onClick={leave}>
-          Leave
-        </button>
-      )}
-    </div>
-  );
-};
+// the audience, to the cast: how many are watching (just the number's read out as it changes), and
+// for the host, the doors to open or close
+const Watchers = ({ room, isHost, send }: { room: RoomView; isHost: boolean; send: ReturnType<typeof useRoom>["send"] }) => (
+  <li className={styles.watchers}>
+    <Icon name="eye" />
+    <span aria-live="polite">
+      <b>{room.watching}</b> watching{room.watchOpen ? "" : " · doors closed"}
+    </span>
+    {isHost && (
+      <button
+        type="button"
+        className={styles.watchersDoors}
+        onClick={() => {
+          send({ t: "watchOpen", open: !room.watchOpen });
+          play(room.watchOpen ? "doorsClose" : "doorsOpen");
+        }}
+        title={room.watchOpen ? "Stop any more spectators coming in" : "Let spectators in again"}
+      >
+        {room.watchOpen ? "Close the doors" : "Open the doors"}
+      </button>
+    )}
+  </li>
+);
+
+// a spectator's bar, under the heading: that they're watching, a seat to take while there's one free
+// before the show, and a way out
+const Audience = ({ room, takeSeat, leave }: { room: RoomView; takeSeat: () => void; leave: () => void }) => (
+  <div className={styles.audience}>
+    <span className={styles.audienceText}>
+      <Icon name="eye" /> You’re watching
+    </span>
+    {!room.game && room.players.length < MAX_PLAYERS && <DefaultButton onClick={takeSeat} text="Take a seat" icon="enter" color="red" />}
+    <DefaultButton onClick={leave} text="Leave" icon="leave" variant="secondary" border="dark" />
+  </div>
+);
 
 // a player who's ready: a tick on their face
 const ReadyTick = () => (
@@ -990,18 +1081,13 @@ const ReadyTick = () => (
   </span>
 );
 
+// The invite: the room's code (a tap copies it) and its link, to copy (on a phone, to share), and the
+// faces of the cast so far. (On a phone it's a slim row: the code, and Share.)
 const Invite = ({ code, room }: { code: string; room: RoomView }) => {
-  const { link, copied, failed, setFailed, copy } = useCopyLink(code);
-  const [codeCopied, setCodeCopied] = useState(false);
+  const invite = useCopyLink(code);
+  const [codeCopied, flashCode] = useFlash();
   const copyCode = async () => {
-    try {
-      await navigator.clipboard.writeText(code);
-      setCodeCopied(true);
-      play("copy");
-      setTimeout(() => setCodeCopied(false), 2000);
-    } catch {
-      setFailed(true);
-    }
+    if (await invite.copyText(code)) flashCode();
   };
   const faces = room.players.filter((p) => room.picks?.[p.id] !== undefined);
   return (
@@ -1032,14 +1118,9 @@ const Invite = ({ code, room }: { code: string; room: RoomView }) => {
           ))}
         </ul>
       )}
-      <DefaultButton onClick={copy} text={copied ? "Link copied!" : "Copy invite link"} icon={copied ? "check" : "link"} color="yellow" className={styles.inviteButton} />
-      {failed && (
-        <Modal onClose={() => setFailed(false)} ariaLabel="Invite link">
-          <h2 className={modalStyles.title}>Your invite link</h2>
-          <p className={modalStyles.text}>Copy it and send it to your friends.</p>
-          <input className={styles.input} value={link} readOnly onFocus={(e) => e.target.select()} autoFocus />
-        </Modal>
-      )}
+      <DefaultButton onClick={invite.copy} text={invite.copied ? "Link copied!" : "Copy invite link"} icon={invite.copied ? "check" : "link"} color="yellow" className={`${styles.inviteButton} ${styles.inviteCopy}`} />
+      <DefaultButton onClick={invite.share} text={invite.copied ? "Link copied!" : "Share invite link"} icon={invite.copied ? "check" : "share"} color="yellow" className={`${styles.inviteButton} ${styles.inviteShare}`} />
+      {invite.fallback}
     </section>
   );
 };

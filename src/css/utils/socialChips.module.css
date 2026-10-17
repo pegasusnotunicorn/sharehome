@@ -1,0 +1,84 @@
+/* The socials' chips (SocialChips in SocialIcons.tsx): the site's small square button (see
+   defaultButton.module.css), in the brand's colours when pointed at */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.55rem;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-size);
+  aspect-ratio: 1;
+  box-sizing: border-box;
+  border: 2px solid var(--chip-edge);
+  border-radius: var(--chip-radius);
+  background: #fff;
+  color: var(--btn-ink);
+  box-shadow: 0 3px 0 var(--chip-edge);
+  text-decoration: none;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.chip:hover,
+.chip:focus-visible {
+  background: var(--brand-background, var(--brand, #fff));
+  color: var(--brand-icon, #fff);
+  border-color: var(--btn-ink);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 var(--btn-ink);
+}
+
+.chip:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 var(--btn-ink);
+}
+
+.chip:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
+}
+
+.icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  color: inherit;
+}
+
+/* on the dark footer: see-through, with a light edge (a dark one wouldn't show), hovered too */
+.onDark {
+  border-color: rgba(244, 239, 227, 0.25);
+  background: transparent;
+  color: var(--paper-dark);
+  box-shadow: 0 3px 0 rgba(244, 239, 227, 0.18);
+}
+
+.onDark:hover,
+.onDark:focus-visible {
+  border-color: rgba(244, 239, 227, 0.85);
+  box-shadow: 0 4px 0 rgba(244, 239, 227, 0.55);
+}
+
+.onDark:active {
+  box-shadow: 0 1px 0 rgba(244, 239, 227, 0.55);
+}
+
+.onDark:focus-visible {
+  outline-color: var(--paper-dark);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip {
+    transition: none;
+  }
+}

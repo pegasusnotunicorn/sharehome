@@ -10,6 +10,7 @@ const ErrorPage = () => {
   return (
     <div className={`content max-width ${errorStyles.errorPage}`}>
       <PageIntro
+        className={errorStyles.intro}
         eyebrow="404"
         title="Not found!"
         lead="Sorry, but we couldn’t find the page you were looking for 🧭"

@@ -52,7 +52,7 @@
   left: 0;
   width: 22px;
   height: 2px;
-  background-color: #323232;
+  background-color: var(--ink);
   border-radius: 1px;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }

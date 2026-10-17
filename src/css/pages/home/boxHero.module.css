@@ -46,7 +46,7 @@
   font-family: var(--font-rowdies-bold);
   font-size: clamp(1.6rem, 3.4vw, 2.7rem);
   line-height: 1.15;
-  color: #323232;
+  color: var(--ink);
   text-wrap: balance;
 }
 
@@ -124,7 +124,7 @@
   margin: 0;
   font-family: var(--font-rowdies-bold);
   font-size: clamp(0.72rem, 3.2vw, 1rem);
-  color: #323232;
+  color: var(--ink);
   white-space: nowrap;
 }
 
@@ -196,10 +196,10 @@
   line-height: 1.1;
   letter-spacing: 0;
   white-space: nowrap;
-  color: #1e1e1e;
+  color: var(--ink);
   -webkit-text-stroke: 0.04em currentColor; /* the font's single weight, made marker-thick */
   /* a soft paper-coloured edge, so it reads over the doodles behind */
-  text-shadow: 0 0 2px #faf8f0, 0 0 4px #faf8f0, 0 0 8px #faf8f0;
+  text-shadow: 0 0 2px var(--paper), 0 0 4px var(--paper), 0 0 8px var(--paper);
   pointer-events: none;
   user-select: none;
   transition: opacity 0.3s;
@@ -214,7 +214,7 @@
 
 .hintArrow path {
   fill: none;
-  stroke: #1e1e1e;
+  stroke: var(--ink);
   stroke-width: 9;
   stroke-linecap: round;
   stroke-linejoin: round;

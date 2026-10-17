@@ -17,7 +17,7 @@
   border: 2px solid transparent;
   border-radius: var(--btn-radius);
   outline: none;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: inherit;
   line-height: 1.2;
   letter-spacing: 0.02em;
@@ -84,7 +84,7 @@ a.btn.secondary {
 }
 
 .secondary:hover {
-  background-color: #fffdf6;
+  background-color: var(--paper-light);
 }
 
 /* #endregion */
@@ -111,14 +111,14 @@ a.btn.secondary {
 /* #region--------------------------------------COLOURS */
 
 .colorDark {
-  --btn-color: #323232;
-  --btn-color-dark: #0f0f0f;
+  --btn-color: var(--ink);
+  --btn-color-dark: var(--ink-edge);
 }
 
 .colorRed {
   /* Pegasus red (white on it: 5.0:1) */
-  --btn-color: #d81e18;
-  --btn-color-dark: #8f1410;
+  --btn-color: var(--red);
+  --btn-color-dark: var(--red-edge);
 }
 
 .colorGreen {
@@ -127,13 +127,13 @@ a.btn.secondary {
 }
 
 .colorPurple {
-  --btn-color: #5f5aa2;
-  --btn-color-dark: #3c3878;
+  --btn-color: var(--purple);
+  --btn-color-dark: var(--purple-edge);
 }
 
 .colorYellow {
-  --btn-color: #f1db4b;
-  --btn-color-dark: #b39d1b;
+  --btn-color: var(--yellow);
+  --btn-color-dark: var(--yellow-edge);
 }
 
 .colorWhite {
@@ -142,8 +142,8 @@ a.btn.secondary {
 }
 
 .colorKickstarter {
-  --btn-color: #05ce78;
-  --btn-color-dark: #038a50;
+  --btn-color: var(--kickstarter);
+  --btn-color-dark: var(--kickstarter-edge);
 }
 
 /* dark text on the light faces */

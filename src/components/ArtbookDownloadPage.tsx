@@ -14,7 +14,7 @@ const ArtbookDownloadPage = () => {
   usePageTitle(title);
 
   return (
-    <div className="content">
+    <div className={`content ${styles.page}`}>
       <PageIntro eyebrow="Free download" title="Your digital artbook" lead={description}>
         <DefaultButton variant="primary" icon="download" href="/Artbook%20v2.pdf" text="Download artbook" />
       </PageIntro>

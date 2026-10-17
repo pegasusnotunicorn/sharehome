@@ -20,9 +20,9 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.9rem;
-  color: #323232;
+  color: var(--ink);
   text-decoration: none;
 }
 
@@ -35,11 +35,11 @@
 }
 
 .count {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.75rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.55);
+  color: var(--ink-soft);
 }
 
 /* who they are */
@@ -57,26 +57,26 @@
 
 .eyebrow {
   margin: 0 0 0.6rem;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.78rem;
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: #d81e18;
+  color: var(--red);
 }
 
 .name {
   margin: 0;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: clamp(2.4rem, 5vw, 3.8rem);
   font-weight: normal;
   line-height: 1;
   letter-spacing: -0.03em;
-  color: #323232;
+  color: var(--ink);
 }
 
 .head .meta {
   margin: 0.75rem 0 0;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 1.05rem;
   line-height: 1.45;
   color: rgba(50, 50, 50, 0.8);
@@ -95,11 +95,9 @@
 
 .box {
   padding: 1.75rem 2rem 2rem;
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   background: #fff;
-  box-shadow:
-    0 0 0 1px rgba(50, 50, 50, 0.08),
-    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+  box-shadow: var(--card-shadow);
 }
 
 .box p,
@@ -109,11 +107,11 @@
 
 .label {
   margin: 0 0 1rem;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.78rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.6);
+  color: var(--ink-soft);
 }
 
 .hobbies {
@@ -129,10 +127,10 @@
 .hobbies li {
   position: relative;
   padding-left: 2.25rem;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 1rem;
   line-height: 1.45;
-  color: #323232;
+  color: var(--ink);
   counter-increment: hobby;
 }
 
@@ -149,14 +147,14 @@
   height: 1.45rem;
   border-radius: 50%;
   background: rgba(216, 30, 24, 0.1);
-  color: #d81e18;
-  font-family: "Rowdies-Regular";
+  color: var(--red);
+  font-family: var(--font-rowdies-regular);
   font-size: 0.75rem;
 }
 
 .box .story p {
   margin: 0 0 0.8rem;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.98rem;
   line-height: 1.6;
   color: rgba(50, 50, 50, 0.88);
@@ -199,9 +197,9 @@
     border: 0;
     border-bottom: 2px solid rgba(50, 50, 50, 0.25);
     background: none;
-    font-family: "Rowdies-Regular";
+    font-family: var(--font-rowdies-regular);
     font-size: 0.95rem;
-    color: #323232;
+    color: var(--ink);
     cursor: pointer;
   }
 

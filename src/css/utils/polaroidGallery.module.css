@@ -106,8 +106,8 @@
 .polaroidCaption {
   margin: 0;
   font-size: 0.75rem;
-  color: #666;
-  font-family: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+  color: var(--ink-soft);
+  font-family: var(--font-gochi);
   letter-spacing: 0.02em;
   line-height: 1.4;
   text-align: center;
@@ -115,11 +115,11 @@
 
 .polaroidDate {
   margin: 0;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.6);
-  font-family: "Rowdies-Regular", sans-serif;
+  color: var(--ink-soft);
+  font-family: var(--font-rowdies-regular);
   text-align: center;
 }
 
@@ -135,8 +135,8 @@
   font-size: 0.85rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.6);
-  font-family: "Rowdies-Regular", sans-serif;
+  color: var(--ink-soft);
+  font-family: var(--font-rowdies-regular);
   text-align: center;
 }
 
@@ -167,8 +167,8 @@
 .lightboxCaption {
   margin: 0;
   font-size: 1.25rem;
-  color: #323232;
-  font-family: "GochiHand", "Comic Sans MS", cursive;
+  color: var(--ink);
+  font-family: var(--font-gochi);
   line-height: 1.45;
   text-align: center;
 }

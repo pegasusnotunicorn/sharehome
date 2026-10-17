@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import usePageTitle from "./utils/usePageTitle";
 import DefaultButton from "./utils/DefaultButton";
+import PageIntro from "./utils/PageIntro";
 import PolaroidJourney from "./utils/PolaroidJourney";
 import { CONTACT_POLAROIDS } from "./utils/contactPolaroids";
 import { FETCH_FIRST } from "./utils/imageCopies";
@@ -53,15 +54,14 @@ const ThankYouPage = () => {
 
   return (
     <div className={`content ${styles.thankYouPage}`}>
-      <header className={styles.intro}>
-        <p className={styles.eyebrow}>Order confirmed</p>
-        <h1 className={styles.title}>Thank you!</h1>
-        {/* (true wherever it ships: a Europe order goes out with the next batch, not today) */}
-        <p className={styles.lede}>Your order is in, and a receipt is on its way to your email 📦</p>
-        <div className={styles.actions}>
-          <DefaultButton navlink="/" variant="secondary" border="dark" icon="prev" text="Back to home" />
-        </div>
-      </header>
+      {/* (true wherever it ships: a Europe order goes out with the next batch, not today) */}
+      <PageIntro
+        eyebrow={<span className={styles.confirmed}>Order confirmed</span>}
+        title="Thank you!"
+        lead="Your order is in, and a receipt is on its way to your email 📦"
+      >
+        <DefaultButton navlink="/" variant="secondary" border="dark" icon="prev" text="Back to home" />
+      </PageIntro>
 
       <section className={styles.lou}>
         <img

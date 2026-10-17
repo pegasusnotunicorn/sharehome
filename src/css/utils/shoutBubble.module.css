@@ -12,7 +12,7 @@
 
 .shape path {
   fill: #fff;
-  stroke: #2e2e2e;
+  stroke: var(--ink);
   stroke-width: 2.6;
   stroke-linejoin: round;
 }

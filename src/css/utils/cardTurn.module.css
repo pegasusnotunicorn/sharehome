@@ -27,7 +27,7 @@
 }
 
 .stage:focus-visible {
-  outline: 3px solid #5f5aa2;
+  outline: 3px solid var(--btn-focus);
   outline-offset: 4px;
 }
 
@@ -47,12 +47,12 @@
   align-items: center;
   gap: 6px;
   padding: 4px 12px;
-  border-radius: 999px;
+  border-radius: var(--pill-radius);
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(50, 50, 50, 0.2);
-  font-family: "Roboto Light", sans-serif;
+  font-family: var(--font-roboto-light);
   font-size: 14px;
-  color: #323232;
+  color: var(--ink);
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;

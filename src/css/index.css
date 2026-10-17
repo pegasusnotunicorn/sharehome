@@ -12,16 +12,64 @@
   /* phones: room at the foot of the page for the buttons fixed along the bottom of the screen */
   --fixed-bar-room: calc(5rem + env(safe-area-inset-bottom, 0px));
 
+  /* The palette. Use these rather than a hex of your own, so a shade can't drift. */
+  --ink: #323232;
+  --ink-edge: #0f0f0f;
+  /* (small grey text: 5.3:1 on the paper and on white, where 50% or 60% ink was too faint) */
+  --ink-soft: #6e6563;
+  --paper: #fbf8f1;
+  --paper-light: #fffdf6;
+  --paper-dark: #f3eee2;
+  --note: #fbf3c8;
+  --red: #d81e18;
+  --red-edge: #8f1410;
+  /* (an error's words: 5:1 on the paper) */
+  --error: #b54848;
+  --purple: #5f5aa2;
+  --purple-edge: #3c3878;
+  --green: #7daf9c;
+  /* (green words, e.g. "done": 4.7:1 on the paper) */
+  --green-dark: #3f7a64;
+  --yellow: #f1db4b;
+  --yellow-edge: #b39d1b;
+  --pink: #dd7373;
+  --night: #1c1a2b;
+  --kickstarter: #05ce78;
+  --kickstarter-edge: #038a50;
+
+  /* White cards and boxes: one radius and one soft shadow everywhere. */
+  --card-radius: 20px;
+  --card-shadow:
+    0 0 0 1px rgba(50, 50, 50, 0.08),
+    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+  /* (a smaller box inside a card: a note, a highlight) */
+  --box-radius: 14px;
+  --dialog-radius: 22px;
+  /* (a dialog, lifted off the page) */
+  --dialog-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.5);
+  /* buttons, fields, chips */
+  --control-radius: 12px;
+  --pill-radius: 999px;
+
+  /* What sits over what. (A game room's own layers sit above or below these as they always have.) */
+  --z-drawer: 9000;
+  --z-nav: 9001;
+  --z-banner: 9002;
+  --z-modal: 10000;
+  --z-toast: 10001;
+
   /* Buttons, all over the site: chunky, like a game piece. A solid face with a hard edge under it
      (its "depth") that it lifts off when hovered and presses into when clicked. */
-  --btn-ink: #323232;
-  --btn-radius: 12px;
+  --btn-ink: var(--ink);
+  --btn-radius: var(--control-radius);
   --btn-depth: 4px;
-  --btn-focus: #5f5aa2;
+  --btn-focus: var(--purple);
   /* the small square ones (zoom, close, arrows) */
   --chip-size: 40px;
-  --chip-radius: 12px;
+  --chip-radius: var(--control-radius);
   --chip-edge: rgba(50, 50, 50, 0.22);
+  /* (a finger's worth: the least a thing to tap should be) */
+  --tap-size: 44px;
 }
 
 html {
@@ -36,7 +84,7 @@ body {
   text-align: center;
   letter-spacing: 1px;
   font-size: 1.1rem;
-  color: #323232;
+  color: var(--ink);
   overflow-x: hidden;
   position: relative;
   min-height: 100vh;
@@ -74,6 +122,11 @@ li {
   opacity: 0.85;
 }
 
+/* (a button is in the words' font, not the browser's Arial, unless it says otherwise) */
+button {
+  font-family: inherit;
+}
+
 /* a link to a part of a page (#…) lands it below the banner and the top bar */
 [id] {
   scroll-margin-top: calc(var(--banner-height) + var(--navbar-height));
@@ -83,6 +136,12 @@ li {
   [id] {
     scroll-margin-top: calc(var(--banner-height-mobile) + var(--navbar-height));
   }
+}
+
+/* the site's focus ring, on anything that can be tabbed to and doesn't draw its own */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 2px;
 }
 
 /* read out, but not shown */
@@ -116,10 +175,10 @@ li {
 .fantasyEmphasis {
   background: linear-gradient(
     -45deg,
-    #5f5aa2 20%,
-    #f1db4b 40%,
-    #7daf9c 60%,
-    #dd7373 80%
+    var(--purple) 20%,
+    var(--yellow) 40%,
+    var(--green) 60%,
+    var(--pink) 80%
   );
   background-size: 200% auto;
   background-clip: text;
@@ -210,11 +269,9 @@ li {
   justify-content: center;
   gap: 1rem;
   padding: 2rem 2.25rem 2.25rem;
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   background: #fff;
-  box-shadow:
-    0 0 0 1px rgba(50, 50, 50, 0.08),
-    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+  box-shadow: var(--card-shadow);
 }
 
 .termsWrapper p,
@@ -233,7 +290,7 @@ li {
   font-size: 1.45rem;
   line-height: 1.15;
   text-align: left;
-  color: #323232;
+  color: var(--ink);
 }
 
 .termsWrapper > .subtitle:first-child,
@@ -245,11 +302,11 @@ li {
   margin: 0.5rem 0 0;
   font-family: var(--font-rowdies-regular);
   font-size: 1.05rem;
-  color: #323232;
+  color: var(--ink);
 }
 
 .termsWrapper a {
-  color: #323232;
+  color: var(--ink);
   text-decoration: underline;
   text-decoration-color: rgba(216, 30, 24, 0.5);
   text-decoration-thickness: 2px;
@@ -257,7 +314,7 @@ li {
 }
 
 .termsWrapper a:hover {
-  text-decoration-color: #d81e18;
+  text-decoration-color: var(--red);
 }
 
 .legalBack {
@@ -270,11 +327,24 @@ li {
   .termsWrapper {
     padding: 1.5rem 1.25rem 1.75rem;
   }
+
+  /* (the button goes full width here: kept off the screen's edges) */
+  .legalBack {
+    padding: 0 1rem;
+  }
 }
 
 .termsWrapper p,
 .termsWrapper ul {
   margin: 0;
+}
+
+/* (bold in the words: Roboto's heavier font, rather than a faked bold of the light one) */
+.termsWrapper strong,
+.termsWrapper b {
+  font-family: var(--font-roboto-regular);
+  font-weight: normal;
+  color: var(--ink);
 }
 
 .termsWrapper .subtitle {

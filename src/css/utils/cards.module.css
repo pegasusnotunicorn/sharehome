@@ -9,7 +9,7 @@
   -moz-perspective: 1000px; /* Remove this if you don't want the 3D effect */
   -o-perspective: 1000px; /* Remove this if you don't want the 3D effect */
   pointer-events: all;
-  font-family: "Roboto Regular";
+  font-family: var(--font-roboto-regular);
 }
 
 .flipcardInner {
@@ -64,7 +64,7 @@
 }
 
 .flipcardBack.name {
-  background-color: #323232;
+  background-color: var(--ink);
 }
 
 /* #endregion ----------------------------------------------------------- */
@@ -91,7 +91,7 @@
 .memberCommCardMainText {
   font-size: 3.5em;
   line-height: 110%;
-  font-family: "Roboto Regular";
+  font-family: var(--font-roboto-regular);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -100,7 +100,7 @@
 .memberCommCardSubText {
   font-size: 2em;
   line-height: 110%;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -126,7 +126,7 @@
   font-size: 40em;
   position: absolute;
   margin: 0;
-  font-family: "Rowdies-Light";
+  font-family: var(--font-rowdies-light);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -145,7 +145,7 @@
 /* #region ---------------------------------------- DIRECTION / EPISODE CARD */
 
 .directionEpisodeCardWrapper {
-  font-family: "Futura", "Roboto Regular";
+  font-family: var(--font-roboto-regular);
   height: 100%;
   width: 100%;
   display: flex;
@@ -154,8 +154,7 @@
 }
 
 .directionEpisodeTextWrapper {
-  color: #323232;
-  font-family: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  color: var(--ink);
   font-size: 2.8em;
   line-height: 120%;
   overflow: hidden;
@@ -210,7 +209,7 @@
   }
   :global(.footer) .directionEpisodeTextWrapper {
     font-size: 2em;
-    font-family: "Rowdies-Light";
+    font-family: var(--font-rowdies-light);
   }
   :global(.directionEpisodeDecksContainer) .directionEpisodeTextWrapper {
     font-size: 1.8em;
@@ -242,7 +241,7 @@
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   padding-left: 1em;
   padding-right: 1em;
   overflow: hidden;
@@ -275,8 +274,7 @@
   text-align: center;
 }
 
-.cardBackAge,
-.cardBackJob {
+.cardBackAge {
   font-size: 1.2em;
   margin: 0;
   text-transform: lowercase;

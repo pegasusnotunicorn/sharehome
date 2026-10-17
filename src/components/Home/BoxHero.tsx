@@ -4,7 +4,7 @@ import BoxViewer from "../utils/BoxViewer";
 import BuyButton from "../utils/BuyButton";
 import DefaultButton from "../utils/DefaultButton";
 import ShoutBubble from "../utils/ShoutBubble";
-import useWindowDimensions from "../utils/useWindowDimensions";
+import useWindowDimensions, { PHONE_MAX_WIDTH } from "../utils/useWindowDimensions";
 import { trackEvent } from "../utils/trackEvent";
 import type { BoxArt } from "../utils/box3d";
 import styles from "../../css/pages/home/boxHero.module.css";
@@ -22,7 +22,7 @@ const panels = (dir: string, part: "lid" | "base") => ({
 const boxArt = (dir: string): BoxArt => ({ lid: panels(dir, "lid"), base: panels(dir, "base") });
 const BOX = boxArt("/images/box");
 const BOX_PHONE = boxArt("/images/box/phone");
-const isPhone = () => !!window.matchMedia?.("(max-width: 900px)").matches;
+const isPhone = () => !!window.matchMedia?.(`(max-width: ${PHONE_MAX_WIDTH}px)`).matches;
 // the words come in this soon after the page is up, whether or not the 3D box is in yet (Bizz pops up
 // behind the box when it is)
 const WORDS_MS = 300;

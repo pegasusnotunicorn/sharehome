@@ -182,7 +182,6 @@ const RafflePage = () => {
                   icon="forward"
                   variant="primary"
                   color="kickstarter"
-                  className={styles.kickstarterBtnInner}
                 />
               </>
             )}

@@ -14,53 +14,7 @@
   opacity: 1;
 }
 
-/* #region--------------------------------------THE OPENING */
-
-.intro {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  max-width: 46rem;
-  margin: 0 auto;
-  padding: var(--intro-top) 0 2.25rem;
-}
-
-.page .eyebrow {
-  margin: 0 0 0.9rem;
-  font-family: "Rowdies-Regular";
-  font-size: 0.78rem;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.6);
-}
-
-.title {
-  margin: 0;
-  font-family: "Rowdies-Bold";
-  font-size: clamp(3rem, 8.5vw, 6rem);
-  font-weight: normal;
-  line-height: 0.92;
-  letter-spacing: -0.04em;
-  color: #323232;
-}
-
-.page .lede {
-  max-width: 34rem;
-  margin: 1.1rem 0 0;
-  font-family: "Roboto Light";
-  font-size: 1.08rem;
-  line-height: 1.5;
-  color: rgba(50, 50, 50, 0.85);
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
-  margin-top: 1.6rem;
-}
+/* #region--------------------------------------THE OPENING (PageIntro), then the video */
 
 .video {
   max-width: 900px;
@@ -71,11 +25,9 @@
   position: relative;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   background: #e9e4d8;
-  box-shadow:
-    0 0 0 1px rgba(50, 50, 50, 0.08),
-    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+  box-shadow: var(--card-shadow);
 }
 
 .videoEmbed iframe {
@@ -92,7 +44,7 @@
   left: clamp(14px, 2.5vw, 28px);
   bottom: clamp(12px, 2.2vw, 24px);
   color: #fff;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: clamp(1.1rem, 2.2vw, 1.6rem);
   line-height: 1.1;
 }
@@ -123,7 +75,7 @@
   min-width: 0;
   padding: 0.7rem 0.75rem 0.65rem;
   border: 2px solid var(--chip-edge);
-  border-radius: 14px;
+  border-radius: var(--box-radius);
   background: #fff;
   color: var(--btn-ink);
   box-shadow: 0 3px 0 var(--chip-edge);
@@ -163,14 +115,14 @@
 }
 
 .tabLabel {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 1rem;
   line-height: 1.2;
 }
 
 .tabNote {
-  font-family: "Rowdies-Light";
-  font-size: 0.72rem;
+  font-family: var(--font-rowdies-light);
+  font-size: 0.75rem;
   line-height: 1.2;
   opacity: 0.65;
 }
@@ -195,12 +147,10 @@
   gap: 2.5rem;
   align-items: center;
   padding: 1.75rem;
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   background: #fff;
   text-align: left;
-  box-shadow:
-    0 0 0 1px rgba(50, 50, 50, 0.08),
-    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+  box-shadow: var(--card-shadow);
 }
 
 /* every other step the other way round, so the page zigzags */
@@ -221,11 +171,11 @@
   align-items: center;
   gap: 0.6rem;
   margin: 0 0 0.7rem;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 0.78rem;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: rgba(50, 50, 50, 0.6);
+  color: var(--ink-soft);
 }
 
 /* the step's number in a red circle, like a character's hobbies */
@@ -237,28 +187,28 @@
   height: 1.8rem;
   border-radius: 50%;
   background: rgba(216, 30, 24, 0.1);
-  color: #d81e18;
-  font-family: "Rowdies-Regular";
+  color: var(--red);
+  font-family: var(--font-rowdies-regular);
   font-size: 0.85rem;
   letter-spacing: 0;
 }
 
 .stepTitle {
   margin: 0;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: clamp(1.7rem, 3vw, 2.3rem);
   font-weight: normal;
   line-height: 1.05;
   letter-spacing: -0.02em;
-  color: #323232;
+  color: var(--ink);
 }
 
 .page .stepLead {
   margin: 0.8rem 0 1rem;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 1.1rem;
   line-height: 1.5;
-  color: #323232;
+  color: var(--ink);
 }
 
 .points {
@@ -273,7 +223,7 @@
 .page .points li {
   position: relative;
   padding-left: 1.4rem;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.98rem;
   line-height: 1.55;
   color: rgba(50, 50, 50, 0.85);
@@ -287,7 +237,7 @@
   width: 0.45rem;
   height: 0.45rem;
   border-radius: 50%;
-  background: #d81e18;
+  background: var(--red);
   opacity: 0.55;
 }
 
@@ -298,8 +248,8 @@
   gap: 0.8rem;
   margin-top: 1.4rem;
   padding: 1rem 1.15rem;
-  border-radius: 14px;
-  background: #fbf3c8;
+  border-radius: var(--box-radius);
+  background: var(--note);
   box-shadow: inset 0 0 0 1px rgba(160, 130, 20, 0.18);
 }
 
@@ -312,14 +262,14 @@
 
 .page .goal p {
   margin: 0;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.95rem;
   line-height: 1.55;
-  color: #323232;
+  color: var(--ink);
 }
 
 .goal b {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-weight: normal;
 }
 
@@ -328,8 +278,8 @@
 /* #region--------------------------------------A SCENE: the printed pieces, laid on a table */
 
 .stepScene {
-  border-radius: 14px;
-  background: radial-gradient(ellipse at 50% 40%, #fffdf8 0%, #f3eee2 80%);
+  border-radius: var(--box-radius);
+  background: radial-gradient(ellipse at 50% 40%, var(--paper-light) 0%, var(--paper-dark) 80%);
   box-shadow: inset 0 0 0 1px rgba(50, 50, 50, 0.06);
   overflow: hidden;
 }
@@ -400,11 +350,9 @@
 .golden {
   margin-top: 1rem;
   padding: 2.5rem 1.75rem 1.75rem;
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   background: #fff;
-  box-shadow:
-    0 0 0 1px rgba(50, 50, 50, 0.08),
-    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+  box-shadow: var(--card-shadow);
 }
 
 .goldenHead {
@@ -426,8 +374,8 @@
   align-items: center;
   text-align: center;
   padding: 1.75rem 1.5rem 1.6rem;
-  border-radius: 14px;
-  background: radial-gradient(ellipse at 50% 30%, #fffdf8 0%, #f3eee2 85%);
+  border-radius: var(--box-radius);
+  background: radial-gradient(ellipse at 50% 30%, var(--paper-light) 0%, var(--paper-dark) 85%);
 }
 
 .goldenRule img {
@@ -439,16 +387,16 @@
 
 .goldenRule h3 {
   margin: 0 0 0.5rem;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 1.15rem;
   line-height: 1.25;
-  color: #323232;
+  color: var(--ink);
 }
 
 .page .goldenRule p {
   max-width: 28rem;
   margin: 0;
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 0.98rem;
   line-height: 1.55;
   color: rgba(50, 50, 50, 0.85);
@@ -469,12 +417,10 @@
 /* What's in the box: in a white box like the steps */
 .boxPanel {
   padding: 1.75rem;
-  border-radius: 20px;
+  border-radius: var(--card-radius);
   background: #fff;
   text-align: left;
-  box-shadow:
-    0 0 0 1px rgba(50, 50, 50, 0.08),
-    0 14px 30px -22px rgba(50, 40, 30, 0.35);
+  box-shadow: var(--card-shadow);
 }
 
 /* #endregion */
@@ -485,11 +431,6 @@
   .page {
     padding-left: 1rem;
     padding-right: 1rem;
-  }
-
-  /* (clear of the logo and the menu button, which float over the top of the page here) */
-  .intro {
-    padding: 4.75rem 0 2rem;
   }
 
   .parts {
@@ -526,10 +467,6 @@
 }
 
 @media only screen and (max-width: 640px) {
-  .page .lede {
-    font-size: 1rem;
-  }
-
   .tabs {
     gap: 0.4rem;
   }
@@ -543,7 +480,7 @@
   }
 
   .tabNote {
-    font-size: 0.62rem;
+    font-size: 0.75rem;
   }
 
   .long {

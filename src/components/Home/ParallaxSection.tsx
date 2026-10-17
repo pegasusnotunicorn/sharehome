@@ -4,7 +4,7 @@ import gsap from "gsap";
 import Card from "../Card/Card";
 import getHomePageCardProps from "./utils/getHomePageCardProps";
 import { getAllFinishedPeople } from "../Characters/Characters";
-import useWindowDimensions from "../utils/useWindowDimensions";
+import useWindowDimensions, { PHONE_MAX_WIDTH } from "../utils/useWindowDimensions";
 import styles from "../../css/pages/home/cardparallax.module.css";
 import { useLocation } from "react-router";
 import { characterArtFace } from "../Characters/characterCardFaces";
@@ -100,7 +100,7 @@ const ParallaxSection = () => {
   const characters = useMemo(() => getAllFinishedPeople(true), []);
 
   const { width } = useWindowDimensions();
-  const cardsPerRow = width >= 1400 ? 5 : width >= 900 ? 5 : 3;
+  const cardsPerRow = width > PHONE_MAX_WIDTH ? 5 : 3;
   const totalCards = numRows * cardsPerRow;
   let randomCharacters = characters.slice(0, totalCards);
 

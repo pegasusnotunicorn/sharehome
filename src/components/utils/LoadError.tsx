@@ -16,7 +16,7 @@ const LoadError = ({ title, children, onRetry, className }: LoadErrorProps) => (
     <p className={styles.title}>{title}</p>
     {children && <p className={styles.body}>{children}</p>}
     <div className={styles.actions}>
-      {onRetry && <DefaultButton button="button" text="Try again" icon="again" variant="primary" color="dark" compact onClick={onRetry} />}
+      {onRetry && <DefaultButton button="button" text="Try again" icon="again" variant="primary" color="dark" onClick={onRetry} />}
       <NavLink to="/contact" className={styles.contact}>
         Contact us
       </NavLink>

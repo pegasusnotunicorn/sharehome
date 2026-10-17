@@ -462,7 +462,9 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   const phoneRef = useRef<HTMLDivElement>(null);
   const step = `${game.phase}-${game.episode}`;
   const [coachSeen, setCoachSeen] = useState<string | null>(null);
-  const coachOpen = coachSeen !== step && (game.phase === "ready" || game.phase === "break") && !timeUp && loadingGone;
+  // (a spectator has nothing to do: no phone held up for them)
+  const spectating = !game.hands[me];
+  const coachOpen = !spectating && coachSeen !== step && (game.phase === "ready" || game.phase === "break") && !timeUp && loadingGone;
   const stepNow = useRef(step);
   stepNow.current = step;
   // (put down: not again until the next step; whichever step it's on as it's put down)
@@ -575,7 +577,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
   }
 
   return (
-    <div className={styles.room}>
+    <div className={`${styles.room}${spectating ? ` ${styles.watchOnly}` : ""}`}>
       {!loadingGone && <Loading out={loaded} />}
       <div className={`${styles.tabletop}${clothClass(cloth)}`}>
 

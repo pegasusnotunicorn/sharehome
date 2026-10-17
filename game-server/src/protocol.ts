@@ -132,6 +132,11 @@ export interface RoomView {
   picks: Record<string, number>;
   ready: Record<string, boolean>;
   game: GameView | null;
+  // how many are watching (spectators: no seat; they see the table, and can't touch it). Counted as
+  // the room's sent; a spectator coming or going doesn't send it again on their own
+  watching: number;
+  // whether more spectators may come in (the host can close the doors)
+  watchOpen: boolean;
   // the server's clock as it sent this, so the page can line its own clock up with it
   now: number;
 }
@@ -144,6 +149,9 @@ export interface Slot {
 
 // browser → room
 export type ClientMessage =
+  | { t: "chat"; text: string } // a line in the chat (players and spectators)
+  | { t: "removeWatcher"; id: string } // host only: a spectator out (and their chat lines), not to come back
+  | { t: "watchOpen"; open: boolean } // host only: let more spectators in, or not
   | { t: "rename"; name: string }
   | { t: "kick"; id: string } // host only
   | { t: "makeHost"; id: string } // host only
@@ -165,8 +173,52 @@ export type ClientMessage =
   | { t: "toLobby" }; // host only
 
 // room → browser
+// #region--------------------------------------CHAT
+
+// a line in the room's chat, from a player (their name and color) or a spectator (watching)
+export interface ChatLine {
+  id: string;
+  by: string; // who sent it (a player's id, or a spectator's device)
+  name: string;
+  color: number | null; // a player's color; null for a spectator
+  watching: boolean;
+  text: string;
+  at: number;
+}
+export const CHAT_MAX = 200; // characters a line
+// the characters' own emoji, written in a line as :name: (public/images/emojis/name.webp)
+export const CHAT_EMOJI = [
+  "urgSmile", "beatriceStare", "tsukasaSmile", "kottrSleepy", "lydiaSolemn", "ahxiEyeroll", "ogarkYell", "annaPhone",
+  "korelinProud", "rosamundHappy", "robinSurprised", "dorpipSweat", "gingernutsCreep", "bizzHappy", "grodrotPanic",
+  "nycolasPanic", "aryaIrritated", "sejiAngry", "dommyStare", "sohFocus", "brigitCute", "hansanSmoke", "sysifeThink",
+  "eliasAndMaya", "susomNervous", "magicFingers", "magicFist", "magicOkay", "birdSurprised", "horseWhat", "seagullMad",
+  "sysifusLogo",
+] as const;
+
+// a line as it's shown: plain text on one line, at most CHAT_MAX characters, no invisible or
+// direction-flipping characters, no links (a link's just "🔗": no spam that goes anywhere)
+export const cleanChat = (text: unknown) => {
+  if (typeof text !== "string") return "";
+  const t = text
+    .normalize("NFC")
+    .replace(/[\u0000-\u001f\u007f-\u009f]/g, " ")
+    .replace(/[\u200b\u200c\u200e\u200f\u202a-\u202e\u2060-\u206f\ufeff\ufff9-\ufffb]/g, "")
+    .replace(/(\p{M}{2})\p{M}+/gu, "$1")
+    .replace(/\b(?:https?:\/\/|www\.)\S+/gi, "🔗")
+    .replace(/\b[a-z0-9-]+\.(?:com|net|org|gg|io|co|xyz|ru|ly|me|app|link)(?:\/\S*)?\b/gi, "🔗")
+    .replace(/\s+/g, " ")
+    .trim();
+  return Array.from(t).slice(0, CHAT_MAX).join("").trim();
+};
+
+// #endregion
+
 export type ServerMessage =
   | { t: "state"; room: RoomView }
+  | { t: "chat"; line: ChatLine } // a new line
+  | { t: "chatLog"; lines: ChatLine[] } // the chat so far, as a socket opens
+  | { t: "chatSlow" } // too fast: that line wasn't sent
+  | { t: "watching"; n: number; open: boolean } // the audience's changed (to the players only)
   | { t: "error"; error: RoomError }
   // sent just before the room closes a socket for good (a socket's own close can be slow to arrive)
   | { t: "bye"; reason: ByeReason };
@@ -174,7 +226,7 @@ export type ServerMessage =
 // ("expired": the room closed, after a long while)
 export type ByeReason = "kicked" | "left" | "replaced" | "expired";
 
-export type RoomError = "not-found" | "full" | "bad-request";
+export type RoomError = "not-found" | "full" | "bad-request" | "watch-full" | "watch-closed" | "removed";
 
 // Why the room closed a socket, so the page knows not to reconnect
 export const CLOSE_KICKED = 4003;

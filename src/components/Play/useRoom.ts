@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { ByeReason, ClientMessage, RoomError, RoomView, ServerMessage } from "../../../game-server/src/protocol";
+import type { ByeReason, ChatLine, ClientMessage, RoomError, RoomView, ServerMessage } from "../../../game-server/src/protocol";
 import { socketUrl } from "./gameServer";
 
 export type RoomStatus = "connecting" | "open" | "reconnecting" | "refused" | "gone";
@@ -7,12 +7,15 @@ export type RoomStatus = "connecting" | "open" | "reconnecting" | "refused" | "g
 // A game room's socket: the room as the server last sent it, and a way to send it moves. A dropped
 // socket comes back on its own (sooner when the page is looked at again or the network returns);
 // one the room refused or closed for good doesn't.
-export default function useRoom(code: string | null, name: string) {
+export default function useRoom(code: string | null, name: string, watch = false) {
   const [room, setRoom] = useState<RoomView | null>(null);
   const [status, setStatus] = useState<RoomStatus>("connecting");
   const [error, setError] = useState<RoomError | null>(null);
   const [bye, setBye] = useState<ByeReason | null>(null);
   const ws = useRef<WebSocket | null>(null);
+  // the room's chat, and when a line was last turned back for coming too fast
+  const [chat, setChat] = useState<ChatLine[]>([]);
+  const [chatSlow, setChatSlow] = useState(0);
   // (the name the socket first opens with: changes after that go as a rename)
   const nameRef = useRef(name);
 
@@ -26,7 +29,7 @@ export default function useRoom(code: string | null, name: string) {
     const connect = () => {
       clearTimeout(retry);
       if (done || (ws.current && ws.current.readyState <= WebSocket.OPEN)) return;
-      const socket = new WebSocket(socketUrl(code, nameRef.current));
+      const socket = new WebSocket(socketUrl(code, nameRef.current, watch));
       ws.current = socket;
       socket.onopen = () => {
         tries = 0;
@@ -45,6 +48,10 @@ export default function useRoom(code: string | null, name: string) {
           return;
         }
         if (msg.t === "state") setRoom(msg.room);
+        else if (msg.t === "chatLog") setChat(msg.lines);
+        else if (msg.t === "chat") setChat((all) => [...all.filter((l) => l.id !== msg.line.id), msg.line].slice(-60));
+        else if (msg.t === "chatSlow") setChatSlow(Date.now());
+        else if (msg.t === "watching") setRoom((r) => (r ? { ...r, watching: msg.n, watchOpen: msg.open } : r));
         else if (msg.t === "error") {
           done = true;
           setError(msg.error);
@@ -103,11 +110,11 @@ export default function useRoom(code: string | null, name: string) {
       ws.current?.close();
       ws.current = null;
     };
-  }, [code]);
+  }, [code, watch]);
 
   const send = useCallback((msg: ClientMessage) => {
     if (ws.current?.readyState === WebSocket.OPEN) ws.current.send(JSON.stringify(msg));
   }, []);
 
-  return { room, status, error, bye, send };
+  return { room, status, error, bye, send, chat, chatSlow };
 }

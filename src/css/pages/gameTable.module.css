@@ -2897,3 +2897,12 @@ button.traitPickCard:focus-visible {
     gap: 0.8rem;
   }
 }
+
+/* a spectator: the table to look at (cards up close, the phone's log and the rules), nothing to touch */
+.watchOnly :is(.card, .swap, .trait, .past, .minus, .playArea, .phoneActions, .remotePad) {
+  pointer-events: none;
+}
+
+.watchOnly .phoneActions {
+  display: none;
+}

@@ -17,7 +17,8 @@ import DescriptionContainer from "./DescriptionContainer";
 import StepText from "./utils/StepText";
 import useNearViewport from "../utils/useNearViewport";
 
-// (the photo carousel at the bottom, and the carousel library with it, load as it comes near the screen)
+// (the photo carousel at the bottom, and the carousel library with it, load a screen and a half before
+// it comes on screen, so its pictures are in when it does)
 const CarouselSection = lazy(() => import("../utils/CarouselSection"));
 
 interface LandingPageProps {
@@ -27,7 +28,7 @@ interface LandingPageProps {
 const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
   useEffect(() => () => setTrailerPlaying(false), [setTrailerPlaying]);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const carouselNear = useNearViewport(carouselRef);
+  const carouselNear = useNearViewport(carouselRef, { rootMargin: "150% 0px" });
 
   return (
     <div className="content">

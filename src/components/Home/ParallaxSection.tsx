@@ -11,6 +11,7 @@ import { characterArtFace } from "../Characters/characterCardFaces";
 import { getAllCharacters } from "../Characters/Characters";
 import { characterArtSmall } from "../utils/characterArt";
 import useNearViewport from "../utils/useNearViewport";
+import { afterLoad } from "../utils/later";
 import type { WallApi } from "../utils/parallaxWall3d";
 import type { Character } from "../../types/character";
 import landingPageStyles from "../../css/landingPage.module.css";
@@ -47,9 +48,18 @@ const ParallaxSection = () => {
   const wall = useRef<WallApi | null>(null);
   const scrolled = useRef(0);
   const [flat, setFlat] = useState(false);
-  // the wall (and its art) loads once it starts coming up the screen: it waits just below the first
-  // screen, so the hero loads first
-  const near = useNearViewport(stageRef, { rootMargin: "0px" });
+  // the wall (and its art) loads once the page has (so the hero comes first), or sooner if it's
+  // scrolled to; ready before it comes up the screen, not popping in as it does
+  const near = useNearViewport(stageRef, { rootMargin: "150% 0px" });
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    let gone = false;
+    afterLoad().then(() => !gone && setLoaded(true));
+    return () => {
+      gone = true;
+    };
+  }, []);
+  const start = near || loaded;
 
   // the flat cards: pinned to the screen while they part, fading. (The 3D wall stays on screen by
   // itself, sticky, and does its own fading.)
@@ -133,7 +143,7 @@ const ParallaxSection = () => {
 
   useEffect(() => {
     const stage = stageRef.current;
-    if (!near || flat || !stage) return;
+    if (!start || flat || !stage) return;
     let gone = false;
     const fail = () => !gone && setFlat(true);
     import("../utils/parallaxWall3d")
@@ -168,7 +178,7 @@ const ParallaxSection = () => {
       wall.current?.destroy();
       wall.current = null;
     };
-  }, [near, flat, wallCards, cardsPerRow]);
+  }, [start, flat, wallCards, cardsPerRow]);
 
   return (
     <div

@@ -73,8 +73,9 @@ const getPictureSlide = (
   const src = `${directory}/${filename}.webp`;
   const imageContent = (
     <div className={frameClassName} style={frameStyle}>
+      {/* (all fetched as the carousel mounts, before it comes on screen: lazy ones popped in as they
+          slid in) */}
       <img
-        loading="lazy"
         alt={`Carousel ${filename} ${index}`}
         className={imageClassName}
         style={imageStyle}

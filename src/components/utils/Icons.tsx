@@ -24,6 +24,17 @@ const PATHS = {
       <path d="M11 6l-6 6l6 6" />
     </>
   ),
+  // ›, ‹ (a carousel's Next, Prev)
+  chevron: (
+    <>
+      <path d="M9 6l6 6l-6 6" />
+    </>
+  ),
+  chevronBack: (
+    <>
+      <path d="M15 6l-6 6l6 6" />
+    </>
+  ),
   // a sparkle
   star: (
     <>

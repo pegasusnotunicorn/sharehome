@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import ArrowChip from "./ArrowChip";
 import PolaroidGallery, { PolaroidLightbox, formatDate } from "./PolaroidGallery";
 import { CONTACT_POLAROIDS } from "./contactPolaroids";
 import type { PolaroidRingApi } from "./polaroidRing3d";
@@ -111,17 +112,13 @@ const PolaroidJourney = ({ label, title, start = 0 }: PolaroidJourneyProps) => {
             {!live && <img className={styles.ringStill} src={PHOTOS[start].src} alt="" loading="lazy" />}
           </div>
           <div className={styles.journeyBar} onFocus={() => setHeld(true)} onBlur={() => setHeld(false)}>
-            <button type="button" className={`${styles.chip} tap-area`} onClick={() => nudge(-1)} aria-label="Previous photo">
-              <Chevron flip />
-            </button>
+            <ArrowChip dir={-1} label="Previous photo" onClick={() => nudge(-1)} />
             <div className={styles.caption} aria-live={held ? "polite" : "off"}>
               <p key={at} className={styles.captionText}>
                 {item.caption}
               </p>
             </div>
-            <button type="button" className={`${styles.chip} tap-area`} onClick={() => nudge(1)} aria-label="Next photo">
-              <Chevron />
-            </button>
+            <ArrowChip dir={1} label="Next photo" onClick={() => nudge(1)} />
           </div>
         </div>
       )}
@@ -130,11 +127,5 @@ const PolaroidJourney = ({ label, title, start = 0 }: PolaroidJourneyProps) => {
     </section>
   );
 };
-
-const Chevron = ({ flip }: { flip?: boolean }) => (
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={flip ? { transform: "scaleX(-1)" } : undefined}>
-    <path d="M9 6l6 6-6 6" />
-  </svg>
-);
 
 export default PolaroidJourney;

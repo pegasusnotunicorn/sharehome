@@ -8,7 +8,7 @@ import modalStyles from "../../css/utils/modal.module.css";
 import PageIntro from "../utils/PageIntro";
 import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, forgetRoom, rememberRoom, roomInfo, saveName, savedName, wasInRoom } from "./gameServer";
 import Confirm from "./Confirm";
-import GameTable, { Loading, PLAYER_COLORS, preloadBacks, useNames } from "./GameTable";
+import GameTable, { Loading, PLAYER_COLORS, preloadBacks, useCurtain, useNames } from "./GameTable";
 import Toast from "./Toast";
 import Rulebook from "./Rulebook";
 import CharacterChooser from "./CharacterChooser";
@@ -422,16 +422,8 @@ const Lobby = ({
   useLobbyNews(room, me);
   // the curtains, from the first moment: drawn while the room connects, then they open on the waiting
   // room (or, for a show under way, the table's own curtains take over, drawn the same)
-  const [curtain, setCurtain] = useState<"closed" | "opening" | "gone">("closed");
-  useEffect(() => {
-    if (!room || curtain !== "closed") return;
-    if (room.phase === "game") return setCurtain("gone");
-    setCurtain("opening");
-    const t = setTimeout(() => setCurtain("gone"), 1300);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [room]);
-  const curtains = curtain !== "gone" && <Loading out={curtain === "opening"} />;
+  const curtain = useCurtain(!!room);
+  const curtains = curtain !== "gone" && room?.phase !== "game" && <Loading out={curtain === "opening"} />;
   // (the loading screen's cards, fetched while everyone's still in the waiting room)
   useEffect(() => {
     const t = setTimeout(preloadBacks, 1500);
@@ -495,7 +487,8 @@ const Lobby = ({
         <DefaultButton navlink="/play" text="Back to Play" icon="prev" variant="secondary" border="dark" />
       </Stage>
     ) : (
-      <Loading out={false} />
+      // (in the same place as the waiting room's, so it's the same curtains, shuffle and all, that open)
+      <RoomOffline.Provider value={!connected}>{curtains}</RoomOffline.Provider>
     );
 
   const isHost = room.hostId === me;
@@ -530,6 +523,7 @@ const Lobby = ({
 
   return (
     <RoomOffline.Provider value={!connected}>
+      {curtains}
       <PageIntro
         eyebrow={spectating ? "Watching" : "Game room"}
         title={spectating ? "The show’s about to start" : "Getting ready"}
@@ -537,7 +531,6 @@ const Lobby = ({
         className={styles.intro}
       />
 
-      {curtains}
       {reconnecting}
       {chatCorner}
       <SoundToggle />

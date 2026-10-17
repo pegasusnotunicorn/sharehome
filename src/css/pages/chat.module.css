@@ -223,6 +223,8 @@
 
 /* the cast's faces to pick from */
 .picker {
+  /* (room above the top row for its tooltips) */
+  padding-top: 1.6rem !important;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
   gap: 0.25rem;
@@ -363,4 +365,44 @@
   from {
     transform: scale(0);
   }
+}
+
+/* an emoji's name, in a little dark tooltip on hover (not the browser's alt text) */
+.emojiWrap,
+.picker button {
+  position: relative;
+}
+
+.emojiWrap {
+  display: inline-block;
+}
+
+.emojiWrap::after,
+.picker button::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  z-index: 5;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  background: #2b2233;
+  font-family: "Rowdies-Regular";
+  font-size: 0.72rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: #fff;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 3px);
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
+}
+
+.emojiWrap:hover::after,
+.picker button:hover::after,
+.picker button:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0);
 }

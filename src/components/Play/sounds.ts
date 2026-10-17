@@ -31,7 +31,9 @@ type Sound =
   | "swap" // a card back into its deck
   | "turn" // the picker's cards swinging round
   | "applause"
-  | "countdown"; // the clock's last three seconds
+  | "countdown" // the clock's last three seconds
+  | "doorsClose" // the host shuts the doors to more spectators: a heavy door, and a latch
+  | "doorsOpen"; // and opens them: a creak, and a bright chime
 
 let ctx: AudioContext | null = null;
 const MUTE_KEY = "lcm-play-muted";
@@ -302,6 +304,17 @@ export function play(sound: Sound) {
       break;
     case "applause":
       applause(a);
+      break;
+    case "doorsClose":
+      slide(a, 220, 110, 0, 0.3, "triangle", 0.12);
+      swish(a, 0.02, 0.22, 0.08);
+      note(a, 140, 0.28, 0.18, "square", 0.12);
+      note(a, 1800, 0.3, 0.04, "square", 0.05);
+      break;
+    case "doorsOpen":
+      slide(a, 180, 420, 0, 0.35, "sawtooth", 0.035);
+      note(a, 880, 0.32, 0.25, "sine", 0.1);
+      note(a, 1320, 0.42, 0.35, "sine", 0.09);
       break;
     case "countdown":
       note(a, 880, 0, 0.12, "square", 0.08);

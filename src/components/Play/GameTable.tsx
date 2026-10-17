@@ -388,7 +388,7 @@ const useClock = (game: GameView, serverNow: number) => {
 
 // the time of day, for the phone's status bar
 const useWallClock = () => {
-  const fmt = () => new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }).replace(/\s?[AP]M$/i, "");
+  const fmt = () => new Date().toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
   const [t, setT] = useState(fmt);
   useEffect(() => {
     const timer = setInterval(() => setT(fmt()), 15_000);
@@ -724,6 +724,7 @@ const GameTable = ({ room, me, isHost, send }: TableProps) => {
                     <rect x="10" y="2" width="3" height="10" rx="1" />
                     <rect x="15" y="0" width="3" height="12" rx="1" />
                   </svg>
+                  <span className={styles.batteryLevel}>67%</span>
                   <span className={styles.battery}>
                     <span />
                   </span>

@@ -925,7 +925,10 @@ const Watchers = ({
         <button
           type="button"
           className={room.watchOpen ? styles.watchersLeave : styles.watchersSeat}
-          onClick={() => send({ t: "watchOpen", open: !room.watchOpen })}
+          onClick={() => {
+            send({ t: "watchOpen", open: !room.watchOpen });
+            play(room.watchOpen ? "doorsClose" : "doorsOpen");
+          }}
           title={room.watchOpen ? "Stop any more spectators coming in" : "Let spectators in again"}
         >
           {room.watchOpen ? "Close the doors" : "Open the doors"}

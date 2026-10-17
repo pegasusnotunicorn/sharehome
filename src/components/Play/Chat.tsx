@@ -12,6 +12,18 @@ import styles from "../../css/pages/chat.module.css";
 
 const emojiSrc = (name: string) => `/images/emojis/${name}.webp`;
 const KNOWN = new Set<string>(CHAT_EMOJI);
+// each emoji's name, as its tooltip
+const EMOJI_NAMES: Record<string, string> = {
+  urgSmile: "Urg, smiling", beatriceStare: "Beatrice, staring", tsukasaSmile: "Tsukasa, smiling", kottrSleepy: "Köttr, sleepy",
+  lydiaSolemn: "Lydia, solemn", ahxiEyeroll: "Ahxi, eye roll", ogarkYell: "Ogark, yelling", annaPhone: "Anna, on her phone",
+  korelinProud: "Korelin, proud", rosamundHappy: "Rosamund, happy", robinSurprised: "Robin, surprised", dorpipSweat: "Dorpip, sweating",
+  gingernutsCreep: "Gingernuts, creeping", bizzHappy: "Bizz, happy", grodrotPanic: "Grodrot, panicking", nycolasPanic: "Nycolas, panicking",
+  aryaIrritated: "Arya, irritated", sejiAngry: "Seji, angry", dommyStare: "Dommy, staring", sohFocus: "Soh, focused",
+  brigitCute: "Brigit, cute", hansanSmoke: "Hansan, smoking", sysifeThink: "Sysife, thinking", eliasAndMaya: "Elias & Maya",
+  susomNervous: "Susom, nervous", magicFingers: "Magic fingers", magicFist: "Magic fist", magicOkay: "Magic okay",
+  birdSurprised: "Surprised bird", horseWhat: "Horse, what?", seagullMad: "Mad seagull", sysifusLogo: "Sysifus Corp",
+};
+const emojiName = (name: string) => EMOJI_NAMES[name] ?? name;
 
 // a line's text, its :emoji: as pictures (a line of nothing but emoji, bigger)
 const Text = ({ text }: { text: string }) => {
@@ -21,7 +33,9 @@ const Text = ({ text }: { text: string }) => {
     <span className={onlyEmoji ? styles.bigEmoji : undefined}>
       {parts.map((p, i) => {
         const m = p.match(/^:([A-Za-z]+):$/);
-        return m && KNOWN.has(m[1]) ? <img key={i} className={styles.emoji} src={emojiSrc(m[1])} alt={p} title={p} draggable={false} /> : <span key={i}>{p}</span>;
+        return m && KNOWN.has(m[1]) ? <span key={i} className={styles.emojiWrap} data-tip={emojiName(m[1])}>
+              <img className={styles.emoji} src={emojiSrc(m[1])} alt={emojiName(m[1])} draggable={false} />
+            </span> : <span key={i}>{p}</span>;
       })}
     </span>
   );
@@ -127,8 +141,8 @@ const Chat = ({ lines, me, send, slow, isHost }: ChatProps) => {
           {picking && (
             <div className={styles.picker} role="listbox" aria-label="Character emoji">
               {CHAT_EMOJI.map((e) => (
-                <button key={e} type="button" role="option" aria-selected={false} onClick={() => addEmoji(e)} title={`:${e}:`}>
-                  <img src={emojiSrc(e)} alt={`:${e}:`} loading="lazy" draggable={false} />
+                <button key={e} type="button" role="option" aria-selected={false} onClick={() => addEmoji(e)} aria-label={emojiName(e)} data-tip={emojiName(e)}>
+                  <img src={emojiSrc(e)} alt="" loading="lazy" draggable={false} />
                 </button>
               ))}
             </div>

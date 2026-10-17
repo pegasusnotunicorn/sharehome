@@ -55,7 +55,8 @@ const ThankYouPage = () => {
       <header className={styles.intro}>
         <p className={styles.eyebrow}>Order confirmed</p>
         <h1 className={styles.title}>Thank you!</h1>
-        <p className={styles.lede}>Your game is on its way 📦</p>
+        {/* (true wherever it ships: a Europe order goes out with the next batch, not today) */}
+        <p className={styles.lede}>Your order is in, and a receipt is on its way to your email 📦</p>
         <div className={styles.actions}>
           <DefaultButton navlink="/" variant="secondary" border="dark" icon="prev" text="Back to home" />
         </div>
@@ -66,7 +67,6 @@ const ThankYouPage = () => {
           src="/images/loucheck.webp"
           alt="Lou the cat is checking your order"
           className={styles.louImage}
-          loading="lazy"
         />
         <div className={styles.louWords}>
           <p className={styles.label}>Head of Fulfillment</p>
@@ -117,7 +117,6 @@ const ThankYouPage = () => {
                   ? "If you have any questions about your order, "
                   : "Orders typically arrive within 1-2 weeks. If it's been longer, "}
                 <a
-                  aria-label="Contact us"
                   target="_blank"
                   rel="noreferrer"
                   href="/contact"

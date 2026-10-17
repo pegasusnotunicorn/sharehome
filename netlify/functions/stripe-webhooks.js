@@ -5,6 +5,9 @@ import { createLabel, createOrder, parcelForGameCount } from "./lib/shippo.js";
 import { STAMPED_LABEL_STORE, stampGroundSaverNote } from "./lib/label-note.js";
 import { shippingAddressFromSession } from "./lib/stripe-shipping.js";
 import { isEuropeCountry } from "../lib/regions.js";
+import { maskEmail } from "../lib/privacy.js";
+import { fetchSubscriber } from "../lib/mailerlite.js";
+import { nextCount } from "../lib/counter.js";
 import {
   isBlankAttribution,
   inferSourceFromReferrer,
@@ -188,20 +191,20 @@ export default async function stripeWebhooks(request) {
       // is asymmetric: a missed abandoner costs nothing, while mailing "come
       // back and finish" to someone who just paid costs goodwill.
       if (subscriber.status === "error") {
-        console.warn(`⚠️  MailerLite lookup failed for ${abandonedEmail} — skipping enrollment rather than risking a duplicate or post-purchase send`);
+        console.warn(`⚠️  MailerLite lookup failed for ${maskEmail(abandonedEmail)} — skipping enrollment rather than risking a duplicate or post-purchase send`);
         break;
       }
 
       if (subscriber.status === "found") {
         if (subscriber.groups.has(String(MAILERLITE_PURCHASE_GROUP_ID))) {
-          console.log(`📧 ${abandonedEmail} is already in the purchase group — skipping abandoned cart enrollment`);
+          console.log(`📧 ${maskEmail(abandonedEmail)} is already in the purchase group — skipping abandoned cart enrollment`);
           break;
         }
 
         if (subscriber.groups.has(String(MAILERLITE_ABANDONED_GROUP_ID))) {
           const lastAbandon = parseAbandonDate(subscriber.fields?.last_abandoned_at);
           if (lastAbandon && Date.now() - lastAbandon < REENROLL_AFTER_MS) {
-            console.log(`📧 ${abandonedEmail} abandoned within the last ${REENROLL_AFTER_DAYS} days — skipping to avoid restarting the automation mid-flow`);
+            console.log(`📧 ${maskEmail(abandonedEmail)} abandoned within the last ${REENROLL_AFTER_DAYS} days — skipping to avoid restarting the automation mid-flow`);
             break;
           }
 
@@ -213,10 +216,10 @@ export default async function stripeWebhooks(request) {
             MAILERLITE_ABANDONED_GROUP_ID
           );
           if (!removed) {
-            console.warn(`⚠️  Couldn't remove ${abandonedEmail} from the abandoned group — skipping rather than re-adding to a group they're already in (which would enroll them silently and never send)`);
+            console.warn(`⚠️  Couldn't remove ${maskEmail(abandonedEmail)} from the abandoned group — skipping rather than re-adding to a group they're already in (which would enroll them silently and never send)`);
             break;
           }
-          console.log(`📧 ${abandonedEmail} last abandoned ${lastAbandon ? "over " + REENROLL_AFTER_DAYS + " days ago" : "before we tracked dates"} — re-enrolling`);
+          console.log(`📧 ${maskEmail(abandonedEmail)} last abandoned ${lastAbandon ? "over " + REENROLL_AFTER_DAYS + " days ago" : "before we tracked dates"} — re-enrolling`);
         }
       }
 
@@ -254,23 +257,56 @@ export default async function stripeWebhooks(request) {
 // check and both buy a label; the blob claim catches that. onlyIfNew makes
 // the claim one atomic write (a read then a write would let both through).
 // Fail-open: if Blobs is unreachable, we degrade to metadata-only idempotency.
+//
+// A claim can also be left behind by a delivery that was cut off partway (the
+// function's time limit is seconds): no label, and no alert. So a claim older
+// than STALE_CLAIM_MS that isn't marked done is taken over by the next
+// delivery (Stripe's retry, or a dashboard resend), which alerts and carries
+// on. The takeover is a compare-and-swap on the claim, so two deliveries
+// can't both take it. Claims from before this was tracked (no `v`) are never
+// taken over.
+const CLAIM_STORE = "shippo-claimed-sessions";
+const CLAIM_VERSION = 2;
+const STALE_CLAIM_MS = 2 * 60 * 1000;
+const claimRecord = (eventId, done) =>
+  JSON.stringify({ v: CLAIM_VERSION, eventId, at: new Date().toISOString(), ...(done && { done }) });
+
 async function claimSessionForLabel(sessionId, eventId) {
   try {
-    const store = getStore({ name: "shippo-claimed-sessions", consistency: "strong" });
-    const { modified } = await store.set(
-      sessionId,
-      JSON.stringify({ eventId, at: new Date().toISOString() }),
-      { onlyIfNew: true }
-    );
-    if (!modified) return { claimed: false, by: await store.get(sessionId) };
-    await maybeAlertBlobBloat(store);
-    return { claimed: true };
+    const store = getStore({ name: CLAIM_STORE, consistency: "strong" });
+    const { modified } = await store.set(sessionId, claimRecord(eventId), { onlyIfNew: true });
+    if (modified) {
+      await maybeAlertBlobBloat(store);
+      return { claimed: true };
+    }
+    const existing = await store.getWithMetadata(sessionId, { type: "text" });
+    let prior = null;
+    try {
+      prior = JSON.parse(existing?.data);
+    } catch {}
+    const ageMs = prior?.at ? Date.now() - Date.parse(prior.at) : NaN;
+    if (prior?.v === CLAIM_VERSION && !prior.done && ageMs > STALE_CLAIM_MS && existing?.etag) {
+      const { modified: took } = await store.set(sessionId, claimRecord(eventId), { onlyIfMatch: existing.etag });
+      if (took) return { claimed: true, staleFrom: { eventId: prior.eventId, ageMs } };
+    }
+    return { claimed: false, by: existing?.data ?? null };
   } catch (err) {
     console.warn(
       "⚠️  Blob claim unavailable, falling back to metadata-only idempotency:",
       err.message
     );
     return { claimed: true };
+  }
+}
+
+// Marks the claim finished (a label bought, or an order that's handled by
+// hand), so it's kept for good and never taken for a stale one.
+async function finishSessionClaim(sessionId, eventId, done) {
+  try {
+    const store = getStore({ name: CLAIM_STORE, consistency: "strong" });
+    await store.set(sessionId, claimRecord(eventId, done));
+  } catch (err) {
+    console.warn("⚠️  Couldn't mark the Blob claim done:", err.message);
   }
 }
 
@@ -305,31 +341,13 @@ async function maybeAlertBlobBloat(store) {
 // CAS attempts, callers should fall back to a unique-by-construction id so
 // they don't block label purchase.
 const ORDER_COUNTER_STORE = "shippo-order-counters";
-const ORDER_COUNTER_MAX_RETRIES = 5;
 async function nextDailyOrderNumber() {
-  // (strong reads: a stale count would only waste retries and fall back to the session number)
-  const store = getStore({ name: ORDER_COUNTER_STORE, consistency: "strong" });
   const day = new Date().toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD
   // Scope key by Stripe mode so test runs never bump the live sequence.
   const mode = IS_DEV ? "test" : "live";
-  const key = `${mode}-${day}`;
   const numberPrefix = IS_DEV ? "LCM-TEST-" : "LCM-";
-  for (let attempt = 0; attempt < ORDER_COUNTER_MAX_RETRIES; attempt++) {
-    const current = await store.getWithMetadata(key, { type: "text" });
-    const value = current?.data ? Number(current.data) : 0;
-    const next = value + 1;
-    const writeOpts = current?.etag
-      ? { onlyIfMatch: current.etag }
-      : { onlyIfNew: true };
-    const { modified } = await store.set(key, String(next), writeOpts);
-    if (modified) {
-      return `${numberPrefix}${day}-${String(next).padStart(3, "0")}`;
-    }
-    // Another delivery beat us to it; loop and re-read.
-  }
-  throw new Error(
-    `Couldn't acquire order counter for ${key} after ${ORDER_COUNTER_MAX_RETRIES} attempts`
-  );
+  const next = await nextCount(ORDER_COUNTER_STORE, `${mode}-${day}`);
+  return `${numberPrefix}${day}-${String(next).padStart(3, "0")}`;
 }
 
 // Releases the claim so a Stripe dashboard replay can re-process the session.
@@ -339,7 +357,7 @@ async function nextDailyOrderNumber() {
 // primary idempotency mechanism from that point on.
 async function releaseSessionClaim(sessionId) {
   try {
-    const store = getStore("shippo-claimed-sessions");
+    const store = getStore(CLAIM_STORE);
     await store.delete(sessionId);
   } catch (err) {
     console.warn("⚠️  Couldn't release Blob claim:", err.message);
@@ -395,6 +413,12 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
       );
       return;
     }
+    if (claim.staleFrom) {
+      await alert(
+        `An earlier delivery of this order (${claim.staleFrom.eventId}) claimed it ${Math.round(claim.staleFrom.ageMs / 60000)} min ago and never finished, most likely cut off by the function's time limit. **Retrying now.** If a label from that earlier try turns up in Shippo, void the extra one.`,
+        { source: "shippo", sessionId: session.id }
+      );
+    }
 
     // Only US orders ever get a Shippo label. Everything below this block is
     // US-only.
@@ -405,12 +429,14 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
       if (isEuropeCountry(shipping.address.country)) {
         await tagEuropeOrder(session);
         await notifyEuropeOrder({ session, to, mailerStatus });
+        await finishSessionClaim(session.id, eventId, "europe");
         return;
       }
       await alert(
         `Non-US order received (country=${shipping.address.country}). Skipping Shippo — handle manually.`,
         { source: "shippo", sessionId: session.id }
       );
+      await finishSessionClaim(session.id, eventId, "manual");
       return;
     }
 
@@ -527,7 +553,7 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
     const pickList = pickListParts.join(" ").slice(0, 30) || null;
 
     console.log(
-      `📦 Buying Shippo label for ${to.name} (${session.id}, ${gameCount} game(s))`
+      `📦 Buying Shippo label for ${session.id} (${gameCount} game(s))`
     );
     const label = await createLabel({
       to,
@@ -549,6 +575,8 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
         weightOz: gameCount * 20 + (urgPinCount + bizzPinCount),
       },
     });
+    // (straight away: from here a retry must never buy a second label)
+    await finishSessionClaim(session.id, eventId, `label ${label.transactionId}`);
     console.log(
       `✅ Label ${label.transactionId} — ${label.rate.provider} ${label.rate.service} $${label.rate.amount} — tracking ${label.trackingNumber}`
     );
@@ -722,7 +750,8 @@ const FIELD_LABELS = {
   response: "Response",
 };
 async function alert(message, context = {}) {
-  console.error(`🚨 ALERT: ${message}`, context);
+  // (the details, customer's included, go to Discord; the log keeps only which order)
+  console.error(`🚨 ALERT: ${message}`, context.sessionId ? `(session ${context.sessionId})` : "");
   const { sessionId, source = "webhook", titleSuffix, ...rest } = context;
   const titles = {
     shippo: "🚨 Shippo label issue",
@@ -1166,43 +1195,6 @@ async function notifySubscriberAdded({
   });
 }
 
-// Looks up a subscriber so the caller can decide whether to enroll them.
-// Returns one of:
-//   { status: "found", id, groups: Set<string>, fields }
-//   { status: "absent" }  — no such subscriber, safe to enroll
-//   { status: "error" }   — we don't know; caller should fail closed
-// One retry absorbs the usual transient blip before we give up.
-async function fetchSubscriber(email) {
-  if (!MAILER_LITE_KEY) return { status: "error" };
-
-  const url = `https://connect.mailerlite.com/api/subscribers/${encodeURIComponent(email)}`;
-
-  for (let attempt = 0; attempt < 2; attempt++) {
-    try {
-      const response = await fetch(url, {
-        headers: { Authorization: `Bearer ${MAILER_LITE_KEY}` },
-      });
-      if (response.status === 404) return { status: "absent" };
-      if (!response.ok) {
-        console.warn(`⚠️  MailerLite subscriber lookup returned HTTP ${response.status} (attempt ${attempt + 1})`);
-        continue;
-      }
-      const data = await response.json();
-      const subscriber = data?.data ?? {};
-      return {
-        status: "found",
-        id: subscriber.id,
-        groups: new Set((subscriber.groups ?? []).map((g) => String(g.id))),
-        fields: subscriber.fields ?? {},
-      };
-    } catch (err) {
-      console.warn(`⚠️  MailerLite subscriber lookup threw (attempt ${attempt + 1}):`, err.message);
-    }
-  }
-
-  return { status: "error" };
-}
-
 // Unassigns a subscriber from a group. Used only to make a re-add register as
 // a fresh join so the automation fires again. Returns true on success.
 async function removeSubscriberFromGroup(subscriberId, groupId) {
@@ -1260,10 +1252,7 @@ async function addEmailToMailerLite(email, fields, group_id, alertContext = {}) 
 
   try {
     maybeForceFailure("mailerlite");
-    console.log(
-      `📧 Trying to add subscriber to MailerLite: ${email} for group ${group_id}`,
-      cleanFields
-    );
+    console.log(`📧 Trying to add subscriber to MailerLite: ${maskEmail(email)} for group ${group_id}`);
     const response = await fetch(url, {
       method: "POST",
       headers: {

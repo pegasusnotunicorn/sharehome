@@ -36,6 +36,12 @@ const PlayPage = lazy(() => import("./components/Play/PlayPage"));
 // this route only mounts if an in-app link to /buy is added — those never send
 // a request to /buy, so force a full-page load and let the edge function take
 // over.
+// /cart is an old name for /checkout: the query (UTMs, a recovery email's address) goes along.
+const CartRedirect = () => {
+  const { search } = useLocation();
+  return <Navigate to={{ pathname: "/checkout", search }} replace />;
+};
+
 const BUY_EDGE_ATTEMPT_KEY = "buy_edge_attempt_at";
 
 const BuyGate = () => {
@@ -107,7 +113,7 @@ const AppRoutes = () => {
           <Route path="/rulebook" element={<ExternalRedirect url="/rulebook.pdf" />} />
           <Route path="/blog" element={<ExternalRedirect url="https://pegasusgames.medium.com" />} />
           <Route path="/buy" element={<BuyGate />} />
-          <Route path="/cart" element={<Navigate to="/checkout" replace />} />
+          <Route path="/cart" element={<CartRedirect />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />

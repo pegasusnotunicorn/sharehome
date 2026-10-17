@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useId } from "react";
 import DefaultButton from "../utils/DefaultButton";
 import styles from "../../css/utils/emailForm.module.css";
 
@@ -9,7 +9,6 @@ interface EmailFormProps {
   formClassName?: string;
   titleIcon?: string;
   inputId?: string;
-  responseOverride?: string;
   responseClassName?: string;
   inputClassName?: string;
   submitButtonClassName?: string;
@@ -23,7 +22,11 @@ export const EmailForm = (props: EmailFormProps) => {
   const classFromParent = props.className;
 
   const emailRef = useRef<HTMLInputElement>(null);
-  const [response, setResponse] = useState(props.responseOverride ?? "");
+  const fallbackId = useId();
+  const inputId = props.inputId ?? fallbackId;
+  // (what came back: told apart by look, and announced, success politely and a problem at once)
+  const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">("idle");
+  const [error, setError] = useState("");
 
   //focus the email input on desktop
   useEffect(() => {
@@ -35,49 +38,32 @@ export const EmailForm = (props: EmailFormProps) => {
   //submit button text depending on if navbar or main page
   const submitButtonText = "Sign up!";
 
-  //function to submit email
+  // (the browser checks the address is an email before this runs)
   const submitEmail = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const fail = (message: string) => {
+      setError(message);
+      setStatus("error");
+    };
+    setStatus("sending");
 
-    if ((e.target as HTMLFormElement).checkValidity()) {
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fields: {
-            email: emailRef.current!.value,
-          },
-        }),
-      };
-
-      setResponse("Submitting...");
-
-      fetch(
-        "https://assets.mailerlite.com/jsonp/248479/forms/73678789967611030/subscribe",
-        requestOptions
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          if (!data.success || data.errors) {
-            setResponse(data.errors?.fields?.email?.[0] ?? "Something went wrong. Please try again.");
-          } else {
-            setResponse("Thank you! You're all signed up.");
-          }
-        })
-        // (offline, or the sign-up service down: say so, rather than "Submitting..." for good)
-        .catch(() => setResponse("Something went wrong. Please try again."));
-    } else {
-      setResponse("Something went wrong. Please try again.");
-    }
+    fetch("https://assets.mailerlite.com/jsonp/248479/forms/73678789967611030/subscribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ fields: { email: emailRef.current!.value } }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (!data.success || data.errors) fail(data.errors?.fields?.email?.[0] ?? "Something went wrong. Please try again.");
+        else setStatus("done");
+      })
+      // (offline, or the sign-up service down: say so, rather than "Submitting..." for good)
+      .catch(() => fail("Something went wrong. Please try again."));
   };
 
   const className = classFromParent
     ? `${styles.emailWrapper} ${classFromParent}`
     : styles.emailWrapper;
-
-  // Check if response contains HTML tags (for conditional rendering)
-  const hasHTML = /<[a-z][\s\S]*>/i.test(response);
-  const isLongDescription = props.responseOverride && response.length > 50;
 
   return (
     <div className={className}>
@@ -96,53 +82,57 @@ export const EmailForm = (props: EmailFormProps) => {
           </h1>
         </div>
       )}
-      {response && hasHTML ? (
-        <p
-          className={`${styles.forminputText} ${
-            isLongDescription ? styles["forminputText-description"] : ""
-          } ${props.responseClassName ?? ""}`}
-          dangerouslySetInnerHTML={{ __html: response }}
-        />
-      ) : response ? (
-        <p
-          className={`${styles.forminputText} ${
-            isLongDescription ? styles["forminputText-description"] : ""
-          } ${props.responseClassName ?? ""}`}
-        >
-          {response}
-        </p>
-      ) : null}
-      <form
-        className={`${styles.formWrapper} ${props.formClassName ?? ""}`}
-        autoComplete="on"
-        action=""
-        data-code=""
-        method="post"
-        target="_blank"
-        onSubmit={submitEmail}
+      {/* (always there, so a screen reader is listening when the thanks arrives) */}
+      <p
+        className={status === "done" ? `${styles.forminputText} ${styles.success} ${props.responseClassName ?? ""}` : "visually-hidden"}
+        role="status"
       >
-        <input
-          id={props.inputId}
-          ref={emailRef}
-          type="email"
-          className={`${styles.emailInput} ${props.inputClassName ?? ""}`}
-          data-inputmask=""
-          name="fields[email]"
-          placeholder="Enter your email"
-          autoComplete="email"
-          required
-        />
-        <DefaultButton
-          variant="primary"
-          compact
-          icon="forward"
-          color={props.submitButtonColor ?? "dark"}
-          button="submit"
-          className={`${styles.subscribeButton} ${props.submitButtonClassName ?? ""}`}
-          text={submitButtonText}
-          loading={response === "Submitting..."}
-        />
-      </form>
+        {status === "done" ? "Thank you! You're all signed up." : ""}
+      </p>
+      {status === "error" && (
+        <p className={`${styles.forminputText} ${styles.error} ${props.responseClassName ?? ""}`} role="alert">
+          {error}
+        </p>
+      )}
+      {/* (signed up: the form's done its job) */}
+      {status !== "done" && (
+        <form
+          className={`${styles.formWrapper} ${props.formClassName ?? ""}`}
+          autoComplete="on"
+          action=""
+          data-code=""
+          method="post"
+          target="_blank"
+          onSubmit={submitEmail}
+        >
+          <label htmlFor={inputId} className="visually-hidden">
+            Email address
+          </label>
+          <input
+            id={inputId}
+            ref={emailRef}
+            type="email"
+            className={`${styles.emailInput} ${props.inputClassName ?? ""}`}
+            data-inputmask=""
+            name="fields[email]"
+            placeholder="Enter your email"
+            autoComplete="email"
+            required
+            aria-invalid={status === "error"}
+            onInput={() => status === "error" && setStatus("idle")}
+          />
+          <DefaultButton
+            variant="primary"
+            compact
+            icon="forward"
+            color={props.submitButtonColor ?? "dark"}
+            button="submit"
+            className={`${styles.subscribeButton} ${props.submitButtonClassName ?? ""}`}
+            text={submitButtonText}
+            loading={status === "sending"}
+          />
+        </form>
+      )}
     </div>
   );
 };

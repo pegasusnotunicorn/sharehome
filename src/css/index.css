@@ -336,3 +336,16 @@ body.in-room {
   /* (just room for the rulebook, where the navbar would be) */
   --navbar-height: 68px;
 }
+
+/* read by screen readers, not shown (a field's label where the design has only a placeholder) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

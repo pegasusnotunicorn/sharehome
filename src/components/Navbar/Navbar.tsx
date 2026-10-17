@@ -4,7 +4,7 @@ import EmailForm from "../utils/EmailForm";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import DefaultButton from "../utils/DefaultButton";
 import BuyButton from "../utils/BuyButton";
-import { BUY_DESTINATION } from "../utils/BuyButton";
+import { hidesBuyButtons } from "../utils/BuyButton";
 import styles from "../../css/navbar.module.css";
 import "../../css/utils/hamburger.css";
 import useWindowScroll from "../utils/useWindowScroll";
@@ -19,9 +19,7 @@ interface NavbarMainProps {
 export const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
   const location = useLocation();
   const isLandingPage = location.pathname === "/";
-  // (and on the online game's pages, where they'd sit over the game)
-  const hideBuyButtons =
-    ["/buy", BUY_DESTINATION, "/thankyou", "/raffle", "/play"].includes(location.pathname) || location.pathname.startsWith("/play/");
+  const hideBuyButtons = hidesBuyButtons(location.pathname);
 
   const [visible, setVisibility] = useState(false);
   const isVisibleClass = visible ? "is-active" : "";

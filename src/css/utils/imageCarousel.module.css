@@ -1,0 +1,52 @@
+.panel {
+  position: relative;
+  width: min(680px, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  padding: 1rem 1rem 1.25rem;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 28px 60px -36px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+}
+
+.swiper {
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.slide {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.swiper :global(.swiper-button-prev),
+.swiper :global(.swiper-button-next) {
+  color: #323232;
+  background: rgba(255, 255, 255, 0.9);
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  box-shadow: 0 6px 14px -10px rgba(0, 0, 0, 0.4);
+}
+
+.swiper :global(.swiper-button-prev::after),
+.swiper :global(.swiper-button-next::after) {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.swiper :global(.swiper-pagination-bullet-active) {
+  background: #5f5aa2;
+}

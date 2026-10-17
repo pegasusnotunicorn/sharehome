@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import Roleplay from "./components/Roleplay";
 import DefaultButton from "../utils/DefaultButton";
+import VideoPoster from "../utils/VideoPoster";
+import { sized } from "../utils/imageCopies";
 import aboutStyles from "../../css/pages/aboutPage.module.css";
 
 const AboutPage = () => {
@@ -23,20 +25,26 @@ const AboutPage = () => {
             variant="secondary"
             border="dark"
             icon="rulebook"
-            text="Rulebook PDF"
+            text="Rulebook PDF (2.4 MB)"
           />
         </div>
       </header>
 
       <section className={aboutStyles.video} aria-label="Video">
         <div className={aboutStyles.videoEmbed}>
-          <iframe
-            src="https://www.youtube.com/embed/jKp0NWvWEQY?rel=0&modestbranding=1"
+          {/* (the cast in the kitchen until it's played: the player loads only then) */}
+          <VideoPoster
+            id="jKp0NWvWEQY"
             title="How to play Love, Career & Magic"
-            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            frameBorder="0"
-          />
+            label="Play the how-to-play video"
+            poster={sized("/images/illustrations/splash.webp", 1000)}
+            posterWidth={1000}
+            posterHeight={600}
+          >
+            <span className={aboutStyles.videoCaption} aria-hidden="true">
+              Watch how to play
+            </span>
+          </VideoPoster>
         </div>
       </section>
 

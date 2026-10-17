@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { DIRECTION_POINTS, arcDone, score, type ClientMessage, type GameView, type RoomView } from "../../../game-server/src/protocol";
 import DefaultButton from "../utils/DefaultButton";
+import { sized, srcSet } from "../utils/imageCopies";
 import styles from "../../css/pages/finale.module.css";
 
 // The season's over: the ratings, as a season poster. The cast at the kitchen table behind the
@@ -12,6 +13,9 @@ const characterArt = (i: number) => `/images/pieces/characters/${nn(i)}.webp`;
 const episodeArt = (i: number) => `/images/pieces/episodes/${nn(i)}.webp`;
 const PLAYER_COLORS = ["#d81e18", "#5f5aa2", "#4f8a73", "#e0a91b", "#3d7fb8", "#d9652b"];
 const SITE = "https://lovecareermagic.com/play";
+// the key art (its 1000px copy, unless the screen needs more)
+const SPLASH = "/images/illustrations/splash.webp";
+const SPLASH_SMALL = sized(SPLASH, 1000);
 
 // #region--------------------------------------CONFETTI
 
@@ -141,7 +145,7 @@ async function drawShare(rating: string, perPlayer: number, cast: { name: string
   ctx.fillRect(0, 0, W, H);
 
   // the key art, framed like a photo, a little askew
-  const art = await load("/images/illustrations/splash-1000.webp");
+  const art = await load(SPLASH_SMALL);
   ctx.save();
   ctx.translate(W / 2, 330);
   ctx.rotate(-0.025);
@@ -282,7 +286,7 @@ const Finale = ({ room, game, isHost, send }: { room: RoomView; game: GameView; 
 
       {/* #region the poster */}
       <div className={styles.poster}>
-        <img className={styles.posterArt} src="/images/illustrations/splash.webp" alt="" />
+        <img className={styles.posterArt} src={SPLASH_SMALL} srcSet={srcSet(SPLASH)} sizes="(max-width: 760px) 100vw, 1000px" alt="" />
         <div className={styles.posterShade} />
         <div className={styles.posterText}>
           <p className={styles.kicker}>{game.outOfCards ? "That’s a wrap!" : "Season finale"} · the ratings are in</p>

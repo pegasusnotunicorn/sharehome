@@ -94,8 +94,8 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     textures.push(x);
     return x;
   };
-  // the box's bottom (How to Play) is only seen if it's turned over, so it loads after the rest:
-  // board-coloured until then
+  // the box's bottom (How to Play) is only seen if it's turned over, so it loads only once the box
+  // has been turned or opened: board-coloured until then
   const later = (url: string) => {
     const board = document.createElement("canvas");
     board.width = board.height = 1;
@@ -152,7 +152,11 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     };
     const [lid, base] = await Promise.all([panels(art.lid), panels(art.base, bottom.x)]);
     made = makeBox(T, lid, base);
-    loadLater = bottom.load;
+    // (once)
+    loadLater = () => {
+      loadLater = () => {};
+      bottom.load();
+    };
   } catch {
     cleanup();
     onFail();
@@ -287,6 +291,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     moved = q.angleTo(rest) > 0.02;
   };
   const turn = (ax: number, ay: number) => {
+    loadLater();
     q.premultiply(tmp.setFromAxisAngle(Y, ax)).premultiply(tmp.setFromAxisAngle(X, ay)).normalize();
     spin.quaternion.copy(q);
     if (!intro) report();
@@ -377,6 +382,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     if (to === openTo) return;
     openTo = to;
     introPending = false;
+    loadLater();
     onOpen?.(open);
     cancelAnimationFrame(raf);
     cancelAnimationFrame(lraf);
@@ -412,7 +418,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     };
     oraf = requestAnimationFrame(step);
   };
-  // The trailer, kept ready: the player loads (hidden) as soon as the box is pointed at or touched,
+  // The trailer, kept ready: the player loads (hidden) as soon as the box is pointed at or tapped,
   // starts playing muted as the box opens, so it's loaded and buffered by the time it's open, and
   // then goes back to the start, unmuted, as it appears. It's driven through YouTube's embed API
   // (postMessage), retried every so often until the player says it's done.
@@ -479,7 +485,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     ytHeard = false;
     const id = tall ? video.portrait : video.landscape;
     player = document.createElement("iframe");
-    player.src = `https://www.youtube.com/embed/${id}?enablejsapi=1&mute=1&playsinline=1&rel=0&modestbranding=1&origin=${encodeURIComponent(location.origin)}`;
+    player.src = `https://www.youtube-nocookie.com/embed/${id}?enablejsapi=1&mute=1&playsinline=1&rel=0&modestbranding=1&origin=${encodeURIComponent(location.origin)}`;
     player.title = "Love, Career & Magic: how to play";
     player.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
     player.allowFullscreen = true;
@@ -529,7 +535,8 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     intro = introPending = false;
     slideIn(500);
     stage.classList.add("used");
-    warmPlayer();
+    // (a finger on it may only be scrolling the page: the trailer's made ready once it's a tap)
+    if (e.pointerType === "mouse") warmPlayer();
     stage.setPointerCapture(e.pointerId);
     drag = tap = { x: e.clientX, y: e.clientY, t: e.timeStamp };
     v[0] = v[1] = 0;
@@ -614,6 +621,5 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     io.observe(stage);
   }
 
-  loadLater();
   return { destroy: cleanup };
 }

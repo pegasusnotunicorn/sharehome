@@ -6,7 +6,8 @@
 //
 // It drives your installed Chrome; set CHROMIUM_PATH to use another Chromium.
 //
-// Writes public/images/cards/character-fronts.webp and character-backs.webp. Run it again when a
+// Writes public/images/cards/character-fronts.webp and character-backs.webp, and half-size copies of them
+// for phones in public/images/cards/1000/. Run it again when a
 // character's art or text changes, or a character is added (then update the cols/rows in footerCards3d.ts's
 // ATLAS and Footer.tsx's SHEET to match).
 import { chromium } from "playwright-core";
@@ -42,13 +43,28 @@ const sheets = await page.evaluate(
         ctx.drawImage(face, x + PAD, y + PAD, CELL_W - 2 * PAD, CELL_H - 2 * PAD);
       }
     }
-    return { count: all.length, fronts: fronts.toDataURL("image/webp", 0.76), backs: backs.toDataURL("image/webp", 0.55) };
+    const half = (sheet) => {
+      const c = document.createElement("canvas");
+      c.width = sheet.width / 2;
+      c.height = sheet.height / 2;
+      const ctx = c.getContext("2d");
+      ctx.imageSmoothingQuality = "high";
+      ctx.drawImage(sheet, 0, 0, c.width, c.height);
+      return c;
+    };
+    return {
+      count: all.length,
+      fronts: fronts.toDataURL("image/webp", 0.76),
+      backs: backs.toDataURL("image/webp", 0.55),
+      "1000/fronts": half(fronts).toDataURL("image/webp", 0.8),
+      "1000/backs": half(backs).toDataURL("image/webp", 0.6),
+    };
   },
   { COLS, ROWS, CELL_W, CELL_H, PAD }
 );
-fs.mkdirSync("public/images/cards", { recursive: true });
-for (const name of ["fronts", "backs"]) {
-  const file = `public/images/cards/character-${name}.webp`;
+fs.mkdirSync("public/images/cards/1000", { recursive: true });
+for (const name of ["fronts", "backs", "1000/fronts", "1000/backs"]) {
+  const file = `public/images/cards/${name.replace(/[a-z]+$/, "character-$&")}.webp`;
   fs.writeFileSync(file, Buffer.from(sheets[name].split(",")[1], "base64"));
   console.log(file, (fs.statSync(file).size / 1024).toFixed(0) + " KB");
 }

@@ -9,6 +9,7 @@ import "swiper/css/a11y";
 import { GsapFadeScrub } from "../utils/useGsap";
 import useWindowDimensions from "../utils/useWindowDimensions";
 import DefaultButton from "./DefaultButton";
+import { srcSet } from "./imageCopies";
 import styles from "../../css/utils/swiper.module.css";
 
 interface SpecificFile {
@@ -41,7 +42,8 @@ const getPictureSlide = (
   filename: string,
   href?: string,
   mediaAspectRatio?: string,
-  imageFit: "contain" | "cover" = "contain"
+  imageFit: "contain" | "cover" = "contain",
+  sizes?: string
 ) => {
   const frameStyle = mediaAspectRatio ? { aspectRatio: mediaAspectRatio } : undefined;
   const imageStyle = mediaAspectRatio
@@ -68,6 +70,7 @@ const getPictureSlide = (
   ]
     .filter(Boolean)
     .join(" ");
+  const src = `${directory}/${filename}.webp`;
   const imageContent = (
     <div className={frameClassName} style={frameStyle}>
       <img
@@ -75,7 +78,9 @@ const getPictureSlide = (
         alt={`Carousel ${filename} ${index}`}
         className={imageClassName}
         style={imageStyle}
-        src={`${directory}/${filename}.webp`}
+        src={src}
+        srcSet={srcSet(src)}
+        sizes={sizes}
       />
     </div>
   );
@@ -126,6 +131,8 @@ export const CarouselSection = (props: CarouselSectionProps) => {
   const showNavigation = props.showNavigation ?? true;
   const mediaAspectRatio = props.mediaAspectRatio;
   const imageFit = props.imageFit ?? "contain";
+  // (how wide a slide is, for picking the size of picture)
+  const sizes = `${Math.ceil(100 / cardsPerView)}vw`;
   // (not moving by itself for visitors who ask for less motion)
   const autoplayEnabled = (props.autoplayEnabled ?? true) && !reduceMotion;
   const [ranks] = useState(() => Array.from({ length: 200 }, Math.random));
@@ -158,7 +165,8 @@ export const CarouselSection = (props: CarouselSectionProps) => {
           `${filename}${x}`,
           href,
           mediaAspectRatio,
-          imageFit
+          imageFit,
+          sizes
         )
       );
     }
@@ -171,7 +179,8 @@ export const CarouselSection = (props: CarouselSectionProps) => {
           specificFiles[x].filename,
           specificFiles[x].href,
           mediaAspectRatio,
-          imageFit
+          imageFit,
+          sizes
         )
       );
     }

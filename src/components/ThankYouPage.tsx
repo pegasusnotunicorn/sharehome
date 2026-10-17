@@ -3,6 +3,7 @@ import usePageTitle from "./utils/usePageTitle";
 import DefaultButton from "./utils/DefaultButton";
 import PolaroidJourney from "./utils/PolaroidJourney";
 import { CONTACT_POLAROIDS } from "./utils/contactPolaroids";
+import { FETCH_FIRST } from "./utils/imageCopies";
 import styles from "../css/pages/thankYouPage.module.css";
 
 type ShippingRegion = "loading" | "us" | "europe";
@@ -66,7 +67,9 @@ const ThankYouPage = () => {
           src="/images/loucheck.webp"
           alt="Lou the cat is checking your order"
           className={styles.louImage}
-          loading="lazy"
+          width={1000}
+          height={758}
+          {...FETCH_FIRST}
         />
         <div className={styles.louWords}>
           <p className={styles.label}>Head of Fulfillment</p>

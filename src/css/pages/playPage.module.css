@@ -17,6 +17,9 @@
   padding-bottom: 4rem;
   box-sizing: border-box;
   text-align: left;
+  /* (the top card's margin stays inside: let through, it carried the page's top, and the texture
+     behind it, down, leaving a white strip that jumped as the room came in) */
+  display: flow-root;
 }
 
 .playPage p {

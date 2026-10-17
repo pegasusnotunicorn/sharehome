@@ -113,11 +113,14 @@ const Rulebook = () => {
     }, OPEN_MS);
   }, []);
 
-  // (the first pages are fetched early, so they're there as it opens)
-  useEffect(() => {
-    const t = setTimeout(() => [0, 1].forEach((n) => (new Image().src = pageSrc(n))), 2500);
-    return () => clearTimeout(t);
-  }, []);
+  // (the first pages are fetched as the Rules button's pointed at or focused, so they're there as it
+  // opens, and not for every room that never opens it)
+  const fetched = useRef(false);
+  const fetchFirstPages = () => {
+    if (fetched.current) return;
+    fetched.current = true;
+    [0, 1].forEach((n) => (new Image().src = pageSrc(n)));
+  };
 
   useEffect(() => {
     const on = (e: Event) => open((e as CustomEvent<Section | undefined>).detail);
@@ -271,6 +274,9 @@ const Rulebook = () => {
         type="button"
         className={`${styles.launcher}${shown ? ` ${styles.launcherAway}` : ""}`}
         onClick={() => open()}
+        onPointerEnter={fetchFirstPages}
+        onPointerDown={fetchFirstPages}
+        onFocus={fetchFirstPages}
         aria-label="Open the rulebook"
         title="Rulebook"
       >

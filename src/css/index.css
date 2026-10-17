@@ -28,7 +28,7 @@ body {
   margin: 0;
   padding: 0;
   border: 0;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   text-align: center;
   letter-spacing: 1px;
   font-size: 1.1rem;
@@ -54,7 +54,7 @@ span {
 
 h2,
 h2 a {
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
 }
 
 h3,
@@ -62,7 +62,7 @@ p,
 a,
 input,
 li {
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
 }
 
 p,
@@ -191,7 +191,7 @@ li {
 
 .termsWrapper p,
 .termsWrapper li {
-  font-family: "Roboto Light";
+  font-family: var(--font-roboto-light);
   font-size: 1rem;
   line-height: 1.65;
   color: rgba(50, 50, 50, 0.88);
@@ -201,7 +201,7 @@ li {
 .termsWrapper .subtitle,
 .termsWrapper h2 {
   margin: 0.75rem 0 0;
-  font-family: "Rowdies-Bold";
+  font-family: var(--font-rowdies-bold);
   font-size: 1.45rem;
   line-height: 1.15;
   text-align: left;
@@ -215,7 +215,7 @@ li {
 
 .termsWrapper h3 {
   margin: 0.5rem 0 0;
-  font-family: "Rowdies-Regular";
+  font-family: var(--font-rowdies-regular);
   font-size: 1.05rem;
   color: #323232;
 }
@@ -299,7 +299,7 @@ li {
 }
 
 .timePlayerInfoWrapper div {
-  font-family: "Rowdies-Light";
+  font-family: var(--font-rowdies-light);
   display: flex;
   justify-content: center;
   align-items: center;

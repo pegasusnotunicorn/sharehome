@@ -8,6 +8,7 @@ import PageIntro from "./utils/PageIntro";
 import Modal from "./utils/Modal";
 import MagnifierButton from "./utils/MagnifierButton";
 import DefaultButton from "./utils/DefaultButton";
+import { FETCH_FIRST, srcSet } from "./utils/imageCopies";
 import styles from "../css/pages/rafflePage.module.css";
 import buyStyles from "../css/pages/buyPage.module.css";
 
@@ -89,6 +90,11 @@ const RafflePage = () => {
           <MagnifierButton onClick={() => setBoxCarouselOpen(true)} ariaLabel="Preview game box">
             <img
               src="/images/box_trimmed.webp"
+              srcSet={srcSet("/images/box_trimmed.webp")}
+              sizes="200px"
+              width={1200}
+              height={848}
+              {...FETCH_FIRST}
               alt="Love, Career & Magic"
               className={styles.prizeImage}
             />

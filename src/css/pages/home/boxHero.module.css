@@ -43,7 +43,7 @@
 
 .title {
   margin: 0;
-  font-family: "Rowdies-Bold", sans-serif;
+  font-family: var(--font-rowdies-bold);
   font-size: clamp(1.6rem, 3.4vw, 2.7rem);
   line-height: 1.15;
   color: #323232;
@@ -55,7 +55,7 @@
   margin: 0 0.25rem 66px;
 }
 
-/* Bizz's words burst out once he's popped up (.spoken): the shout from its long spike's end, then the
+/* Bizz's words burst out soon after the page is up (.spoken): the shout from its long spike's end, then the
    facts after it */
 .head .bubble,
 .head .factsBubble {
@@ -122,7 +122,7 @@
   justify-content: center;
   gap: 0.5rem;
   margin: 0;
-  font-family: "Rowdies-Bold", sans-serif;
+  font-family: var(--font-rowdies-bold);
   font-size: clamp(0.72rem, 3.2vw, 1rem);
   color: #323232;
   white-space: nowrap;
@@ -142,6 +142,7 @@
   left: 24%;
   bottom: 63%;
   width: 22%;
+  height: auto;
   transform: rotate(-12deg); /* leaning back a little */
   transform-origin: 50% 100%;
   translate: 0 45%;
@@ -190,7 +191,7 @@
   z-index: 2; /* over the 3D view */
   right: 4%;
   bottom: 9%;
-  font-family: "GochiHand", "Rowdies-Regular", sans-serif;
+  font-family: var(--font-gochi);
   font-size: clamp(1.25rem, 1.6vw, 1.6rem);
   line-height: 1.1;
   letter-spacing: 0;

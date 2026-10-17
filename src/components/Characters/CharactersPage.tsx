@@ -15,11 +15,14 @@ import { EmojiSection } from "../utils/EmojiSection";
 import CustomHelmet from "../utils/CustomHelmet";
 import usePageTitle from "../utils/usePageTitle";
 import Modal from "../utils/Modal";
+import { sized, srcSet } from "../utils/imageCopies";
 import charStyles from "../../css/pages/characterPage.module.css";
 import type { CharacterWithNav } from "../../types/character";
 
 // a character's printed card front, by their place in the cast
 const cardFront = (i: number) => `/images/pieces/characters/${String(i + 1).padStart(2, "0")}.webp`;
+// how wide a card on the walls is shown (two, three or five across)
+const WALL_SIZES = "(max-width: 640px) 46vw, (max-width: 1100px) 30vw, 240px";
 
 interface IndividualCharacterProps {
   character: CharacterWithNav;
@@ -157,7 +160,8 @@ const CastWall = () => {
           els.map((link, i) => ({
             link: link!,
             stage: link!.querySelector<HTMLElement>(`.${charStyles.castStage}`)!,
-            src: cardFront(i),
+            // (as big as the 3D card's drawn: at most twice its size on the page)
+            src: sized(cardFront(i), link!.clientWidth * Math.min(window.devicePixelRatio || 1, 2)),
             onReady: () => !gone && setReady((r) => Object.assign([...r], { [i]: true })),
           })),
           () => {}
@@ -191,6 +195,8 @@ const CastWall = () => {
                 <img
                   className={charStyles.castFlat}
                   src={cardFront(i)}
+                  srcSet={srcSet(cardFront(i))}
+                  sizes={WALL_SIZES}
                   alt=""
                   loading={i < 10 ? "eager" : "lazy"}
                   decoding="async"
@@ -252,6 +258,8 @@ const ExpansionCharactersSection = () => {
                 <img
                   className={charStyles.castFlat}
                   src={latest || expansionPlaceholderImage}
+                  srcSet={latest && srcSet(latest)}
+                  sizes={WALL_SIZES}
                   alt=""
                   loading="lazy"
                   decoding="async"

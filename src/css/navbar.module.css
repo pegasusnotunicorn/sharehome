@@ -426,6 +426,11 @@
     right: 1rem;
     z-index: 100;
   }
+
+  /* room under the footer, so its last line can be scrolled clear of them */
+  :global(body):has(.buyButton, .expansionButton) :global(footer) {
+    padding-bottom: var(--fixed-bar-room);
+  }
 }
 
 /* a phone: the whole screen */

@@ -20,6 +20,7 @@ import styles from "../css/pages/buyPage.module.css";
 // (the same list checkout offers and the webhook ships to)
 import { isEuropeCountry } from "../../netlify/lib/regions.js";
 import Icon from "./utils/Icons";
+import { session } from "../utils/safeStorage";
 
 // (the carousel library comes down only when the box preview opens)
 const ImageCarouselModal = lazy(() => import("./utils/ImageCarouselModal"));
@@ -110,7 +111,7 @@ function getStoredUtms(): Record<string, string> {
 
   // sessionStorage overrides URL — more authoritative when present.
   try {
-    const raw = sessionStorage.getItem("utm_params");
+    const raw = session.get("utm_params");
     if (raw) {
       const data = JSON.parse(raw) as Record<string, string>;
       if (data.utm_source) out.utmSource = data.utm_source;
@@ -926,7 +927,7 @@ const CartSummary = ({
 const InternationalModal = ({ onClose }: { onClose: () => void }) => {
   const titleId = useId();
   return (
-    <Modal onClose={onClose} ariaLabelledby={titleId}>
+    <Modal onClose={onClose} ariaLabelledBy={titleId}>
       <h2 id={titleId} className={styles.modalTitle}>Shipping to Europe 🇪🇺</h2>
       <p className={styles.modalBody}>
         Love, Career &amp; Magic is finally available in Europe! I'm working
@@ -1030,7 +1031,7 @@ const ShippingWaitlistNotice = ({ country }: { country: string }) => {
 const MissingCountryModal = ({ europeEnabled, onClose }: { europeEnabled: boolean; onClose: () => void }) => {
   const titleId = useId();
   return (
-    <Modal onClose={onClose} ariaLabelledby={titleId}>
+    <Modal onClose={onClose} ariaLabelledBy={titleId}>
       <h2 id={titleId} className={styles.modalTitle}>Don't see your country?</h2>
       <p className={styles.modalBody}>
         Right now I can only ship to the US{europeEnabled ? " and Europe" : ""}.{" "}

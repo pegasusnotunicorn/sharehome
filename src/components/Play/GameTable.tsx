@@ -33,6 +33,7 @@ import { isMuted, play, setMuted } from "./sounds";
 import modalStyles from "../../css/utils/modal.module.css";
 import styles from "../../css/pages/gameTable.module.css";
 import chatStyles from "../../css/pages/chat.module.css";
+import { local } from "../../utils/safeStorage";
 
 // The table (once the host starts the show), laid out like the real thing on a kitchen table: the
 // three direction decks with their face-up cards, the episode card with the cards completed in it,
@@ -312,12 +313,8 @@ const CLOTHS = [
 type Cloth = (typeof CLOTHS)[number]["id"];
 const CLOTH_KEY = "lcm-play-cloth";
 const readCloth = (): Cloth => {
-  try {
-    const c = localStorage.getItem(CLOTH_KEY);
-    return CLOTHS.some((x) => x.id === c) ? (c as Cloth) : "blue";
-  } catch {
-    return "blue";
-  }
+  const c = local.get(CLOTH_KEY);
+  return CLOTHS.some((x) => x.id === c) ? (c as Cloth) : "blue";
 };
 const clothClass = (c: Cloth) => (c === "blue" ? "" : ` ${styles[`cloth-${c}`]}`);
 
@@ -508,11 +505,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
   const pickCloth = (c: Cloth) => {
     if (c !== cloth) play("whoosh");
     setCloth(c);
-    try {
-      localStorage.setItem(CLOTH_KEY, c);
-    } catch {
-      // (just for this visit)
-    }
+    local.set(CLOTH_KEY, c);
   };
   const [zoom, setZoom] = useState<{ player: Player; character: number } | null>(null);
   const [playedOpen, setPlayedOpen] = useState(false);

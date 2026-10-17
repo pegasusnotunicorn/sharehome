@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { session } from "../utils/safeStorage";
 
 interface ExternalRedirectProps {
   url: string;
@@ -27,7 +28,7 @@ const ExternalRedirect = ({ url }: ExternalRedirectProps) => {
     const hasUTMParams = trackingParams.some((param) => currentParams.has(param));
 
     if (!hasUTMParams) {
-      const storedUTM = sessionStorage.getItem("utm_params");
+      const storedUTM = session.get("utm_params");
       if (storedUTM) {
         try {
           const utmData = JSON.parse(storedUTM);

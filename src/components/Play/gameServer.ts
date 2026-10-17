@@ -1,4 +1,5 @@
 import { CODE_PATTERN } from "../../../game-server/src/protocol";
+import { local } from "../../utils/safeStorage";
 
 // Where the online game's room server is (game-server/): set on Netlify as VITE_GAME_SERVER_URL;
 // `npm run dev` in game-server/ runs it at localhost:8787 for local work
@@ -9,22 +10,8 @@ export const DISCORD_URL = "https://discord.com/invite/nv89cRgEsS";
 
 // This browser's player id and name, kept so a dropped or reloaded page comes back as the same
 // player (in memory only when storage is blocked)
-const memory: Record<string, string> = {};
-const read = (key: string) => {
-  try {
-    return localStorage.getItem(key) ?? memory[key] ?? null;
-  } catch {
-    return memory[key] ?? null;
-  }
-};
-const write = (key: string, value: string) => {
-  memory[key] = value;
-  try {
-    localStorage.setItem(key, value);
-  } catch {
-    // (kept in memory)
-  }
-};
+const read = local.get;
+const write = local.set;
 
 export const playerId = () => {
   let id = read("lcm-play-id");

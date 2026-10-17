@@ -1,4 +1,5 @@
 import stripeModule from "stripe";
+import { isCheckoutSessionId } from "../lib/session-id.js";
 
 const IS_DEV = process.env.NETLIFY_DEV === "true";
 
@@ -32,7 +33,7 @@ export default async function saveCheckoutPhone(req) {
   const { sessionId } = body;
   const phone = typeof body.phone === "string" ? body.phone.trim() : "";
 
-  if (!sessionId || typeof sessionId !== "string" || !sessionId.startsWith("cs_")) {
+  if (!isCheckoutSessionId(sessionId)) {
     return new Response("Invalid session ID", { status: 400 });
   }
 
@@ -44,9 +45,14 @@ export default async function saveCheckoutPhone(req) {
   const stripe = stripeModule(STRIPE_SECRET_KEY, { apiVersion: "2025-03-31.basil" });
 
   try {
-    const existing = await stripe.checkout.sessions.retrieve(sessionId);
+    // (only an open session's: a paid or expired one's order is settled. Stripe merges metadata
+    // keys, so just this one is sent.)
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    if (session.status !== "open") {
+      return new Response("Session isn't open", { status: 409 });
+    }
     await stripe.checkout.sessions.update(sessionId, {
-      metadata: { ...existing.metadata, phone: phone.slice(0, 40) },
+      metadata: { phone: phone.slice(0, 40) },
     });
   } catch (err) {
     console.error("save-checkout-phone: Stripe update failed:", err.message);

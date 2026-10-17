@@ -7,8 +7,9 @@ interface ModalProps {
   onClose: () => void;
   children: ReactNode;
   panelClassName?: string;
+  // its accessible name: a heading inside it (that heading's id), or else a label
+  ariaLabelledBy?: string;
   ariaLabel?: string;
-  ariaLabelledBy?: string; // (or the id of its own title)
 }
 
 // A dialog over the page: Escape or a click outside closes it. Focus moves into it as it opens, stays in

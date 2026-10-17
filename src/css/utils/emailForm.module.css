@@ -39,16 +39,6 @@
   text-align: center;
 }
 
-.forminputText-description {
-  max-width: 600px;
-  margin-bottom: 1.5rem;
-  padding: 0 1rem;
-}
-
-.forminputText a {
-  color: #323232;
-}
-
 .emailInput {
   width: 100%;
   height: 48px;
@@ -82,3 +72,19 @@
 }
 
 /* #endregion */
+
+/* what came back from signing up: thanks in green, a problem in red */
+.success {
+  margin: 0;
+  color: #2f7a3b;
+  font-family: "Rowdies-Regular";
+}
+
+.error {
+  margin: 0 0 0.75rem;
+  color: #b54848;
+}
+
+.emailInput[aria-invalid="true"] {
+  border-color: #b54848;
+}

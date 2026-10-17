@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router";
-import BuyButton from "./utils/BuyButton";
+import BuyButton, { hidesBuyButtons } from "./utils/BuyButton";
 import { SOCIAL_LINKS, SocialIcon } from "./utils/SocialIcons";
 import useWindowDimensions from "./utils/useWindowDimensions";
 import type { FooterCard, FooterCardsApi } from "./utils/footerCards3d";
@@ -124,7 +124,7 @@ const Footer = () => {
           <h2 className={styles.title}>Love, Career &amp; Magic</h2>
           <img className={styles.tagline} src="/images/title.webp" alt="A game where fantasy meets reality TV" loading="lazy" />
           <div className={styles.ctas}>
-            <BuyButton from="footer" animated icon="forward" variant="primary" color="red" text="Buy now!" />
+            {!hidesBuyButtons(pathname) && <BuyButton from="footer" animated icon="forward" variant="primary" color="red" text="Buy now!" />}
             <NavLink to="/characters" className={styles.castLink} onClick={toTopIfHere("/characters")}>
               Meet the cast <span aria-hidden="true">→</span>
             </NavLink>

@@ -364,3 +364,6 @@ body.in-room {
   /* (just room for the rulebook, where the navbar would be) */
   --navbar-height: 68px;
 }
+
+/* read by screen readers, not shown (a field's label where the design has only a placeholder) */
+

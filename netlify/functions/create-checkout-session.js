@@ -1,5 +1,6 @@
 import stripeModule from "stripe";
 import { EUROPE_COUNTRIES, shippingRegionFor } from "../lib/regions.js";
+import { lineItemsFor } from "../lib/checkout-items.js";
 
 const IS_DEV = process.env.NETLIFY_DEV === "true";
 
@@ -16,21 +17,6 @@ const NORTH_AMERICAN_SHIPPING_ID = IS_DEV
 const EUROPE_SHIPPING_ID = IS_DEV
   ? process.env.STRIPE_EUROPE_SHIPPING_ID_TEST
   : process.env.STRIPE_EUROPE_SHIPPING_ID_LIVE;
-
-const PRICE_IDS = {
-  lcm: IS_DEV
-    ? process.env.STRIPE_LCM_PRICE_ID_TEST
-    : process.env.STRIPE_LCM_PRICE_ID_LIVE,
-  urg_pin: IS_DEV
-    ? process.env.STRIPE_URG_PIN_PRICE_ID_TEST
-    : process.env.STRIPE_URG_PIN_PRICE_ID_LIVE,
-  bizz_pin: IS_DEV
-    ? process.env.STRIPE_BIZZ_PIN_PRICE_ID_TEST
-    : process.env.STRIPE_BIZZ_PIN_PRICE_ID_LIVE,
-};
-
-const LCM_MAX_QTY = 12;
-const PIN_MAX_QTY = 99;
 
 export default async function createCheckoutSession(req, context) {
   if (req.method !== "POST") {
@@ -103,41 +89,9 @@ export default async function createCheckoutSession(req, context) {
   const customerEmail =
     typeof email === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) ? email.trim().slice(0, 254) : null;
 
-  if (!items || typeof items !== "object" || Array.isArray(items)) {
-    console.error("Invalid items payload:", typeof items);
-    return new Response(JSON.stringify({ error: "Something went wrong." }), { status: 400, headers: { "Content-Type": "application/json" } });
-  }
-
-  const lcmQty = Math.floor(Number(items["lcm"] ?? 0));
-  if (!isFinite(lcmQty) || lcmQty < 1) {
-    console.error("Missing or invalid lcm quantity:", items["lcm"]);
-    return new Response(JSON.stringify({ error: "Something went wrong." }), { status: 400, headers: { "Content-Type": "application/json" } });
-  }
-
-  const validSlugs = Object.keys(PRICE_IDS);
-  const lineItems = [];
-
-  for (const [slug, rawQty] of Object.entries(items)) {
-    if (!validSlugs.includes(slug)) continue;
-    const qty = Math.floor(Number(rawQty));
-    const maxQty = slug === "lcm" ? LCM_MAX_QTY : PIN_MAX_QTY;
-    if (!isFinite(qty) || qty < 1) continue;
-    // (more than the page allows: refused, rather than quietly dropping the item)
-    if (qty > maxQty) {
-      console.error(`Quantity over the limit for ${slug}:`, rawQty);
-      return new Response(JSON.stringify({ error: "Something went wrong." }), { status: 400, headers: { "Content-Type": "application/json" } });
-    }
-    const priceId = PRICE_IDS[slug];
-    if (!priceId) {
-      console.error(`Missing price ID for: ${slug}`);
-      return new Response("Server configuration error", { status: 500 });
-    }
-    lineItems.push({ price: priceId, quantity: qty });
-  }
-
-  if (!lineItems.length) {
-    console.error("No valid line items after filtering:", items);
-    return new Response(JSON.stringify({ error: "Something went wrong." }), { status: 400, headers: { "Content-Type": "application/json" } });
+  const cart = lineItemsFor(items);
+  if (!cart.lineItems) {
+    return new Response(JSON.stringify({ error: cart.error }), { status: cart.status, headers: { "Content-Type": "application/json" } });
   }
 
   try {
@@ -146,7 +100,7 @@ export default async function createCheckoutSession(req, context) {
       return_url: baseUrl,
       expires_at: Math.floor(Date.now() / 1000) + 2 * 60 * 60, // 2 hours
       mode: "payment",
-      line_items: lineItems,
+      line_items: cart.lineItems,
       allow_promotion_codes: true,
       automatic_tax: { enabled: true },
       metadata: {
@@ -157,6 +111,11 @@ export default async function createCheckoutSession(req, context) {
         ...(referrer && { referrer: String(referrer).slice(0, 500) }),
         ...(userAgent && { user_agent: String(userAgent).slice(0, 500) }),
         ...(gaClientId && { ga_client_id: String(gaClientId).slice(0, 100) }),
+        // (an address they've already given, from a recovery email or the
+        // session a cart change replaced: kept for the abandoned-cart email,
+        // and prefilled on the page, rather than set as customer_email, which
+        // Stripe doesn't let the buyer change)
+        ...(customerEmail && { contact_email: customerEmail }),
       },
       // Europe opens only once its rate exists in this environment, so a
       // deploy without the env var keeps checkout US-only. The first option
@@ -169,7 +128,6 @@ export default async function createCheckoutSession(req, context) {
         { shipping_rate: NORTH_AMERICAN_SHIPPING_ID },
         ...(EUROPE_SHIPPING_ID ? [{ shipping_rate: EUROPE_SHIPPING_ID }] : []),
       ],
-      ...(customerEmail && { customer_email: customerEmail }),
     });
 
     return new Response(JSON.stringify({

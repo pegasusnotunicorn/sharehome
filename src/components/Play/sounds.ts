@@ -33,7 +33,9 @@ type Sound =
   | "applause"
   | "countdown" // the clock's last three seconds
   | "doorsClose" // the host shuts the doors to more spectators: a heavy door, and a latch
-  | "doorsOpen"; // and opens them: a creak, and a bright chime
+  | "doorsOpen" // and opens them: a creak, and a bright chime
+  | "pickUp" // the phone picked up off the table: a lift, and its screen waking
+  | "putDown"; // and set back down: a soft clack on the table
 
 let ctx: AudioContext | null = null;
 const MUTE_KEY = "lcm-play-muted";
@@ -318,6 +320,17 @@ export function play(sound: Sound) {
       break;
     case "countdown":
       note(a, 880, 0, 0.12, "square", 0.08);
+      break;
+    case "pickUp":
+      swish(a, 0, 0.18, 0.06);
+      slide(a, 260, 520, 0, 0.16, "sine", 0.06);
+      note(a, 1175, 0.14, 0.12, "sine", 0.07);
+      note(a, 1568, 0.21, 0.2, "sine", 0.06);
+      break;
+    case "putDown":
+      swish(a, 0, 0.12, 0.05);
+      slide(a, 180, 70, 0.08, 0.12, "triangle", 0.16);
+      note(a, 2400, 0.08, 0.012, "square", 0.035);
       break;
   }
 }

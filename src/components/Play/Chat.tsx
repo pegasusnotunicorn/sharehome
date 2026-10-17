@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
+import { createPortal } from "react-dom";
 import { CHAT_EMOJI, CHAT_MAX, type ChatLine, type ClientMessage } from "../../../game-server/src/protocol";
 import Icon from "../utils/Icons";
 import Confirm from "./Confirm";
@@ -30,6 +31,43 @@ export const ChatText = ({ text }: { text: string }) => {
       })}
     </span>
   );
+};
+
+// the emoji's names, for whatever's under the pointer (or focused): one tooltip over the whole page,
+// so the chat's scrolling lists don't cut it off, nudged in from the screen's edges
+export const ChatTips = () => {
+  const [tip, setTip] = useState<{ text: string; x: number; y: number } | null>(null);
+  const ref = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const show = (e: Event) => {
+      const el = (e.target as Element | null)?.closest?.("[data-tip]");
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      setTip({ text: el.getAttribute("data-tip") ?? "", x: r.left + r.width / 2, y: r.top - 6 });
+    };
+    const hide = () => setTip(null);
+    const leave = (e: Event) => (e.target as Element | null)?.closest?.("[data-tip]") && hide();
+    addEventListener("pointerover", show);
+    addEventListener("pointerout", leave);
+    addEventListener("focusin", show);
+    addEventListener("focusout", leave);
+    addEventListener("pointerdown", hide);
+    addEventListener("scroll", hide, true);
+    return () => {
+      removeEventListener("pointerover", show);
+      removeEventListener("pointerout", leave);
+      removeEventListener("focusin", show);
+      removeEventListener("focusout", leave);
+      removeEventListener("pointerdown", hide);
+      removeEventListener("scroll", hide, true);
+    };
+  }, []);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || !tip) return;
+    el.style.left = `${Math.min(Math.max(8, tip.x - el.offsetWidth / 2), innerWidth - el.offsetWidth - 8)}px`;
+  }, [tip]);
+  return tip && createPortal(<span ref={ref} className={styles.tip} style={{ top: tip.y, left: tip.x }} role="tooltip">{tip.text}</span>, document.body);
 };
 
 // a pop for each new line (yours a lighter one), once the chat's history is in
@@ -206,6 +244,7 @@ const Chat = ({ lines, me, send, slow, isHost }: ChatProps) => {
         </section>
       )}
 
+      {open && <ChatTips />}
       {removing && <RemoveWatcher line={removing} send={send} onClose={() => setRemoving(null)} />}
     </>
   );

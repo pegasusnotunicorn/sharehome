@@ -24,7 +24,7 @@ import CardViewer from "../utils/CardViewer";
 import CharacterDetails from "../Characters/CharacterDetails";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
 import { getAllCharacters } from "../Characters/Characters";
-import { ChatBubble, ChatInput, RemoveWatcher, useChatPops } from "./Chat";
+import { ChatBubble, ChatInput, ChatTips, RemoveWatcher, useChatPops } from "./Chat";
 import Confirm from "./Confirm";
 import Finale from "./Finale";
 import { DISCORD_URL } from "./gameServer";
@@ -478,6 +478,12 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
   const [phoneTab, setPhoneTab] = useState<"clock" | "log" | "remote">("clock");
   // the phone picked up off the table: big, in the middle of the screen, for reading the chat
   const [held, setHeld] = useState(false);
+  // (picked up, put down: a sound for each)
+  const wasHeld = useRef(held);
+  useEffect(() => {
+    if (held !== wasHeld.current) play(held ? "pickUp" : "putDown");
+    wasHeld.current = held;
+  }, [held]);
   useEffect(() => {
     if (!held) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setHeld(false);
@@ -906,6 +912,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                       })}
                     </ol>
                     <ChatInput send={send} slow={chatSlow} />
+                    <ChatTips />
                   </div>
                 )}
               </div>

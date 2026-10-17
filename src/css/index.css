@@ -88,7 +88,9 @@ body {
   letter-spacing: 1px;
   font-size: 1.1rem;
   color: var(--ink);
-  overflow-x: hidden;
+  /* (clipped, not hidden: hidden would make the body a scroller of its own while a menu or dialog
+     holds the page still, and the page would shift sideways as the scrollbar went) */
+  overflow-x: clip;
   position: relative;
   min-height: 100vh;
   min-height: -webkit-fill-available;

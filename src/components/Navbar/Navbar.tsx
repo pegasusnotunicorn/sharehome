@@ -34,15 +34,13 @@ const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
   // while it's open: the page behind doesn't scroll
   useEffect(() => {
     if (!visible) return;
-    // (the scrollbar's room is kept, so nothing on the page shifts sideways as it goes)
-    const root = document.documentElement, was = root.style.overflow, gutter = root.style.scrollbarGutter;
-    if (innerWidth > root.clientWidth) root.style.scrollbarGutter = "stable"; // (only if there's a scrollbar)
+    // (the scrollbar's room stays: index.html)
+    const root = document.documentElement, was = root.style.overflow;
     root.style.overflow = "hidden";
     // (keyboard focus goes into the menu as it opens, past its close button)
     requestAnimationFrame(() => menuRef.current?.querySelector<HTMLElement>("a, button, input")?.focus({ preventScroll: true }));
     return () => {
       root.style.overflow = was;
-      root.style.scrollbarGutter = gutter;
     };
   }, [visible]);
   // open, it's a dialog like the rest: Tab goes round the menu and its close button, Escape closes it,

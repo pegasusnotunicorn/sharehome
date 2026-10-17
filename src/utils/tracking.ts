@@ -1,4 +1,4 @@
-import { session } from "./safeStorage";
+import { session } from "./safeStorage.ts"; // (with its .ts: the /buy edge function runs this as it is)
 
 // The tags a link can carry to say where a visit came from (an ad, a campaign, a post). A visit keeps
 // them (here, and in the track-utm edge function's cookie) for the checkout and the redirects to pass

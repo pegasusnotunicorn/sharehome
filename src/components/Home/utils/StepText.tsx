@@ -4,11 +4,10 @@ import styles from "../../../css/pages/home/stepText.module.css";
 
 // Where a doodle sits around a step's words: above them (at their start or end), below them, or
 // beside them (start is the left, end the right)
-export type DoodleSpot = "aboveStart" | "aboveEnd" | "belowStart" | "belowEnd" | "besideStart" | "besideEnd";
+type DoodleSpot = "aboveStart" | "aboveEnd" | "belowStart" | "belowEnd" | "besideStart" | "besideEnd";
 
-export interface Doodle {
-  src: string;
-  alt: string;
+interface Doodle {
+  src: string; // (a doodle's only decoration: no alt text)
   at: DoodleSpot;
   along?: number; // above or below: how far along the words from that corner (0 at it, 1 at the other)
 }
@@ -34,7 +33,7 @@ const StepText = ({ doodles, className, children }: { doodles: Doodle[]; classNa
           className={`${styles.doodle} ${styles[d.at]}`}
           style={d.along ? ({ "--along": d.along } as CSSProperties) : undefined}
         >
-          <img loading="lazy" src={d.src} alt={d.alt} />
+          <img loading="lazy" src={d.src} alt="" />
         </GsapWiggle>
       ))}
     </div>

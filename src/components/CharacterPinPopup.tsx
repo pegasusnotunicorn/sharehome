@@ -3,14 +3,13 @@ import Modal from "./utils/Modal";
 import DefaultButton from "./utils/DefaultButton";
 import { POPUP_TITLE_ID } from "./utils/usePinPopup";
 import modalStyles from "../css/utils/modal.module.css";
+import { KICKSTARTER_URL } from "../utils/links";
 
 interface CharacterPinPopupProps {
   shown: () => void; // it's on the screen
   closePopup: (how: string) => void; // how: "close" or "not_now"
   followed: () => void;
 }
-
-const KICKSTARTER_URL = "https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season";
 
 // The expansion news, once (usePinPopup.ts says when): the site's dialog, its band in Kickstarter green.
 const CharacterPinPopup = ({ shown, closePopup, followed }: CharacterPinPopupProps) => {

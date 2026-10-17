@@ -9,7 +9,7 @@ import type * as THREE from "three";
 import { calm, ease, loadTexture, loadThree, makeCard, paint, renderer, studio } from "./card3d";
 import type { Three } from "./card3d";
 
-export type CardFace = string | HTMLCanvasElement;
+type CardFace = string | HTMLCanvasElement;
 export type CardEdge = "paper" | "gold"; // cream card stock, or gold foil (the character cards)
 export interface CardFaces {
   front: CardFace;

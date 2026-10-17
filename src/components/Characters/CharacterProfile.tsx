@@ -4,7 +4,7 @@ import CardCarousel from "../utils/CardCarousel";
 import CardTurn from "../utils/CardTurn";
 import CharacterDetails from "./CharacterDetails";
 import { CHARACTER_CARD_MM } from "./characterCardFaces";
-import { getAllCharacters } from "./Characters";
+import { characterTitle, getAllCharacters } from "./Characters";
 import type { CharacterWithNav } from "../../types/character";
 import styles from "../../css/pages/characterProfile.module.css";
 
@@ -19,7 +19,7 @@ const cardBack = (i: number) => `/images/pieces/characters/${String(i + 1).padSt
 // phone the rest of their story waits behind a button.
 const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => {
   const navigate = useNavigate();
-  const work = (job: string, employer: string | false | undefined) => (employer ? `${job} at ${employer}` : job);
+  const work = (job: string, employer: string | false | undefined) => (employer ? `${job} at ${employer}` : `${job} (self-employed)`);
   const jobs = [work(c.job, c.employer), c.job2 && work(c.job2, c.employer2)].filter(Boolean).join(" · ");
   const all = getAllCharacters();
   // the words fade out while the cards swing round, and back in as the next character's
@@ -38,13 +38,12 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
       </div>
 
       <header className={`${styles.head} ${styles.words} ${hush ? styles.hushed : ""}`}>
-        <p className={styles.eyebrow}>{c.title || `The ${c.race}`}</p>
+        <p className={styles.eyebrow}>{characterTitle(c)}</p>
         <h1 id="character-name" className={styles.name}>
           {c.name}
         </h1>
         <p className={styles.meta}>
           {c.age} years old · {jobs}
-          {!c.employer && " (self employed)"}
         </p>
       </header>
 

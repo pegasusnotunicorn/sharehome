@@ -86,7 +86,7 @@ export const CardFrontPerson = (props: CardFrontPersonProps) => {
         loading="lazy"
         draggable={false}
         className={`${styles.memberCommCardImage} nopointerevent`}
-        alt={"Image credit - " + cardPerson.image.credit}
+        alt="" // (the card's words name them)
         src={cardPerson.image.url}
         srcSet={characterArtSrcSet(cardPerson.image.url)}
         sizes={CHARACTER_ART_SIZES}

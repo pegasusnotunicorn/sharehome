@@ -231,13 +231,13 @@ const CharacterArc = ({ traits: randomTraits, coords, showLeft }: CharacterArcPr
               loading="lazy"
               className={styles.arrowTailSVG}
               src="/images/icons/arrowtail.svg"
-              alt="part of the arrow"
+              alt=""
             />
             <img
               loading="lazy"
               className={styles.arrowHeadSVG}
               src="/images/icons/arrowhead.svg"
-              alt="part of the arrow"
+              alt=""
             />
           </GsapWiggle>
         </div>
@@ -260,14 +260,14 @@ const CharacterArc = ({ traits: randomTraits, coords, showLeft }: CharacterArcPr
               loading="lazy"
               className={styles.arrowTailSVG}
               src="/images/icons/arrowtail.svg"
-              alt="part of the arrow"
+              alt=""
               width="25"
             />
             <img
               loading="lazy"
               className={styles.arrowHeadSVG}
               src="/images/icons/arrowhead.svg"
-              alt="part of the arrow"
+              alt=""
               width="25"
             />
           </GsapWiggle>

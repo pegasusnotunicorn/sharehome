@@ -148,7 +148,7 @@ const Decks = (props: DecksProps) => {
     finalY = `${finalY}%`;
 
     if (tl) {
-      cards.forEach((curr, index) => {
+      cards.forEach((_, index) => {
         tl.killTweensOf(cardRefs.current[index]);
         tl.fromTo(
           cardRefs.current[index],

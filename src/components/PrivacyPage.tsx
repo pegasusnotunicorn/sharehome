@@ -1,13 +1,13 @@
-import usePageTitle from "./utils/usePageTitle";
 import PageIntro from "./utils/PageIntro";
 import DefaultButton from "./utils/DefaultButton";
 import { NavLink } from "react-router";
+import { CONTACT_EMAIL } from "../utils/links";
 
 // Full privacy policy. Also the privacy policy and data deletion URL for the
 // Pegasus Games Video apps on Meta (Instagram), TikTok and Google (YouTube),
 // so keep the "Social media" and "Delete your data" sections accurate.
 const EFFECTIVE_DATE = "October 9, 2026";
-const CONTACT = "hello@lovecareermagic.com";
+const CONTACT = CONTACT_EMAIL;
 
 const ext = (href: string, text: string) => (
   <a href={href} target="_blank" rel="noreferrer">
@@ -16,7 +16,6 @@ const ext = (href: string, text: string) => (
 );
 
 const PrivacyPage = () => {
-  usePageTitle("Privacy policy");
   return (
     <div className="content max-width">
       <PageIntro eyebrow="The fine print" title="Privacy policy" lead={`Effective ${EFFECTIVE_DATE}`} />

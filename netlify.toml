@@ -32,7 +32,8 @@
   function = "campaign-links"
   path = "/smosh/*"
 
-# (also writes each page's title, description and share image into the page: src/pageMeta.ts)
+# (also writes each page's title, description, share image and canonical link into the page, and
+# sends an address with no page as a 404: src/pageMeta.ts)
 [[edge_functions]]
   function = "track-utm"
   path = "/*"

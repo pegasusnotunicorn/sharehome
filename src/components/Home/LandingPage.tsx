@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef } from "react";
-import { Link } from "react-router";
+import { NavLink } from "react-router";
 import { GsapFadeScrub } from "../utils/useGsap";
 import ParallaxSection from "./ParallaxSection";
 import MechanicsSection from "./MechanicsSection";
@@ -28,10 +28,6 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
   useEffect(() => () => setTrailerPlaying(false), [setTrailerPlaying]);
   const carouselRef = useRef<HTMLDivElement>(null);
   const carouselNear = useNearViewport(carouselRef);
-
-  useEffect(() => {
-    document.title = "Love, Career & Magic - 12m game for 2-6 players";
-  }, []);
 
   return (
     <div className="content">
@@ -76,13 +72,13 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
         <CharactersDeckSection />
         <div className={`${landingPageStyles.characterTextContainer}`}>
           <GsapFadeScrub fadeIn>
-            <StepText doodles={[{ src: "/images/icons/pointer.svg", alt: "pointing finger", at: "aboveStart" }]}>
+            <StepText doodles={[{ src: "/images/icons/pointer.svg", at: "aboveStart" }]}>
               <p className={landingPageStyles.stepEyebrow}>Step 1.</p>
               <h1>Choose from 25 unique characters!</h1>
               <p>
                 Mythological creatures with modern day jobs just like us humans.
                 <br />
-                <Link to="/characters">Click here</Link> to see all characters.
+                <NavLink to="/characters">See all 25 characters</NavLink>
               </p>
             </StepText>
           </GsapFadeScrub>
@@ -101,9 +97,9 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
           <StepText
             className={landingPageStyles.eventsTextContainer}
             doodles={[
-              { src: "/images/icons/planet.svg", alt: "planet", at: "besideStart" },
-              { src: "/images/icons/lovekey.svg", alt: "heart and key", at: "aboveEnd" },
-              { src: "/images/icons/cake.svg", alt: "cake", at: "belowStart", along: 0.25 },
+              { src: "/images/icons/planet.svg", at: "besideStart" },
+              { src: "/images/icons/lovekey.svg", at: "aboveEnd" },
+              { src: "/images/icons/cake.svg", at: "belowStart", along: 0.25 },
             ]}
           >
             <p className={landingPageStyles.stepEyebrow}>Step 2.</p>
@@ -150,8 +146,8 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
           <StepText
             className={landingPageStyles.goalsTextContainer}
             doodles={[
-              { src: "/images/icons/scroll.svg", alt: "scroll", at: "aboveEnd" },
-              { src: "/images/icons/flag.svg", alt: "flag", at: "belowEnd" },
+              { src: "/images/icons/scroll.svg", at: "aboveEnd" },
+              { src: "/images/icons/flag.svg", at: "belowEnd" },
             ]}
           >
             <p className={landingPageStyles.stepEyebrow}>Step 4.</p>

@@ -17,6 +17,7 @@ import useTrackingTags from "./hooks/useTrackingTags";
 import { SocialIconDefs } from "./components/utils/SocialIcons";
 import ErrorBoundary from "./components/utils/ErrorBoundary";
 import { session } from "./utils/safeStorage";
+import { BLOG_URL } from "./utils/links";
 
 const LandingPage = lazy(() => import("./components/Home/LandingPage"));
 const AboutPage = lazy(() => import("./components/About/AboutPage"));
@@ -116,7 +117,7 @@ const AppRoutes = () => {
             <Route path="/play/:code" element={<PlayPage />} />
             <Route path="/thankyou" element={<ThankYouPage />} />
             <Route path="/rulebook" element={<ExternalRedirect url="/rulebook.pdf" />} />
-            <Route path="/blog" element={<ExternalRedirect url="https://pegasusgames.medium.com" />} />
+            <Route path="/blog" element={<ExternalRedirect url={BLOG_URL} />} />
             <Route path="/buy" element={<BuyGate />} />
             <Route path="/cart" element={<CartRedirect />} />
             <Route path="/checkout" element={<CheckoutPage />} />

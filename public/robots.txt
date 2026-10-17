@@ -1,6 +1,8 @@
 User-agent: *
 Disallow: /thankyou  # Avoid indexing post-purchase pages
+Disallow: /checkout  # The checkout: nothing to find there
 Disallow: /buy  # A redirect to checkout that records an analytics event
+Disallow: /play/  # Game rooms (the /play page itself is fine)
 Disallow: /.netlify/
 
 Sitemap: https://lovecareermagic.com/sitemap.xml

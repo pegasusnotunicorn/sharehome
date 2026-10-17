@@ -1,4 +1,4 @@
-export interface CharacterImage {
+interface CharacterImage {
   url: string;
   name: string;
   width: number;
@@ -29,8 +29,6 @@ export interface Character {
 }
 
 export interface CharacterWithNav extends Character {
-  index: number;
+  index: number; // (their place in the cast, from 1)
   total: number;
-  prevCharURL: string | false;
-  nextCharURL: string | false;
 }

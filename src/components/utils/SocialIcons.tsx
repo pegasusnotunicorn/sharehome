@@ -1,4 +1,6 @@
-export interface SocialLink {
+import { CONTACT_EMAIL, DISCORD_URL } from "../../utils/links";
+
+interface SocialLink {
   href: string;
   label: string;
   iconId: string;
@@ -30,7 +32,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
     brandColor: "#ff0000",
   },
   {
-    href: "https://discord.com/invite/nv89cRgEsS",
+    href: DISCORD_URL,
     label: "Discord",
     iconId: "social-icon-discord",
     brandColor: "#5865f2",
@@ -60,7 +62,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
     brandColor: "#1877f2",
   },
   {
-    href: "mailto:hello@lovecareermagic.com",
+    href: `mailto:${CONTACT_EMAIL}`,
     label: "Email",
     iconId: "social-icon-email",
     external: false,

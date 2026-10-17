@@ -9,7 +9,6 @@ import {
   PaymentElement,
   type StripeCheckoutElementsValue,
 } from "@stripe/react-stripe-js/checkout";
-import usePageTitle from "./utils/usePageTitle";
 import Modal from "./utils/Modal";
 import Stepper from "./utils/Stepper";
 import MagnifierButton from "./utils/MagnifierButton";
@@ -1089,7 +1088,6 @@ const CheckoutHandle = ({ handle }: { handle: React.MutableRefObject<StripeCheck
 };
 
 const CheckoutPage = () => {
-  usePageTitle("Checkout");
   const { isDesktop } = useWindowDimensions();
   const appearance = isDesktop ? appearanceBase : appearanceMobile;
   const [lcmQty, setLcmQty] = useState(1);

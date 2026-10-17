@@ -17,7 +17,7 @@ import type { CardPose } from "./cardPose";
 //   - A hovered card lifts straight out of the wall along its own facing, so it clears its
 //     neighbours as soon as it starts to move.
 
-export interface WallSize {
+interface WallSize {
   W: number; // the stage's width, px
   H: number; // and height (the camera stands back so that z = 0 is drawn at 1px per px)
   cw: number; // a card's width, px
@@ -31,7 +31,7 @@ export interface WallCardMotion {
   col: number;
 }
 
-export const WALL_GAP = 16;
+const WALL_GAP = 16;
 export const CARD_ASPECT = 120 / 69.44; // CHARACTER_CARD_MM
 const OPEN = 0.55; // how far each half swings back, radians
 const SWAY_Y = 2.5, SWAY_TILT = 0.02;

@@ -3,9 +3,9 @@ import PageIntro from "./utils/PageIntro";
 import MagnifierButton from "./utils/MagnifierButton";
 import DefaultButton from "./utils/DefaultButton";
 import { FETCH_FIRST, srcSet } from "./utils/imageCopies";
-import usePageTitle from "./utils/usePageTitle";
 import { PRICES, formatUsd } from "./utils/prices";
 import styles from "../css/pages/rafflePage.module.css";
+import { KICKSTARTER_URL } from "../utils/links";
 
 // (the carousel library comes down only when the box preview opens)
 const ImageCarouselModal = lazy(() => import("./utils/ImageCarouselModal"));
@@ -34,9 +34,6 @@ const MailIcon = () => (
   </svg>
 );
 
-const KICKSTARTER_URL =
-  "https://www.kickstarter.com/projects/pegasusgamesnyc/love-career-and-magic-the-second-season";
-
 const RafflePage = () => {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -44,7 +41,6 @@ const RafflePage = () => {
   const [kickstarterClicked, setKickstarterClicked] = useState(false);
   const [boxCarouselOpen, setBoxCarouselOpen] = useState(false);
   const emailId = useId();
-  usePageTitle("Win a free copy");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

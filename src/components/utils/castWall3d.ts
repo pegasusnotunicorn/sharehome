@@ -11,14 +11,14 @@ import { calm, cardShadow, loadTexture, loadThree, makeCard, paint, renderer, st
 import type { Three } from "./card3d";
 import { CHARACTER_CARD_MM } from "../Characters/characterCardFaces";
 
-export interface CastTile {
+interface CastTile {
   link: HTMLElement; // hovering or focusing it lifts the card
   stage: HTMLElement; // the card's place on the page (the canvas reaches a little past it)
   src: string; // its printed front
   onReady: () => void; // drawn: the flat picture under it can go
 }
 
-export interface CastWallApi {
+interface CastWallApi {
   destroy: () => void;
 }
 

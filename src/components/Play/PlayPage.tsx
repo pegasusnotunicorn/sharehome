@@ -6,7 +6,6 @@ import Icon from "../utils/Icons";
 import Modal from "../utils/Modal";
 import modalStyles from "../../css/utils/modal.module.css";
 import PageIntro from "../utils/PageIntro";
-import usePageTitle from "../utils/usePageTitle";
 import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, forgetRoom, rememberRoom, roomInfo, saveName, savedName, wasInRoom } from "./gameServer";
 import Confirm from "./Confirm";
 import GameTable, { Loading, PLAYER_COLORS, preloadBacks, useNames } from "./GameTable";
@@ -39,7 +38,6 @@ const PlayPage = () => {
   useEffect(() => setJoined(false), [code]);
   // watching, not playing (asked to, or the room was full, or the show had started)
   const [watch, setWatch] = useState(false);
-  usePageTitle(code ? `Game ${code} | Play online` : "Play online");
   // (a game's for tapping, not selecting: no highlighting text on these pages, dialogs included)
   useEffect(() => {
     document.body.classList.add("no-select");

@@ -1,10 +1,8 @@
-import usePageTitle from "./utils/usePageTitle";
 import PageIntro from "./utils/PageIntro";
 import DefaultButton from "./utils/DefaultButton";
 import { NavLink } from "react-router";
 
 const TermsPage = () => {
-  usePageTitle("Terms");
   return (
     <div className="content max-width">
       <PageIntro eyebrow="The fine print" title="Terms" lead="Returns, and how your information is used." />
@@ -28,7 +26,7 @@ const TermsPage = () => {
             </li>
             <li>
               If anything goes wrong with your order,{" "}
-              <a href="/contact">reach out</a> and I’ll do my best to fix it!
+              <NavLink to="/contact">reach out</NavLink> and I’ll do my best to fix it!
               Just keep in mind, I’m a one-person team, so it might take a
               little time to get back to you.
             </li>

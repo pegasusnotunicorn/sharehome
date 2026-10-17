@@ -229,7 +229,7 @@ const ParallaxCards = ({
       },
     });
 
-    randomCharacters.forEach((curr, index) => {
+    randomCharacters.forEach((_, index) => {
       const card = cardRefs[index];
       if (!card) return;
 

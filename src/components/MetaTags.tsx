@@ -1,12 +1,13 @@
 import { useLocation } from "react-router";
-import { SITE, pageMeta } from "../pageMeta";
-import CustomHelmet from "./utils/CustomHelmet";
+import { pageMeta } from "../pageMeta";
+import useHeadTags from "./utils/useHeadTags";
 
-// the page's title, description and share image, from the list (a character's page sets its own)
+// the page's title, description and share image, from the list (a character's page, and the
+// not-found page, set their own over it)
 const MetaTags = () => {
   const { pathname } = useLocation();
-  const { title, description, image } = pageMeta(pathname);
-  return <CustomHelmet title={title} splashImage={SITE + image.url} description={description} />;
+  useHeadTags(pageMeta(pathname), pathname);
+  return null;
 };
 
 export default MetaTags;

@@ -1,53 +1,59 @@
-// Every page is the same index.html; this also writes in the page's own title, description and
-// share image (src/pageMeta.ts, or a character's), since link previews (Facebook, iMessage, Discord,
-// X…) don't run JavaScript and only ever see what's in the page as it's sent.
+// Every page is the same index.html; this also writes in the page's own title, description, share
+// image and canonical address (src/pageMeta.ts, or a character's), since link previews (Facebook,
+// iMessage, Discord, X…) and search engines don't run JavaScript and only see the page as it's sent.
+// An address with no page is sent as a 404, kept out of search results.
 import { getCharacterShareMeta, getSpecificPersonByURL } from "../../src/components/Characters/Characters.ts";
-import { SITE, pageMeta } from "../../src/pageMeta.ts";
+import { CHARACTER_NOT_FOUND_META, NOT_FOUND_META, SITE, cleanPath, headTags, isPage, pageMeta } from "../../src/pageMeta.ts";
 
 const escapeAttr = (value) =>
   String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-// Replaces the content="" of <meta property|name="key" content="..."> tags. (A function, so a "$" in
-// the value is written as it is, not read as a replace pattern.)
-const setMeta = (html, key, value) =>
-  html.replace(
-    new RegExp(`(<meta\\s+(?:property|name)="${key.replace(/[.:]/g, "\\$&")}"\\s+content=")[^"]*(")`, "g"),
-    (_, open, close) => open + escapeAttr(value) + close
-  );
+// Sets a <meta name|property="key" content="..."> or <link rel="canonical" href="...">'s value, adds the
+// tag if the page hasn't one, or takes it out (a null value). (A function replacer, so a "$" in the
+// value is written as it is, not read as a replace pattern.)
+const setTag = (html, [attr, key, value]) => {
+  const tag = attr === "rel" ? "link" : "meta";
+  const valueAttr = tag === "link" ? "href" : "content";
+  const name = key.replace(/[.:]/g, "\\$&");
+  const re = new RegExp(`<${tag}\\s+${attr}="${name}"\\s+${valueAttr}="[^"]*"\\s*/?>\\s*`, "g");
+  const written = value === null ? "" : `<${tag} ${attr}="${key}" ${valueAttr}="${escapeAttr(value)}" />\n    `;
+  if (re.test(html)) return html.replace(re, () => written);
+  return value === null ? html : html.replace("</head>", () => written + "</head>");
+};
 
-// the page's share tags: a character's own, or the page's from the list
+// the page at this address, with its own address, and whether there is one
 const metaFor = (pathname) => {
-  const slug = pathname.match(/^\/characters\/([^/]+)$/)?.[1];
-  const character = slug ? getSpecificPersonByURL(slug) : false;
-  if (character && !character.ignoreInRandom) {
-    const { title, description, image } = getCharacterShareMeta(character);
-    return { title, description, image, url: `${SITE}/characters/${character.urlName}` };
+  const path = cleanPath(pathname);
+  const slug = path.match(/^\/characters\/([^/]+)$/)?.[1];
+  if (slug) {
+    let name = slug;
+    try {
+      name = decodeURIComponent(slug);
+    } catch {
+      // (a broken %-escape: as it is)
+    }
+    const character = getSpecificPersonByURL(name);
+    if (!character) return { meta: CHARACTER_NOT_FOUND_META, url: SITE + path, found: false };
+    return { meta: getCharacterShareMeta(character), url: `${SITE}/characters/${character.urlName}`, found: true };
   }
-  return { ...pageMeta(pathname), url: SITE + (pathname.replace(/\/+$/, "") || "/") };
+  if (!isPage(path)) return { meta: NOT_FOUND_META, url: SITE + path, found: false };
+  return { meta: pageMeta(path), url: SITE + path, found: true };
 };
 
 const withMeta = async (response, pathname) => {
   if (!response.headers.get("content-type")?.includes("text/html")) return response;
-  const { title, description, image, url } = metaFor(pathname);
-  const imageUrl = SITE + image.url;
-  const ext = image.url.split(".").pop().toLowerCase();
+  const { meta, url, found } = metaFor(pathname);
   let html = await response.text();
-  html = html.replace(/<title>[^<]*<\/title>/, () => `<title>${escapeAttr(title)}</title>`);
-  html = setMeta(html, "description", description);
-  html = setMeta(html, "og:url", url);
-  html = setMeta(html, "og:title", title);
-  html = setMeta(html, "og:description", description);
-  html = setMeta(html, "og:image", imageUrl);
-  html = setMeta(html, "og:image:width", image.width);
-  html = setMeta(html, "og:image:height", image.height);
-  html = setMeta(html, "og:image:type", ext === "jpg" ? "image/jpeg" : `image/${ext}`);
-  html = setMeta(html, "twitter:url", url);
-  html = setMeta(html, "twitter:title", title);
-  html = setMeta(html, "twitter:description", description);
-  html = setMeta(html, "twitter:image", imageUrl);
+  html = html.replace(/<title>[^<]*<\/title>/, () => `<title>${escapeAttr(meta.tab ?? meta.title)}</title>`);
+  for (const tag of headTags(meta, url)) html = setTag(html, tag);
   const headers = new Headers(response.headers);
   headers.delete("content-length");
-  return new Response(html, { status: response.status, statusText: response.statusText, headers });
+  if (!found) headers.set("X-Robots-Tag", "noindex");
+  return new Response(html, {
+    status: found ? response.status : 404,
+    statusText: found ? response.statusText : "Not Found",
+    headers,
+  });
 };
 
 // The UTM cookie: JSON in base64. btoa only takes Latin-1, and campaign tags can hold emoji or

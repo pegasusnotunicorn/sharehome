@@ -85,7 +85,8 @@ function drawBack(c: Character) {
     ["Age", String(c.age)],
     ["Race", c.race],
     ["Occupation", [c.job, c.job2].filter(Boolean).join(" / ")],
-    ["Employer", [c.employer, c.employer2].filter(Boolean).join(" / ")],
+    // (with a second job, a first one of their own still pairs up with its employer)
+    ["Employer", [c.employer || (c.employer2 && "Self-employed"), c.employer2].filter(Boolean).join(" / ")],
   ];
 
   // lay both columns out at scale s; returns whether they fit

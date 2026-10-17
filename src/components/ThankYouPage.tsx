@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import CustomHelmet from "./utils/CustomHelmet";
 import usePageTitle from "./utils/usePageTitle";
 import DefaultButton from "./utils/DefaultButton";
 import PolaroidJourney from "./utils/PolaroidJourney";
@@ -53,12 +52,6 @@ const ThankYouPage = () => {
 
   return (
     <div className={`content ${styles.thankYouPage}`}>
-      <CustomHelmet
-        title={title}
-        splashImage="https://lovecareermagic.com/images/loucheck.webp"
-        description="We have received your order and will ship your game to you within 3-5 business days."
-      />
-
       <header className={styles.intro}>
         <p className={styles.eyebrow}>Order confirmed</p>
         <h1 className={styles.title}>Thank you!</h1>

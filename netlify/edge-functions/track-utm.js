@@ -1,3 +1,54 @@
+// Every page is the same index.html; this also writes in the page's own title, description and
+// share image (src/pageMeta.ts, or a character's), since link previews (Facebook, iMessage, Discord,
+// X…) don't run JavaScript and only ever see what's in the page as it's sent.
+import { getCharacterShareMeta, getSpecificPersonByURL } from "../../src/components/Characters/Characters.ts";
+import { SITE, pageMeta } from "../../src/pageMeta.ts";
+
+const escapeAttr = (value) =>
+  String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+// Replaces the content="" of <meta property|name="key" content="..."> tags
+const setMeta = (html, key, value) =>
+  html.replace(
+    new RegExp(`(<meta\\s+(?:property|name)="${key.replace(/[.:]/g, "\\$&")}"\\s+content=")[^"]*(")`, "g"),
+    `$1${escapeAttr(value)}$2`
+  );
+
+// the page's share tags: a character's own, or the page's from the list
+const metaFor = (pathname) => {
+  const slug = pathname.match(/^\/characters\/([^/]+)$/)?.[1];
+  const character = slug ? getSpecificPersonByURL(slug) : false;
+  if (character && !character.ignoreInRandom) {
+    const { title, description, image } = getCharacterShareMeta(character);
+    return { title, description, image, url: `${SITE}/characters/${character.urlName}` };
+  }
+  return { ...pageMeta(pathname), url: SITE + (pathname.replace(/\/+$/, "") || "/") };
+};
+
+const withMeta = async (response, pathname) => {
+  if (!response.headers.get("content-type")?.includes("text/html")) return response;
+  const { title, description, image, url } = metaFor(pathname);
+  const imageUrl = SITE + image.url;
+  const ext = image.url.split(".").pop().toLowerCase();
+  let html = await response.text();
+  html = html.replace(/<title>[^<]*<\/title>/, `<title>${escapeAttr(title)}</title>`);
+  html = setMeta(html, "description", description);
+  html = setMeta(html, "og:url", url);
+  html = setMeta(html, "og:title", title);
+  html = setMeta(html, "og:description", description);
+  html = setMeta(html, "og:image", imageUrl);
+  html = setMeta(html, "og:image:width", image.width);
+  html = setMeta(html, "og:image:height", image.height);
+  html = setMeta(html, "og:image:type", ext === "jpg" ? "image/jpeg" : `image/${ext}`);
+  html = setMeta(html, "twitter:url", url);
+  html = setMeta(html, "twitter:title", title);
+  html = setMeta(html, "twitter:description", description);
+  html = setMeta(html, "twitter:image", imageUrl);
+  const headers = new Headers(response.headers);
+  headers.delete("content-length");
+  return new Response(html, { status: response.status, statusText: response.statusText, headers });
+};
+
 // The UTM cookie: JSON in base64. btoa only takes Latin-1, and campaign tags can hold emoji or
 // any script, so anything past ASCII is written as a JSON \\u escape first (JSON.parse turns it back,
 // so the readers in create-checkout-session and track-conversions read it as before).
@@ -8,6 +59,13 @@ const IS_DEV = Deno.env.get("NETLIFY_DEV") === "true";
 
 const trackUtm = async (request, context) => {
   const url = new URL(request.url);
+  // /characters/ (and /characters/<name>/) is the same page without the slash. (Netlify's
+  // _redirects can't say this: it matches a path with or without its trailing slash, so the rule
+  // would send the page to itself.)
+  if (/^\/characters(\/[^/]+)?\/+$/.test(url.pathname)) {
+    url.pathname = url.pathname.replace(/\/+$/, "");
+    return Response.redirect(url.toString(), 301);
+  }
   const searchParams = new URLSearchParams(url.search);
 
   if (IS_DEV) console.log("🔍 Processing UTM tracking for:", request.url);
@@ -91,7 +149,7 @@ const trackUtm = async (request, context) => {
   } else if (IS_DEV) {
     console.log("🔄 Preserved existing UTM cookie (no UTMs in URL)");
   }
-  return context.rewrite(new URL("/index.html", request.url));
+  return withMeta(await context.rewrite(new URL("/index.html", request.url)), url.pathname);
 };
 
 export default trackUtm;

@@ -32,16 +32,7 @@
   function = "campaign-links"
   path = "/smosh/*"
 
-# Must stay above track-utm: it edits the index.html that track-utm serves (and it takes the
-# trailing slash off /characters/)
-[[edge_functions]]
-  function = "character-meta"
-  path = "/characters/"
-
-[[edge_functions]]
-  function = "character-meta"
-  path = "/characters/*"
-
+# (also writes each page's title, description and share image into the page: src/pageMeta.ts)
 [[edge_functions]]
   function = "track-utm"
   path = "/*"

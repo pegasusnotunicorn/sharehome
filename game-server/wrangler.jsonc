@@ -6,10 +6,13 @@
   "compatibility_date": "2026-10-01",
   // (logs for a sample of requests only: plenty to debug with, and never a big log bill)
   "observability": { "enabled": true, "head_sampling_rate": 0.02 },
-  // per address: 5 new rooms a minute, and 60 room visits (the join screen, a socket) a minute
+  // per address (an IPv6 one by its /64): 5 new rooms a minute, and 60 room visits (the join screen, a
+  // socket) a minute. And for all the rooms together: one show told to Discord a minute (a minute's
+  // the longest period these take), on top of each room's own 10 minutes between
   "ratelimits": [
     { "name": "CREATE_LIMIT", "namespace_id": "1001", "simple": { "limit": 5, "period": 60 } },
-    { "name": "JOIN_LIMIT", "namespace_id": "1002", "simple": { "limit": 60, "period": 60 } }
+    { "name": "JOIN_LIMIT", "namespace_id": "1002", "simple": { "limit": 60, "period": 60 } },
+    { "name": "ANNOUNCE_LIMIT", "namespace_id": "1003", "simple": { "limit": 1, "period": 60 } }
   ],
   // (a deploy keeps variables set in the dashboard, so the PAUSED off switch survives one)
   "keep_vars": true,

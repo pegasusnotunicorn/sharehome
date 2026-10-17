@@ -354,6 +354,7 @@
   .ctasBottom > * {
     flex: 1;
     min-width: 0;
+    height: var(--tap-size);
   }
 
   /* not tappable until they've faded in, nor while the trailer plays or the expansion popup's open

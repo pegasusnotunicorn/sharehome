@@ -404,7 +404,21 @@ export async function mountCardViewer(stage: HTMLElement, { mm, faces, edge = "p
   }
   stage.addEventListener("wheel", onWheel, { passive: false });
   stage.onkeydown = (e) => {
-    if (e.key === "+" || e.key === "=") {
+    // the arrow keys turn it (and stay on it: not on to another card), F flips it over
+    const a = Math.PI / 12;
+    const by = ({ ArrowRight: [a, 0], ArrowLeft: [-a, 0], ArrowUp: [0, -a], ArrowDown: [0, a] } as Record<string, [number, number]>)[e.key];
+    if (by) {
+      e.preventDefault();
+      e.stopPropagation();
+      used();
+      cancelAnimationFrame(raf);
+      turn(...by);
+      schedule();
+    } else if (e.key === "f" || e.key === "F") {
+      e.preventDefault();
+      used();
+      spinBy(Math.PI, 600);
+    } else if (e.key === "+" || e.key === "=") {
       e.preventDefault();
       used();
       zoomAt(1.25);

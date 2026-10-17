@@ -22,7 +22,7 @@ export default function SmoshSection() {
     <GsapFadeScrub fadeIn className={`${landingPageStyles.mainpageContainer} ${styles.section} ${smosh.section}`}>
       <div className={styles.heading}>
         <p className={landingPageStyles.stepEyebrow}>As seen on Smosh Games</p>
-        <h1 className={styles.title}>Smosh played it!</h1>
+        <h2 className={styles.title}>Smosh played it!</h2>
         <p className={styles.lede}>The Board AF crew turned Love, Career &amp; Magic into their own magical reality show.</p>
       </div>
 
@@ -63,7 +63,7 @@ export default function SmoshSection() {
           </button>
         )}
       </div>
-      <a className={styles.more} href={`https://www.youtube.com/watch?v=${VIDEO.id}`} target="_blank" rel="noreferrer">
+      <a className={`${styles.more} tap-area`} href={`https://www.youtube.com/watch?v=${VIDEO.id}`} target="_blank" rel="noreferrer">
         Open on YouTube <span aria-hidden="true">↗</span>
       </a>
     </GsapFadeScrub>

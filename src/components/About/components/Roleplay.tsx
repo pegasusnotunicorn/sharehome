@@ -19,15 +19,29 @@ const Roleplay = () => {
   const [tab, setTab] = useState<Tab>("setup");
   const [boxOpened, setBoxOpened] = useState(false); // the pieces load the first time their tab opens, and stay
 
+  // (from a button in a part, that goes as the part changes: focus goes to the new part's tab, the
+  // page back up to it)
   const open = (next: Tab, scroll = false) => {
     setTab(next);
     if (next === "box") setBoxOpened(true);
-    if (scroll) document.getElementById("how-to-play-parts")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (!scroll) return;
+    document.getElementById("how-to-play-parts")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById(`tab-${next}`)?.focus({ preventScroll: true });
+  };
+  // the tabs, as tabs go: one stop for Tab, and the arrow keys (Home, End) go along them
+  const onTabsKey = (e: React.KeyboardEvent) => {
+    const at = TABS.findIndex((t) => t.id === tab);
+    const to = { ArrowRight: at + 1, ArrowLeft: at - 1, Home: 0, End: TABS.length - 1 }[e.key];
+    if (to === undefined) return;
+    e.preventDefault();
+    const next = TABS[(to + TABS.length) % TABS.length].id;
+    open(next);
+    document.getElementById(`tab-${next}`)?.focus();
   };
 
   return (
     <section className={aboutStyles.parts} id="how-to-play-parts">
-      <div className={aboutStyles.tabs} role="tablist" aria-label="How to play">
+      <div className={aboutStyles.tabs} role="tablist" aria-label="How to play" onKeyDown={onTabsKey}>
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -36,6 +50,7 @@ const Roleplay = () => {
             id={`tab-${t.id}`}
             aria-controls={`panel-${t.id}`}
             aria-selected={tab === t.id}
+            tabIndex={tab === t.id ? 0 : -1}
             className={`${aboutStyles.tab}${tab === t.id ? ` ${aboutStyles.tabActive}` : ""}`}
             onClick={() => open(t.id)}
           >

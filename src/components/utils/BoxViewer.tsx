@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import type { BoxArt } from "./box3d";
 import type { BoxVideo, BoxViewerApi } from "./boxViewer3d";
 import { savingData } from "./later";
+import { CloseButton } from "./Modal";
 import styles from "../../css/utils/boxViewer.module.css";
 
 // The game box in 3D (boxViewer3d.ts): turn it, click it to open it and play the trailer inside
@@ -106,6 +107,16 @@ const BoxViewer = ({ art, video, label, still, fallback, behind, onPeek, onOpen,
         </span>
       )}
       {still && <img className={styles.still} src={still} alt="" aria-hidden="true" onLoad={onStill} />}
+      {/* open: a way to close it that can be seen, and reached by Tab (the trailer keeps Escape to itself) */}
+      {open && (
+        <CloseButton
+          label="Close the trailer"
+          onClick={() => {
+            api.current?.close();
+            stageRef.current?.focus({ preventScroll: true });
+          }}
+        />
+      )}
     </div>
   );
 };

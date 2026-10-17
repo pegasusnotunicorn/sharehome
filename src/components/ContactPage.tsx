@@ -70,7 +70,7 @@ const ContactPage = () => {
               </NavLink>
             </p>
           </div>
-          <button type="button" className={styles.readMore} onClick={() => setIsBioExpanded((v) => !v)}>
+          <button type="button" className={`${styles.readMore} tap-area`} onClick={() => setIsBioExpanded((v) => !v)}>
             {isBioExpanded ? "Show less" : "Read more"}
           </button>
         </div>

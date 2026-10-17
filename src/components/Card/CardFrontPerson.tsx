@@ -73,7 +73,7 @@ export const CardFrontPerson = (props: CardFrontPersonProps) => {
   if (enableQuestionMark) {
     mainText = (
       <>
-        <h1 className={styles.memberCommCardQuestionMark}>?</h1>
+        <span className={styles.memberCommCardQuestionMark} aria-hidden="true">?</span>
         <div className={styles.memberCommCardFullShadow}></div>
       </>
     );

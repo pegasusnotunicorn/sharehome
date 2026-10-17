@@ -1,8 +1,9 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import CardCarousel from "../utils/CardCarousel";
 import CardTurn from "../utils/CardTurn";
 import CharacterDetails from "./CharacterDetails";
+import announce from "../../utils/announce";
 import { CHARACTER_CARD_MM } from "./characterCardFaces";
 import { characterTitle, getAllCharacters } from "./Characters";
 import type { CharacterWithNav } from "../../types/character";
@@ -25,11 +26,16 @@ const CharacterProfile = ({ character: c }: { character: CharacterWithNav }) => 
   // the words fade out while the cards swing round, and back in as the next character's
   const [hush, setHush] = useState(false);
   const from = useRef("");
+  // on to the next character (Prev / Next, where focus stays): who it is now, read out
+  const firstShown = useRef(c.urlName);
+  useEffect(() => {
+    if (c.urlName !== firstShown.current) announce(`${c.name}, ${c.index} of ${c.total}`);
+  }, [c.urlName, c.name, c.index, c.total]);
 
   return (
     <article className={styles.profile} aria-labelledby="character-name">
       <div className={`${styles.topRow} ${styles.words} ${hush ? styles.hushed : ""}`}>
-        <Link to="/characters" className={styles.back}>
+        <Link to="/characters" className={`${styles.back} tap-area`}>
           <span aria-hidden="true">←</span> All characters
         </Link>
         <span className={styles.count}>

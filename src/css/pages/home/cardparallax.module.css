@@ -10,6 +10,13 @@
   flex-direction: column;
 }
 
+/* phones: as far as the words under it come up (landingPage.module.css #descriptionContainer) */
+@media only screen and (max-width: 900px) {
+  .parallaxSection {
+    height: 260svh;
+  }
+}
+
 .parallaxRow {
   display: flex;
   justify-content: center;

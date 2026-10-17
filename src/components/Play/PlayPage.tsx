@@ -826,7 +826,7 @@ const Seat = ({
       {mine && (
         <button
           type="button"
-          className={styles.seatCorner}
+          className={`${styles.seatCorner} tap-area`}
           onClick={() => {
             setDraft(player.name);
             setEditing(true);
@@ -845,7 +845,7 @@ const Seat = ({
           <button
             ref={toggle}
             type="button"
-            className={styles.seatCorner}
+            className={`${styles.seatCorner} tap-area`}
             onClick={() => setMenu((m) => !m)}
             aria-label={`Options for ${player.name}`}
             aria-expanded={menu}

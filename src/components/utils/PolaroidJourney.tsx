@@ -111,7 +111,7 @@ const PolaroidJourney = ({ label, title, start = 0 }: PolaroidJourneyProps) => {
             {!live && <img className={styles.ringStill} src={PHOTOS[start].src} alt="" loading="lazy" />}
           </div>
           <div className={styles.journeyBar} onFocus={() => setHeld(true)} onBlur={() => setHeld(false)}>
-            <button type="button" className={styles.chip} onClick={() => nudge(-1)} aria-label="Previous photo">
+            <button type="button" className={`${styles.chip} tap-area`} onClick={() => nudge(-1)} aria-label="Previous photo">
               <Chevron flip />
             </button>
             <div className={styles.caption} aria-live={held ? "polite" : "off"}>
@@ -119,7 +119,7 @@ const PolaroidJourney = ({ label, title, start = 0 }: PolaroidJourneyProps) => {
                 {item.caption}
               </p>
             </div>
-            <button type="button" className={styles.chip} onClick={() => nudge(1)} aria-label="Next photo">
+            <button type="button" className={`${styles.chip} tap-area`} onClick={() => nudge(1)} aria-label="Next photo">
               <Chevron />
             </button>
           </div>

@@ -20,7 +20,7 @@ const CharacterDetails = ({ character: c, className }: { character: Character; c
           ))}
         </div>
         {c.description.length > 1 && (
-          <button type="button" className={styles.storyToggle} aria-expanded={story} aria-controls={`${id}-text`} onClick={() => setStory((s) => !s)}>
+          <button type="button" className={`${styles.storyToggle} tap-area`} aria-expanded={story} aria-controls={`${id}-text`} onClick={() => setStory((s) => !s)}>
             {story ? "Show less" : "Read more"}
           </button>
         )}

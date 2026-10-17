@@ -1,5 +1,4 @@
 import { useState, useLayoutEffect, useRef, useEffect } from "react";
-import gsap from "gsap";
 import { GsapFadeScrub, GsapWiggle } from "../utils/useGsap";
 import { getRandomTrait } from "../Card/ExampleTraits";
 import type { Trait, TraitTilesApi } from "../utils/traitTiles3d";
@@ -105,47 +104,45 @@ const LikeHateSection = (props: LikeHateSectionProps) => {
   const [currentChar, setCurrentChar] = useState(0);
   const [traits, setTraits] = useState(randomTraits);
 
-  //fade in and out character traits
-  useLayoutEffect(() => {
-    const delay = 1;
-    const duration = 2;
-    const tl = gsap
-      .timeline({
-        repeat: -1,
-        onRepeat: () => {
-          //cycle through the characters
-          setCurrentChar((c) => {
-            if (c + 1 >= characterCoords.length) return 0;
-            else return c + 1;
-          });
-          setTraits(randomTraits());
-        },
-      })
-      .fromTo(
-        [arrowsContainerRef.current],
-        {
-          opacity: 1,
-        },
-        {
-          opacity: 1,
-          duration: duration,
-        }
-      )
-      .fromTo(
-        [arrowsContainerRef.current],
-        {
-          opacity: 1,
-        },
-        {
-          opacity: 1,
-          duration: duration,
-        },
-        `+=${delay}`
-      );
-    return () => {
-      if (tl) tl.kill();
+  // a new character and traits every 5 seconds, only while the picture's on screen and isn't being
+  // looked at closely (pointed at, or tabbed into); and not at all for a visitor who'd rather things
+  // didn't move
+  const sectionRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+    let onScreen = false, held = false, timer = 0;
+    const next = () => {
+      setCurrentChar((c) => (c + 1) % characterCoords.length);
+      setTraits(randomTraits());
     };
-  }, [characterCoords.length, setCurrentChar]);
+    const sync = () => {
+      clearInterval(timer);
+      timer = onScreen && !held ? window.setInterval(next, 5000) : 0;
+    };
+    const io = new IntersectionObserver((e) => {
+      onScreen = e.some((x) => x.isIntersecting);
+      sync();
+    });
+    io.observe(el);
+    const hold = (h: boolean) => () => {
+      held = h;
+      sync();
+    };
+    const on = hold(true), off = hold(false);
+    el.addEventListener("pointerenter", on);
+    el.addEventListener("pointerleave", off);
+    el.addEventListener("focusin", on);
+    el.addEventListener("focusout", off);
+    return () => {
+      clearInterval(timer);
+      io.disconnect();
+      el.removeEventListener("pointerenter", on);
+      el.removeEventListener("pointerleave", off);
+      el.removeEventListener("focusin", on);
+      el.removeEventListener("focusout", off);
+    };
+  }, [characterCoords.length]);
 
   // the trait tags as 3D tiles that flip over to each new set (traitTiles3d.ts); the flat tags stay,
   // hidden, to lay them out, and show if the 3D can't
@@ -191,7 +188,7 @@ const LikeHateSection = (props: LikeHateSectionProps) => {
 
   //text to display depending on like/hate
   return (
-    <div id={props.id} className={props.className}>
+    <div id={props.id} className={props.className} ref={sectionRef}>
       <div className={`${styles.likehateLeftContainer} ${styles.likehateContainers}`}>
         <GsapFadeScrub fadeIn className={styles.imageAndArrowContainer}>
           <img

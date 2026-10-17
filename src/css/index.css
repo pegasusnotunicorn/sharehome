@@ -51,12 +51,15 @@
   --control-radius: 12px;
   --pill-radius: 999px;
 
-  /* What sits over what. (A game room's own layers sit above or below these as they always have.) */
+  /* What sits over what. (A game room's own corner buttons sit below these.) */
   --z-drawer: 9000;
   --z-nav: 9001;
   --z-banner: 9002;
   --z-modal: 10000;
   --z-toast: 10001;
+  /* a game room's full-screen layers (the finale, the pop-up phone, the chat over them), in their
+     order from here up */
+  --z-room: 10100;
 
   /* Buttons, all over the site: chunky, like a game piece. A solid face with a hard edge under it
      (its "depth") that it lifts off when hovered and presses into when clicked. */
@@ -157,6 +160,48 @@ button {
   border: 0;
 }
 
+/* A small control (a chip, a text link on its own) with a fingertip's worth to tap round it
+   (--tap-size), without it looking any bigger. (Relative unless it's placed some other way.) */
+:where(.tap-area) {
+  position: relative;
+}
+
+.tap-area::before {
+  content: "";
+  position: absolute;
+  inset: min(0px, calc((100% - var(--tap-size)) / 2));
+}
+
+/* "Skip to content": out of sight until Tab reaches it, then over the banner's corner */
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: var(--z-toast);
+  padding: 0.6rem 1rem;
+  min-height: var(--tap-size);
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--control-radius);
+  background: var(--paper-light);
+  color: var(--ink);
+  font-family: var(--font-rowdies-regular);
+  font-size: 1rem;
+  text-decoration: none;
+  box-shadow: var(--card-shadow);
+  transform: translateY(calc(-100% - 1rem));
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+/* (the page's content, focused by the skip link: no ring round all of it) */
+#main:focus {
+  outline: none;
+}
+
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari */
@@ -172,19 +217,26 @@ button {
   pointer-events: none;
 }
 
+/* (the palette's colours, deep enough to read on white and on the paper: 3:1 or more all the way) */
 .fantasyEmphasis {
   background: linear-gradient(
     -45deg,
     var(--purple) 20%,
-    var(--yellow) 40%,
-    var(--green) 60%,
-    var(--pink) 80%
+    #a68b00 40%,
+    #5a9a82 60%,
+    #d05a5a 80%
   );
   background-size: 200% auto;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: animated_text 5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fantasyEmphasis {
+    animation: none;
+  }
 }
 
 @keyframes animated_text {

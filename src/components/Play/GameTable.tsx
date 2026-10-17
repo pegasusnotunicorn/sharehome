@@ -929,7 +929,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                       <span>
                         <CountUp value={points.total} className={styles.score} /> pts
                       </span>
-                      <button type="button" className={styles.clothButton} onClick={() => setHeld((h) => !h)} aria-pressed={held} aria-label="Hold the phone up" title={held ? "Put down" : "Hold"}>
+                      <button type="button" className={`${styles.clothButton} tap-area`} onClick={() => setHeld((h) => !h)} aria-pressed={held} aria-label="Hold the phone up" title={held ? "Put down" : "Hold"}>
                         {held ? (
                           <svg viewBox="0 0 24 24" aria-hidden>
                             <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />
@@ -940,12 +940,12 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                           </svg>
                         )}
                       </button>
-                      <button type="button" className={styles.clothButton} onClick={() => setPicking(true)} aria-label="Settings" title="Settings">
+                      <button type="button" className={`${styles.clothButton} tap-area`} onClick={() => setPicking(true)} aria-label="Settings" title="Settings">
                         <SettingsIcon />
                       </button>
                       <button
                         type="button"
-                        className={styles.mute}
+                        className={`${styles.mute} tap-area`}
                         onClick={() => {
                           setMuted(!muted);
                           setMutedState(!muted);
@@ -971,7 +971,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                     <div className={styles.logHead}>
                       <span>R.E.M.O.T.E.</span>
                       {held && (
-                        <button type="button" className={`${styles.clothButton} ${styles.headHold}`} onClick={() => setHeld(false)} aria-label="Set the phone back down" title="Put down">
+                        <button type="button" className={`${styles.clothButton} ${styles.headHold} tap-area`} onClick={() => setHeld(false)} aria-label="Set the phone back down" title="Put down">
                           <svg viewBox="0 0 24 24" aria-hidden>
                             <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />
                           </svg>
@@ -1004,10 +1004,10 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                     <div className={styles.logHead}>
                       <span>Chat</span>
                       <Watching room={room} always />
-                      <button type="button" className={`${styles.clothButton} ${styles.headHold}`} onClick={() => setPicking(true)} aria-label="Settings" title="Settings">
+                      <button type="button" className={`${styles.clothButton} ${styles.headHold} tap-area`} onClick={() => setPicking(true)} aria-label="Settings" title="Settings">
                         <SettingsIcon />
                       </button>
-                      <button type="button" className={`${styles.clothButton} ${styles.headHold}`} onClick={() => setHeld((h) => !h)} aria-pressed={held} aria-label="Hold the phone up" title={held ? "Put down" : "Hold"}>
+                      <button type="button" className={`${styles.clothButton} ${styles.headHold} tap-area`} onClick={() => setHeld((h) => !h)} aria-pressed={held} aria-label="Hold the phone up" title={held ? "Put down" : "Hold"}>
                         {held ? (
                           <svg viewBox="0 0 24 24" aria-hidden>
                             <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />
@@ -1053,7 +1053,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                       aria-selected={phoneTab === app.id}
                       aria-controls="phone-screen"
                       tabIndex={phoneTab === app.id ? 0 : -1}
-                      className={phoneTab === app.id ? styles.dockOn : ""}
+                      className={`${phoneTab === app.id ? styles.dockOn : ""} tap-area`}
                       onClick={() => openApp(app.id)}
                     >
                       {app.icon}
@@ -1230,7 +1230,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                   color="red"
                   className={styles.coachCta}
                 />
-                <a className={styles.coachLink} href={DISCORD_URL} target="_blank" rel="noreferrer">
+                <a className={`${styles.coachLink} tap-area`} href={DISCORD_URL} target="_blank" rel="noreferrer">
                   <Icon name="discord" /> Not on a call? Voice chat on Discord
                 </a>
               </>
@@ -1653,7 +1653,7 @@ const Coach = ({
     <div className={`${styles.coach}${leaving ? ` ${styles.coachLeaving}` : ""}`} onClick={() => close()}>
       <div ref={panel} className={styles.coachPhone} role="dialog" aria-modal="true" aria-label={label} onClick={(e) => e.stopPropagation()}>
         <span className={styles.coachIsland} aria-hidden />
-        <button type="button" className={styles.coachClose} onClick={() => close()} aria-label="Put the phone down">
+        <button type="button" className={`${styles.coachClose} tap-area`} onClick={() => close()} aria-label="Put the phone down">
           <Icon name="close" strokeWidth={2.6} />
         </button>
         {/* (focus starts on what to do, not on putting it down) */}
@@ -1734,7 +1734,7 @@ const Seat = ({
             <li key={t.kind}>
               <button
                 type="button"
-                className={`${styles.trait}${done ? ` ${styles.traitDone}` : ""}${locked ? ` ${styles.traitLocked}` : ""}`}
+                className={`${styles.trait}${done ? ` ${styles.traitDone}` : ""}${locked ? ` ${styles.traitLocked}` : ""} tap-area`}
                 disabled={!mine || game.phase !== "break" || locked || (done && t.done !== game.episode)}
                 onClick={() => send({ t: "trait", player: player.id, slot })}
                 aria-pressed={done}

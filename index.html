@@ -160,8 +160,10 @@
         --hero-static-banner-height-mobile: 45px;
       }
 
-      body {
-        overflow-y: scroll;
+      /* the scrollbar's room is always kept, so nothing shifts sideways when a menu or dialog holds the
+         page still, or a page is too short to scroll */
+      html {
+        scrollbar-gutter: stable;
       }
       html,
       body {

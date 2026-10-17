@@ -18,7 +18,7 @@ const AboutPage = () => {
           variant="secondary"
           border="dark"
           icon="rulebook"
-          text="Rulebook PDF (2.4 MB)"
+          text="Rulebook PDF"
         />
       </PageIntro>
 

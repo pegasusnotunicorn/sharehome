@@ -2991,18 +2991,43 @@ button.traitPickCard:focus-visible {
   }
 }
 
-/* on a wide screen (callbacks under the phone), the earlier episodes one above the other, each with
-   its tokens and minus under it (the column runs down beside your seat, never pushing it down) */
+/* on a wide screen, callbacks fill the column under the phone, down to the table's edge: room for
+   three episodes one above the other, each card as big as a third of that room allows, its tokens
+   and minus under it, the same width. (One or two episodes keep that size, with room to spare.) */
 @media only screen and (min-width: 1101px) {
-  .pastRow {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.8rem;
+  .side {
+    align-self: stretch;
   }
 
-  /* (half the column's width: the cards are a reminder, the counter's what's used) */
+  .callbacks {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .pastRow {
+    --gap: 0.8rem;
+    --count: 2.3rem;
+    flex: 1;
+    min-height: 12rem;
+    container-type: size;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap);
+  }
+
+  /* (a third of the room, less the counter: the card's height; its width follows) */
+  .pastSlot {
+    width: min(100cqw, calc(((100cqh - 2 * var(--gap)) / 3 - var(--count) - 0.4rem) * 768 / 549));
+  }
+
   .pastSlot > .past {
-    width: 50%;
-    align-self: center;
+    width: 100%;
+  }
+
+  .pastSlot .pastCount {
+    align-self: stretch;
+    height: var(--count);
   }
 }
 

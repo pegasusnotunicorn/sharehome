@@ -452,8 +452,8 @@ const Lobby = ({ code, name, watch, takeSeat, toAudience }: { code: string; name
     return (
       <>
         {reconnecting}
-        <GameTable room={room} me={me} isHost={isHost} send={send} />
-        {watchers}
+        {/* (the chat, how many are watching and the doors: all on the table's phone) */}
+        <GameTable room={room} me={me} isHost={isHost} send={send} chat={chat} chatSlow={chatSlow} leave={() => navigate("/play")} />
       </>
     );
   }

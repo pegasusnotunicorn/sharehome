@@ -878,7 +878,8 @@
   color: #fff;
 }
 
-/* the "what's happened" app: a feed, scrolling inside the screen */
+/* the chat app: the chat and what's happened in one feed, scrolling inside the screen, and the box to
+   write in under it */
 .logApp {
   display: flex;
   flex-direction: column;
@@ -918,7 +919,7 @@
   scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
 }
 
-.logList li {
+.logList .logEntry {
   display: grid;
   grid-template-columns: 22px minmax(0, 1fr);
   align-items: start;
@@ -3055,4 +3056,214 @@ button.traitPickCard:focus-visible {
 
 .watchOnly .phoneActions {
   display: none;
+}
+
+/* #region the phone, held: picked up off the table, big in the middle of the screen (for the chat) */
+.phoneBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 990;
+  background: rgba(20, 16, 36, 0.62);
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.2s ease-out both;
+}
+
+.phone.phoneHeld {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 991;
+  gap: 0;
+  width: min(440px, calc(100vw - 24px));
+  height: min(880px, calc(100dvh - 32px));
+  padding: 0.6rem 0.6rem 0.5rem;
+  border-radius: 44px;
+  transform: translate(-50%, -50%);
+  animation: phoneLift 0.32s cubic-bezier(0.3, 1.35, 0.5, 1) both;
+}
+
+@keyframes phoneLift {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.85) rotate(2deg);
+  }
+}
+
+.phoneHeld .phoneIsland {
+  display: block;
+  top: 18px;
+}
+
+.phoneHeld .statusBar {
+  display: flex;
+  top: 18px;
+  left: 2rem;
+  right: 2rem;
+  font-size: 0.8rem;
+}
+
+.phoneHeld .homeBar {
+  display: block;
+}
+
+.phone.phoneHeld .screen {
+  flex: 1;
+  min-height: 0;
+  height: auto;
+  padding: 3rem 1rem 0.8rem;
+  border-radius: 36px 36px 14px 14px;
+}
+
+.phoneHeld .clockApp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+}
+
+.phoneHeld .phoneLabel {
+  font-size: 0.85rem;
+}
+
+.phoneHeld .phoneTime {
+  font-size: 5rem;
+}
+
+.phoneHeld .phoneFoot {
+  margin-top: auto;
+}
+
+.phoneHeld .logHead {
+  font-size: 1.15rem;
+}
+
+.phone.phoneHeld .dock {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 0.4rem;
+}
+
+.phoneHeld .remotePad {
+  margin: auto 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phone.phoneHeld {
+    animation: none;
+  }
+}
+
+/* #endregion */
+
+/* how many are watching: in the status bar, and by the chat's name */
+.watchCount {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-family: "Roboto Regular", sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.watchCount svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+}
+
+.logHead .watchCount {
+  margin-left: auto;
+  margin-right: 0.4rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.75rem;
+  color: rgba(244, 239, 227, 0.7);
+}
+
+.logHead .headHold {
+  width: 28px;
+  height: 28px;
+}
+
+.logHead .headHold svg {
+  width: 15px;
+  height: 15px;
+}
+
+.logApp > .logHead {
+  align-items: center;
+}
+
+/* (a spectator: no buttons for them on the timer, just that they're watching) */
+.phoneWatching {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.3rem;
+  font-family: "Rowdies-Regular";
+  font-size: 0.8rem;
+  color: rgba(244, 239, 227, 0.75);
+}
+
+.phoneWatching svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* the host's doors, in the settings */
+.doors {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.doors > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: "Rowdies-Regular";
+  color: #323232;
+}
+
+.doors > span svg {
+  width: 18px;
+  height: 18px;
+}
+
+.doorsNote {
+  margin: 0.4rem 0 0;
+  font-family: "Roboto Regular", sans-serif;
+  font-size: 0.85rem;
+  color: rgba(50, 50, 50, 0.72);
+}
+
+/* (hold and the cog, side by side on the right) */
+.phoneFoot .clothButton + .clothButton {
+  margin-left: 0;
+}
+
+.doorsNote {
+  margin-bottom: 0.4rem;
+}
+
+/* (held, on a small screen too: the time in the middle, the score and buttons along the bottom) */
+.phone.phoneHeld .clockApp > .phoneLabel {
+  margin-top: auto;
+}
+
+.phone.phoneHeld .phoneFoot {
+  align-self: stretch;
+  width: auto;
+  margin: auto 0 0;
+  font-size: 0.85rem;
+}
+
+.phone.phoneHeld .phoneActions {
+  width: 100%;
+}
+
+.phone.phoneHeld .phoneActions > * {
+  width: 100%;
 }

@@ -44,6 +44,7 @@
     "/buy",
     "/smosh",
     "/smosh/*",
+    "/posts/*",
     "/sitemap.xml",
     "/rulebook",
     "/rulebook.pdf",

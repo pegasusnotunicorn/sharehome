@@ -1,3 +1,6 @@
+# TikTok posting: signed links into the private pegasus-posts R2 bucket, passed straight through (LCM marketing/video/r2.py --posts)
+/posts/* https://0ee6b83acf67c0937acf43ae48162db1.r2.cloudflarestorage.com/pegasus-posts/:splat 200!
+
 /rulebook /rulebook.pdf 200
 
 /thankyou /.netlify/edge-functions/track-conversions 200

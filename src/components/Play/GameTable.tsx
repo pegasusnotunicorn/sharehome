@@ -923,14 +923,15 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                       </span>
                     )}
                     <div className={styles.phoneActions}>
-                      {game.phase === "ready" && <DefaultButton onClick={() => send({ t: "startClock" })} text="Start" icon="play" color="red" />}
-                      {paused && <DefaultButton onClick={() => send({ t: "resume" })} text="Resume" icon="play" color="red" />}
+                      {game.phase === "ready" && <DefaultButton onClick={() => send({ t: "startClock" })} text="Start" icon="play" color="red" className="tap-area" />}
+                      {paused && <DefaultButton onClick={() => send({ t: "resume" })} text="Resume" icon="play" color="red" className="tap-area" />}
                       {game.phase === "break" && (
                         <DefaultButton
                           onClick={() => send({ t: "nextEpisode" })}
                           text={game.episode >= EPISODES ? "Ratings" : `Episode ${game.episode + 1}`}
                           icon={game.episode >= EPISODES ? "trophy" : "forward"}
                           color="yellow"
+                          className="tap-area"
                         />
                       )}
                     </div>

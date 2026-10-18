@@ -1569,6 +1569,7 @@
     margin: 0;
   }
 
+  /* (40px tall to fit beside the time; a fingertip's 44 to tap: .tap-area) */
   .phoneActions > * {
     width: auto;
     min-height: 40px;

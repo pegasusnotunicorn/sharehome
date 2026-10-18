@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import BoxViewer from "../utils/BoxViewer";
 import BuyButton from "../utils/BuyButton";
@@ -23,9 +23,6 @@ const boxArt = (dir: string): BoxArt => ({ lid: panels(dir, "lid"), base: panels
 const BOX = boxArt("/images/box");
 const BOX_PHONE = boxArt("/images/box/phone");
 const isPhone = () => !!window.matchMedia?.(`(max-width: ${PHONE_MAX_WIDTH}px)`).matches;
-// the words come in this soon after the page is up, whether or not the 3D box is in yet (Bizz pops up
-// behind the box when it is)
-const WORDS_MS = 300;
 // the trailers: wide on big screens, upright on phones
 const VIDEO = { landscape: "EoQ2VTipXPA", portrait: "fNq9hS6DsTU" };
 
@@ -41,12 +38,8 @@ interface BoxHeroProps {
 
 export default function BoxHero({ onOpen }: BoxHeroProps) {
   const [open, setOpen] = useState(false);
-  // Bizz's words
+  // Bizz's words: out as he pops up to say them (or, with no 3D box or a slow one, without him)
   const [spoken, setSpoken] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setSpoken(true), WORDS_MS);
-    return () => clearTimeout(t);
-  }, []);
   const { isDesktop } = useWindowDimensions();
   const [art] = useState(() => (isPhone() ? BOX_PHONE : BOX));
   const openedAt = useRef(0);
@@ -99,6 +92,7 @@ export default function BoxHero({ onOpen }: BoxHeroProps) {
             }
           }}
           onStill={hideStaticHero}
+          onPeek={(shown) => shown && setSpoken(true)}
           behind={<img className={styles.bizz} src="/images/box/bizz.webp" alt="" width={450} height={392} draggable={false} />}
           fallback={
             <a className={styles.fallback} href={`https://www.youtube.com/watch?v=${VIDEO.landscape}`} target="_blank" rel="noreferrer">

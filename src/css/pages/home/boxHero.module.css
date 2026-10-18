@@ -55,8 +55,8 @@
   margin: 0 0.25rem 66px;
 }
 
-/* Bizz's words burst out soon after the page is up (.spoken): the shout from its long spike's end, then the
-   facts after it */
+/* Bizz's words burst out as he pops up (.spoken): the shout from its long spike's end, then the facts
+   after it */
 .head .bubble,
 .head .factsBubble {
   opacity: 0;

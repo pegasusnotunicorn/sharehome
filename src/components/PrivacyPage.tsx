@@ -6,7 +6,7 @@ import { CONTACT_EMAIL } from "../utils/links";
 // Full privacy policy. Also the privacy policy and data deletion URL for the
 // Pegasus Games Video apps on Meta (Instagram), TikTok and Google (YouTube),
 // so keep the "Social media" and "Delete your data" sections accurate.
-const EFFECTIVE_DATE = "October 9, 2026";
+const EFFECTIVE_DATE = "October 18, 2026";
 const CONTACT = CONTACT_EMAIL;
 
 const ext = (href: string, text: string) => (
@@ -103,7 +103,9 @@ const PrivacyPage = () => {
             our own accounts and to reply to comments on our own posts on
             Instagram, TikTok and YouTube. It connects only to accounts owned by
             Pegasus Games, through each platform’s official API. It is not
-            offered to anyone else and it never logs in to your account.
+            offered to anyone else and it never logs in to your account. Our
+            Threads app also reads public Threads posts by keyword, as described
+            under “Finding other creators on Threads” below.
           </p>
           <p>
             <strong>What it accesses:</strong> our own account’s profile and
@@ -137,7 +139,8 @@ const PrivacyPage = () => {
             YouTube we keep even less: only the comment’s ID and link, our
             reply and the date (never your name or what you wrote), and we
             delete those records within 30 days. We do not download or keep
-            copies of your profile, followers or other posts.
+            copies of your profile, followers or other posts, apart from the
+            public Threads posts described below.
           </p>
           <p>
             <strong>What we never do with platform data:</strong> sell it, share
@@ -167,6 +170,17 @@ const PrivacyPage = () => {
             <strong>TikTok.</strong> TikTok’s handling of your data is described
             in the{" "}
             {ext("https://www.tiktok.com/legal/privacy-policy", "TikTok Privacy Policy")}.
+          </p>
+          <p>
+            <strong>Finding other creators on Threads.</strong> Our Threads app
+            searches public Threads posts by keyword so we can find independent
+            tabletop game creators to leave a supportive comment on. We store
+            only what’s needed to show the post we’re replying to: the
+            username, a link, and up to 400 characters of the public post, for
+            at most 90 days. Every comment is written and reviewed by a person
+            before it’s posted, a few a day at most. We never send messages,
+            never sell or share this data, and never use it for advertising,
+            profiling or training models.
           </p>
           <p>
             To ask us to delete anything our tools have about you, see section

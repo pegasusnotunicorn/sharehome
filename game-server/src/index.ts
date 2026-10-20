@@ -308,7 +308,7 @@ export class Room extends DurableObject<Env> {
       // (nobody else watches as the developer's name)
       const asked = cleanName(url.searchParams.get("name"));
       const watcherName = dev ? DEV_NAME : asked.toLowerCase() === DEV_NAME.toLowerCase() ? "" : asked;
-      server.serializeAttachment({ playerId, watch: true, name: watcherName });
+      server.serializeAttachment({ playerId, watch: true, dev, name: watcherName });
       this.send(server, { t: "you", id: playerId });
       this.send(server, { t: "state", room: this.view() });
       if (this.chat.length) this.send(server, { t: "chatLog", lines: this.chat });
@@ -356,7 +356,7 @@ export class Room extends DurableObject<Env> {
       ws.close(1008, "too many messages");
       return;
     }
-    const { playerId, watch, name: watcherName } = ws.deserializeAttachment() as { playerId: string; watch?: boolean; name?: string };
+    const { playerId, watch, dev, name: watcherName } = ws.deserializeAttachment() as { playerId: string; watch?: boolean; dev?: boolean; name?: string };
     const msg = parseClientMessage(raw);
     if (!msg) return;
     // the chat: players and spectators alike
@@ -368,6 +368,7 @@ export class Room extends DurableObject<Env> {
         name: player?.name ?? (watcherName || "Audience"),
         color: player ? player.color : null,
         watching: !player,
+        ...(dev && !player ? { dev: true } : {}),
       }, msg.text);
     }
     // (a spectator can't touch the table: anything else they send is dropped)

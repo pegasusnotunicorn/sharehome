@@ -89,9 +89,15 @@ export const ChatBubble = ({ line, me, onRemove }: { line: ChatLine; me: string;
   <li className={`${styles.bubble}${line.by === me ? ` ${styles.mine}` : ""}`} style={{ "--who": line.color === null ? "#8a86c9" : PLAYER_COLORS[line.color % PLAYER_COLORS.length] } as CSSProperties}>
     <span className={styles.name}>
       {line.name}
+      {/* (each with the chat's own tooltip, on pointing or tapping) */}
       {line.watching && (
-        <span className={styles.watching} title="Watching" aria-label="watching">
+        <span className={styles.watching} data-tip="Watching" aria-label="watching" tabIndex={0}>
           <Icon name="eye" strokeWidth={2.2} />
+        </span>
+      )}
+      {line.dev && (
+        <span className={styles.dev} data-tip="The game’s developer" aria-label="the game’s developer" tabIndex={0}>
+          Dev
         </span>
       )}
     </span>

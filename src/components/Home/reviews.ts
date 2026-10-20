@@ -1,7 +1,8 @@
 // The home page's reviews (ReviewsSection.tsx): word for word from LCM's brain/mined/reviews.md, typos and
 // all. A public reviewer (an outlet, a creator) is named and their review linked; a private person never
 // is, by name or by a link to their own review: at most, a link to where the ratings are. (A TikTok Shop
-// customer goes by the masked name the store shows, like "R**i".)
+// customer goes by the masked name the store shows, like "R**i", where it shows one: it shows them only
+// for its newest few reviews.)
 
 export interface Rating {
   score: string;
@@ -35,7 +36,6 @@ export const REVIEWS: Review[] = [
       "Love, Career & Magic had me laughing harder than almost any game I’ve played, and created stories my group will tell for months to come.",
     by: "Roll to Review",
     press: true,
-    score: "4.5/5",
     href: "https://rolltoreview.com/love-career-magic-review-improv-party-game/",
     linkText: "Read the review",
   },
@@ -80,6 +80,14 @@ export const REVIEWS: Review[] = [
   },
   {
     quote:
+      "My niece actually ended up stealing it from me to take back to school to play with her friends 🙃",
+    by: "a TikTok Shop customer",
+    score: "5★",
+    href: TIKTOK_STORE,
+    linkText: "TikTok Shop reviews",
+  },
+  {
+    quote:
       "It feels like I'm actually watching a reality tv show being made in real time.",
     by: "a YouTube commenter on Smosh Games' Board AF episode",
     score: "273 likes",
@@ -94,6 +102,13 @@ export const REVIEWS: Review[] = [
     score: "10/10",
     href: BGG_RATINGS,
     linkText: "BoardGameGeek ratings",
+  },
+  {
+    quote: "So much fun, I had to get another.",
+    by: "a TikTok Shop customer",
+    score: "5★",
+    href: TIKTOK_STORE,
+    linkText: "TikTok Shop reviews",
   },
   {
     quote: "This is such a fun game. Quick adventures for a night of laughing.",

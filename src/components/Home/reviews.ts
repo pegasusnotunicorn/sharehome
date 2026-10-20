@@ -83,6 +83,9 @@ export const REVIEWS: Review[] = [
       "It feels like I'm actually watching a reality tv show being made in real time.",
     by: "a YouTube commenter on Smosh Games' Board AF episode",
     score: "273 likes",
+    // (the episode itself, never the comment: that would show their name)
+    href: "https://www.youtube.com/watch?v=OrUfce-2eUU",
+    linkText: "Watch the episode",
   },
   {
     quote:

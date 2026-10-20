@@ -6,9 +6,7 @@
 
 .room {
   position: relative;
-  --ink: var(--ink);
   --ink-soft: rgba(50, 50, 50, 0.72);
-  --night: var(--night);
   /* card stock: a pale edge under each card (its thickness), then its shadow on the cloth; lifted,
      the shadow spreads */
   --card-shadow:
@@ -3306,12 +3304,6 @@ button.traitPickCard:focus-visible {
   gap: 0.2rem;
   font-family: var(--font-roboto-regular);
   font-variant-numeric: tabular-nums;
-}
-
-/* (the developer, among the audience: named, beside the count) */
-.devWatching {
-  margin-left: 0.15rem;
-  white-space: nowrap;
 }
 
 .watchCount svg {

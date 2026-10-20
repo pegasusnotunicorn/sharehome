@@ -33,7 +33,7 @@ import { getAllCharacters } from "../Characters/Characters";
 import { ChatBubble, ChatInput, ChatTips, RemoveWatcher, useChatPops } from "./Chat";
 import Confirm from "./Confirm";
 import Finale from "./Finale";
-import { DEV_WATCHER, DISCORD_URL, watchingLabel } from "./gameServer";
+import { DISCORD_URL, watchingLabel } from "./gameServer";
 import { openRulebook, rulebookOpensAt } from "./Rulebook";
 import { isMuted, play, setMuted } from "./sounds";
 import { useOffline } from "./useRoom";
@@ -1367,8 +1367,6 @@ const Watching = ({ room, always }: { room: RoomView; always?: boolean }) => (
     <Icon name="eye" strokeWidth={2.4} />
     {room.watching}
     {always && " watching"}
-    {/* (the developer, when they're watching: always said) */}
-    {room.devWatching && <span className={styles.devWatching}>{DEV_WATCHER}</span>}
     {!room.watchOpen && (
       <svg viewBox="0 0 24 24" aria-label="doors closed">
         <rect x="5" y="11" width="14" height="10" rx="2" />

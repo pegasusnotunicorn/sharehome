@@ -72,6 +72,6 @@ export const socketUrl = (code: string, name: string, watch?: boolean, dev?: str
 
 // how many are watching, said the same everywhere (the developer, when they're there, by name; count:
 // with the number first, or just the words after it)
-export const DEV_WATCHER = "Pegasus Games";
+const DEV_WATCHER = "Pegasus Games";
 export const watchingLabel = (room: RoomView, count = true) =>
   `${count ? `${room.watching} ` : ""}watching${room.devWatching ? `, ${DEV_WATCHER} among them` : ""}${room.watchOpen ? "" : " · doors closed"}`;

@@ -3,8 +3,6 @@
    falls over all of it. */
 
 .finale {
-  --ink: var(--ink);
-  --night: var(--night);
   display: flex;
   flex-direction: column;
   gap: 1.75rem;

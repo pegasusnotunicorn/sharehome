@@ -246,6 +246,7 @@ export interface ChatLine {
   name: string;
   color: number | null; // a player's color; null for a spectator
   watching: boolean;
+  dev?: boolean; // the game's developer, watching by their key
   text: string;
   at: number;
 }

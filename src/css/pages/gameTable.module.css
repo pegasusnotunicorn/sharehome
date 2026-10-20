@@ -1602,9 +1602,9 @@
     flex-direction: row;
     justify-content: center;
     gap: 0.35rem;
-    padding: 0.4rem 0.2rem;
+    padding: 0.7rem 0.2rem;
     border-radius: 8px;
-    font-size: 0.72rem;
+    font-size: 0.8rem;
   }
 
   .dockTabs > button:first-child {
@@ -1616,8 +1616,8 @@
   }
 
   .dock svg {
-    width: 17px;
-    height: 17px;
+    width: 19px;
+    height: 19px;
   }
 
   .unread {
@@ -2850,11 +2850,18 @@ button.traitPickCard:focus-visible {
     width: min(2.6rem, 100%);
   }
 
+  /* (big enough to see and tap on a phone, whatever the tap area round them) */
   .phoneFoot .clothButton,
   .phoneFoot .mute {
     position: relative;
-    width: 30px;
-    height: 30px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .phoneFoot .clothButton svg,
+  .phoneFoot .mute svg {
+    width: 20px;
+    height: 20px;
   }
 
   .phoneFoot .clothButton::after,
@@ -3323,13 +3330,18 @@ button.traitPickCard:focus-visible {
 }
 
 .logHead .headHold {
-  width: 28px;
-  height: 28px;
+  width: 38px;
+  height: 38px;
 }
 
 .logHead .headHold svg {
-  width: 15px;
-  height: 15px;
+  width: 19px;
+  height: 19px;
+}
+
+/* (the cog and hold, side by side, a little apart) */
+.logHead .headHold + .headHold {
+  margin-left: 6px;
 }
 
 .logApp > .logHead {

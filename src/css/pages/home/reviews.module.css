@@ -168,8 +168,17 @@
     padding: 0 16px;
   }
 
+  /* (the row reaches the screen's edges, so a card slides off them, not off the gutter; at rest it
+     sits between the gutters, and just the edge of the next shows) */
   .row {
-    --per-view: 1.15;
+    --per-view: 1;
+    column-gap: 10px;
+    width: calc(100% + 32px);
+    margin: 0 -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+    scroll-padding: 0 16px;
   }
 
   .card {

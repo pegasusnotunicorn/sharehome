@@ -13,7 +13,6 @@ export interface Rating {
 export interface Review {
   quote: string;
   by: string; // the outlet or creator; for a private person, "a BoardGameGeek reviewer" and the like
-  press?: boolean; // an outlet's or a creator's
   score?: string; // only as the source gives it
   href?: string;
   linkText?: string;
@@ -35,14 +34,12 @@ export const REVIEWS: Review[] = [
     quote:
       "Love, Career & Magic had me laughing harder than almost any game I’ve played, and created stories my group will tell for months to come.",
     by: "Roll to Review",
-    press: true,
     href: "https://rolltoreview.com/love-career-magic-review-improv-party-game/",
     linkText: "Read the review",
   },
   {
     quote: "Everything nails the vibes of low stakes, high drama reality TV.",
     by: "EN World (Rob Wieland)",
-    press: true,
     href: "https://www.enworld.org/threads/love-career-magic-brings-bite-sized-fantasy-to-reality-tv.713185/",
     linkText: "Read the review",
   },
@@ -50,7 +47,6 @@ export const REVIEWS: Review[] = [
     quote:
       "The game delivers on its promise of zany humor and amusing roleplay challenges.",
     by: "Board Gamers Anonymous",
-    press: true,
     href: "https://www.boardgamersanonymous.com/love-career-magic-review/",
     linkText: "Read the review",
   },
@@ -58,7 +54,6 @@ export const REVIEWS: Review[] = [
     quote:
       "A charming, fast-paced, fantasy storytelling rpg where you get to be on reality TV without all the unnecessary drama.",
     by: "King's Entertainment Reviews",
-    press: true,
     href: "https://youtu.be/ZrUFVSHTPI0",
     linkText: "Watch the review",
   },

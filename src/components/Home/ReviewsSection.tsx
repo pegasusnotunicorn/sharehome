@@ -97,7 +97,7 @@ export default function ReviewsSection() {
 }
 
 const ReviewCard = ({ review: r }: { review: Review }) => (
-  <li className={`${styles.card}${r.press ? ` ${styles.press}` : ""}`}>
+  <li className={styles.card}>
     <figure className={styles.figure}>
       <blockquote className={styles.quote}>
         <p>“{r.quote}”</p>

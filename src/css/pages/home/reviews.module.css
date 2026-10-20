@@ -106,14 +106,6 @@
   letter-spacing: 0.02em;
 }
 
-/* (the press's, a little bigger, in Rowdies) */
-.press .quote p {
-  font-family: var(--font-rowdies-light);
-  font-size: 1.2rem;
-  line-height: 1.35;
-  letter-spacing: 0;
-}
-
 .credit {
   display: flex;
   flex-wrap: wrap;
@@ -217,10 +209,6 @@
 
   .on {
     display: none;
-  }
-
-  .press .quote p {
-    font-size: 1.1rem;
   }
 }
 

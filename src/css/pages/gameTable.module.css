@@ -3308,6 +3308,12 @@ button.traitPickCard:focus-visible {
   font-variant-numeric: tabular-nums;
 }
 
+/* (the developer, among the audience: named, beside the count) */
+.devWatching {
+  margin-left: 0.15rem;
+  white-space: nowrap;
+}
+
 .watchCount svg {
   width: 13px;
   height: 13px;

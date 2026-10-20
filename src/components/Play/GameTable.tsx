@@ -33,7 +33,7 @@ import { getAllCharacters } from "../Characters/Characters";
 import { ChatBubble, ChatInput, ChatTips, RemoveWatcher, useChatPops } from "./Chat";
 import Confirm from "./Confirm";
 import Finale from "./Finale";
-import { DISCORD_URL } from "./gameServer";
+import { DEV_WATCHER, DISCORD_URL, watchingLabel } from "./gameServer";
 import { openRulebook, rulebookOpensAt } from "./Rulebook";
 import { isMuted, play, setMuted } from "./sounds";
 import { useOffline } from "./useRoom";
@@ -1299,7 +1299,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
               <div className={styles.doors}>
                 <span>
                   <Icon name="eye" strokeWidth={2.2} />
-                  {room.watching} watching{room.watchOpen ? "" : " · doors closed"}
+                  {watchingLabel(room)}
                 </span>
                 <DefaultButton
                   onClick={() => {
@@ -1363,10 +1363,12 @@ const SettingsIcon = () => (
 
 // how many are watching, on the phone (with a lock when the host's closed the doors)
 const Watching = ({ room, always }: { room: RoomView; always?: boolean }) => (
-  <span className={styles.watchCount} title={`${room.watching} watching${room.watchOpen ? "" : " · doors closed"}`}>
+  <span className={styles.watchCount} title={watchingLabel(room)}>
     <Icon name="eye" strokeWidth={2.4} />
     {room.watching}
     {always && " watching"}
+    {/* (the developer, when they're watching: always said) */}
+    {room.devWatching && <span className={styles.devWatching}>{DEV_WATCHER}</span>}
     {!room.watchOpen && (
       <svg viewBox="0 0 24 24" aria-label="doors closed">
         <rect x="5" y="11" width="14" height="10" rx="2" />

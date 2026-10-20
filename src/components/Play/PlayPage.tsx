@@ -6,7 +6,7 @@ import Icon from "../utils/Icons";
 import Modal from "../utils/Modal";
 import modalStyles from "../../css/utils/modal.module.css";
 import PageIntro from "../utils/PageIntro";
-import { DISCORD_URL, GAME_SERVER, createRoom, isCode, normalizeCode, forgetRoom, rememberRoom, roomInfo, saveName, savedName, wasInRoom } from "./gameServer";
+import { DISCORD_URL, GAME_SERVER, createRoom, devWatchKey, watchingLabel, isCode, normalizeCode, forgetRoom, rememberRoom, roomInfo, saveName, savedName, wasInRoom } from "./gameServer";
 import Confirm from "./Confirm";
 import GameTable, { Loading, PLAYER_COLORS, preloadBacks, useCurtain, useNames } from "./GameTable";
 import Toast from "./Toast";
@@ -39,8 +39,10 @@ const PlayPage = () => {
   const joined = joinedNow || (!!code && wasInRoom(code));
   // (another room's link: it asks again)
   useEffect(() => setJoined(false), [code]);
+  // the developer, watching by their key (see devWatchKey): straight in as a spectator
+  const [dev] = useState(devWatchKey);
   // watching, not playing (asked to, or the room was full, or the show had started)
-  const [watch, setWatch] = useState(false);
+  const [watch, setWatch] = useState(!!dev);
   // (a game's for tapping, not selecting: no highlighting text on these pages, dialogs included)
   useEffect(() => {
     document.body.classList.add("no-select");
@@ -68,6 +70,7 @@ const PlayPage = () => {
           code={code}
           name={name}
           watch={watch}
+          dev={watch ? dev : ""}
           rename={setName}
           takeSeat={() => {
             // (a spectator taking a free seat: in as a player, by name)
@@ -395,6 +398,7 @@ const Lobby = ({
   code,
   name,
   watch,
+  dev,
   rename,
   takeSeat,
   toAudience,
@@ -402,12 +406,13 @@ const Lobby = ({
   code: string;
   name: string;
   watch: boolean;
+  dev: string;
   rename: (name: string) => void;
   takeSeat: () => void;
   toAudience: () => void;
 }) => {
   const navigate = useNavigate();
-  const { room, status, connected, unreachable, retry, error, bye, send, chat, chatSlow, me } = useRoom(code, name, watch);
+  const { room, status, connected, unreachable, retry, error, bye, send, chat, chatSlow, me } = useRoom(code, name, watch, dev);
   // (out of their seat, into the audience: back in as a spectator)
   useEffect(() => {
     if (bye === "toAudience") toAudience();
@@ -1031,7 +1036,7 @@ const Watchers = ({ room, isHost, send }: { room: RoomView; isHost: boolean; sen
   <li className={styles.watchers}>
     <Icon name="eye" />
     <span aria-live="polite">
-      <b>{room.watching}</b> watching{room.watchOpen ? "" : " · doors closed"}
+      <b>{room.watching}</b> {watchingLabel(room, false)}
     </span>
     {isHost && (
       <button

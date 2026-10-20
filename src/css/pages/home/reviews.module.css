@@ -1,0 +1,234 @@
+/* "What people are saying" (ReviewsSection.tsx): the ratings as two small pills, then the reviews in a
+   row that scrolls sideways, a card at a time */
+.section {
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 50px 0 2rem;
+  padding: 0 2rem;
+  color: var(--ink);
+  z-index: 10;
+}
+
+.heading {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.heading .title {
+  margin: 0.35rem 0 0.75rem;
+}
+
+/* the ratings: pills that link to where they're from */
+.ratings {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rating {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 0.45rem 1rem;
+  border-radius: var(--pill-radius);
+  background: var(--paper-light);
+  box-shadow: var(--card-shadow);
+  font-family: var(--font-rowdies-regular);
+  font-size: 0.95rem;
+  line-height: 1.2;
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform 0.15s ease;
+}
+
+.rating:hover {
+  transform: translateY(-2px);
+}
+
+.ratingScore {
+  color: var(--purple);
+}
+
+/* the row: three cards across on wide screens, two on tablets, one (and the edge of the next) on
+   phones; each stop lines a card up at the left */
+.row {
+  --per-view: 3;
+  display: flex;
+  column-gap: 1rem;
+  width: min(100%, 1100px);
+  margin: 0;
+  padding: 0.25rem 0 1rem;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.row::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex: 0 0 calc((100% - (var(--per-view) - 1) * 1rem) / var(--per-view));
+  box-sizing: border-box;
+  padding: 24px;
+  border-radius: var(--box-radius);
+  background: var(--paper-light);
+  box-shadow: var(--card-shadow);
+  text-align: left;
+  scroll-snap-align: start;
+}
+
+.figure {
+  margin: 0;
+}
+
+.quote {
+  margin: 0 0 0.75rem;
+}
+
+.quote p {
+  margin: 0;
+  font-family: var(--font-roboto-light);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.credit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.6rem;
+}
+
+.by {
+  font-family: var(--font-rowdies-regular);
+  font-size: 0.95rem;
+  line-height: 1.25;
+}
+
+.score {
+  padding: 0.1rem 0.55rem;
+  border-radius: var(--pill-radius);
+  background: var(--note);
+  font-family: var(--font-roboto-regular);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* the card's link: along its foot, over a hairline, the arrow nudging on as it's pointed at */
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  align-self: stretch;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(50, 50, 50, 0.1);
+  font-family: var(--font-rowdies-regular);
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  color: var(--purple);
+  text-decoration: none;
+}
+
+.linkIcon {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  transition: translate 0.15s ease;
+}
+
+.link:hover .linkIcon {
+  translate: 3px 0;
+}
+
+.link:focus-visible {
+  outline: 3px solid var(--btn-focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.arrows {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+@media only screen and (max-width: 1000px) {
+  .row {
+    --per-view: 2;
+  }
+}
+
+/* phones: the store's 16px gutters, a card and the edge of the next, 16px inside */
+@media only screen and (max-width: 640px) {
+  .section {
+    padding: 0 16px;
+  }
+
+  /* (the row reaches the screen's edges, so a card slides off them, not off the gutter; at rest it
+     sits between the gutters, and just the edge of the next shows) */
+  .row {
+    --per-view: 1;
+    column-gap: 10px;
+    width: calc(100% + 32px);
+    margin: 0 -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+    scroll-padding: 0 16px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  /* (both ratings on one line: "5.0 ★ TikTok Shop", without the "on") */
+  .ratings {
+    gap: 0.4rem;
+  }
+
+  .rating {
+    padding: 0.4rem 0.7rem;
+    font-size: clamp(0.8rem, 3.8vw, 0.875rem);
+    letter-spacing: 0.02em;
+  }
+
+  .on {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rating {
+    transition: none;
+  }
+
+  .rating:hover {
+    transform: none;
+  }
+
+  .linkIcon {
+    transition: none;
+  }
+}
+
+/* (the narrowest phones: a line each, rather than past the edge) */
+@media only screen and (max-width: 350px) {
+  .ratings {
+    flex-wrap: wrap;
+  }
+}

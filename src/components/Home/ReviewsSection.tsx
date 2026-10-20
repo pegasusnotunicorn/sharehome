@@ -2,18 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { GsapFadeScrub } from "../utils/useGsap";
 import { trackEvent } from "../utils/trackEvent";
 import ArrowChip from "../utils/ArrowChip";
+import Icon from "../utils/Icons";
 import { RATINGS, REVIEWS, type Review } from "./reviews";
 import landingPageStyles from "../../css/landingPage.module.css";
 import styles from "../../css/pages/home/reviews.module.css";
-
-// "as of Oct 20, 2026"
-const asOf = (day: string) =>
-  new Date(`${day}T12:00:00Z`).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  });
 
 const follow = (href: string) => () => trackEvent("review_link", { to: href });
 
@@ -67,8 +59,9 @@ export default function ReviewsSection() {
                 rel="noreferrer"
                 onClick={follow(r.href)}
               >
-                {r.label}{" "}
-                <span className={styles.asOf}>as of {asOf(r.asOf)}</span>
+                <span className={styles.ratingScore}>{r.score}</span>{" "}
+                <span className={styles.on}>on </span>
+                {r.where}
               </a>
             </li>
           ))}
@@ -123,6 +116,7 @@ const ReviewCard = ({ review: r }: { review: Review }) => (
         onClick={follow(r.href)}
       >
         {r.linkText}
+        <Icon name="forward" className={styles.linkIcon} strokeWidth={2.4} />
       </a>
     )}
   </li>

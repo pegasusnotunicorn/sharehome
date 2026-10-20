@@ -4,8 +4,8 @@
 // customer goes by the masked name the store shows, like "R**i".)
 
 export interface Rating {
-  label: string; // what it says, as of `asOf`
-  asOf: string; // YYYY-MM-DD
+  score: string;
+  where: string;
   href: string;
 }
 
@@ -24,8 +24,8 @@ const TIKTOK_STORE =
   "https://shop.tiktok.com/us/pdp/love-career-magic-fantasy-reality-tv-game-family-fun/1732132920084697114";
 
 export const RATINGS: Rating[] = [
-  { label: "5.0 ★ on TikTok Shop", asOf: "2026-10-20", href: TIKTOK_STORE },
-  { label: "8.1/10 on BoardGameGeek", asOf: "2026-10-08", href: BGG_RATINGS },
+  { score: "5.0 ★", where: "TikTok Shop", href: TIKTOK_STORE },
+  { score: "8.1/10", where: "BoardGameGeek", href: BGG_RATINGS },
 ];
 
 // press and creators first (named, their review linked), then players (never named)

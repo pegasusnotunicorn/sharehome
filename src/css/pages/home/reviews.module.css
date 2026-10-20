@@ -1,0 +1,218 @@
+/* "What people are saying" (ReviewsSection.tsx): the ratings as two pills, the press's four reviews,
+   then players' in columns */
+.section {
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 50px 0 2rem;
+  padding: 0 2rem;
+  color: var(--ink);
+  z-index: 10;
+}
+
+.heading {
+  text-align: center;
+  max-width: 40rem;
+  margin-bottom: 1.25rem;
+}
+
+.heading .title {
+  margin: 0.35rem 0 0;
+}
+
+/* the ratings: pills that link to where they're from */
+.ratings {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-size);
+  box-sizing: border-box;
+  padding: 0.55rem 1.25rem;
+  border-radius: var(--pill-radius);
+  background: var(--paper-light);
+  box-shadow: var(--card-shadow);
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform 0.15s ease;
+}
+
+.rating:hover {
+  transform: translateY(-2px);
+}
+
+.ratingLabel {
+  font-family: var(--font-rowdies-regular);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.asOf {
+  font-family: var(--font-roboto-regular);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--ink-soft);
+}
+
+/* the reviews: the press two by two, players in three columns (fewer on narrower screens) */
+.cards {
+  width: min(100%, 1100px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.press {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.players {
+  columns: 3;
+  column-gap: 1rem;
+}
+
+.players .card {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  box-sizing: border-box;
+  padding: 24px;
+  border-radius: var(--box-radius);
+  background: var(--paper-light);
+  box-shadow: var(--card-shadow);
+  text-align: left;
+}
+
+.figure {
+  margin: 0;
+}
+
+.quote {
+  margin: 0 0 0.75rem;
+}
+
+.quote p {
+  margin: 0;
+  font-family: var(--font-roboto-light);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.big .quote p {
+  font-family: var(--font-rowdies-light);
+  font-size: 1.3rem;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.credit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.6rem;
+}
+
+.by {
+  font-family: var(--font-rowdies-regular);
+  font-size: 0.95rem;
+  line-height: 1.25;
+}
+
+.score {
+  padding: 0.1rem 0.55rem;
+  border-radius: var(--pill-radius);
+  background: var(--note);
+  font-family: var(--font-roboto-regular);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.link {
+  margin-top: auto;
+  font-family: var(--font-roboto-regular);
+  font-size: 0.95rem;
+  color: var(--purple);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+@media only screen and (max-width: 1000px) {
+  .players {
+    columns: 2;
+  }
+}
+
+/* phones: one column, the store's 16px gutters and cards' 16px inside */
+@media only screen and (max-width: 640px) {
+  .section {
+    padding: 0 16px;
+  }
+
+  .press {
+    grid-template-columns: 1fr;
+  }
+
+  .players {
+    columns: 1;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  /* (the ratings a line each, the width of the cards) */
+  .ratings {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .rating {
+    border-radius: var(--box-radius);
+  }
+
+  .ratingLabel {
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+  }
+
+  .big .quote p {
+    font-size: 1.15rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rating {
+    transition: none;
+  }
+
+  .rating:hover {
+    transform: none;
+  }
+}

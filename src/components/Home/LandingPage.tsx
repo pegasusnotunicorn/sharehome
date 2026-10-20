@@ -8,6 +8,7 @@ import {
   DirectionDeckSection,
   EpisodeDeckSection,
 } from "./DirectionEpisodeDeckSection";
+import ReviewsSection from "./ReviewsSection";
 import TestimonialsSection from "./TestimonialsSection";
 import SmoshSection from "./SmoshSection";
 import LikeHateSection from "./LikeHateSection";
@@ -161,6 +162,8 @@ const LandingPage = ({ setTrailerPlaying }: LandingPageProps) => {
           </StepText>
         </GsapFadeScrub>
       </div>
+
+      <ReviewsSection />
 
       <TestimonialsSection />
 

@@ -141,6 +141,8 @@ export interface RoomView {
   watching: number;
   // whether more spectators may come in (the host can close the doors)
   watchOpen: boolean;
+  // the game's developer is among them (in by their key, whatever the doors: always said, never hidden)
+  devWatching?: boolean;
   // the server's clock as it sent this, so the page can line its own clock up with it
   now: number;
 }
@@ -281,7 +283,7 @@ export type ServerMessage =
   | { t: "chat"; line: ChatLine } // a new line
   | { t: "chatLog"; lines: ChatLine[] } // the chat so far, as a socket opens
   | { t: "chatSlow" } // too fast: that line wasn't sent
-  | { t: "watching"; n: number; open: boolean } // the audience's changed (to the players only)
+  | { t: "watching"; n: number; open: boolean; dev?: boolean } // the audience's changed (to the players only)
   | { t: "error"; error: RoomError }
   // sent just before the room closes a socket for good (a socket's own close can be slow to arrive)
   | { t: "bye"; reason: ByeReason };

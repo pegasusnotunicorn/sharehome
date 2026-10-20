@@ -16,7 +16,7 @@ const UNREACHABLE_AFTER = 10_000;
 // so does one that's gone quiet (no answer to the keep-alive); one the room refused or closed for good
 // doesn't. `connected` is the one word on whether a move would get there: while it's false, the
 // page's controls are off (see Live).
-export default function useRoom(code: string | null, name: string, watch = false) {
+export default function useRoom(code: string | null, name: string, watch = false, dev = "") {
   const [room, setRoom] = useState<RoomView | null>(null);
   const [status, setStatus] = useState<RoomStatus>("connecting");
   const [error, setError] = useState<RoomError | null>(null);
@@ -87,7 +87,7 @@ export default function useRoom(code: string | null, name: string, watch = false
     const connect = () => {
       clearTimeout(retry);
       if (done || ws.current) return;
-      const socket = new WebSocket(socketUrl(code, nameRef.current, watch));
+      const socket = new WebSocket(socketUrl(code, nameRef.current, watch, dev));
       ws.current = socket;
       socket.onopen = () => {
         tries = 0;
@@ -115,7 +115,7 @@ export default function useRoom(code: string | null, name: string, watch = false
         } else if (msg.t === "chatLog") setChat(msg.lines);
         else if (msg.t === "chat") setChat((all) => [...all.filter((l) => l.id !== msg.line.id), msg.line].slice(-60));
         else if (msg.t === "chatSlow") setChatSlow(Date.now());
-        else if (msg.t === "watching") setRoom((r) => (r ? { ...r, watching: msg.n, watchOpen: msg.open } : r));
+        else if (msg.t === "watching") setRoom((r) => (r ? { ...r, watching: msg.n, watchOpen: msg.open, devWatching: msg.dev } : r));
         else if (msg.t === "error") {
           done = true;
           clearTimeout(lost);
@@ -174,7 +174,7 @@ export default function useRoom(code: string | null, name: string, watch = false
       const socket = ws.current;
       if (socket) drop(socket);
     };
-  }, [code, watch]);
+  }, [code, watch, dev]);
 
   const send = useCallback((msg: ClientMessage) => {
     if (ws.current?.readyState !== WebSocket.OPEN) return;

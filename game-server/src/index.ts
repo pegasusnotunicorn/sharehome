@@ -48,6 +48,10 @@ export interface Env {
   // a Discord webhook (a secret: Worker → Settings → Variables): a word there whenever a show starts,
   // with the link to come and watch. Unset: no word
   DISCORD_WEBHOOK_URL?: string;
+  // the game's developer's key (a secret: `wrangler secret put DEV_WATCH_KEY`, 24 characters or more):
+  // with it, they can watch any room, even with its doors closed or its audience full. The players
+  // are told they're there. Unset: nobody can
+  DEV_WATCH_KEY?: string;
   // how often one address may make a room, and open a room; and how often Discord's told of a show,
   // from all the rooms together (see wrangler.jsonc)
   CREATE_LIMIT: RateLimit;
@@ -78,6 +82,18 @@ const CHAT_WINDOW = 30 * 1000;
 
 // spectators: their sockets' tag, and how many one room takes (unless MAX_SPECTATORS says otherwise)
 const WATCH = "watch";
+// (the developer's socket, watching by their key: tagged as this too)
+const DEV = "dev";
+const DEV_NAME = "Pegasus Games";
+
+// whether `given` is the developer's key (compared in constant time, as hashes)
+const isDevKey = async (env: Env, given: string | null) => {
+  const key = env.DEV_WATCH_KEY;
+  if (!key || key.length < 24 || !given) return false;
+  const hash = async (t: string) => crypto.subtle.digest("SHA-256", new TextEncoder().encode(t));
+  const [a, b] = await Promise.all([hash(key), hash(given)]);
+  return crypto.subtle.timingSafeEqual(a, b);
+};
 const WATCH_MAX = 50;
 const maxWatching = (env: Env) => {
   const n = Number(env.MAX_SPECTATORS);
@@ -282,11 +298,17 @@ export class Room extends DurableObject<Env> {
     // a spectator: anyone not already playing who asks to watch, or arrives once the room's full or
     // the show's started. Cheap by design: nothing's saved, and the players are sent just the new
     // count of watchers; the room sends the spectator the table as it is, and the chat
-    if (!player && (url.searchParams.get("watch") === "1" || room.players.length >= MAX_PLAYERS || room.game)) {
-      if (room.watchClosed) return refuse("watch-closed");
-      if (this.openSockets(undefined, WATCH).length >= maxWatching(this.env)) return refuse("watch-full");
-      this.ctx.acceptWebSocket(server, [WATCH]);
-      server.serializeAttachment({ playerId, watch: true, name: cleanName(url.searchParams.get("name")) });
+    // (the developer, by their key, watches whatever the doors and the audience's size; the players are
+    // told, and the host can still show them out)
+    const dev = !player && (await isDevKey(this.env, url.searchParams.get("dev")));
+    if (!player && (dev || url.searchParams.get("watch") === "1" || room.players.length >= MAX_PLAYERS || room.game)) {
+      if (!dev && room.watchClosed) return refuse("watch-closed");
+      if (!dev && this.openSockets(undefined, WATCH).length >= maxWatching(this.env)) return refuse("watch-full");
+      this.ctx.acceptWebSocket(server, dev ? [WATCH, DEV] : [WATCH]);
+      // (nobody else watches as the developer's name)
+      const asked = cleanName(url.searchParams.get("name"));
+      const watcherName = dev ? DEV_NAME : asked.toLowerCase() === DEV_NAME.toLowerCase() ? "" : asked;
+      server.serializeAttachment({ playerId, watch: true, name: watcherName });
       this.send(server, { t: "you", id: playerId });
       this.send(server, { t: "state", room: this.view() });
       if (this.chat.length) this.send(server, { t: "chatLog", lines: this.chat });
@@ -624,6 +646,7 @@ export class Room extends DurableObject<Env> {
       game: room.game ? gameView(room.game) : null,
       watching: this.openSockets(closing, WATCH).length,
       watchOpen: !room.watchClosed,
+      devWatching: this.openSockets(closing, DEV).length > 0,
       now: Date.now(),
     };
   }
@@ -665,7 +688,8 @@ export class Room extends DurableObject<Env> {
   private tellPlayersWatching(closing?: WebSocket) {
     if (!this.room) return;
     const n = this.openSockets(closing, WATCH).length;
-    const msg = JSON.stringify({ t: "watching", n, open: !this.room.watchClosed } satisfies ServerMessage);
+    const dev = this.openSockets(closing, DEV).length > 0;
+    const msg = JSON.stringify({ t: "watching", n, open: !this.room.watchClosed, dev } satisfies ServerMessage);
     for (const ws of this.playerSockets()) {
       try {
         ws.send(msg);

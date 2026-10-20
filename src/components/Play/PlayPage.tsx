@@ -37,12 +37,17 @@ const PlayPage = () => {
   // (joined this room just now, or before: in it goes; a new room's link asks first)
   const [joinedNow, setJoined] = useState(false);
   const joined = joinedNow || (!!code && wasInRoom(code));
+  // the developer, watching by their key (see devWatchKey): straight in as a spectator, to the room the
+  // ?dev link was for (and only that one: a room they go on to make or join, they're in as anyone)
+  const [dev] = useState(() => ({ code, key: devWatchKey() }));
+  const devKey = code && code === dev.code ? dev.key : "";
+  // watching, not playing (asked to, or the room was full, or the show had started); kept as the room's
+  // code, so another room's never watched by mistake (one they go on to make, say)
+  const [watching, setWatching] = useState(devKey ? code : null);
+  const watch = !!code && watching === code;
+  const setWatch = (on: boolean) => setWatching(on ? code : null);
   // (another room's link: it asks again)
   useEffect(() => setJoined(false), [code]);
-  // the developer, watching by their key (see devWatchKey): straight in as a spectator
-  const [dev] = useState(devWatchKey);
-  // watching, not playing (asked to, or the room was full, or the show had started)
-  const [watch, setWatch] = useState(!!dev);
   // (a game's for tapping, not selecting: no highlighting text on these pages, dialogs included)
   useEffect(() => {
     document.body.classList.add("no-select");
@@ -70,7 +75,7 @@ const PlayPage = () => {
           code={code}
           name={name}
           watch={watch}
-          dev={watch ? dev : ""}
+          dev={watch ? devKey : ""}
           rename={setName}
           takeSeat={() => {
             // (a spectator taking a free seat: in as a player, by name)

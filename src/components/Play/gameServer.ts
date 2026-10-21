@@ -54,17 +54,23 @@ export async function roomInfo(code: string): Promise<{ exists: boolean; full: b
 // room uses it (?dev alone watches straight away; ?dev=off forgets it). Without ?dev, a room opens as
 // any other: playing, or making a room, never sends it. Either way the ?dev comes straight
 // out of the address bar, so it's in no screenshot or shared link. Returns the key to watch with, if
-// this visit asked to
+// this visit asked to, and the news for the page to show: the key kept, or forgotten
 const DEV_KEY = "lcm-dev-key";
-export const devWatchKey = () => {
+export const devWatchKey = (): { key: string; news: "unlocked" | "forgotten" | null } => {
   const url = new URL(window.location.href);
   const given = url.searchParams.get("dev");
-  if (given === null) return "";
-  if (given === "off") local.remove(DEV_KEY);
-  else if (given && given !== "1") write(DEV_KEY, given);
+  if (given === null) return { key: "", news: null };
+  let news: "unlocked" | "forgotten" | null = null;
+  if (given === "off") {
+    local.remove(DEV_KEY);
+    news = "forgotten";
+  } else if (given && given !== "1") {
+    write(DEV_KEY, given);
+    news = "unlocked";
+  }
   url.searchParams.delete("dev");
   window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
-  return given === "off" ? "" : read(DEV_KEY) || "";
+  return { key: given === "off" ? "" : read(DEV_KEY) || "", news };
 };
 // the key this browser keeps, once a ?dev=KEY link's given it: watching any room uses it, so the
 // developer just picks "watch", whatever the room's doors

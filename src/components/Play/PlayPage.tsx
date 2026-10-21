@@ -39,8 +39,11 @@ const PlayPage = () => {
   const joined = joinedNow || (!!code && wasInRoom(code));
   // the developer, watching by their key (see devWatchKey): straight in as a spectator, to the room the
   // ?dev link was for (and only that one: a room they go on to make or join, they're in as anyone)
-  const [dev] = useState(() => ({ code, key: devWatchKey() }));
+  const [dev] = useState(() => ({ code, ...devWatchKey() }));
   const devKey = code && code === dev.code ? dev.key : "";
+  // (the key just kept, or forgotten: said so)
+  const [devNews, setDevNews] = useState(dev.news);
+  const clearDevNews = useCallback(() => setDevNews(null), []);
   // watching, not playing (asked to, or the room was full, or the show had started); kept as the room's
   // code, so another room's never watched by mistake (one they go on to make, say)
   const [watching, setWatching] = useState(devKey ? code : null);
@@ -62,6 +65,13 @@ const PlayPage = () => {
 
   return (
     <div className={`content ${styles.playPage}`}>
+      {devNews && (
+        <Toast
+          good
+          message={devNews === "unlocked" ? "🔓 Dev key unlocked" : "Dev key forgotten"}
+          onClose={clearDevNews}
+        />
+      )}
       {/* (in a room, the rulebook's where the navbar would be) */}
       {code && GAME_SERVER && <Rulebook />}
       {!GAME_SERVER ? (

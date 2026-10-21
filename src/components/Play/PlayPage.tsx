@@ -6,7 +6,7 @@ import Icon from "../utils/Icons";
 import Modal from "../utils/Modal";
 import modalStyles from "../../css/utils/modal.module.css";
 import PageIntro from "../utils/PageIntro";
-import { DISCORD_URL, GAME_SERVER, createRoom, devWatchKey, watchingLabel, isCode, normalizeCode, forgetRoom, rememberRoom, roomInfo, saveName, savedName, wasInRoom } from "./gameServer";
+import { DISCORD_URL, GAME_SERVER, createRoom, devWatchKey, savedDevKey, watchingLabel, isCode, normalizeCode, forgetRoom, rememberRoom, roomInfo, saveName, savedName, wasInRoom } from "./gameServer";
 import Confirm from "./Confirm";
 import GameTable, { Loading, PLAYER_COLORS, preloadBacks, useCurtain, useNames } from "./GameTable";
 import Toast from "./Toast";
@@ -75,7 +75,7 @@ const PlayPage = () => {
           code={code}
           name={name}
           watch={watch}
-          dev={watch ? devKey : ""}
+          dev={watch ? devKey || savedDevKey() : ""}
           rename={setName}
           takeSeat={() => {
             // (a spectator taking a free seat: in as a player, by name)

@@ -782,6 +782,8 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
 
   return (
     <div className={`${styles.room}${spectating ? ` ${styles.watchOnly}` : ""}`}>
+      {/* (the tooltips for the chat's emoji and badges and the watching count, wherever they are) */}
+      <ChatTips />
       {!loadingGone && <Loading out={curtain === "opening"} />}
       <h1 className="visually-hidden">
         Game {room.code}: episode {game.episode} of {EPISODES}
@@ -1013,7 +1015,7 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                   <div className={`${styles.logApp} ${chatStyles.compact}`}>
                     <div className={styles.logHead}>
                       <span>Chat</span>
-                      <Watching room={room} always />
+                      <Watching room={room} />
                       <button type="button" className={`${styles.clothButton} ${styles.headHold} tap-area`} onClick={() => setPicking(true)} aria-label="Settings" title="Settings">
                         <SettingsIcon />
                       </button>
@@ -1046,7 +1048,6 @@ const GameTable = ({ room, me, isHost, send, chat, chatSlow, leave }: TableProps
                       })}
                     </ol>
                     <ChatInput send={send} slow={chatSlow} />
-                    <ChatTips />
                   </div>
                 )}
               </div>
@@ -1362,11 +1363,11 @@ const SettingsIcon = () => (
 );
 
 // how many are watching, on the phone (with a lock when the host's closed the doors)
-const Watching = ({ room, always }: { room: RoomView; always?: boolean }) => (
-  <span className={styles.watchCount} title={watchingLabel(room)}>
+// (just the eye and the number: what it means, on pointing or tapping, in the chat's own tooltip)
+const Watching = ({ room }: { room: RoomView }) => (
+  <span className={styles.watchCount} data-tip={watchingLabel(room)} aria-label={watchingLabel(room)} tabIndex={0}>
     <Icon name="eye" strokeWidth={2.4} />
     {room.watching}
-    {always && " watching"}
     {!room.watchOpen && (
       <svg viewBox="0 0 24 24" aria-label="doors closed">
         <rect x="5" y="11" width="14" height="10" rx="2" />

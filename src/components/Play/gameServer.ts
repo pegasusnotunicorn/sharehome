@@ -50,8 +50,9 @@ export async function roomInfo(code: string): Promise<{ exists: boolean; full: b
 }
 
 // The game's developer's key, for watching any room (the room checks it: game-server's DEV_WATCH_KEY).
-// A room's link with ?dev=KEY watches with it, and this browser keeps it, so ?dev alone does next time
-// (?dev=off forgets it). Without ?dev, a room opens as any other. Either way the ?dev comes straight
+// A room's link with ?dev=KEY watches with it, and this browser keeps it, so from then on watching any
+// room uses it (?dev alone watches straight away; ?dev=off forgets it). Without ?dev, a room opens as
+// any other: playing, or making a room, never sends it. Either way the ?dev comes straight
 // out of the address bar, so it's in no screenshot or shared link. Returns the key to watch with, if
 // this visit asked to
 const DEV_KEY = "lcm-dev-key";
@@ -65,6 +66,9 @@ export const devWatchKey = () => {
   window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
   return given === "off" ? "" : read(DEV_KEY) || "";
 };
+// the key this browser keeps, once a ?dev=KEY link's given it: watching any room uses it, so the
+// developer just picks "watch", whatever the room's doors
+export const savedDevKey = () => read(DEV_KEY) || "";
 
 // (watch: as a spectator, if they're not playing already; dev: the developer's key, see devWatchKey)
 export const socketUrl = (code: string, name: string, watch?: boolean, dev?: string) =>

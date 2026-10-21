@@ -3319,6 +3319,7 @@ button.traitPickCard:focus-visible {
   white-space: nowrap;
   flex-shrink: 0;
   line-height: 1;
+  cursor: default;
   font-family: var(--font-roboto-regular);
   font-variant-numeric: tabular-nums;
 }
@@ -3482,4 +3483,10 @@ button.traitPickCard:focus-visible {
 .phone.phoneHeld .remoteApp .logHead .headHold {
   margin-left: auto;
   margin-right: 0.4rem;
+}
+
+.watchCount:focus-visible {
+  outline: 2px solid var(--btn-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
 }

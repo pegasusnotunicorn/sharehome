@@ -681,7 +681,8 @@
   top: 14px;
   left: 50%;
   z-index: 2;
-  width: 24%;
+  /* (small, so the time and the status icons have room either side) */
+  width: min(14%, 56px);
   height: 16px;
   border-radius: var(--pill-radius);
   background: #0b0b10;
@@ -734,6 +735,11 @@
   height: 3px;
   border-radius: 0 1px 1px 0;
   background: rgba(255, 255, 255, 0.8);
+}
+
+/* (the watching count in the status bar too: the battery's just its icon, to leave room for it) */
+.statusIcons:has(.watchCount) .batteryLevel {
+  display: none;
 }
 
 .batteryLevel {
@@ -888,7 +894,7 @@
 
 .logHead {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   font-family: var(--font-rowdies-regular);
   font-size: 0.95rem;
@@ -3309,6 +3315,11 @@ button.traitPickCard:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 0.2rem;
+  /* (on one line: the eye, the count and the lock, all on its middle) */
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1;
+  cursor: default;
   font-family: var(--font-roboto-regular);
   font-variant-numeric: tabular-nums;
 }
@@ -3330,13 +3341,26 @@ button.traitPickCard:focus-visible {
 }
 
 .logHead .headHold {
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
 }
 
 .logHead .headHold svg {
-  width: 19px;
-  height: 19px;
+  width: 17px;
+  height: 17px;
+}
+
+/* (phones: bigger, to see and to tap) */
+@media only screen and (max-width: 1100px), only screen and (max-height: 500px) {
+  .logHead .headHold {
+    width: 38px;
+    height: 38px;
+  }
+
+  .logHead .headHold svg {
+    width: 19px;
+    height: 19px;
+  }
 }
 
 /* (the cog and hold, side by side, a little apart) */
@@ -3459,4 +3483,10 @@ button.traitPickCard:focus-visible {
 .phone.phoneHeld .remoteApp .logHead .headHold {
   margin-left: auto;
   margin-right: 0.4rem;
+}
+
+.watchCount:focus-visible {
+  outline: 2px solid var(--btn-focus);
+  outline-offset: 2px;
+  border-radius: 4px;
 }

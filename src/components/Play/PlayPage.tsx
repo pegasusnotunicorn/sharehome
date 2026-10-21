@@ -68,7 +68,7 @@ const PlayPage = () => {
       {devNews && (
         <Toast
           good
-          message={devNews === "unlocked" ? "🔓 Dev key unlocked: you can watch any room, even with its doors closed." : "Dev key forgotten on this browser."}
+          message={devNews === "unlocked" ? "🔓 Dev key unlocked" : "Dev key forgotten"}
           onClose={clearDevNews}
         />
       )}

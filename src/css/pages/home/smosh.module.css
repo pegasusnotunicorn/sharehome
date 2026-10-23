@@ -18,7 +18,7 @@ button:hover > .thumb {
   top: clamp(10px, 2vw, 20px);
   right: clamp(10px, 2vw, 20px);
   padding: 0.35rem 0.8rem;
-  border-radius: var(--pill-radius);
+  border-radius: var(--tag-radius);
   background: rgba(20, 18, 30, 0.72);
   color: #fff;
   font-family: var(--font-rowdies-regular);

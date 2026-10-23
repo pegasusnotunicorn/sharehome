@@ -48,7 +48,10 @@
   /* (a dialog, lifted off the page) */
   --dialog-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.5);
   /* buttons, fields, chips */
-  --control-radius: 12px;
+  --control-radius: 8px;
+  /* (tags: "TTRPGs", "900K+ views") */
+  --tag-radius: 6px;
+  /* (count badges, switch tracks and meters only) */
   --pill-radius: 999px;
 
   /* What sits over what. (A game room's own corner buttons sit below these.) */

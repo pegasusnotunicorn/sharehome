@@ -87,6 +87,15 @@ a.btn.secondary {
   background-color: var(--paper-light);
 }
 
+/* (violet: the paper, outlined and lettered in violet, 6.1:1) */
+.colorPurple.secondary,
+a.btn.colorPurple.secondary {
+  background-color: var(--paper);
+  border-color: var(--purple);
+  color: var(--purple);
+  --btn-edge: var(--purple);
+}
+
 /* #endregion */
 
 /* #region--------------------------------------GHOST: just an outline, no depth */

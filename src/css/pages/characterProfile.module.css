@@ -168,7 +168,7 @@
 /* a phone: the rest of the story behind a button */
 @media only screen and (max-width: 900px) {
   .profile {
-    padding: 4.75rem 1rem 0;
+    padding: var(--intro-top) 1rem 0;
   }
 
   .details {

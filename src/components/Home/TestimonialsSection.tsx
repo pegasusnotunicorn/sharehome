@@ -136,7 +136,7 @@ export default function TestimonialsSection() {
                 onClick={() => pick(i)}
               >
                 {/* (a small copy for the strip; the full one's only for the big screen) */}
-                <img className={styles.crop} src={p.thumb.replace("/testimonials/", "/testimonials/thumbs/")} alt="" loading="lazy" width={400} height={225} />
+                <img className={styles.crop} src={p.thumb.replace("/testimonials/", "/testimonials/thumbs/")} alt={`Playthrough clip ${p.game}`} loading="lazy" width={400} height={225} />
                 <span className={styles.thumbNo} aria-hidden="true">
                   {p.game}
                 </span>

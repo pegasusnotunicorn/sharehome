@@ -311,6 +311,29 @@
 
   .bottom {
     padding: 1rem 6vw 1.4rem;
+    font-size: 0.875rem;
+  }
+
+  .kicker {
+    font-size: 0.875rem;
+  }
+
+  /* the links a fingertip tall, in the reading size */
+  .link,
+  .legal .link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-size);
+    font-family: var(--font-roboto-light);
+    font-size: 1rem;
+  }
+
+  .legal {
+    gap: 1.5rem;
+  }
+
+  .blurb {
+    font-size: 1rem;
   }
 }
 

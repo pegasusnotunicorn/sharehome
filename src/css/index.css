@@ -33,6 +33,8 @@
   --yellow: #f1db4b;
   --yellow-edge: #b39d1b;
   --pink: #dd7373;
+  /* (a fine line between parts: the top bar's foot) */
+  --hairline: #e8dfdb;
   --night: #1c1a2b;
   --kickstarter: #05ce78;
   --kickstarter-edge: #038a50;
@@ -48,7 +50,10 @@
   /* (a dialog, lifted off the page) */
   --dialog-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.5);
   /* buttons, fields, chips */
-  --control-radius: 12px;
+  --control-radius: 8px;
+  /* (tags: "TTRPGs", "900K+ views") */
+  --tag-radius: 6px;
+  /* (count badges, switch tracks and meters only) */
   --pill-radius: 999px;
 
   /* What sits over what. (A game room's own corner buttons sit below these.) */

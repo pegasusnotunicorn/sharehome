@@ -49,14 +49,19 @@
   margin-top: 1.6rem;
 }
 
-/* (clear of the logo and the menu button, which float over the top of the page here) */
+/* (clear of the top bar, filled, over the top of the page here) */
 @media only screen and (max-width: 900px) {
   .intro {
-    padding: 4.75rem 0 2rem;
+    padding: var(--intro-top) 0 2rem;
   }
 
   .intro .lead {
     font-size: 1rem;
+  }
+
+  /* (14px, the least to read on a phone) */
+  .intro .eyebrow {
+    font-size: 0.875rem;
   }
 
   /* (its buttons the column's width, one under the other) */

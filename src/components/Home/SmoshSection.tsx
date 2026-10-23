@@ -40,7 +40,7 @@ export default function SmoshSection() {
             <img
               className={smosh.thumb}
               src={thumb("maxresdefault")}
-              alt=""
+              alt="Smosh Games playing Love, Career & Magic"
               loading="lazy"
               onError={(e) => {
                 const img = e.currentTarget;

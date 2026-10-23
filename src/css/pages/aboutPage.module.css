@@ -480,7 +480,17 @@
   }
 
   .tabNote {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  /* (16px for reading, 14px for the small lines: the phone minimum) */
+  .page .stepEyebrow {
+    font-size: 0.875rem;
+  }
+
+  .page .points li,
+  .page .goal p {
+    font-size: 1rem;
   }
 
   .long {

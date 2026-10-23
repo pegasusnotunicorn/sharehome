@@ -341,10 +341,10 @@
   }
 }
 
-/* (clear of the logo and the menu button, which float over the top of the page here) */
+/* (clear of the top bar, filled, over the top of the page here) */
 @media only screen and (max-width: 900px) {
   .castHero {
-    padding-top: 4.75rem;
+    padding-top: var(--intro-top);
   }
 }
 

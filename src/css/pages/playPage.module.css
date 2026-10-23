@@ -1190,7 +1190,7 @@
   }
 
   .stage {
-    margin: calc(var(--navbar-height) - 0.5rem) 0 1.25rem;
+    margin: var(--intro-top) 0 1.25rem;
   }
 
   /* (in a room, the Rules tab's in the corner: the stage starts below it) */
@@ -1973,5 +1973,13 @@
   .startGlow,
   .startGlow::after {
     animation: none;
+  }
+}
+
+/* phones: no smaller than 14px, the least to read on one */
+@media only screen and (max-width: 640px) {
+  .stage .eyebrow,
+  .fieldLabel {
+    font-size: 0.875rem;
   }
 }

@@ -49,7 +49,7 @@
   margin-top: 1.6rem;
 }
 
-/* (clear of the top bar, filled, over the top of the page here) */
+/* (clear of the logo and the menu button, which float over the top of the page here) */
 @media only screen and (max-width: 900px) {
   .intro {
     padding: var(--intro-top) 0 2rem;

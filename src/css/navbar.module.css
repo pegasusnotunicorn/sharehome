@@ -372,19 +372,10 @@
     top: var(--banner-height-mobile, 45px);
   }
 
-  /* (a fill, so what scrolls under the logo and the menu button doesn't show through them) */
+  /* (no fill, ever: the top bar stays transparent over the page) */
   .topBar {
     top: var(--banner-height-mobile, 45px);
-    height: var(--navbar-height);
-    padding: 1rem 1rem calc(1rem - 1px);
-    background: rgba(251, 247, 245, 0.92);
-    border-bottom: 1px solid var(--hairline);
-  }
-
-  /* (none over the open menu: it's the menu's own paper there) */
-  .navbar:global(.is-active) .topBar {
-    background: none;
-    border-bottom-color: transparent;
+    padding: 1rem;
   }
 
   .topBarActions {

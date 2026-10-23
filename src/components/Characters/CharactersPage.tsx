@@ -59,7 +59,7 @@ const expansionPlaceholders: ExpansionCharacter[] = [
   { id: 5, name: "Bellerophon “Belly” Skybound", race: "Pegasus", job: "Entertainer / Performer", sketches: ["/images/members/expansion-belly-1.webp"] },
   { id: 7, name: "Aquila Leonis", race: "Griffin", job: "Investigative Journalist", sketches: ["/images/members/expansion-aquila-1.webp"] },
   { id: 6, name: "Vex “PAN-IQ!” Hoofprint", race: "Satyr", job: "Rock Star" },
-  { id: 8, name: "Vespera Skryre", race: "Harpy", job: "Paparazzo" },
+  { id: 8, name: "Vespera Skryre", race: "Harpy", job: "Paparazzo", sketches: ["/images/members/expansion-vespera-1.webp"] },
   { id: 9, name: "Xylia Aenigmata", race: "Sphinx", job: "Curator" },
   { id: 10, name: "Phido", race: "Cerberus", job: "Body Guard" },
 ];

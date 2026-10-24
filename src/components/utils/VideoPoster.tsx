@@ -48,7 +48,7 @@ export default function VideoPoster({ id, start, title, label, poster, posterWid
       <img
         className={`${styles.picture} ${posterClassName ?? ""}`.trim()}
         src={poster}
-        alt=""
+        alt={title}
         width={posterWidth}
         height={posterHeight}
         {...(first ? FETCH_FIRST : { loading: "lazy" as const })}

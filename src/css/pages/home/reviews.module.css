@@ -32,10 +32,14 @@
 }
 
 .rating {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  min-height: 44px;
+  box-sizing: border-box;
   white-space: nowrap;
   padding: 0.45rem 1rem;
-  border-radius: var(--pill-radius);
+  border-radius: var(--control-radius);
   background: var(--paper-light);
   box-shadow: var(--card-shadow);
   font-family: var(--font-rowdies-regular);
@@ -121,10 +125,10 @@
 
 .score {
   padding: 0.1rem 0.55rem;
-  border-radius: var(--pill-radius);
+  border-radius: var(--tag-radius);
   background: var(--note);
   font-family: var(--font-roboto-regular);
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   line-height: 1.4;
 }
 

@@ -117,7 +117,7 @@
 .castEyebrow {
   margin: 0 0 0.9rem;
   font-family: var(--font-rowdies-regular);
-  font-size: 0.78rem;
+  font-size: 0.875rem;
   letter-spacing: 4px;
   text-transform: uppercase;
   color: var(--ink-soft);
@@ -376,7 +376,7 @@
     font-size: 0.88rem;
   }
   .castJob {
-    font-size: 0.76rem;
+    font-size: 0.875rem;
   }
 }
 

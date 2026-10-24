@@ -6,7 +6,7 @@ import { CONTACT_EMAIL } from "../utils/links";
 // Full privacy policy. Also the privacy policy and data deletion URL for the
 // Pegasus Games Video apps on Meta (Instagram), TikTok and Google (YouTube),
 // so keep the "Social media" and "Delete your data" sections accurate.
-const EFFECTIVE_DATE = "October 18, 2026";
+const EFFECTIVE_DATE = "October 24, 2026";
 const CONTACT = CONTACT_EMAIL;
 
 const ext = (href: string, text: string) => (
@@ -121,7 +121,9 @@ const PrivacyPage = () => {
             <li>
               On Instagram, when a post invites you to comment a keyword to get
               a link, to send that link to you by direct message. We send one
-              message per request and never message people who didn’t ask.
+              message per request and never message people who didn’t ask. If
+              you write back within 24 hours, we may send you one more message
+              about our expansion on Kickstarter, and nothing after that.
             </li>
             <li>To publish videos we made to our own accounts.</li>
             <li>To make sure we never answer the same comment twice.</li>

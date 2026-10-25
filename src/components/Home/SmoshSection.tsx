@@ -49,7 +49,7 @@ export default function SmoshSection() {
             />
             <span className={styles.shade} aria-hidden="true" />
             <span className={smosh.views} aria-hidden="true">
-              Nearly 950K views
+              940K+ views
             </span>
             <span className={styles.play} aria-hidden="true">
               <svg viewBox="0 0 24 24">

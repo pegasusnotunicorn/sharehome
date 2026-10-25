@@ -97,6 +97,20 @@ const Footer = () => {
     };
   }, [near, count, isMobile, navigate]);
 
+  // While the closing Buy now is on screen, the bar along the foot of a phone's screen steps aside
+  // (body[data-footer-buy]), so there's one Buy now at a time.
+  const ctasRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const el = ctasRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([e]) => document.body.toggleAttribute("data-footer-buy", e.isIntersecting));
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      document.body.removeAttribute("data-footer-buy");
+    };
+  }, []);
+
   return (
     <footer className={styles.footer}>
       <div className={styles.band}>
@@ -127,7 +141,7 @@ const Footer = () => {
           <p className={styles.kicker}>The cast is waiting</p>
           <h2 className={styles.title}>Love, Career &amp; Magic</h2>
           <img className={styles.tagline} src="/images/title.webp" alt="A game where fantasy meets reality TV" loading="lazy" />
-          <div className={styles.ctas}>
+          <div ref={ctasRef} className={styles.ctas}>
             {!hidesBuyButtons(pathname) && <BuyButton from="footer" animated icon="forward" variant="primary" color="red" text="Buy now!" />}
             {/* (not on the cast's own page) */}
             {pathname !== "/characters" && (
@@ -160,6 +174,9 @@ const Footer = () => {
         </div>
         <div className={styles.col}>
           <h3 className={styles.colTitle}>Made by</h3>
+          <a href="https://unicornwithwings.com/" className={styles.wordmark} target="_blank" rel="noreferrer">
+            <img src="/images/pegasus_wordmark_white.webp" alt="Pegasus Games" width="140" height="23" loading="lazy" />
+          </a>
           <p className={styles.blurb}>
             <a href="https://unicornwithwings.com/" className={styles.inline} target="_blank" rel="noreferrer">
               Pegasus Games

@@ -61,6 +61,12 @@
   white-space: nowrap;
 }
 
+/* both a full tap tall */
+.topBarActions > .buyButton,
+.topBarActions > .expansionButton {
+  min-height: var(--tap-size);
+}
+
 /* ===== THE MENU: a drawer from the right ===== */
 
 .backdrop {
@@ -404,6 +410,13 @@
     bottom: 1rem;
     right: 1rem;
     z-index: 100;
+  }
+
+  /* out of the way while the footer's own Buy now is on screen (Footer.tsx) */
+  :global(body)[data-footer-buy] .topBarActions > .buyButton,
+  :global(body)[data-footer-buy] .topBarActions > .expansionButton {
+    opacity: 0;
+    pointer-events: none;
   }
 
   /* room under the footer, so its last line can be scrolled clear of them */

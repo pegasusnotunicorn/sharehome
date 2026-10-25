@@ -118,7 +118,7 @@ export default function BoxHero({ onOpen }: BoxHeroProps) {
           <div className={`${spoken ? styles.spoken : ""} ${open ? styles.open : ""}`.trim() || undefined}>
             <div className={`${styles.ctas} ${styles.ctasBottom}`}>
               <BuyButton from="home_hero" animated compact icon="forward" variant="primary" color="red" text="Buy now!" />
-              <ExpansionButton bar />
+              <ExpansionButton />
             </div>
           </div>,
           document.body

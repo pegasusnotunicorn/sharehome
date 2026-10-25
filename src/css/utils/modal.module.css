@@ -135,9 +135,9 @@
 
 /* #region--------------------------------------VARIANTS AND EXTRAS */
 
-/* a Kickstarter dialog: the band in Kickstarter green */
-.kickstarter {
-  --dialog-band: var(--kickstarter);
+/* a violet dialog: the band in the brand violet */
+.violet {
+  --dialog-band: var(--purple);
 }
 
 /* a picture across the top of a dialog */

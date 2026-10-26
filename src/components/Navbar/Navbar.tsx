@@ -99,7 +99,7 @@ const NavbarMain = ({ trailerPlaying }: NavbarMainProps) => {
               />
             )}
             {!hideBuyButtons && ((!isLandingPage || isDesktop) && (!isLandingPage || !isAtTop)) && (
-              <ExpansionButton className={styles.expansionButton} bar={!isDesktop} />
+              <ExpansionButton className={styles.expansionButton} />
             )}
             <button
               className={`hamburger noselect tap-area ${styles.navToggle} ${isVisibleClass}`}

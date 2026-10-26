@@ -370,7 +370,8 @@
   }
 
   .open .ctasBottom,
-  :global(body):has([aria-labelledby="expansion-popup-title"]) .ctasBottom {
+  :global(body):has([aria-labelledby="expansion-popup-title"]) .ctasBottom,
+  :global(body)[data-footer-buy] .ctasBottom {
     opacity: 0;
     pointer-events: none;
   }

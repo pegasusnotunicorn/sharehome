@@ -223,6 +223,17 @@
   color: var(--yellow);
 }
 
+/* the Pegasus Games wordmark, white, over the "Made by" line */
+.wordmark {
+  display: block;
+  line-height: 0;
+}
+
+.wordmark img {
+  width: 140px;
+  height: auto;
+}
+
 .blurb {
   margin: 0;
   font-family: var(--font-roboto-light);

@@ -38,7 +38,7 @@
   max-width: 1040px;
   margin: 0 auto;
   padding: 1.75rem;
-  border-radius: var(--card-radius);
+  border-radius: var(--box-radius);
   background: #fff;
   text-align: left;
   box-shadow: var(--card-shadow);
@@ -52,7 +52,7 @@
   aspect-ratio: 4 / 5;
   object-fit: cover;
   object-position: center 30%;
-  border-radius: var(--box-radius);
+  border-radius: 10px;
 }
 
 .aboutWords {
@@ -101,19 +101,21 @@
 /* (on a wide screen it's all there) */
 .readMore {
   display: none;
-  padding: 0 0 0.1rem;
+  min-height: 44px;
+  padding: 0;
   border: 0;
-  border-bottom: 2px solid rgba(50, 50, 50, 0.15);
   background: none;
   color: var(--ink);
-  font-family: var(--font-rowdies-regular);
-  font-size: 0.85rem;
+  font-family: var(--font-roboto-regular);
+  font-size: 1rem;
+  text-decoration: underline 2px rgba(50, 50, 50, 0.15);
+  text-underline-offset: 4px;
   cursor: pointer;
-  transition: border-color 0.15s ease;
+  transition: text-decoration-color 0.15s ease;
 }
 
 .readMore:hover {
-  border-color: var(--ink);
+  text-decoration-color: var(--ink);
 }
 
 .readMore:focus-visible {
@@ -157,7 +159,8 @@
   }
 
   .readMore {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     margin-top: 0.25rem;
   }
 

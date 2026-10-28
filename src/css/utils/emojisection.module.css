@@ -12,7 +12,7 @@
   margin: 0 auto;
   padding: 3rem 3.25rem;
   box-sizing: border-box;
-  border-radius: 28px;
+  border-radius: 14px;
   background:
     radial-gradient(circle at 85% 20%, rgba(255, 255, 255, 0.55), transparent 55%),
     #e9e6f6;
@@ -142,7 +142,6 @@
     grid-template-columns: 1fr;
     gap: 2rem;
     padding: 2rem 1.25rem 2.25rem;
-    border-radius: 22px;
   }
   .stickers {
     order: -1;

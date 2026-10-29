@@ -138,6 +138,12 @@
 /* a violet dialog: the band in the brand violet */
 .violet {
   --dialog-band: var(--purple);
+  /* the expansion pop-up: card corners, as the guide has for panes (the picture inside a step less) */
+  border-radius: var(--box-radius);
+}
+
+.violet .picture {
+  border-radius: 10px;
 }
 
 /* a picture across the top of a dialog */

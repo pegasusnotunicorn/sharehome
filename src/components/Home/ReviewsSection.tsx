@@ -100,7 +100,7 @@ const ReviewCard = ({ review: r }: { review: Review }) => (
   <li className={styles.card}>
     <figure className={styles.figure}>
       <blockquote className={styles.quote}>
-        <p>“{r.quote}”</p>
+        <p>{r.quote}</p>
       </blockquote>
       <figcaption className={styles.credit}>
         <span className={styles.by}>{r.by}</span>

@@ -291,6 +291,12 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
   const report = () => {
     moved = q.angleTo(rest) > 0.02;
   };
+  // a grab or a key cuts the opening spin short: wherever it stopped counts as turned, so it goes back
+  const stopIntro = () => {
+    cancelAnimationFrame(raf);
+    intro = introPending = false;
+    report();
+  };
   const turn = (ax: number, ay: number) => {
     loadLater();
     q.premultiply(tmp.setFromAxisAngle(Y, ax)).premultiply(tmp.setFromAxisAngle(X, ay)).normalize();
@@ -540,9 +546,8 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
   const still = () => openTo || opened > 0;
   stage.onpointerdown = (e) => {
     if (e.button > 0 || (e.target as Element).closest("button, iframe") || still() || drag) return;
-    cancelAnimationFrame(raf);
+    stopIntro();
     clearTimeout(idle);
-    intro = introPending = false;
     slideIn(500);
     stage.classList.add("used");
     // (a finger on it may only be scrolling the page: the trailer's made ready once it's a tap)
@@ -596,8 +601,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     const m = ({ ArrowRight: [a, 0], ArrowLeft: [-a, 0], ArrowUp: [0, -a], ArrowDown: [0, a] } as Record<string, [number, number]>)[e.key];
     if (m && !still()) {
       e.preventDefault();
-      cancelAnimationFrame(raf);
-      intro = introPending = false;
+      stopIntro();
       slideIn(500);
       turn(...m);
       schedule();

@@ -111,11 +111,11 @@ export default function BoxHero({ onOpen }: BoxHeroProps) {
 
       {/* phones: fixed along the bottom of the screen all the way down the home page (the navbar
           leaves its own off on the home page). Outside the hero, so the sections below it can't
-          cover them; the wrapper carries the hero's state, so they appear once Bizz has spoken and
-          make way while the trailer plays. */}
+          cover them; the wrapper carries the hero's state, so they're there from the first screen
+          (the phone hero has no Buy now of its own) and make way while the trailer plays. */}
       {!isDesktop &&
         createPortal(
-          <div className={`${spoken ? styles.spoken : ""} ${open ? styles.open : ""}`.trim() || undefined}>
+          <div className={`${styles.spoken} ${open ? styles.open : ""}`.trim()}>
             <div className={`${styles.ctas} ${styles.ctasBottom}`}>
               <BuyButton from="home_hero" animated compact icon="forward" variant="primary" color="red" text="Buy now!" />
               <ExpansionButton />

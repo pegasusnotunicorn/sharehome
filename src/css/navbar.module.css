@@ -10,6 +10,14 @@
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
+  transition: opacity 0.3s 0.75s;
+}
+
+/* the home page on phones: hidden until Bizz has spoken and the Buy now bar is in (BoxHero.tsx) */
+:global(html.hero-waiting) .topBar {
+  opacity: 0;
+  pointer-events: none;
+  transition: none;
 }
 
 .logo {

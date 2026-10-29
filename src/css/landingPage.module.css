@@ -491,6 +491,11 @@
 }
 
 @media only screen and (max-width: 900px) {
+  /* the labels are wider than the pictures here: a little room so side-by-side ones don't touch */
+  .mechanicsWrapper {
+    column-gap: 0.5rem;
+  }
+
   .mechanicsWrapper li {
     padding: 0.25rem;
     font-size: 1.25rem;

@@ -26,6 +26,31 @@ button:hover > .thumb {
   letter-spacing: 0.02em;
 }
 
+/* YouTube's play button in the middle of the picture */
+.ytPlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: clamp(68px, 9vw, 96px);
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
+}
+
+.ytPlay svg {
+  display: block;
+  width: 100%;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.35));
+}
+
+.ytPlayBg {
+  fill: #ff0000;
+}
+
+button:hover > .ytPlay,
+button:focus-visible > .ytPlay {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
 /* a little more room between it and "Real players, real stories" below */
 div.section {
   margin-bottom: 5rem;

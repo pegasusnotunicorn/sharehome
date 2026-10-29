@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import BoxViewer from "../utils/BoxViewer";
 import BuyButton from "../utils/BuyButton";
@@ -41,6 +41,12 @@ export default function BoxHero({ onOpen }: BoxHeroProps) {
   // Bizz's words: out as he pops up to say them (or, with no 3D box or a slow one, without him)
   const [spoken, setSpoken] = useState(false);
   const { isDesktop } = useWindowDimensions();
+  // phones: the navbar waits for the Buy now bar too (navbar.module.css hides it while this is on)
+  const waiting = !isDesktop && !spoken;
+  useEffect(() => {
+    document.documentElement.classList.toggle("hero-waiting", waiting);
+    return () => document.documentElement.classList.remove("hero-waiting");
+  }, [waiting]);
   const [art] = useState(() => (isPhone() ? BOX_PHONE : BOX));
   const openedAt = useRef(0);
   // touch screens tap
@@ -111,11 +117,11 @@ export default function BoxHero({ onOpen }: BoxHeroProps) {
 
       {/* phones: fixed along the bottom of the screen all the way down the home page (the navbar
           leaves its own off on the home page). Outside the hero, so the sections below it can't
-          cover them; the wrapper carries the hero's state, so they're there from the first screen
-          (the phone hero has no Buy now of its own) and make way while the trailer plays. */}
+          cover them; the wrapper carries the hero's state, so they appear once Bizz has spoken and
+          make way while the trailer plays. */}
       {!isDesktop &&
         createPortal(
-          <div className={`${styles.spoken} ${open ? styles.open : ""}`.trim()}>
+          <div className={`${spoken ? styles.spoken : ""} ${open ? styles.open : ""}`.trim() || undefined}>
             <div className={`${styles.ctas} ${styles.ctasBottom}`}>
               <BuyButton from="home_hero" animated compact icon="forward" variant="primary" color="red" text="Buy now!" />
               <ExpansionButton />

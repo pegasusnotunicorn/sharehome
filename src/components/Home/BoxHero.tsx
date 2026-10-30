@@ -47,6 +47,19 @@ export default function BoxHero({ onOpen }: BoxHeroProps) {
     document.documentElement.classList.toggle("hero-waiting", waiting);
     return () => document.documentElement.classList.remove("hero-waiting");
   }, [waiting]);
+  // While the hero's Buy now is on screen, the navbar's steps aside (body[data-hero-buy], navbar.module.css),
+  // so there's one Buy now at a time
+  const ctasRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const el = ctasRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([e]) => document.body.toggleAttribute("data-hero-buy", e.isIntersecting));
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      document.body.removeAttribute("data-hero-buy");
+    };
+  }, [isDesktop]);
   const [art] = useState(() => (isPhone() ? BOX_PHONE : BOX));
   const openedAt = useRef(0);
   // touch screens tap
@@ -74,7 +87,7 @@ export default function BoxHero({ onOpen }: BoxHeroProps) {
           </ShoutBubble>
         </header>
         {isDesktop && (
-          <div className={styles.ctas}>
+          <div ref={ctasRef} className={styles.ctas}>
             <BuyButton from="home_hero" animated icon="forward" variant="primary" color="red" size="large" text="Buy now" />
           </div>
         )}

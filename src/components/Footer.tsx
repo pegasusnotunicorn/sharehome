@@ -174,7 +174,7 @@ const Footer = () => {
         </div>
         <div className={styles.col}>
           <h3 className={styles.colTitle}>Made by</h3>
-          <a href="https://unicornwithwings.com/" className={styles.wordmark} target="_blank" rel="noreferrer">
+          <a href="https://unicornwithwings.com/" className={`${styles.wordmark} tap-area`} target="_blank" rel="noreferrer">
             <img src="/images/pegasus_wordmark_white.webp" alt="Pegasus Games" width="140" height="23" loading="lazy" />
           </a>
           <p className={styles.blurb}>

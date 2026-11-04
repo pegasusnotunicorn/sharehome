@@ -431,6 +431,84 @@
 
 /* #endregion */
 
+/* #region--------------------------------------THE THANK-YOU CODE */
+
+.coupon {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: var(--card-radius);
+  background: #fffaf0;
+  box-shadow: 0 18px 36px -24px rgba(28, 26, 43, 0.6);
+  color: #323232;
+  text-align: left;
+}
+
+.couponText h3 {
+  margin: 0.25rem 0 0.5rem;
+  font-family: var(--font-rowdies-bold);
+  font-size: 1.8rem;
+  font-weight: normal;
+  line-height: 1.15;
+}
+
+.couponText p {
+  margin: 0;
+}
+
+.finale .couponKicker {
+  font-family: var(--font-rowdies-regular);
+  font-size: 0.8rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #d81e18;
+}
+
+.couponTicket {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.1rem 1rem 0.6rem;
+  border: 2px dashed rgba(50, 50, 50, 0.35);
+  border-radius: var(--control-radius);
+  background: #fff;
+  text-align: center;
+}
+
+.couponLabel {
+  font-family: var(--font-gochi);
+  font-size: 1.15rem;
+  color: rgba(50, 50, 50, 0.7);
+}
+
+.couponCode {
+  font-family: var(--font-rowdies-bold);
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  font-weight: normal;
+  letter-spacing: 1px;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.couponButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.couponNote {
+  display: block;
+  min-height: 1.4rem;
+  font-family: var(--font-gochi);
+  font-size: 1.05rem;
+}
+
+/* #endregion */
+
 @media (prefers-reduced-motion: reduce) {
   .poster,
   .posterArt,
@@ -444,8 +522,13 @@
 
 @media only screen and (max-width: 860px) {
   .season,
-  .share {
+  .share,
+  .coupon {
     grid-template-columns: 1fr;
+  }
+
+  .coupon {
+    text-align: center;
   }
 
   .sharePreview {
@@ -474,7 +557,8 @@
   }
 
   .season,
-  .share {
+  .share,
+  .coupon {
     padding: 1rem;
   }
 }

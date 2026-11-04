@@ -13,6 +13,8 @@ const characterArt = (i: number) => `/images/pieces/characters/${nn(i)}.webp`;
 const episodeArt = (i: number) => `/images/pieces/episodes/${nn(i)}.webp`;
 const PLAYER_COLORS = ["#d81e18", "#5f5aa2", "#4f8a73", "#e0a91b", "#3d7fb8", "#d9652b"];
 const SITE = "https://lovecareermagic.com/play";
+// the thank-you for finishing a season: 10% off the boxed game (a Stripe promotion code)
+const COUPON = "OFFLINEISBETTER";
 // the key art (its 1000px copy, unless the screen needs more)
 const SPLASH = "/images/illustrations/splash.webp";
 const SPLASH_SMALL = sized(SPLASH, 1000);
@@ -266,6 +268,7 @@ const Finale = ({ room, game, me, isHost, send, leave }: { room: RoomView; game:
   // the picture, made once
   const [picture, setPicture] = useState<{ blob: Blob; url: string } | null>(null);
   const [note, setNote] = useState("");
+  const [couponNote, setCouponNote] = useState("");
   useEffect(() => {
     let live = true;
     drawShare(s.rating, s.perPlayer, cast)
@@ -454,6 +457,41 @@ const Finale = ({ room, game, me, isHost, send, leave }: { room: RoomView; game:
           </div>
           <span className={styles.shareNote} role="status">
             {note}
+          </span>
+        </div>
+      </div>
+      {/* #endregion */}
+
+      {/* #region the thank-you: a code for the boxed game */}
+      <div className={styles.coupon}>
+        <div className={styles.couponText}>
+          <p className={styles.couponKicker}>Thanks for playing</p>
+          <h3>Games are more fun in real life</h3>
+          <p>Bring Love, Career &amp; Magic to the table with your friends. Here’s a code for 10% off.</p>
+        </div>
+        <div className={styles.couponTicket}>
+          <span className={styles.couponLabel}>10% off at checkout</span>
+          <b className={styles.couponCode}>{COUPON}</b>
+          <div className={styles.couponButtons}>
+            <DefaultButton
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(COUPON);
+                  setCouponNote("Code copied!");
+                } catch {
+                  setCouponNote("Couldn’t copy: type it at checkout");
+                }
+                setTimeout(() => setCouponNote(""), 2200);
+              }}
+              text="Copy code"
+              icon="copy"
+              variant="secondary"
+              border="dark"
+            />
+            <DefaultButton href="/buy" text="Get the game" icon="forward" iconPosition="right" color="red" />
+          </div>
+          <span className={styles.couponNote} role="status">
+            {couponNote}
           </span>
         </div>
       </div>

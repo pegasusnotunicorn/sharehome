@@ -3213,6 +3213,24 @@ button.traitPickCard:focus-visible {
   display: none;
 }
 
+/* (no minus to take a callback back, which they can't) */
+.watchOnly .pastSlot .minus {
+  display: none;
+}
+
+.watchOnly .pastSlot .pastCount {
+  justify-content: center;
+}
+
+/* (no seat of their own under the decks, so the column ends at the table's top row and callbacks get
+   only their 14rem: three cards in that come out a few pixels wide. A spectator's callbacks get room
+   for three readable cards, the table growing to fit) */
+@media only screen and (min-width: 1101px) {
+  .watchOnly .callbacks {
+    min-height: 30rem;
+  }
+}
+
 /* #region the phone, held: picked up off the table, big in the middle of the screen (for the chat) */
 .phoneBackdrop {
   position: fixed;

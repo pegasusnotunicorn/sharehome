@@ -27,7 +27,7 @@ const routes = [
   "/privacy",
   "/rulebook",
 ];
-// (not listed: /thankyou, /checkout and the game rooms, which robots.txt keeps out; /buy, a redirect
+// (not listed: /thankyou and the game rooms, which robots.txt keeps out; /checkout, marked noindex; /buy, a redirect
 // that records a checkout event each time it's fetched, crawlers included)
 
 // Get character names dynamically
@@ -51,7 +51,8 @@ try {
   // (not a git checkout)
 }
 
-const sitemap = new SitemapStream({ hostname });
+// (only the plain sitemap namespace: no news, image, video or language entries here)
+const sitemap = new SitemapStream({ hostname, xmlns: { news: false, xhtml: false, image: false, video: false } });
 
 // Add each route to the sitemap
 routes.forEach((url) => sitemap.write({ url, lastmod }));

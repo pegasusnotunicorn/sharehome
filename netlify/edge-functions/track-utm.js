@@ -2,7 +2,7 @@
 // image and canonical address (src/pageMeta.ts, or a character's), since link previews (Facebook,
 // iMessage, Discord, X…) and search engines don't run JavaScript and only see the page as it's sent.
 // An address with no page is sent as a 404, kept out of search results.
-import { getCharacterShareMeta, getSpecificPersonByURL } from "../../src/components/Characters/Characters.ts";
+import { getAllFinishedPeople, getCharacterShareMeta, getSpecificPersonByURL } from "../../src/components/Characters/Characters.ts";
 import { CHARACTER_NOT_FOUND_META, NOT_FOUND_META, SITE, cleanPath, headTags, isPage, pageMeta } from "../../src/pageMeta.ts";
 
 const escapeAttr = (value) =>
@@ -21,6 +21,41 @@ const setTag = (html, [attr, key, value]) => {
   return value === null ? html : html.replace("</head>", () => written + "</head>");
 };
 
+const escapeText = (value) => String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+// The site's pages and the cast, as plain links: written into every page so search engines find each
+// one from the HTML as it's sent, without running the site's code first
+const SITE_LINKS = [
+  ["/", "Love, Career & Magic"],
+  ["/howtoplay", "How to play"],
+  ["/characters", "Meet the cast"],
+  ["/play", "Play online"],
+  ["/digitalartbook", "The digital artbook"],
+  ["/signup", "Sign up"],
+  ["/contact", "Contact us"],
+  ["/rulebook", "Rulebook (PDF)"],
+];
+
+// The page's words as plain HTML, in the app's box until the app is up (React replaces it as it
+// starts). Search engines read it straight from the page; it's visually hidden, so nobody sees it
+// flash and nothing shifts. (The same words the app shows: the page's title and description, and a
+// character's bio and hobbies.)
+const HIDDEN =
+  "position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0";
+const pageText = (meta, character) => {
+  const p = (text) => `<p>${escapeText(text)}</p>`;
+  let body = `<h1>${escapeText(character ? character.name : meta.title)}</h1>` + p(meta.description);
+  if (character) {
+    body += character.description.map(p).join("");
+    if (character.hobbies?.length)
+      body += `<h2>Hobbies</h2><ul>${character.hobbies.map((h) => `<li>${escapeText(h)}</li>`).join("")}</ul>`;
+  }
+  const link = ([href, text]) => `<li><a href="${escapeAttr(href)}">${escapeText(text)}</a></li>`;
+  const cast = getAllFinishedPeople().map((c) => [`/characters/${c.urlName}`, c.name]);
+  body += `<nav><ul>${SITE_LINKS.map(link).join("")}</ul><h2>The cast</h2><ul>${cast.map(link).join("")}</ul></nav>`;
+  return `<div class="visually-hidden" style="${HIDDEN}">${body}</div>`;
+};
+
 // the page at this address, with its own address, and whether there is one
 const metaFor = (pathname) => {
   const path = cleanPath(pathname);
@@ -34,7 +69,7 @@ const metaFor = (pathname) => {
     }
     const character = getSpecificPersonByURL(name);
     if (!character) return { meta: CHARACTER_NOT_FOUND_META, url: SITE + path, found: false };
-    return { meta: getCharacterShareMeta(character), url: `${SITE}/characters/${character.urlName}`, found: true };
+    return { meta: getCharacterShareMeta(character), url: `${SITE}/characters/${character.urlName}`, found: true, character };
   }
   if (!isPage(path)) return { meta: NOT_FOUND_META, url: SITE + path, found: false };
   return { meta: pageMeta(path), url: SITE + path, found: true };
@@ -42,13 +77,15 @@ const metaFor = (pathname) => {
 
 const withMeta = async (response, pathname) => {
   if (!response.headers.get("content-type")?.includes("text/html")) return response;
-  const { meta, url, found } = metaFor(pathname);
+  const { meta, url, found, character } = metaFor(pathname);
   let html = await response.text();
   html = html.replace(/<title>[^<]*<\/title>/, () => `<title>${escapeAttr(meta.tab ?? meta.title)}</title>`);
   for (const tag of headTags(meta, url)) html = setTag(html, tag);
+  const noindex = !found || meta.noindex;
+  if (!noindex) html = html.replace('<div id="sharehome"></div>', () => `<div id="sharehome">${pageText(meta, character)}</div>`);
   const headers = new Headers(response.headers);
   headers.delete("content-length");
-  if (!found) headers.set("X-Robots-Tag", "noindex");
+  if (noindex) headers.set("X-Robots-Tag", "noindex");
   return new Response(html, {
     status: found ? response.status : 404,
     statusText: found ? response.statusText : "Not Found",

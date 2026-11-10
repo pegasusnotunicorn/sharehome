@@ -22,7 +22,7 @@ export interface PageMeta {
   description: string;
   image: ShareImage;
   tab?: string; // (the browser tab's title, where it's not the share title)
-  noindex?: boolean; // (kept out of search results: a page that isn't there)
+  noindex?: boolean; // (kept out of search results: a page that isn't there, or the checkout)
 }
 
 const card = (name: string): ShareImage => ({ url: `/images/og/${name}.jpg`, width: 1200, height: 630 });
@@ -77,10 +77,12 @@ const PAGES: Record<string, Partial<PageMeta>> = {
     title: withBrand("Checkout"),
     description: "Get your copy of Love, Career & Magic, the 12-minute party game for 2–6 players where fantasy meets reality TV.",
     image: card("checkout"),
+    noindex: true, // (nothing to find there: robots.txt lets Google in so it can read this)
   },
   "/thankyou": {
     title: withBrand("Thank you for your order!"),
     description: "We’ve received your order and will ship your game within 3–5 business days.",
+    noindex: true,
   },
   "/terms": {
     title: withBrand("Terms"),

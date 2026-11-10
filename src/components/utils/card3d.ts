@@ -239,7 +239,9 @@ export const pointerReaches = (scene: Element, x: number, y: number) => {
 // own view carried on out to the canvas's edges.
 export function stretchCanvas(cv: HTMLCanvasElement, W: number, H: number, by: { left: number; right: number; top: number; bottom: number }, pixelRatio: number) {
   const w = W + by.left + by.right, h = H + by.top + by.bottom;
-  Object.assign(cv.style, { position: "absolute", left: `${-by.left}px`, top: `${-by.top}px`, width: `${w}px`, height: `${h}px`, pointerEvents: "none" });
+  // (moved out past the stage with a transform, not left/top: its box stays at the stage's corner, so
+  // a resize as the page settles isn't a layout shift)
+  Object.assign(cv.style, { position: "absolute", left: "0", top: "0", translate: `${-by.left}px ${-by.top}px`, width: `${w}px`, height: `${h}px`, pointerEvents: "none" });
   cv.width = Math.round(w * pixelRatio);
   cv.height = Math.round(h * pixelRatio);
   // a frame as wide and as high either side of the stage's middle as the canvas reaches on its far side
@@ -255,7 +257,7 @@ export function stretchCanvas(cv: HTMLCanvasElement, W: number, H: number, by: {
 
 export function bleedCanvas(cv: HTMLCanvasElement, W: number, H: number, bx: number, by: number, pixelRatio: number) {
   const w = W + 2 * bx, h = H + 2 * by;
-  Object.assign(cv.style, { position: "absolute", left: `${-bx}px`, top: `${-by}px`, width: `${w}px`, height: `${h}px`, pointerEvents: "none" });
+  Object.assign(cv.style, { position: "absolute", left: "0", top: "0", translate: `${-bx}px ${-by}px`, width: `${w}px`, height: `${h}px`, pointerEvents: "none" });
   cv.width = Math.round(w * pixelRatio);
   cv.height = Math.round(h * pixelRatio);
   return { w, h };

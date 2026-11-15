@@ -67,6 +67,8 @@
     "/*.otf",
     "/*.pdf",
     "/*.xml",
+    "/*.mp4",
+    "/videos/*",
   ]
 
 # Browser caching. The build's own files carry a hash in their names, so a browser can keep them for
@@ -85,6 +87,12 @@
 # The PDFs (the rulebook is large): kept a day, then checked in the background, like the images
 [[headers]]
   for = "/*.pdf"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
+# The box trailer (public/videos): kept a day, then checked in the background, like the images
+[[headers]]
+  for = "/videos/*"
   [headers.values]
     Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
 

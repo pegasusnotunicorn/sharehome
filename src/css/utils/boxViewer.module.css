@@ -87,7 +87,7 @@
 }
 
 /* the trailer, on the tray's floor (placed by boxViewer3d.ts) */
-.stage iframe[data-box-video] {
+.stage video[data-box-video] {
   position: absolute;
   z-index: 2;
   border: 0;
@@ -99,7 +99,7 @@
   transition: opacity 0.25s;
 }
 
-.stage iframe[data-box-video]:global(.shown) {
+.stage video[data-box-video]:global(.shown) {
   opacity: 1;
   pointer-events: auto;
 }

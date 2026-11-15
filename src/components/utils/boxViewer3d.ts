@@ -14,7 +14,7 @@ import { BOX_RADIUS, makeBox } from "./box3d";
 import type { BoxArt, BoxPanels } from "./box3d";
 
 export interface BoxVideo {
-  landscape: string; // YouTube video ids: one for a wide stage, one for a tall one
+  landscape: string; // video files (URLs): one for a wide stage, one for a tall one
   portrait: string;
 }
 export interface BoxViewerApi {
@@ -123,7 +123,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     return { x, load };
   };
   let io: IntersectionObserver | null = null, ro: ResizeObserver | null = null, idle = 0;
-  let player: HTMLIFrameElement | null = null, unlisten = () => {}, unlistenYt = () => {};
+  let player: HTMLVideoElement | null = null, unlisten = () => {}, unlistenYt = () => {};
   const cleanup = () => {
     dead = true;
     [raf, pending, lraf, oraf, sraf].forEach(cancelAnimationFrame);
@@ -405,7 +405,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
       qFrom.copy(q);
       // the trailer gets going (muted, out of sight) while the box opens
       warmPlayer();
-      startDriving("warm", OPEN_MS + 4000);
+      startDriving("warm");
     } else {
       qFrom.copy(rest);
       stopPlayer();
@@ -425,59 +425,30 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     };
     oraf = requestAnimationFrame(step);
   };
-  // The trailer, kept ready: the player loads (hidden) as soon as the box is pointed at or tapped,
-  // starts playing muted as the box opens, so it's loaded and buffered by the time it's open, and
-  // then goes back to the start, unmuted, as it appears. It's driven through YouTube's embed API
-  // (postMessage), retried every so often until the player says it's done.
-  let ytState = -2, ytMuted = true, ytHeard = false, phase: "idle" | "warm" | "show" = "idle", seeked = false;
-  let tick = 0, tickUntil = 0, playerPortrait = false;
-  const yt = (func: string, args: unknown[] = []) =>
-    player?.contentWindow?.postMessage(JSON.stringify({ event: "command", func, args }), "*");
-  const onYt = (e: MessageEvent) => {
-    if (!player || e.source !== player.contentWindow) return;
-    try {
-      const d = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
-      ytHeard = true;
-      if (typeof d?.info?.playerState === "number") ytState = d.info.playerState;
-      if (typeof d?.info?.muted === "boolean") ytMuted = d.info.muted;
-    } catch {
-      // not the player's
-    }
+  // The trailer, kept ready: the video loads (hidden) as soon as the box is pointed at or tapped,
+  // starts playing muted as the box opens, so it's buffered by the time it's open, and then goes
+  // back to the start, unmuted, as it appears. It's our own file, not a YouTube embed, so nobody
+  // gets YouTube's "sign in to confirm you're not a bot" check (VPNs often trip it).
+  let phase: "idle" | "warm" | "show" = "idle", playerPortrait = false;
+  unlistenYt = () => {};
+  const play = () => {
+    if (!player) return;
+    player.play().catch(() => {
+      // sound isn't allowed yet (some browsers): play it muted, and its controls can turn it up
+      if (!player || player.muted) return;
+      player.muted = true;
+      player.play().catch(() => {});
+    });
   };
-  window.addEventListener("message", onYt);
-  unlistenYt = () => {
-    stopDriving();
-    window.removeEventListener("message", onYt);
-  };
-  const drive = () => {
-    if (!player || phase === "idle" || performance.now() > tickUntil) return stopDriving();
-    if (!ytHeard) {
-      // ask the player to start reporting to us
-      player.contentWindow?.postMessage(JSON.stringify({ event: "listening", id: 1, channel: "widget" }), "*");
-      return;
-    }
-    const playing = ytState === 1 || ytState === 3;
-    if (phase === "warm") {
-      if (!ytMuted) yt("mute");
-      if (!playing) yt("playVideo");
-    } else {
-      if (!seeked) {
-        yt("seekTo", [0, true]);
-        seeked = true;
-      }
-      if (ytMuted) yt("unMute");
-      if (!playing) yt("playVideo");
-    }
-  };
-  const stopDriving = () => {
-    clearInterval(tick);
-    tick = 0;
-  };
-  const startDriving = (p: "warm" | "show", ms: number) => {
+  const startDriving = (p: "warm" | "show") => {
     phase = p;
-    tickUntil = performance.now() + ms;
-    drive();
-    if (!tick) tick = window.setInterval(drive, 120);
+    if (!player) return;
+    if (p === "warm") player.muted = true;
+    else {
+      player.currentTime = 0;
+      player.muted = false;
+    }
+    play();
   };
   // Open, the box's stage is most of the screen (the page folds the rest away as it opens), so the
   // screen's shape says which way it'll be; the stage's shape now, before that, can say otherwise
@@ -488,18 +459,19 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
     if (player && playerPortrait === tall) return;
     player?.remove();
     playerPortrait = tall;
-    ytState = -2;
-    ytHeard = false;
-    const id = tall ? video.portrait : video.landscape;
-    player = document.createElement("iframe");
-    player.src = `https://www.youtube-nocookie.com/embed/${id}?enablejsapi=1&mute=1&playsinline=1&rel=0&modestbranding=1&origin=${encodeURIComponent(location.origin)}`;
-    player.title = "Love, Career & Magic: how to play";
-    player.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
-    player.allowFullscreen = true;
+    player = document.createElement("video");
+    player.src = tall ? video.portrait : video.landscape;
+    player.preload = "auto";
+    player.muted = true;
+    player.playsInline = true;
+    player.controls = true;
+    player.disablePictureInPicture = false;
+    player.setAttribute("aria-label", "Love, Career & Magic: how to play");
     player.dataset.boxVideo = "";
     hidePlayer(true);
     stage.append(player);
     placePlayer();
+    if (phase !== "idle") startDriving(phase);
   };
   // (loaded ahead, out of sight: out of Tab's way and a screen reader's too, until it's shown)
   const hidePlayer = (hide: boolean) => {
@@ -511,16 +483,14 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
   };
   const startPlayer = () => {
     warmPlayer();
-    seeked = false;
     hidePlayer(false);
-    startDriving("show", 6000);
+    startDriving("show");
   };
   const stopPlayer = () => {
     hidePlayer(true);
     phase = "idle";
-    stopDriving();
-    yt("pauseVideo");
-    yt("mute");
+    player?.pause();
+    if (player) player.muted = true;
   };
 
   // open, a click or tap anywhere off the box (its buttons aside) closes it
@@ -545,7 +515,7 @@ export async function mountBoxViewer(stage: HTMLElement, { art, video, onRest, o
   let drag: { x: number; y: number; t: number } | null = null, tap: { x: number; y: number; t: number } | null = null;
   const still = () => openTo || opened > 0;
   stage.onpointerdown = (e) => {
-    if (e.button > 0 || (e.target as Element).closest("button, iframe") || still() || drag) return;
+    if (e.button > 0 || (e.target as Element).closest("button, video") || still() || drag) return;
     stopIntro();
     clearTimeout(idle);
     slideIn(500);

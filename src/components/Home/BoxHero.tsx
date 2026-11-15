@@ -24,7 +24,8 @@ const BOX = boxArt("/images/box");
 const BOX_PHONE = boxArt("/images/box/phone");
 const isPhone = () => !!window.matchMedia?.(`(max-width: ${PHONE_MAX_WIDTH}px)`).matches;
 // the trailers: wide on big screens, upright on phones
-const VIDEO = { landscape: "EoQ2VTipXPA", portrait: "fNq9hS6DsTU" };
+// our own files (public/videos), not YouTube: its embed asks VPN users to sign in to prove they aren't bots
+const VIDEO = { landscape: "/videos/box-trailer-landscape.mp4", portrait: "/videos/box-trailer-portrait.mp4" };
 
 // index.html shows the box before the app is up; once ours is on screen, that one goes
 const hideStaticHero = () => {
@@ -114,7 +115,7 @@ export default function BoxHero({ onOpen }: BoxHeroProps) {
           onPeek={(shown) => shown && setSpoken(true)}
           behind={<img className={styles.bizz} src="/images/box/bizz.webp" alt="" width={450} height={392} draggable={false} />}
           fallback={
-            <a className={styles.fallback} href={`https://www.youtube.com/watch?v=${VIDEO.landscape}`} target="_blank" rel="noreferrer">
+            <a className={styles.fallback} href={VIDEO.landscape} target="_blank" rel="noreferrer">
               <img src="/images/box/still.webp" alt="The Love, Career & Magic game box. Watch the trailer." onLoad={hideStaticHero} />
             </a>
           }

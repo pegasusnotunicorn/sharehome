@@ -1,6 +1,14 @@
 import stripeModule from "stripe";
 import { getStore } from "@netlify/blobs";
-import { createLabel, createOrder, parcelForGameCount } from "./lib/shippo.js";
+import {
+  createLabel,
+  createOrder,
+  findExistingLabel,
+  getOrder,
+  isAddressError,
+  parcelForGameCount,
+} from "./lib/shippo.js";
+import { finishRetry, getRetry, nextRetryAt, outOfRetries, putRetry } from "./lib/label-retry.js";
 import { STAMPED_LABEL_STORE, stampGroundSaverNote } from "./lib/label-note.js";
 import { shippingAddressFromSession } from "./lib/stripe-shipping.js";
 import { isEuropeCountry } from "../lib/regions.js";
@@ -364,7 +372,13 @@ async function releaseSessionClaim(sessionId) {
   }
 }
 
-async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
+// Buys the label for a paid order. Called by the webhook, and by the retry
+// job (shippo-retry.js) with `retry` = the order's queue entry. A failure
+// doesn't alert: it queues the order for the retry job, which fixes what it
+// safely can (Shippo hiccups, an address USPS spells differently, a carrier
+// that refuses the label) and alerts only when it truly can't buy one.
+// Returns "done", "queued", "gave-up" or "skipped".
+export async function purchaseShippoLabel(eventSession, eventId, mailerStatus, retry = null) {
   // Re-fetch the live session — webhook event payloads are frozen snapshots,
   // so retries/replays would otherwise see stale metadata and double-buy.
   // Expanding line items here also avoids a second API call in countGames.
@@ -376,6 +390,10 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
     });
   } catch (err) {
     console.error("❌ Couldn't fetch Stripe session:", err.message);
+    if (retry) {
+      // (the retry job tries again later; Stripe being down isn't Wonmin's problem yet)
+      return queueLabelRetry({ sessionId: eventSession.id, eventId, retry, err, session: eventSession });
+    }
     await alert(
       `Couldn't fetch Stripe session — can't buy label: ${err.message}`,
       { source: "stripe", sessionId: eventSession.id }
@@ -383,18 +401,20 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
     return;
   }
 
+  const labelCtx = {};
   try {
     if (session.metadata?.shippo_transaction_id) {
       console.log(
         `📦 Shippo label already purchased (${session.metadata.shippo_transaction_id}), skipping`
       );
-      return;
+      if (retry) await finishRetry(session.id, "done");
+      return "done";
     }
 
     const address = shippingAddressFromSession(session);
     if (!address) {
       console.log("📦 No shipping address on session, skipping Shippo");
-      return;
+      return "skipped";
     }
     const { shipping, to } = address;
 
@@ -413,9 +433,9 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
       console.log(
         `📦 Another delivery already claimed this session (by ${claimedBy}); skipping`
       );
-      return;
+      return "skipped";
     }
-    if (claim.staleFrom) {
+    if (claim.staleFrom && !retry) {
       await alert(
         `An earlier delivery of this order (${claim.staleFrom.eventId}) claimed it ${Math.round(claim.staleFrom.ageMs / 60000)} min ago and never finished, most likely cut off by the function's time limit. **Retrying now.** If a label from that earlier try turns up in Shippo, void the extra one.`,
         { source: "shippo", sessionId: session.id }
@@ -488,12 +508,49 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
       return;
     }
 
+    // Never buy twice: a label for this order may already exist in Shippo,
+    // from a try whose answer was lost (a timeout) or bought by hand on the
+    // order. If so, record it on the Stripe session and stop. An unanswered
+    // lookup throws, which queues a later try: wait, never buy blind.
+    const queued = retry || (await getRetry(session.id));
+    // (a first, clean delivery skips the lookup: the webhook has seconds)
+    let prior = null;
+    if (queued || claim.staleFrom) {
+      prior = await findExistingLabel({
+        sessionId: session.id,
+        orderId: queued?.orderId,
+        sinceIso: new Date(((session.created || Date.now() / 1000) - 60) * 1000).toISOString(),
+      });
+    }
+    if (prior) {
+      console.log(`📦 Found label ${prior.transactionId} already bought for ${session.id}; recording it`);
+      await finishSessionClaim(session.id, eventId, `label ${prior.transactionId}`);
+      await stripe.checkout.sessions
+        .update(session.id, {
+          metadata: {
+            ...(session.metadata || {}),
+            shippo_transaction_id: prior.transactionId,
+            ...(prior.trackingNumber && { shippo_tracking_number: prior.trackingNumber }),
+            ...(prior.labelUrl && { shippo_label_url: prior.labelUrl }),
+          },
+        })
+        .catch((err) => console.warn("⚠️  Couldn't write the found label to Stripe:", err.message));
+      if (queued) await finishRetry(session.id, "done", { transactionId: prior.transactionId });
+      return "done";
+    }
+
     // Best-effort: create a Shippo Order so the transaction shows up linked
     // under the dashboard's Orders view (line items, totals, customer info).
-    // Cosmetic — if this fails we still buy the label.
-    let shippoOrderId;
-    let shippoOrderNumber;
-    try {
+    // Cosmetic — if this fails we still buy the label. A retry reuses the
+    // order from the first try.
+    let shippoOrderId = queued?.orderId || undefined;
+    let shippoOrderNumber = queued?.orderNumber || undefined;
+    if (shippoOrderId && !shippoOrderNumber) {
+      shippoOrderNumber = await getOrder(shippoOrderId)
+        .then((o) => o.order_number)
+        .catch(() => undefined);
+    }
+    if (!shippoOrderId) try {
       try {
         shippoOrderNumber = await nextDailyOrderNumber();
       } catch (err) {
@@ -557,6 +614,7 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
     console.log(
       `📦 Buying Shippo label for ${session.id} (${gameCount} game(s))`
     );
+    Object.assign(labelCtx, { orderId: shippoOrderId, orderNumber: shippoOrderNumber });
     const label = await createLabel({
       to,
       parcel: parcelConfig.parcel,
@@ -566,6 +624,8 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
       order: shippoOrderId,
       reference1: shippoOrderNumber,
       ...(pickList && { reference2: pickList }),
+      recover: Boolean(queued),
+      fixAddressFirst: Boolean(queued) && isAddressError(queued.lastError),
       customs: {
         description: [
           gameCount ? "Love Career Magic Board Game" : null,
@@ -579,6 +639,10 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
     });
     // (straight away: from here a retry must never buy a second label)
     await finishSessionClaim(session.id, eventId, `label ${label.transactionId}`);
+    if (queued) {
+      await finishRetry(session.id, "done", { transactionId: label.transactionId, tried: label.tried });
+      console.log(`🔁 Bought on retry ${queued.attempts + 1}. ${label.tried.join(" | ")}`);
+    }
     console.log(
       `✅ Label ${label.transactionId} — ${label.rate.provider} ${label.rate.service} $${label.rate.amount} — tracking ${label.trackingNumber}`
     );
@@ -632,36 +696,116 @@ async function purchaseShippoLabel(eventSession, eventId, mailerStatus) {
         }
       );
     }
+    return "done";
   } catch (err) {
     // Never throw — Stripe would retry the webhook forever.
     console.error("❌ Shippo label purchase failed:", err.message);
 
-    // Release the claim so the operator can fix the underlying issue
-    // (raise cap, fix address, etc.) and replay the event from the Stripe
-    // dashboard. Without this, a replay would silently skip on the blob lock.
+    if (labelCtx.orderId) err.shippoOrderId = labelCtx.orderId;
+    if (labelCtx.orderNumber) err.shippoOrderNumber = labelCtx.orderNumber;
+    // Release the claim so the retry job (or a Stripe replay) can take it.
     await releaseSessionClaim(session.id);
 
-    const isCapRejection = /exceeds cap/i.test(err.message);
-    const description = isCapRejection
-      ? "A paying customer's order needs a shipping label, but the cheapest Shippo rate exceeded our per-label safety cap (`SHIPPO_MAX_LABEL_USD_*` in env). The cap is there to stop runaway shipping charges from a misrouted rate or address. **No label was bought and the order has NOT shipped yet** — handle manually."
-      : "A paying customer's order needs a shipping label, but the Shippo flow failed. **No label was bought and the order has NOT shipped yet** — handle manually.";
-
-    await alert(description, {
-      source: "shippo",
-      sessionId: session.id,
-      customer: session.customer_details?.email || "—",
-      // (under the pinned API version the address is in collected_information)
-      shipTo: (() => {
-        const d = session.collected_information?.shipping_details || session.shipping_details;
-        return d?.address
-          ? `${d.name || ""} — ${d.address.city || ""}, ${d.address.state || ""} ${d.address.postal_code || ""} ${d.address.country || ""}`.trim()
-          : "—";
-      })(),
-      error: err.message,
-      nextSteps:
-        "Buy the label manually in Shippo, then patch the Stripe session metadata (shippo_transaction_id, shippo_tracking_number, shippo_label_url) so any webhook retry won't double-buy.",
-    });
+    const shipTo = shipToLine(session);
+    if (err.capRejection || /exceeds cap/i.test(err.message)) {
+      // The safety cap stops runaway charges, so a human decides. Retrying
+      // wouldn't change the price.
+      const queued = retry || (await getRetry(session.id));
+      if (queued) await finishRetry(session.id, "gave-up", { lastError: err.message });
+      await alert(
+        "A paying customer's order needs a shipping label, but even the cheapest rate is above our per-label safety cap (`SHIPPO_MAX_LABEL_USD_*` in Netlify), so nothing was bought on its own. **The order has NOT shipped yet.** The cap guards against a misrouted rate or address; if the price looks right, buy the label in Shippo.",
+        {
+          source: "shippo",
+          sessionId: session.id,
+          customer: session.customer_details?.email || "—",
+          shipTo,
+          error: err.message,
+        }
+      );
+      return "gave-up";
+    }
+    return queueLabelRetry({ sessionId: session.id, eventId, retry, err, session });
   }
+}
+
+function shipToLine(session) {
+  // (under the pinned API version the address is in collected_information)
+  const d = session?.collected_information?.shipping_details || session?.shipping_details;
+  return d?.address
+    ? `${d.name || ""} — ${d.address.line1 || ""}${d.address.line2 ? `, ${d.address.line2}` : ""}, ${d.address.city || ""}, ${d.address.state || ""} ${d.address.postal_code || ""} ${d.address.country || ""}`.trim()
+    : "—";
+}
+
+// After a failed try: put the order (back) in the retry queue, quietly. Only
+// when the retries run out, or nothing could queue it, does Wonmin hear, with
+// exactly why and what was tried.
+async function queueLabelRetry({ sessionId, eventId, retry, err, session }) {
+  const prior = retry || (await getRetry(sessionId));
+  const attempts = retry ? retry.attempts + 1 : prior?.attempts || 0;
+  const addressError = Boolean(err.addressError) || isAddressError(err.message);
+  const tried = [...(prior?.tried || []), ...(err.tried || [])].slice(-12);
+  const entry = {
+    ...(prior || {}),
+    sessionId,
+    eventId: prior?.eventId || eventId,
+    orderId: prior?.orderId || null,
+    orderNumber: prior?.orderNumber || null,
+    attempts,
+    firstAt: prior?.firstAt || new Date().toISOString(),
+    nextAt: nextRetryAt(attempts),
+    lastError: err.message.slice(0, 500),
+    addressError,
+    tried,
+    state: "waiting",
+  };
+  // the Shippo order the first try made, so retries reuse it
+  if (!entry.orderId && err.shippoOrderId) entry.orderId = err.shippoOrderId;
+  if (!entry.orderNumber && err.shippoOrderNumber) entry.orderNumber = err.shippoOrderNumber;
+
+  const giveUp = Boolean(retry) && outOfRetries({ attempts, addressError: addressError && Boolean(retry) });
+  if (!giveUp) {
+    try {
+      await putRetry(entry);
+      console.log(`🔁 Label for ${sessionId} queued for retry ${attempts + 1} at ${entry.nextAt}`);
+      return "queued";
+    } catch (qErr) {
+      console.error("⚠️  Couldn't queue the label retry:", qErr.message);
+      await alert(
+        "A paying customer's order needs a shipping label. The first try failed, and the automatic retry couldn't be scheduled (Netlify Blobs didn't answer), so **nothing will retry it. No label was bought and the order has NOT shipped yet.** Buy it in Shippo.",
+        {
+          source: "shippo",
+          sessionId,
+          customer: session?.customer_details?.email || "—",
+          shipTo: shipToLine(session),
+          error: err.message,
+        }
+      );
+      return "gave-up";
+    }
+  }
+
+  await putRetry({ ...entry, state: "gave-up" }).catch(() => {});
+  const hours = Math.max(1, Math.round((Date.now() - Date.parse(entry.firstAt)) / 36e5));
+  const order = entry.orderNumber ? `Shippo order ${entry.orderNumber}` : "the order in Shippo";
+  const why = addressError
+    ? `The carrier can't find this address, and Shippo's address check found no match in the same ZIP code either, so the label can't be bought until the address is fixed. Tried ${attempts} time${attempts === 1 ? "" : "s"} over about ${hours} h.`
+    : `Shippo kept failing for about ${hours} h (${attempts} tries), so it isn't a passing hiccup. The last error is below.`;
+  await alert(
+    `Couldn't buy this order's shipping label on its own. **No label was bought and the order has NOT shipped yet.**\n\n**Why:** ${why}`,
+    {
+      source: "shippo",
+      sessionId,
+      orderNumber: entry.orderNumber || "—",
+      customer: session?.customer_details?.email || "—",
+      shipTo: shipToLine(session),
+      error: err.message,
+      tried: tried.join("\n") || "—",
+      nextSteps: addressError
+        ? `Check the address with the customer, fix it on ${order} (Orders) and buy the label there. Nothing retries it after this, and a label bought on that order is picked up by the 9:30 AM batch.`
+        : `Buy the label on ${order} (Orders). Nothing retries it after this.`,
+    }
+  );
+  return "gave-up";
 }
 
 function countProduct(session, productId) {
@@ -739,6 +883,7 @@ const FIELD_LABELS = {
   gameCount: "Game count",
   error: "Error",
   nextSteps: "Next steps",
+  tried: "What was tried",
   trackingNumber: "Tracking number",
   shippoTransactionId: "Shippo transaction",
   orderNumber: "Order #",

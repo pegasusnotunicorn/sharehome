@@ -52,5 +52,7 @@ Analytics (GTM, MailerLite) stay off everywhere but the live site.
   with `npm start` going).
 - `node scripts/test-shippo.mjs`, `node scripts/test-shippo-webhook.mjs`: try label buying with
   Shippo's test key (read from `.env`).
+- `node --experimental-test-module-mocks --test scripts/test-label-recovery.mjs`: the failed-label
+  recovery (`netlify/functions/shippo-retry.js`, every 10 minutes) against a fake Shippo and Stripe.
 - `node scripts/preview-discord.mjs [session_id]`: shows the Discord order alerts without buying a
   label.

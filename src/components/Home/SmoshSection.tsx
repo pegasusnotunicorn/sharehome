@@ -23,7 +23,7 @@ export default function SmoshSection() {
       <div className={styles.heading}>
         <p className={landingPageStyles.stepEyebrow}>As seen on Smosh Games</p>
         <h2 className={styles.title}>Smosh played it!</h2>
-        <p className={styles.lede}>The Board AF crew turned Love, Career &amp; Magic into their own magical reality show.</p>
+        <p className={styles.lede}>The Board AF crew turned Love, Career &amp; Magic into their own magical reality show, and over a million people watched.</p>
       </div>
 
       <div className={styles.screen}>
@@ -49,7 +49,7 @@ export default function SmoshSection() {
             />
             <span className={styles.shade} aria-hidden="true" />
             <span className={smosh.views} aria-hidden="true">
-              940K+ views
+              1M+ views
             </span>
             {/* YouTube's own play button, so it reads as a YouTube video */}
             <span className={smosh.ytPlay} aria-hidden="true">
